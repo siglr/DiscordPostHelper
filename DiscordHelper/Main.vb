@@ -1118,7 +1118,6 @@ Public Class Main
         Dim fullLaunchDateTimeLocal As DateTime = GetFullEventDateTimeInLocal(dtEventLaunchDate, dtEventLaunchTime)
         Dim fullStartTaskDateTimeLocal As DateTime = GetFullEventDateTimeInLocal(dtEventStartTaskDate, dtEventStartTaskTime)
 
-        'Test feature/test
         Dim dateFormat As String
         If chkIncludeYear.Checked Then
             dateFormat = "MMMM dd, yyyy"
