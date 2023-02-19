@@ -7,7 +7,7 @@
     Private Const constKelvinTo As Decimal = 273.15
     Private Const constMeterToInches As Double = 39.370078740157
     Private Const constKnotsToKmh As Single = 1.852
-    Private Const R As Double = 6371 ' Earth's radius in kilometers
+    Private Const constEarthRadius As Double = 6371 ' Earth's radius in kilometers
 
 
     Public Shared Function FeetToMeters(feet As Decimal) As Decimal
@@ -48,21 +48,24 @@
         Return meters * constMeterToFeet
     End Function
 
-    Public Shared Function GetDistanceInKm(ByVal lat1 As Double, ByVal lon1 As Double, ByVal lat2 As Double, ByVal lon2 As Double) As Double
+    Public Shared Function GetDistanceInKm(latitude1 As Double, longitude1 As Double, latitude2 As Double, longitude2 As Double) As Double
 
-        Dim dLat As Double = (lat2 - lat1) * (Math.PI / 180)
-        Dim dLon As Double = (lon2 - lon1) * (Math.PI / 180)
-        lat1 = lat1 * (Math.PI / 180)
-        lat2 = lat2 * (Math.PI / 180)
+        Dim latRad1 As Double = latitude1 * (Math.PI / 180)
+        Dim latRad2 As Double = latitude2 * (Math.PI / 180)
+        Dim lonRad1 As Double = longitude1 * (Math.PI / 180)
+        Dim lonRad2 As Double = longitude2 * (Math.PI / 180)
 
-        Dim a As Double = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2)
+        Dim deltaLat As Double = (latitude2 - latitude1) * (Math.PI / 180)
+        Dim deltaLon As Double = (longitude2 - longitude1) * (Math.PI / 180)
+
+        Dim a As Double = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) + Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2) * Math.Cos(latRad1) * Math.Cos(latRad2)
         Dim c As Double = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a))
-        Dim d As Double = R * c
+        Dim distanceInKm As Double = constEarthRadius * c
 
-        Return d
+        Return distanceInKm
     End Function
 
-    Public Shared Function ConvertToLatitude(ByVal coord As String) As Double
+    Public Shared Function ConvertToLatitude(coord As String) As Double
         Dim isNegative As Boolean = False
         If coord.StartsWith("S") Then
             isNegative = True
@@ -75,10 +78,10 @@
         Dim parts As String() = coord.Split(" "c)
         Dim degrees As Double = Double.Parse(parts(0))
         Dim minutes As Double = Double.Parse(parts(2))
-        Dim seconds As Double = Double.Parse(parts(4).Substring(0,parts(4).length-1))
+        Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1))
         Dim decimalDegrees As Double = degrees + (minutes / 60) + (seconds / 3600)
         If isNegative Then
-            decimalDegrees = decimalDegrees * -1
+            decimalDegrees *= -1
         End If
         Return decimalDegrees
     End Function
@@ -99,12 +102,12 @@
         Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1))
         Dim decimalDegrees As Double = degrees + (minutes / 60) + (seconds / 3600)
         If isNegative Then
-            decimalDegrees = decimalDegrees * -1
+            decimalDegrees *= -1
         End If
         Return decimalDegrees
     End Function
 
-    Public Shared Function KnotsToKmh(ByVal knots As Integer) As Single
+    Public Shared Function KnotsToKmh(knots As Integer) As Single
         Return knots * constKnotsToKmh
     End Function
 

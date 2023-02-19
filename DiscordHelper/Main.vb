@@ -14,16 +14,16 @@ Public Class Main
 
     Private xmldocFlightPlan As XmlDocument
     Private xmldocWeatherPreset As XmlDocument
-    Private AirportsICAO As New Dictionary(Of String, String)
+    Private ReadOnly AirportsICAO As New Dictionary(Of String, String)
     Private weatherDetails As WeatherDetails = Nothing
-    Private DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
+    Private ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Private ClubPreset As PresetEvent = Nothing
-    Private _currentDistanceUnit As Integer
+    Private ReadOnly _currentDistanceUnit As Integer
     Private Const DiscordLimit As Integer = 2000
     Private Const LimitMsg As String = "Caution! Discord Characters Limit: "
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
     Private intGuideCurrentStep As Integer = 0
-    Private EnglishCulture As CultureInfo = New CultureInfo("en-US")
+    Private ReadOnly EnglishCulture As CultureInfo = New CultureInfo("en-US")
 
     Private dblFlightTotalDistanceInKm As Double = 0
     Private dblTaskTotalDistanceInKm As Double = 0
@@ -103,11 +103,11 @@ Public Class Main
             While Not MyReader.EndOfData
                 Try
                     currentRow = MyReader.ReadFields()
-                    If Not currentRow Is Nothing Then
+                    If currentRow IsNot Nothing Then
                         AirportsICAO.Add(currentRow(1), currentRow(3))
                     End If
                 Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
-                    nbrErrors = nbrErrors + 1
+                    nbrErrors += 1
                 End Try
             End While
         End Using
@@ -504,11 +504,11 @@ Public Class Main
             If i > 0 Then
                 'Start adding distance between this waypoint and previous one to the total distance
                 dblDistanceToPrevious = Conversions.GetDistanceInKm(previousATCWaypoing.Latitude, previousATCWaypoing.Longitude, atcWaypoint.Latitude, atcWaypoint.Longitude)
-                dblFlightTotalDistanceInKm = dblFlightTotalDistanceInKm + dblDistanceToPrevious
+                dblFlightTotalDistanceInKm += dblDistanceToPrevious
             End If
             If blnInTask Then
                 'Start adding distance between this waypoint and previous one to the track distance
-                dblTaskTotalDistanceInKm = dblTaskTotalDistanceInKm + dblDistanceToPrevious
+                dblTaskTotalDistanceInKm += dblDistanceToPrevious
             End If
             If atcWaypoint.IsTaskStart Then
                 blnInTask = True
@@ -583,10 +583,10 @@ Public Class Main
             If useBrackets Then
                 textToReturn = textToReturn & "(" & textValue & ")"
             Else
-                textToReturn = textToReturn & textValue
+                textToReturn &= textValue
             End If
             For i As Integer = 1 To nbrLineFeed
-                textToReturn = textToReturn & vbCrLf
+                textToReturn &= vbCrLf
             Next
         End If
 
@@ -601,7 +601,7 @@ Public Class Main
         Clipboard.SetText(txtFPResults.Text)
         MsgBox("You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", vbOKOnly Or MsgBoxStyle.Information, "Step 1 - Creating main FP post")
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
     End Sub
@@ -610,7 +610,7 @@ Public Class Main
         Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf & ".")
         MsgBox("Now paste the content as the second message in the thread!", vbOKOnly Or MsgBoxStyle.Information, "Step 2 - Creating secondary post for weather in the thread.")
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
 
@@ -640,7 +640,7 @@ Public Class Main
                 MsgBox("Now paste the copied files as the third message without posting it and come back for the text info (button 3b).", vbOKOnly Or MsgBoxStyle.Exclamation, "Step 3a - Creating the files post in the thread - actual files first")
             End If
             If intGuideCurrentStep <> 0 Then
-                intGuideCurrentStep = intGuideCurrentStep + 1
+                intGuideCurrentStep += 1
                 ShowGuide()
             End If
         Else
@@ -653,7 +653,7 @@ Public Class Main
         Clipboard.SetText(txtFilesText.Text)
         MsgBox("Now enter the info (legend) in the third message and post it. Also pin this message in the thread.", vbOKOnly Or MsgBoxStyle.Information, "Step 3b - Creating the files post in the thread - file info")
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
     End Sub
@@ -666,7 +666,7 @@ Public Class Main
             Clipboard.SetText(txtFullDescriptionResults.Text)
             MsgBox("Now post the last message in the thread to complete your flight plan entry.", vbOKOnly Or MsgBoxStyle.Information, "Step 4 - Creating full description post in the thread.")
             If intGuideCurrentStep <> 0 Then
-                intGuideCurrentStep = intGuideCurrentStep + 1
+                intGuideCurrentStep += 1
                 ShowGuide()
             End If
         End If
@@ -774,12 +774,12 @@ Public Class Main
     End Sub
 
     Private Sub BuildWeatherCloudLayers()
-        txtWeatherClouds.Text = "**Cloud Layers**"
+        txtWeatherClouds.Text = "**Cloud Layers**" & vbCrLf
         txtWeatherClouds.AppendText(weatherDetails.CloudLayers)
     End Sub
 
     Private Sub BuildWeatherWindLayers()
-        txtWeatherWinds.Text = "**Wind Layers**"
+        txtWeatherWinds.Text = "**Wind Layers**" & vbCrLf
         txtWeatherWinds.AppendText(weatherDetails.WindLayers)
     End Sub
 
@@ -942,7 +942,7 @@ Public Class Main
 
         Dim trackDistanceKM As Integer = 0
 
-        If (Not ClubPreset Is Nothing) AndAlso ClubPreset.EligibleAward AndAlso txtDistanceTrack.Text <> String.Empty Then
+        If (ClubPreset IsNot Nothing) AndAlso ClubPreset.EligibleAward AndAlso txtDistanceTrack.Text <> String.Empty Then
 
             trackDistanceKM = CInt(txtDistanceTrack.Text)
 
@@ -1166,7 +1166,7 @@ Public Class Main
         If txtFlightPlanFile.Text <> String.Empty Then
             txtGroupFlightEventPost.AppendText("**Flight plan file:** " & Chr(34) & Path.GetFileName(txtFlightPlanFile.Text) & Chr(34) & vbCrLf)
         End If
-        If txtWeatherFile.Text <> String.Empty AndAlso (Not weatherDetails Is Nothing) Then
+        If txtWeatherFile.Text <> String.Empty AndAlso (weatherDetails IsNot Nothing) Then
             txtGroupFlightEventPost.AppendText("**Weather file & profile name:** " & Chr(34) & Path.GetFileName(txtWeatherFile.Text) & Chr(34) & " (" & weatherDetails.PresetName & ")" & vbCrLf)
         End If
         txtGroupFlightEventPost.AppendText(vbCrLf)
@@ -1229,7 +1229,7 @@ Public Class Main
             Case DiscordTimeStampFormat.LongDateTime
                 formatAbbr = ":f>"
             Case DiscordTimeStampFormat.CountDown
-                formatAbbr = ":R>"
+                formatAbbr = ":constEarthRadius>"
 
         End Select
 
@@ -1258,7 +1258,7 @@ Public Class Main
                "Finally, paste the link in the URL field on section 2 for Discord Event.", vbOKOnly Or MsgBoxStyle.Information, "Creating group flight post")
 
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
 
@@ -1294,7 +1294,7 @@ Public Class Main
             MsgBox("Paste the topic into the Event Topic field on Discord.", vbOKOnly Or MsgBoxStyle.Information, "Creating Discord Event")
         End If
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
 
@@ -1306,7 +1306,7 @@ Public Class Main
             MsgBox("Paste the description into the Event Description field on Discord.", vbOKOnly Or MsgBoxStyle.Information, "Creating Discord Event")
         End If
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
 
@@ -1663,7 +1663,7 @@ Public Class Main
         End If
 
         If intGuideCurrentStep <> 0 Then
-            intGuideCurrentStep = intGuideCurrentStep + 1
+            intGuideCurrentStep += 1
             ShowGuide()
         End If
 
@@ -1943,7 +1943,7 @@ Public Class Main
 
             Case 42 'Discord Event
                 If MsgBox("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", vbYesNo Or MsgBoxStyle.Question, "Discord Post Helper Wizard") = vbYes Then
-                    intGuideCurrentStep = intGuideCurrentStep + 1
+                    intGuideCurrentStep += 1
                 Else
                     intGuideCurrentStep = 999
                 End If
@@ -2071,7 +2071,7 @@ Public Class Main
 
     Private Sub btnGuideNext_Click(sender As Object, e As EventArgs) Handles btnGuideNext.Click, btnEventGuideNext.Click
 
-        intGuideCurrentStep = intGuideCurrentStep + 1
+        intGuideCurrentStep += 1
         ShowGuide()
 
     End Sub

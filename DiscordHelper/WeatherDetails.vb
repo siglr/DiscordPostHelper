@@ -1,95 +1,89 @@
-﻿Imports System.Xml
+﻿Imports System.Text
+Imports System.Xml
 
 Public Class WeatherDetails
+    Private ReadOnly _MSLPressureInPa As Single
+    Private ReadOnly _MSLTempKelvin As Single
+    Private ReadOnly _AerosolDensity As Single
+    Private ReadOnly _Precipitations As Single
+    Private ReadOnly _PrecipitationType As String
+    Private ReadOnly _SnowCover As Single
 
-    Private strPresetName As String
-    Private dblMSLPressureInPa As Single
-    Private dblMSLTempKelvin As Single
-    Private dblAerosolDensity As Single
-    Private dblPrecipitations As Single
-    Private strPrecipitationType As String
-    Private dblSnowCover As Single
-    Private strAltitudeMeasurement As String
+    Private ReadOnly _CloudLayers As New List(Of CloudLayer)
+    Private ReadOnly _WindLayers As New List(Of WindLayer)
 
-    Private lstCloudLayers As New List(Of CloudLayer)
-    Private lstWindLayers As New List(Of WindLayer)
+    Public Sub New(xmlWeatherXMLDoc As XmlDocument)
 
-    Public Sub New(weatherXMLDoc As XmlDocument)
+        Dim blnHasGround As Boolean = False
 
-        Dim HasGround As Boolean = False
+        PresetName = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Name").Item(0).FirstChild.Value
+        _MSLPressureInPa = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLPressure").Item(0).Attributes("Value").Value
+        _MSLTempKelvin = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLTemperature").Item(0).Attributes("Value").Value
+        _AerosolDensity = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/AerosolDensity").Item(0).Attributes("Value").Value
+        _Precipitations = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Precipitations").Item(0).Attributes("Value").Value
+        _SnowCover = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value
 
-        strPresetName = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Name").Item(0).FirstChild.Value
-        dblMSLPressureInPa = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLPressure").Item(0).Attributes("Value").Value
-        dblMSLTempKelvin = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLTemperature").Item(0).Attributes("Value").Value
-        dblAerosolDensity = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/AerosolDensity").Item(0).Attributes("Value").Value
-        dblPrecipitations = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Precipitations").Item(0).Attributes("Value").Value
-        dblSnowCover = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value
-
-        If weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
-            strAltitudeMeasurement = "AMGL"
+        If xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
+            AltitudeMeasurement = "AMGL"
         Else
-            strAltitudeMeasurement = "AMSL"
+            AltitudeMeasurement = "AMSL"
         End If
 
         Try
-            strPrecipitationType = weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/PrecipitationType").Item(0).Attributes("Value").Value.ToLower
+            _PrecipitationType = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/PrecipitationType").Item(0).Attributes("Value").Value.ToLower
         Catch ex As Exception
-            strPrecipitationType = "rain"
+            _PrecipitationType = "rain"
         End Try
 
-        For Each cloudNode As XmlNode In weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/CloudLayer")
-            lstCloudLayers.Add(New CloudLayer(cloudNode))
+        For Each xmlCloudNode As XmlNode In xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/CloudLayer")
+            _CloudLayers.Add(New CloudLayer(xmlCloudNode))
         Next
 
-        lstCloudLayers = lstCloudLayers.OrderBy(Function(x) x.AltitudeBottom).ToList()
+        _CloudLayers = _CloudLayers.OrderBy(Function(x) x.AltitudeBottom).ToList()
 
-        For Each windNode As XmlNode In weatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/WindLayer")
-            lstWindLayers.Add(New WindLayer(windNode))
-            If lstWindLayers.Last.IsGround Then
-                HasGround = True
+        For Each xmlWindNode As XmlNode In xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/WindLayer")
+            _WindLayers.Add(New WindLayer(xmlWindNode))
+            If _WindLayers.Last.IsGround Then
+                blnHasGround = True
             End If
         Next
 
-        lstWindLayers = lstWindLayers.OrderBy(Function(x) x.Altitude).ToList()
+        _WindLayers = _WindLayers.OrderBy(Function(x) x.Altitude).ToList()
 
         'if there is no ground layer, the first layer should indicate surface wind
-        If Not HasGround Then
-            lstWindLayers.First.IncludeSurfaceWind()
+        If Not blnHasGround Then
+            _WindLayers.First.IncludeSurfaceWind = True
         End If
 
     End Sub
 
     Public ReadOnly Property PresetName() As String
+
+    Public ReadOnly Property MSLTemperature As String
         Get
-            Return strPresetName
+            Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(_MSLTempKelvin), Conversions.KelvinToFarenheit(_MSLTempKelvin))
         End Get
     End Property
 
     Public ReadOnly Property MSLPressure As String
         Get
-            Return FormatNumber(Conversions.PaToInHg(dblMSLPressureInPa), 2) & " inHg / " & FormatNumber(dblMSLPressureInPa / 100, 0,,, TriState.False) & " hpa"
-        End Get
-    End Property
-
-    Public ReadOnly Property MSLTemperature As String
-        Get
-            Return FormatNumber(Conversions.KelvinToCelsius(dblMSLTempKelvin), 0) & "°C / " & FormatNumber(Conversions.KelvinToFarenheit(dblMSLTempKelvin), 0) & "°F"
+            Return String.Format("{0:F2} inHg / {1:N0} hPa", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100)
         End Get
     End Property
 
     Public ReadOnly Property Humidity As String
         Get
-            Return FormatNumber(dblAerosolDensity, 2)
+            Return FormatNumber(_AerosolDensity, 2)
         End Get
     End Property
 
     Public ReadOnly Property SnowCover As String
         Get
             Dim cover As String
-            If dblSnowCover = 0 Then
+            If _SnowCover = 0 Then
                 cover = "0"
             Else
-                cover = FormatNumber(Conversions.MeterToInches(dblSnowCover), 0) & " inches / " & FormatNumber(dblSnowCover, 2) & " m"
+                cover = String.Format("{0:N0} inches / {1:N2} m", Conversions.MeterToInches(_SnowCover), _SnowCover)
             End If
 
             Return cover
@@ -100,23 +94,23 @@ Public Class WeatherDetails
         Get
             Dim strSummary As String = String.Empty
 
-            Select Case dblPrecipitations
+            Select Case _Precipitations
                 Case 0
                     strSummary = "None"
                 Case < 0.5
-                    strSummary = "Slight " & strPrecipitationType & " (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Slight {0} ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case < 2
-                    strSummary = "Slight " & strPrecipitationType & " shower (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Slight {0} shower ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case < 4
-                    strSummary = "Moderate " & strPrecipitationType & " shower (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Moderate {0} shower ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case < 8
-                    strSummary = "Heavy " & strPrecipitationType & " (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Heavy {0} ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case < 10
-                    strSummary = "Very heavy " & strPrecipitationType & " (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Very heavy {0} ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case < 50
-                    strSummary = "Heavy " & strPrecipitationType & " shower (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Heavy {0} shower ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
                 Case Else
-                    strSummary = "Violent " & strPrecipitationType & " shower (" & FormatNumber(dblPrecipitations, 1) & " mm/h)"
+                    strSummary = String.Format("Violent {0} shower ({1:N1} mm/h)", _PrecipitationType, _Precipitations)
             End Select
             Return strSummary
         End Get
@@ -124,72 +118,56 @@ Public Class WeatherDetails
 
     Public ReadOnly Property HasSnowCover As Boolean
         Get
-            Dim answer As Boolean = False
-
-            If dblSnowCover > 0 Then
-                answer = True
-            End If
-
-            Return answer
+            Return _SnowCover > 0
         End Get
     End Property
 
     Public ReadOnly Property AltitudeMeasurement As String
-        Get
-            Return strAltitudeMeasurement
-        End Get
-    End Property
 
     Public ReadOnly Property HasPrecipitations As Boolean
         Get
-            Dim answer As Boolean = False
-
-            If dblPrecipitations > 0 Then
-                answer = True
-            End If
-
-            Return answer
+            Return _Precipitations > 0
         End Get
     End Property
 
     Public ReadOnly Property CloudLayers As String
         Get
-            Dim results As String = String.Empty
+            Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
 
-            For Each layer As CloudLayer In lstCloudLayers
+            For Each layer As CloudLayer In _CloudLayers
                 If layer.IsValidCloudLayer Then
                     countLayer = ++1
-                    results = results & vbCrLf & layer.CloudLayerText
+                    results.AppendLine(layer.CloudLayerText)
                 End If
             Next
 
             If countLayer = 0 Then
-                results = vbCrLf & "None"
+                results.AppendLine("None")
             End If
 
-            Return results
+            Return results.ToString.Trim
 
         End Get
     End Property
 
     Public ReadOnly Property WindLayers As String
         Get
-            Dim results As String = String.Empty
+            Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
 
-            For Each layer As WindLayer In lstWindLayers
+            For Each layer As WindLayer In _WindLayers
                 If layer.IsValidWindLayer Then
                     countLayer = ++1
-                    results = results & vbCrLf & layer.WindLayerText
+                    results.AppendLine(layer.WindLayerText)
                 End If
             Next
 
             If countLayer = 0 Then
-                results = "None"
+                results.AppendLine("None")
             End If
 
-            Return results
+            Return results.ToString.Trim
 
         End Get
     End Property
