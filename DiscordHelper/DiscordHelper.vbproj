@@ -80,6 +80,7 @@
     <Compile Include="AllData.vb" />
     <Compile Include="ATCWaypointvb.vb" />
     <Compile Include="PresetEvent.vb" />
+    <Compile Include="SupportingFeatures.vb" />
     <Compile Include="WindLayer.vb" />
     <Compile Include="CloudLayer.vb" />
     <Compile Include="Conversions.vb" />

@@ -13,7 +13,9 @@
                    strWorldPosition As String,
                    intSeq As Integer)
 
-        _TaskStartFound = intSeq <> 0
+        If intSeq = 0 Then
+            _TaskStartFound = False
+        End If
 
         Me.FullATCId = strFullATCId
 
@@ -98,11 +100,11 @@
             Dim strRestrictions As String = String.Empty
 
             If _MinAlt IsNot Nothing AndAlso _MaxAlt IsNot Nothing Then
-                strRestrictions = String.Format("{0}: Between {1}' ({2}m) and {3}' ({4}m)",
+                strRestrictions = String.Format("{0}: Between {1}' and {2}' ({3}m and {4}m)",
                                                 _Name,
                                                 _MinAlt,
-                                                Int(Conversions.FeetToMeters(_MinAlt)),
                                                 _MaxAlt,
+                                                Int(Conversions.FeetToMeters(_MinAlt)),
                                                 Int(Conversions.FeetToMeters(_MaxAlt))
                                                 )
             ElseIf _MinAlt IsNot Nothing Then

@@ -29,11 +29,11 @@ Public Class CloudLayer
 
     Public ReadOnly Property CloudLayerText() As String
         Get
-            Dim strResults As String = String.Format("From {0}' / {1} m to {2}' / {3} m, {4}% coverage, {5} density, {6}% scattering",
-                                                  FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
+            Dim strResults As String = String.Format("From {0}' to {1}' / {2} m to {3} m, {4}% coverage, {5} density, {6}% scattering",
                                                   FormatNumber(AltitudeBottom, 0,,, TriState.False),
-                                                  FormatNumber(Conversions.MeterToFeet(_AltitudeTop), 0,,, TriState.False),
                                                   FormatNumber(_AltitudeTop, 0,,, TriState.False),
+                                                  FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
+                                                  FormatNumber(Conversions.MeterToFeet(_AltitudeTop), 0,,, TriState.False),
                                                   FormatNumber(_Coverage, 0),
                                                   FormatNumber(_Density, 3),
                                                   FormatNumber(_Scattering, 0))

@@ -1394,7 +1394,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(852, 881)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(852, 1003)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1459,7 +1459,7 @@ Partial Class Main
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(860, 726)
+        Me.Label30.Location = New System.Drawing.Point(860, 781)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(175, 26)
         Me.Label30.TabIndex = 5
@@ -1468,7 +1468,7 @@ Partial Class Main
         'txtDiscordEventTopic
         '
         Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(860, 753)
+        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(860, 808)
         Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
         Me.txtDiscordEventTopic.Size = New System.Drawing.Size(626, 32)
         Me.txtDiscordEventTopic.TabIndex = 6
@@ -1479,7 +1479,7 @@ Partial Class Main
         '
         Me.Label23.AutoSize = True
         Me.Label23.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label23.Location = New System.Drawing.Point(860, 807)
+        Me.Label23.Location = New System.Drawing.Point(860, 862)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(228, 26)
         Me.Label23.TabIndex = 7
@@ -1488,7 +1488,7 @@ Partial Class Main
         'txtDiscordEventDescription
         '
         Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(860, 834)
+        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(860, 889)
         Me.txtDiscordEventDescription.Multiline = True
         Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
         Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1515,7 +1515,7 @@ Partial Class Main
         Me.txtGroupFlightEventPost.Multiline = True
         Me.txtGroupFlightEventPost.Name = "txtGroupFlightEventPost"
         Me.txtGroupFlightEventPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtGroupFlightEventPost.Size = New System.Drawing.Size(626, 534)
+        Me.txtGroupFlightEventPost.Size = New System.Drawing.Size(626, 742)
         Me.txtGroupFlightEventPost.TabIndex = 2
         Me.txtGroupFlightEventPost.Tag = "41"
         Me.ToolTip1.SetToolTip(Me.txtGroupFlightEventPost, "This is the content of the Discord group flight event post.")
@@ -1536,9 +1536,9 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
         Me.grpDiscordEvent.Controls.Add(Me.txtGroupEventPostURL)
         Me.grpDiscordEvent.Controls.Add(Me.Label38)
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 584)
+        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 701)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(848, 440)
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(848, 378)
         Me.grpDiscordEvent.TabIndex = 1
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Step 2: Discord Event (if applicable)"
@@ -1735,7 +1735,7 @@ Partial Class Main
         Me.grpGroupEventPost.Controls.Add(Me.Label24)
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 572)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 689)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         Me.grpGroupEventPost.Text = "Step 1: Group Event Post"
