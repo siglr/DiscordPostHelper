@@ -6,5 +6,9 @@ You can download the .NET Framework here: https://dotnet.microsoft.com/en-us/dow
 
 To download the latest release, click here: https://github.com/siglr/DiscordPostHelper/releases/latest
 
-For support and more information about the tool, you can visit this Discord Server: https://discord.gg/fUnUg2E58N
+For support and more information about the tool, you can visit this Discord Server.
 There you will also find links to tutorial videos explaining how to use it.
+
+Tutorial/Videos: https://discord.gg/HbKMjjbW
+Questions/Support: https://discord.gg/fUnUg2E58N
+
