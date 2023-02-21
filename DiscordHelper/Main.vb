@@ -659,7 +659,7 @@ Public Class Main
 
 #End Region
 
-#Region "Flight Plan tab subs & functions"
+#Region "Flight Plan tab Subs & Functions"
 
     Private Sub BuildFPResults()
 
