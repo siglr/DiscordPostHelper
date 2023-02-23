@@ -1,11 +1,8 @@
 ﻿Imports System.Xml
 Imports System.IO
 Imports System.Xml.Serialization
-Imports System.Net
 Imports System.Text
-Imports System.Web
 Imports System.Threading
-Imports System.Security.Cryptography
 Imports System.Web.UI.WebControls
 Imports System.Globalization
 
@@ -28,6 +25,7 @@ Public Class Main
     Private _GuideCurrentStep As Integer = 0
     Private _FlightTotalDistanceInKm As Double = 0
     Private _TaskTotalDistanceInKm As Double = 0
+    Private _CurrentSessionFile As String = String.Empty
 
 #End Region
 
@@ -48,11 +46,14 @@ Public Class Main
             Me.Height = Screen.PrimaryScreen.Bounds.Height - 20
         End If
 
-        'Add version to form title
-        Me.Text = $"{Me.Text} {Me.GetType.Assembly.GetName.Version}"
-
-        'Load previous session data
-        LoadSessionData(Application.StartupPath & "\LastSession.dph")
+        If My.Application.CommandLineArgs.Count > 0 Then
+            ' Open the file passed as an argument
+            _CurrentSessionFile = My.Application.CommandLineArgs(0)
+        Else
+            'Load previous session data
+            _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
+        End If
+        LoadSessionData(_CurrentSessionFile)
 
     End Sub
 
@@ -1882,6 +1883,9 @@ Public Class Main
             serializer.Serialize(stream, allCurrentData)
         End Using
 
+        _CurrentSessionFile = filename
+        Me.Text = $"Discord Post Helper v{Me.GetType.Assembly.GetName.Version} - {filename}"
+
     End Sub
 
     Private Sub LoadSessionData(filename As String)
@@ -1894,6 +1898,9 @@ Public Class Main
             Using stream As New FileStream(filename, FileMode.Open)
                 allCurrentData = CType(serializer.Deserialize(stream), AllData)
             End Using
+
+            'Add version to form title
+            Me.Text = $"Discord Post Helper v{Me.GetType.Assembly.GetName.Version} - {filename}"
 
             'Set all fields
             With allCurrentData
