@@ -272,7 +272,7 @@ Public Class SupportingFeatures
 
         End Select
 
-        Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}:{formatAbbr}>"
+        Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}{formatAbbr}>"
 
 
     End Function
