@@ -262,17 +262,17 @@ Public Class SupportingFeatures
 
         Select Case format
             Case DiscordTimeStampFormat.TimeOnlyWithoutSeconds
-                formatAbbr = ":t>"
+                formatAbbr = "t"
             Case DiscordTimeStampFormat.FullDateTimeWithDayOfWeek
-                formatAbbr = ":F>"
+                formatAbbr = "F"
             Case DiscordTimeStampFormat.LongDateTime
-                formatAbbr = ":f>"
+                formatAbbr = "f"
             Case DiscordTimeStampFormat.CountDown
-                formatAbbr = ":constEarthRadius>"
+                formatAbbr = "constEarthRadius"
 
         End Select
 
-        Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}{formatAbbr}>"
+        Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}:{formatAbbr}>"
 
 
     End Function
