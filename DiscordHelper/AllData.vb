@@ -174,6 +174,21 @@ Public Class AllData
     <XmlElement("IncludeGGServerInvite")>
     Public Property IncludeGGServerInvite As Boolean
 
+    <XmlElement("MapImageSelected")>
+    Public Property MapImageSelected As String
+
+    <XmlElement("MapImageHorizontalScrollValue")>
+    Public Property MapImageHorizontalScrollValue As String
+
+    <XmlElement("MapImageVerticalScrollValue")>
+    Public Property MapImageVerticalScrollValue As String
+
+    <XmlElement("MapImageWidth")>
+    Public Property MapImageWidth As Integer
+
+    <XmlElement("MapImageHeight")>
+    Public Property MapImageHeight As Integer
+
     Public Sub New()
 
     End Sub
