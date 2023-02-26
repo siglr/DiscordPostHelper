@@ -13,6 +13,8 @@ Public Class Main
     Private Const DiscordLimit As Integer = 2000
     Private Const LimitMsg As String = "Caution! Discord Characters Limit: "
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+    Private Const DefaultMapImageWidth As Integer = 1647
+    Private Const DefaultMapImageHeight As Integer = 639
 
     Private ReadOnly _SF As New SupportingFeatures
     Private ReadOnly _CurrentDistanceUnit As Integer
@@ -53,6 +55,7 @@ Public Class Main
             'Load previous session data
             _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
         End If
+        Me.Refresh()
         LoadSessionData(_CurrentSessionFile)
 
     End Sub
@@ -147,6 +150,13 @@ Public Class Main
         txtGroupEventPostURL.Text = String.Empty
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
+        imgMap.Image = Nothing
+        imgMap.Width = DefaultMapImageWidth
+        imgMap.Height = DefaultMapImageHeight
+        cboBriefingMap.Items.Clear()
+        txtBriefing.Text = String.Empty
+        txtBriefingDescription.Text = String.Empty
+        txtBriefingRestrictions.Text = String.Empty
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -174,8 +184,15 @@ Public Class Main
         ResetForm()
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherSummary.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtDepartureICAO.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalICAO.Enter, txtArrivalExtraInfo.Enter, txtWeatherWinds.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtAltRestrictions.Enter, txtTaskFlightPlanURL.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtDepartureICAO.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalICAO.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
         EnteringTextBox(sender)
+    End Sub
+
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        SetBriefingControlsVisiblity()
+        If TabControl1.SelectedTab.Name = "tabBriefing" Then
+            GenerateBriefing()
+        End If
     End Sub
 
 #End Region
@@ -419,7 +436,7 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub CopyToEventFields(sender As Object, e As EventArgs) Handles txtTitle.TextChanged, txtShortDescription.TextChanged, txtDurationMin.TextChanged, txtDurationMax.TextChanged, txtDurationExtraInfo.TextChanged, txtCredits.TextChanged, txtSimDateTimeExtraInfo.TextChanged
+    Private Sub CopyToEventFields(sender As Object, e As EventArgs) Handles txtTitle.TextChanged, txtSimDateTimeExtraInfo.TextChanged, txtShortDescription.TextChanged, txtDurationMin.TextChanged, txtDurationMax.TextChanged, txtDurationExtraInfo.TextChanged, txtCredits.TextChanged
 
         If sender Is txtTitle Then
             txtEventTitle.Text = txtTitle.Text
@@ -587,6 +604,8 @@ Public Class Main
             Next
         End If
 
+        LoadPossibleImagesInMapDropdown()
+
     End Sub
 
     Private Sub btnRemoveExtraFile_Click(sender As Object, e As EventArgs) Handles btnRemoveExtraFile.Click
@@ -594,6 +613,9 @@ Public Class Main
         For i As Integer = lstAllFiles.SelectedIndices.Count - 1 To 0 Step -1
             lstAllFiles.Items.RemoveAt(lstAllFiles.SelectedIndices(i))
         Next
+
+        LoadPossibleImagesInMapDropdown()
+
     End Sub
 
     Private Sub btnExtraFileUp_Click(sender As Object, e As EventArgs) Handles btnExtraFileUp.Click
@@ -978,7 +1000,7 @@ Public Class Main
         BuildEventDatesTimes()
     End Sub
 
-    Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles cboVoiceChannel.Leave, cboMSFSServer.Leave, cboEligibleAward.Leave, chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboMSFSServer.SelectedIndexChanged, cboEligibleAward.SelectedIndexChanged
+    Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboVoiceChannel.Leave, cboMSFSServer.SelectedIndexChanged, cboMSFSServer.Leave, cboEligibleAward.SelectedIndexChanged, cboEligibleAward.Leave
         BuildGroupFlightPost()
     End Sub
 
@@ -1262,13 +1284,227 @@ Public Class Main
 
 #End Region
 
+#Region "Briefing tab"
+
+#Region "Briefing tab event handlers"
+    Private Sub tabBriefingControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabBriefingControl.SelectedIndexChanged
+
+        SetBriefingControlsVisiblity()
+
+    End Sub
+
+    Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
+
+        'Load image
+        imgMap.Image = System.Drawing.Image.FromFile(cboBriefingMap.SelectedItem.ToString)
+
+    End Sub
+
+    Private Sub btnMapZoomIn_Click(sender As Object, e As EventArgs) Handles btnMapZoomIn.Click
+        Dim ratio As Integer = imgMap.Size.Width * 100 / pnlMapImage.Size.Width
+        If ratio <= 200 Then
+            ' Increase the size of the picture box
+            imgMap.Size = New Size(imgMap.Size.Width * 1.1, imgMap.Size.Height * 1.1)
+            imgMap.SizeMode = PictureBoxSizeMode.Zoom
+        End If
+
+    End Sub
+
+    Private Sub btnMapZoomOut_Click(sender As Object, e As EventArgs) Handles btnMapZoomOut.Click
+        Dim ratio As Integer = imgMap.Size.Width * 100 / pnlMapImage.Size.Width
+        If ratio >= 100 Then
+            ' Decrease the size of the picture box
+            imgMap.Size = New Size(imgMap.Size.Width * 0.9, imgMap.Size.Height * 0.9)
+            imgMap.SizeMode = PictureBoxSizeMode.Zoom
+        End If
+
+    End Sub
+
+
+#End Region
+
+    Private Sub SetBriefingControlsVisiblity()
+
+        If TabControl1.SelectedTab.Name = "tabBriefing" Then
+            If tabBriefingControl.SelectedTab.Name = "tabBrief2" Then
+                cboBriefingMap.Visible = True
+                btnMapZoomIn.Visible = True
+                btnMapZoomOut.Visible = True
+            Else
+                cboBriefingMap.Visible = False
+                btnMapZoomIn.Visible = False
+                btnMapZoomOut.Visible = False
+            End If
+        Else
+            cboBriefingMap.Visible = False
+            btnMapZoomIn.Visible = False
+            btnMapZoomOut.Visible = False
+        End If
+
+    End Sub
+
+    Private Sub LoadPossibleImagesInMapDropdown(Optional mapToSelect As String = "")
+
+        Dim currentImage As String = String.Empty
+
+        'Load up the possible images in the dropdown list
+        If mapToSelect = "" Then
+            currentImage = cboBriefingMap.Text
+        Else
+            currentImage = mapToSelect
+        End If
+        cboBriefingMap.Items.Clear()
+        For Each item As String In lstAllFiles.Items
+            Dim fileExtension As String = Path.GetExtension(item)
+            If fileExtension = ".png" OrElse fileExtension = ".jpg" OrElse fileExtension = ".bmp" Then
+                cboBriefingMap.Items.Add(item)
+                If item = currentImage Then
+                    cboBriefingMap.SelectedItem = item
+                End If
+            End If
+        Next
+        If cboBriefingMap.SelectedIndex = -1 Then
+            imgMap.Image = Nothing
+            imgMap.Width = DefaultMapImageWidth
+            imgMap.Height = DefaultMapImageHeight
+        End If
+
+    End Sub
+    Private Sub GenerateBriefing()
+
+        LoadPossibleImagesInMapDropdown()
+
+        Dim dateFormat As String
+        If chkIncludeYear.Checked Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+
+        Dim sb As New StringBuilder
+        sb.Append("{\rtf1\ansi")
+
+        'MSFS Server {}
+        sb.Append($"The MSFS Server is \b {cboMSFSServer.Text}\b0\line ")
+
+        'Local MSFS date And time when we click Fly (sync Or Not)
+        sb.Append($"MSFS Local date & time is \b {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}\b0\line ")
+
+        'Flight plan
+        sb.Append($"The flight plan to load is \b {Path.GetFileName(txtFlightPlanFile.Text)}\b0\line ")
+
+        sb.Append("\line ")
+
+        'Departure airfield And runway
+        sb.Append($"We will depart from \b {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}\b0\line ")
+
+        'Arrival airfield And expected runway
+        sb.Append($"We will land at \b {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}\b0\line ")
+
+        'Type of soaring
+        Dim soaringType As String = GetSoaringTypesSelected()
+        If soaringType.Trim <> String.Empty OrElse txtSoaringTypeExtraInfo.Text.Trim <> String.Empty Then
+            sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}\b0\line ")
+        End If
+
+        'Task distance And total distance
+        sb.Append($"Distances are \b {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}\b0\line ")
+
+        'Approx. duration
+        sb.Append($"Approx. duration should be \b {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}\b0\line ")
+
+        'Recommended gliders
+        If cboRecommendedGliders.Text.Trim <> String.Empty Then
+            sb.Append($"Recommended gliders: \b {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}\b0\line ")
+        End If
+
+        'Difficulty rating
+        If cboDifficulty.SelectedIndex > 0 OrElse txtDifficultyExtraInfo.Text <> String.Empty Then
+            sb.Append($"The difficulty is rated as \b {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text, True)}\b0\line ")
+        End If
+
+        sb.Append("\line ")
+
+        If _WeatherDetails IsNot Nothing Then
+            'Weather info (temperature, baro pressure, precipitations)
+            sb.Append($"The weather profile to load is \b {_WeatherDetails.PresetName}\b0\line ")
+            If txtWeatherSummary.Text <> String.Empty Then
+                sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}\b0\line ")
+            End If
+            sb.Append($"The elevation measurement used is \b {_WeatherDetails.AltitudeMeasurement}\b0\line ")
+            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure}\b0\line ")
+            sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature}\b0\line ")
+            sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
+            If _WeatherDetails.HasPrecipitations Then
+                sb.Append($"Precipitations: \b {_WeatherDetails.Precipitations}\b0\line ")
+            End If
+
+            sb.Append("\line ")
+
+            'Winds
+            sb.Append($"\b Wind Layers\b0\line ")
+            Dim lines As String() = _WeatherDetails.WindLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
+            For Each line In lines
+                sb.Append($"{line}\line ")
+            Next
+
+            sb.Append(" \line ")
+
+            'Clouds
+            sb.Append($"\b Cloud Layers\b0\line ")
+            lines = _WeatherDetails.CloudLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
+            For Each line In lines
+                sb.Append($"{line}\line ")
+            Next
+
+        End If
+        sb.Append("}")
+        txtBriefing.Rtf = sb.ToString()
+
+        sb.Clear()
+
+        'Description of flight with map
+        If txtFullDescriptionResults.Text <> String.Empty Then
+            sb.AppendLine(txtFullDescriptionResults.Text.Replace("**", ""))
+        End If
+        txtBriefingDescription.Text = sb.ToString()
+        FormatFirstLine(txtBriefingDescription)
+
+        sb.Clear()
+
+        'Altitude restrictions 
+        sb.AppendLine(txtAltRestrictions.Text.Replace("**", ""))
+        txtBriefingRestrictions.Text = sb.ToString()
+        FormatFirstLine(txtBriefingRestrictions)
+
+    End Sub
+
+    Private Sub FormatFirstLine(rtb As RichTextBox)
+        Dim lineBreakIndex As Integer = rtb.Text.IndexOf(vbLf)
+
+        If lineBreakIndex > -1 Then
+            ' Select the first line
+            rtb.SelectionStart = 0
+            rtb.SelectionLength = lineBreakIndex
+
+            ' Change the font to bold
+            rtb.SelectionFont = New Font(rtb.Font, FontStyle.Bold)
+
+            'Replace **
+
+        End If
+
+    End Sub
+
+#End Region
+
 #Region "Guide/Wizard"
 
 #Region "Event Handlers"
 
     Private Sub btnGuideMe_Click(sender As Object, e As EventArgs) Handles btnGuideMe.Click
 
-        If MessageBox.Show(Me, "Do you want to start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If MessageBox.Show(Me, "Do you want To start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             ResetForm()
         End If
 
@@ -1294,7 +1530,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown, TabControl1.KeyDown
+    Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles TabControl1.KeyDown, MyBase.KeyDown
         If e.KeyCode = Keys.F1 Then
             Try
                 Dim controlTag As Integer = CInt(Me.ActiveControl.Tag)
@@ -1328,27 +1564,27 @@ Public Class Main
             Case 1 'Select flight plan
                 SetGuidePanelToLeft()
                 pnlGuide.Top = -9
-                lblGuideInstructions.Text = "Click the ""Flight Plan"" button and select the flight plan to use with this task."
+                lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
                 SetFocusOnField(btnSelectFlightPlan, fromF1Key)
             Case 2 'Select weather file
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 54
-                lblGuideInstructions.Text = "Click the ""Weather file"" button and select the weather file to use with this task."
+                lblGuideInstructions.Text = "Click the ""Weather file"" button And Select the weather file To use With this task."
                 SetFocusOnField(btnSelectWeatherFile, fromF1Key)
             Case 3 'Title
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 95
-                lblGuideInstructions.Text = "This is the title that was read from the flight plan. Is it ok? If not, change it and use the checkbox to prevent it from being overwritten."
+                lblGuideInstructions.Text = "This Is the title that was read from the flight plan. Is it ok? If Not, change it And use the checkbox to prevent it from being overwritten."
                 SetFocusOnField(txtTitle, fromF1Key)
             Case 4 'Sim date & time
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 139
-                lblGuideInstructions.Text = "Specify the appropriate local date and time to set inside MSFS. You can also add extra information in the text box if you want."
+                lblGuideInstructions.Text = "Specify the appropriate local date And time to set inside MSFS. You can also add extra information in the text box if you want."
                 SetFocusOnField(dtSimDate, fromF1Key)
             Case 5 'Main area
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 194
-                lblGuideInstructions.Text = "Do you want to specify the main area and/or point of interest for this task? It's only optionnal."
+                lblGuideInstructions.Text = "Do you want to specify the main area And/Or point of interest for this task? It's only optionnal."
                 SetFocusOnField(txtMainArea, fromF1Key)
             Case 6 'Departure
                 SetGuidePanelToLeft()
@@ -1746,6 +1982,7 @@ Public Class Main
         If result = DialogResult.OK Then
             ResetForm()
             LoadSessionData(OpenFileDialog1.FileName)
+            GenerateBriefing()
         End If
 
     End Sub
@@ -1876,6 +2113,12 @@ Public Class Main
             .URLFlightPlanPost = txtTaskFlightPlanURL.Text
             .URLGroupEventPost = txtGroupEventPostURL.Text
             .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
+            .MapImageSelected = cboBriefingMap.Text
+            .MapImageHorizontalScrollValue = pnlMapImage.HorizontalScroll.Value
+            .MapImageVerticalScrollValue = pnlMapImage.VerticalScroll.Value
+            .MapImageWidth = imgMap.Width
+            .MapImageHeight = imgMap.Height
+
         End With
 
         Dim serializer As New XmlSerializer(GetType(AllData))
@@ -1963,8 +2206,9 @@ Public Class Main
                             'Should expect the file to be in the same folder as the .dph file
                             .ExtraFiles(i) = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.ExtraFiles(i))}"
                         End If
-
-                        lstAllFiles.Items.Add(.ExtraFiles(i))
+                        If File.Exists(.ExtraFiles(i)) Then
+                            lstAllFiles.Items.Add(.ExtraFiles(i))
+                        End If
                     Next
                 End If
                 cboGroupOrClubName.Text = .GroupClub
@@ -1988,8 +2232,19 @@ Public Class Main
                 txtTaskFlightPlanURL.Text = .URLFlightPlanPost
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
-
+                LoadPossibleImagesInMapDropdown(.MapImageSelected)
+                imgMap.Width = .MapImageWidth
+                imgMap.Height = .MapImageHeight
+                pnlMapImage.HorizontalScroll.Value = .MapImageHorizontalScrollValue
+                pnlMapImage.VerticalScroll.Value = .MapImageVerticalScrollValue
             End With
+
+            If imgMap.Width < DefaultMapImageWidth Then
+                imgMap.Width = DefaultMapImageWidth
+            End If
+            If imgMap.Height < DefaultMapImageHeight Then
+                imgMap.Height = DefaultMapImageHeight
+            End If
 
             BuildFPResults()
             BuildWeatherInfoResults()
@@ -1999,6 +2254,8 @@ Public Class Main
         End If
 
     End Sub
+
+
 
 
 #End Region
