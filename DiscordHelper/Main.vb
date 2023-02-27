@@ -596,10 +596,18 @@ Public Class Main
                 'Check if one of the files is selected flight plan or weather file to exclude them
                 If OpenFileDialog1.FileNames(i) <> txtFlightPlanFile.Text And OpenFileDialog1.FileNames(i) <> txtWeatherFile.Text Then
                     If lstAllFiles.Items.Count = 8 Then
-                        MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit For
                     End If
-                    lstAllFiles.Items.Add(OpenFileDialog1.FileNames(i))
+                    If _SF.ExtraFileExtensionIsValid(OpenFileDialog1.FileNames(i)) Then
+                        If Not lstAllFiles.Items.Contains(OpenFileDialog1.FileNames(i)) Then
+                            lstAllFiles.Items.Add(OpenFileDialog1.FileNames(i))
+                        Else
+                            MessageBox.Show(Me, "This file already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+                    Else
+                        MessageBox.Show(Me, "This file type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
                 End If
             Next
         End If
@@ -630,38 +638,6 @@ Public Class Main
         MoveExtraFilesSelectedItems(1)
         btnExtraFileDown.Focus()
 
-    End Sub
-
-    Private Sub MoveExtraFilesSelectedItems(ByVal direction As Integer)
-        Dim selectedIndices As List(Of Integer) = lstAllFiles.SelectedIndices.Cast(Of Integer).ToList()
-        If selectedIndices.Count = 0 Then
-            Return
-        End If
-
-        Dim minIndex As Integer = selectedIndices.Min()
-        Dim maxIndex As Integer = selectedIndices.Max()
-
-        If direction = -1 AndAlso minIndex > 0 Then
-            For Each index As Integer In selectedIndices
-                Dim item As Object = lstAllFiles.Items(index)
-                lstAllFiles.Items.RemoveAt(index)
-                lstAllFiles.Items.Insert(index - 1, item)
-            Next
-            lstAllFiles.ClearSelected()
-            For Each index As Integer In selectedIndices
-                lstAllFiles.SetSelected(index - 1, True)
-            Next
-        ElseIf direction = 1 AndAlso maxIndex < lstAllFiles.Items.Count - 1 Then
-            For Each index As Integer In selectedIndices.OrderByDescending(Function(i) i)
-                Dim item As Object = lstAllFiles.Items(index)
-                lstAllFiles.Items.RemoveAt(index)
-                lstAllFiles.Items.Insert(index + 1, item)
-            Next
-            lstAllFiles.ClearSelected()
-            For Each index As Integer In selectedIndices
-                lstAllFiles.SetSelected(index + 1, True)
-            Next
-        End If
     End Sub
 
     Private Sub lstAllFiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAllFiles.SelectedIndexChanged
@@ -865,6 +841,39 @@ Public Class Main
         End If
 
     End Sub
+
+    Private Sub MoveExtraFilesSelectedItems(ByVal direction As Integer)
+        Dim selectedIndices As List(Of Integer) = lstAllFiles.SelectedIndices.Cast(Of Integer).ToList()
+        If selectedIndices.Count = 0 Then
+            Return
+        End If
+
+        Dim minIndex As Integer = selectedIndices.Min()
+        Dim maxIndex As Integer = selectedIndices.Max()
+
+        If direction = -1 AndAlso minIndex > 0 Then
+            For Each index As Integer In selectedIndices
+                Dim item As Object = lstAllFiles.Items(index)
+                lstAllFiles.Items.RemoveAt(index)
+                lstAllFiles.Items.Insert(index - 1, item)
+            Next
+            lstAllFiles.ClearSelected()
+            For Each index As Integer In selectedIndices
+                lstAllFiles.SetSelected(index - 1, True)
+            Next
+        ElseIf direction = 1 AndAlso maxIndex < lstAllFiles.Items.Count - 1 Then
+            For Each index As Integer In selectedIndices.OrderByDescending(Function(i) i)
+                Dim item As Object = lstAllFiles.Items(index)
+                lstAllFiles.Items.RemoveAt(index)
+                lstAllFiles.Items.Insert(index + 1, item)
+            Next
+            lstAllFiles.ClearSelected()
+            For Each index As Integer In selectedIndices
+                lstAllFiles.SetSelected(index + 1, True)
+            Next
+        End If
+    End Sub
+
 
 #Region "Weather sections"
     Private Sub BuildWeatherInfoResults()
@@ -2201,13 +2210,16 @@ Public Class Main
                 If .ExtraFiles.Count > 0 Then
                     For i As Integer = 0 To .ExtraFiles.Count - 1
 
-                        If File.Exists(.ExtraFiles(i)) Then
-                        Else
+                        If Not File.Exists(.ExtraFiles(i)) Then
                             'Should expect the file to be in the same folder as the .dph file
                             .ExtraFiles(i) = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.ExtraFiles(i))}"
                         End If
-                        If File.Exists(.ExtraFiles(i)) Then
+                        If File.Exists(.ExtraFiles(i)) _
+                           AndAlso _SF.ExtraFileExtensionIsValid(OpenFileDialog1.FileNames(i)) _
+                           AndAlso Not lstAllFiles.Items.Contains(OpenFileDialog1.FileNames(i)) Then
+
                             lstAllFiles.Items.Add(.ExtraFiles(i))
+
                         End If
                     Next
                 End If
