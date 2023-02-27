@@ -347,4 +347,26 @@ Public Class SupportingFeatures
         Return BitConverter.ToString(randomBytes).Replace("-", "")
     End Function
 
+    Public Function ExtraFileExtensionIsValid(filename As String) As Boolean
+
+        'Check file extension
+        Dim fileExtension As String = Path.GetExtension(filename)
+
+        fileExtension = fileExtension.Replace(".", "")
+
+        If String.IsNullOrEmpty(fileExtension) Then
+            Return True
+        End If
+
+        Dim invalidExtensions As String() = {"exe", "zip", "xslm", "docm", "pptm", "msi", "vbs", "js", "bat", "cmd", "reg", "ps1", "com", "dll"}
+        For Each extension As String In invalidExtensions
+            If fileExtension.Equals(extension, StringComparison.OrdinalIgnoreCase) Then
+                Return False
+            End If
+        Next
+
+        Return True
+
+    End Function
+
 End Class
