@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Discord Post Helper")>
-<Assembly: AssemblyDescription("Tool to help in the creation of MSFS Glider task and event posts in Discord")>
-<Assembly: AssemblyCompany("Services Informatiques GLR Inc.")>
-<Assembly: AssemblyProduct("SIGLR Soaring Tools - Discord Post Helper")>
+<Assembly: AssemblyTitle("Discord Post Helper - Common Library")>
+<Assembly: AssemblyDescription("Library containing code used by both applications")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("SIGLR Soaring Tools")>
 <Assembly: AssemblyCopyright("Copyright ©  2023")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("9c725e1e-4877-430b-91e0-e351ac94eb25")>
+<Assembly: Guid("321b42c0-d7aa-4cf3-ab79-769f574698d9")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("23.02.27.1")>
+<Assembly: AssemblyVersion("23.2.27.1")>
 <Assembly: AssemblyFileVersion("1.0.0.0")>

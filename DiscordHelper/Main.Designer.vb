@@ -344,7 +344,7 @@ Partial Class Main
         'pnlArrow
         '
         Me.pnlArrow.BackColor = System.Drawing.Color.Gray
-        Me.pnlArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.right_arrow
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         Me.pnlArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.pnlArrow.Location = New System.Drawing.Point(667, 0)
         Me.pnlArrow.Name = "pnlArrow"
@@ -1455,7 +1455,7 @@ Partial Class Main
         'pnlEventArrow
         '
         Me.pnlEventArrow.BackColor = System.Drawing.Color.Gray
-        Me.pnlEventArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.right_arrow
+        Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         Me.pnlEventArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.pnlEventArrow.Location = New System.Drawing.Point(667, 0)
         Me.pnlEventArrow.Name = "pnlEventArrow"

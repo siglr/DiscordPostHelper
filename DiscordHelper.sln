@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DiscordHelper", "DiscordHelper\DiscordHelper.vbproj", "{355ECA5B-3D03-44CB-B117-F8C3AAC40F17}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CommonLibrary", "CommonLibrary\CommonLibrary.vbproj", "{8F737F27-41DD-492B-B023-D43501F38355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{355ECA5B-3D03-44CB-B117-F8C3AAC40F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{355ECA5B-3D03-44CB-B117-F8C3AAC40F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{355ECA5B-3D03-44CB-B117-F8C3AAC40F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F737F27-41DD-492B-B023-D43501F38355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F737F27-41DD-492B-B023-D43501F38355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F737F27-41DD-492B-B023-D43501F38355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F737F27-41DD-492B-B023-D43501F38355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

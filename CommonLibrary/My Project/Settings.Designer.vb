@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.SIGLR.SoaringTools.DiscordPostHelper.My.MySettings
+        Friend ReadOnly Property Settings() As Global.SIGLR.SoaringTools.CommonLibrary.My.MySettings
             Get
-                Return Global.SIGLR.SoaringTools.DiscordPostHelper.My.MySettings.Default
+                Return Global.SIGLR.SoaringTools.CommonLibrary.My.MySettings.Default
             End Get
         End Property
     End Module
