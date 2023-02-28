@@ -5,6 +5,7 @@ Imports System.Text
 Imports System.Threading
 Imports System.Web.UI.WebControls
 Imports System.Globalization
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class Main
 
@@ -1657,7 +1658,7 @@ Public Class Main
                 SetFocusOnField(txtWeatherSummary, fromF1Key)
             Case 18 'Extra files
                 SetGuidePanelToLeft()
-                Me.pnlArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.left_arrow
+                Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
                 pnlGuide.Top = 1006
                 lblGuideInstructions.Text = "Optionally, use this section to add and remove any extra files you want included with the task post. Maps, XCSoar track files, other images, etc."
                 SetFocusOnField(btnAddExtraFile, fromF1Key)
@@ -1883,7 +1884,7 @@ Public Class Main
 
     Private Sub SetGuidePanelToLeft()
         pnlWizardEvent.Visible = False
-        Me.pnlArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.left_arrow
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
         pnlGuide.Left = 737
         pnlGuide.Visible = True
         pnlArrow.Left = -6
@@ -1894,7 +1895,7 @@ Public Class Main
 
     Private Sub SetGuidePanelToTop()
         pnlWizardEvent.Visible = False
-        Me.pnlArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.up_arrow
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
         pnlGuide.Top = 0
         pnlGuide.Visible = True
         pnlArrow.Left = -6
@@ -1905,7 +1906,7 @@ Public Class Main
 
     Private Sub SetGuidePanelToRight()
         pnlWizardEvent.Visible = False
-        Me.pnlArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.right_arrow
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         pnlGuide.Left = 737
         pnlGuide.Visible = True
         pnlArrow.Left = 667
@@ -1916,7 +1917,7 @@ Public Class Main
 
     Private Sub SetEventGuidePanelToLeft()
         pnlGuide.Visible = False
-        Me.pnlEventArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.left_arrow
+        Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
         pnlWizardEvent.Left = 852
         pnlWizardEvent.Visible = True
         pnlEventArrow.Left = -6
@@ -1927,7 +1928,7 @@ Public Class Main
 
     Private Sub SetEventGuidePanelToRight()
         pnlGuide.Visible = False
-        Me.pnlEventArrow.BackgroundImage = Global.DiscordHelper.My.Resources.Resources.right_arrow
+        Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         pnlWizardEvent.Left = 740
         pnlWizardEvent.Visible = True
         pnlEventArrow.Left = 667

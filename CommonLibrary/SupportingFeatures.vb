@@ -3,6 +3,7 @@ Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Web
+Imports System.Windows.Forms
 Imports System.Xml
 
 Public Class SupportingFeatures
@@ -16,10 +17,12 @@ Public Class SupportingFeatures
     Public ReadOnly AirportsICAO As New Dictionary(Of String, String)
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
 
-    Public Sub New()
+    Public Sub New(Optional DiscordPostHelper As Boolean = True)
 
-        LoadAirportsICAOFile()
-        LoadDefaultClubEvents()
+        If Not DiscordPostHelper Then
+            LoadAirportsICAOFile()
+            LoadDefaultClubEvents()
+        End If
 
     End Sub
 
@@ -47,7 +50,7 @@ Public Class SupportingFeatures
                 Try
                     currentRow = MyReader.ReadFields()
                     If currentRow IsNot Nothing Then
-                        AirportsICAO.Add(currentRow(1), currentRow(3))
+                        AirportsICAO.Add(currentRow(0), currentRow(1))
                     End If
                 Catch ex As FileIO.MalformedLineException
                     nbrErrors += 1

@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.DiscordHelper.Main
+            Me.MainForm = Global.SIGLR.SoaringTools.DiscordPostHelper.Main
         End Sub
     End Class
 End Namespace
