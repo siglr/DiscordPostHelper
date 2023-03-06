@@ -14,14 +14,12 @@ Public Class SupportingFeatures
         CountDown = 3
     End Enum
 
-    Public ReadOnly AirportsICAO As New Dictionary(Of String, String)
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
 
     Public Sub New(Optional DiscordPostHelper As Boolean = True)
 
         If Not DiscordPostHelper Then
-            LoadAirportsICAOFile()
             LoadDefaultClubEvents()
         End If
 
@@ -34,30 +32,6 @@ Public Class SupportingFeatures
         DefaultKnownClubEvents.Add("SSC SATURDAY", New PresetEvent("SSC Saturday", "West Europe", "SSC Saturday", DayOfWeek.Saturday, DateTime.Parse("5:45 PM"), 15, 0, 30, True))
         DefaultKnownClubEvents.Add("AUS TUESDAYS", New PresetEvent("Aus Tuesdays", "Southeast Asia", "Flight 01", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), 15, 0, 15, True))
         'DefaultKnownClubEvents.Add("DTS", New PresetEvent("DTS", "West USA", "Thermal Smashing", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), True))
-
-    End Sub
-
-    Private Sub LoadAirportsICAOFile()
-
-        Dim nbrErrors As Integer = 0
-
-        Using MyReader As New FileIO.TextFieldParser($"{Application.StartupPath}\msfs_airports.csv")
-            MyReader.TextFieldType = FileIO.FieldType.Delimited
-            MyReader.SetDelimiters(",")
-
-            Dim currentRow As String()
-            currentRow = MyReader.ReadFields()
-            While Not MyReader.EndOfData
-                Try
-                    currentRow = MyReader.ReadFields()
-                    If currentRow IsNot Nothing Then
-                        AirportsICAO.Add(currentRow(0), currentRow(1))
-                    End If
-                Catch ex As FileIO.MalformedLineException
-                    nbrErrors += 1
-                End Try
-            End While
-        End Using
 
     End Sub
 

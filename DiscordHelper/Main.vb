@@ -222,10 +222,6 @@ Public Class Main
 
     Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeThermal.CheckedChanged, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
 
-        If sender Is txtDepartureICAO Or sender Is txtArrivalICAO Then
-            AirportICAOChanged(sender)
-        End If
-
         BuildFPResults()
 
         'Some fields need to be copied to the Event tab
@@ -788,9 +784,13 @@ Public Class Main
         End If
 
         txtDepartureICAO.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DepartureID").Item(0).FirstChild.Value
-        AirportICAOChanged(txtDepartureICAO)
+        If Not chkDepartureLock.Checked Then
+            txtDepName.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DepartureName").Item(0).FirstChild.Value
+        End If
         txtArrivalICAO.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DestinationID").Item(0).FirstChild.Value
-        AirportICAOChanged(txtArrivalICAO)
+        If Not chkArrivalLock.Checked Then
+            txtArrivalName.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DestinationName").Item(0).FirstChild.Value
+        End If
 
         txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm)
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
@@ -798,23 +798,6 @@ Public Class Main
 
         BuildFPResults()
         BuildGroupFlightPost()
-
-    End Sub
-
-    Private Sub AirportICAOChanged(sender As Windows.Forms.Control)
-
-        Select Case sender.Name
-            Case "txtDepartureICAO"
-                If _SF.AirportsICAO.ContainsKey(txtDepartureICAO.Text) And Not chkDepartureLock.Checked Then
-                    txtDepName.Text = _SF.AirportsICAO(txtDepartureICAO.Text)
-                End If
-            Case "txtArrivalICAO"
-                If _SF.AirportsICAO.ContainsKey(txtArrivalICAO.Text) And Not chkArrivalLock.Checked Then
-                    txtArrivalName.Text = _SF.AirportsICAO(txtArrivalICAO.Text)
-                End If
-        End Select
-
-        BuildFPResults()
 
     End Sub
 
