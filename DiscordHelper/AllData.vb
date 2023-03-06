@@ -102,6 +102,9 @@ Public Class AllData
     <XmlElement("LongDescription")>
     Public Property LongDescription As String
 
+    <XmlElement("AddWPCoordinates")>
+    Public Property AddWPCoordinates As Boolean
+
     <XmlElement("WeatherSummaryOnly")>
     Public Property WeatherSummaryOnly As Boolean
 

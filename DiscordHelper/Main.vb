@@ -131,6 +131,7 @@ Public Class Main
         txtShortDescription.Text = String.Empty
         txtCredits.Text = "All credits to @UserName for this track."
         txtLongDescription.Text = String.Empty
+        chkAddWPCoords.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
@@ -219,7 +220,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeThermal.CheckedChanged, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged
+    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeThermal.CheckedChanged, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
 
         If sender Is txtDepartureICAO Or sender Is txtArrivalICAO Then
             AirportICAOChanged(sender)
@@ -694,6 +695,16 @@ Public Class Main
 
         If txtLongDescription.Text.Trim.Length > 0 Then
             txtFullDescriptionResults.Text = $"**Full Description**{Environment.NewLine}{txtLongDescription.Text.Trim}"
+        Else
+            txtFullDescriptionResults.Text = String.Empty
+        End If
+
+        If chkAddWPCoords.Checked Then
+            'Add waypoints information to the description
+            If txtLongDescription.Text.Trim.Length > 0 Then
+                txtFullDescriptionResults.AppendText($"{Environment.NewLine}{Environment.NewLine}")
+            End If
+            txtFullDescriptionResults.AppendText(_SF.GetAllWPCoordinates())
         End If
 
     End Sub
@@ -1649,7 +1660,7 @@ Public Class Main
             Case 16 'Long description
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 627
-                lblGuideInstructions.Text = "Optionally, you should provide a more detailed description of the task. Context, history, hints, tips, tricks around waypoints, etc."
+                lblGuideInstructions.Text = "Optionally, you should provide a more detailed description of the task. Context, history, hints, tips, tricks around waypoints, etc. Also possible to add waypoint coordinates."
                 SetFocusOnField(txtLongDescription, fromF1Key)
             Case 17 'Weather summary
                 SetGuidePanelToLeft()
@@ -2097,6 +2108,7 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
+            .AddWPCoordinates = chkAddWPCoords.Checked
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
@@ -2206,6 +2218,7 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
+                chkAddWPCoords.Checked = .AddWPCoordinates
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
                 If .ExtraFiles.Count > 0 Then
@@ -2267,9 +2280,6 @@ Public Class Main
         End If
 
     End Sub
-
-
-
 
 #End Region
 

@@ -16,6 +16,7 @@ Public Class SupportingFeatures
 
     Public ReadOnly AirportsICAO As New Dictionary(Of String, String)
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
+    Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
 
     Public Sub New(Optional DiscordPostHelper As Boolean = True)
 
@@ -193,8 +194,10 @@ Public Class SupportingFeatures
 
         pFlightTotalDistanceInKm = 0
         pTaskTotalDistanceInKm = 0
+        AllWaypoints.Clear()
         For i As Integer = 0 To pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Count - 1
             Dim atcWaypoint As New ATCWaypoint(pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Item(i).Attributes(0).Value, pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/WorldPosition").Item(i).FirstChild.Value, i)
+            AllWaypoints.Add(atcWaypoint)
             If atcWaypoint.ContainsRestriction Then
                 strRestrictions = $"{strRestrictions}{Environment.NewLine}{atcWaypoint.Restrictions}"
             End If
@@ -369,6 +372,27 @@ Public Class SupportingFeatures
         Next
 
         Return True
+
+    End Function
+
+    Public Function GetAllWPCoordinates() As String
+
+        Dim sb As New StringBuilder()
+        Dim seq As Integer = 0
+
+        If AllWaypoints.Count > 0 Then
+            sb.AppendLine("**Waypoint Coordinates for Xbox Users**")
+            For Each wp As ATCWaypoint In AllWaypoints
+                seq += 1
+                If seq = 1 Or seq = AllWaypoints.Count Then
+                    'Departure and arrival airports - do not add them
+                Else
+                    sb.AppendLine($"{wp.WPName}: {wp.Latitude:0.000000}, {wp.Longitude:0.000000}")
+                End If
+            Next
+        End If
+
+        Return sb.ToString
 
     End Function
 
