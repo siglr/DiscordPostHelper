@@ -34,6 +34,8 @@ Partial Class Main
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.grbTrackInfo = New System.Windows.Forms.GroupBox()
+        Me.chkAddWPCoords = New System.Windows.Forms.CheckBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.btnExtraFileDown = New System.Windows.Forms.Button()
         Me.btnExtraFileUp = New System.Windows.Forms.Button()
         Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
@@ -353,6 +355,8 @@ Partial Class Main
         '
         'grbTrackInfo
         '
+        Me.grbTrackInfo.Controls.Add(Me.chkAddWPCoords)
+        Me.grbTrackInfo.Controls.Add(Me.Label10)
         Me.grbTrackInfo.Controls.Add(Me.btnExtraFileDown)
         Me.grbTrackInfo.Controls.Add(Me.btnExtraFileUp)
         Me.grbTrackInfo.Controls.Add(Me.btnRemoveExtraFile)
@@ -421,6 +425,27 @@ Partial Class Main
         Me.grbTrackInfo.Size = New System.Drawing.Size(729, 1093)
         Me.grbTrackInfo.TabIndex = 2
         Me.grbTrackInfo.TabStop = False
+        '
+        'chkAddWPCoords
+        '
+        Me.chkAddWPCoords.AutoSize = True
+        Me.chkAddWPCoords.Location = New System.Drawing.Point(166, 644)
+        Me.chkAddWPCoords.Name = "chkAddWPCoords"
+        Me.chkAddWPCoords.Size = New System.Drawing.Size(15, 14)
+        Me.chkAddWPCoords.TabIndex = 63
+        Me.chkAddWPCoords.Tag = "16"
+        Me.ToolTip1.SetToolTip(Me.chkAddWPCoords, "When checked, waypoint coordinates will be added at the end of the description.")
+        Me.chkAddWPCoords.UseVisualStyleBackColor = True
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(4, 608)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(131, 78)
+        Me.Label10.TabIndex = 62
+        Me.Label10.Text = "Add waypoint " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "coordinates" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(for Xbox)"
         '
         'btnExtraFileDown
         '
@@ -2659,4 +2684,6 @@ Partial Class Main
     Friend WithEvents btnMapZoomOut As Button
     Friend WithEvents pnlMapImage As Panel
     Friend WithEvents imgMap As PictureBox
+    Friend WithEvents chkAddWPCoords As CheckBox
+    Friend WithEvents Label10 As Label
 End Class

@@ -1,9 +1,9 @@
 ﻿Public Class ATCWaypoint
 
-    Private ReadOnly _Name As String = String.Empty
     Private ReadOnly _MinAlt As Nullable(Of Integer) = Nothing
     Private ReadOnly _MaxAlt As Nullable(Of Integer) = Nothing
 
+    Public ReadOnly WPName As String = String.Empty
     Public IsTaskStart As Boolean = False
     Public IsTaskEnd As Boolean = False
 
@@ -25,14 +25,14 @@
 
         'Set name of waypoint
         If strFullATCId.Contains("+") OrElse strFullATCId.Contains("|") Then
-            _Name = strFullATCId.Substring(0, strFullATCId.IndexOfAny("+|"))
-            strFullATCId = strFullATCId.Substring(_Name.Length)
-            If _Name.StartsWith("*") Then
-                _Name = _Name.Substring(1, _Name.Length - 1)
+            WPName = strFullATCId.Substring(0, strFullATCId.IndexOfAny("+|"))
+            strFullATCId = strFullATCId.Substring(WPName.Length)
+            If WPName.StartsWith("*") Then
+                WPName = WPName.Substring(1, WPName.Length - 1)
             End If
         Else
             'No encoding
-            _Name = strFullATCId
+            WPName = strFullATCId
         End If
 
         'Remove radius part (when only radius is specified)
@@ -101,7 +101,7 @@
 
             If _MinAlt IsNot Nothing AndAlso _MaxAlt IsNot Nothing Then
                 strRestrictions = String.Format("{0}: Between {1}' and {2}' ({3}m and {4}m)",
-                                                _Name,
+                                                WPName,
                                                 _MinAlt,
                                                 _MaxAlt,
                                                 Int(Conversions.FeetToMeters(_MinAlt)),
@@ -109,13 +109,13 @@
                                                 )
             ElseIf _MinAlt IsNot Nothing Then
                 strRestrictions = String.Format("{0}: MIN {1}' ({2}m)",
-                                                _Name,
+                                                WPName,
                                                 _MinAlt,
                                                 Int(Conversions.FeetToMeters(_MinAlt))
                                                 )
             ElseIf _MaxAlt IsNot Nothing Then
                 strRestrictions = String.Format("{0}: MAX {1}' ({2}m)",
-                                                _Name,
+                                                WPName,
                                                 _MaxAlt,
                                                 Int(Conversions.FeetToMeters(_MaxAlt))
                                                 )
