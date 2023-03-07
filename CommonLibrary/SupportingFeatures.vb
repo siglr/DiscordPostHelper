@@ -361,7 +361,7 @@ Public Class SupportingFeatures
                 If seq = 1 Or seq = AllWaypoints.Count Then
                     'Departure and arrival airports - do not add them
                 Else
-                    sb.AppendLine($"{wp.WPName}: {wp.Latitude:0.000000}, {wp.Longitude:0.000000}")
+                    sb.AppendLine($"{wp.WPName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
                 End If
             Next
         End If
