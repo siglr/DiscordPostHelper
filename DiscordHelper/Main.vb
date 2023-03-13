@@ -52,6 +52,17 @@ Public Class Main
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
             _CurrentSessionFile = My.Application.CommandLineArgs(0)
+            'Check if the selected file is a dph or dphx files
+            If Path.GetExtension(_CurrentSessionFile) = ".dphx" Then
+                'Package - we need to unpack it first
+                OpenFileDialog1.FileName = _SF.UnpackDPHXFile(_CurrentSessionFile)
+
+                If OpenFileDialog1.FileName = String.Empty Then
+                    _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
+                Else
+                    _CurrentSessionFile = OpenFileDialog1.FileName
+                End If
+            End If
         Else
             'Load previous session data
             _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
@@ -1969,26 +1980,7 @@ Public Class Main
 #Region "Event Handlers"
 
     Private Sub btnLoadConfig_Click(sender As Object, e As EventArgs) Handles btnLoadConfig.Click
-
-        If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
-        Else
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
-        End If
-
-        OpenFileDialog1.FileName = String.Empty
-        OpenFileDialog1.Title = "Select session file to load"
-        OpenFileDialog1.Filter = "Discord Post Helper Session|*.dph"
-        OpenFileDialog1.Multiselect = False
-
-        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
-
-        If result = DialogResult.OK Then
-            ResetForm()
-            LoadSessionData(OpenFileDialog1.FileName)
-            GenerateBriefing()
-        End If
-
+        LoadFile()
     End Sub
 
     Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles btnSaveConfig.Click
@@ -2007,51 +1999,97 @@ Public Class Main
 
         If result = DialogResult.OK Then
             SaveSessionData(SaveFileDialog1.FileName)
+            _CurrentSessionFile = SaveFileDialog1.FileName
         End If
 
     End Sub
 
     Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles btnCreateShareablePack.Click
 
-        If txtTitle.Text = String.Empty Then
-            MessageBox.Show(Me, "A title must be specified to package your session.", "No title", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        If _CurrentSessionFile.EndsWith("LastSession.dph") Then
+            MessageBox.Show("You first need to save or load your session!", "Package creation error - cannot create from last session!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
         End If
 
-        'Ask for a new folder where to put all the files
-        FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(Application.StartupPath)
-        FolderBrowserDialog1.Description = $"Select folder where to create your session package called ""{txtTitle.Text}"""
-        FolderBrowserDialog1.ShowNewFolderButton = False
+        SaveFileDialog1.RestoreDirectory = True
+        If txtFlightPlanFile.Text = String.Empty Then
+            SaveFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+        Else
+            SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
+        End If
+        SaveFileDialog1.FileName = txtTitle.Text
+        SaveFileDialog1.Title = "Select package file to save"
+        SaveFileDialog1.Filter = "Discord Post Helper package files (*.dphx)|*.dphx"
 
-        Dim result As DialogResult = FolderBrowserDialog1.ShowDialog()
+        Dim result As DialogResult = SaveFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-            'Check if folder already exists
-            If Directory.Exists($"{FolderBrowserDialog1.SelectedPath}\{txtTitle.Text}") Then
-                If MessageBox.Show(Me, "The folder already exists, do you want to continue?", "Confirm creation of package in existing folder", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
-                    Exit Sub
-                End If
+            'Check if file already exists and delete it
+            If File.Exists(SaveFileDialog1.FileName) Then
+                File.Delete(SaveFileDialog1.FileName)
             End If
-            'Create folder
-            Dim packageTitle As String = txtTitle.Text
-            Dim packageFolder As String = FolderBrowserDialog1.SelectedPath & "\" & packageTitle
-            Directory.CreateDirectory(packageFolder)
-            'Copy all files into that folder
-            File.Copy(txtFlightPlanFile.Text, $"{packageFolder}\{Path.GetFileName(txtFlightPlanFile.Text)}")
-            File.Copy(txtWeatherFile.Text, $"{packageFolder}\{Path.GetFileName(txtWeatherFile.Text)}")
+
+            ' Zip the selected files using the ZipFiles method
+            Dim filesToInclude As New List(Of String)()
+            filesToInclude.Add(_CurrentSessionFile)
+            filesToInclude.Add(txtFlightPlanFile.Text)
+            filesToInclude.Add(txtWeatherFile.Text)
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
-                File.Copy(lstAllFiles.Items(i), $"{packageFolder}\{Path.GetFileName(lstAllFiles.Items(i))}")
+                filesToInclude.Add(lstAllFiles.Items(i))
             Next
 
-            'Save session file with incorrect paths
-            SaveSessionData($"{packageFolder}\{packageTitle}.dph")
+            _SF.CreateDPHXFile(SaveFileDialog1.FileName, filesToInclude)
 
-            MessageBox.Show(Me, "You can now zip and share your working session package with someone else.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
+            Dim allFiles As New Specialized.StringCollection
+            allFiles.Add(SaveFileDialog1.FileName)
+            Clipboard.SetFileDropList(allFiles)
+            MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
 
     End Sub
 
 #End Region
+
+    Private Sub LoadFile()
+
+        If txtFlightPlanFile.Text = String.Empty Then
+            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+        Else
+            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
+        End If
+
+        OpenFileDialog1.FileName = String.Empty
+        OpenFileDialog1.Title = "Select session or package file to load"
+        OpenFileDialog1.Filter = "Discord Post Helper|*.dph;*.dphx"
+        OpenFileDialog1.Multiselect = False
+
+        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+
+        If result = DialogResult.OK Then
+
+            Dim validSessionFile As Boolean = True
+
+            'Check if the selected file is a dph or dphx files
+            If Path.GetExtension(OpenFileDialog1.FileName) = ".dphx" Then
+                'Package - we need to unpack it first
+                OpenFileDialog1.FileName = _SF.UnpackDPHXFile(OpenFileDialog1.FileName)
+
+                If OpenFileDialog1.FileName = String.Empty Then
+                    validSessionFile = False
+                Else
+                    validSessionFile = True
+                End If
+            End If
+
+            If validSessionFile Then
+                ResetForm()
+                LoadSessionData(OpenFileDialog1.FileName)
+                _CurrentSessionFile = OpenFileDialog1.FileName
+                GenerateBriefing()
+            End If
+        End If
+
+    End Sub
 
     Private Sub SaveSessionData(filename As String)
 

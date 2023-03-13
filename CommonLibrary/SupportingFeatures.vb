@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.IO.Compression
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Text
@@ -367,6 +368,77 @@ Public Class SupportingFeatures
         End If
 
         Return sb.ToString
+
+    End Function
+
+    Public Sub CreateDPHXFile(ByVal dphxFilePath As String, ByVal filesToInclude As List(Of String))
+        Using archive As ZipArchive = ZipFile.Open(dphxFilePath, ZipArchiveMode.Create)
+            For Each fileToZip As String In filesToInclude
+                archive.CreateEntryFromFile(fileToZip, Path.GetFileName(fileToZip))
+            Next
+        End Using
+    End Sub
+
+    Public Function UnpackDPHXFile(ByVal dphxFilePath As String) As String
+
+        Dim folderToUnpackDialog As New FolderBrowserDialog
+
+        folderToUnpackDialog.SelectedPath = Path.GetDirectoryName(Path.GetFullPath(dphxFilePath))
+        folderToUnpackDialog.Description = $"Select folder where to unpack the session package ""{Path.GetFileName(dphxFilePath)}"""
+        folderToUnpackDialog.ShowNewFolderButton = True
+
+        Dim result As DialogResult = folderToUnpackDialog.ShowDialog()
+
+        If result = DialogResult.Cancel Then
+            Return String.Empty
+        End If
+
+        Dim overwriteResult As DialogResult
+        If Directory.Exists(folderToUnpackDialog.SelectedPath) Then
+            'Folder exists - files may be overwritten
+            overwriteResult = MessageBox.Show("Existing files in this folder may get overwritten by the ones in the package, do you want to confirm each individual file?", $"Unpacking to {folderToUnpackDialog.SelectedPath}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            If overwriteResult = DialogResult.Cancel Then
+                Return String.Empty
+            End If
+        End If
+
+        'Unpack files
+        Dim individualFileOverwrite As DialogResult
+        Dim extractFile As Boolean = True
+        Dim dphFilename As String = String.Empty
+        Dim fileDestination As String = String.Empty
+        Using archive As ZipArchive = ZipFile.OpenRead(dphxFilePath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                fileDestination = Path.Combine(folderToUnpackDialog.SelectedPath, entry.Name)
+                If Path.GetExtension(fileDestination) = ".dph" Then
+                    dphFilename = fileDestination
+                End If
+                If File.Exists(fileDestination) Then
+                    If overwriteResult = DialogResult.Yes Then
+                        individualFileOverwrite = MessageBox.Show($"File {entry.Name} already exists - do you want to overwrite?", "Confirm file overwrite", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+                        Select Case individualFileOverwrite
+                            Case DialogResult.Cancel
+                                Return String.Empty
+                            Case DialogResult.No
+                                'Do not overwrite
+                                extractFile = False
+                            Case DialogResult.Yes
+                                'Overwrite
+                                extractFile = True
+                        End Select
+                    Else
+                        extractFile = True
+                    End If
+                Else
+                    extractFile = True
+                End If
+                If extractFile Then
+                    entry.ExtractToFile(fileDestination, True)
+                End If
+            Next
+        End Using
+
+        Return dphFilename
 
     End Function
 
