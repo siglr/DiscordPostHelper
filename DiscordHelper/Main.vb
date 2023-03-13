@@ -129,7 +129,7 @@ Public Class Main
         txtDifficultyExtraInfo.Text = String.Empty
         chkDescriptionLock.Checked = False
         txtShortDescription.Text = String.Empty
-        txtCredits.Text = "All credits to @UserName for this track."
+        txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkAddWPCoords.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
