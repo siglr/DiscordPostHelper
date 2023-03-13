@@ -121,7 +121,18 @@
     End Function
 
     Public Shared Function ConvertUTCToLocal(dateToConvert As DateTime) As DateTime
-        Return TimeZoneInfo.ConvertTimeFromUtc(dateToConvert, TimeZoneInfo.Local)
+        Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
+        Dim localTime As DateTime = TimeZoneInfo.ConvertTimeFromUtc(dateToConvert, localTimeZone)
+
+        ' Check if the local time zone is currently observing daylight saving time
+        Dim isDst As Boolean = localTimeZone.IsDaylightSavingTime(localTime)
+
+        ' If the local time zone is observing daylight saving time, subtract an hour from the local time
+        If isDst Then
+            Return localTime.AddHours(-1)
+        Else
+            Return localTime
+        End If
     End Function
 
 End Class
