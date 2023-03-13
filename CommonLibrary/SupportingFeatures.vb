@@ -19,7 +19,7 @@ Public Class SupportingFeatures
 
     Public Sub New(Optional DiscordPostHelper As Boolean = True)
 
-        If Not DiscordPostHelper Then
+        If DiscordPostHelper Then
             LoadDefaultClubEvents()
         End If
 

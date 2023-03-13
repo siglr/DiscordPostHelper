@@ -129,7 +129,7 @@ Public Class Main
         txtDifficultyExtraInfo.Text = String.Empty
         chkDescriptionLock.Checked = False
         txtShortDescription.Text = String.Empty
-        txtCredits.Text = "All credits to @UserName for this track."
+        txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkAddWPCoords.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
@@ -465,7 +465,7 @@ Public Class Main
             lblTotalDistanceAndMiles.Text = "km / " & FormatNumber(Conversions.KmToMiles(Decimal.Parse(txtDistanceTotal.Text)), 0) & " mi Total"
         End If
         If txtDistanceTrack.Text <> String.Empty Then
-            lblTrackDistanceAndMiles.Text = "km / " & FormatNumber(Conversions.KmToMiles(Decimal.Parse(txtDistanceTrack.Text)), 0) & " mi Track"
+            lblTrackDistanceAndMiles.Text = "km / " & FormatNumber(Conversions.KmToMiles(Decimal.Parse(txtDistanceTrack.Text)), 0) & " mi Task"
         End If
 
         CheckAndSetEventAward()
