@@ -211,7 +211,6 @@ Partial Class Main
         Me.btnMapZoomIn = New System.Windows.Forms.Button()
         Me.btnMapZoomOut = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2650,7 +2649,6 @@ Partial Class Main
     Friend WithEvents btnSaveConfig As Button
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents btnCreateShareablePack As Button
-    Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents chkIncludeGotGravelInvite As CheckBox
     Friend WithEvents btnLoadB21Planner As Button
     Friend WithEvents btnCopyReqFilesToClipboard As Button
