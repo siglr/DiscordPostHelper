@@ -970,7 +970,7 @@ Partial Class Main
         Me.txtCredits.Size = New System.Drawing.Size(531, 32)
         Me.txtCredits.TabIndex = 51
         Me.txtCredits.Tag = "15"
-        Me.txtCredits.Text = "All credits to @UserName for this track."
+        Me.txtCredits.Text = "All credits to @UserName for this task."
         Me.ToolTip1.SetToolTip(Me.txtCredits, "Specify credits for this flight as required.")
         '
         'Label15
