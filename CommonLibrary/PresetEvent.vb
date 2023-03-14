@@ -33,4 +33,16 @@
 
     End Sub
 
+    Public Function GetZuluTimeForDate(selectedDate As Date) As DateTime
+        Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
+        ' Check if the local time zone is currently observing daylight saving time
+        Dim isDst As Boolean = localTimeZone.IsDaylightSavingTime(selectedDate)
+        If isDst Then
+            Return ZuluTime.AddHours(-1)
+        Else
+            Return ZuluTime
+        End If
+
+    End Function
+
 End Class

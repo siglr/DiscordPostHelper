@@ -942,10 +942,11 @@ Public Class Main
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
             chkDateTimeUTC.Checked = True
+
             dtEventMeetDate.Value = _SF.FindNextDate(Now, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
-            dtEventMeetTime.Value = _ClubPreset.ZuluTime
+            dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value)
             Application.DoEvents()
-            dtEventSyncFlyTime.Value = _ClubPreset.ZuluTime.AddMinutes(_ClubPreset.SyncFlyDelay)
+            dtEventSyncFlyTime.Value = dtEventMeetTime.Value.AddMinutes(_ClubPreset.SyncFlyDelay)
             Application.DoEvents()
             dtEventLaunchTime.Value = dtEventSyncFlyTime.Value.AddMinutes(_ClubPreset.LaunchDelay)
             Application.DoEvents()
