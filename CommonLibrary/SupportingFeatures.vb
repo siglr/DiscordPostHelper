@@ -501,17 +501,17 @@ Public Class SupportingFeatures
             Dim localZip As String = String.Empty
             Dim zipFileName As String = String.Empty
 
-            'Discord Post Helper format example: https://github.com/siglr/DiscordPostHelper/releases/download/DPH23.3.20.1/Discord.Post.Helper.23.3.20.1.zip
-            'Soaring Task Browser format example: https://github.com/siglr/DiscordPostHelper/releases/download/STB23.3.20.1/Soaring.Task.Browser.23.3.20.1.zip
+            'Discord Post Helper format example: https://github.com/siglr/DiscordPostHelper/releases/download/DPH.23.3.20.1/Discord.Post.Helper.23.3.20.1.zip
+            'Soaring Task Browser format example: https://github.com/siglr/DiscordPostHelper/releases/download/STB.23.3.20.1/Soaring.Task.Browser.23.3.20.1.zip
 
             Select Case ClientRunning
                 Case ClientApp.DiscordPostHelper
                     zipFileName = $"Discord.Post.Helper.{version}.zip"
-                    url = $"{url}{version}/{zipFileName}"
+                    url = $"{url}DPH.{version}/{zipFileName}"
                     localZip = $"{Application.StartupPath}\{zipFileName}"
                 Case ClientApp.SoaringTaskBrowser
                     zipFileName = $"Soaring.Task.Browser.{version}.zip"
-                    url = $"{url}{version}/{zipFileName}"
+                    url = $"{url}STB.{version}/{zipFileName}"
                     localZip = $"{Application.StartupPath}\{zipFileName}"
             End Select
 

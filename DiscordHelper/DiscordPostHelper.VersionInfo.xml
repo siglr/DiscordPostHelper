@@ -1,0 +1,49 @@
+<VersionInfo>
+  <CurrentLatestVersion>23.3.20.2</CurrentLatestVersion>
+  <Releases>
+    <Release>
+      <ReleaseVersion>23.3.20.2</ReleaseVersion>
+      <ReleaseTitle>Auto-Update implementation</ReleaseTitle>
+      <ReleaseNotes>
+        Starting with this release, an auto-update feature has been implemented and the app will automatically check for a new release when you start it.
+
+        If it finds one, it will show you a popup window with the release's details and the release history too. You then have the choice to update or not, but if you do, everything will happen automatically.
+
+        Manual update will still be possible by downloading the latest release and replacing the files yourself.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.20.1</ReleaseVersion>
+      <ReleaseTitle>Yet another fix for daylight saving time calculation</ReleaseTitle>
+      <ReleaseNotes>
+        Very minor update that should fix the daylight saving date and time calculation for good.
+
+        Let me know if you think there is still a problem with that.
+
+        To update: simply overwrite your current files with the one in this release.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.13.1</ReleaseVersion>
+      <ReleaseTitle>DPHX Package creation and load back</ReleaseTitle>
+      <ReleaseNotes>
+        In this new version, the "Create package" button becomes "Share package" and instead of only copying files to a folder for you to manually zip, it will now put all the required files into a .dphx file, save it and place it on your clipboard. You can then paste the file anywhere (email, Discord, other chat platforms, etc.) to share with someone else.
+
+        Of course, anyone with the tool can then also load back the .dphx file (when you click load, you can select both .dph and .dphx files) and automatically extract all the same files including the .dph file and load everything easily.
+
+        The tool also supports direct opening by double-clicking on a dphx file once you associate the file extension with the tool's main executable.
+
+        To update, simply overwrite your existing files with the ones in this release.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.12.1</ReleaseVersion>
+      <ReleaseTitle>Fix for Daylight Saving rules to calculate UTC and local times</ReleaseTitle>
+      <ReleaseNotes>
+        After going into DST here in East America, I've discovered a bug with the UTC and Local date/time conversions. This release should address this problem.
+
+        Simply overwrite your existing files with the one in this release.
+      </ReleaseNotes>
+    </Release>
+  </Releases>
+</VersionInfo>

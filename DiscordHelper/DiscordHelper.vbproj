@@ -134,6 +134,7 @@
     <None Include="right arrow.png" />
     <None Include="left arrow.png" />
     <None Include="down arrow.png" />
+    <Content Include="DiscordPostHelper.VersionInfo.xml" />
     <Content Include="Icon.ico" />
     <None Include="Resources\LeftArrow.png" />
   </ItemGroup>
