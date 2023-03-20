@@ -6,6 +6,7 @@ Imports System.Text
 Imports System.Web
 Imports System.Windows.Forms
 Imports System.Xml
+Imports System.Xml.Serialization
 
 Public Class SupportingFeatures
     Public Enum DiscordTimeStampFormat As Integer
@@ -15,12 +16,20 @@ Public Class SupportingFeatures
         CountDown = 3
     End Enum
 
+    Public Enum ClientApp As Integer
+        DiscordPostHelper = 1
+        SoaringTaskBrowser = 2
+    End Enum
+
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
+    Public ReadOnly ClientRunning As ClientApp
 
-    Public Sub New(Optional DiscordPostHelper As Boolean = True)
+    Public Sub New(Optional RunningClientApp As ClientApp = ClientApp.DiscordPostHelper)
 
-        If DiscordPostHelper Then
+        ClientRunning = RunningClientApp
+
+        If ClientRunning = ClientApp.DiscordPostHelper Then
             LoadDefaultClubEvents()
         End If
 
@@ -439,6 +448,101 @@ Public Class SupportingFeatures
         End Using
 
         Return dphFilename
+
+    End Function
+
+    Public Function GetVersionInfo() As VersionInfo
+
+
+        Dim url As String = $"https://siglr.com/DiscordPostHelper/{ClientRunning.ToString}.VersionInfo.xml"
+        Dim client As New WebClient()
+        Dim responseBytes As Byte() = client.DownloadData(url)
+        Dim responseString As String = Encoding.UTF8.GetString(responseBytes)
+
+        Dim serializer As New XmlSerializer(GetType(VersionInfo))
+        Dim reader As New StringReader(responseString)
+        Dim versionInfo As VersionInfo = DirectCast(serializer.Deserialize(reader), VersionInfo)
+
+        Return versionInfo
+    End Function
+
+    Public Function FormatVersionNumber(versionNumber As String) As String
+        Dim parts As String() = versionNumber.Split("."c)
+        Dim formattedMonth As String = parts(1).PadLeft(2, "0"c)
+        Dim formattedDay As String = parts(2).PadLeft(2, "0"c)
+        Dim formattedNumber As String = parts(3).PadLeft(2, "0"c)
+        Return $"{parts(0)}.{formattedMonth}.{formattedDay}.{formattedNumber}"
+    End Function
+
+    Public Function ShowVersionForm(verInfo As VersionInfo, currentVersion As String) As DialogResult
+
+        Dim versionForm As New VersionInfoForm
+
+        versionForm.lblLocalVersion.Text = currentVersion
+        versionForm.lblLatestVersion.Text = verInfo.CurrentLatestVersion
+
+        For Each release As Release In verInfo.Releases
+            If release.ReleaseVersion = verInfo.CurrentLatestVersion Then
+                versionForm.lblReleaseTitle.Text = release.ReleaseTitle
+                versionForm.txtReleaseNotes.Text = release.ReleaseNotes.Replace(vbLf, vbCrLf)
+            Else
+                versionForm.txtReleaseHistory.Text = versionForm.txtReleaseHistory.Text & ($"{release.ReleaseVersion} - {release.ReleaseTitle}{Environment.NewLine}{release.ReleaseNotes.Replace(vbLf, vbCrLf)}{Environment.NewLine}{Environment.NewLine}")
+            End If
+        Next
+
+        Return versionForm.ShowDialog()
+
+    End Function
+
+    Public Function DownloadLatestUpdate(version As String, ByRef message As String) As Boolean
+
+        Try
+            Dim url As String = "https://github.com/siglr/DiscordPostHelper/releases/download/"
+            Dim localZip As String = String.Empty
+            Dim zipFileName As String = String.Empty
+
+            'Discord Post Helper format example: https://github.com/siglr/DiscordPostHelper/releases/download/DPH23.3.20.1/Discord.Post.Helper.23.3.20.1.zip
+            'Soaring Task Browser format example: https://github.com/siglr/DiscordPostHelper/releases/download/STB23.3.20.1/Soaring.Task.Browser.23.3.20.1.zip
+
+            Select Case ClientRunning
+                Case ClientApp.DiscordPostHelper
+                    zipFileName = $"Discord.Post.Helper.{version}.zip"
+                    url = $"{url}{version}/{zipFileName}"
+                    localZip = $"{Application.StartupPath}\{zipFileName}"
+                Case ClientApp.SoaringTaskBrowser
+                    zipFileName = $"Soaring.Task.Browser.{version}.zip"
+                    url = $"{url}{version}/{zipFileName}"
+                    localZip = $"{Application.StartupPath}\{zipFileName}"
+            End Select
+
+            message = $"Downloading file {url} to {localZip}"
+            Dim client As New WebClient()
+            client.DownloadFile(url, localZip)
+
+            message = $"Openening zip to check for Updater entry"
+            'open zip and check if updater is there
+            Using archive As ZipArchive = ZipFile.OpenRead(localZip)
+                For Each entry As ZipArchiveEntry In archive.Entries
+                    If entry.Name = "Updater.exe" Then
+                        'Updater found - unzip
+                        message = $"Extracting Updater to {Application.StartupPath}\{entry.Name}"
+                        entry.ExtractToFile($"{Application.StartupPath}\{entry.Name}", True)
+                    End If
+                Next
+            End Using
+
+            message = $"Launching the updater tool"
+
+            'Launch the Updater program
+            Dim startInfo As New ProcessStartInfo($"{Application.StartupPath}\Updater.exe", $"""{localZip}"" {Process.GetCurrentProcess.Id} ""{Process.GetCurrentProcess.MainModule.FileName}""")
+
+            Process.Start(startinfo)
+
+            Return True
+
+        Catch ex As Exception
+            Return False
+        End Try
 
     End Function
 
