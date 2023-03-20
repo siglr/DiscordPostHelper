@@ -45,5 +45,68 @@
         Simply overwrite your existing files with the one in this release.
       </ReleaseNotes>
     </Release>
+    <Release>
+      <ReleaseVersion>23.3.10.1</ReleaseVersion>
+      <ReleaseTitle>Small release</ReleaseTitle>
+      <ReleaseNotes>
+        In this release:
+        - The airfield database is no longer used as we always take the airfield names from the flight plan file
+        - The waypoint coordinates for xbox no longer contain a comma, but just a space
+        - Fixed a possible bug where the default clubs were not loaded
+        You can delete the csv file of the airfield database that was included in previous versions. Simply overwrite the other files.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.6.1</ReleaseVersion>
+      <ReleaseTitle>Rename, split, add waypoint coordinates</ReleaseTitle>
+      <ReleaseNotes>
+        For this release, you should delete any previous files you had and replace them by the ones in this release.
+        - The main executable was renamed to DiscordPostHelper.exe
+        - The code not directly related to UI has been moved into a CommonLibrary.dll
+        
+        New features:
+        - The extra files section now do not accept potentially harmful file extensions
+        - There is a new checkbox to add all waypoint coordinates into the description to help Xbox users
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.26.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.26.1 - New Briefing Tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release adds a new "Briefing" tab, where will you find all relevant information to give during the briefing time.
+
+        The tab is itself divided into two sub-tabs, the "Basic Info" and the "Flight & Map" where you get to select an image from the extra files, that represents the flight map. You can then zoom and scroll the image according to the briefing needs.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.24.2</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.24.2 Unix timestamps fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Bug fix in this release:
+        - During refactoring, an error was introduced with the syntax of the Unix timestamps, it is now fixed
+        
+        Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.22.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.22.1 Load parameter file</ReleaseTitle>
+      <ReleaseNotes>
+        New features in this release:
+        - You can now set Windows to auto-launch the tool when double-clicking a .dph file, it will be automatically opened
+        - The current session file is added to the window title for convenience
+        
+        Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
+
+        To set Windows to automatically open the app when double-clicking on a .dph file, you will need to right-click a .dph file and select "Open with..." or double-click the .dph file, and then browse and select the executable file and set to "Always".
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.20.1 Code refactoring & cleanup</ReleaseTitle>
+      <ReleaseNotes>
+        Several fixes or improvements along the way, including performance wise.
+      </ReleaseNotes>
+    </Release>
   </Releases>
 </VersionInfo>
