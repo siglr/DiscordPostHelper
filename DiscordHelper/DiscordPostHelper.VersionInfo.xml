@@ -75,7 +75,7 @@
       <ReleaseNotes>
         This release adds a new "Briefing" tab, where will you find all relevant information to give during the briefing time.
 
-        The tab is itself divided into two sub-tabs, the "Basic Info" and the "Flight & Map" where you get to select an image from the extra files, that represents the flight map. You can then zoom and scroll the image according to the briefing needs.
+        The tab is itself divided into two sub-tabs, the "Basic Info" and the "Flight and Map" where you get to select an image from the extra files, that represents the flight map. You can then zoom and scroll the image according to the briefing needs.
       </ReleaseNotes>
     </Release>
     <Release>
@@ -103,7 +103,7 @@
     </Release>
     <Release>
       <ReleaseVersion>23.2.20.1</ReleaseVersion>
-      <ReleaseTitle>Version 23.2.20.1 Code refactoring & cleanup</ReleaseTitle>
+      <ReleaseTitle>Version 23.2.20.1 Code refactoring and cleanup</ReleaseTitle>
       <ReleaseNotes>
         Several fixes or improvements along the way, including performance wise.
       </ReleaseNotes>
