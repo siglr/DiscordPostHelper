@@ -4,31 +4,35 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8F737F27-41DD-492B-B023-D43501F38355}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>SIGLR.SoaringTools.CommonLibrary</RootNamespace>
-    <AssemblyName>CommonLibrary</AssemblyName>
+    <ProjectGuid>{EF1DB017-460D-4CDE-94F8-4F085B1912B0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <StartupObject>SIGLR.SoaringTools.Updater.MainModule</StartupObject>
+    <RootNamespace>SIGLR.SoaringTools.Updater</RootNamespace>
+    <AssemblyName>Updater</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>CommonLibrary.xml</DocumentationFile>
+    <OutputPath>..\DiscordHelper\bin\Debug\</OutputPath>
+    <DocumentationFile>Updater.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>CommonLibrary.xml</DocumentationFile>
+    <OutputPath>..\DiscordHelper\bin\Release\</OutputPath>
+    <DocumentationFile>Updater.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -46,11 +50,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,9 +71,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ATCWaypointvb.vb" />
-    <Compile Include="CloudLayer.vb" />
-    <Compile Include="Conversions.vb" />
+    <Compile Include="MainModule.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -88,17 +88,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PresetEvent.vb" />
-    <Compile Include="SupportingFeatures.vb" />
-    <Compile Include="VersionInfo.vb" />
-    <Compile Include="VersionInfoForm.Designer.vb">
-      <DependentUpon>VersionInfoForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="VersionInfoForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WeatherDetails.vb" />
-    <Compile Include="WindLayer.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -106,9 +95,6 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VersionInfoForm.resx">
-      <DependentUpon>VersionInfoForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -121,9 +107,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ProjectNotes.txt" />
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

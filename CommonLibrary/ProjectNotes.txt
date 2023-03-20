@@ -1,5 +1,1 @@
-﻿ALL AIRPORTS LIST
-Source: https://davidmegginson.github.io/ourairports-data/airports.csv
-Needs to be data imported into Excel for correct conversion to UTF-8 then removal of all columns except ICAO code and airport name.
-Perhaps this process could be automated at some point, so that we could download a new list every month for example.
-
+﻿

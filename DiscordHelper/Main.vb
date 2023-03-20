@@ -69,6 +69,7 @@ Public Class Main
         End If
         Me.Refresh()
         LoadSessionData(_CurrentSessionFile)
+        CheckForNewVersion()
 
     End Sub
 
@@ -178,6 +179,27 @@ Public Class Main
         SetVisibilityForSecPosts()
         BuildFPResults()
         BuildGroupFlightPost()
+        SetFormCaption(String.Empty)
+
+    End Sub
+
+    Public Sub CheckForNewVersion()
+        Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
+        Dim message As String = String.Empty
+
+        If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
+            'New version available
+            If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
+                'update
+                'Download the file
+                If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
+                    Application.Exit()
+                Else
+                    'Show error updating
+                    MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        End If
 
     End Sub
 
@@ -211,6 +233,17 @@ Public Class Main
 #End Region
 
 #Region "Global form subs & functions"
+
+    Public Sub SetFormCaption(filename As String)
+
+        If filename = String.Empty Then
+            filename = "No session file loaded"
+        End If
+
+        'Add version to form title
+        Me.Text = $"Discord Post Helper v{Me.GetType.Assembly.GetName.Version} - {filename}"
+
+    End Sub
 
     Private Sub LeavingTextBox(txtbox As Windows.Forms.TextBox)
         txtbox.SelectionLength = 0
@@ -2171,7 +2204,7 @@ Public Class Main
         End Using
 
         _CurrentSessionFile = filename
-        Me.Text = $"Discord Post Helper v{Me.GetType.Assembly.GetName.Version} - {filename}"
+        SetFormCaption(filename)
 
     End Sub
 
@@ -2187,7 +2220,7 @@ Public Class Main
             End Using
 
             'Add version to form title
-            Me.Text = $"Discord Post Helper v{Me.GetType.Assembly.GetName.Version} - {filename}"
+            SetFormCaption(filename)
 
             'Set all fields
             With allCurrentData
