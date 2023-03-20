@@ -453,6 +453,7 @@ Public Class SupportingFeatures
 
     Public Function GetVersionInfo() As VersionInfo
 
+        LogDateTime()
 
         Dim url As String = $"https://siglr.com/DiscordPostHelper/{ClientRunning.ToString}.VersionInfo.xml"
         Dim client As New WebClient()
@@ -464,7 +465,25 @@ Public Class SupportingFeatures
         Dim versionInfo As VersionInfo = DirectCast(serializer.Deserialize(reader), VersionInfo)
 
         Return versionInfo
+
     End Function
+
+    Public Sub LogDateTime()
+
+        Dim url As String = $"https://siglr.com/DiscordPostHelper/DPHGetVersionInfo.php"
+        Dim client As New WebClient()
+        Dim responseString As String
+
+        If Debugger.IsAttached Or File.Exists($"{Application.StartupPath}\{Environment.UserName}.txt") Then
+            'Do nothing
+        Else
+            Try
+                responseString = client.DownloadString(url)
+            Catch ex As Exception
+            End Try
+        End If
+
+    End Sub
 
     Public Function FormatVersionNumber(versionNumber As String) As String
         Dim parts As String() = versionNumber.Split("."c)

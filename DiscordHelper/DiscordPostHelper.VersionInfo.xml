@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.3.20.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.3.20.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.3.20.3</ReleaseVersion>
+      <ReleaseTitle>Auto-Update test</ReleaseTitle>
+      <ReleaseNotes>
+        This is just a "fake" release to test the auto-update feature.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.3.20.2</ReleaseVersion>
       <ReleaseTitle>Auto-Update implementation</ReleaseTitle>
