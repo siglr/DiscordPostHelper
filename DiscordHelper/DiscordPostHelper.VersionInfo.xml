@@ -1,11 +1,11 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.3.20.3</CurrentLatestVersion>
+  <CurrentLatestVersion>23.3.20.4</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.3.20.3</ReleaseVersion>
-      <ReleaseTitle>Auto-Update test</ReleaseTitle>
+      <ReleaseVersion>23.3.20.4</ReleaseVersion>
+      <ReleaseTitle>Auto-Update bug fix</ReleaseTitle>
       <ReleaseNotes>
-        This is just a "fake" release to test the auto-update feature.
+        Fixed bug where Updater did not actually extract the files.
       </ReleaseNotes>
     </Release>
     <Release>

@@ -65,12 +65,15 @@ Module MainModule
                 For Each entry As ZipArchiveEntry In archive.Entries
                     If entry.Name <> "Updater.exe" Then
                         Console.WriteLine($"Extracting {AppDomain.CurrentDomain.BaseDirectory}{entry.Name}")
-                        'entry.ExtractToFile($"{AppDomain.CurrentDomain.BaseDirectory}{entry.Name}", True)
+                        entry.ExtractToFile($"{AppDomain.CurrentDomain.BaseDirectory}{entry.Name}", True)
                     End If
                 Next
             End Using
 
             Console.WriteLine($"Update completed - Launching the calling process back.")
+            Console.WriteLine("")
+            Console.WriteLine("Press ENTER to continue")
+            Console.ReadLine()
             Dim startInfo As New ProcessStartInfo(programToStart)
             Process.Start(startInfo)
 
