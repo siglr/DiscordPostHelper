@@ -24,7 +24,7 @@ Module MainModule
                     'Program to start after update
                     programToStart = arg
             End Select
-            Console.WriteLine($"Argument #{argNo.ToString}: {arg}")
+            Console.WriteLine($"Argument #{argNo}: {arg}")
         Next
 
         Try
@@ -69,6 +69,10 @@ Module MainModule
                     End If
                 Next
             End Using
+            Console.WriteLine($"All files extracted, deleting zip file.")
+            If File.Exists(zipFilename) Then
+                File.Delete(zipFilename)
+            End If
 
             Console.WriteLine($"Update completed - Launching the calling process back.")
             Console.WriteLine("")
