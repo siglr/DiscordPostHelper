@@ -80,7 +80,7 @@ Public Class WindLayer
     Private Function GetGustText() As String
         Dim results As String
         If _HasGust Then
-            results = String.Format("Gust {0}° @ {1} kts every {2} seconds for {3} seconds :warning:*Gusts formats are currently bugged in MSFS*",
+            results = String.Format("Gust {0}° @ {1} kts every {2} seconds for {3} seconds", ' :warning:*Gusts formats are currently bugged in MSFS*
                                     _GustAngle,
                                     _GustSpeed,
                                     _GustInterval,

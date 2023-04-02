@@ -39,7 +39,7 @@ Public Class SupportingFeatures
 
         DefaultKnownClubEvents.Add("TSC", New PresetEvent("TSC", "East USA", "Unicom 1", DayOfWeek.Wednesday, DateTime.Parse("1:00 AM"), 10, 0, 10, False))
         DefaultKnownClubEvents.Add("FSC", New PresetEvent("FSC", "West USA", "Unicom 3", DayOfWeek.Friday, DateTime.Parse("9:00 PM"), 30, 0, 0, False))
-        DefaultKnownClubEvents.Add("SSC SATURDAY", New PresetEvent("SSC Saturday", "West Europe", "SSC Saturday", DayOfWeek.Saturday, DateTime.Parse("5:45 PM"), 15, 0, 30, True))
+        DefaultKnownClubEvents.Add("SSC SATURDAY", New PresetEvent("SSC Saturday", "West Europe", "Sim Soaring Club (PTT)", DayOfWeek.Saturday, DateTime.Parse("5:45 PM"), 15, 0, 30, True))
         DefaultKnownClubEvents.Add("AUS TUESDAYS", New PresetEvent("Aus Tuesdays", "Southeast Asia", "Flight 01", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), 15, 0, 15, True))
         'DefaultKnownClubEvents.Add("DTS", New PresetEvent("DTS", "West USA", "Thermal Smashing", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), True))
 

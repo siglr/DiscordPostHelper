@@ -1932,7 +1932,7 @@ Partial Class Main
         '
         Me.cboVoiceChannel.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboVoiceChannel.FormattingEnabled = True
-        Me.cboVoiceChannel.Items.AddRange(New Object() {"Unicom 1", "Unicom 2", "Unicom 3", "SSC Saturday", "Flight 01", "Flight 02", "Thermal Smashing"})
+        Me.cboVoiceChannel.Items.AddRange(New Object() {"Unicom 1", "Unicom 2", "Unicom 3", "Sim Soaring Club (PTT)", "Flight 01", "Flight 02", "Thermal Smashing"})
         Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 201)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
         Me.cboVoiceChannel.Size = New System.Drawing.Size(650, 32)
