@@ -1,6 +1,20 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.3.20.4</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.2.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.2.2</ReleaseVersion>
+      <ReleaseTitle>Briefing tab improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Minor improvements to the briefing tab to remove waypoints from the description and make sure formatting (bold and italic) are properly applied.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.2.1</ReleaseVersion>
+      <ReleaseTitle>Fix for SSC channel name and remove gust warning</ReleaseTitle>
+      <ReleaseNotes>
+        Minor update to update the name of the voice channel for SSC Saturday's group flight and also remove the wind gusts warning as it appears to be resolved in SU12.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.3.20.4</ReleaseVersion>
       <ReleaseTitle>Auto-Update bug fix</ReleaseTitle>
@@ -70,7 +84,7 @@
         For this release, you should delete any previous files you had and replace them by the ones in this release.
         - The main executable was renamed to DiscordPostHelper.exe
         - The code not directly related to UI has been moved into a CommonLibrary.dll
-        
+
         New features:
         - The extra files section now do not accept potentially harmful file extensions
         - There is a new checkbox to add all waypoint coordinates into the description to help Xbox users
@@ -91,7 +105,7 @@
       <ReleaseNotes>
         Bug fix in this release:
         - During refactoring, an error was introduced with the syntax of the Unix timestamps, it is now fixed
-        
+
         Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
       </ReleaseNotes>
     </Release>
@@ -102,7 +116,7 @@
         New features in this release:
         - You can now set Windows to auto-launch the tool when double-clicking a .dph file, it will be automatically opened
         - The current session file is added to the window title for convenience
-        
+
         Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
 
         To set Windows to automatically open the app when double-clicking on a .dph file, you will need to right-click a .dph file and select "Open with..." or double-click the .dph file, and then browse and select the executable file and set to "Always".

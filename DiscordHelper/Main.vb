@@ -6,6 +6,7 @@ Imports System.Threading
 Imports System.Web.UI.WebControls
 Imports System.Globalization
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports System.Text.RegularExpressions
 
 Public Class Main
 
@@ -1512,12 +1513,20 @@ Public Class Main
 
         sb.Clear()
 
-        'Description of flight with map
-        If txtFullDescriptionResults.Text <> String.Empty Then
-            sb.AppendLine(txtFullDescriptionResults.Text.Replace("**", ""))
+        Dim sbDescription As New StringBuilder
+        If txtLongDescription.Text.Trim.Length > 0 Then
+            sbDescription.AppendLine($"**Full Description**{Environment.NewLine}{txtLongDescription.Text.Trim}")
+        Else
+            sbDescription.AppendLine(String.Empty)
         End If
-        txtBriefingDescription.Text = sb.ToString()
-        FormatFirstLine(txtBriefingDescription)
+
+        'Description of flight with map
+        If sbDescription.ToString <> String.Empty Then
+            sb.AppendLine(sbDescription.ToString)
+        End If
+        FormatMarkdownToRTF(sb.ToString, txtBriefingDescription)
+        'txtBriefingDescription.Text = sb.ToString()
+        'FormatFirstLine(txtBriefingDescription)
 
         sb.Clear()
 
@@ -1526,6 +1535,22 @@ Public Class Main
         txtBriefingRestrictions.Text = sb.ToString()
         FormatFirstLine(txtBriefingRestrictions)
 
+    End Sub
+
+    Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox)
+        ' Regex patterns to match bold and italic texts
+        Dim boldPattern As String = "\*\*(.+?)\*\*"
+        Dim italicPattern As String = "(?<!\*)\*(.+?)\*(?!\*)"
+
+        ' Replace bold and italic markdown syntax with corresponding RTF code
+        Dim boldReplaced As String = Regex.Replace(input, boldPattern, "{\b $1\b0 }")
+        Dim rtfFormatted As String = Regex.Replace(boldReplaced, italicPattern, "{\i $1\i0 }")
+
+        ' Replace vbcrlf with RTF line break code
+        rtfFormatted = rtfFormatted.Replace(vbCrLf, "\line ")
+
+        ' Set the RTF-formatted text to the RichTextBox control
+        richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
     End Sub
 
     Private Sub FormatFirstLine(rtb As RichTextBox)
