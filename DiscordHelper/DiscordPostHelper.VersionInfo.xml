@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.4.2.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.16.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.16.1</ReleaseVersion>
+      <ReleaseTitle>Bug fix for cloud layer altitude</ReleaseTitle>
+      <ReleaseNotes>
+        The cloud layer altitude was reversed between meters and feet.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.2.2</ReleaseVersion>
       <ReleaseTitle>Briefing tab improvements</ReleaseTitle>
