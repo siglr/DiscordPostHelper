@@ -37,6 +37,8 @@ Public Class Main
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        _SF.FillCountryFlagList(cboCountryFlag.Items)
+
         ResetForm()
 
         SetTimePickerFormat()
@@ -176,6 +178,8 @@ Public Class Main
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
         btnExtraFileUp.Enabled = False
+
+        _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
 
         SetVisibilityForSecPosts()
         BuildFPResults()
@@ -517,6 +521,19 @@ Public Class Main
 
     End Sub
 
+    Private Sub cboCountryFlag_Leave(sender As Object, e As EventArgs) Handles cboCountryFlag.Leave
+
+        If cboCountryFlag.SelectedIndex = -1 Then
+            cboCountryFlag.SelectedIndex = 0
+        End If
+
+    End Sub
+
+    Private Sub cboCountryFlag_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCountryFlag.SelectedIndexChanged
+        BuildFPResults()
+        BuildGroupFlightPost()
+    End Sub
+
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
@@ -714,7 +731,7 @@ Public Class Main
             dateFormat = "MMMM dd"
         End If
 
-        sb.AppendLine("**" & txtTitle.Text & "**")
+        sb.AppendLine($"**{txtTitle.Text}**{AddFlagToTitle()}")
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
@@ -750,6 +767,14 @@ Public Class Main
 
     End Sub
 
+    Private Function AddFlagToTitle() As String
+        Dim answer As String = String.Empty
+        If cboCountryFlag.SelectedIndex > 0 Then
+            answer = $" {_SF.CountryFlagCodes(cboCountryFlag.Text)}"
+        End If
+        Return answer
+
+    End Function
     Private Sub CalculateDuration()
 
         Dim minAvgspeedInKmh As Single
@@ -1238,7 +1263,7 @@ Public Class Main
             If cboGroupOrClubName.SelectedIndex > -1 Then
                 sb.Append($"{cboGroupOrClubName.Text} - ")
             End If
-            sb.AppendLine(txtEventTitle.Text)
+            sb.AppendLine(txtEventTitle.Text & AddFlagToTitle())
             sb.AppendLine()
         End If
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
@@ -2188,6 +2213,7 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
+            .CountryFlag = cboCountryFlag.SelectedIndex
             .AddWPCoordinates = chkAddWPCoords.Checked
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
@@ -2298,6 +2324,7 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
+                cboCountryFlag.SelectedIndex = .CountryFlag
                 chkAddWPCoords.Checked = .AddWPCoordinates
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary

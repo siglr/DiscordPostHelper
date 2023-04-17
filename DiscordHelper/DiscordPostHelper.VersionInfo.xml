@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.4.16.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.17.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.17.1</ReleaseVersion>
+      <ReleaseTitle>Country Flags and known clubs name change</ReleaseTitle>
+      <ReleaseNotes>
+        New field to specify Country flag to use in the task's title
+        
+        Several known clubs have changed their names, this update implements the new names.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.16.1</ReleaseVersion>
       <ReleaseTitle>Bug fix for cloud layer altitude</ReleaseTitle>
