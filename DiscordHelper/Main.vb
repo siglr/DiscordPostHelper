@@ -108,6 +108,7 @@ Public Class Main
         cboDifficulty.SelectedIndex = 0
         cboRecommendedGliders.SelectedIndex = 0
         lstAllFiles.Items.Clear()
+        lstAllCountries.Items.Clear()
 
         Dim sb As New StringBuilder
         sb.AppendLine("**Files**")
@@ -147,6 +148,7 @@ Public Class Main
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkAddWPCoords.Checked = False
+        chkLockCountries.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
@@ -521,19 +523,6 @@ Public Class Main
 
     End Sub
 
-    Private Sub cboCountryFlag_Leave(sender As Object, e As EventArgs) Handles cboCountryFlag.Leave
-
-        If cboCountryFlag.SelectedIndex = -1 Then
-            cboCountryFlag.SelectedIndex = 0
-        End If
-
-    End Sub
-
-    Private Sub cboCountryFlag_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCountryFlag.SelectedIndexChanged
-        BuildFPResults()
-        BuildGroupFlightPost()
-    End Sub
-
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
@@ -688,14 +677,14 @@ Public Class Main
 
     Private Sub btnExtraFileUp_Click(sender As Object, e As EventArgs) Handles btnExtraFileUp.Click
 
-        MoveExtraFilesSelectedItems(-1)
+        MoveExtraFilesSelectedItems(-1, lstAllFiles)
         btnExtraFileUp.Focus()
 
     End Sub
 
     Private Sub btnExtraFileDown_Click(sender As Object, e As EventArgs) Handles btnExtraFileDown.Click
 
-        MoveExtraFilesSelectedItems(1)
+        MoveExtraFilesSelectedItems(1, lstAllFiles)
         btnExtraFileDown.Focus()
 
     End Sub
@@ -716,6 +705,34 @@ Public Class Main
 
 #End Region
 
+#Region "Country controls events"
+
+    Private Sub btnAddCountry_Click(sender As Object, e As EventArgs) Handles btnAddCountry.Click
+        If cboCountryFlag.SelectedIndex > 0 AndAlso Not lstAllCountries.Items.Contains(cboCountryFlag.Text) Then
+            lstAllCountries.Items.Add(cboCountryFlag.Text)
+            BuildFPResults()
+        End If
+    End Sub
+
+    Private Sub btnRemoveCountry_Click(sender As Object, e As EventArgs) Handles btnRemoveCountry.Click
+        For i As Integer = lstAllCountries.SelectedIndices.Count - 1 To 0 Step -1
+            lstAllCountries.Items.RemoveAt(lstAllCountries.SelectedIndices(i))
+        Next
+        BuildFPResults()
+    End Sub
+
+    Private Sub btnMoveCountryUp_Click(sender As Object, e As EventArgs) Handles btnMoveCountryUp.Click
+        MoveExtraFilesSelectedItems(-1, lstAllCountries)
+        BuildFPResults()
+    End Sub
+
+    Private Sub btnMoveCountryDown_Click(sender As Object, e As EventArgs) Handles btnMoveCountryDown.Click
+        MoveExtraFilesSelectedItems(1, lstAllCountries)
+        BuildFPResults()
+    End Sub
+
+#End Region
+
 #End Region
 
 #Region "Flight Plan tab Subs & Functions"
@@ -731,7 +748,7 @@ Public Class Main
             dateFormat = "MMMM dd"
         End If
 
-        sb.AppendLine($"**{txtTitle.Text}**{AddFlagToTitle()}")
+        sb.AppendLine($"**{txtTitle.Text}**{AddFlagsToTitle()}")
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
@@ -767,12 +784,16 @@ Public Class Main
 
     End Sub
 
-    Private Function AddFlagToTitle() As String
-        Dim answer As String = String.Empty
-        If cboCountryFlag.SelectedIndex > 0 Then
-            answer = $" {_SF.CountryFlagCodes(cboCountryFlag.Text)}"
+    Private Function AddFlagsToTitle() As String
+        Dim answer As New StringBuilder
+
+        If lstAllCountries.Items.Count > 0 Then
+            For Each country As String In lstAllCountries.Items
+                answer.Append($" {_SF.CountryFlagCodes(country)}")
+            Next
         End If
-        Return answer
+
+        Return answer.ToString
 
     End Function
     Private Sub CalculateDuration()
@@ -866,6 +887,16 @@ Public Class Main
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
         txtDistanceTrack.Text = FormatNumber(_TaskTotalDistanceInKm, 0)
 
+        'Build countries
+        If Not chkLockCountries.Checked Then
+            lstAllCountries.Items.Clear()
+            For Each waypoint As ATCWaypoint In _SF.AllWaypoints
+                If _SF.CountryFlagCodes.ContainsKey(waypoint.Country) AndAlso Not lstAllCountries.Items.Contains(waypoint.Country) Then
+                    lstAllCountries.Items.Add(waypoint.Country)
+                End If
+            Next
+        End If
+
         BuildFPResults()
         BuildGroupFlightPost()
 
@@ -907,8 +938,8 @@ Public Class Main
 
     End Sub
 
-    Private Sub MoveExtraFilesSelectedItems(ByVal direction As Integer)
-        Dim selectedIndices As List(Of Integer) = lstAllFiles.SelectedIndices.Cast(Of Integer).ToList()
+    Private Sub MoveExtraFilesSelectedItems(ByVal direction As Integer, ByVal listContrl As Windows.Forms.ListBox)
+        Dim selectedIndices As List(Of Integer) = listContrl.SelectedIndices.Cast(Of Integer).ToList()
         If selectedIndices.Count = 0 Then
             Return
         End If
@@ -918,23 +949,23 @@ Public Class Main
 
         If direction = -1 AndAlso minIndex > 0 Then
             For Each index As Integer In selectedIndices
-                Dim item As Object = lstAllFiles.Items(index)
-                lstAllFiles.Items.RemoveAt(index)
-                lstAllFiles.Items.Insert(index - 1, item)
+                Dim item As Object = listContrl.Items(index)
+                listContrl.Items.RemoveAt(index)
+                listContrl.Items.Insert(index - 1, item)
             Next
-            lstAllFiles.ClearSelected()
+            listContrl.ClearSelected()
             For Each index As Integer In selectedIndices
-                lstAllFiles.SetSelected(index - 1, True)
+                listContrl.SetSelected(index - 1, True)
             Next
-        ElseIf direction = 1 AndAlso maxIndex < lstAllFiles.Items.Count - 1 Then
+        ElseIf direction = 1 AndAlso maxIndex < listContrl.Items.Count - 1 Then
             For Each index As Integer In selectedIndices.OrderByDescending(Function(i) i)
-                Dim item As Object = lstAllFiles.Items(index)
-                lstAllFiles.Items.RemoveAt(index)
-                lstAllFiles.Items.Insert(index + 1, item)
+                Dim item As Object = listContrl.Items(index)
+                listContrl.Items.RemoveAt(index)
+                listContrl.Items.Insert(index + 1, item)
             Next
-            lstAllFiles.ClearSelected()
+            listContrl.ClearSelected()
             For Each index As Integer In selectedIndices
-                lstAllFiles.SetSelected(index + 1, True)
+                listContrl.SetSelected(index + 1, True)
             Next
         End If
     End Sub
@@ -1263,7 +1294,7 @@ Public Class Main
             If cboGroupOrClubName.SelectedIndex > -1 Then
                 sb.Append($"{cboGroupOrClubName.Text} - ")
             End If
-            sb.AppendLine(txtEventTitle.Text & AddFlagToTitle())
+            sb.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
             sb.AppendLine()
         End If
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
@@ -2213,12 +2244,15 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
-            .CountryFlag = cboCountryFlag.SelectedIndex
             .AddWPCoordinates = chkAddWPCoords.Checked
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
                 .ExtraFiles.Add(lstAllFiles.Items(i))
+            Next
+            .LockCountries = chkLockCountries.Checked
+            For i As Integer = 0 To lstAllCountries.Items.Count - 1
+                .Countries.Add(lstAllCountries.Items(i))
             Next
             .GroupClub = cboGroupOrClubName.Text
             .EventTopic = txtEventTitle.Text
@@ -2282,6 +2316,7 @@ Public Class Main
                 End If
                 txtFlightPlanFile.Text = .FlightPlanFilename
                 Me.Update()
+                chkLockCountries.Checked = .LockCountries
                 LoadFlightPlan(txtFlightPlanFile.Text)
 
                 If File.Exists(.WeatherFilename) Then
@@ -2324,7 +2359,6 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
-                cboCountryFlag.SelectedIndex = .CountryFlag
                 chkAddWPCoords.Checked = .AddWPCoordinates
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
@@ -2341,6 +2375,13 @@ Public Class Main
 
                             lstAllFiles.Items.Add(.ExtraFiles(i))
 
+                        End If
+                    Next
+                End If
+                If .Countries.Count > 0 Then
+                    For i As Integer = 0 To .Countries.Count - 1
+                        If _SF.CountryFlagCodes.ContainsKey(.Countries(i)) AndAlso Not lstAllCountries.Items.Contains(.Countries(i)) Then
+                            lstAllCountries.Items.Add(.Countries(i))
                         End If
                     Next
                 End If

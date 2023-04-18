@@ -34,6 +34,12 @@ Partial Class Main
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.grbTrackInfo = New System.Windows.Forms.GroupBox()
+        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
+        Me.btnMoveCountryDown = New System.Windows.Forms.Button()
+        Me.btnMoveCountryUp = New System.Windows.Forms.Button()
+        Me.btnRemoveCountry = New System.Windows.Forms.Button()
+        Me.btnAddCountry = New System.Windows.Forms.Button()
+        Me.lstAllCountries = New System.Windows.Forms.ListBox()
         Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.chkAddWPCoords = New System.Windows.Forms.CheckBox()
@@ -356,6 +362,12 @@ Partial Class Main
         '
         'grbTrackInfo
         '
+        Me.grbTrackInfo.Controls.Add(Me.chkLockCountries)
+        Me.grbTrackInfo.Controls.Add(Me.btnMoveCountryDown)
+        Me.grbTrackInfo.Controls.Add(Me.btnMoveCountryUp)
+        Me.grbTrackInfo.Controls.Add(Me.btnRemoveCountry)
+        Me.grbTrackInfo.Controls.Add(Me.btnAddCountry)
+        Me.grbTrackInfo.Controls.Add(Me.lstAllCountries)
         Me.grbTrackInfo.Controls.Add(Me.cboCountryFlag)
         Me.grbTrackInfo.Controls.Add(Me.Label11)
         Me.grbTrackInfo.Controls.Add(Me.chkAddWPCoords)
@@ -429,28 +441,100 @@ Partial Class Main
         Me.grbTrackInfo.TabIndex = 2
         Me.grbTrackInfo.TabStop = False
         '
+        'chkLockCountries
+        '
+        Me.chkLockCountries.AutoSize = True
+        Me.chkLockCountries.Location = New System.Drawing.Point(166, 845)
+        Me.chkLockCountries.Name = "chkLockCountries"
+        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCountries.TabIndex = 54
+        Me.chkLockCountries.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
+        Me.chkLockCountries.UseVisualStyleBackColor = True
+        '
+        'btnMoveCountryDown
+        '
+        Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 872)
+        Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
+        Me.btnMoveCountryDown.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryDown.TabIndex = 54
+        Me.btnMoveCountryDown.Tag = ""
+        Me.btnMoveCountryDown.Text = "▼"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryDown, "Click to move the selected countries down in the list.")
+        Me.btnMoveCountryDown.UseVisualStyleBackColor = True
+        '
+        'btnMoveCountryUp
+        '
+        Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 836)
+        Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
+        Me.btnMoveCountryUp.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryUp.TabIndex = 54
+        Me.btnMoveCountryUp.Tag = ""
+        Me.btnMoveCountryUp.Text = "▲"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
+        Me.btnMoveCountryUp.UseVisualStyleBackColor = True
+        '
+        'btnRemoveCountry
+        '
+        Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 872)
+        Me.btnRemoveCountry.Name = "btnRemoveCountry"
+        Me.btnRemoveCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnRemoveCountry.TabIndex = 54
+        Me.btnRemoveCountry.Tag = ""
+        Me.btnRemoveCountry.Text = "Remove Country"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveCountry, "Remove the selected countries from the list")
+        Me.btnRemoveCountry.UseVisualStyleBackColor = True
+        '
+        'btnAddCountry
+        '
+        Me.btnAddCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddCountry.Location = New System.Drawing.Point(189, 837)
+        Me.btnAddCountry.Name = "btnAddCountry"
+        Me.btnAddCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnAddCountry.TabIndex = 54
+        Me.btnAddCountry.Tag = ""
+        Me.btnAddCountry.Text = "Add Country"
+        Me.ToolTip1.SetToolTip(Me.btnAddCountry, "Click to add the selected country to the list")
+        Me.btnAddCountry.UseVisualStyleBackColor = True
+        '
+        'lstAllCountries
+        '
+        Me.lstAllCountries.FormattingEnabled = True
+        Me.lstAllCountries.HorizontalScrollbar = True
+        Me.lstAllCountries.ItemHeight = 20
+        Me.lstAllCountries.Location = New System.Drawing.Point(364, 837)
+        Me.lstAllCountries.Name = "lstAllCountries"
+        Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllCountries.Size = New System.Drawing.Size(356, 64)
+        Me.lstAllCountries.TabIndex = 54
+        Me.lstAllCountries.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
+        '
         'cboCountryFlag
         '
         Me.cboCountryFlag.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cboCountryFlag.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboCountryFlag.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboCountryFlag.FormattingEnabled = True
-        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 873)
+        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 799)
         Me.cboCountryFlag.Name = "cboCountryFlag"
         Me.cboCountryFlag.Size = New System.Drawing.Size(531, 32)
         Me.cboCountryFlag.TabIndex = 54
         Me.cboCountryFlag.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select the optional Country Flag to add to the title")
+        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(6, 876)
+        Me.Label11.Location = New System.Drawing.Point(6, 802)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(123, 26)
+        Me.Label11.Size = New System.Drawing.Size(145, 26)
         Me.Label11.TabIndex = 64
-        Me.Label11.Text = "Country/Flag"
+        Me.Label11.Text = "Countries/Flags"
         '
         'chkAddWPCoords
         '
@@ -1150,7 +1234,7 @@ Partial Class Main
         Me.txtLongDescription.Multiline = True
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtLongDescription.Size = New System.Drawing.Size(531, 297)
+        Me.txtLongDescription.Size = New System.Drawing.Size(531, 224)
         Me.txtLongDescription.TabIndex = 53
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
@@ -2713,4 +2797,10 @@ Partial Class Main
     Friend WithEvents Label10 As Label
     Friend WithEvents cboCountryFlag As ComboBox
     Friend WithEvents Label11 As Label
+    Friend WithEvents btnMoveCountryDown As Button
+    Friend WithEvents btnMoveCountryUp As Button
+    Friend WithEvents btnRemoveCountry As Button
+    Friend WithEvents btnAddCountry As Button
+    Friend WithEvents lstAllCountries As ListBox
+    Friend WithEvents chkLockCountries As CheckBox
 End Class

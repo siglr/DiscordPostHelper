@@ -6,6 +6,7 @@
     Public ReadOnly WPName As String = String.Empty
     Public IsTaskStart As Boolean = False
     Public IsTaskEnd As Boolean = False
+    Public Country As String = String.Empty
 
     Private Shared _TaskStartFound As Boolean = False
 
@@ -22,6 +23,8 @@
         CheckTaskStartOrEnd()
 
         SetLatitudeAndLongitude(strWorldPosition, Latitude, Longitude)
+
+        Country = CountryGeo.GetCountryFromCoordinates(Latitude, Longitude)
 
         'Set name of waypoint
         If strFullATCId.Contains("+") OrElse strFullATCId.Contains("|") Then
