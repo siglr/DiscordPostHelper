@@ -1250,8 +1250,14 @@ Public Class Main
 
         Dim eventDay As DayOfWeek
 
-        lblMeetTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventMeetDate.Value.Year, dtEventMeetDate.Value.Month, dtEventMeetDate.Value.Day, dtEventMeetTime.Value.Hour, dtEventMeetTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
+        Dim theDate As Date
+
+        theDate = New Date(dtEventMeetDate.Value.Year, dtEventMeetDate.Value.Month, dtEventMeetDate.Value.Day, dtEventMeetTime.Value.Hour, dtEventMeetTime.Value.Minute, 0)
+        lblMeetTimeResult.Text = _SF.FormatEventDateTime(theDate, eventDay, chkDateTimeUTC.Checked)
         ToolTip1.SetToolTip(lblMeetTimeResult, eventDay.ToString)
+
+        'Check if local DST applies for this date
+        lblLocalDSTWarning.Visible = _SF.DSTAppliesForLocalDate(theDate)
 
         lblSyncTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventSyncFlyDate.Value.Year, dtEventSyncFlyDate.Value.Month, dtEventSyncFlyDate.Value.Day, dtEventSyncFlyTime.Value.Hour, dtEventSyncFlyTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
         ToolTip1.SetToolTip(lblSyncTimeResult, eventDay.ToString)

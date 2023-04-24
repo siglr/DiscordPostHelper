@@ -220,6 +220,7 @@ Partial Class Main
         Me.btnMapZoomOut = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
+        Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
@@ -1848,6 +1849,7 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
+        Me.grpGroupEventPost.Controls.Add(Me.lblLocalDSTWarning)
         Me.grpGroupEventPost.Controls.Add(Me.chkIncludeGotGravelInvite)
         Me.grpGroupEventPost.Controls.Add(Me.Label48)
         Me.grpGroupEventPost.Controls.Add(Me.lblEventTaskDistance)
@@ -2558,6 +2560,17 @@ Partial Class Main
         Me.cboBriefingMap.TabIndex = 85
         Me.cboBriefingMap.Visible = False
         '
+        'lblLocalDSTWarning
+        '
+        Me.lblLocalDSTWarning.AutoSize = True
+        Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
+        Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
+        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
+        Me.lblLocalDSTWarning.TabIndex = 51
+        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
+        Me.lblLocalDSTWarning.Visible = False
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2803,4 +2816,5 @@ Partial Class Main
     Friend WithEvents btnAddCountry As Button
     Friend WithEvents lstAllCountries As ListBox
     Friend WithEvents chkLockCountries As CheckBox
+    Friend WithEvents lblLocalDSTWarning As Label
 End Class

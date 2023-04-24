@@ -40,13 +40,26 @@ Public Class SupportingFeatures
     End Sub
 
     Private Sub LoadDefaultClubEvents()
+        Dim xmlDoc As New XmlDocument()
+        xmlDoc.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KnownSoaringClubs.xml"))
 
-        DefaultKnownClubEvents.Add("GG-STC", New PresetEvent("GG-STC", "East USA", "Unicom 1", DayOfWeek.Wednesday, DateTime.Parse("1:00 AM"), 10, 0, 10, False))
-        DefaultKnownClubEvents.Add("GG-SFC", New PresetEvent("GG-SFC", "West USA", "Unicom 3", DayOfWeek.Friday, DateTime.Parse("9:00 PM"), 30, 0, 0, False))
-        DefaultKnownClubEvents.Add("SSC SATURDAY", New PresetEvent("SSC Saturday", "West Europe", "Sim Soaring Club (PTT)", DayOfWeek.Saturday, DateTime.Parse("5:45 PM"), 15, 0, 30, True))
-        DefaultKnownClubEvents.Add("AUS TUESDAYS", New PresetEvent("Aus Tuesdays", "Southeast Asia", "Flight 01", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), 15, 0, 15, True))
-        'DefaultKnownClubEvents.Add("DTS", New PresetEvent("DTS", "West USA", "Thermal Smashing", DayOfWeek.Tuesday, DateTime.Parse("8:30 AM"), True))
+        Dim events As XmlNodeList = xmlDoc.GetElementsByTagName("KnownSoaringClub")
 
+        For Each eventNode As XmlNode In events
+            Dim clubId As String = eventNode("ClubId").InnerText
+            Dim clubName As String = eventNode("ClubName").InnerText
+            Dim msfsServer As String = eventNode("MSFSServer").InnerText
+            Dim voiceChannel As String = eventNode("VoiceChannel").InnerText
+            Dim dayOfWeek As DayOfWeek = [Enum].Parse(GetType(DayOfWeek), eventNode("ZuluDayOfWeek").InnerText)
+            Dim zuluTime As DateTime = DateTime.Parse(eventNode("ZuluTime").InnerText)
+            Dim syncFlyDelay As Integer = Integer.Parse(eventNode("SyncFlyDelay").InnerText)
+            Dim launchDelay As Integer = Integer.Parse(eventNode("LaunchDelay").InnerText)
+            Dim startTaskDelay As Integer = Integer.Parse(eventNode("StartTaskDelay").InnerText)
+            Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
+
+            Dim presetEvent As New PresetEvent(clubId, clubName, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward)
+            DefaultKnownClubEvents.Add(clubId, presetEvent)
+        Next
     End Sub
 
     Public Sub PopulateSoaringClubList(ByVal ctlControl As IList)
@@ -822,4 +835,11 @@ Public Class SupportingFeatures
         Next
 
     End Sub
+
+    Public Function DSTAppliesForLocalDate(localDateTime As Date) As Boolean
+        Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
+        ' Check if the local time zone is currently observing daylight saving time
+        Return localTimeZone.IsDaylightSavingTime(localDateTime)
+
+    End Function
 End Class

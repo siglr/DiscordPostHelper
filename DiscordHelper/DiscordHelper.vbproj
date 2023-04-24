@@ -130,6 +130,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="KnownSoaringClubs.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="up arrow.png" />
     <None Include="right arrow.png" />
     <None Include="left arrow.png" />

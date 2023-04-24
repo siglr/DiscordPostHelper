@@ -1,5 +1,6 @@
 ﻿Public Class PresetEvent
 
+    Public ReadOnly Property ClubId As String
     Public ReadOnly Property ClubName As String
     Public ReadOnly Property MSFSServer As String
     Public ReadOnly Property VoiceChannel As String
@@ -11,7 +12,8 @@
     Public ReadOnly Property EligibleAward As Boolean
 
 
-    Public Sub New(pClubName As String,
+    Public Sub New(pClubId As String,
+                   pClubName As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
                    pZuluDayOfWeek As DayOfWeek,
@@ -21,6 +23,7 @@
                    pStartTaskDelay As Integer,
                    pEligibleAward As Boolean)
 
+        ClubId = pClubId
         ClubName = pClubName
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
@@ -34,14 +37,18 @@
     End Sub
 
     Public Function GetZuluTimeForDate(selectedDate As Date) As DateTime
-        Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
-        ' Check if the local time zone is currently observing daylight saving time
-        Dim isDst As Boolean = localTimeZone.IsDaylightSavingTime(selectedDate)
-        If isDst Then
-            Return ZuluTime.AddHours(-1)
-        Else
-            Return ZuluTime
-        End If
+
+        'Going back to always returning ZuluTime without checking daylight savings
+        Return ZuluTime
+
+        'Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
+        '' Check if the local time zone is currently observing daylight saving time
+        'Dim isDst As Boolean = localTimeZone.IsDaylightSavingTime(selectedDate)
+        'If isDst Then
+        '    Return ZuluTime.AddHours(-1)
+        'Else
+        '    Return ZuluTime
+        'End If
 
     End Function
 

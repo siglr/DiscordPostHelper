@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KnownSoaringClubs>
+  <KnownSoaringClub>
+    <ClubId>GG-STC (DST)</ClubId>
+    <ClubName>GG-STC</ClubName>
+    <MSFSServer>East USA</MSFSServer>
+    <VoiceChannel>Unicom 1</VoiceChannel>
+    <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
+    <ZuluTime>11:30 PM</ZuluTime>
+    <SyncFlyDelay>10</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>10</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>GG-STC (NT)</ClubId>
+    <ClubName>GG-STC</ClubName>
+    <MSFSServer>East USA</MSFSServer>
+    <VoiceChannel>Unicom 1</VoiceChannel>
+    <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>
+    <ZuluTime>00:30 AM</ZuluTime>
+    <SyncFlyDelay>10</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>10</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>GG-SFC</ClubId>
+    <ClubName>GG-SFC</ClubName>
+    <MSFSServer>West USA</MSFSServer>
+    <VoiceChannel>Unicom 3</VoiceChannel>
+    <ZuluDayOfWeek>Friday</ZuluDayOfWeek>
+    <ZuluTime>9:00 PM</ZuluTime>
+    <SyncFlyDelay>30</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>0</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>SSC SATURDAY</ClubId>
+    <ClubName>SSC Saturday</ClubName>
+    <MSFSServer>West Europe</MSFSServer>
+    <VoiceChannel>Sim Soaring Club (PTT)</VoiceChannel>
+    <ZuluDayOfWeek>Saturday</ZuluDayOfWeek>
+    <ZuluTime>5:45 PM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>30</StartTaskDelay>
+    <EligibleAward>True</EligibleAward>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>AUS SATURDAY</ClubId>
+    <ClubName>AUS Tuesdays</ClubName>
+    <MSFSServer>Southeast Asia</MSFSServer>
+    <VoiceChannel>Flight 01</VoiceChannel>
+    <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
+    <ZuluTime>8:30 AM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>True</EligibleAward>
+  </KnownSoaringClub>
+</KnownSoaringClubs>
