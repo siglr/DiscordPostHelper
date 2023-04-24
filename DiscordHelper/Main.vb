@@ -1027,7 +1027,7 @@ Public Class Main
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
-            cboGroupOrClubName.Text = _ClubPreset.ClubName
+            cboGroupOrClubName.Text = _ClubPreset.ClubId
             cboMSFSServer.Text = _ClubPreset.MSFSServer
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
@@ -1298,7 +1298,7 @@ Public Class Main
 
         If txtEventTitle.Text <> String.Empty Then
             If cboGroupOrClubName.SelectedIndex > -1 Then
-                sb.Append($"{cboGroupOrClubName.Text} - ")
+                sb.Append($"{_ClubPreset.ClubName} - ")
             End If
             sb.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
             sb.AppendLine()
@@ -1374,7 +1374,7 @@ Public Class Main
         txtDiscordEventTopic.Text = String.Empty
         If Not txtEventTitle.Text = String.Empty Then
             If cboGroupOrClubName.SelectedIndex > -1 Then
-                txtDiscordEventTopic.AppendText($"{cboGroupOrClubName.Text} - ")
+                txtDiscordEventTopic.AppendText($"{_ClubPreset.ClubName} - ")
             End If
             txtDiscordEventTopic.AppendText(txtEventTitle.Text)
         End If
