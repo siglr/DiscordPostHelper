@@ -2,6 +2,15 @@
   <CurrentLatestVersion>23.4.18.1</CurrentLatestVersion>
   <Releases>
     <Release>
+      <ReleaseVersion>23.4.24.1</ReleaseVersion>
+      <ReleaseTitle>Known Clubs now in XML file</ReleaseTitle>
+      <ReleaseNotes>
+        Known Clubs informations are now stored in an external XML file.
+
+        Reverted Daylight Saving Time code to Zulu only, with warning visible when DST applies for the selected event date.
+      </ReleaseNotes>
+    </Release>
+    <Release>
       <ReleaseVersion>23.4.18.1</ReleaseVersion>
       <ReleaseTitle>Multiple country flags and autoload countries</ReleaseTitle>
       <ReleaseNotes>
