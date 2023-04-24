@@ -15,7 +15,25 @@ Public Class CountryGeo
 
         Dim url As String = $"http://dev.virtualearth.net/REST/v1/Locations/{lat},{lon}?includeEntityTypes=countryRegion&o=xml&key=u55CcFPOKv1c2SL4A4CT~I9NvEguTlf-h2ykmuGRMKw~ApGdr1VVqULcZjF-BUbsyb2VXD52pcbpvfA34-hHmJwP2_qzmD9fNp7TxLx0ePGZ"
         Dim client As New WebClient()
-        Dim data As String = client.DownloadString(url)
+        Dim data As String = ""
+        Dim attempts As Integer = 0
+        While attempts < 10
+            Try
+                data = client.DownloadString(url)
+                Exit While
+            Catch ex As WebException
+                If ex.Message.Contains("(429) Too Many Requests") Then
+                    attempts += 1
+                    System.Threading.Thread.Sleep(1000) ' Wait for 1 second
+                Else
+                    Throw ex
+                End If
+            End Try
+        End While
+
+        If attempts = 10 Then
+            Throw New Exception("Too many attempts to retrieve data from the API")
+        End If
 
         Dim xmlDoc As New XmlDocument()
         xmlDoc.LoadXml(data)
