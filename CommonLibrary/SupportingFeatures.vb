@@ -19,6 +19,7 @@ Public Class SupportingFeatures
     Public Enum ClientApp As Integer
         DiscordPostHelper = 1
         SoaringTaskBrowser = 2
+        DPHXUnpackAndLoad = 3
     End Enum
 
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)

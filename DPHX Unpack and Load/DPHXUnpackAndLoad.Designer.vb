@@ -1,0 +1,134 @@
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Partial Class DPHXUnpackAndLoad
+    Inherits System.Windows.Forms.Form
+
+    'Form overrides dispose to clean up the component list.
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+        Try
+            If disposing AndAlso components IsNot Nothing Then
+                components.Dispose()
+            End If
+        Finally
+            MyBase.Dispose(disposing)
+        End Try
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    <System.Diagnostics.DebuggerStepThrough()> _
+    Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Me.topButtonsArea = New System.Windows.Forms.Panel()
+        Me.LoadDPHX = New System.Windows.Forms.Button()
+        Me.btnSettings = New System.Windows.Forms.Button()
+        Me.btnCopyFiles = New System.Windows.Forms.Button()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.pnlPackageFileName = New System.Windows.Forms.Panel()
+        Me.txtPackageName = New System.Windows.Forms.TextBox()
+        Me.topButtonsArea.SuspendLayout()
+        Me.pnlPackageFileName.SuspendLayout()
+        Me.SuspendLayout()
+        '
+        'topButtonsArea
+        '
+        Me.topButtonsArea.Controls.Add(Me.btnCopyFiles)
+        Me.topButtonsArea.Controls.Add(Me.LoadDPHX)
+        Me.topButtonsArea.Controls.Add(Me.btnSettings)
+        Me.topButtonsArea.Dock = System.Windows.Forms.DockStyle.Top
+        Me.topButtonsArea.Location = New System.Drawing.Point(0, 0)
+        Me.topButtonsArea.Name = "topButtonsArea"
+        Me.topButtonsArea.Padding = New System.Windows.Forms.Padding(5)
+        Me.topButtonsArea.Size = New System.Drawing.Size(1095, 48)
+        Me.topButtonsArea.TabIndex = 0
+        '
+        'LoadDPHX
+        '
+        Me.LoadDPHX.Dock = System.Windows.Forms.DockStyle.Left
+        Me.LoadDPHX.Location = New System.Drawing.Point(5, 5)
+        Me.LoadDPHX.Name = "LoadDPHX"
+        Me.LoadDPHX.Size = New System.Drawing.Size(123, 38)
+        Me.LoadDPHX.TabIndex = 0
+        Me.LoadDPHX.Text = "Load DPHX"
+        Me.ToolTip1.SetToolTip(Me.LoadDPHX, "Click to select and open a DPHX package file")
+        Me.LoadDPHX.UseVisualStyleBackColor = True
+        '
+        'btnSettings
+        '
+        Me.btnSettings.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btnSettings.Location = New System.Drawing.Point(967, 5)
+        Me.btnSettings.Name = "btnSettings"
+        Me.btnSettings.Size = New System.Drawing.Size(123, 38)
+        Me.btnSettings.TabIndex = 2
+        Me.btnSettings.Text = "Settings"
+        Me.ToolTip1.SetToolTip(Me.btnSettings, "Click to open the Settings windows")
+        Me.btnSettings.UseVisualStyleBackColor = True
+        '
+        'btnCopyFiles
+        '
+        Me.btnCopyFiles.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnCopyFiles.Enabled = False
+        Me.btnCopyFiles.Location = New System.Drawing.Point(128, 5)
+        Me.btnCopyFiles.Name = "btnCopyFiles"
+        Me.btnCopyFiles.Size = New System.Drawing.Size(123, 38)
+        Me.btnCopyFiles.TabIndex = 1
+        Me.btnCopyFiles.Text = "Unpack!"
+        Me.ToolTip1.SetToolTip(Me.btnCopyFiles, "Click to unpack the files to their right locations")
+        Me.btnCopyFiles.UseVisualStyleBackColor = True
+        '
+        'OpenFileDialog1
+        '
+        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        '
+        'pnlPackageFileName
+        '
+        Me.pnlPackageFileName.Controls.Add(Me.txtPackageName)
+        Me.pnlPackageFileName.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlPackageFileName.Location = New System.Drawing.Point(0, 48)
+        Me.pnlPackageFileName.Name = "pnlPackageFileName"
+        Me.pnlPackageFileName.Padding = New System.Windows.Forms.Padding(5)
+        Me.pnlPackageFileName.Size = New System.Drawing.Size(1095, 32)
+        Me.pnlPackageFileName.TabIndex = 1
+        '
+        'txtPackageName
+        '
+        Me.txtPackageName.Location = New System.Drawing.Point(8, 1)
+        Me.txtPackageName.Name = "txtPackageName"
+        Me.txtPackageName.ReadOnly = True
+        Me.txtPackageName.Size = New System.Drawing.Size(1079, 27)
+        Me.txtPackageName.TabIndex = 0
+        '
+        'DPHXUnpackAndLoad
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(1095, 758)
+        Me.Controls.Add(Me.pnlPackageFileName)
+        Me.Controls.Add(Me.topButtonsArea)
+        Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.MinimumSize = New System.Drawing.Size(800, 600)
+        Me.Name = "DPHXUnpackAndLoad"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Form1"
+        Me.topButtonsArea.ResumeLayout(False)
+        Me.pnlPackageFileName.ResumeLayout(False)
+        Me.pnlPackageFileName.PerformLayout()
+        Me.ResumeLayout(False)
+
+    End Sub
+
+    Friend WithEvents topButtonsArea As Panel
+    Friend WithEvents btnSettings As Button
+    Friend WithEvents LoadDPHX As Button
+    Friend WithEvents btnCopyFiles As Button
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents OpenFileDialog1 As OpenFileDialog
+    Friend WithEvents pnlPackageFileName As Panel
+    Friend WithEvents txtPackageName As TextBox
+End Class
