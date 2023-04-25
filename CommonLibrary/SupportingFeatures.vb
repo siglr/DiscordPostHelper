@@ -478,6 +478,36 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Function UnpackDPHXFileToTempFolder(ByVal dphxFilePath As String, ByVal unpackFolder As String) As String
+
+        If Directory.Exists(unpackFolder) Then
+            'Folder exists - delete files
+            Dim files As String() = Directory.GetFiles(unpackFolder)
+            For Each file As String In files
+                IO.File.Delete(file)
+            Next
+        Else
+            'Create folder
+            Directory.CreateDirectory(unpackFolder)
+        End If
+
+        'Unpack files
+        Dim dphFilename As String = String.Empty
+        Dim fileDestination As String = String.Empty
+        Using archive As ZipArchive = ZipFile.OpenRead(dphxFilePath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                fileDestination = Path.Combine(unpackFolder, entry.Name)
+                If Path.GetExtension(fileDestination) = ".dph" Then
+                    dphFilename = fileDestination
+                End If
+                entry.ExtractToFile(fileDestination, True)
+            Next
+        End Using
+
+        Return dphFilename
+
+    End Function
+
     Public Function GetVersionInfo() As VersionInfo
 
         LogDateTime()

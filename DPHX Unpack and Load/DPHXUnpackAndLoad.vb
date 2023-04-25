@@ -1,8 +1,15 @@
 ﻿Imports System.IO
+Imports System.Xml
+Imports System.Xml.Serialization
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class DPHXUnpackAndLoad
 
+    Private ReadOnly _SF As New SupportingFeatures(SupportingFeatures.ClientApp.DPHXUnpackAndLoad)
     Private _currentFile As String = String.Empty
+    Private _XmlDocFlightPlan As XmlDocument
+    Private _XmlDocWeatherPreset As XmlDocument
+    Private _WeatherDetails As WeatherDetails = Nothing
 
     Public Sub SetFormCaption(filename As String)
 
@@ -39,7 +46,7 @@ Public Class DPHXUnpackAndLoad
             If Directory.Exists(Settings.SessionSettings.PackagesFolder) Then
                 OpenFileDialog1.InitialDirectory = Settings.SessionSettings.PackagesFolder
             Else
-                OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+                OpenFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             End If
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtPackageName.Text)
@@ -53,24 +60,59 @@ Public Class DPHXUnpackAndLoad
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-
-            Dim validSessionFile As Boolean = True
-
-            'Check if the selected file is a dph or dphx files
-            If Path.GetExtension(OpenFileDialog1.FileName) = ".dphx" Then
-                'Package - we need to unpack it first
-                'OpenFileDialog1.FileName = _SF.UnpackDPHXFile(OpenFileDialog1.FileName)
-
-                If OpenFileDialog1.FileName = String.Empty Then
-                    validSessionFile = False
-                Else
-                    validSessionFile = True
-                End If
-            End If
-
-            If validSessionFile Then
-            End If
+            LoadDPHXPackage(OpenFileDialog1.FileName)
         End If
 
     End Sub
+
+    Private Function TempDPHXUnpackFolder() As String
+        Return Path.Combine(Settings.SessionSettings.UnpackingFolder, "TempDPHXUnpack")
+    End Function
+
+    Private Sub LoadDPHXPackage(dphxFilename As String)
+
+        Dim newDPHFile As String
+
+        newDPHFile = _SF.UnpackDPHXFileToTempFolder(dphxFilename, TempDPHXUnpackFolder)
+
+        If newDPHFile = String.Empty Then
+            'Invalid file loaded
+            txtPackageName.Text = String.Empty
+            _currentFile = String.Empty
+            btnCopyFiles.Enabled = False
+        Else
+            txtPackageName.Text = dphxFilename
+            _currentFile = dphxFilename
+            btnCopyFiles.Enabled = True
+            txtDPHFilename.Text = newDPHFile
+        End If
+        SetFormCaption(_currentFile)
+
+        If File.Exists(newDPHFile) Then
+            Dim serializer As New XmlSerializer(GetType(AllData))
+            Dim allCurrentData As AllData
+
+            On Error Resume Next
+
+            Using stream As New FileStream(newDPHFile, FileMode.Open)
+                allCurrentData = CType(serializer.Deserialize(stream), AllData)
+            End Using
+
+            'Load flight plan
+            _XmlDocFlightPlan = New XmlDocument
+            _XmlDocFlightPlan.Load(Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(allCurrentData.FlightPlanFilename)))
+            Dim totalDistance As Integer
+            Dim trackDistance As Integer
+            Dim altitudeRestrictions As String = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance)
+
+            'Load weather info
+            _XmlDocWeatherPreset = New XmlDocument
+            _XmlDocWeatherPreset.Load(Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(allCurrentData.WeatherFilename)))
+            _WeatherDetails = Nothing
+            _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
+
+        End If
+
+    End Sub
+
 End Class

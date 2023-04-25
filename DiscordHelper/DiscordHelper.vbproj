@@ -80,7 +80,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllData.vb" />
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
