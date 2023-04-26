@@ -24,7 +24,9 @@
 
         SetLatitudeAndLongitude(strWorldPosition, Latitude, Longitude)
 
-        Country = CountryGeo.GetCountryFromCoordinates(Latitude, Longitude)
+        If SupportingFeatures.ClientRunning = SupportingFeatures.ClientApp.DiscordPostHelper Then
+            Country = CountryGeo.GetCountryFromCoordinates(Latitude, Longitude)
+        End If
 
         'Set name of waypoint
         If strFullATCId.Contains("+") OrElse strFullATCId.Contains("|") Then

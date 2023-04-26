@@ -1586,49 +1586,13 @@ Public Class Main
         If sbDescription.ToString <> String.Empty Then
             sb.AppendLine(sbDescription.ToString)
         End If
-        FormatMarkdownToRTF(sb.ToString, txtBriefingDescription)
-        'txtBriefingDescription.Text = sb.ToString()
-        'FormatFirstLine(txtBriefingDescription)
+        _SF.FormatMarkdownToRTF(sb.ToString, txtBriefingDescription)
 
         sb.Clear()
 
         'Altitude restrictions 
-        sb.AppendLine(txtAltRestrictions.Text.Replace("**", ""))
-        txtBriefingRestrictions.Text = sb.ToString()
-        FormatFirstLine(txtBriefingRestrictions)
-
-    End Sub
-
-    Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox)
-        ' Regex patterns to match bold and italic texts
-        Dim boldPattern As String = "\*\*(.+?)\*\*"
-        Dim italicPattern As String = "(?<!\*)\*(.+?)\*(?!\*)"
-
-        ' Replace bold and italic markdown syntax with corresponding RTF code
-        Dim boldReplaced As String = Regex.Replace(input, boldPattern, "{\b $1\b0 }")
-        Dim rtfFormatted As String = Regex.Replace(boldReplaced, italicPattern, "{\i $1\i0 }")
-
-        ' Replace vbcrlf with RTF line break code
-        rtfFormatted = rtfFormatted.Replace(vbCrLf, "\line ")
-
-        ' Set the RTF-formatted text to the RichTextBox control
-        richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
-    End Sub
-
-    Private Sub FormatFirstLine(rtb As RichTextBox)
-        Dim lineBreakIndex As Integer = rtb.Text.IndexOf(vbLf)
-
-        If lineBreakIndex > -1 Then
-            ' Select the first line
-            rtb.SelectionStart = 0
-            rtb.SelectionLength = lineBreakIndex
-
-            ' Change the font to bold
-            rtb.SelectionFont = New Font(rtb.Font, FontStyle.Bold)
-
-            'Replace **
-
-        End If
+        sb.AppendLine(txtAltRestrictions.Text)
+        _SF.FormatMarkdownToRTF(sb.ToString, txtBriefingRestrictions)
 
     End Sub
 

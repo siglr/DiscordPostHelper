@@ -59,7 +59,7 @@ Public Class Settings
 
         'Discard all changes
         SessionSettings.Load()
-        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
 
     End Sub
