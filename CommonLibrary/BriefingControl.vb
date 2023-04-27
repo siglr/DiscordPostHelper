@@ -1,8 +1,10 @@
 ﻿Imports System.Drawing
 Imports System.Globalization
 Imports System.IO
+Imports System.Linq.Expressions
 Imports System.Text
 Imports System.Web.SessionState
+Imports System.Web.UI.WebControls
 Imports System.Windows.Forms
 Imports System.Xml
 
@@ -13,10 +15,18 @@ Public Class BriefingControl
     Private _WeatherDetails As WeatherDetails = Nothing
     Private _SF As SupportingFeatures
     Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
+    Private _sessionData As AllData
+
+    Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As IntPtr, ByVal nIndex As Integer) As Integer
+    Public Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Integer) As Integer
+    Public Const GWL_STYLE As Integer = (-16)
+    Public Const WS_VSCROLL As Integer = &H200000
+    Public Const WS_HSCROLL As Integer = &H100000
 
     Public Sub GenerateBriefing(supportFeat As SupportingFeatures, sessionData As AllData, unpackFolder As String)
 
         _SF = supportFeat
+        _sessionData = sessionData
 
         'Load flight plan
         _XmlDocFlightPlan = New XmlDocument
@@ -60,7 +70,7 @@ Public Class BriefingControl
         sb.Append($"You will land at \b {_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalICAO)}{_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalName, True)}{_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalExtra, True, True)}\b0\line ")
 
         'Type of soaring
-        Dim soaringType As String = GetSoaringTypesSelected(sessionData)
+        Dim soaringType As String = GetSoaringTypesSelected()
         If soaringType.Trim <> String.Empty OrElse sessionData.SoaringExtraInfo <> String.Empty Then
             sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(sessionData.SoaringExtraInfo, True, True)}\b0\line ")
         End If
@@ -118,21 +128,87 @@ Public Class BriefingControl
         End If
         sb.Append("}")
         txtBriefing.Rtf = sb.ToString()
+        SetZoomFactorOfRichTextBox(txtBriefing)
 
         sb.Clear()
 
-        imgMap.Image = System.Drawing.Image.FromFile(Path.Combine(unpackFolder, Path.GetFileName(sessionData.MapImageSelected)))
+        If sessionData.MapImageSelected = String.Empty Then
+            imageViewer.Enabled = False
+        Else
+            imageViewer.LoadImage(sessionData.MapImageSelected)
+        End If
+
+        'Build full description
+        If sessionData.LongDescription <> String.Empty Then
+            sb.AppendLine("**Full Description**")
+            sb.AppendLine(sessionData.LongDescription.Replace("($*$)", Environment.NewLine))
+            _SF.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
+
+        End If
+
+        'Build altitude restrictions
+        sb.Clear()
+        If altitudeRestrictions <> String.Empty Then
+            sb.AppendLine(altitudeRestrictions)
+            _SF.FormatMarkdownToRTF(sb.ToString, txtAltitudeRestrictions)
+        End If
 
     End Sub
 
-    Private Function GetSoaringTypesSelected(sessionData As AllData) As String
+    Private Sub SetZoomFactorOfRichTextBox(rtfControl As RichTextBox)
+
+        If rtfControl.Text.Trim = String.Empty Then
+            Exit Sub
+        End If
+
+        Dim bVScrollBar As Boolean
+        bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+        Select Case bVScrollBar
+            Case True
+                'Scrollbar is visible - Make it smaller
+                Do
+                    If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
+                        Exit Do
+                    End If
+                    rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
+                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                    'If the scrollbar is no longer visible we are done!
+                    If bVScrollBar = False Then Exit Do
+                Loop
+            Case False
+                'Scrollbar is not visible - Make it bigger
+                Do
+                    If (rtfControl.ZoomFactor + 0.01) >= 64 Then
+                        Exit Do
+                    End If
+                    rtfControl.ZoomFactor = rtfControl.ZoomFactor + 0.01
+                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                    If bVScrollBar = True Then
+                        Do
+                            'Found the scrollbar, make smaller until bar is not visible
+                            If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
+                                Exit Do
+                            End If
+                            rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
+                            bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                            'If the scrollbar is no longer visible we are done!
+                            If bVScrollBar = False Then Exit Do
+                        Loop
+                        Exit Do
+                    End If
+                Loop
+        End Select
+
+    End Sub
+
+    Private Function GetSoaringTypesSelected() As String
         Dim types As String = String.Empty
 
-        If sessionData.SoaringRidge And sessionData.SoaringThermals Then
+        If _sessionData.SoaringRidge And _sessionData.SoaringThermals Then
             types = "Ridge and Thermals"
-        ElseIf sessionData.SoaringRidge Then
+        ElseIf _sessionData.SoaringRidge Then
             types = "Ridge"
-        ElseIf sessionData.SoaringThermals Then
+        ElseIf _sessionData.SoaringThermals Then
             types = "Thermals"
         End If
 
@@ -140,24 +216,35 @@ Public Class BriefingControl
 
     End Function
 
-    Private Sub btnMapZoomIn_Click(sender As Object, e As EventArgs) 
-        Dim ratio As Integer = imgMap.Size.Width * 100 / mapSplitterUpDown.Panel1.Size.Width
-        If ratio <= 200 Then
-            ' Increase the size of the picture box
-            imgMap.Size = New Size(imgMap.Size.Width * 1.1, imgMap.Size.Height * 1.1)
-            imgMap.SizeMode = PictureBoxSizeMode.Zoom
-        End If
+    Private Sub mapPictureBox_DoubleClick(sender As Object, e As EventArgs)
+
+        'Launch the ImageViewer program
+        Dim startInfo As New ProcessStartInfo($"{Application.StartupPath}\ImageViewer.exe", $"""{_sessionData.MapImageSelected}""")
+
+        Process.Start(startInfo)
+
 
     End Sub
 
-    Private Sub btnMapZoomOut_Click(sender As Object, e As EventArgs) 
-        Dim ratio As Integer = imgMap.Size.Width * 100 / mapSplitterUpDown.Panel1.Size.Width
-        If ratio >= 100 Then
-            ' Decrease the size of the picture box
-            imgMap.Size = New Size(imgMap.Size.Width * 0.9, imgMap.Size.Height * 0.9)
-            imgMap.SizeMode = PictureBoxSizeMode.Zoom
-        End If
+    Private Sub tabsBriefing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabsBriefing.SelectedIndexChanged
+
+        AdjustRTBoxControls()
 
     End Sub
 
+    Public Sub AdjustRTBoxControls()
+
+        Select Case tabsBriefing.SelectedIndex = 1
+            Case 0
+                SetZoomFactorOfRichTextBox(txtBriefing)
+            Case 1
+                SetZoomFactorOfRichTextBox(txtFullDescription)
+                SetZoomFactorOfRichTextBox(txtAltitudeRestrictions)
+        End Select
+
+    End Sub
+
+    Private Sub mapSplitterLeftRight_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles mapSplitterLeftRight.SplitterMoved, mapSplitterUpDown.SplitterMoved
+        AdjustRTBoxControls()
+    End Sub
 End Class

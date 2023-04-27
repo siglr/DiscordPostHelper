@@ -1,6 +1,10 @@
 ﻿Imports System.Configuration
 Imports System.IO
+Imports System.Linq.Expressions
+Imports System.Xml.Serialization
+Imports SIGLR.SoaringTools.CommonLibrary
 
+<XmlRoot("DPHXUnpackLoadSettings")>
 Public Class AllSettings
 
     Public Enum AutoOverwriteOptions As Integer
@@ -10,6 +14,7 @@ Public Class AllSettings
     End Enum
 
     Private _MSFSWeatherPresetsFolder As String
+    <XmlElement("MSFSWeatherPresetsFolder")>
     Public Property MSFSWeatherPresetsFolder As String
         Get
             Return _MSFSWeatherPresetsFolder
@@ -22,6 +27,7 @@ Public Class AllSettings
     End Property
 
     Private _FlightPlansFolder As String
+    <XmlElement("FlightPlansFolder")>
     Public Property FlightPlansFolder As String
         Get
             Return _FlightPlansFolder
@@ -34,6 +40,7 @@ Public Class AllSettings
     End Property
 
     Private _UnpackingFolder As String
+    <XmlElement("UnpackingFolder")>
     Public Property UnpackingFolder As String
         Get
             Return _UnpackingFolder
@@ -46,6 +53,7 @@ Public Class AllSettings
     End Property
 
     Private _PackagesFolder As String
+    <XmlElement("PackagesFolder")>
     Public Property PackagesFolder As String
         Get
             Return _PackagesFolder
@@ -57,56 +65,69 @@ Public Class AllSettings
         End Set
     End Property
 
+    <XmlElement("AutoOverwriteFiles")>
     Public Property AutoOverwriteFiles As AutoOverwriteOptions
 
+    <XmlElement("MainFormSize")>
+    Public Property MainFormSize As String
+
+    <XmlElement("MainFormLocation")>
+    Public Property MainFormLocation As String
+
+    Public Sub New()
+
+    End Sub
 
     Public Sub Save()
-        Dim config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
-
-        If Not config.AppSettings.Settings.AllKeys.Contains("MSFSWeatherPresetsFolder") Then
-            config.AppSettings.Settings.Add("MSFSWeatherPresetsFolder", MSFSWeatherPresetsFolder)
-        Else
-            config.AppSettings.Settings("MSFSWeatherPresetsFolder").Value = MSFSWeatherPresetsFolder
-        End If
-
-        If Not config.AppSettings.Settings.AllKeys.Contains("FlightPlansFolder") Then
-            config.AppSettings.Settings.Add("FlightPlansFolder", FlightPlansFolder)
-        Else
-            config.AppSettings.Settings("FlightPlansFolder").Value = FlightPlansFolder
-        End If
-
-        If Not config.AppSettings.Settings.AllKeys.Contains("UnpackingFolder") Then
-            config.AppSettings.Settings.Add("UnpackingFolder", UnpackingFolder)
-        Else
-            config.AppSettings.Settings("UnpackingFolder").Value = UnpackingFolder
-        End If
-
-        If Not config.AppSettings.Settings.AllKeys.Contains("PackagesFolder") Then
-            config.AppSettings.Settings.Add("PackagesFolder", PackagesFolder)
-        Else
-            config.AppSettings.Settings("PackagesFolder").Value = PackagesFolder
-        End If
-
-        If Not config.AppSettings.Settings.AllKeys.Contains("AutoOverwriteFiles") Then
-            config.AppSettings.Settings.Add("AutoOverwriteFiles", CStr(CInt(AutoOverwriteFiles)))
-        Else
-            config.AppSettings.Settings("AutoOverwriteFiles").Value = CStr(CInt(AutoOverwriteFiles))
-        End If
-
-        config.Save(ConfigurationSaveMode.Modified)
-        ConfigurationManager.RefreshSection("appSettings")
+        Dim serializer As New XmlSerializer(GetType(AllSettings))
+        Using stream As New FileStream($"{Application.StartupPath}\DPHXUnpackLoadSettings.xml", FileMode.Create)
+            serializer.Serialize(stream, Me)
+        End Using
     End Sub
 
-    Public Sub Load()
-        Try
-            MSFSWeatherPresetsFolder = ConfigurationManager.AppSettings("MSFSWeatherPresetsFolder")
-            FlightPlansFolder = ConfigurationManager.AppSettings("FlightPlansFolder")
-            UnpackingFolder = ConfigurationManager.AppSettings("UnpackingFolder")
-            PackagesFolder = ConfigurationManager.AppSettings("PackagesFolder")
-            AutoOverwriteFiles = CType(Integer.Parse(ConfigurationManager.AppSettings("AutoOverwriteFiles")), AutoOverwriteOptions)
-        Catch ex As Exception
+    Public Function Load() As Boolean
 
-        End Try
-    End Sub
+        Dim settingsFound As Boolean = True
+
+        If File.Exists($"{Application.StartupPath}\DPHXUnpackLoadSettings.xml") Then
+            Dim serializer As New XmlSerializer(GetType(AllSettings))
+            Dim settingsInFile As AllSettings
+
+            On Error Resume Next
+
+            Using stream As New FileStream($"{Application.StartupPath}\DPHXUnpackLoadSettings.xml", FileMode.Open)
+                settingsInFile = CType(serializer.Deserialize(stream), AllSettings)
+            End Using
+
+            _MSFSWeatherPresetsFolder = settingsInFile.MSFSWeatherPresetsFolder
+            _FlightPlansFolder = settingsInFile.FlightPlansFolder
+            _UnpackingFolder = settingsInFile.UnpackingFolder
+            _PackagesFolder = settingsInFile.PackagesFolder
+            MainFormLocation = settingsInFile.MainFormLocation
+            MainFormSize = settingsInFile.MainFormSize
+            AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
+
+        Else
+            settingsFound = False
+
+            'No settings found - try to auto locate the MSFS default folders
+            Dim folderPathToCheck As String
+            'Weather Presets
+            folderPathToCheck = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalState\Weather\Presets"
+
+            If Directory.Exists(folderPathToCheck) Then
+                _MSFSWeatherPresetsFolder = folderPathToCheck
+            End If
+            'Flight plans
+            folderPathToCheck = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalState"
+            If Directory.Exists(folderPathToCheck) Then
+                _FlightPlansFolder = folderPathToCheck
+            End If
+
+        End If
+
+        Return settingsFound
+
+    End Function
 
 End Class

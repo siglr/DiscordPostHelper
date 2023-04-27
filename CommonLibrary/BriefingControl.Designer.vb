@@ -29,7 +29,10 @@ Partial Class BriefingControl
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
         Me.mapSplitterUpDown = New System.Windows.Forms.SplitContainer()
+        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.mapSplitterLeftRight = New System.Windows.Forms.SplitContainer()
+        Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
+        Me.txtAltitudeRestrictions = New System.Windows.Forms.RichTextBox()
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -38,9 +41,12 @@ Partial Class BriefingControl
         Me.tbpgMainTaskInfo.SuspendLayout()
         Me.tbpgMap.SuspendLayout()
         CType(Me.mapSplitterUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mapSplitterUpDown.Panel1.SuspendLayout()
         Me.mapSplitterUpDown.Panel2.SuspendLayout()
         Me.mapSplitterUpDown.SuspendLayout()
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mapSplitterLeftRight.Panel1.SuspendLayout()
+        Me.mapSplitterLeftRight.Panel2.SuspendLayout()
         Me.mapSplitterLeftRight.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -115,6 +121,7 @@ Partial Class BriefingControl
         'mapSplitterUpDown.Panel1
         '
         Me.mapSplitterUpDown.Panel1.AutoScroll = True
+        Me.mapSplitterUpDown.Panel1.Controls.Add(Me.imageViewer)
         '
         'mapSplitterUpDown.Panel2
         '
@@ -123,14 +130,52 @@ Partial Class BriefingControl
         Me.mapSplitterUpDown.SplitterDistance = 325
         Me.mapSplitterUpDown.TabIndex = 0
         '
+        'imageViewer
+        '
+        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
+        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imageViewer.Name = "imageViewer"
+        Me.imageViewer.Size = New System.Drawing.Size(976, 325)
+        Me.imageViewer.TabIndex = 0
+        '
         'mapSplitterLeftRight
         '
         Me.mapSplitterLeftRight.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mapSplitterLeftRight.Location = New System.Drawing.Point(0, 0)
         Me.mapSplitterLeftRight.Name = "mapSplitterLeftRight"
+        '
+        'mapSplitterLeftRight.Panel1
+        '
+        Me.mapSplitterLeftRight.Panel1.Controls.Add(Me.txtFullDescription)
+        '
+        'mapSplitterLeftRight.Panel2
+        '
+        Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.txtAltitudeRestrictions)
         Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 375)
-        Me.mapSplitterLeftRight.SplitterDistance = 500
+        Me.mapSplitterLeftRight.SplitterDistance = 650
         Me.mapSplitterLeftRight.TabIndex = 0
+        '
+        'txtFullDescription
+        '
+        Me.txtFullDescription.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtFullDescription.Location = New System.Drawing.Point(0, 0)
+        Me.txtFullDescription.Name = "txtFullDescription"
+        Me.txtFullDescription.ReadOnly = True
+        Me.txtFullDescription.Size = New System.Drawing.Size(650, 375)
+        Me.txtFullDescription.TabIndex = 0
+        Me.txtFullDescription.Text = ""
+        '
+        'txtAltitudeRestrictions
+        '
+        Me.txtAltitudeRestrictions.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtAltitudeRestrictions.Location = New System.Drawing.Point(0, 0)
+        Me.txtAltitudeRestrictions.Name = "txtAltitudeRestrictions"
+        Me.txtAltitudeRestrictions.ReadOnly = True
+        Me.txtAltitudeRestrictions.Size = New System.Drawing.Size(322, 375)
+        Me.txtAltitudeRestrictions.TabIndex = 1
+        Me.txtAltitudeRestrictions.Text = ""
         '
         'tbpgEventInfo
         '
@@ -166,9 +211,12 @@ Partial Class BriefingControl
         Me.tabsBriefing.ResumeLayout(False)
         Me.tbpgMainTaskInfo.ResumeLayout(False)
         Me.tbpgMap.ResumeLayout(False)
+        Me.mapSplitterUpDown.Panel1.ResumeLayout(False)
         Me.mapSplitterUpDown.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mapSplitterUpDown.ResumeLayout(False)
+        Me.mapSplitterLeftRight.Panel1.ResumeLayout(False)
+        Me.mapSplitterLeftRight.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mapSplitterLeftRight.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -185,4 +233,7 @@ Partial Class BriefingControl
     Friend WithEvents ToolTip1 As Windows.Forms.ToolTip
     Friend WithEvents mapSplitterUpDown As Windows.Forms.SplitContainer
     Friend WithEvents mapSplitterLeftRight As Windows.Forms.SplitContainer
+    Friend WithEvents imageViewer As ImageViewerControl
+    Friend WithEvents txtFullDescription As Windows.Forms.RichTextBox
+    Friend WithEvents txtAltitudeRestrictions As Windows.Forms.RichTextBox
 End Class

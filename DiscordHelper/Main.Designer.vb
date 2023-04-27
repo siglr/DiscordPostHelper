@@ -158,6 +158,7 @@ Partial Class Main
         Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
         Me.chkIncludeGotGravelInvite = New System.Windows.Forms.CheckBox()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.lblEventTaskDistance = New System.Windows.Forms.Label()
@@ -203,8 +204,6 @@ Partial Class Main
         Me.tabBrief1 = New System.Windows.Forms.TabPage()
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tabBrief2 = New System.Windows.Forms.TabPage()
-        Me.pnlMapImage = New System.Windows.Forms.Panel()
-        Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.txtBriefingRestrictions = New System.Windows.Forms.RichTextBox()
         Me.txtBriefingDescription = New System.Windows.Forms.RichTextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -220,7 +219,7 @@ Partial Class Main
         Me.btnMapZoomOut = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
-        Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
+        Me.pnlMapImage = New System.Windows.Forms.Panel()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
@@ -236,8 +235,6 @@ Partial Class Main
         Me.tabBriefingControl.SuspendLayout()
         Me.tabBrief1.SuspendLayout()
         Me.tabBrief2.SuspendLayout()
-        Me.pnlMapImage.SuspendLayout()
-        CType(Me.imgMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -1897,6 +1894,17 @@ Partial Class Main
         Me.grpGroupEventPost.TabStop = False
         Me.grpGroupEventPost.Text = "Step 1: Group Event Post"
         '
+        'lblLocalDSTWarning
+        '
+        Me.lblLocalDSTWarning.AutoSize = True
+        Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
+        Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
+        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
+        Me.lblLocalDSTWarning.TabIndex = 51
+        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
+        Me.lblLocalDSTWarning.Visible = False
+        '
         'chkIncludeGotGravelInvite
         '
         Me.chkIncludeGotGravelInvite.AutoSize = True
@@ -2402,24 +2410,6 @@ Partial Class Main
         Me.tabBrief2.Text = "Flight & Map"
         Me.tabBrief2.UseVisualStyleBackColor = True
         '
-        'pnlMapImage
-        '
-        Me.pnlMapImage.AutoScroll = True
-        Me.pnlMapImage.Controls.Add(Me.imgMap)
-        Me.pnlMapImage.Location = New System.Drawing.Point(6, 6)
-        Me.pnlMapImage.Name = "pnlMapImage"
-        Me.pnlMapImage.Size = New System.Drawing.Size(1666, 647)
-        Me.pnlMapImage.TabIndex = 9
-        '
-        'imgMap
-        '
-        Me.imgMap.Location = New System.Drawing.Point(0, 8)
-        Me.imgMap.Name = "imgMap"
-        Me.imgMap.Size = New System.Drawing.Size(1647, 639)
-        Me.imgMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.imgMap.TabIndex = 8
-        Me.imgMap.TabStop = False
-        '
         'txtBriefingRestrictions
         '
         Me.txtBriefingRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2560,16 +2550,16 @@ Partial Class Main
         Me.cboBriefingMap.TabIndex = 85
         Me.cboBriefingMap.Visible = False
         '
-        'lblLocalDSTWarning
+        'pnlMapImage
         '
-        Me.lblLocalDSTWarning.AutoSize = True
-        Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
-        Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
-        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
-        Me.lblLocalDSTWarning.TabIndex = 51
-        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
-        Me.lblLocalDSTWarning.Visible = False
+        Me.pnlMapImage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlMapImage.AutoScroll = True
+        Me.pnlMapImage.Location = New System.Drawing.Point(6, 6)
+        Me.pnlMapImage.Name = "pnlMapImage"
+        Me.pnlMapImage.Size = New System.Drawing.Size(1666, 647)
+        Me.pnlMapImage.TabIndex = 9
         '
         'Main
         '
@@ -2614,8 +2604,6 @@ Partial Class Main
         Me.tabBriefingControl.ResumeLayout(False)
         Me.tabBrief1.ResumeLayout(False)
         Me.tabBrief2.ResumeLayout(False)
-        Me.pnlMapImage.ResumeLayout(False)
-        CType(Me.imgMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2804,8 +2792,6 @@ Partial Class Main
     Friend WithEvents cboBriefingMap As ComboBox
     Friend WithEvents btnMapZoomIn As Button
     Friend WithEvents btnMapZoomOut As Button
-    Friend WithEvents pnlMapImage As Panel
-    Friend WithEvents imgMap As PictureBox
     Friend WithEvents chkAddWPCoords As CheckBox
     Friend WithEvents Label10 As Label
     Friend WithEvents cboCountryFlag As ComboBox
@@ -2817,4 +2803,5 @@ Partial Class Main
     Friend WithEvents lstAllCountries As ListBox
     Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents lblLocalDSTWarning As Label
+    Friend WithEvents pnlMapImage As Panel
 End Class

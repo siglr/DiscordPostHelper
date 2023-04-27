@@ -48,8 +48,8 @@ Public Class Settings
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysAsk
             End If
 
-            SessionSettings.Save
-            Me.DialogResult = System.Windows.Forms.DialogResult.OK
+            SessionSettings.Save()
+            Me.DialogResult = DialogResult.OK
             Me.Close()
         End If
 
@@ -58,9 +58,15 @@ Public Class Settings
     Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
 
         'Discard all changes
-        SessionSettings.Load()
-        Me.DialogResult = DialogResult.Cancel
-        Me.Close()
+        If SessionSettings.Load() Then
+            Me.DialogResult = DialogResult.Cancel
+            Me.Close()
+        Else
+            If MessageBox.Show("You must save valid paths on the first run. Click Cancel to exit app.", "Cannot cancel on first run.", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then
+                Me.DialogResult = DialogResult.Abort
+                Me.Close()
+            End If
+        End If
 
     End Sub
 
@@ -190,15 +196,19 @@ Public Class Settings
 
         If Directory.Exists(SessionSettings.FlightPlansFolder) Then
             btnFlightPlanFilesFolder.Text = SessionSettings.FlightPlansFolder
+            ToolTip1.SetToolTip(btnFlightPlanFilesFolder, SessionSettings.FlightPlansFolder)
         End If
         If Directory.Exists(SessionSettings.MSFSWeatherPresetsFolder) Then
             btnWeatherPresetsFolder.Text = SessionSettings.MSFSWeatherPresetsFolder
+            ToolTip1.SetToolTip(btnWeatherPresetsFolder, SessionSettings.MSFSWeatherPresetsFolder)
         End If
         If Directory.Exists(SessionSettings.UnpackingFolder) Then
             btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
+            ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
         End If
         If Directory.Exists(SessionSettings.PackagesFolder) Then
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
+            ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If
 
         Select Case SessionSettings.AutoOverwriteFiles

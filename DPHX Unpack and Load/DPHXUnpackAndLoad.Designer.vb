@@ -34,11 +34,16 @@ Partial Class DPHXUnpackAndLoad
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlPackageFileName = New System.Windows.Forms.Panel()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
+        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+        Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
+        Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.topButtonsArea.SuspendLayout()
         Me.pnlUnpackBtn.SuspendLayout()
         Me.pnlPackageFileName.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'topButtonsArea
@@ -149,15 +154,48 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlDPHFile.Size = New System.Drawing.Size(1077, 32)
         Me.pnlDPHFile.TabIndex = 2
         '
+        'StatusStrip1
+        '
+        Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.warningMSFSRunningToolStrip, Me.packageNameToolStrip})
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 734)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New System.Drawing.Size(1077, 24)
+        Me.StatusStrip1.TabIndex = 4
+        Me.StatusStrip1.Text = "StatusStrip1"
+        '
+        'packageNameToolStrip
+        '
+        Me.packageNameToolStrip.Name = "packageNameToolStrip"
+        Me.packageNameToolStrip.Size = New System.Drawing.Size(93, 19)
+        Me.packageNameToolStrip.Text = "No file loaded"
+        '
+        'ChkMSFS
+        '
+        Me.ChkMSFS.Enabled = True
+        Me.ChkMSFS.Interval = 5000
+        '
+        'warningMSFSRunningToolStrip
+        '
+        Me.warningMSFSRunningToolStrip.Font = New System.Drawing.Font("Segoe UI", 9.163636!, System.Drawing.FontStyle.Bold)
+        Me.warningMSFSRunningToolStrip.ForeColor = System.Drawing.Color.Red
+        Me.warningMSFSRunningToolStrip.Name = "warningMSFSRunningToolStrip"
+        Me.warningMSFSRunningToolStrip.Size = New System.Drawing.Size(179, 19)
+        Me.warningMSFSRunningToolStrip.Text = "⚠️MSFS 2020 Running⚠️"
+        Me.warningMSFSRunningToolStrip.ToolTipText = "MSFS needs to be restarted to see new weather presets after unpacking."
+        Me.warningMSFSRunningToolStrip.Visible = False
+        '
         'ctrlBriefing
         '
-        Me.ctrlBriefing.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ctrlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ctrlBriefing.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.ctrlBriefing.Location = New System.Drawing.Point(0, 109)
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 649)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 635)
         Me.ctrlBriefing.TabIndex = 3
         '
         'DPHXUnpackAndLoad
@@ -165,6 +203,7 @@ Partial Class DPHXUnpackAndLoad
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1077, 758)
+        Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ctrlBriefing)
         Me.Controls.Add(Me.pnlDPHFile)
         Me.Controls.Add(Me.pnlPackageFileName)
@@ -182,7 +221,10 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlPackageFileName.PerformLayout()
         Me.pnlDPHFile.ResumeLayout(False)
         Me.pnlDPHFile.PerformLayout()
+        Me.StatusStrip1.ResumeLayout(False)
+        Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -198,4 +240,8 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents pnlUnpackBtn As Panel
     Friend WithEvents btnCopyFiles As Button
     Friend WithEvents ctrlBriefing As CommonLibrary.BriefingControl
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents packageNameToolStrip As ToolStripStatusLabel
+    Friend WithEvents ChkMSFS As Timer
+    Friend WithEvents warningMSFSRunningToolStrip As ToolStripStatusLabel
 End Class

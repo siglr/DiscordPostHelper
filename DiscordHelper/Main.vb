@@ -169,9 +169,6 @@ Public Class Main
         txtGroupEventPostURL.Text = String.Empty
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
-        imgMap.Image = Nothing
-        imgMap.Width = DefaultMapImageWidth
-        imgMap.Height = DefaultMapImageHeight
         cboBriefingMap.Items.Clear()
         txtBriefing.Text = String.Empty
         txtBriefingDescription.Text = String.Empty
@@ -1408,27 +1405,7 @@ Public Class Main
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
         'Load image
-        imgMap.Image = System.Drawing.Image.FromFile(cboBriefingMap.SelectedItem.ToString)
-
-    End Sub
-
-    Private Sub btnMapZoomIn_Click(sender As Object, e As EventArgs) Handles btnMapZoomIn.Click
-        Dim ratio As Integer = imgMap.Size.Width * 100 / pnlMapImage.Size.Width
-        If ratio <= 200 Then
-            ' Increase the size of the picture box
-            imgMap.Size = New Size(imgMap.Size.Width * 1.1, imgMap.Size.Height * 1.1)
-            imgMap.SizeMode = PictureBoxSizeMode.Zoom
-        End If
-
-    End Sub
-
-    Private Sub btnMapZoomOut_Click(sender As Object, e As EventArgs) Handles btnMapZoomOut.Click
-        Dim ratio As Integer = imgMap.Size.Width * 100 / pnlMapImage.Size.Width
-        If ratio >= 100 Then
-            ' Decrease the size of the picture box
-            imgMap.Size = New Size(imgMap.Size.Width * 0.9, imgMap.Size.Height * 0.9)
-            imgMap.SizeMode = PictureBoxSizeMode.Zoom
-        End If
+        'imgMap.Image = System.Drawing.Image.FromFile(cboBriefingMap.SelectedItem.ToString)
 
     End Sub
 
@@ -1476,9 +1453,6 @@ Public Class Main
             End If
         Next
         If cboBriefingMap.SelectedIndex = -1 Then
-            imgMap.Image = Nothing
-            imgMap.Width = DefaultMapImageWidth
-            imgMap.Height = DefaultMapImageHeight
         End If
 
     End Sub
@@ -2248,8 +2222,6 @@ Public Class Main
             .MapImageSelected = cboBriefingMap.Text
             .MapImageHorizontalScrollValue = pnlMapImage.HorizontalScroll.Value
             .MapImageVerticalScrollValue = pnlMapImage.VerticalScroll.Value
-            .MapImageWidth = imgMap.Width
-            .MapImageHeight = imgMap.Height
 
         End With
 
@@ -2377,18 +2349,9 @@ Public Class Main
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
                 LoadPossibleImagesInMapDropdown(.MapImageSelected)
-                imgMap.Width = .MapImageWidth
-                imgMap.Height = .MapImageHeight
                 pnlMapImage.HorizontalScroll.Value = .MapImageHorizontalScrollValue
                 pnlMapImage.VerticalScroll.Value = .MapImageVerticalScrollValue
             End With
-
-            If imgMap.Width < DefaultMapImageWidth Then
-                imgMap.Width = DefaultMapImageWidth
-            End If
-            If imgMap.Height < DefaultMapImageHeight Then
-                imgMap.Height = DefaultMapImageHeight
-            End If
 
             BuildFPResults()
             BuildWeatherInfoResults()
