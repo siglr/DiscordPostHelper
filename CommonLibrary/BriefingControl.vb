@@ -153,6 +153,16 @@ Public Class BriefingControl
             _SF.FormatMarkdownToRTF(sb.ToString, txtAltitudeRestrictions)
         End If
 
+        'XBOX Coordinates
+        waypointCoordinatesDataGrid.Font = New Font(waypointCoordinatesDataGrid.Font.FontFamily, 12)
+        waypointCoordinatesDataGrid.RowTemplate.Height = 30
+        waypointCoordinatesDataGrid.DataSource = _SF.AllWaypoints
+        Dim gridColumn As DataGridViewColumn = waypointCoordinatesDataGrid.Columns("Latitude")
+        gridColumn.DefaultCellStyle.Format = "N6"
+        gridColumn = waypointCoordinatesDataGrid.Columns("Longitude")
+        gridColumn.DefaultCellStyle.Format = "N6"
+        waypointCoordinatesDataGrid.ColumnHeadersDefaultCellStyle.Font = New Font(waypointCoordinatesDataGrid.Font, FontStyle.Bold)
+
     End Sub
 
     Private Sub SetZoomFactorOfRichTextBox(rtfControl As RichTextBox)
@@ -234,7 +244,7 @@ Public Class BriefingControl
 
     Public Sub AdjustRTBoxControls()
 
-        Select Case tabsBriefing.SelectedIndex = 1
+        Select Case tabsBriefing.SelectedIndex
             Case 0
                 SetZoomFactorOfRichTextBox(txtBriefing)
             Case 1

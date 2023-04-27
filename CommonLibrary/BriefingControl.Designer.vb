@@ -23,6 +23,8 @@ Partial Class BriefingControl
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.pnlTaskBriefing = New System.Windows.Forms.Panel()
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
@@ -36,6 +38,8 @@ Partial Class BriefingControl
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.tbpgXBOX = New System.Windows.Forms.TabPage()
+        Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -48,6 +52,8 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.Panel1.SuspendLayout()
         Me.mapSplitterLeftRight.Panel2.SuspendLayout()
         Me.mapSplitterLeftRight.SuspendLayout()
+        Me.tbpgXBOX.SuspendLayout()
+        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -67,6 +73,7 @@ Partial Class BriefingControl
         Me.tabsBriefing.Controls.Add(Me.tbpgMap)
         Me.tabsBriefing.Controls.Add(Me.tbpgEventInfo)
         Me.tabsBriefing.Controls.Add(Me.tbpgImages)
+        Me.tabsBriefing.Controls.Add(Me.tbpgXBOX)
         Me.tabsBriefing.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tabsBriefing.Location = New System.Drawing.Point(7, 8)
         Me.tabsBriefing.Name = "tabsBriefing"
@@ -197,6 +204,45 @@ Partial Class BriefingControl
         Me.tbpgImages.Text = "Images"
         Me.tbpgImages.UseVisualStyleBackColor = True
         '
+        'tbpgXBOX
+        '
+        Me.tbpgXBOX.Controls.Add(Me.waypointCoordinatesDataGrid)
+        Me.tbpgXBOX.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgXBOX.Name = "tbpgXBOX"
+        Me.tbpgXBOX.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgXBOX.TabIndex = 4
+        Me.tbpgXBOX.Text = "XBOX"
+        Me.tbpgXBOX.UseVisualStyleBackColor = True
+        '
+        'waypointCoordinatesDataGrid
+        '
+        Me.waypointCoordinatesDataGrid.AllowUserToAddRows = False
+        Me.waypointCoordinatesDataGrid.AllowUserToDeleteRows = False
+        Me.waypointCoordinatesDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Variable Display", 14.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.waypointCoordinatesDataGrid.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.waypointCoordinatesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.waypointCoordinatesDataGrid.DefaultCellStyle = DataGridViewCellStyle2
+        Me.waypointCoordinatesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.waypointCoordinatesDataGrid.Location = New System.Drawing.Point(0, 0)
+        Me.waypointCoordinatesDataGrid.Name = "waypointCoordinatesDataGrid"
+        Me.waypointCoordinatesDataGrid.RowHeadersWidth = 47
+        Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 710)
+        Me.waypointCoordinatesDataGrid.TabIndex = 0
+        '
         'BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -219,6 +265,8 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mapSplitterLeftRight.ResumeLayout(False)
+        Me.tbpgXBOX.ResumeLayout(False)
+        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -236,4 +284,6 @@ Partial Class BriefingControl
     Friend WithEvents imageViewer As ImageViewerControl
     Friend WithEvents txtFullDescription As Windows.Forms.RichTextBox
     Friend WithEvents txtAltitudeRestrictions As Windows.Forms.RichTextBox
+    Friend WithEvents tbpgXBOX As Windows.Forms.TabPage
+    Friend WithEvents waypointCoordinatesDataGrid As Windows.Forms.DataGridView
 End Class
