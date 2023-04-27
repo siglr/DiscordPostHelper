@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.IO.Compression
+Imports System.Linq.Expressions
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Text
@@ -202,7 +203,10 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function BuildAltitudeRestrictions(ByVal pXmlDocFlightPlan As XmlDocument, ByRef pFlightTotalDistanceInKm As Integer, ByRef pTaskTotalDistanceInKm As Integer) As String
+    Public Function BuildAltitudeRestrictions(ByVal pXmlDocFlightPlan As XmlDocument,
+                                              ByRef pFlightTotalDistanceInKm As Integer,
+                                              ByRef pTaskTotalDistanceInKm As Integer,
+                                              Optional includeWPName As Boolean = True) As String
 
         'Build altitude restrictions
         Dim previousATCWaypoing As ATCWaypoint = Nothing
@@ -213,28 +217,36 @@ Public Class SupportingFeatures
         pFlightTotalDistanceInKm = 0
         pTaskTotalDistanceInKm = 0
         AllWaypoints.Clear()
-        For i As Integer = 0 To pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Count - 1
-            Dim atcWaypoint As New ATCWaypoint(pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Item(i).Attributes(0).Value, pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/WorldPosition").Item(i).FirstChild.Value, i)
-            AllWaypoints.Add(atcWaypoint)
-            If atcWaypoint.ContainsRestriction Then
-                strRestrictions = $"{strRestrictions}{Environment.NewLine}{atcWaypoint.Restrictions}"
+
+        Dim xmlWaypointList As XmlNodeList = pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint")
+        Dim ICAO As String = String.Empty
+        For i As Integer = 0 To xmlWaypointList.Count - 1
+            If i = 0 Or i = xmlWaypointList.Count - 1 Then
+                ICAO = pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/ICAO/ICAOIdent").Item(0).InnerText
+            Else
+                ICAO = String.Empty
             End If
-            If i > 0 Then
-                'Start adding distance between this waypoint and previous one to the total distance
-                dblDistanceToPrevious = Conversions.GetDistanceInKm(previousATCWaypoing.Latitude, previousATCWaypoing.Longitude, atcWaypoint.Latitude, atcWaypoint.Longitude)
-                pFlightTotalDistanceInKm += dblDistanceToPrevious
-            End If
-            If blnInTask Then
-                'Start adding distance between this waypoint and previous one to the track distance
-                pTaskTotalDistanceInKm += dblDistanceToPrevious
-            End If
-            If atcWaypoint.IsTaskStart Then
-                blnInTask = True
-            End If
-            If atcWaypoint.IsTaskEnd Then
-                blnInTask = False
-            End If
-            previousATCWaypoing = atcWaypoint
+            Dim atcWaypoint As New ATCWaypoint(pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Item(i).Attributes(0).Value, pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/WorldPosition").Item(i).FirstChild.Value, i, ICAO)
+            AllWaypoints.Add(ATCWaypoint)
+                If ATCWaypoint.ContainsRestriction Then
+                    strRestrictions = $"{strRestrictions}{Environment.NewLine}{ATCWaypoint.Restrictions(includeWPName)}"
+                End If
+                If i > 0 Then
+                    'Start adding distance between this waypoint and previous one to the total distance
+                    dblDistanceToPrevious = Conversions.GetDistanceInKm(previousATCWaypoing.Latitude, previousATCWaypoing.Longitude, ATCWaypoint.Latitude, ATCWaypoint.Longitude)
+                    pFlightTotalDistanceInKm += dblDistanceToPrevious
+                End If
+                If blnInTask Then
+                    'Start adding distance between this waypoint and previous one to the track distance
+                    pTaskTotalDistanceInKm += dblDistanceToPrevious
+                End If
+                If ATCWaypoint.IsTaskStart Then
+                    blnInTask = True
+                End If
+                If ATCWaypoint.IsTaskEnd Then
+                    blnInTask = False
+                End If
+                previousATCWaypoing = ATCWaypoint
         Next
         Dim strAltRestrictions As String
 
@@ -405,7 +417,7 @@ Public Class SupportingFeatures
                 If seq = 1 Or seq = AllWaypoints.Count Then
                     'Departure and arrival airports - do not add them
                 Else
-                    sb.AppendLine($"{wp.WPName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
+                    sb.AppendLine($"{wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
                 End If
             Next
         End If
@@ -580,21 +592,29 @@ Public Class SupportingFeatures
     Public Function DownloadLatestUpdate(version As String, ByRef message As String) As Boolean
 
         Try
-            Dim url As String = "https://github.com/siglr/DiscordPostHelper/releases/download/"
+            Dim url As String = String.Empty
             Dim localZip As String = String.Empty
             Dim zipFileName As String = String.Empty
 
             'Discord Post Helper format example: https://github.com/siglr/DiscordPostHelper/releases/download/DPH.23.3.20.1/Discord.Post.Helper.23.3.20.1.zip
-            'Soaring Task Browser format example: https://github.com/siglr/DiscordPostHelper/releases/download/STB.23.3.20.1/Soaring.Task.Browser.23.3.20.1.zip
+            'Soaring Task Browser format example: https://github.com/siglr/TOBEDEFINED/releases/download/STB.23.3.20.1/Soaring.Task.Browser.23.3.20.1.zip
+            'DPHX Unpack and Load format example: https://github.com/siglr/DPHXUnpackAndLoad/releases/download/DPHXUL.23.3.20.1/DPHX.Unpack.Load.23.3.20.1.zip
 
             Select Case ClientRunning
                 Case ClientApp.DiscordPostHelper
                     zipFileName = $"Discord.Post.Helper.{version}.zip"
+                    url = "https://github.com/siglr/DiscordPostHelper/releases/download/"
                     url = $"{url}DPH.{version}/{zipFileName}"
                     localZip = $"{Application.StartupPath}\{zipFileName}"
                 Case ClientApp.SoaringTaskBrowser
                     zipFileName = $"Soaring.Task.Browser.{version}.zip"
+                    url = "https://github.com/siglr/TOBEDEFINED/releases/download/"
                     url = $"{url}STB.{version}/{zipFileName}"
+                    localZip = $"{Application.StartupPath}\{zipFileName}"
+                Case ClientApp.DPHXUnpackAndLoad
+                    zipFileName = $"DPHX.Unpack.Load.{version}.zip"
+                    url = "https://github.com/siglr/DPHXUnpackAndLoad/releases/download/"
+                    url = $"{url}DPHXUL.{version}/{zipFileName}"
                     localZip = $"{Application.StartupPath}\{zipFileName}"
             End Select
 

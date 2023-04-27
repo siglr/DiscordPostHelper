@@ -35,10 +35,11 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlPackageFileName = New System.Windows.Forms.Panel()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+        Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
-        Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.btnCleanup = New System.Windows.Forms.Button()
         Me.topButtonsArea.SuspendLayout()
         Me.pnlUnpackBtn.SuspendLayout()
         Me.pnlPackageFileName.SuspendLayout()
@@ -48,6 +49,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'topButtonsArea
         '
+        Me.topButtonsArea.Controls.Add(Me.btnCleanup)
         Me.topButtonsArea.Controls.Add(Me.pnlUnpackBtn)
         Me.topButtonsArea.Controls.Add(Me.LoadDPHX)
         Me.topButtonsArea.Controls.Add(Me.btnSettings)
@@ -82,7 +84,6 @@ Partial Class DPHXUnpackAndLoad
         '
         'LoadDPHX
         '
-        Me.LoadDPHX.Dock = System.Windows.Forms.DockStyle.Left
         Me.LoadDPHX.Location = New System.Drawing.Point(5, 5)
         Me.LoadDPHX.Name = "LoadDPHX"
         Me.LoadDPHX.Size = New System.Drawing.Size(123, 30)
@@ -164,6 +165,16 @@ Partial Class DPHXUnpackAndLoad
         Me.StatusStrip1.TabIndex = 4
         Me.StatusStrip1.Text = "StatusStrip1"
         '
+        'warningMSFSRunningToolStrip
+        '
+        Me.warningMSFSRunningToolStrip.Font = New System.Drawing.Font("Segoe UI", 9.163636!, System.Drawing.FontStyle.Bold)
+        Me.warningMSFSRunningToolStrip.ForeColor = System.Drawing.Color.Red
+        Me.warningMSFSRunningToolStrip.Name = "warningMSFSRunningToolStrip"
+        Me.warningMSFSRunningToolStrip.Size = New System.Drawing.Size(179, 19)
+        Me.warningMSFSRunningToolStrip.Text = "⚠️MSFS 2020 Running⚠️"
+        Me.warningMSFSRunningToolStrip.ToolTipText = "MSFS needs to be restarted to see new weather presets after unpacking."
+        Me.warningMSFSRunningToolStrip.Visible = False
+        '
         'packageNameToolStrip
         '
         Me.packageNameToolStrip.Name = "packageNameToolStrip"
@@ -174,16 +185,6 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.ChkMSFS.Enabled = True
         Me.ChkMSFS.Interval = 5000
-        '
-        'warningMSFSRunningToolStrip
-        '
-        Me.warningMSFSRunningToolStrip.Font = New System.Drawing.Font("Segoe UI", 9.163636!, System.Drawing.FontStyle.Bold)
-        Me.warningMSFSRunningToolStrip.ForeColor = System.Drawing.Color.Red
-        Me.warningMSFSRunningToolStrip.Name = "warningMSFSRunningToolStrip"
-        Me.warningMSFSRunningToolStrip.Size = New System.Drawing.Size(179, 19)
-        Me.warningMSFSRunningToolStrip.Text = "⚠️MSFS 2020 Running⚠️"
-        Me.warningMSFSRunningToolStrip.ToolTipText = "MSFS needs to be restarted to see new weather presets after unpacking."
-        Me.warningMSFSRunningToolStrip.Visible = False
         '
         'ctrlBriefing
         '
@@ -197,6 +198,17 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Name = "ctrlBriefing"
         Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 635)
         Me.ctrlBriefing.TabIndex = 3
+        '
+        'btnCleanup
+        '
+        Me.btnCleanup.Enabled = False
+        Me.btnCleanup.Location = New System.Drawing.Point(267, 6)
+        Me.btnCleanup.Name = "btnCleanup"
+        Me.btnCleanup.Size = New System.Drawing.Size(123, 30)
+        Me.btnCleanup.TabIndex = 4
+        Me.btnCleanup.Text = "Cleanup"
+        Me.ToolTip1.SetToolTip(Me.btnCleanup, "Click to delete the associated files from their respective folders")
+        Me.btnCleanup.UseVisualStyleBackColor = True
         '
         'DPHXUnpackAndLoad
         '
@@ -244,4 +256,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents packageNameToolStrip As ToolStripStatusLabel
     Friend WithEvents ChkMSFS As Timer
     Friend WithEvents warningMSFSRunningToolStrip As ToolStripStatusLabel
+    Friend WithEvents btnCleanup As Button
 End Class

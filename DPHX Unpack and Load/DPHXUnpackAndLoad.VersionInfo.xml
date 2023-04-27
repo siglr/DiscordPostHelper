@@ -1,0 +1,13 @@
+﻿<VersionInfo>
+  <CurrentLatestVersion>23.4.27.1</CurrentLatestVersion>
+  <Releases>
+    <Release>
+      <ReleaseVersion>23.4.27.1</ReleaseVersion>
+      <ReleaseTitle>First BETA Release</ReleaseTitle>
+      <ReleaseNotes>
+        Open BETA Release.
+        Contains minimum features for real testing purposes.
+      </ReleaseNotes>
+    </Release>
+  </Releases>
+</VersionInfo>

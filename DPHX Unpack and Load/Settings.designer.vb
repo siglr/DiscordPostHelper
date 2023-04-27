@@ -49,12 +49,16 @@ Partial Class Settings
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.pnlAutoUnpack = New System.Windows.Forms.Panel()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.chkEnableAutoUnpack = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
         Me.pnlUnpackingFolder.SuspendLayout()
         Me.pnlPackagesFolder.SuspendLayout()
         Me.pnlAutoOverwrite.SuspendLayout()
+        Me.pnlAutoUnpack.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -65,7 +69,7 @@ Partial Class Settings
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(487, 247)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(487, 305)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
@@ -86,6 +90,7 @@ Partial Class Settings
         'Cancel_Button
         '
         Me.Cancel_Button.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Cancel_Button.Location = New System.Drawing.Point(101, 5)
         Me.Cancel_Button.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Cancel_Button.Name = "Cancel_Button"
@@ -338,14 +343,49 @@ Partial Class Settings
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Automatic Overwrite:"
         '
+        'pnlAutoUnpack
+        '
+        Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
+        Me.pnlAutoUnpack.Controls.Add(Me.Label6)
+        Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 225)
+        Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
+        Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlAutoUnpack.Size = New System.Drawing.Size(682, 45)
+        Me.pnlAutoUnpack.TabIndex = 6
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(5, 12)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(94, 20)
+        Me.Label6.TabIndex = 0
+        Me.Label6.Text = "Auto Unpack"
+        '
+        'chkEnableAutoUnpack
+        '
+        Me.chkEnableAutoUnpack.AutoSize = True
+        Me.chkEnableAutoUnpack.Checked = True
+        Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(197, 14)
+        Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
+        Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
+        Me.chkEnableAutoUnpack.TabIndex = 1
+        Me.chkEnableAutoUnpack.Text = "Enable"
+        Me.ToolTip1.SetToolTip(Me.chkEnableAutoUnpack, "When enabled (checked), any DPHX package loaded will automatically unpack and cop" &
+        "y the files.")
+        Me.chkEnableAutoUnpack.UseVisualStyleBackColor = True
+        '
         'Settings
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(682, 306)
+        Me.ClientSize = New System.Drawing.Size(682, 364)
         Me.ControlBox = False
+        Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
         Me.Controls.Add(Me.pnlPackagesFolder)
         Me.Controls.Add(Me.pnlUnpackingFolder)
@@ -356,9 +396,9 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 350)
+        Me.MaximumSize = New System.Drawing.Size(5000, 408)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(700, 350)
+        Me.MinimumSize = New System.Drawing.Size(700, 408)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
@@ -375,6 +415,8 @@ Partial Class Settings
         Me.pnlPackagesFolder.PerformLayout()
         Me.pnlAutoOverwrite.ResumeLayout(False)
         Me.pnlAutoOverwrite.PerformLayout()
+        Me.pnlAutoUnpack.ResumeLayout(False)
+        Me.pnlAutoUnpack.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -404,4 +446,7 @@ Partial Class Settings
     Friend WithEvents btnPackagesFolderPaste As Button
     Friend WithEvents btnPackagesFolder As Button
     Friend WithEvents Label5 As Label
+    Friend WithEvents pnlAutoUnpack As Panel
+    Friend WithEvents chkEnableAutoUnpack As CheckBox
+    Friend WithEvents Label6 As Label
 End Class

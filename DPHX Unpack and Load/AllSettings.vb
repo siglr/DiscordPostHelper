@@ -74,6 +74,9 @@ Public Class AllSettings
     <XmlElement("MainFormLocation")>
     Public Property MainFormLocation As String
 
+    <XmlElement("AutoUnpack")>
+    Public Property AutoUnpack As Boolean
+
     Public Sub New()
 
     End Sub
@@ -106,6 +109,7 @@ Public Class AllSettings
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
+            AutoUnpack = settingsInFile.AutoUnpack
 
         Else
             settingsFound = False

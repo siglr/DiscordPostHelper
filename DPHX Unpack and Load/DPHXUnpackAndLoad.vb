@@ -51,6 +51,40 @@ Public Class DPHXUnpackAndLoad
 
         End If
 
+        CheckForNewVersion()
+
+        If My.Application.CommandLineArgs.Count > 0 Then
+            ' Open the file passed as an argument
+            _currentFile = My.Application.CommandLineArgs(0)
+            'Check if the selected file is a dph or dphx files
+            If Path.GetExtension(_currentFile) = ".dphx" Then
+                LoadDPHXPackage(_currentFile)
+                If Settings.SessionSettings.AutoUnpack Then
+                    UnpackFiles()
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Public Sub CheckForNewVersion()
+        Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
+        Dim message As String = String.Empty
+
+        If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
+            'New version available
+            If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
+                'update
+                'Download the file
+                If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
+                    Application.Exit()
+                Else
+                    'Show error updating
+                    MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        End If
+
     End Sub
 
     Private Function OpenSettingsWindow() As DialogResult
@@ -131,12 +165,14 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DisableUnpackButton()
         btnCopyFiles.Enabled = False
+        btnCleanup.Enabled = False
         pnlUnpackBtn.BackColor = SystemColors.Control
         btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
     End Sub
 
     Private Sub EnableUnpackButton(emphasize As Boolean)
         btnCopyFiles.Enabled = True
+        btnCleanup.Enabled = True
         If emphasize Then
             pnlUnpackBtn.BackColor = Color.Red
             btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Bold)
@@ -262,4 +298,60 @@ Public Class DPHXUnpackAndLoad
         Return messageToReturn
 
     End Function
+
+    Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String) As String
+        Dim fullSourceFilename As String
+        Dim messageToReturn As String = String.Empty
+
+        fullSourceFilename = Path.Combine(sourcePath, filename)
+        If File.Exists(fullSourceFilename) Then
+            Try
+                File.Delete(fullSourceFilename)
+                messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
+            Catch ex As Exception
+                messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to deleted it:{Environment.NewLine}{ex.Message}"
+            End Try
+        Else
+            messageToReturn = $"{msgToAsk} ""{filename}"" not found"
+        End If
+
+        Return messageToReturn
+
+    End Function
+
+    Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles btnCleanup.Click
+
+        If warningMSFSRunningToolStrip.Visible Then
+            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                CleanupFiles()
+            End If
+        Else
+            CleanupFiles()
+        End If
+
+    End Sub
+
+    Private Sub CleanupFiles()
+
+        Dim sb As New StringBuilder
+
+        sb.AppendLine("Cleanup Results:")
+        sb.AppendLine()
+
+        'Flight plan
+        sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 Settings.SessionSettings.FlightPlansFolder,
+                 "Flight Plan"))
+        sb.AppendLine()
+
+        'Weather file
+        sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
+                 Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                 "Weather Preset"))
+
+        MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        EnableUnpackButton(True)
+
+    End Sub
+
 End Class

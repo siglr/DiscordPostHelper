@@ -37,6 +37,7 @@ Public Class Settings
             SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
             SessionSettings.PackagesFolder = btnPackagesFolder.Text
+            SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
 
             If optOverwriteAlwaysOverwrite.Checked Then
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -219,6 +220,9 @@ Public Class Settings
             Case AllSettings.AutoOverwriteOptions.AlwaysAsk
                 optOverwriteAlwaysAsk.Checked = True
         End Select
+
+        chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
+
 
     End Sub
 

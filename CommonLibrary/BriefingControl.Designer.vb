@@ -23,8 +23,6 @@ Partial Class BriefingControl
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.pnlTaskBriefing = New System.Windows.Forms.Panel()
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
@@ -34,12 +32,14 @@ Partial Class BriefingControl
         Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.mapSplitterLeftRight = New System.Windows.Forms.SplitContainer()
         Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
-        Me.txtAltitudeRestrictions = New System.Windows.Forms.RichTextBox()
+        Me.restrictionsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.tbpgXBOX = New System.Windows.Forms.TabPage()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -52,6 +52,9 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.Panel1.SuspendLayout()
         Me.mapSplitterLeftRight.Panel2.SuspendLayout()
         Me.mapSplitterLeftRight.SuspendLayout()
+        CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tbpgEventInfo.SuspendLayout()
+        Me.tbpgImages.SuspendLayout()
         Me.tbpgXBOX.SuspendLayout()
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -159,7 +162,7 @@ Partial Class BriefingControl
         '
         'mapSplitterLeftRight.Panel2
         '
-        Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.txtAltitudeRestrictions)
+        Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.restrictionsDataGrid)
         Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 375)
         Me.mapSplitterLeftRight.SplitterDistance = 650
         Me.mapSplitterLeftRight.TabIndex = 0
@@ -174,19 +177,27 @@ Partial Class BriefingControl
         Me.txtFullDescription.TabIndex = 0
         Me.txtFullDescription.Text = ""
         '
-        'txtAltitudeRestrictions
+        'restrictionsDataGrid
         '
-        Me.txtAltitudeRestrictions.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtAltitudeRestrictions.Location = New System.Drawing.Point(0, 0)
-        Me.txtAltitudeRestrictions.Name = "txtAltitudeRestrictions"
-        Me.txtAltitudeRestrictions.ReadOnly = True
-        Me.txtAltitudeRestrictions.Size = New System.Drawing.Size(322, 375)
-        Me.txtAltitudeRestrictions.TabIndex = 1
-        Me.txtAltitudeRestrictions.Text = ""
+        Me.restrictionsDataGrid.AllowUserToAddRows = False
+        Me.restrictionsDataGrid.AllowUserToDeleteRows = False
+        Me.restrictionsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.restrictionsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.restrictionsDataGrid.ColumnHeadersVisible = False
+        Me.restrictionsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.restrictionsDataGrid.Location = New System.Drawing.Point(0, 0)
+        Me.restrictionsDataGrid.Name = "restrictionsDataGrid"
+        Me.restrictionsDataGrid.ReadOnly = True
+        Me.restrictionsDataGrid.RowHeadersVisible = False
+        Me.restrictionsDataGrid.RowHeadersWidth = 47
+        Me.restrictionsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 375)
+        Me.restrictionsDataGrid.TabIndex = 1
         '
         'tbpgEventInfo
         '
         Me.tbpgEventInfo.AutoScroll = True
+        Me.tbpgEventInfo.Controls.Add(Me.Label1)
         Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 29)
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
         Me.tbpgEventInfo.Size = New System.Drawing.Size(982, 710)
@@ -197,6 +208,7 @@ Partial Class BriefingControl
         'tbpgImages
         '
         Me.tbpgImages.AutoScroll = True
+        Me.tbpgImages.Controls.Add(Me.Label2)
         Me.tbpgImages.Location = New System.Drawing.Point(4, 29)
         Me.tbpgImages.Name = "tbpgImages"
         Me.tbpgImages.Size = New System.Drawing.Size(982, 710)
@@ -211,7 +223,7 @@ Partial Class BriefingControl
         Me.tbpgXBOX.Name = "tbpgXBOX"
         Me.tbpgXBOX.Size = New System.Drawing.Size(982, 710)
         Me.tbpgXBOX.TabIndex = 4
-        Me.tbpgXBOX.Text = "XBOX"
+        Me.tbpgXBOX.Text = "All waypoints"
         Me.tbpgXBOX.UseVisualStyleBackColor = True
         '
         'waypointCoordinatesDataGrid
@@ -219,29 +231,35 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid.AllowUserToAddRows = False
         Me.waypointCoordinatesDataGrid.AllowUserToDeleteRows = False
         Me.waypointCoordinatesDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Variable Display", 14.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.waypointCoordinatesDataGrid.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.waypointCoordinatesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.waypointCoordinatesDataGrid.DefaultCellStyle = DataGridViewCellStyle2
         Me.waypointCoordinatesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.waypointCoordinatesDataGrid.Location = New System.Drawing.Point(0, 0)
         Me.waypointCoordinatesDataGrid.Name = "waypointCoordinatesDataGrid"
         Me.waypointCoordinatesDataGrid.RowHeadersWidth = 47
         Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 710)
         Me.waypointCoordinatesDataGrid.TabIndex = 0
+        '
+        'Label1
+        '
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(982, 710)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "COMING SOON!"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label2
+        '
+        Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(0, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(982, 710)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "COMING SOON!"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'BriefingControl
         '
@@ -265,6 +283,9 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mapSplitterLeftRight.ResumeLayout(False)
+        CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbpgEventInfo.ResumeLayout(False)
+        Me.tbpgImages.ResumeLayout(False)
         Me.tbpgXBOX.ResumeLayout(False)
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -283,7 +304,9 @@ Partial Class BriefingControl
     Friend WithEvents mapSplitterLeftRight As Windows.Forms.SplitContainer
     Friend WithEvents imageViewer As ImageViewerControl
     Friend WithEvents txtFullDescription As Windows.Forms.RichTextBox
-    Friend WithEvents txtAltitudeRestrictions As Windows.Forms.RichTextBox
     Friend WithEvents tbpgXBOX As Windows.Forms.TabPage
     Friend WithEvents waypointCoordinatesDataGrid As Windows.Forms.DataGridView
+    Friend WithEvents restrictionsDataGrid As Windows.Forms.DataGridView
+    Friend WithEvents Label1 As Windows.Forms.Label
+    Friend WithEvents Label2 As Windows.Forms.Label
 End Class

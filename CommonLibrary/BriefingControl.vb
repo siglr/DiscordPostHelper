@@ -33,7 +33,7 @@ Public Class BriefingControl
         _XmlDocFlightPlan.Load(Path.Combine(unpackFolder, Path.GetFileName(sessionData.FlightPlanFilename)))
         Dim totalDistance As Integer
         Dim trackDistance As Integer
-        Dim altitudeRestrictions As String = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance)
+        Dim altitudeRestrictions As String = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
 
         'Load weather info
         _XmlDocWeatherPreset = New XmlDocument
@@ -146,22 +146,39 @@ Public Class BriefingControl
 
         End If
 
+        Dim gridColumn As DataGridViewColumn
         'Build altitude restrictions
-        sb.Clear()
-        If altitudeRestrictions <> String.Empty Then
-            sb.AppendLine(altitudeRestrictions)
-            _SF.FormatMarkdownToRTF(sb.ToString, txtAltitudeRestrictions)
-        End If
+        Dim dt As New DataTable()
+        dt.Columns.Add("Waypoint Name", GetType(String))
+        dt.Columns.Add("Restrictions", GetType(String))
+        For Each waypoint In _SF.AllWaypoints.Where(Function(x) x.ContainsRestriction)
+            dt.Rows.Add(waypoint.WaypointName, waypoint.Restrictions)
+        Next
+        restrictionsDataGrid.DataSource = dt
+        restrictionsDataGrid.Font = New Font(restrictionsDataGrid.Font.FontFamily, 12)
+        restrictionsDataGrid.RowTemplate.Height = 28
+        restrictionsDataGrid.RowHeadersVisible = False
+        restrictionsDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
         'XBOX Coordinates
         waypointCoordinatesDataGrid.Font = New Font(waypointCoordinatesDataGrid.Font.FontFamily, 12)
         waypointCoordinatesDataGrid.RowTemplate.Height = 30
         waypointCoordinatesDataGrid.DataSource = _SF.AllWaypoints
-        Dim gridColumn As DataGridViewColumn = waypointCoordinatesDataGrid.Columns("Latitude")
+        gridColumn = waypointCoordinatesDataGrid.Columns("Latitude")
         gridColumn.DefaultCellStyle.Format = "N6"
         gridColumn = waypointCoordinatesDataGrid.Columns("Longitude")
         gridColumn.DefaultCellStyle.Format = "N6"
         waypointCoordinatesDataGrid.ColumnHeadersDefaultCellStyle.Font = New Font(waypointCoordinatesDataGrid.Font, FontStyle.Bold)
+        waypointCoordinatesDataGrid.Columns(0).HeaderText = "#"
+        For i As Integer = 0 To waypointCoordinatesDataGrid.Columns.Count - 2
+            waypointCoordinatesDataGrid.Columns(i).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        Next
+        waypointCoordinatesDataGrid.RowHeadersWidth = 15
+        waypointCoordinatesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+
+        waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
+        waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
+        waypointCoordinatesDataGrid.Columns("Gate").HeaderText = "Gate diameter"
 
     End Sub
 
@@ -249,7 +266,6 @@ Public Class BriefingControl
                 SetZoomFactorOfRichTextBox(txtBriefing)
             Case 1
                 SetZoomFactorOfRichTextBox(txtFullDescription)
-                SetZoomFactorOfRichTextBox(txtAltitudeRestrictions)
         End Select
 
     End Sub
