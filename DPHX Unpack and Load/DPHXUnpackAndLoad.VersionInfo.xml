@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.4.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.27.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.27.2</ReleaseVersion>
+      <ReleaseTitle>Testing the auto-update</ReleaseTitle>
+      <ReleaseNotes>
+        This release is only to test the auto-update feature.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.27.1</ReleaseVersion>
       <ReleaseTitle>First BETA Release</ReleaseTitle>
