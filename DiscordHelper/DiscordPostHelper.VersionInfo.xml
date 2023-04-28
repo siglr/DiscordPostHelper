@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.4.24.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Revamping of Briefing tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release merges with the DPHX Unpack and Load tool and replaces the old Briefing tab with the same one built for that tool.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.24.2</ReleaseVersion>
       <ReleaseTitle>Small fix following previous update</ReleaseTitle>
