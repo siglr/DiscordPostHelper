@@ -1,6 +1,20 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.4.27.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.4.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Lots of new stuff and bux fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added XCSoar .tsk files support
+        Added task credits under the task title
+        Added support for displaying other images included in package
+        Added support for right-click on paths in the settings page to open up the actual folder in Windows Explorer
+        Added cleanup of temporary folder at start and close
+        Fix for files not loading from the right folder
+        Lots of bug fixes around loading different dphx packages in the same session
+        Fix conversions to integer or not doing proper round up/down
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.27.2</ReleaseVersion>
       <ReleaseTitle>Testing the auto-update</ReleaseTitle>

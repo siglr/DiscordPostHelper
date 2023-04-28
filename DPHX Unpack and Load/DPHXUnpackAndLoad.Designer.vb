@@ -23,7 +23,9 @@ Partial Class DPHXUnpackAndLoad
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Me.topButtonsArea = New System.Windows.Forms.Panel()
+        Me.btnCleanup = New System.Windows.Forms.Button()
         Me.pnlUnpackBtn = New System.Windows.Forms.Panel()
         Me.btnCopyFiles = New System.Windows.Forms.Button()
         Me.LoadDPHX = New System.Windows.Forms.Button()
@@ -39,7 +41,6 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.btnCleanup = New System.Windows.Forms.Button()
         Me.topButtonsArea.SuspendLayout()
         Me.pnlUnpackBtn.SuspendLayout()
         Me.pnlPackageFileName.SuspendLayout()
@@ -59,6 +60,17 @@ Partial Class DPHXUnpackAndLoad
         Me.topButtonsArea.Padding = New System.Windows.Forms.Padding(5, 5, 5, 10)
         Me.topButtonsArea.Size = New System.Drawing.Size(1077, 45)
         Me.topButtonsArea.TabIndex = 0
+        '
+        'btnCleanup
+        '
+        Me.btnCleanup.Enabled = False
+        Me.btnCleanup.Location = New System.Drawing.Point(267, 6)
+        Me.btnCleanup.Name = "btnCleanup"
+        Me.btnCleanup.Size = New System.Drawing.Size(123, 30)
+        Me.btnCleanup.TabIndex = 4
+        Me.btnCleanup.Text = "Cleanup"
+        Me.ToolTip1.SetToolTip(Me.btnCleanup, "Click to delete the associated files from their respective folders")
+        Me.btnCleanup.UseVisualStyleBackColor = True
         '
         'pnlUnpackBtn
         '
@@ -199,17 +211,6 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 635)
         Me.ctrlBriefing.TabIndex = 3
         '
-        'btnCleanup
-        '
-        Me.btnCleanup.Enabled = False
-        Me.btnCleanup.Location = New System.Drawing.Point(267, 6)
-        Me.btnCleanup.Name = "btnCleanup"
-        Me.btnCleanup.Size = New System.Drawing.Size(123, 30)
-        Me.btnCleanup.TabIndex = 4
-        Me.btnCleanup.Text = "Cleanup"
-        Me.ToolTip1.SetToolTip(Me.btnCleanup, "Click to delete the associated files from their respective folders")
-        Me.btnCleanup.UseVisualStyleBackColor = True
-        '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -221,6 +222,7 @@ Partial Class DPHXUnpackAndLoad
         Me.Controls.Add(Me.pnlPackageFileName)
         Me.Controls.Add(Me.topButtonsArea)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "DPHXUnpackAndLoad"

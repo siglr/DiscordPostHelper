@@ -13,6 +13,7 @@ Public Class BriefingControl
     Private _SF As SupportingFeatures
     Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
     Private _sessionData As AllData
+    Private _unpackFolder As String = String.Empty
 
     Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As IntPtr, ByVal nIndex As Integer) As Integer
     Public Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Integer) As Integer
@@ -26,16 +27,26 @@ Public Class BriefingControl
         txtFullDescription.Clear()
         restrictionsDataGrid.DataSource = Nothing
         waypointCoordinatesDataGrid.DataSource = Nothing
+        imagesListView.Clear()
     End Sub
 
     Public Sub ChangeImage(imgFilename As String)
         imageViewer.LoadImage(imgFilename)
     End Sub
 
-    Public Sub GenerateBriefing(supportFeat As SupportingFeatures, sessionData As AllData, flightplanfile As String, weatherfile As String)
+    Public Sub GenerateBriefing(supportFeat As SupportingFeatures,
+                                sessionData As AllData,
+                                flightplanfile As String,
+                                weatherfile As String,
+                                Optional unpackFolder As String = "NONE")
 
         _SF = supportFeat
         _sessionData = sessionData
+        If unpackFolder = "NONE" Then
+            _unpackFolder = String.Empty
+        Else
+            _unpackFolder = unpackFolder
+        End If
 
         'Load flight plan
         _XmlDocFlightPlan = New XmlDocument
@@ -148,7 +159,11 @@ Public Class BriefingControl
         If sessionData.MapImageSelected = String.Empty Then
             imageViewer.Enabled = False
         Else
-            imageViewer.LoadImage(sessionData.MapImageSelected)
+            Dim filename As String = sessionData.MapImageSelected
+            If _unpackFolder <> String.Empty Then
+                filename = Path.Combine(_unpackFolder, Path.GetFileName(filename))
+            End If
+            imageViewer.LoadImage(filename)
         End If
 
         'Build full description
@@ -188,10 +203,44 @@ Public Class BriefingControl
         Next
         waypointCoordinatesDataGrid.RowHeadersWidth = 15
         waypointCoordinatesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
+        waypointCoordinatesDataGrid.AllowUserToResizeColumns = True
         waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
         waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
         waypointCoordinatesDataGrid.Columns("Gate").HeaderText = "Gate diameter"
+
+        'Images tab
+        LoadImagesTabListView()
+
+    End Sub
+
+    Private Sub LoadImagesTabListView()
+
+        Dim imageFilenameList As New List(Of String)
+
+        Dim imgList As New ImageList
+        For Each filename As String In _sessionData.ExtraFiles
+            If Path.GetExtension(filename) = ".png" OrElse Path.GetExtension(filename) = ".jpg" Then
+                If _unpackFolder <> String.Empty Then
+                    filename = Path.Combine(_unpackFolder, Path.GetFileName(filename))
+                End If
+                imgList.Images.Add(Image.FromFile(filename))
+                imageFilenameList.Add(filename)
+            End If
+        Next
+        imgList.ImageSize = New Size(64, 64) 'set the size of the icons
+
+        imagesListView.View = View.LargeIcon
+        imagesListView.LargeImageList = imgList
+
+        For i = 0 To imgList.Images.Count - 1
+            Dim item1 As New ListViewItem($"")
+            item1.ImageIndex = i
+            item1.Text = i + 1.ToString
+            item1.Tag = imageFilenameList(i)
+            imagesListView.Items.Add(item1)
+        Next
+
+        imagesListView.Items(0).Selected = True
 
     End Sub
 
@@ -285,5 +334,14 @@ Public Class BriefingControl
 
     Private Sub mapSplitterLeftRight_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles mapSplitterLeftRight.SplitterMoved, mapSplitterUpDown.SplitterMoved
         AdjustRTBoxControls()
+    End Sub
+
+    Private Sub imagesListView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles imagesListView.SelectedIndexChanged
+
+
+        If imagesListView.SelectedItems.Count > 0 AndAlso imagesListView.SelectedItems(0).Tag <> String.Empty Then
+            imagesTabViewerControl.LoadImage(imagesListView.SelectedItems(0).Tag)
+        End If
+
     End Sub
 End Class

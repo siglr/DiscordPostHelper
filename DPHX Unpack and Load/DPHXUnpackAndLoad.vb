@@ -53,6 +53,8 @@ Public Class DPHXUnpackAndLoad
 
         CheckForNewVersion()
 
+        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
             _currentFile = My.Application.CommandLineArgs(0)
@@ -158,10 +160,12 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
+            ctrlBriefing.FullReset()
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
-                                          Path.Combine(Settings.SessionSettings.UnpackingFolder, _allDPHData.FlightPlanFilename),
-                                          Path.Combine(Settings.SessionSettings.UnpackingFolder, _allDPHData.WeatherFilename))
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                                          TempDPHXUnpackFolder)
         End If
 
     End Sub
@@ -186,6 +190,8 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+
+        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
         If Not _abortingFirstRun Then
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()

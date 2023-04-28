@@ -497,13 +497,30 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Sub CleanupDPHXTempFolder(ByVal unpackFolder As String)
+
+        If Directory.Exists(unpackFolder) Then
+            'Folder exists - delete files
+            Dim files As String() = Directory.GetFiles(unpackFolder)
+            For Each file As String In files
+                Try
+                    IO.File.Delete(file)
+                Catch ex As Exception
+                End Try
+            Next
+        End If
+
+    End Sub
     Public Function UnpackDPHXFileToTempFolder(ByVal dphxFilePath As String, ByVal unpackFolder As String) As String
 
         If Directory.Exists(unpackFolder) Then
             'Folder exists - delete files
             Dim files As String() = Directory.GetFiles(unpackFolder)
             For Each file As String In files
-                IO.File.Delete(file)
+                Try
+                    IO.File.Delete(file)
+                Catch ex As Exception
+                End Try
             Next
         Else
             'Create folder

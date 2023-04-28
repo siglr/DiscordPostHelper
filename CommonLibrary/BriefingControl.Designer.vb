@@ -34,12 +34,14 @@ Partial Class BriefingControl
         Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
         Me.restrictionsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.tbpgXBOX = New System.Windows.Forms.TabPage()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
+        Me.imagesListView = New System.Windows.Forms.ListView()
+        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -57,6 +59,10 @@ Partial Class BriefingControl
         Me.tbpgImages.SuspendLayout()
         Me.tbpgXBOX.SuspendLayout()
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.imagesTabDivider.Panel1.SuspendLayout()
+        Me.imagesTabDivider.Panel2.SuspendLayout()
+        Me.imagesTabDivider.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -205,10 +211,21 @@ Partial Class BriefingControl
         Me.tbpgEventInfo.Text = "Event Info"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(982, 710)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "COMING SOON!"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'tbpgImages
         '
         Me.tbpgImages.AutoScroll = True
-        Me.tbpgImages.Controls.Add(Me.Label2)
+        Me.tbpgImages.Controls.Add(Me.imagesTabDivider)
         Me.tbpgImages.Location = New System.Drawing.Point(4, 29)
         Me.tbpgImages.Name = "tbpgImages"
         Me.tbpgImages.Size = New System.Drawing.Size(982, 710)
@@ -239,27 +256,47 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 710)
         Me.waypointCoordinatesDataGrid.TabIndex = 0
         '
-        'Label1
+        'imagesTabDivider
         '
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(982, 710)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "COMING SOON!"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.imagesTabDivider.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesTabDivider.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.imagesTabDivider.IsSplitterFixed = True
+        Me.imagesTabDivider.Location = New System.Drawing.Point(0, 0)
+        Me.imagesTabDivider.Name = "imagesTabDivider"
         '
-        'Label2
+        'imagesTabDivider.Panel1
         '
-        Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(0, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(982, 710)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "COMING SOON!"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.imagesTabDivider.Panel1.Controls.Add(Me.imagesTabViewerControl)
+        '
+        'imagesTabDivider.Panel2
+        '
+        Me.imagesTabDivider.Panel2.Controls.Add(Me.imagesListView)
+        Me.imagesTabDivider.Panel2MinSize = 100
+        Me.imagesTabDivider.Size = New System.Drawing.Size(982, 710)
+        Me.imagesTabDivider.SplitterDistance = 814
+        Me.imagesTabDivider.TabIndex = 0
+        '
+        'imagesListView
+        '
+        Me.imagesListView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesListView.FullRowSelect = True
+        Me.imagesListView.HideSelection = False
+        Me.imagesListView.Location = New System.Drawing.Point(0, 0)
+        Me.imagesListView.MultiSelect = False
+        Me.imagesListView.Name = "imagesListView"
+        Me.imagesListView.Size = New System.Drawing.Size(164, 710)
+        Me.imagesListView.TabIndex = 0
+        Me.imagesListView.UseCompatibleStateImageBehavior = False
+        '
+        'imagesTabViewerControl
+        '
+        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
+        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.TabIndex = 0
         '
         'BriefingControl
         '
@@ -288,6 +325,10 @@ Partial Class BriefingControl
         Me.tbpgImages.ResumeLayout(False)
         Me.tbpgXBOX.ResumeLayout(False)
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.imagesTabDivider.Panel1.ResumeLayout(False)
+        Me.imagesTabDivider.Panel2.ResumeLayout(False)
+        CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.imagesTabDivider.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -308,5 +349,7 @@ Partial Class BriefingControl
     Friend WithEvents waypointCoordinatesDataGrid As Windows.Forms.DataGridView
     Friend WithEvents restrictionsDataGrid As Windows.Forms.DataGridView
     Friend WithEvents Label1 As Windows.Forms.Label
-    Friend WithEvents Label2 As Windows.Forms.Label
+    Friend WithEvents imagesTabDivider As Windows.Forms.SplitContainer
+    Friend WithEvents imagesListView As Windows.Forms.ListView
+    Friend WithEvents imagesTabViewerControl As ImageViewerControl
 End Class
