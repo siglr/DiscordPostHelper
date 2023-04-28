@@ -16,9 +16,9 @@
                 Dim convImperial As Single = Conversions.KmToMiles(_Diameter / 1000)
                 If convImperial < 1 Then
                     convImperial = Conversions.MeterToFeet(_Diameter)
-                    diameter = $"{CInt(convImperial)}' ({_Diameter} m)"
+                    diameter = $"{Math.Round(convImperial, 0)}' ({_Diameter} m)"
                 Else
-                    diameter = $"{String.Format("{0:0.0}", convImperial)} mi ({_Diameter} m)"
+                    diameter = $"{String.Format("{0:0.0}", Math.Round(convImperial, 1))} mi ({_Diameter} m)"
                 End If
             End If
 
@@ -176,20 +176,20 @@
                                                 prefix,
                                                 _MinAlt,
                                                 _MaxAlt,
-                                                Int(Conversions.FeetToMeters(_MinAlt)),
-                                                Int(Conversions.FeetToMeters(_MaxAlt))
+                                                Math.Round(Conversions.FeetToMeters(_MinAlt), 0),
+                                                Math.Round(Conversions.FeetToMeters(_MaxAlt), 0)
                                                 )
             ElseIf _MinAlt IsNot Nothing Then
                 strRestrictions = String.Format("{0}MIN {1}' ({2}m)",
                                                 prefix,
                                                 _MinAlt,
-                                                Int(Conversions.FeetToMeters(_MinAlt))
+                                                Math.Round(Conversions.FeetToMeters(_MinAlt), 0)
                                                 )
             ElseIf _MaxAlt IsNot Nothing Then
                 strRestrictions = String.Format("{0}MAX {1}' ({2}m)",
                                                 prefix,
                                                 _MaxAlt,
-                                                Int(Conversions.FeetToMeters(_MaxAlt))
+                                                Math.Round(Conversions.FeetToMeters(_MaxAlt), 0)
                                                 )
             End If
 
@@ -199,7 +199,7 @@
     End Property
     Public ReadOnly Property Elevation As String
         Get
-            Return String.Format("{0}' ({1}m)", CInt(_wpelevation), Int(Conversions.FeetToMeters(_wpelevation)))
+            Return String.Format("{0}' ({1}m)", CInt(_wpelevation), Math.Round(Conversions.FeetToMeters(_wpelevation)), 0)
         End Get
     End Property
 
