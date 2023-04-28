@@ -158,6 +158,7 @@ Partial Class Main
         Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
         Me.chkIncludeGotGravelInvite = New System.Windows.Forms.CheckBox()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.lblEventTaskDistance = New System.Windows.Forms.Label()
@@ -199,14 +200,6 @@ Partial Class Main
         Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
-        Me.tabBriefingControl = New System.Windows.Forms.TabControl()
-        Me.tabBrief1 = New System.Windows.Forms.TabPage()
-        Me.txtBriefing = New System.Windows.Forms.RichTextBox()
-        Me.tabBrief2 = New System.Windows.Forms.TabPage()
-        Me.pnlMapImage = New System.Windows.Forms.Panel()
-        Me.imgMap = New System.Windows.Forms.PictureBox()
-        Me.txtBriefingRestrictions = New System.Windows.Forms.RichTextBox()
-        Me.txtBriefingDescription = New System.Windows.Forms.RichTextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -216,11 +209,11 @@ Partial Class Main
         Me.btnLoadB21Planner = New System.Windows.Forms.Button()
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
-        Me.btnMapZoomIn = New System.Windows.Forms.Button()
-        Me.btnMapZoomOut = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
-        Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
+        Me.pnlBriefing = New System.Windows.Forms.Panel()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
@@ -233,15 +226,14 @@ Partial Class Main
         Me.grpDiscordEvent.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
         Me.tabBriefing.SuspendLayout()
-        Me.tabBriefingControl.SuspendLayout()
-        Me.tabBrief1.SuspendLayout()
-        Me.tabBrief2.SuspendLayout()
-        Me.pnlMapImage.SuspendLayout()
-        CType(Me.imgMap, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlBriefing.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
         '
+        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.tabFlightPlan)
         Me.TabControl1.Controls.Add(Me.tabEvent)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
@@ -1897,6 +1889,17 @@ Partial Class Main
         Me.grpGroupEventPost.TabStop = False
         Me.grpGroupEventPost.Text = "Step 1: Group Event Post"
         '
+        'lblLocalDSTWarning
+        '
+        Me.lblLocalDSTWarning.AutoSize = True
+        Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
+        Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
+        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
+        Me.lblLocalDSTWarning.TabIndex = 51
+        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
+        Me.lblLocalDSTWarning.Visible = False
+        '
         'chkIncludeGotGravelInvite
         '
         Me.chkIncludeGotGravelInvite.AutoSize = True
@@ -2350,93 +2353,15 @@ Partial Class Main
         '
         'tabBriefing
         '
-        Me.tabBriefing.Controls.Add(Me.tabBriefingControl)
+        Me.tabBriefing.Controls.Add(Me.Label20)
+        Me.tabBriefing.Controls.Add(Me.cboBriefingMap)
+        Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
         Me.tabBriefing.Size = New System.Drawing.Size(1681, 1154)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
-        '
-        'tabBriefingControl
-        '
-        Me.tabBriefingControl.Controls.Add(Me.tabBrief1)
-        Me.tabBriefingControl.Controls.Add(Me.tabBrief2)
-        Me.tabBriefingControl.Location = New System.Drawing.Point(3, 3)
-        Me.tabBriefingControl.Name = "tabBriefingControl"
-        Me.tabBriefingControl.SelectedIndex = 0
-        Me.tabBriefingControl.Size = New System.Drawing.Size(1675, 1148)
-        Me.tabBriefingControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
-        Me.tabBriefingControl.TabIndex = 0
-        '
-        'tabBrief1
-        '
-        Me.tabBrief1.Controls.Add(Me.txtBriefing)
-        Me.tabBrief1.Location = New System.Drawing.Point(4, 29)
-        Me.tabBrief1.Name = "tabBrief1"
-        Me.tabBrief1.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabBrief1.Size = New System.Drawing.Size(1667, 1115)
-        Me.tabBrief1.TabIndex = 0
-        Me.tabBrief1.Text = "Basic Info"
-        Me.tabBrief1.UseVisualStyleBackColor = True
-        '
-        'txtBriefing
-        '
-        Me.txtBriefing.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBriefing.Location = New System.Drawing.Point(-4, 6)
-        Me.txtBriefing.Name = "txtBriefing"
-        Me.txtBriefing.Size = New System.Drawing.Size(1663, 1103)
-        Me.txtBriefing.TabIndex = 3
-        Me.txtBriefing.Text = ""
-        '
-        'tabBrief2
-        '
-        Me.tabBrief2.Controls.Add(Me.pnlMapImage)
-        Me.tabBrief2.Controls.Add(Me.txtBriefingRestrictions)
-        Me.tabBrief2.Controls.Add(Me.txtBriefingDescription)
-        Me.tabBrief2.Location = New System.Drawing.Point(4, 29)
-        Me.tabBrief2.Name = "tabBrief2"
-        Me.tabBrief2.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabBrief2.Size = New System.Drawing.Size(1667, 1115)
-        Me.tabBrief2.TabIndex = 1
-        Me.tabBrief2.Text = "Flight & Map"
-        Me.tabBrief2.UseVisualStyleBackColor = True
-        '
-        'pnlMapImage
-        '
-        Me.pnlMapImage.AutoScroll = True
-        Me.pnlMapImage.Controls.Add(Me.imgMap)
-        Me.pnlMapImage.Location = New System.Drawing.Point(6, 6)
-        Me.pnlMapImage.Name = "pnlMapImage"
-        Me.pnlMapImage.Size = New System.Drawing.Size(1666, 647)
-        Me.pnlMapImage.TabIndex = 9
-        '
-        'imgMap
-        '
-        Me.imgMap.Location = New System.Drawing.Point(0, 8)
-        Me.imgMap.Name = "imgMap"
-        Me.imgMap.Size = New System.Drawing.Size(1647, 639)
-        Me.imgMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.imgMap.TabIndex = 8
-        Me.imgMap.TabStop = False
-        '
-        'txtBriefingRestrictions
-        '
-        Me.txtBriefingRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBriefingRestrictions.Location = New System.Drawing.Point(981, 656)
-        Me.txtBriefingRestrictions.Name = "txtBriefingRestrictions"
-        Me.txtBriefingRestrictions.Size = New System.Drawing.Size(683, 453)
-        Me.txtBriefingRestrictions.TabIndex = 8
-        Me.txtBriefingRestrictions.Text = ""
-        '
-        'txtBriefingDescription
-        '
-        Me.txtBriefingDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBriefingDescription.Location = New System.Drawing.Point(6, 656)
-        Me.txtBriefingDescription.Name = "txtBriefingDescription"
-        Me.txtBriefingDescription.Size = New System.Drawing.Size(969, 453)
-        Me.txtBriefingDescription.TabIndex = 6
-        Me.txtBriefingDescription.Text = ""
         '
         'OpenFileDialog1
         '
@@ -2523,53 +2448,48 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'btnMapZoomIn
-        '
-        Me.btnMapZoomIn.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMapZoomIn.Location = New System.Drawing.Point(866, 44)
-        Me.btnMapZoomIn.Name = "btnMapZoomIn"
-        Me.btnMapZoomIn.Size = New System.Drawing.Size(33, 30)
-        Me.btnMapZoomIn.TabIndex = 86
-        Me.btnMapZoomIn.Tag = "19"
-        Me.btnMapZoomIn.Text = "+"
-        Me.ToolTip1.SetToolTip(Me.btnMapZoomIn, "Click to select and load a configuration file from your PC.")
-        Me.btnMapZoomIn.UseVisualStyleBackColor = True
-        Me.btnMapZoomIn.Visible = False
-        '
-        'btnMapZoomOut
-        '
-        Me.btnMapZoomOut.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMapZoomOut.Location = New System.Drawing.Point(899, 44)
-        Me.btnMapZoomOut.Name = "btnMapZoomOut"
-        Me.btnMapZoomOut.Size = New System.Drawing.Size(33, 30)
-        Me.btnMapZoomOut.TabIndex = 87
-        Me.btnMapZoomOut.Tag = "19"
-        Me.btnMapZoomOut.Text = "-"
-        Me.ToolTip1.SetToolTip(Me.btnMapZoomOut, "Click to select and load a configuration file from your PC.")
-        Me.btnMapZoomOut.UseVisualStyleBackColor = True
-        Me.btnMapZoomOut.Visible = False
-        '
         'cboBriefingMap
         '
         Me.cboBriefingMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboBriefingMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.cboBriefingMap.FormattingEnabled = True
-        Me.cboBriefingMap.Location = New System.Drawing.Point(337, 45)
+        Me.cboBriefingMap.Location = New System.Drawing.Point(274, 9)
         Me.cboBriefingMap.Name = "cboBriefingMap"
         Me.cboBriefingMap.Size = New System.Drawing.Size(524, 28)
         Me.cboBriefingMap.TabIndex = 85
+        Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
         Me.cboBriefingMap.Visible = False
         '
-        'lblLocalDSTWarning
+        'pnlBriefing
         '
-        Me.lblLocalDSTWarning.AutoSize = True
-        Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
-        Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
-        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
-        Me.lblLocalDSTWarning.TabIndex = 51
-        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
-        Me.lblLocalDSTWarning.Visible = False
+        Me.pnlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
+        Me.pnlBriefing.Location = New System.Drawing.Point(3, 43)
+        Me.pnlBriefing.Name = "pnlBriefing"
+        Me.pnlBriefing.Size = New System.Drawing.Size(1675, 1108)
+        Me.pnlBriefing.TabIndex = 0
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1675, 1108)
+        Me.BriefingControl1.TabIndex = 0
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(20, 12)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(227, 20)
+        Me.Label20.TabIndex = 86
+        Me.Label20.Text = "Select image for the map display:"
         '
         'Main
         '
@@ -2577,9 +2497,6 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(1708, 1205)
-        Me.Controls.Add(Me.btnMapZoomOut)
-        Me.Controls.Add(Me.btnMapZoomIn)
-        Me.Controls.Add(Me.cboBriefingMap)
         Me.Controls.Add(Me.btnTurnGuideOff)
         Me.Controls.Add(Me.btnGuideMe)
         Me.Controls.Add(Me.btnLoadB21Planner)
@@ -2611,11 +2528,8 @@ Partial Class Main
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
         Me.tabBriefing.ResumeLayout(False)
-        Me.tabBriefingControl.ResumeLayout(False)
-        Me.tabBrief1.ResumeLayout(False)
-        Me.tabBrief2.ResumeLayout(False)
-        Me.pnlMapImage.ResumeLayout(False)
-        CType(Me.imgMap, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabBriefing.PerformLayout()
+        Me.pnlBriefing.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -2795,17 +2709,7 @@ Partial Class Main
     Friend WithEvents chkGroupSecondaryPosts As CheckBox
     Friend WithEvents btnCopyAllSecPosts As Button
     Friend WithEvents tabBriefing As TabPage
-    Friend WithEvents tabBriefingControl As TabControl
-    Friend WithEvents tabBrief1 As TabPage
-    Friend WithEvents txtBriefing As RichTextBox
-    Friend WithEvents tabBrief2 As TabPage
-    Friend WithEvents txtBriefingDescription As RichTextBox
-    Friend WithEvents txtBriefingRestrictions As RichTextBox
     Friend WithEvents cboBriefingMap As ComboBox
-    Friend WithEvents btnMapZoomIn As Button
-    Friend WithEvents btnMapZoomOut As Button
-    Friend WithEvents pnlMapImage As Panel
-    Friend WithEvents imgMap As PictureBox
     Friend WithEvents chkAddWPCoords As CheckBox
     Friend WithEvents Label10 As Label
     Friend WithEvents cboCountryFlag As ComboBox
@@ -2817,4 +2721,7 @@ Partial Class Main
     Friend WithEvents lstAllCountries As ListBox
     Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents lblLocalDSTWarning As Label
+    Friend WithEvents pnlBriefing As Panel
+    Friend WithEvents BriefingControl1 As CommonLibrary.BriefingControl
+    Friend WithEvents Label20 As Label
 End Class

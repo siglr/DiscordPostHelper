@@ -4,31 +4,50 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8F737F27-41DD-492B-B023-D43501F38355}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>SIGLR.SoaringTools.CommonLibrary</RootNamespace>
-    <AssemblyName>CommonLibrary</AssemblyName>
+    <ProjectGuid>{99721D20-A22B-4D33-9867-6F8501F9BDC6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>SIGLR.SoaringTools.UnpackAndLoad.My.MyApplication</StartupObject>
+    <RootNamespace>SIGLR.SoaringTools.UnpackAndLoad</RootNamespace>
+    <AssemblyName>DPHX Unpack and Load</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>CommonLibrary.xml</DocumentationFile>
+    <DocumentationFile>DPHX Unpack and Load.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>CommonLibrary.xml</DocumentationFile>
+    <DocumentationFile>DPHX Unpack and Load.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -43,14 +62,15 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -60,28 +80,32 @@
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
-    <Import Include="SIGLR.SoaringTools.ImageViewer" />
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
     <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllData.vb" />
-    <Compile Include="ATCWaypointvb.vb" />
-    <Compile Include="BriefingControl.Designer.vb">
-      <DependentUpon>BriefingControl.vb</DependentUpon>
+    <Compile Include="AllSettings.vb" />
+    <Compile Include="Settings.designer.vb">
+      <DependentUpon>Settings.vb</DependentUpon>
     </Compile>
-    <Compile Include="BriefingControl.vb">
-      <SubType>UserControl</SubType>
+    <Compile Include="Settings.vb">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CloudLayer.vb" />
-    <Compile Include="Conversions.vb" />
-    <Compile Include="CountryGeo.vb" />
+    <Compile Include="DPHXUnpackAndLoad.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DPHXUnpackAndLoad.Designer.vb">
+      <DependentUpon>DPHXUnpackAndLoad.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -98,30 +122,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PresetEvent.vb" />
-    <Compile Include="SupportingFeatures.vb" />
-    <Compile Include="VersionInfo.vb" />
-    <Compile Include="VersionInfoForm.Designer.vb">
-      <DependentUpon>VersionInfoForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="VersionInfoForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WeatherDetails.vb" />
-    <Compile Include="WindLayer.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BriefingControl.resx">
-      <DependentUpon>BriefingControl.vb</DependentUpon>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DPHXUnpackAndLoad.resx">
+      <DependentUpon>DPHXUnpackAndLoad.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VersionInfoForm.resx">
-      <DependentUpon>VersionInfoForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -134,18 +147,29 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProjectNotes.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ImageViewer\ImageViewer.csproj">
-      <Project>{8241a955-c8e4-4cfd-ba28-eeab34f6c00c}</Project>
-      <Name>ImageViewer</Name>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.vbproj">
+      <Project>{8f737f27-41dd-492b-b023-d43501f38355}</Project>
+      <Name>CommonLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+    <Content Include="DPHXUnpackAndLoad.VersionInfo.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

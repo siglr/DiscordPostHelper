@@ -8,8 +8,8 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Discord Post Helper - Common Library")>
-<Assembly: AssemblyDescription("Library containing code used by both applications")>
+<Assembly: AssemblyTitle("DPHX Unpack and Load")>
+<Assembly: AssemblyDescription("Unpacks a DPHX package file and load soaring task files and information")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("SIGLR Soaring Tools")>
 <Assembly: AssemblyCopyright("Copyright ©  2023")>
@@ -18,7 +18,7 @@ Imports System.Runtime.InteropServices
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("321b42c0-d7aa-4cf3-ab79-769f574698d9")>
+<Assembly: Guid("a351d309-2e9c-4535-83f2-7316d315072e")>
 
 ' Version information for an assembly consists of the following four values:
 '
