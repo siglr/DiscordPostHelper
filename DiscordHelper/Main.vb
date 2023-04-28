@@ -98,6 +98,8 @@ Public Class Main
     End Sub
     Private Sub ResetForm()
 
+        BriefingControl1.FullReset()
+
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
         _WeatherDetails = Nothing
@@ -170,9 +172,6 @@ Public Class Main
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
         cboBriefingMap.Items.Clear()
-        txtBriefing.Text = String.Empty
-        txtBriefingDescription.Text = String.Empty
-        txtBriefingRestrictions.Text = String.Empty
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -1396,7 +1395,7 @@ Public Class Main
 #Region "Briefing tab"
 
 #Region "Briefing tab event handlers"
-    Private Sub tabBriefingControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabBriefingControl.SelectedIndexChanged
+    Private Sub tabBriefingControl_SelectedIndexChanged(sender As Object, e As EventArgs)
 
         SetBriefingControlsVisiblity()
 
@@ -1405,7 +1404,7 @@ Public Class Main
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
         'Load image
-        'imgMap.Image = System.Drawing.Image.FromFile(cboBriefingMap.SelectedItem.ToString)
+        BriefingControl1.ChangeImage(cboBriefingMap.SelectedItem.ToString)
 
     End Sub
 
@@ -1415,19 +1414,9 @@ Public Class Main
     Private Sub SetBriefingControlsVisiblity()
 
         If TabControl1.SelectedTab.Name = "tabBriefing" Then
-            If tabBriefingControl.SelectedTab.Name = "tabBrief2" Then
-                cboBriefingMap.Visible = True
-                btnMapZoomIn.Visible = True
-                btnMapZoomOut.Visible = True
-            Else
-                cboBriefingMap.Visible = False
-                btnMapZoomIn.Visible = False
-                btnMapZoomOut.Visible = False
-            End If
+            cboBriefingMap.Visible = True
         Else
             cboBriefingMap.Visible = False
-            btnMapZoomIn.Visible = False
-            btnMapZoomOut.Visible = False
         End If
 
     End Sub
@@ -1460,113 +1449,12 @@ Public Class Main
 
         LoadPossibleImagesInMapDropdown()
 
-        Dim dateFormat As String
-        If chkIncludeYear.Checked Then
-            dateFormat = "MMMM dd, yyyy"
+        If txtFlightPlanFile.Text = String.Empty OrElse txtWeatherFile.Text = String.Empty Then
+            'Can't generate briefing
+            BriefingControl1.FullReset()
         Else
-            dateFormat = "MMMM dd"
+            BriefingControl1.GenerateBriefing(_SF, SetAndRetrieveSessionData(), txtFlightPlanFile.Text, txtWeatherFile.Text)
         End If
-
-        Dim sb As New StringBuilder
-        sb.Append("{\rtf1\ansi")
-
-        'MSFS Server {}
-        sb.Append($"The MSFS Server is \b {cboMSFSServer.Text}\b0\line ")
-
-        'Local MSFS date And time when we click Fly (sync Or Not)
-        sb.Append($"MSFS Local date & time is \b {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}\b0\line ")
-
-        'Flight plan
-        sb.Append($"The flight plan to load is \b {Path.GetFileName(txtFlightPlanFile.Text)}\b0\line ")
-
-        sb.Append("\line ")
-
-        'Departure airfield And runway
-        sb.Append($"We will depart from \b {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}\b0\line ")
-
-        'Arrival airfield And expected runway
-        sb.Append($"We will land at \b {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}\b0\line ")
-
-        'Type of soaring
-        Dim soaringType As String = GetSoaringTypesSelected()
-        If soaringType.Trim <> String.Empty OrElse txtSoaringTypeExtraInfo.Text.Trim <> String.Empty Then
-            sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}\b0\line ")
-        End If
-
-        'Task distance And total distance
-        sb.Append($"Distances are \b {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}\b0\line ")
-
-        'Approx. duration
-        sb.Append($"Approx. duration should be \b {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}\b0\line ")
-
-        'Recommended gliders
-        If cboRecommendedGliders.Text.Trim <> String.Empty Then
-            sb.Append($"Recommended gliders: \b {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}\b0\line ")
-        End If
-
-        'Difficulty rating
-        If cboDifficulty.SelectedIndex > 0 OrElse txtDifficultyExtraInfo.Text <> String.Empty Then
-            sb.Append($"The difficulty is rated as \b {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text, True)}\b0\line ")
-        End If
-
-        sb.Append("\line ")
-
-        If _WeatherDetails IsNot Nothing Then
-            'Weather info (temperature, baro pressure, precipitations)
-            sb.Append($"The weather profile to load is \b {_WeatherDetails.PresetName}\b0\line ")
-            If txtWeatherSummary.Text <> String.Empty Then
-                sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}\b0\line ")
-            End If
-            sb.Append($"The elevation measurement used is \b {_WeatherDetails.AltitudeMeasurement}\b0\line ")
-            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure}\b0\line ")
-            sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature}\b0\line ")
-            sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
-            If _WeatherDetails.HasPrecipitations Then
-                sb.Append($"Precipitations: \b {_WeatherDetails.Precipitations}\b0\line ")
-            End If
-
-            sb.Append("\line ")
-
-            'Winds
-            sb.Append($"\b Wind Layers\b0\line ")
-            Dim lines As String() = _WeatherDetails.WindLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
-            For Each line In lines
-                sb.Append($"{line}\line ")
-            Next
-
-            sb.Append(" \line ")
-
-            'Clouds
-            sb.Append($"\b Cloud Layers\b0\line ")
-            lines = _WeatherDetails.CloudLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
-            For Each line In lines
-                sb.Append($"{line}\line ")
-            Next
-
-        End If
-        sb.Append("}")
-        txtBriefing.Rtf = sb.ToString()
-
-        sb.Clear()
-
-        Dim sbDescription As New StringBuilder
-        If txtLongDescription.Text.Trim.Length > 0 Then
-            sbDescription.AppendLine($"**Full Description**{Environment.NewLine}{txtLongDescription.Text.Trim}")
-        Else
-            sbDescription.AppendLine(String.Empty)
-        End If
-
-        'Description of flight with map
-        If sbDescription.ToString <> String.Empty Then
-            sb.AppendLine(sbDescription.ToString)
-        End If
-        _SF.FormatMarkdownToRTF(sb.ToString, txtBriefingDescription)
-
-        sb.Clear()
-
-        'Altitude restrictions 
-        sb.AppendLine(txtAltRestrictions.Text)
-        _SF.FormatMarkdownToRTF(sb.ToString, txtBriefingRestrictions)
 
     End Sub
 
@@ -2152,6 +2040,20 @@ Public Class Main
 
     Private Sub SaveSessionData(filename As String)
 
+        Dim allCurrentData As AllData = SetAndRetrieveSessionData()
+
+        Dim serializer As New XmlSerializer(GetType(AllData))
+        Using stream As New FileStream(filename, FileMode.Create)
+            serializer.Serialize(stream, allCurrentData)
+        End Using
+
+        _CurrentSessionFile = filename
+        SetFormCaption(filename)
+
+    End Sub
+
+    Private Function SetAndRetrieveSessionData() As AllData
+
         Dim allCurrentData As New AllData()
 
         With allCurrentData
@@ -2220,20 +2122,12 @@ Public Class Main
             .URLGroupEventPost = txtGroupEventPostURL.Text
             .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
             .MapImageSelected = cboBriefingMap.Text
-            .MapImageHorizontalScrollValue = pnlMapImage.HorizontalScroll.Value
-            .MapImageVerticalScrollValue = pnlMapImage.VerticalScroll.Value
 
         End With
 
-        Dim serializer As New XmlSerializer(GetType(AllData))
-        Using stream As New FileStream(filename, FileMode.Create)
-            serializer.Serialize(stream, allCurrentData)
-        End Using
+        Return allCurrentData
 
-        _CurrentSessionFile = filename
-        SetFormCaption(filename)
-
-    End Sub
+    End Function
 
     Private Sub LoadSessionData(filename As String)
         If File.Exists(filename) Then
@@ -2349,8 +2243,6 @@ Public Class Main
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
                 LoadPossibleImagesInMapDropdown(.MapImageSelected)
-                pnlMapImage.HorizontalScroll.Value = .MapImageHorizontalScrollValue
-                pnlMapImage.VerticalScroll.Value = .MapImageVerticalScrollValue
             End With
 
             BuildFPResults()

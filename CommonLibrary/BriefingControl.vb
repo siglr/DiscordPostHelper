@@ -20,21 +20,33 @@ Public Class BriefingControl
     Public Const WS_VSCROLL As Integer = &H200000
     Public Const WS_HSCROLL As Integer = &H100000
 
-    Public Sub GenerateBriefing(supportFeat As SupportingFeatures, sessionData As AllData, unpackFolder As String)
+    Public Sub FullReset()
+        txtBriefing.Clear()
+        imageViewer.Visible = False
+        txtFullDescription.Clear()
+        restrictionsDataGrid.DataSource = Nothing
+        waypointCoordinatesDataGrid.DataSource = Nothing
+    End Sub
+
+    Public Sub ChangeImage(imgFilename As String)
+        imageViewer.LoadImage(imgFilename)
+    End Sub
+
+    Public Sub GenerateBriefing(supportFeat As SupportingFeatures, sessionData As AllData, flightplanfile As String, weatherfile As String)
 
         _SF = supportFeat
         _sessionData = sessionData
 
         'Load flight plan
         _XmlDocFlightPlan = New XmlDocument
-        _XmlDocFlightPlan.Load(Path.Combine(unpackFolder, Path.GetFileName(sessionData.FlightPlanFilename)))
+        _XmlDocFlightPlan.Load(flightplanfile)
         Dim totalDistance As Integer
         Dim trackDistance As Integer
         Dim altitudeRestrictions As String = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
 
         'Load weather info
         _XmlDocWeatherPreset = New XmlDocument
-        _XmlDocWeatherPreset.Load(Path.Combine(unpackFolder, Path.GetFileName(sessionData.WeatherFilename)))
+        _XmlDocWeatherPreset.Load(weatherfile)
         _WeatherDetails = Nothing
         _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
 
@@ -132,6 +144,7 @@ Public Class BriefingControl
 
         sb.Clear()
 
+        imageViewer.Visible = True
         If sessionData.MapImageSelected = String.Empty Then
             imageViewer.Enabled = False
         Else

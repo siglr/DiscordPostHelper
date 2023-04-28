@@ -158,7 +158,10 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
-            ctrlBriefing.GenerateBriefing(_SF, _allDPHData, TempDPHXUnpackFolder)
+            ctrlBriefing.GenerateBriefing(_SF,
+                                          _allDPHData,
+                                          Path.Combine(Settings.SessionSettings.UnpackingFolder, _allDPHData.FlightPlanFilename),
+                                          Path.Combine(Settings.SessionSettings.UnpackingFolder, _allDPHData.WeatherFilename))
         End If
 
     End Sub
