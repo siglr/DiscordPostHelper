@@ -1,10 +1,7 @@
 ﻿Imports System.Drawing
 Imports System.Globalization
 Imports System.IO
-Imports System.Linq.Expressions
 Imports System.Text
-Imports System.Web.SessionState
-Imports System.Web.UI.WebControls
 Imports System.Windows.Forms
 Imports System.Xml
 
@@ -53,7 +50,10 @@ Public Class BriefingControl
 
         'Title
         sb.Append($"\b {sessionData.Title}\b0\line ")
+        sb.Append($"{sessionData.Credits}\line ")
         sb.Append("\line ")
+
+        'Credits
 
         'Local MSFS date and time 
         sb.Append($"MSFS Local date & time is \b {sessionData.SimDate.ToString(dateFormat, _EnglishCulture)}, {sessionData.SimTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")

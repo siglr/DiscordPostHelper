@@ -256,6 +256,19 @@ Public Class DPHXUnpackAndLoad
                  Settings.SessionSettings.MSFSWeatherPresetsFolder,
                  "Weather Preset"))
 
+        sb.AppendLine()
+
+        'Look in the other files for xcsoar file
+        For Each filepath As String In _allDPHData.ExtraFiles
+            If Path.GetExtension(filepath) = ".tsk" Then
+                'XCSoar file
+                sb.AppendLine(CopyFile(Path.GetFileName(filepath),
+                                    TempDPHXUnpackFolder,
+                                    Settings.SessionSettings.XCSoarTasksFolder,
+                                    "XCSoar Task"))
+            End If
+        Next
+
         MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         EnableUnpackButton(False)
 
@@ -267,33 +280,38 @@ Public Class DPHXUnpackAndLoad
         Dim proceed As Boolean = False
         Dim messageToReturn As String = String.Empty
 
-        fullSourceFilename = Path.Combine(sourcePath, filename)
-        fullDestFilename = Path.Combine(destPath, filename)
-        If File.Exists(fullDestFilename) Then
-            'Check what to do
-            Select Case Settings.SessionSettings.AutoOverwriteFiles
-                Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                    proceed = True
-                    messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
-                Case AllSettings.AutoOverwriteOptions.AlwaysSkip
-                    proceed = False
-                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped - already exists"
-                Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                    If MessageBox.Show($"The {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Do you want to overwrite it?", "File already exists!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If Directory.Exists(destPath) Then
+            fullSourceFilename = Path.Combine(sourcePath, filename)
+            fullDestFilename = Path.Combine(destPath, filename)
+            If File.Exists(fullDestFilename) Then
+                'Check what to do
+                Select Case Settings.SessionSettings.AutoOverwriteFiles
+                    Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
                         proceed = True
                         messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
-                    Else
+                    Case AllSettings.AutoOverwriteOptions.AlwaysSkip
                         proceed = False
-                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user - already exists"
-                    End If
-            End Select
+                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped - already exists"
+                    Case AllSettings.AutoOverwriteOptions.AlwaysAsk
+                        If MessageBox.Show($"The {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Do you want to overwrite it?", "File already exists!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                            proceed = True
+                            messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
+                        Else
+                            proceed = False
+                            messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user - already exists"
+                        End If
+                End Select
+            Else
+                proceed = True
+                messageToReturn = $"{msgToAsk} ""{filename}"" copied"
+            End If
+            If proceed Then
+                File.Copy(fullSourceFilename, fullDestFilename, True)
+            End If
         Else
-            proceed = True
-            messageToReturn = $"{msgToAsk} ""{filename}"" copied"
+            messageToReturn = $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
         End If
-        If proceed Then
-            File.Copy(fullSourceFilename, fullDestFilename, True)
-        End If
+
 
         Return messageToReturn
 
@@ -303,17 +321,22 @@ Public Class DPHXUnpackAndLoad
         Dim fullSourceFilename As String
         Dim messageToReturn As String = String.Empty
 
-        fullSourceFilename = Path.Combine(sourcePath, filename)
-        If File.Exists(fullSourceFilename) Then
-            Try
-                File.Delete(fullSourceFilename)
-                messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
-            Catch ex As Exception
-                messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to deleted it:{Environment.NewLine}{ex.Message}"
-            End Try
+        If Directory.Exists(sourcePath) Then
+            fullSourceFilename = Path.Combine(sourcePath, filename)
+            If File.Exists(fullSourceFilename) Then
+                Try
+                    File.Delete(fullSourceFilename)
+                    messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
+                Catch ex As Exception
+                    messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to deleted it:{Environment.NewLine}{ex.Message}"
+                End Try
+            Else
+                messageToReturn = $"{msgToAsk} ""{filename}"" not found"
+            End If
         Else
-            messageToReturn = $"{msgToAsk} ""{filename}"" not found"
+            messageToReturn = $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
         End If
+
 
         Return messageToReturn
 
@@ -348,6 +371,17 @@ Public Class DPHXUnpackAndLoad
         sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  Settings.SessionSettings.MSFSWeatherPresetsFolder,
                  "Weather Preset"))
+        sb.AppendLine()
+
+        'Look in the other files for xcsoar file
+        For Each filepath As String In _allDPHData.ExtraFiles
+            If Path.GetExtension(filepath) = ".tsk" Then
+                'XCSoar file
+                sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
+                                    Settings.SessionSettings.XCSoarTasksFolder,
+                                    "XCSoar Task"))
+            End If
+        Next
 
         MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         EnableUnpackButton(True)

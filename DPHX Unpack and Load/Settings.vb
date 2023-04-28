@@ -35,6 +35,7 @@ Public Class Settings
             'Save settings
             SessionSettings.FlightPlansFolder = btnFlightPlanFilesFolder.Text
             SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
+            SessionSettings.XCSoarTasksFolder = btnXCSoarFilesFolder.Text
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
             SessionSettings.PackagesFolder = btnPackagesFolder.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
@@ -82,7 +83,7 @@ Public Class Settings
             FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         End If
 
-        If folderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             ' User selected a folder and clicked OK
             btnPackagesFolder.Text = FolderBrowserDialog1.SelectedPath
             ToolTip1.SetToolTip(btnPackagesFolder, FolderBrowserDialog1.SelectedPath)
@@ -138,7 +139,36 @@ Public Class Settings
             ToolTip1.SetToolTip(btnPackagesFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
+    End Sub
 
+    Private Sub btnXCSoarFilesFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarFilesFolder.Click
+        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .tsk files are located"
+        FolderBrowserDialog1.ShowNewFolderButton = True
+        If Directory.Exists(btnXCSoarFilesFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnXCSoarFilesFolder.Text
+        Else
+            FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        End If
+
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+            ' User selected a folder and clicked OK
+            btnXCSoarFilesFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnXCSoarFilesFolder, FolderBrowserDialog1.SelectedPath)
+        End If
+
+    End Sub
+
+    Private Sub btnXCSoarFilesFolderPaste_Click(sender As Object, e As EventArgs) Handles btnXCSoarFilesFolderPaste.Click
+
+        Dim folderPath As String = Clipboard.GetText()
+        If Directory.Exists(folderPath) Then
+            ' folderPath is a valid folder
+            btnXCSoarFilesFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnXCSoarFilesFolder, folderPath)
+        Else
+            ' folderPath is not a valid folder
+            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub btnFlightPlansFolderPaste_Click(sender As Object, e As EventArgs) Handles btnFlightPlansFolderPaste.Click
@@ -195,6 +225,8 @@ Public Class Settings
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        okCancelPanel.Top = Me.Height - 103
+
         If Directory.Exists(SessionSettings.FlightPlansFolder) Then
             btnFlightPlanFilesFolder.Text = SessionSettings.FlightPlansFolder
             ToolTip1.SetToolTip(btnFlightPlanFilesFolder, SessionSettings.FlightPlansFolder)
@@ -211,6 +243,10 @@ Public Class Settings
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If
+        If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
+            btnXCSoarFilesFolder.Text = SessionSettings.XCSoarTasksFolder
+            ToolTip1.SetToolTip(btnXCSoarFilesFolder, SessionSettings.XCSoarTasksFolder)
+        End If
 
         Select Case SessionSettings.AutoOverwriteFiles
             Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -223,6 +259,20 @@ Public Class Settings
 
         chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
 
+    End Sub
+
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnFlightPlanFilesFolder.MouseUp, btnWeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarFilesFolder.MouseUp
+        Select Case e.Button
+            Case MouseButtons.Right
+                RightClickOnPathButton(sender)
+        End Select
+    End Sub
+
+    Private Sub RightClickOnPathButton(theButton As Button)
+
+        If Directory.Exists(theButton.Text) Then
+            Process.Start("explorer.exe", theButton.Text)
+        End If
 
     End Sub
 

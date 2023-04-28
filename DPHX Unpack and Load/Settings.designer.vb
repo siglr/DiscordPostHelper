@@ -23,7 +23,7 @@ Partial Class Settings
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.okCancelPanel = New System.Windows.Forms.TableLayoutPanel()
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.pnlFlightPlanFilesFolder = New System.Windows.Forms.Panel()
@@ -40,8 +40,13 @@ Partial Class Settings
         Me.btnTempFolderPaste = New System.Windows.Forms.Button()
         Me.btnPackagesFolderPaste = New System.Windows.Forms.Button()
         Me.btnPackagesFolder = New System.Windows.Forms.Button()
+        Me.chkEnableAutoUnpack = New System.Windows.Forms.CheckBox()
+        Me.btnXCSoarFilesFolderPaste = New System.Windows.Forms.Button()
+        Me.btnXCSoarFilesFolder = New System.Windows.Forms.Button()
         Me.pblWeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.pnlXCSoarFilesFolder = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.pnlUnpackingFolder = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -51,31 +56,32 @@ Partial Class Settings
         Me.Label4 = New System.Windows.Forms.Label()
         Me.pnlAutoUnpack = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.chkEnableAutoUnpack = New System.Windows.Forms.CheckBox()
-        Me.TableLayoutPanel1.SuspendLayout()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.okCancelPanel.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
+        Me.pnlXCSoarFilesFolder.SuspendLayout()
         Me.pnlUnpackingFolder.SuspendLayout()
         Me.pnlPackagesFolder.SuspendLayout()
         Me.pnlAutoOverwrite.SuspendLayout()
         Me.pnlAutoUnpack.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TableLayoutPanel1
+        'okCancelPanel
         '
-        Me.TableLayoutPanel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(487, 305)
-        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(195, 45)
-        Me.TableLayoutPanel1.TabIndex = 4
+        Me.okCancelPanel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.okCancelPanel.ColumnCount = 2
+        Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.okCancelPanel.Controls.Add(Me.OK_Button, 0, 0)
+        Me.okCancelPanel.Controls.Add(Me.Cancel_Button, 1, 0)
+        Me.okCancelPanel.Location = New System.Drawing.Point(487, 371)
+        Me.okCancelPanel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.okCancelPanel.Name = "okCancelPanel"
+        Me.okCancelPanel.RowCount = 1
+        Me.okCancelPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.okCancelPanel.Size = New System.Drawing.Size(195, 45)
+        Me.okCancelPanel.TabIndex = 7
         '
         'OK_Button
         '
@@ -127,9 +133,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFlightPlanFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnFlightPlanFilesFolder.Location = New System.Drawing.Point(197, 4)
+        Me.btnFlightPlanFilesFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnFlightPlanFilesFolder.Name = "btnFlightPlanFilesFolder"
-        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(401, 37)
+        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(422, 37)
         Me.btnFlightPlanFilesFolder.TabIndex = 1
         Me.btnFlightPlanFilesFolder.Text = "Select the folder for the flight plan files (.pln)"
         Me.btnFlightPlanFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -151,9 +157,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnWeatherPresetsFolder.Location = New System.Drawing.Point(197, 4)
+        Me.btnWeatherPresetsFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnWeatherPresetsFolder.Name = "btnWeatherPresetsFolder"
-        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(401, 37)
+        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(422, 37)
         Me.btnWeatherPresetsFolder.TabIndex = 1
         Me.btnWeatherPresetsFolder.Text = "Select the MSFS folder containing weather presets (.wpr)"
         Me.btnWeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -166,9 +172,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnUnpackingFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnUnpackingFolder.Location = New System.Drawing.Point(197, 4)
+        Me.btnUnpackingFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnUnpackingFolder.Name = "btnUnpackingFolder"
-        Me.btnUnpackingFolder.Size = New System.Drawing.Size(401, 37)
+        Me.btnUnpackingFolder.Size = New System.Drawing.Size(422, 37)
         Me.btnUnpackingFolder.TabIndex = 1
         Me.btnUnpackingFolder.Text = "Select the folder where to temporary unpack DPHX packages"
         Me.btnUnpackingFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -178,7 +184,7 @@ Partial Class Settings
         'optOverwriteAlwaysOverwrite
         '
         Me.optOverwriteAlwaysOverwrite.AutoSize = True
-        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(197, 10)
+        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(176, 10)
         Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
         Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
         Me.optOverwriteAlwaysOverwrite.TabIndex = 1
@@ -189,7 +195,7 @@ Partial Class Settings
         'optOverwriteAlwaysSkip
         '
         Me.optOverwriteAlwaysSkip.AutoSize = True
-        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(341, 10)
+        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(320, 10)
         Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
         Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
         Me.optOverwriteAlwaysSkip.TabIndex = 2
@@ -201,7 +207,7 @@ Partial Class Settings
         '
         Me.optOverwriteAlwaysAsk.AutoSize = True
         Me.optOverwriteAlwaysAsk.Checked = True
-        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(450, 10)
+        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(429, 10)
         Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
         Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
         Me.optOverwriteAlwaysAsk.TabIndex = 3
@@ -249,14 +255,54 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPackagesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnPackagesFolder.Location = New System.Drawing.Point(197, 4)
+        Me.btnPackagesFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnPackagesFolder.Name = "btnPackagesFolder"
-        Me.btnPackagesFolder.Size = New System.Drawing.Size(401, 37)
+        Me.btnPackagesFolder.Size = New System.Drawing.Size(422, 37)
         Me.btnPackagesFolder.TabIndex = 1
         Me.btnPackagesFolder.Text = "Select the folder where your DPHX packages are stored"
         Me.btnPackagesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnPackagesFolder, "Select the folder where your DPHX packages are stored")
         Me.btnPackagesFolder.UseVisualStyleBackColor = True
+        '
+        'chkEnableAutoUnpack
+        '
+        Me.chkEnableAutoUnpack.AutoSize = True
+        Me.chkEnableAutoUnpack.Checked = True
+        Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(176, 11)
+        Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
+        Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
+        Me.chkEnableAutoUnpack.TabIndex = 1
+        Me.chkEnableAutoUnpack.Text = "Enable"
+        Me.ToolTip1.SetToolTip(Me.chkEnableAutoUnpack, "When enabled (checked), any DPHX package loaded will automatically unpack and cop" &
+        "y the files.")
+        Me.chkEnableAutoUnpack.UseVisualStyleBackColor = True
+        '
+        'btnXCSoarFilesFolderPaste
+        '
+        Me.btnXCSoarFilesFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarFilesFolderPaste.Location = New System.Drawing.Point(604, 4)
+        Me.btnXCSoarFilesFolderPaste.Name = "btnXCSoarFilesFolderPaste"
+        Me.btnXCSoarFilesFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnXCSoarFilesFolderPaste.TabIndex = 2
+        Me.btnXCSoarFilesFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarFilesFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btnXCSoarFilesFolderPaste.UseVisualStyleBackColor = True
+        '
+        'btnXCSoarFilesFolder
+        '
+        Me.btnXCSoarFilesFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnXCSoarFilesFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnXCSoarFilesFolder.Name = "btnXCSoarFilesFolder"
+        Me.btnXCSoarFilesFolder.Size = New System.Drawing.Size(422, 37)
+        Me.btnXCSoarFilesFolder.TabIndex = 1
+        Me.btnXCSoarFilesFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
+        Me.btnXCSoarFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarFilesFolder, "Select the folder containing XCSoar tasks (.tsk) (optional)")
+        Me.btnXCSoarFilesFolder.UseVisualStyleBackColor = True
         '
         'pblWeatherPresetsFolder
         '
@@ -279,17 +325,38 @@ Partial Class Settings
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Weather Presets Folder:"
         '
+        'pnlXCSoarFilesFolder
+        '
+        Me.pnlXCSoarFilesFolder.Controls.Add(Me.btnXCSoarFilesFolderPaste)
+        Me.pnlXCSoarFilesFolder.Controls.Add(Me.btnXCSoarFilesFolder)
+        Me.pnlXCSoarFilesFolder.Controls.Add(Me.Label8)
+        Me.pnlXCSoarFilesFolder.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlXCSoarFilesFolder.Location = New System.Drawing.Point(0, 90)
+        Me.pnlXCSoarFilesFolder.Name = "pnlXCSoarFilesFolder"
+        Me.pnlXCSoarFilesFolder.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlXCSoarFilesFolder.Size = New System.Drawing.Size(682, 45)
+        Me.pnlXCSoarFilesFolder.TabIndex = 2
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(5, 12)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(144, 20)
+        Me.Label8.TabIndex = 0
+        Me.Label8.Text = "XCSoar Tasks Folder:"
+        '
         'pnlUnpackingFolder
         '
         Me.pnlUnpackingFolder.Controls.Add(Me.btnTempFolderPaste)
         Me.pnlUnpackingFolder.Controls.Add(Me.btnUnpackingFolder)
         Me.pnlUnpackingFolder.Controls.Add(Me.Label3)
         Me.pnlUnpackingFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlUnpackingFolder.Location = New System.Drawing.Point(0, 90)
+        Me.pnlUnpackingFolder.Location = New System.Drawing.Point(0, 135)
         Me.pnlUnpackingFolder.Name = "pnlUnpackingFolder"
         Me.pnlUnpackingFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlUnpackingFolder.Size = New System.Drawing.Size(682, 45)
-        Me.pnlUnpackingFolder.TabIndex = 2
+        Me.pnlUnpackingFolder.TabIndex = 3
         '
         'Label3
         '
@@ -306,11 +373,11 @@ Partial Class Settings
         Me.pnlPackagesFolder.Controls.Add(Me.btnPackagesFolder)
         Me.pnlPackagesFolder.Controls.Add(Me.Label5)
         Me.pnlPackagesFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlPackagesFolder.Location = New System.Drawing.Point(0, 135)
+        Me.pnlPackagesFolder.Location = New System.Drawing.Point(0, 180)
         Me.pnlPackagesFolder.Name = "pnlPackagesFolder"
         Me.pnlPackagesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlPackagesFolder.Size = New System.Drawing.Size(682, 45)
-        Me.pnlPackagesFolder.TabIndex = 5
+        Me.pnlPackagesFolder.TabIndex = 4
         '
         'Label5
         '
@@ -328,11 +395,11 @@ Partial Class Settings
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
         Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
         Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 180)
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 225)
         Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
         Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoOverwrite.Size = New System.Drawing.Size(682, 45)
-        Me.pnlAutoOverwrite.TabIndex = 3
+        Me.pnlAutoOverwrite.TabIndex = 5
         '
         'Label4
         '
@@ -348,7 +415,7 @@ Partial Class Settings
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 225)
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 270)
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoUnpack.Size = New System.Drawing.Size(682, 45)
@@ -363,19 +430,17 @@ Partial Class Settings
         Me.Label6.TabIndex = 0
         Me.Label6.Text = "Auto Unpack"
         '
-        'chkEnableAutoUnpack
+        'Label7
         '
-        Me.chkEnableAutoUnpack.AutoSize = True
-        Me.chkEnableAutoUnpack.Checked = True
-        Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(197, 14)
-        Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
-        Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
-        Me.chkEnableAutoUnpack.TabIndex = 1
-        Me.chkEnableAutoUnpack.Text = "Enable"
-        Me.ToolTip1.SetToolTip(Me.chkEnableAutoUnpack, "When enabled (checked), any DPHX package loaded will automatically unpack and cop" &
-        "y the files.")
-        Me.chkEnableAutoUnpack.UseVisualStyleBackColor = True
+        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(12, 361)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(269, 60)
+        Me.Label7.TabIndex = 8
+        Me.Label7.Text = "For paths on this screen, you can either:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Left-Click to open the folder select" &
+    "ion" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Right-Click to open the folder itself"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
         '
         'Settings
         '
@@ -383,20 +448,22 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(682, 364)
+        Me.ClientSize = New System.Drawing.Size(682, 456)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
         Me.Controls.Add(Me.pnlPackagesFolder)
         Me.Controls.Add(Me.pnlUnpackingFolder)
+        Me.Controls.Add(Me.pnlXCSoarFilesFolder)
         Me.Controls.Add(Me.pblWeatherPresetsFolder)
         Me.Controls.Add(Me.pnlFlightPlanFilesFolder)
-        Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.Controls.Add(Me.okCancelPanel)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 408)
+        Me.MaximumSize = New System.Drawing.Size(5000, 500)
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(700, 408)
         Me.Name = "Settings"
@@ -404,11 +471,13 @@ Partial Class Settings
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "DPHX Unpack and Load - Settings"
-        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.okCancelPanel.ResumeLayout(False)
         Me.pnlFlightPlanFilesFolder.ResumeLayout(False)
         Me.pnlFlightPlanFilesFolder.PerformLayout()
         Me.pblWeatherPresetsFolder.ResumeLayout(False)
         Me.pblWeatherPresetsFolder.PerformLayout()
+        Me.pnlXCSoarFilesFolder.ResumeLayout(False)
+        Me.pnlXCSoarFilesFolder.PerformLayout()
         Me.pnlUnpackingFolder.ResumeLayout(False)
         Me.pnlUnpackingFolder.PerformLayout()
         Me.pnlPackagesFolder.ResumeLayout(False)
@@ -418,9 +487,10 @@ Partial Class Settings
         Me.pnlAutoUnpack.ResumeLayout(False)
         Me.pnlAutoUnpack.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
-    Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
+    Friend WithEvents okCancelPanel As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents pnlFlightPlanFilesFolder As Panel
@@ -449,4 +519,9 @@ Partial Class Settings
     Friend WithEvents pnlAutoUnpack As Panel
     Friend WithEvents chkEnableAutoUnpack As CheckBox
     Friend WithEvents Label6 As Label
+    Friend WithEvents Label7 As Label
+    Friend WithEvents pnlXCSoarFilesFolder As Panel
+    Friend WithEvents btnXCSoarFilesFolderPaste As Button
+    Friend WithEvents btnXCSoarFilesFolder As Button
+    Friend WithEvents Label8 As Label
 End Class
