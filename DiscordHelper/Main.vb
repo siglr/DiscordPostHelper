@@ -1439,8 +1439,8 @@ Public Class Main
         End If
         cboBriefingMap.Items.Clear()
         For Each item As String In lstAllFiles.Items
-            Dim fileExtension As String = Path.GetExtension(item)
-            If fileExtension = ".png" OrElse fileExtension = ".jpg" OrElse fileExtension = ".bmp" Then
+            Dim fileExtension As String = Path.GetExtension(item).ToLower
+            If fileExtension = ".png" OrElse fileExtension = ".jpg" Then
                 cboBriefingMap.Items.Add(item)
                 If item = currentImage Then
                     cboBriefingMap.SelectedItem = item

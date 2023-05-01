@@ -230,7 +230,7 @@ Public Class BriefingControl
 
         Dim imgList As New ImageList
         For Each filename As String In _sessionData.ExtraFiles
-            If Path.GetExtension(filename) = ".png" OrElse Path.GetExtension(filename) = ".jpg" Then
+            If Path.GetExtension(filename.ToLower) = ".png" OrElse Path.GetExtension(filename.ToLower) = ".jpg" Then
                 If _unpackFolder <> String.Empty Then
                     filename = Path.Combine(_unpackFolder, Path.GetFileName(filename))
                 End If
