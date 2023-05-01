@@ -36,12 +36,15 @@ Partial Class BriefingControl
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
+        Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
+        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
+        Me.imagesListView = New System.Windows.Forms.ListView()
         Me.tbpgXBOX = New System.Windows.Forms.TabPage()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
-        Me.imagesListView = New System.Windows.Forms.ListView()
-        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
+        Me.chkWPEnableLatLonColumns = New System.Windows.Forms.CheckBox()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -57,12 +60,12 @@ Partial Class BriefingControl
         CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbpgEventInfo.SuspendLayout()
         Me.tbpgImages.SuspendLayout()
-        Me.tbpgXBOX.SuspendLayout()
-        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.imagesTabDivider.Panel1.SuspendLayout()
         Me.imagesTabDivider.Panel2.SuspendLayout()
         Me.imagesTabDivider.SuspendLayout()
+        Me.tbpgXBOX.SuspendLayout()
+        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -233,29 +236,6 @@ Partial Class BriefingControl
         Me.tbpgImages.Text = "Images"
         Me.tbpgImages.UseVisualStyleBackColor = True
         '
-        'tbpgXBOX
-        '
-        Me.tbpgXBOX.Controls.Add(Me.waypointCoordinatesDataGrid)
-        Me.tbpgXBOX.Location = New System.Drawing.Point(4, 29)
-        Me.tbpgXBOX.Name = "tbpgXBOX"
-        Me.tbpgXBOX.Size = New System.Drawing.Size(982, 710)
-        Me.tbpgXBOX.TabIndex = 4
-        Me.tbpgXBOX.Text = "All waypoints"
-        Me.tbpgXBOX.UseVisualStyleBackColor = True
-        '
-        'waypointCoordinatesDataGrid
-        '
-        Me.waypointCoordinatesDataGrid.AllowUserToAddRows = False
-        Me.waypointCoordinatesDataGrid.AllowUserToDeleteRows = False
-        Me.waypointCoordinatesDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.waypointCoordinatesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.waypointCoordinatesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.waypointCoordinatesDataGrid.Location = New System.Drawing.Point(0, 0)
-        Me.waypointCoordinatesDataGrid.Name = "waypointCoordinatesDataGrid"
-        Me.waypointCoordinatesDataGrid.RowHeadersWidth = 47
-        Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 710)
-        Me.waypointCoordinatesDataGrid.TabIndex = 0
-        '
         'imagesTabDivider
         '
         Me.imagesTabDivider.Dock = System.Windows.Forms.DockStyle.Fill
@@ -276,6 +256,16 @@ Partial Class BriefingControl
         Me.imagesTabDivider.SplitterDistance = 814
         Me.imagesTabDivider.TabIndex = 0
         '
+        'imagesTabViewerControl
+        '
+        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
+        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.TabIndex = 0
+        '
         'imagesListView
         '
         Me.imagesListView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -288,15 +278,66 @@ Partial Class BriefingControl
         Me.imagesListView.TabIndex = 0
         Me.imagesListView.UseCompatibleStateImageBehavior = False
         '
-        'imagesTabViewerControl
+        'tbpgXBOX
         '
-        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
-        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
-        Me.imagesTabViewerControl.TabIndex = 0
+        Me.tbpgXBOX.Controls.Add(Me.chkWPEnableLatLonColumns)
+        Me.tbpgXBOX.Controls.Add(Me.Label2)
+        Me.tbpgXBOX.Controls.Add(Me.cboWayPointDistances)
+        Me.tbpgXBOX.Controls.Add(Me.waypointCoordinatesDataGrid)
+        Me.tbpgXBOX.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgXBOX.Name = "tbpgXBOX"
+        Me.tbpgXBOX.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgXBOX.TabIndex = 4
+        Me.tbpgXBOX.Text = "All waypoints"
+        Me.tbpgXBOX.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(4, 10)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(72, 20)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "Distances"
+        '
+        'cboWayPointDistances
+        '
+        Me.cboWayPointDistances.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboWayPointDistances.FormattingEnabled = True
+        Me.cboWayPointDistances.Items.AddRange(New Object() {"None", "Kilometers", "Miles"})
+        Me.cboWayPointDistances.Location = New System.Drawing.Point(82, 7)
+        Me.cboWayPointDistances.Name = "cboWayPointDistances"
+        Me.cboWayPointDistances.Size = New System.Drawing.Size(165, 28)
+        Me.cboWayPointDistances.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.cboWayPointDistances, "You can select to display the distances columns")
+        '
+        'waypointCoordinatesDataGrid
+        '
+        Me.waypointCoordinatesDataGrid.AllowUserToAddRows = False
+        Me.waypointCoordinatesDataGrid.AllowUserToDeleteRows = False
+        Me.waypointCoordinatesDataGrid.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.waypointCoordinatesDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.waypointCoordinatesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.waypointCoordinatesDataGrid.Location = New System.Drawing.Point(0, 41)
+        Me.waypointCoordinatesDataGrid.Name = "waypointCoordinatesDataGrid"
+        Me.waypointCoordinatesDataGrid.RowHeadersWidth = 47
+        Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 669)
+        Me.waypointCoordinatesDataGrid.TabIndex = 0
+        '
+        'chkWPEnableLatLonColumns
+        '
+        Me.chkWPEnableLatLonColumns.AutoSize = True
+        Me.chkWPEnableLatLonColumns.Checked = True
+        Me.chkWPEnableLatLonColumns.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkWPEnableLatLonColumns.Location = New System.Drawing.Point(253, 9)
+        Me.chkWPEnableLatLonColumns.Name = "chkWPEnableLatLonColumns"
+        Me.chkWPEnableLatLonColumns.Size = New System.Drawing.Size(218, 24)
+        Me.chkWPEnableLatLonColumns.TabIndex = 3
+        Me.chkWPEnableLatLonColumns.Text = "Show Latitude and Longitude"
+        Me.ToolTip1.SetToolTip(Me.chkWPEnableLatLonColumns, "You can select to show or hide the latitude and longitude columns")
+        Me.chkWPEnableLatLonColumns.UseVisualStyleBackColor = True
         '
         'BriefingControl
         '
@@ -323,12 +364,13 @@ Partial Class BriefingControl
         CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbpgEventInfo.ResumeLayout(False)
         Me.tbpgImages.ResumeLayout(False)
-        Me.tbpgXBOX.ResumeLayout(False)
-        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.imagesTabDivider.Panel1.ResumeLayout(False)
         Me.imagesTabDivider.Panel2.ResumeLayout(False)
         CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.imagesTabDivider.ResumeLayout(False)
+        Me.tbpgXBOX.ResumeLayout(False)
+        Me.tbpgXBOX.PerformLayout()
+        CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -352,4 +394,7 @@ Partial Class BriefingControl
     Friend WithEvents imagesTabDivider As Windows.Forms.SplitContainer
     Friend WithEvents imagesListView As Windows.Forms.ListView
     Friend WithEvents imagesTabViewerControl As ImageViewerControl
+    Friend WithEvents Label2 As Windows.Forms.Label
+    Friend WithEvents cboWayPointDistances As Windows.Forms.ComboBox
+    Friend WithEvents chkWPEnableLatLonColumns As Windows.Forms.CheckBox
 End Class

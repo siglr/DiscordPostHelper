@@ -203,4 +203,26 @@
         End Get
     End Property
 
+    Public Property DistanceFromPreviousKM As Single = 0
+    Public Property DistanceFromTaskStartKM As Single = 0
+    Public Property DistanceFromDepartureKM As Single = 0
+
+    Public ReadOnly Property DistanceFromPreviousMi As Single
+        Get
+            Return Conversions.KmToMiles(DistanceFromPreviousKM)
+        End Get
+    End Property
+
+    Public ReadOnly Property DistanceFromTaskStartMi As Single
+        Get
+            Return Conversions.KmToMiles(DistanceFromTaskStartKM)
+        End Get
+    End Property
+
+    Public ReadOnly Property DistanceFromDepartureMi As Single
+        Get
+            Return Conversions.KmToMiles(DistanceFromDepartureKM)
+        End Get
+    End Property
+
 End Class

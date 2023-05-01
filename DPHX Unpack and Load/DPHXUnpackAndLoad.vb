@@ -25,6 +25,13 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DPHXUnpackAndLoad_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If Not _SF.CheckRequiredNetFrameworkVersion Then
+            MessageBox.Show("This application requires Microsoft .NET Framework 4.8.1 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            _abortingFirstRun = True
+            Application.Exit()
+            Exit Sub
+        End If
+
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
         SetFormCaption(_currentFile)
 
@@ -191,9 +198,8 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
-        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
-
         If Not _abortingFirstRun Then
+            _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()
             Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
             Settings.SessionSettings.Save()

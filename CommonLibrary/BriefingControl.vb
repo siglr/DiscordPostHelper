@@ -27,6 +27,7 @@ Public Class BriefingControl
         txtFullDescription.Clear()
         restrictionsDataGrid.DataSource = Nothing
         waypointCoordinatesDataGrid.DataSource = Nothing
+        cboWayPointDistances.SelectedIndex = 0
         imagesListView.Clear()
     End Sub
 
@@ -174,7 +175,6 @@ Public Class BriefingControl
 
         End If
 
-        Dim gridColumn As DataGridViewColumn
         'Build altitude restrictions
         Dim dt As New DataTable()
         dt.Columns.Add("Waypoint Name", GetType(String))
@@ -192,21 +192,32 @@ Public Class BriefingControl
         waypointCoordinatesDataGrid.Font = New Font(waypointCoordinatesDataGrid.Font.FontFamily, 12)
         waypointCoordinatesDataGrid.RowTemplate.Height = 30
         waypointCoordinatesDataGrid.DataSource = _SF.AllWaypoints
-        gridColumn = waypointCoordinatesDataGrid.Columns("Latitude")
-        gridColumn.DefaultCellStyle.Format = "N6"
-        gridColumn = waypointCoordinatesDataGrid.Columns("Longitude")
-        gridColumn.DefaultCellStyle.Format = "N6"
+        waypointCoordinatesDataGrid.Columns("Latitude").DefaultCellStyle.Format = "N6"
+        waypointCoordinatesDataGrid.Columns("Longitude").DefaultCellStyle.Format = "N6"
         waypointCoordinatesDataGrid.ColumnHeadersDefaultCellStyle.Font = New Font(waypointCoordinatesDataGrid.Font, FontStyle.Bold)
         waypointCoordinatesDataGrid.Columns(0).HeaderText = "#"
         For i As Integer = 0 To waypointCoordinatesDataGrid.Columns.Count - 2
             waypointCoordinatesDataGrid.Columns(i).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
         Next
         waypointCoordinatesDataGrid.RowHeadersWidth = 15
-        waypointCoordinatesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        'waypointCoordinatesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         waypointCoordinatesDataGrid.AllowUserToResizeColumns = True
         waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
         waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
         waypointCoordinatesDataGrid.Columns("Gate").HeaderText = "Gate diameter"
+        waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").HeaderText = "Previous (km)"
+        waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").HeaderText = "Total (km)"
+        waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartKM").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartKM").HeaderText = "Task (km)"
+        waypointCoordinatesDataGrid.Columns("DistanceFromPreviousMi").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromPreviousMi").HeaderText = "Previous (mi)"
+        waypointCoordinatesDataGrid.Columns("DistanceFromDepartureMi").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromDepartureMi").HeaderText = "Total (mi)"
+        waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartMi").DefaultCellStyle.Format = "N1"
+        waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartMi").HeaderText = "Task (mi)"
+        SetWPGridColumnsVisibility()
 
         'Images tab
         LoadImagesTabListView()
@@ -240,7 +251,9 @@ Public Class BriefingControl
             imagesListView.Items.Add(item1)
         Next
 
-        imagesListView.Items(0).Selected = True
+        If imagesListView.Items.Count > 0 Then
+            imagesListView.Items(0).Selected = True
+        End If
 
     End Sub
 
@@ -343,5 +356,56 @@ Public Class BriefingControl
             imagesTabViewerControl.LoadImage(imagesListView.SelectedItems(0).Tag)
         End If
 
+    End Sub
+
+    Private Sub cboWayPointDistances_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboWayPointDistances.SelectedIndexChanged
+        SetWPGridColumnsVisibility()
+    End Sub
+
+    Private Sub SetWPGridColumnsVisibility()
+
+        Try
+            'Distances
+            Select Case cboWayPointDistances.SelectedIndex
+                Case 0 'None
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousMi").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureMi").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartMi").Visible = False
+                Case 1 'Kilometers
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").Visible = True
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").Visible = True
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartKM").Visible = True
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousMi").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureMi").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartMi").Visible = False
+                Case 2 'Miles
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartKM").Visible = False
+                    waypointCoordinatesDataGrid.Columns("DistanceFromPreviousMi").Visible = True
+                    waypointCoordinatesDataGrid.Columns("DistanceFromDepartureMi").Visible = True
+                    waypointCoordinatesDataGrid.Columns("DistanceFromTaskStartMi").Visible = True
+
+            End Select
+
+            'Lat and Lon columns
+            If chkWPEnableLatLonColumns.Checked Then
+                waypointCoordinatesDataGrid.Columns("Latitude").Visible = True
+                waypointCoordinatesDataGrid.Columns("Longitude").Visible = True
+            Else
+                waypointCoordinatesDataGrid.Columns("Latitude").Visible = False
+                waypointCoordinatesDataGrid.Columns("Longitude").Visible = False
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub chkWPEnableLatLonColumns_CheckedChanged(sender As Object, e As EventArgs) Handles chkWPEnableLatLonColumns.CheckedChanged
+        SetWPGridColumnsVisibility()
     End Sub
 End Class

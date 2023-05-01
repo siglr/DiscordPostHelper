@@ -9,6 +9,7 @@ Imports System.Web
 Imports System.Windows.Forms
 Imports System.Xml
 Imports System.Xml.Serialization
+Imports Microsoft.Win32
 
 Public Class SupportingFeatures
     Public Enum DiscordTimeStampFormat As Integer
@@ -204,15 +205,15 @@ Public Class SupportingFeatures
     End Function
 
     Public Function BuildAltitudeRestrictions(ByVal pXmlDocFlightPlan As XmlDocument,
-                                              ByRef pFlightTotalDistanceInKm As Integer,
-                                              ByRef pTaskTotalDistanceInKm As Integer,
+                                              ByRef pFlightTotalDistanceInKm As Single,
+                                              ByRef pTaskTotalDistanceInKm As Single,
                                               Optional includeWPName As Boolean = True) As String
 
         'Build altitude restrictions
         Dim previousATCWaypoing As ATCWaypoint = Nothing
         Dim strRestrictions As String = String.Empty
         Dim blnInTask As Boolean = False
-        Dim dblDistanceToPrevious As Double = 0
+        Dim dblDistanceToPrevious As Single = 0
 
         pFlightTotalDistanceInKm = 0
         pTaskTotalDistanceInKm = 0
@@ -227,26 +228,29 @@ Public Class SupportingFeatures
                 ICAO = String.Empty
             End If
             Dim atcWaypoint As New ATCWaypoint(pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Item(i).Attributes(0).Value, pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/WorldPosition").Item(i).FirstChild.Value, i, ICAO)
-            AllWaypoints.Add(ATCWaypoint)
-                If ATCWaypoint.ContainsRestriction Then
-                    strRestrictions = $"{strRestrictions}{Environment.NewLine}{ATCWaypoint.Restrictions(includeWPName)}"
-                End If
-                If i > 0 Then
-                    'Start adding distance between this waypoint and previous one to the total distance
-                    dblDistanceToPrevious = Conversions.GetDistanceInKm(previousATCWaypoing.Latitude, previousATCWaypoing.Longitude, ATCWaypoint.Latitude, ATCWaypoint.Longitude)
-                    pFlightTotalDistanceInKm += dblDistanceToPrevious
-                End If
-                If blnInTask Then
-                    'Start adding distance between this waypoint and previous one to the track distance
-                    pTaskTotalDistanceInKm += dblDistanceToPrevious
-                End If
-                If ATCWaypoint.IsTaskStart Then
-                    blnInTask = True
-                End If
-                If ATCWaypoint.IsTaskEnd Then
-                    blnInTask = False
-                End If
-                previousATCWaypoing = ATCWaypoint
+            AllWaypoints.Add(atcWaypoint)
+            If atcWaypoint.ContainsRestriction Then
+                strRestrictions = $"{strRestrictions}{Environment.NewLine}{atcWaypoint.Restrictions(includeWPName)}"
+            End If
+            If i > 0 Then
+                'Start adding distance between this waypoint and previous one to the total distance
+                dblDistanceToPrevious = Conversions.GetDistanceInKm(previousATCWaypoing.Latitude, previousATCWaypoing.Longitude, atcWaypoint.Latitude, atcWaypoint.Longitude)
+                atcWaypoint.DistanceFromPreviousKM = dblDistanceToPrevious
+                pFlightTotalDistanceInKm += dblDistanceToPrevious
+                atcWaypoint.DistanceFromDepartureKM = pFlightTotalDistanceInKm
+            End If
+            If blnInTask Then
+                'Start adding distance between this waypoint and previous one to the track distance
+                pTaskTotalDistanceInKm += dblDistanceToPrevious
+                atcWaypoint.DistanceFromTaskStartKM = pTaskTotalDistanceInKm
+            End If
+            If atcWaypoint.IsTaskStart Then
+                blnInTask = True
+            End If
+            If atcWaypoint.IsTaskEnd Then
+                blnInTask = False
+            End If
+            previousATCWaypoing = atcWaypoint
         Next
         Dim strAltRestrictions As String
 
@@ -926,5 +930,22 @@ Public Class SupportingFeatures
         ' Set the RTF-formatted text to the RichTextBox control
         richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
     End Sub
+
+    Public Function CheckRequiredNetFrameworkVersion() As Boolean
+
+        Dim result As Boolean = False
+        Dim subkey As String = "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+
+        Using ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey)
+            If ndpKey IsNot Nothing AndAlso ndpKey.GetValue("Release") IsNot Nothing Then
+                If CInt(ndpKey.GetValue("Release")) >= 533320 Then
+                    result = True
+                End If
+            End If
+        End Using
+
+        Return result
+
+    End Function
 
 End Class

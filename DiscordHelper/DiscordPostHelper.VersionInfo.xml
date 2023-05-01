@@ -1,6 +1,16 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.4.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.1.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.1.1</ReleaseVersion>
+      <ReleaseTitle>Preventing crashes and new waypoint columns</ReleaseTitle>
+      <ReleaseNotes>
+        Try to prevent some crashes with the retrieval of countries from geolocation using waypoints coordinates.
+        Check minimum .NET Framework requirement during startup
+        Add several new waypoint distances columns with drop down list (briefing tab, waypoints)
+        Add possiblity to show/hide the latitude and longitude columns (briefing tab, waypoints)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.4.28.1</ReleaseVersion>
       <ReleaseTitle>Revamping of Briefing tab</ReleaseTitle>
