@@ -310,7 +310,7 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress
+    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress, txtMaxAvgSpeed.KeyPress, txtMinAvgSpeed.KeyPress
         Dim keyChar = e.KeyChar
 
         If Char.IsControl(keyChar) Then

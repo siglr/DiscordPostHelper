@@ -1,4 +1,6 @@
-﻿Public Class Conversions
+﻿Imports System.Globalization
+
+Public Class Conversions
 
     Private Const constMeterToFeet As Double = 3.2808398950131
     Private Const constKmToMiles As Double = 0.6213711922
@@ -76,9 +78,9 @@
         coord = coord.Replace("°", " ") ' replace the degree symbol with a space
         coord = coord.Replace("'", " ") ' replace the minute symbol with a space
         Dim parts As String() = coord.Split(" "c)
-        Dim degrees As Double = Double.Parse(parts(0))
-        Dim minutes As Double = Double.Parse(parts(2))
-        Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1))
+        Dim degrees As Double = Double.Parse(parts(0), CultureInfo.InvariantCulture)
+        Dim minutes As Double = Double.Parse(parts(2), CultureInfo.InvariantCulture)
+        Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1), CultureInfo.InvariantCulture)
         Dim decimalDegrees As Double = degrees + (minutes / 60) + (seconds / 3600)
         If isNegative Then
             decimalDegrees *= -1
@@ -97,9 +99,9 @@
         coord = coord.Replace("°", " ") ' replace the degree symbol with a space
         coord = coord.Replace("'", " ") ' replace the minute symbol with a space
         Dim parts As String() = coord.Split(" "c)
-        Dim degrees As Double = Double.Parse(parts(0))
-        Dim minutes As Double = Double.Parse(parts(2))
-        Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1))
+        Dim degrees As Double = Double.Parse(parts(0), CultureInfo.InvariantCulture)
+        Dim minutes As Double = Double.Parse(parts(2), CultureInfo.InvariantCulture)
+        Dim seconds As Double = Double.Parse(parts(4).Substring(0, parts(4).Length - 1), CultureInfo.InvariantCulture)
         Dim decimalDegrees As Double = degrees + (minutes / 60) + (seconds / 3600)
         If isNegative Then
             decimalDegrees *= -1

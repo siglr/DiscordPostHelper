@@ -9,11 +9,11 @@ Public Class CloudLayer
 
     Public Sub New(xmlCloudNode As XmlNode)
 
-        AltitudeBottom = xmlCloudNode.SelectNodes("CloudLayerAltitudeBot").Item(0).Attributes("Value").Value
-        _AltitudeTop = xmlCloudNode.SelectNodes("CloudLayerAltitudeTop").Item(0).Attributes("Value").Value
-        _Density = xmlCloudNode.SelectNodes("CloudLayerDensity").Item(0).Attributes("Value").Value
-        _Coverage = xmlCloudNode.SelectNodes("CloudLayerCoverage").Item(0).Attributes("Value").Value * 100
-        _Scattering = xmlCloudNode.SelectNodes("CloudLayerScattering").Item(0).Attributes("Value").Value * 100
+        AltitudeBottom = XmlConvert.ToSingle(xmlCloudNode.SelectNodes("CloudLayerAltitudeBot").Item(0).Attributes("Value").Value)
+        _AltitudeTop = XmlConvert.ToSingle(xmlCloudNode.SelectNodes("CloudLayerAltitudeTop").Item(0).Attributes("Value").Value)
+        _Density = XmlConvert.ToSingle(xmlCloudNode.SelectNodes("CloudLayerDensity").Item(0).Attributes("Value").Value)
+        _Coverage = XmlConvert.ToSingle(xmlCloudNode.SelectNodes("CloudLayerCoverage").Item(0).Attributes("Value").Value) * 100
+        _Scattering = XmlConvert.ToSingle(xmlCloudNode.SelectNodes("CloudLayerScattering").Item(0).Attributes("Value").Value) * 100
 
     End Sub
 

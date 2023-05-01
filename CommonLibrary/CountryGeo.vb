@@ -1,4 +1,5 @@
-﻿Imports System.Net
+﻿Imports System.Globalization
+Imports System.Net
 Imports System.Windows.Forms
 Imports System.Xml
 Imports Microsoft.Win32
@@ -20,7 +21,7 @@ Public Class CountryGeo
             Return CountriesCache(key)
         End If
 
-        Dim url As String = $"https://dev.virtualearth.net/REST/v1/Locations/{lat},{lon}?includeEntityTypes=countryRegion&o=xml&key=u55CcFPOKv1c2SL4A4CT~I9NvEguTlf-h2ykmuGRMKw~ApGdr1VVqULcZjF-BUbsyb2VXD52pcbpvfA34-hHmJwP2_qzmD9fNp7TxLx0ePGZ"
+        Dim url As String = $"https://dev.virtualearth.net/REST/v1/Locations/{lat.ToString("G17", CultureInfo.InvariantCulture)},{lon.ToString("G17", CultureInfo.InvariantCulture)}?includeEntityTypes=countryRegion&o=xml&key=u55CcFPOKv1c2SL4A4CT~I9NvEguTlf-h2ykmuGRMKw~ApGdr1VVqULcZjF-BUbsyb2VXD52pcbpvfA34-hHmJwP2_qzmD9fNp7TxLx0ePGZ"
         Dim client As New WebClient()
         Dim data As String = ""
         Dim attempts As Integer = 0

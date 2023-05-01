@@ -16,15 +16,15 @@ Public Class WindLayer
 
     Public Sub New(windNode As XmlNode)
 
-        Altitude = windNode.SelectNodes("WindLayerAltitude").Item(0).Attributes("Value").Value
+        Altitude = XmlConvert.ToSingle(windNode.SelectNodes("WindLayerAltitude").Item(0).Attributes("Value").Value)
         IsGround = Altitude <= 0
-        _Angle = windNode.SelectNodes("WindLayerAngle").Item(0).Attributes("Value").Value
-        _Speed = windNode.SelectNodes("WindLayerSpeed").Item(0).Attributes("Value").Value
+        _Angle = XmlConvert.ToSingle(windNode.SelectNodes("WindLayerAngle").Item(0).Attributes("Value").Value)
+        _Speed = XmlConvert.ToSingle(windNode.SelectNodes("WindLayerSpeed").Item(0).Attributes("Value").Value)
         Try
-            _GustAngle = windNode.SelectNodes("GustWave/GustAngle").Item(0).Attributes("Value").Value
-            _GustSpeed = windNode.SelectNodes("GustWave/GustWaveSpeed").Item(0).Attributes("Value").Value
-            _GustInterval = windNode.SelectNodes("GustWave/GustWaveInterval").Item(0).Attributes("Value").Value
-            _GustDuration = windNode.SelectNodes("GustWave/GustWaveDuration").Item(0).Attributes("Value").Value
+            _GustAngle = XmlConvert.ToSingle(windNode.SelectNodes("GustWave/GustAngle").Item(0).Attributes("Value").Value)
+            _GustSpeed = XmlConvert.ToSingle(windNode.SelectNodes("GustWave/GustWaveSpeed").Item(0).Attributes("Value").Value)
+            _GustInterval = XmlConvert.ToSingle(windNode.SelectNodes("GustWave/GustWaveInterval").Item(0).Attributes("Value").Value)
+            _GustDuration = XmlConvert.ToSingle(windNode.SelectNodes("GustWave/GustWaveDuration").Item(0).Attributes("Value").Value)
             _HasGust = _GustSpeed <> 0
         Catch ex As Exception
             _HasGust = False

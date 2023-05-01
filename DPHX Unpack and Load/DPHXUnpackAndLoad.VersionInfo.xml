@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.1.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.1.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.1.2</ReleaseVersion>
+      <ReleaseTitle>Bunch of fixes related to regional number formats</ReleaseTitle>
+      <ReleaseNotes>
+        This release focuses only on problems that were related to different number formatting based on regional settings.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.1.1</ReleaseVersion>
       <ReleaseTitle>Check minimum requirement and new waypoint columns</ReleaseTitle>

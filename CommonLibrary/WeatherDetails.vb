@@ -17,11 +17,11 @@ Public Class WeatherDetails
         Dim blnHasGround As Boolean = False
 
         PresetName = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Name").Item(0).FirstChild.Value
-        _MSLPressureInPa = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLPressure").Item(0).Attributes("Value").Value
-        _MSLTempKelvin = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLTemperature").Item(0).Attributes("Value").Value
-        _AerosolDensity = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/AerosolDensity").Item(0).Attributes("Value").Value
-        _Precipitations = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Precipitations").Item(0).Attributes("Value").Value
-        _SnowCover = xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value
+        _MSLPressureInPa = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLPressure").Item(0).Attributes("Value").Value)
+        _MSLTempKelvin = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/MSLTemperature").Item(0).Attributes("Value").Value)
+        _AerosolDensity = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/AerosolDensity").Item(0).Attributes("Value").Value)
+        _Precipitations = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Precipitations").Item(0).Attributes("Value").Value)
+        _SnowCover = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value)
 
         If xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
             AltitudeMeasurement = "AMGL"
