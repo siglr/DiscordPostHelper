@@ -24,6 +24,7 @@ Partial Class Main
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
+        Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
         Me.chkGroupSecondaryPosts = New System.Windows.Forms.CheckBox()
@@ -200,6 +201,10 @@ Partial Class Main
         Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
+        Me.pnlBriefing = New System.Windows.Forms.Panel()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -210,10 +215,7 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
-        Me.pnlBriefing = New System.Windows.Forms.Panel()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.Label20 = New System.Windows.Forms.Label()
+        Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
@@ -229,20 +231,31 @@ Partial Class Main
         Me.pnlBriefing.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TabControl1
+        'pnlScrollableSurface
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.pnlScrollableSurface.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlScrollableSurface.AutoScroll = True
+        Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
+        Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
+        Me.pnlScrollableSurface.MaximumSize = New System.Drawing.Size(1708, 1197)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(800, 600)
+        Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1708, 1197)
+        Me.pnlScrollableSurface.TabIndex = 0
+        '
+        'TabControl1
+        '
         Me.TabControl1.Controls.Add(Me.tabFlightPlan)
         Me.TabControl1.Controls.Add(Me.tabEvent)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
-        Me.TabControl1.Location = New System.Drawing.Point(13, 13)
+        Me.TabControl1.Location = New System.Drawing.Point(0, 13)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1689, 1187)
+        Me.TabControl1.Size = New System.Drawing.Size(1708, 1184)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -268,7 +281,7 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1681, 1154)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1700, 1151)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         Me.tabFlightPlan.UseVisualStyleBackColor = True
@@ -305,7 +318,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(809, 140)
+        Me.pnlGuide.Location = New System.Drawing.Point(698, 6)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1530,7 +1543,7 @@ Partial Class Main
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1681, 1154)
+        Me.tabEvent.Size = New System.Drawing.Size(1700, 1151)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
@@ -2353,100 +2366,46 @@ Partial Class Main
         '
         'tabBriefing
         '
+        Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Controls.Add(Me.Label20)
         Me.tabBriefing.Controls.Add(Me.cboBriefingMap)
-        Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1681, 1154)
+        Me.tabBriefing.Size = New System.Drawing.Size(1700, 1151)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
         '
-        'OpenFileDialog1
+        'pnlBriefing
         '
-        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        Me.pnlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
+        Me.pnlBriefing.Location = New System.Drawing.Point(3, 43)
+        Me.pnlBriefing.Name = "pnlBriefing"
+        Me.pnlBriefing.Size = New System.Drawing.Size(1698, 1112)
+        Me.pnlBriefing.TabIndex = 0
         '
-        'btnReset
+        'BriefingControl1
         '
-        Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReset.Location = New System.Drawing.Point(307, 3)
-        Me.btnReset.Name = "btnReset"
-        Me.btnReset.Size = New System.Drawing.Size(175, 35)
-        Me.btnReset.TabIndex = 1
-        Me.btnReset.Text = "Reset All"
-        Me.ToolTip1.SetToolTip(Me.btnReset, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnReset.UseVisualStyleBackColor = True
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1698, 1112)
+        Me.BriefingControl1.TabIndex = 0
         '
-        'btnLoadConfig
+        'Label20
         '
-        Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadConfig.Location = New System.Drawing.Point(486, 3)
-        Me.btnLoadConfig.Name = "btnLoadConfig"
-        Me.btnLoadConfig.Size = New System.Drawing.Size(175, 35)
-        Me.btnLoadConfig.TabIndex = 2
-        Me.btnLoadConfig.Tag = "19"
-        Me.btnLoadConfig.Text = "Load"
-        Me.ToolTip1.SetToolTip(Me.btnLoadConfig, "Click to select and load a configuration file from your PC.")
-        Me.btnLoadConfig.UseVisualStyleBackColor = True
-        '
-        'btnSaveConfig
-        '
-        Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveConfig.Location = New System.Drawing.Point(667, 3)
-        Me.btnSaveConfig.Name = "btnSaveConfig"
-        Me.btnSaveConfig.Size = New System.Drawing.Size(175, 35)
-        Me.btnSaveConfig.TabIndex = 3
-        Me.btnSaveConfig.Tag = "19"
-        Me.btnSaveConfig.Text = "Save"
-        Me.ToolTip1.SetToolTip(Me.btnSaveConfig, "Click to save the current configuration to your PC.")
-        Me.btnSaveConfig.UseVisualStyleBackColor = True
-        '
-        'btnCreateShareablePack
-        '
-        Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCreateShareablePack.Location = New System.Drawing.Point(848, 3)
-        Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
-        Me.btnCreateShareablePack.Size = New System.Drawing.Size(175, 35)
-        Me.btnCreateShareablePack.TabIndex = 4
-        Me.btnCreateShareablePack.Tag = "20"
-        Me.btnCreateShareablePack.Text = "Share package"
-        Me.ToolTip1.SetToolTip(Me.btnCreateShareablePack, "Click to create a shareable package with all files.")
-        Me.btnCreateShareablePack.UseVisualStyleBackColor = True
-        '
-        'btnLoadB21Planner
-        '
-        Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadB21Planner.Location = New System.Drawing.Point(1029, 3)
-        Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
-        Me.btnLoadB21Planner.Size = New System.Drawing.Size(175, 35)
-        Me.btnLoadB21Planner.TabIndex = 5
-        Me.btnLoadB21Planner.Text = "Open B21 Planner"
-        Me.ToolTip1.SetToolTip(Me.btnLoadB21Planner, "Click to open the B21 Planner in your browser.")
-        Me.btnLoadB21Planner.UseVisualStyleBackColor = True
-        '
-        'btnGuideMe
-        '
-        Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideMe.Location = New System.Drawing.Point(1327, 3)
-        Me.btnGuideMe.Name = "btnGuideMe"
-        Me.btnGuideMe.Size = New System.Drawing.Size(175, 35)
-        Me.btnGuideMe.TabIndex = 6
-        Me.btnGuideMe.Text = "Guide me please!"
-        Me.ToolTip1.SetToolTip(Me.btnGuideMe, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnGuideMe.UseVisualStyleBackColor = True
-        '
-        'btnTurnGuideOff
-        '
-        Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1508, 3)
-        Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
-        Me.btnTurnGuideOff.Size = New System.Drawing.Size(175, 35)
-        Me.btnTurnGuideOff.TabIndex = 83
-        Me.btnTurnGuideOff.Text = "Turn guide off"
-        Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnTurnGuideOff.UseVisualStyleBackColor = True
-        Me.btnTurnGuideOff.Visible = False
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(20, 12)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(227, 20)
+        Me.Label20.TabIndex = 86
+        Me.Label20.Text = "Select image for the map display:"
         '
         'cboBriefingMap
         '
@@ -2460,36 +2419,92 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
         Me.cboBriefingMap.Visible = False
         '
-        'pnlBriefing
+        'OpenFileDialog1
         '
-        Me.pnlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
-        Me.pnlBriefing.Location = New System.Drawing.Point(3, 43)
-        Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1675, 1108)
-        Me.pnlBriefing.TabIndex = 0
+        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
-        'BriefingControl1
+        'btnReset
         '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1675, 1108)
-        Me.BriefingControl1.TabIndex = 0
+        Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReset.Location = New System.Drawing.Point(307, 3)
+        Me.btnReset.Name = "btnReset"
+        Me.btnReset.Size = New System.Drawing.Size(118, 35)
+        Me.btnReset.TabIndex = 1
+        Me.btnReset.Text = "Reset All"
+        Me.ToolTip1.SetToolTip(Me.btnReset, "Click to reset ALL of the fiels and start from scratch.")
+        Me.btnReset.UseVisualStyleBackColor = True
         '
-        'Label20
+        'btnLoadConfig
         '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(20, 12)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(227, 20)
-        Me.Label20.TabIndex = 86
-        Me.Label20.Text = "Select image for the map display:"
+        Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnLoadConfig.Location = New System.Drawing.Point(431, 3)
+        Me.btnLoadConfig.Name = "btnLoadConfig"
+        Me.btnLoadConfig.Size = New System.Drawing.Size(118, 35)
+        Me.btnLoadConfig.TabIndex = 2
+        Me.btnLoadConfig.Tag = "19"
+        Me.btnLoadConfig.Text = "Load"
+        Me.ToolTip1.SetToolTip(Me.btnLoadConfig, "Click to select and load a configuration file from your PC.")
+        Me.btnLoadConfig.UseVisualStyleBackColor = True
+        '
+        'btnSaveConfig
+        '
+        Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSaveConfig.Location = New System.Drawing.Point(555, 3)
+        Me.btnSaveConfig.Name = "btnSaveConfig"
+        Me.btnSaveConfig.Size = New System.Drawing.Size(118, 35)
+        Me.btnSaveConfig.TabIndex = 3
+        Me.btnSaveConfig.Tag = "19"
+        Me.btnSaveConfig.Text = "Save"
+        Me.ToolTip1.SetToolTip(Me.btnSaveConfig, "Click to save the current configuration to your PC.")
+        Me.btnSaveConfig.UseVisualStyleBackColor = True
+        '
+        'btnCreateShareablePack
+        '
+        Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCreateShareablePack.Location = New System.Drawing.Point(679, 3)
+        Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
+        Me.btnCreateShareablePack.Size = New System.Drawing.Size(135, 35)
+        Me.btnCreateShareablePack.TabIndex = 4
+        Me.btnCreateShareablePack.Tag = "20"
+        Me.btnCreateShareablePack.Text = "Share package"
+        Me.ToolTip1.SetToolTip(Me.btnCreateShareablePack, "Click to create a shareable package with all files.")
+        Me.btnCreateShareablePack.UseVisualStyleBackColor = True
+        '
+        'btnLoadB21Planner
+        '
+        Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnLoadB21Planner.Location = New System.Drawing.Point(820, 3)
+        Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
+        Me.btnLoadB21Planner.Size = New System.Drawing.Size(152, 35)
+        Me.btnLoadB21Planner.TabIndex = 5
+        Me.btnLoadB21Planner.Text = "Open B21 Planner"
+        Me.ToolTip1.SetToolTip(Me.btnLoadB21Planner, "Click to open the B21 Planner in your browser.")
+        Me.btnLoadB21Planner.UseVisualStyleBackColor = True
+        '
+        'btnGuideMe
+        '
+        Me.btnGuideMe.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGuideMe.Location = New System.Drawing.Point(1396, 3)
+        Me.btnGuideMe.Name = "btnGuideMe"
+        Me.btnGuideMe.Size = New System.Drawing.Size(155, 35)
+        Me.btnGuideMe.TabIndex = 6
+        Me.btnGuideMe.Text = "Guide me please!"
+        Me.ToolTip1.SetToolTip(Me.btnGuideMe, "Click to reset ALL of the fiels and start from scratch.")
+        Me.btnGuideMe.UseVisualStyleBackColor = True
+        '
+        'btnTurnGuideOff
+        '
+        Me.btnTurnGuideOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1557, 3)
+        Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
+        Me.btnTurnGuideOff.Size = New System.Drawing.Size(139, 35)
+        Me.btnTurnGuideOff.TabIndex = 83
+        Me.btnTurnGuideOff.Text = "Turn guide off"
+        Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
+        Me.btnTurnGuideOff.UseVisualStyleBackColor = True
+        Me.btnTurnGuideOff.Visible = False
         '
         'Main
         '
@@ -2504,12 +2519,15 @@ Partial Class Main
         Me.Controls.Add(Me.btnSaveConfig)
         Me.Controls.Add(Me.btnLoadConfig)
         Me.Controls.Add(Me.btnReset)
-        Me.Controls.Add(Me.TabControl1)
+        Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximumSize = New System.Drawing.Size(1726, 1249)
+        Me.MinimumSize = New System.Drawing.Size(1024, 768)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Discord Post Helper"
+        Me.pnlScrollableSurface.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tabFlightPlan.ResumeLayout(False)
         Me.tabFlightPlan.PerformLayout()
@@ -2724,4 +2742,5 @@ Partial Class Main
     Friend WithEvents pnlBriefing As Panel
     Friend WithEvents BriefingControl1 As CommonLibrary.BriefingControl
     Friend WithEvents Label20 As Label
+    Friend WithEvents pnlScrollableSurface As Panel
 End Class

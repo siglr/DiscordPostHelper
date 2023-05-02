@@ -1626,12 +1626,12 @@ Public Class Main
                 SetFocusOnField(btnAddExtraFile, fromF1Key)
             Case 19 'Save & Load
                 SetGuidePanelToTop()
-                pnlGuide.Left = 699
+                pnlGuide.Left = 572
                 lblGuideInstructions.Text = "Whenever you like, you can Save your current track's data to your computer and Load it back when you are ready to continue working on it."
                 SetFocusOnField(btnSaveConfig, fromF1Key)
             Case 20 'Share package
                 SetGuidePanelToTop()
-                pnlGuide.Left = 885
+                pnlGuide.Left = 700
                 lblGuideInstructions.Text = "You can also share your task's data and all the files by creating a package which you can zip and send to someone else."
                 SetFocusOnField(btnCreateShareablePack, fromF1Key)
             Case 21 'Create FP post
