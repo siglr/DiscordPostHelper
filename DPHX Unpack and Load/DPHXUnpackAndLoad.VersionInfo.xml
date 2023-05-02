@@ -2,6 +2,13 @@
   <CurrentLatestVersion>23.5.1.2</CurrentLatestVersion>
   <Releases>
     <Release>
+      <ReleaseVersion>23.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Event Information now displayed</ReleaseTitle>
+      <ReleaseNotes>
+        The Event Info tab now displays event information
+      </ReleaseNotes>
+    </Release>
+    <Release>
       <ReleaseVersion>23.5.1.2</ReleaseVersion>
       <ReleaseTitle>Bunch of fixes related to regional number formats</ReleaseTitle>
       <ReleaseNotes>

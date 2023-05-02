@@ -247,13 +247,17 @@ Public Class BriefingControl
         sb.Append("\line ")
 
         'Meeting Time and Discord Voice Channel
-        sb.Append($"We meet at: \b {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
-        sb.Append($"on voice channel: \b {_sessionData.VoiceChannel}\b0\line ")
-        sb.Append("\line ")
+        If _sessionData.VoiceChannel <> String.Empty Then
+            sb.Append($"We meet at: \b {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
+            sb.Append($"on voice channel: \b {_sessionData.VoiceChannel}\b0\line ")
+            sb.Append("\line ")
+        End If
 
         'MSFS Server
-        sb.Append($"Set MSFS Server to: \b {_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}\b0\line ")
-        sb.Append("\line ")
+        If _sessionData.MSFSServer > 0 Then
+            sb.Append($"Set MSFS Server to: \b {_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}\b0\line ")
+            sb.Append("\line ")
+        End If
 
         'Weather ad flight plan
         sb.Append($"Load weather preset: \b {_WeatherDetails.PresetName}\b0\line ")

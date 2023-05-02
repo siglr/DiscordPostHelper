@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.1.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Support resizing and scrollbars</ReleaseTitle>
+      <ReleaseNotes>
+        The window can now be resized and scrollbars are available when screen space is limited.
+        The Briefing tab now displays event information (Event Info tab)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.1.2</ReleaseVersion>
       <ReleaseTitle>Bunch of fixes related to regional number formats</ReleaseTitle>
