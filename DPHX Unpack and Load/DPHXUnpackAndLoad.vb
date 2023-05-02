@@ -141,6 +141,8 @@ Public Class DPHXUnpackAndLoad
     Private Sub LoadDPHXPackage(dphxFilename As String)
 
         Dim newDPHFile As String
+        ctrlBriefing.FullReset()
+        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
         newDPHFile = _SF.UnpackDPHXFileToTempFolder(dphxFilename, TempDPHXUnpackFolder)
 
@@ -167,7 +169,6 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
-            ctrlBriefing.FullReset()
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),

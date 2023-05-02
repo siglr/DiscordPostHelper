@@ -319,6 +319,19 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Function GetFullEventDateTimeInLocal(theDate As Date, theTime As Date, useUTC As Boolean) As DateTime
+
+        Dim returnDateTime As New Date(theDate.Year, theDate.Month, theDate.Day, theTime.Hour, theTime.Minute, 0)
+
+        If useUTC Then
+            'Need conversion to local
+            returnDateTime = Conversions.ConvertUTCToLocal(returnDateTime)
+        End If
+
+        Return returnDateTime
+
+    End Function
+
     Public Function GetDiscordTimeStampForDate(dateToUse As DateTime, format As DiscordTimeStampFormat) As String
 
         Dim formatAbbr As String = String.Empty
@@ -949,4 +962,16 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Function GetVoiceChannels() As List(Of String)
+
+        Return New List(Of String) From {"Unicom 1", "Unicom 2", "Unicom 3", "Push to talk 1", "Sim Soaring Club (PTT)",
+                                         "Flight 01", "Flight 02", "Thermal Smashing"}
+
+    End Function
+
+    Public Function GetMSFSServers() As List(Of String)
+
+        Return New List(Of String) From {"West Europe", "North Europe", "West USA", "East USA", "Southeast Asia"}
+
+    End Function
 End Class

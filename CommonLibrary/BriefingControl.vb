@@ -23,7 +23,8 @@ Public Class BriefingControl
 
     Public Sub FullReset()
         txtBriefing.Clear()
-        imageViewer.Visible = False
+        imageViewer.ClearImage()
+        imagesTabViewerControl.ClearImage()
         txtFullDescription.Clear()
         restrictionsDataGrid.DataSource = Nothing
         waypointCoordinatesDataGrid.DataSource = Nothing
@@ -222,6 +223,96 @@ Public Class BriefingControl
         'Images tab
         LoadImagesTabListView()
 
+        'EventInfo tab
+        BuildEventInfoTab()
+
+    End Sub
+
+    Private Sub BuildEventInfoTab()
+
+        Dim sb As New StringBuilder
+        sb.Append("{\rtf1\ansi ")
+
+        'Group/Club Name
+        sb.Append($"Group or Club: \b {_sessionData.GroupClub}\b0\line ")
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventMeetDate, _sessionData.EventMeetTime, True)
+        Dim fullSyncFlyDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventSyncFlyDate, _sessionData.EventSyncFlyTime, True)
+        Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventLaunchDate, _sessionData.EventLaunchTime, True)
+        Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventStartTaskDate, _sessionData.EventStartTaskTime, True)
+        Dim fullMSFSLocalDateTime As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.SimDate, _sessionData.SimTime, False)
+
+        'Date
+        sb.Append($"Event Date: \b {fullMeetDateTimeLocal.ToString("dddd, MMMM d, yyyy", CultureInfo.CurrentCulture)}\b0\line ")
+        sb.Append("\line ")
+
+        'Meeting Time and Discord Voice Channel
+        sb.Append($"We meet at: \b {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
+        sb.Append($"on voice channel: \b {_sessionData.VoiceChannel}\b0\line ")
+        sb.Append("\line ")
+
+        'MSFS Server
+        sb.Append($"Set MSFS Server to: \b {_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}\b0\line ")
+        sb.Append("\line ")
+
+        'Weather ad flight plan
+        sb.Append($"Load weather preset: \b {_WeatherDetails.PresetName}\b0\line ")
+        sb.Append($"And flight plan: \b ""{Path.GetFileName(_sessionData.FlightPlanFilename)}""\b0\line ")
+        sb.Append("\line ")
+
+        Dim dateFormat As String
+        If _sessionData.IncludeYear Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+
+        sb.Append($"The MSFS Local Date & Time should be: \b {fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {_SF.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}\b0 ")
+        If _sessionData.UseEventSyncFly Then
+            sb.Append("when it's the Sync Fly time below. \line ")
+        ElseIf _sessionData.UseEventLaunch Then
+            sb.Append("when it's the Launch time below \line ")
+        Else
+            sb.Append("when it's the Meet time above \line ")
+        End If
+        sb.Append("\line ")
+
+        'Sync Start or not?
+        If _sessionData.UseEventSyncFly Then
+            sb.Append($"This task requires a \b SYNC FLY \b0 so \b WAIT \b0 on the World Map for the signal. \line ")
+            sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+            sb.Append("\line ")
+        Else
+            sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. \line ")
+            sb.Append("\line ")
+        End If
+
+        'Launch
+        If _sessionData.UseEventLaunch Then
+            sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+            sb.Append("\line ")
+        Else
+            sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. \line ")
+            sb.Append("\line ")
+        End If
+
+        'Start task
+        If _sessionData.UseEventStartTask Then
+            sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+            sb.Append("\line ")
+        Else
+            sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. \line ")
+            sb.Append("\line ")
+        End If
+        sb.Append($"The expected duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
+        sb.Append("\line ")
+
+        sb.Append($"See Main Task Info and Map tabs for other important task information. \line ")
+
+        sb.Append("}")
+        txtEventInfo.Rtf = sb.ToString()
+        SetZoomFactorOfRichTextBox(txtEventInfo)
+
     End Sub
 
     Private Sub LoadImagesTabListView()
@@ -341,6 +432,8 @@ Public Class BriefingControl
                 SetZoomFactorOfRichTextBox(txtBriefing)
             Case 1
                 SetZoomFactorOfRichTextBox(txtFullDescription)
+            Case 2
+                SetZoomFactorOfRichTextBox(txtEventInfo)
         End Select
 
     End Sub

@@ -29,22 +29,22 @@ Partial Class BriefingControl
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
         Me.mapSplitterUpDown = New System.Windows.Forms.SplitContainer()
-        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.mapSplitterLeftRight = New System.Windows.Forms.SplitContainer()
         Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
         Me.restrictionsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
-        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.imagesListView = New System.Windows.Forms.ListView()
         Me.tbpgXBOX = New System.Windows.Forms.TabPage()
+        Me.chkWPEnableLatLonColumns = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkWPEnableLatLonColumns = New System.Windows.Forms.CheckBox()
+        Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
+        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
+        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -149,16 +149,6 @@ Partial Class BriefingControl
         Me.mapSplitterUpDown.SplitterDistance = 325
         Me.mapSplitterUpDown.TabIndex = 0
         '
-        'imageViewer
-        '
-        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
-        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(976, 325)
-        Me.imageViewer.TabIndex = 0
-        '
         'mapSplitterLeftRight
         '
         Me.mapSplitterLeftRight.Dock = System.Windows.Forms.DockStyle.Fill
@@ -206,24 +196,13 @@ Partial Class BriefingControl
         'tbpgEventInfo
         '
         Me.tbpgEventInfo.AutoScroll = True
-        Me.tbpgEventInfo.Controls.Add(Me.Label1)
+        Me.tbpgEventInfo.Controls.Add(Me.txtEventInfo)
         Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 29)
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
         Me.tbpgEventInfo.Size = New System.Drawing.Size(982, 710)
         Me.tbpgEventInfo.TabIndex = 3
         Me.tbpgEventInfo.Text = "Event Info"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Text", 47.78182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(982, 710)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "COMING SOON!"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'tbpgImages
         '
@@ -256,16 +235,6 @@ Partial Class BriefingControl
         Me.imagesTabDivider.SplitterDistance = 814
         Me.imagesTabDivider.TabIndex = 0
         '
-        'imagesTabViewerControl
-        '
-        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
-        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
-        Me.imagesTabViewerControl.TabIndex = 0
-        '
         'imagesListView
         '
         Me.imagesListView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -290,6 +259,19 @@ Partial Class BriefingControl
         Me.tbpgXBOX.TabIndex = 4
         Me.tbpgXBOX.Text = "All waypoints"
         Me.tbpgXBOX.UseVisualStyleBackColor = True
+        '
+        'chkWPEnableLatLonColumns
+        '
+        Me.chkWPEnableLatLonColumns.AutoSize = True
+        Me.chkWPEnableLatLonColumns.Checked = True
+        Me.chkWPEnableLatLonColumns.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkWPEnableLatLonColumns.Location = New System.Drawing.Point(253, 9)
+        Me.chkWPEnableLatLonColumns.Name = "chkWPEnableLatLonColumns"
+        Me.chkWPEnableLatLonColumns.Size = New System.Drawing.Size(218, 24)
+        Me.chkWPEnableLatLonColumns.TabIndex = 3
+        Me.chkWPEnableLatLonColumns.Text = "Show Latitude and Longitude"
+        Me.ToolTip1.SetToolTip(Me.chkWPEnableLatLonColumns, "You can select to show or hide the latitude and longitude columns")
+        Me.chkWPEnableLatLonColumns.UseVisualStyleBackColor = True
         '
         'Label2
         '
@@ -326,18 +308,37 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 669)
         Me.waypointCoordinatesDataGrid.TabIndex = 0
         '
-        'chkWPEnableLatLonColumns
+        'txtEventInfo
         '
-        Me.chkWPEnableLatLonColumns.AutoSize = True
-        Me.chkWPEnableLatLonColumns.Checked = True
-        Me.chkWPEnableLatLonColumns.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkWPEnableLatLonColumns.Location = New System.Drawing.Point(253, 9)
-        Me.chkWPEnableLatLonColumns.Name = "chkWPEnableLatLonColumns"
-        Me.chkWPEnableLatLonColumns.Size = New System.Drawing.Size(218, 24)
-        Me.chkWPEnableLatLonColumns.TabIndex = 3
-        Me.chkWPEnableLatLonColumns.Text = "Show Latitude and Longitude"
-        Me.ToolTip1.SetToolTip(Me.chkWPEnableLatLonColumns, "You can select to show or hide the latitude and longitude columns")
-        Me.chkWPEnableLatLonColumns.UseVisualStyleBackColor = True
+        Me.txtEventInfo.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtEventInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
+        Me.txtEventInfo.Name = "txtEventInfo"
+        Me.txtEventInfo.ReadOnly = True
+        Me.txtEventInfo.Size = New System.Drawing.Size(982, 710)
+        Me.txtEventInfo.TabIndex = 5
+        Me.txtEventInfo.Text = ""
+        Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
+        '
+        'imageViewer
+        '
+        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
+        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imageViewer.Name = "imageViewer"
+        Me.imageViewer.Size = New System.Drawing.Size(976, 325)
+        Me.imageViewer.TabIndex = 0
+        '
+        'imagesTabViewerControl
+        '
+        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
+        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.TabIndex = 0
         '
         'BriefingControl
         '
@@ -390,11 +391,11 @@ Partial Class BriefingControl
     Friend WithEvents tbpgXBOX As Windows.Forms.TabPage
     Friend WithEvents waypointCoordinatesDataGrid As Windows.Forms.DataGridView
     Friend WithEvents restrictionsDataGrid As Windows.Forms.DataGridView
-    Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents imagesTabDivider As Windows.Forms.SplitContainer
     Friend WithEvents imagesListView As Windows.Forms.ListView
     Friend WithEvents imagesTabViewerControl As ImageViewerControl
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents cboWayPointDistances As Windows.Forms.ComboBox
     Friend WithEvents chkWPEnableLatLonColumns As Windows.Forms.CheckBox
+    Friend WithEvents txtEventInfo As Windows.Forms.RichTextBox
 End Class

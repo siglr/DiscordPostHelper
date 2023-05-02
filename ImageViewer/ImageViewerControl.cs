@@ -107,6 +107,11 @@ namespace SIGLR.SoaringTools.ImageViewer
             imageBox.Refresh();
         }
 
+        public void ClearImage()
+        {
+            imageBox.ClearImage();
+        }
+
         private void imageBox_SizeToFitChanged(object sender, EventArgs e)
         {
             chkFitToWindow.Checked = imageBox.SizeToFit;
