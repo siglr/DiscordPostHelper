@@ -591,6 +591,15 @@ namespace SIGLR.SoaringTools.ImageViewer
             }
         }
 
+        public void ClearImage()
+        {
+            if (this.Image != null)
+            {
+                this.Image.Dispose();
+                this.Image = null;
+            }
+        }
+
         #endregion  Public Methods  
 
         #region  Public Properties  

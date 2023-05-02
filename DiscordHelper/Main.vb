@@ -114,6 +114,10 @@ Public Class Main
 
         cboSpeedUnits.SelectedIndex = 0
         cboDifficulty.SelectedIndex = 0
+        cboVoiceChannel.Items.Clear()
+        cboVoiceChannel.Items.AddRange(_SF.GetVoiceChannels.ToArray)
+        cboMSFSServer.Items.Clear()
+        cboMSFSServer.Items.AddRange(_SF.GetMSFSServers.ToArray)
         cboRecommendedGliders.SelectedIndex = 0
         lstAllFiles.Items.Clear()
         lstAllCountries.Items.Clear()
