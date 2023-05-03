@@ -15,12 +15,6 @@ Public Class BriefingControl
     Private _sessionData As AllData
     Private _unpackFolder As String = String.Empty
 
-    Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As IntPtr, ByVal nIndex As Integer) As Integer
-    Public Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Integer) As Integer
-    Public Const GWL_STYLE As Integer = (-16)
-    Public Const WS_VSCROLL As Integer = &H200000
-    Public Const WS_HSCROLL As Integer = &H100000
-
     Public Sub FullReset()
         txtBriefing.Clear()
         imageViewer.ClearImage()
@@ -30,6 +24,17 @@ Public Class BriefingControl
         waypointCoordinatesDataGrid.DataSource = Nothing
         cboWayPointDistances.SelectedIndex = 0
         imagesListView.Clear()
+        Timer1.Stop()
+
+        countDownToMeet.ZoomFactor = 2
+        countDownToMeet.ResetToZero(True)
+        countDownToSyncFly.ZoomFactor = 2
+        countDownToSyncFly.ResetToZero(True)
+        countDownToLaunch.ZoomFactor = 2
+        countDownToLaunch.ResetToZero(True)
+        countDownTaskStart.ZoomFactor = 2
+        countDownTaskStart.ResetToZero(True)
+
     End Sub
 
     Public Sub ChangeImage(imgFilename As String)
@@ -81,7 +86,7 @@ Public Class BriefingControl
         'Credits
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {sessionData.SimDate.ToString(dateFormat, _EnglishCulture)}, {sessionData.SimTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is \b {sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
 
         'Flight plan
         sb.Append($"The flight plan to load is \b {Path.GetFileName(sessionData.FlightPlanFilename)}\b0\line ")
@@ -153,7 +158,7 @@ Public Class BriefingControl
         End If
         sb.Append("}")
         txtBriefing.Rtf = sb.ToString()
-        SetZoomFactorOfRichTextBox(txtBriefing)
+        SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
 
         sb.Clear()
 
@@ -236,11 +241,18 @@ Public Class BriefingControl
         'Group/Club Name
         sb.Append($"Group or Club: \b {_sessionData.GroupClub}\b0\line ")
 
-        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventMeetDate, _sessionData.EventMeetTime, True)
-        Dim fullSyncFlyDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventSyncFlyDate, _sessionData.EventSyncFlyTime, True)
-        Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventLaunchDate, _sessionData.EventLaunchTime, True)
-        Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.EventStartTaskDate, _sessionData.EventStartTaskTime, True)
-        Dim fullMSFSLocalDateTime As DateTime = _SF.GetFullEventDateTimeInLocal(_sessionData.SimDate, _sessionData.SimTime, False)
+        Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
+        Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
+        Dim fullLaunchDateTimeLocal As DateTime = _sessionData.LaunchLocalDateTime
+        Dim fullStartTaskDateTimeLocal As DateTime = _sessionData.StartTaskLocalDateTime
+        Dim fullMSFSLocalDateTime As DateTime = _sessionData.SimLocalDateTime
+
+        countDownToMeet.SetTargetDateTime(fullMeetDateTimeLocal)
+
+        'Timezone
+        Dim timezoneInfos As List(Of String) = SupportingFeatures.GetTimeZoneInformation
+        sb.Append($"The local times displayed here are for the timezone: \b {timezoneInfos(0)} (UTC{timezoneInfos(1)})\b0\line ")
+        sb.Append("\line ")
 
         'Date
         sb.Append($"Event Date: \b {fullMeetDateTimeLocal.ToString("dddd, MMMM d, yyyy", CultureInfo.CurrentCulture)}\b0\line ")
@@ -286,27 +298,33 @@ Public Class BriefingControl
             sb.Append($"This task requires a \b SYNC FLY \b0 so \b WAIT \b0 on the World Map for the signal. \line ")
             sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
             sb.Append("\line ")
+            countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal)
         Else
             sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. \line ")
             sb.Append("\line ")
+            countDownToSyncFly.ResetToZero(True)
         End If
 
         'Launch
         If _sessionData.UseEventLaunch Then
             sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
             sb.Append("\line ")
+            countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal)
         Else
             sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. \line ")
             sb.Append("\line ")
+            countDownToLaunch.ResetToZero(True)
         End If
 
         'Start task
         If _sessionData.UseEventStartTask Then
             sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
             sb.Append("\line ")
+            countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal)
         Else
             sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. \line ")
             sb.Append("\line ")
+            countDownTaskStart.ResetToZero(True)
         End If
         sb.Append($"The expected duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
         sb.Append("\line ")
@@ -315,7 +333,8 @@ Public Class BriefingControl
 
         sb.Append("}")
         txtEventInfo.Rtf = sb.ToString()
-        SetZoomFactorOfRichTextBox(txtEventInfo)
+        SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
+        Timer1.Start()
 
     End Sub
 
@@ -352,52 +371,6 @@ Public Class BriefingControl
 
     End Sub
 
-    Private Sub SetZoomFactorOfRichTextBox(rtfControl As RichTextBox)
-
-        If rtfControl.Text.Trim = String.Empty Then
-            Exit Sub
-        End If
-
-        Dim bVScrollBar As Boolean
-        bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
-        Select Case bVScrollBar
-            Case True
-                'Scrollbar is visible - Make it smaller
-                Do
-                    If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
-                        Exit Do
-                    End If
-                    rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
-                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
-                    'If the scrollbar is no longer visible we are done!
-                    If bVScrollBar = False Then Exit Do
-                Loop
-            Case False
-                'Scrollbar is not visible - Make it bigger
-                Do
-                    If (rtfControl.ZoomFactor + 0.01) >= 64 Then
-                        Exit Do
-                    End If
-                    rtfControl.ZoomFactor = rtfControl.ZoomFactor + 0.01
-                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
-                    If bVScrollBar = True Then
-                        Do
-                            'Found the scrollbar, make smaller until bar is not visible
-                            If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
-                                Exit Do
-                            End If
-                            rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
-                            bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
-                            'If the scrollbar is no longer visible we are done!
-                            If bVScrollBar = False Then Exit Do
-                        Loop
-                        Exit Do
-                    End If
-                Loop
-        End Select
-
-    End Sub
-
     Private Function GetSoaringTypesSelected() As String
         Dim types As String = String.Empty
 
@@ -431,14 +404,16 @@ Public Class BriefingControl
 
     Public Sub AdjustRTBoxControls()
 
-        Select Case tabsBriefing.SelectedIndex
-            Case 0
-                SetZoomFactorOfRichTextBox(txtBriefing)
-            Case 1
-                SetZoomFactorOfRichTextBox(txtFullDescription)
-            Case 2
-                SetZoomFactorOfRichTextBox(txtEventInfo)
-        End Select
+        If _SF IsNot Nothing Then
+            Select Case tabsBriefing.SelectedIndex
+                Case 0
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
+                Case 1
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtFullDescription)
+                Case 2
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
+            End Select
+        End If
 
     End Sub
 
@@ -504,5 +479,83 @@ Public Class BriefingControl
 
     Private Sub chkWPEnableLatLonColumns_CheckedChanged(sender As Object, e As EventArgs) Handles chkWPEnableLatLonColumns.CheckedChanged
         SetWPGridColumnsVisibility()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+        countDownToMeet.UpdateTime()
+        If _sessionData.UseEventSyncFly Then
+            countDownToSyncFly.UpdateTime()
+        End If
+        If _sessionData.UseEventLaunch Then
+            countDownToLaunch.UpdateTime()
+        End If
+        If _sessionData.UseEventStartTask Then
+            countDownTaskStart.UpdateTime()
+        End If
+        AdjustMSFSLocalDateTime()
+
+    End Sub
+
+    Private Sub AdjustMSFSLocalDateTime()
+
+        Dim timePassedEvent As TimeSpan
+        Dim msfsDateToDisplay As Date = _sessionData.SimLocalDateTime
+        Dim withinEvent60Min As Boolean = False
+
+        If _sessionData.UseEventSyncFly Then
+            'MSFS Local Date and Time should match with the Sync Fly time (only within 60 minutes before or after the SyncFly date)
+            If countDownToSyncFly.RemainingTime > 0 AndAlso countDownToSyncFly.RemainingTime <= 3600 Then
+                msfsDateToDisplay = msfsDateToDisplay.AddSeconds(countDownToSyncFly.RemainingTime * -1)
+                withinEvent60Min = True
+            Else
+                timePassedEvent = DateTime.Now - _sessionData.SyncFlyLocalDateTime
+                If timePassedEvent.TotalMinutes < 61 Then
+                    msfsDateToDisplay += timePassedEvent
+                    withinEvent60Min = True
+                End If
+            End If
+        ElseIf _sessionData.UseEventLaunch Then
+            'MSFS Local Date and Time should match with the launch time (only within 60 minutes before or after the Launch date)
+            If countDownToLaunch.RemainingTime > 0 AndAlso countDownToLaunch.RemainingTime <= 3600 Then
+                msfsDateToDisplay = msfsDateToDisplay.AddSeconds(countDownToLaunch.RemainingTime * -1)
+                withinEvent60Min = True
+            Else
+                timePassedEvent = DateTime.Now - _sessionData.LaunchLocalDateTime
+                If timePassedEvent.TotalMinutes < 61 Then
+                    msfsDateToDisplay += timePassedEvent
+                    withinEvent60Min = True
+                End If
+            End If
+        Else
+            'MSFS Local Date and Time should match with the meet time (only within 60 minutes before or after the Meet date)
+            If countDownToMeet.RemainingTime > 0 AndAlso countDownToMeet.RemainingTime <= 3600 Then
+                msfsDateToDisplay = msfsDateToDisplay.AddSeconds(countDownToMeet.RemainingTime * -1)
+                withinEvent60Min = True
+            Else
+                timePassedEvent = DateTime.Now - _sessionData.MeetLocalDateTime
+                If timePassedEvent.TotalMinutes < 61 Then
+                    msfsDateToDisplay += timePassedEvent
+                    withinEvent60Min = True
+                End If
+            End If
+        End If
+
+        If withinEvent60Min = True Then
+            'Set description label for within 60 minutes
+            lblInsideOutside60Minutes.Text = $"Within 60 minutes of the event's time.{Environment.NewLine}{Environment.NewLine}If clicking Fly now, MSFS local time should be:"
+        Else
+            'Set description label for outside 60 minutes
+            lblInsideOutside60Minutes.Text = $"This is a past or future event.{Environment.NewLine}{Environment.NewLine}MSFS local time{Environment.NewLine}should be:"
+        End If
+
+        'Set date and time
+        If _sessionData.IncludeYear Then
+            msfsLocalDateToSet.Text = msfsDateToDisplay.ToString("MMMM d, yyyy", CultureInfo.CurrentCulture)
+        Else
+            msfsLocalDateToSet.Text = msfsDateToDisplay.ToString("MMMM d", CultureInfo.CurrentCulture)
+        End If
+        msfsLocalTimeToSet.Text = msfsDateToDisplay.ToString("t", CultureInfo.CurrentCulture)
+
     End Sub
 End Class

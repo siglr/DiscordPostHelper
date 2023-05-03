@@ -12,6 +12,7 @@ Imports System.Xml
 Imports System.Xml.Serialization
 Imports Microsoft.Win32
 
+
 Public Class SupportingFeatures
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
@@ -30,6 +31,12 @@ Public Class SupportingFeatures
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
     Public ReadOnly CountryFlagCodes As Dictionary(Of String, String)
     Private Shared _ClientRunning As ClientApp
+
+    Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As IntPtr, ByVal nIndex As Integer) As Integer
+    Public Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Integer) As Integer
+    Public Const GWL_STYLE As Integer = (-16)
+    Public Const WS_VSCROLL As Integer = &H200000
+    Public Const WS_HSCROLL As Integer = &H100000
 
     Public Shared ReadOnly Property ClientRunning As ClientApp
         Get
@@ -319,7 +326,7 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function GetFullEventDateTimeInLocal(theDate As Date, theTime As Date, useUTC As Boolean) As DateTime
+    Public Shared Function GetFullEventDateTimeInLocal(theDate As Date, theTime As Date, useUTC As Boolean) As DateTime
 
         Dim returnDateTime As New Date(theDate.Year, theDate.Month, theDate.Day, theTime.Hour, theTime.Minute, 0)
 
@@ -974,4 +981,72 @@ Public Class SupportingFeatures
         Return New List(Of String) From {"West Europe", "North Europe", "West USA", "East USA", "Southeast Asia"}
 
     End Function
+
+    Public Shared Sub SetZoomFactorOfRichTextBox(rtfControl As RichTextBox)
+
+        If rtfControl.Text.Trim = String.Empty Then
+            Exit Sub
+        End If
+
+        Dim bVScrollBar As Boolean
+        bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+        Select Case bVScrollBar
+            Case True
+                'Scrollbar is visible - Make it smaller
+                Do
+                    If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
+                        Exit Do
+                    End If
+                    rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
+                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                    'If the scrollbar is no longer visible we are done!
+                    If bVScrollBar = False Then Exit Do
+                Loop
+            Case False
+                'Scrollbar is not visible - Make it bigger
+                Do
+                    If (rtfControl.ZoomFactor + 0.01) >= 64 Then
+                        Exit Do
+                    End If
+                    rtfControl.ZoomFactor = rtfControl.ZoomFactor + 0.01
+                    bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                    If bVScrollBar = True Then
+                        Do
+                            'Found the scrollbar, make smaller until bar is not visible
+                            If (rtfControl.ZoomFactor) - 0.01 <= 0.015625 Then
+                                Exit Do
+                            End If
+                            rtfControl.ZoomFactor = rtfControl.ZoomFactor - 0.01
+                            bVScrollBar = ((GetWindowLong(rtfControl.Handle, GWL_STYLE) And WS_VSCROLL) = WS_VSCROLL)
+                            'If the scrollbar is no longer visible we are done!
+                            If bVScrollBar = False Then Exit Do
+                        Loop
+                        Exit Do
+                    End If
+                Loop
+        End Select
+
+    End Sub
+
+    Public Shared Function GetTimeZoneInformation() As List(Of String)
+        Dim currentTimeZone As TimeZone = TimeZone.CurrentTimeZone
+        Dim isDaylightSavingTime As Boolean = currentTimeZone.IsDaylightSavingTime(DateTime.Now)
+        Dim offset As Double = currentTimeZone.GetUtcOffset(DateTime.Now).TotalHours
+        Dim result As New List(Of String)
+
+        If isDaylightSavingTime Then
+            result.Add(currentTimeZone.DaylightName)
+        Else
+            result.Add(currentTimeZone.StandardName)
+        End If
+        If offset >= 0 Then
+            result.Add($"+{offset.ToString}")
+        Else
+            result.Add(offset.ToString)
+        End If
+
+        Return result
+
+    End Function
+
 End Class
