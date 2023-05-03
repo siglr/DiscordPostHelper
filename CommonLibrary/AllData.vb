@@ -205,4 +205,34 @@ Public Class AllData
 
     End Sub
 
+    Public ReadOnly Property SimLocalDateTime As Date
+        Get
+            Return SupportingFeatures.GetFullEventDateTimeInLocal(SimDate, SimTime, False)
+        End Get
+    End Property
+
+    Public ReadOnly Property MeetLocalDateTime As Date
+        Get
+            Return SupportingFeatures.GetFullEventDateTimeInLocal(EventMeetDate, EventMeetTime, True)
+        End Get
+    End Property
+
+    Public ReadOnly Property SyncFlyLocalDateTime As Date
+        Get
+            Return SupportingFeatures.GetFullEventDateTimeInLocal(EventSyncFlyDate, EventSyncFlyTime, True)
+        End Get
+    End Property
+
+    Public ReadOnly Property LaunchLocalDateTime As Date
+        Get
+            Return SupportingFeatures.GetFullEventDateTimeInLocal(EventLaunchDate, EventLaunchTime, True)
+        End Get
+    End Property
+
+    Public ReadOnly Property StartTaskLocalDateTime As Date
+        Get
+            Return SupportingFeatures.GetFullEventDateTimeInLocal(EventStartTaskDate, EventStartTaskTime, True)
+        End Get
+    End Property
+
 End Class

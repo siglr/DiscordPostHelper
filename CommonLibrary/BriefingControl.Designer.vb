@@ -29,12 +29,27 @@ Partial Class BriefingControl
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
         Me.mapSplitterUpDown = New System.Windows.Forms.SplitContainer()
+        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.mapSplitterLeftRight = New System.Windows.Forms.SplitContainer()
         Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
         Me.restrictionsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
+        Me.eventInfoSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
+        Me.lblInsideOutside60Minutes = New System.Windows.Forms.Label()
+        Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
+        Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
+        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
         Me.imagesListView = New System.Windows.Forms.ListView()
         Me.tbpgXBOX = New System.Windows.Forms.TabPage()
         Me.chkWPEnableLatLonColumns = New System.Windows.Forms.CheckBox()
@@ -42,9 +57,7 @@ Partial Class BriefingControl
         Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
-        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
-        Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -59,6 +72,10 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.SuspendLayout()
         CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbpgEventInfo.SuspendLayout()
+        CType(Me.eventInfoSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.eventInfoSplitContainer.Panel1.SuspendLayout()
+        Me.eventInfoSplitContainer.Panel2.SuspendLayout()
+        Me.eventInfoSplitContainer.SuspendLayout()
         Me.tbpgImages.SuspendLayout()
         CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.imagesTabDivider.Panel1.SuspendLayout()
@@ -146,8 +163,18 @@ Partial Class BriefingControl
         '
         Me.mapSplitterUpDown.Panel2.Controls.Add(Me.mapSplitterLeftRight)
         Me.mapSplitterUpDown.Size = New System.Drawing.Size(976, 704)
-        Me.mapSplitterUpDown.SplitterDistance = 325
+        Me.mapSplitterUpDown.SplitterDistance = 324
         Me.mapSplitterUpDown.TabIndex = 0
+        '
+        'imageViewer
+        '
+        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
+        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imageViewer.Name = "imageViewer"
+        Me.imageViewer.Size = New System.Drawing.Size(976, 324)
+        Me.imageViewer.TabIndex = 0
         '
         'mapSplitterLeftRight
         '
@@ -162,7 +189,7 @@ Partial Class BriefingControl
         'mapSplitterLeftRight.Panel2
         '
         Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.restrictionsDataGrid)
-        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 375)
+        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 376)
         Me.mapSplitterLeftRight.SplitterDistance = 650
         Me.mapSplitterLeftRight.TabIndex = 0
         '
@@ -172,7 +199,7 @@ Partial Class BriefingControl
         Me.txtFullDescription.Location = New System.Drawing.Point(0, 0)
         Me.txtFullDescription.Name = "txtFullDescription"
         Me.txtFullDescription.ReadOnly = True
-        Me.txtFullDescription.Size = New System.Drawing.Size(650, 375)
+        Me.txtFullDescription.Size = New System.Drawing.Size(650, 376)
         Me.txtFullDescription.TabIndex = 0
         Me.txtFullDescription.Text = ""
         '
@@ -190,19 +217,174 @@ Partial Class BriefingControl
         Me.restrictionsDataGrid.RowHeadersVisible = False
         Me.restrictionsDataGrid.RowHeadersWidth = 47
         Me.restrictionsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 375)
+        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 376)
         Me.restrictionsDataGrid.TabIndex = 1
         '
         'tbpgEventInfo
         '
         Me.tbpgEventInfo.AutoScroll = True
-        Me.tbpgEventInfo.Controls.Add(Me.txtEventInfo)
+        Me.tbpgEventInfo.Controls.Add(Me.eventInfoSplitContainer)
         Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 29)
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
         Me.tbpgEventInfo.Size = New System.Drawing.Size(982, 710)
         Me.tbpgEventInfo.TabIndex = 3
         Me.tbpgEventInfo.Text = "Event Info"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
+        '
+        'eventInfoSplitContainer
+        '
+        Me.eventInfoSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.eventInfoSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.eventInfoSplitContainer.IsSplitterFixed = True
+        Me.eventInfoSplitContainer.Location = New System.Drawing.Point(0, 0)
+        Me.eventInfoSplitContainer.Name = "eventInfoSplitContainer"
+        '
+        'eventInfoSplitContainer.Panel1
+        '
+        Me.eventInfoSplitContainer.Panel1.Controls.Add(Me.txtEventInfo)
+        '
+        'eventInfoSplitContainer.Panel2
+        '
+        Me.eventInfoSplitContainer.Panel2.AutoScroll = True
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.lblInsideOutside60Minutes)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalTimeToSet)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalDateToSet)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label5)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownTaskStart)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label4)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToLaunch)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label3)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToSyncFly)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label1)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToMeet)
+        Me.eventInfoSplitContainer.Size = New System.Drawing.Size(982, 710)
+        Me.eventInfoSplitContainer.SplitterDistance = 790
+        Me.eventInfoSplitContainer.TabIndex = 0
+        '
+        'txtEventInfo
+        '
+        Me.txtEventInfo.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtEventInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
+        Me.txtEventInfo.Name = "txtEventInfo"
+        Me.txtEventInfo.ReadOnly = True
+        Me.txtEventInfo.Size = New System.Drawing.Size(790, 710)
+        Me.txtEventInfo.TabIndex = 6
+        Me.txtEventInfo.Text = ""
+        Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
+        '
+        'lblInsideOutside60Minutes
+        '
+        Me.lblInsideOutside60Minutes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblInsideOutside60Minutes.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(2, 382)
+        Me.lblInsideOutside60Minutes.Name = "lblInsideOutside60Minutes"
+        Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(183, 119)
+        Me.lblInsideOutside60Minutes.TabIndex = 10
+        Me.lblInsideOutside60Minutes.Text = "Within 60 minutes of the event's time." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If clicking Fly now, MSFS local time sh" &
+    "ould be:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.lblInsideOutside60Minutes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'msfsLocalTimeToSet
+        '
+        Me.msfsLocalTimeToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.msfsLocalTimeToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(2, 528)
+        Me.msfsLocalTimeToSet.Name = "msfsLocalTimeToSet"
+        Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(183, 32)
+        Me.msfsLocalTimeToSet.TabIndex = 9
+        Me.msfsLocalTimeToSet.Text = "12:00 PM"
+        Me.msfsLocalTimeToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'msfsLocalDateToSet
+        '
+        Me.msfsLocalDateToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.msfsLocalDateToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.msfsLocalDateToSet.Location = New System.Drawing.Point(2, 500)
+        Me.msfsLocalDateToSet.Name = "msfsLocalDateToSet"
+        Me.msfsLocalDateToSet.Size = New System.Drawing.Size(183, 32)
+        Me.msfsLocalDateToSet.TabIndex = 8
+        Me.msfsLocalDateToSet.Text = "September 31, 2014"
+        Me.msfsLocalDateToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(4, 281)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(181, 30)
+        Me.Label5.TabIndex = 7
+        Me.Label5.Text = "Start task in"
+        Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownTaskStart
+        '
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(4, 189)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(181, 30)
+        Me.Label4.TabIndex = 5
+        Me.Label4.Text = "Launch in"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(4, 97)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(181, 30)
+        Me.Label3.TabIndex = 3
+        Me.Label3.Text = "Sync Fly in"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(4, 4)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(181, 30)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Meet in"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
         '
         'tbpgImages
         '
@@ -234,6 +416,16 @@ Partial Class BriefingControl
         Me.imagesTabDivider.Size = New System.Drawing.Size(982, 710)
         Me.imagesTabDivider.SplitterDistance = 814
         Me.imagesTabDivider.TabIndex = 0
+        '
+        'imagesTabViewerControl
+        '
+        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
+        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.TabIndex = 0
         '
         'imagesListView
         '
@@ -308,37 +500,9 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 669)
         Me.waypointCoordinatesDataGrid.TabIndex = 0
         '
-        'txtEventInfo
+        'Timer1
         '
-        Me.txtEventInfo.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEventInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
-        Me.txtEventInfo.Name = "txtEventInfo"
-        Me.txtEventInfo.ReadOnly = True
-        Me.txtEventInfo.Size = New System.Drawing.Size(982, 710)
-        Me.txtEventInfo.TabIndex = 5
-        Me.txtEventInfo.Text = ""
-        Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
-        '
-        'imageViewer
-        '
-        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
-        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(976, 325)
-        Me.imageViewer.TabIndex = 0
-        '
-        'imagesTabViewerControl
-        '
-        Me.imagesTabViewerControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imagesTabViewerControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
-        Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
-        Me.imagesTabViewerControl.TabIndex = 0
+        Me.Timer1.Interval = 1000
         '
         'BriefingControl
         '
@@ -364,6 +528,10 @@ Partial Class BriefingControl
         Me.mapSplitterLeftRight.ResumeLayout(False)
         CType(Me.restrictionsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbpgEventInfo.ResumeLayout(False)
+        Me.eventInfoSplitContainer.Panel1.ResumeLayout(False)
+        Me.eventInfoSplitContainer.Panel2.ResumeLayout(False)
+        CType(Me.eventInfoSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.eventInfoSplitContainer.ResumeLayout(False)
         Me.tbpgImages.ResumeLayout(False)
         Me.imagesTabDivider.Panel1.ResumeLayout(False)
         Me.imagesTabDivider.Panel2.ResumeLayout(False)
@@ -397,5 +565,18 @@ Partial Class BriefingControl
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents cboWayPointDistances As Windows.Forms.ComboBox
     Friend WithEvents chkWPEnableLatLonColumns As Windows.Forms.CheckBox
+    Friend WithEvents eventInfoSplitContainer As Windows.Forms.SplitContainer
     Friend WithEvents txtEventInfo As Windows.Forms.RichTextBox
+    Friend WithEvents countDownToMeet As Countdown
+    Friend WithEvents Label4 As Windows.Forms.Label
+    Friend WithEvents countDownToLaunch As Countdown
+    Friend WithEvents Label3 As Windows.Forms.Label
+    Friend WithEvents countDownToSyncFly As Countdown
+    Friend WithEvents Label1 As Windows.Forms.Label
+    Friend WithEvents Label5 As Windows.Forms.Label
+    Friend WithEvents countDownTaskStart As Countdown
+    Friend WithEvents msfsLocalTimeToSet As Windows.Forms.Label
+    Friend WithEvents msfsLocalDateToSet As Windows.Forms.Label
+    Friend WithEvents Timer1 As Windows.Forms.Timer
+    Friend WithEvents lblInsideOutside60Minutes As Windows.Forms.Label
 End Class

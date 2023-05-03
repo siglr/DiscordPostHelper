@@ -81,6 +81,12 @@
     </Compile>
     <Compile Include="CloudLayer.vb" />
     <Compile Include="Conversions.vb" />
+    <Compile Include="Countdown.Designer.vb">
+      <DependentUpon>Countdown.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Countdown.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CountryGeo.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -113,6 +119,9 @@
   <ItemGroup>
     <EmbeddedResource Include="BriefingControl.resx">
       <DependentUpon>BriefingControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Countdown.resx">
+      <DependentUpon>Countdown.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
