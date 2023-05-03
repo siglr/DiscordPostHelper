@@ -510,7 +510,7 @@ Public Class BriefingControl
                 withinEvent60Min = True
             Else
                 timePassedEvent = DateTime.Now - _sessionData.SyncFlyLocalDateTime
-                If timePassedEvent.TotalMinutes < 61 Then
+                If timePassedEvent.TotalMinutes >= 0 AndAlso timePassedEvent.TotalMinutes < 61 Then
                     msfsDateToDisplay += timePassedEvent
                     withinEvent60Min = True
                 End If
@@ -522,7 +522,7 @@ Public Class BriefingControl
                 withinEvent60Min = True
             Else
                 timePassedEvent = DateTime.Now - _sessionData.LaunchLocalDateTime
-                If timePassedEvent.TotalMinutes < 61 Then
+                If timePassedEvent.TotalMinutes >= 0 AndAlso timePassedEvent.TotalMinutes < 61 Then
                     msfsDateToDisplay += timePassedEvent
                     withinEvent60Min = True
                 End If
@@ -533,10 +533,11 @@ Public Class BriefingControl
                 msfsDateToDisplay = msfsDateToDisplay.AddSeconds(countDownToMeet.RemainingTime * -1)
                 withinEvent60Min = True
             Else
-                timePassedEvent = DateTime.Now - _sessionData.MeetLocalDateTime
-                If timePassedEvent.TotalMinutes < 61 Then
-                    msfsDateToDisplay += timePassedEvent
-                    withinEvent60Min = True
+                If timePassedEvent.TotalMinutes >= 0 AndAlso timePassedEvent.TotalMinutes < 61 Then
+                    If timePassedEvent.TotalMinutes < 61 Then
+                        msfsDateToDisplay += timePassedEvent
+                        withinEvent60Min = True
+                    End If
                 End If
             End If
         End If
