@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.4.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.4.1</ReleaseVersion>
+      <ReleaseTitle>Revamped Briefing Event Info with Countdowns</ReleaseTitle>
+      <ReleaseNotes>
+        The Event Info section of the Briefing tab now contains several countdown fields to the various event timings.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.2.1</ReleaseVersion>
       <ReleaseTitle>Event Information now displayed</ReleaseTitle>
