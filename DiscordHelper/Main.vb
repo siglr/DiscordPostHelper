@@ -277,7 +277,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeThermal.CheckedChanged, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
+    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
 
         BuildFPResults()
 
@@ -290,6 +290,17 @@ Public Class Main
         If TypeOf sender Is Windows.Forms.TextBox Then
             LeavingTextBox(sender)
         End If
+
+    End Sub
+
+    Private Sub chkSoaringTypeThermal_CheckedChanged(sender As Object, e As EventArgs) Handles chkSoaringTypeThermal.CheckedChanged
+
+        If chkSoaringTypeThermal.Checked Then
+            chkUseSyncFly.Checked = True
+        End If
+
+        'General object change processing
+        GeneralFPTabFieldChangeDetection(sender, e)
 
     End Sub
 
@@ -1214,6 +1225,11 @@ Public Class Main
         BuildDiscordEventDescription()
     End Sub
 
+    Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
+        grpGroupEventPost.Enabled = chkActivateEvent.Checked
+        grpDiscordEvent.Enabled = chkActivateEvent.Checked
+    End Sub
+
 #End Region
 
 #Region "Group Flights/Events tab subs & functions"
@@ -1673,6 +1689,7 @@ Public Class Main
 
             Case 26 'Event
                 If MessageBox.Show(Me, "The task's details are all posted. Are you also creating the group flight post on Discord?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    chkActivateEvent.Checked = True
                     _GuideCurrentStep += 1
                 Else
                     _GuideCurrentStep = 999
@@ -2110,6 +2127,7 @@ Public Class Main
             For i As Integer = 0 To lstAllCountries.Items.Count - 1
                 .Countries.Add(lstAllCountries.Items(i))
             Next
+            .EventEnabled = chkActivateEvent.Checked
             .GroupClub = cboGroupOrClubName.Text
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
@@ -2231,6 +2249,7 @@ Public Class Main
                         End If
                     Next
                 End If
+                chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClub
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
@@ -2263,6 +2282,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 

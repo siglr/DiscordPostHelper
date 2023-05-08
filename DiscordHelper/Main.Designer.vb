@@ -202,7 +202,6 @@ Partial Class Main
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -215,6 +214,8 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1530,6 +1531,7 @@ Partial Class Main
         '
         'tabEvent
         '
+        Me.tabEvent.Controls.Add(Me.chkActivateEvent)
         Me.tabEvent.Controls.Add(Me.pnlWizardEvent)
         Me.tabEvent.Controls.Add(Me.btnCopyReqFilesToClipboard)
         Me.tabEvent.Controls.Add(Me.Label30)
@@ -1697,6 +1699,7 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
         Me.grpDiscordEvent.Controls.Add(Me.txtGroupEventPostURL)
         Me.grpDiscordEvent.Controls.Add(Me.Label38)
+        Me.grpDiscordEvent.Enabled = False
         Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 701)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
         Me.grpDiscordEvent.Size = New System.Drawing.Size(848, 378)
@@ -1895,6 +1898,7 @@ Partial Class Main
         Me.grpGroupEventPost.Controls.Add(Me.Label26)
         Me.grpGroupEventPost.Controls.Add(Me.dtEventMeetDate)
         Me.grpGroupEventPost.Controls.Add(Me.Label24)
+        Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
         Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 689)
@@ -2387,17 +2391,6 @@ Partial Class Main
         Me.pnlBriefing.Size = New System.Drawing.Size(1698, 1112)
         Me.pnlBriefing.TabIndex = 0
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1698, 1112)
-        Me.BriefingControl1.TabIndex = 0
-        '
         'Label20
         '
         Me.Label20.AutoSize = True
@@ -2505,6 +2498,29 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
+        '
+        'chkActivateEvent
+        '
+        Me.chkActivateEvent.AutoSize = True
+        Me.chkActivateEvent.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkActivateEvent.Location = New System.Drawing.Point(190, 5)
+        Me.chkActivateEvent.Name = "chkActivateEvent"
+        Me.chkActivateEvent.Size = New System.Drawing.Size(117, 24)
+        Me.chkActivateEvent.TabIndex = 84
+        Me.chkActivateEvent.Text = "Enable Event"
+        Me.ToolTip1.SetToolTip(Me.chkActivateEvent, "Check this to enable the event fields.")
+        Me.chkActivateEvent.UseVisualStyleBackColor = True
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1698, 1112)
+        Me.BriefingControl1.TabIndex = 0
         '
         'Main
         '
@@ -2743,4 +2759,5 @@ Partial Class Main
     Friend WithEvents BriefingControl1 As CommonLibrary.BriefingControl
     Friend WithEvents Label20 As Label
     Friend WithEvents pnlScrollableSurface As Panel
+    Friend WithEvents chkActivateEvent As CheckBox
 End Class

@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.4.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.8.1</ReleaseVersion>
+      <ReleaseTitle>Adjustments related to the event now being optional</ReleaseTitle>
+      <ReleaseNotes>
+        This release contains no visible changes or fixes, but small adjustments were needed due to the event now being optional in the DPH file.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.4.1</ReleaseVersion>
       <ReleaseTitle>Revamped Briefing Event Info with Countdowns</ReleaseTitle>

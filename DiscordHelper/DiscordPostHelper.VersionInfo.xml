@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.4.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.8.1</ReleaseVersion>
+      <ReleaseTitle>Event is not always enabled and included now</ReleaseTitle>
+      <ReleaseNotes>
+        Since not all tasks are events, a checkbox has been added to specifically include an event into the DPH file.
+        Also, clicking the "Thermal" checkbox now also activates the "Sync Fly" option on the event tab.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.4.1</ReleaseVersion>
       <ReleaseTitle>Revamped Briefing Event Info with Countdowns</ReleaseTitle>

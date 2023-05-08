@@ -123,6 +123,9 @@ Public Class AllData
     <XmlElement("Countries")>
     Public Property Countries As List(Of String) = New List(Of String)
 
+    <XmlElement("EventEnabled")>
+    Public Property EventEnabled As Boolean
+
     <XmlElement("GroupClub")>
     Public Property GroupClub As String
 
