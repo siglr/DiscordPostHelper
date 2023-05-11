@@ -10,7 +10,7 @@ Public Class WeatherDetails
     Private ReadOnly _SnowCover As Single
 
     Private ReadOnly _CloudLayers As New List(Of CloudLayer)
-    Private ReadOnly _WindLayers As New List(Of WindLayer)
+    Public ReadOnly WindLayers As New List(Of WindLayer)
 
     Public Sub New(xmlWeatherXMLDoc As XmlDocument)
 
@@ -24,7 +24,7 @@ Public Class WeatherDetails
         _SnowCover = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value)
 
         If xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
-            AltitudeMeasurement = "AMGL"
+            AltitudeMeasurement = "AGL"
         Else
             AltitudeMeasurement = "AMSL"
         End If
@@ -42,17 +42,17 @@ Public Class WeatherDetails
         _CloudLayers = _CloudLayers.OrderBy(Function(x) x.AltitudeBottom).ToList()
 
         For Each xmlWindNode As XmlNode In xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/WindLayer")
-            _WindLayers.Add(New WindLayer(xmlWindNode))
-            If _WindLayers.Last.IsGround Then
+            Me.WindLayers.Add(New WindLayer(xmlWindNode, AltitudeMeasurement))
+            If Me.WindLayers.Last.IsGround Then
                 blnHasGround = True
             End If
         Next
 
-        _WindLayers = _WindLayers.OrderBy(Function(x) x.Altitude).ToList()
+        Me.WindLayers = Me.WindLayers.OrderBy(Function(x) x.Altitude).ToList()
 
         'if there is no ground layer, the first layer should indicate surface wind
         If Not blnHasGround Then
-            _WindLayers.First.IncludeSurfaceWind = True
+            Me.WindLayers.First.IncludeSurfaceWind = True
         End If
 
     End Sub
@@ -151,12 +151,12 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property WindLayers As String
+    Public ReadOnly Property WindLayersAsString As String
         Get
             Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
 
-            For Each layer As WindLayer In _WindLayers
+            For Each layer As WindLayer In Me.WindLayers
                 If layer.IsValidWindLayer Then
                     countLayer = ++1
                     results.AppendLine(layer.WindLayerText)

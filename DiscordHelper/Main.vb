@@ -239,6 +239,7 @@ Public Class Main
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
         SetBriefingControlsVisiblity()
         If TabControl1.SelectedTab.Name = "tabBriefing" Then
+
             GenerateBriefing()
         End If
     End Sub
@@ -1025,7 +1026,7 @@ Public Class Main
 
     Private Sub BuildWeatherWindLayers()
         txtWeatherWinds.Text = $"**Wind Layers**{Environment.NewLine}"
-        txtWeatherWinds.AppendText(_WeatherDetails.WindLayers)
+        txtWeatherWinds.AppendText(_WeatherDetails.WindLayersAsString)
     End Sub
 
 #End Region
@@ -1474,6 +1475,8 @@ Public Class Main
     Private Sub GenerateBriefing()
 
         LoadPossibleImagesInMapDropdown()
+
+        BriefingControl1.FullReset()
 
         If txtFlightPlanFile.Text = String.Empty OrElse txtWeatherFile.Text = String.Empty Then
             'Can't generate briefing

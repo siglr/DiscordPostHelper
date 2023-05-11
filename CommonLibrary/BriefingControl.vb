@@ -24,10 +24,20 @@ Public Class BriefingControl
         restrictionsDataGrid.DataSource = Nothing
         waypointCoordinatesDataGrid.DataSource = Nothing
         cboWayPointDistances.SelectedIndex = 0
+
+        If imagesListView.LargeImageList IsNot Nothing Then
+            imagesListView.LargeImageList.Dispose()
+            imagesListView.LargeImageList = Nothing
+        End If
+        imagesListView.Items.Clear()
         imagesListView.Clear()
+
         EventIsEnabled = False
+        windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
+
+        GC.Collect()
 
     End Sub
 
@@ -141,7 +151,11 @@ Public Class BriefingControl
             If sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(sessionData.WeatherSummary)}\b0\line ")
             End If
-            sb.Append($"The elevation measurement used is \b {_WeatherDetails.AltitudeMeasurement}\b0\line ")
+            If _WeatherDetails.AltitudeMeasurement = "AGL" Then
+                sb.Append($"The elevation measurement used is \b AGL (Above Ground Level)\b0\line ")
+            Else
+                sb.Append($"The elevation measurement used is \b AMSL (Above Mean Sea Level)\b0\line ")
+            End If
             sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure}\b0\line ")
             sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature}\b0\line ")
             sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
@@ -153,7 +167,7 @@ Public Class BriefingControl
 
             'Winds
             sb.Append($"\b Wind Layers\b0\line ")
-            Dim lines As String() = _WeatherDetails.WindLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
+            Dim lines As String() = _WeatherDetails.WindLayersAsString.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
                 sb.Append($"{line}\line ")
             Next
@@ -165,6 +179,16 @@ Public Class BriefingControl
             lines = _WeatherDetails.CloudLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
                 sb.Append($"{line}\line ")
+            Next
+
+            ' Create and add wind layer controls to flow layout panel
+            Dim windLayer As WindLayer
+            For i As Integer = _WeatherDetails.WindLayers.Count - 1 To 0 Step -1
+                windLayer = _WeatherDetails.WindLayers(i)
+                If windLayer.IsValidWindLayer Then
+                    Dim windLayerControl As New WindLayerControl(windLayer)
+                    windLayersFlowLayoutPnl.Controls.Add(windLayerControl)
+                End If
             Next
 
         End If
@@ -184,6 +208,7 @@ Public Class BriefingControl
             End If
             imageViewer.LoadImage(filename)
         End If
+
 
         'Build full description
         If sessionData.LongDescription <> String.Empty Then

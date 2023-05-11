@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.11.1</ReleaseVersion>
+      <ReleaseTitle>New compass roses for each wind layer</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is the addition of graphical compass roses with wind indication for each layer on the briefing's map tab.
+        It also contains a fix to properly handle images when switching back and forth from the briefing tab.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.8.1</ReleaseVersion>
       <ReleaseTitle>Event is not always enabled and included now</ReleaseTitle>

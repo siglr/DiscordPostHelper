@@ -115,6 +115,12 @@
     </Compile>
     <Compile Include="WeatherDetails.vb" />
     <Compile Include="WindLayer.vb" />
+    <Compile Include="WindLayerControl.Designer.vb">
+      <DependentUpon>WindLayerControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WindLayerControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BriefingControl.resx">
@@ -132,6 +138,9 @@
     <EmbeddedResource Include="VersionInfoForm.resx">
       <DependentUpon>VersionInfoForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WindLayerControl.resx">
+      <DependentUpon>WindLayerControl.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">
@@ -145,6 +154,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CompassRose.png" />
+    <None Include="CompassRoseBack.png" />
     <Content Include="ProjectNotes.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +166,9 @@
       <Project>{8241a955-c8e4-4cfd-ba28-eeab34f6c00c}</Project>
       <Name>ImageViewer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -142,7 +142,18 @@ Public Class DPHXUnpackAndLoad
 
         Dim newDPHFile As String
         ctrlBriefing.FullReset()
-        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+        Me.Refresh()
+        Application.DoEvents()
+        Dim nbrTries As Integer = 0
+        Do Until nbrTries = 10
+            nbrTries += 1
+            If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
+                nbrTries = 10
+            Else
+                Me.Refresh()
+                Application.DoEvents()
+            End If
+        Loop
 
         newDPHFile = _SF.UnpackDPHXFileToTempFolder(dphxFilename, TempDPHXUnpackFolder)
 
@@ -200,7 +211,16 @@ Public Class DPHXUnpackAndLoad
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
         If Not _abortingFirstRun Then
-            _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+            Dim nbrTries As Integer = 0
+            Do Until nbrTries = 10
+                nbrTries += 1
+                If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
+                    nbrTries = 10
+                Else
+                    Me.Refresh()
+                    Application.DoEvents()
+                End If
+            Loop
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()
             Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
             Settings.SessionSettings.Save()

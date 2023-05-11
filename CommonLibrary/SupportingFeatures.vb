@@ -522,7 +522,9 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Sub CleanupDPHXTempFolder(ByVal unpackFolder As String)
+    Public Function CleanupDPHXTempFolder(ByVal unpackFolder As String) As Boolean
+
+        Dim success As Boolean = True
 
         If Directory.Exists(unpackFolder) Then
             'Folder exists - delete files
@@ -531,11 +533,14 @@ Public Class SupportingFeatures
                 Try
                     IO.File.Delete(file)
                 Catch ex As Exception
+                    success = False
                 End Try
             Next
         End If
 
-    End Sub
+        Return success
+
+    End Function
     Public Function UnpackDPHXFileToTempFolder(ByVal dphxFilePath As String, ByVal unpackFolder As String) As String
 
         If Directory.Exists(unpackFolder) Then

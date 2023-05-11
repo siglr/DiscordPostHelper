@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.11.1</ReleaseVersion>
+      <ReleaseTitle>New compass roses for each wind layer</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is the addition of graphical compass roses with wind indication for each layer.
+        It also contains a fix to properly clear up the images being used by the tool when reloading a file.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.8.1</ReleaseVersion>
       <ReleaseTitle>Adjustments related to the event now being optional</ReleaseTitle>
