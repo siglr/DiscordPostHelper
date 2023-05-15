@@ -370,6 +370,7 @@ Public Class Main
 
     Private Sub txtFPResults_TextChanged(sender As Object, e As EventArgs) Handles txtFPResults.TextChanged
         lblNbrCarsMainFP.Text = txtFPResults.Text.Length
+
     End Sub
 
     Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
@@ -384,9 +385,7 @@ Public Class Main
         CalculateDuration()
     End Sub
 
-    Private Sub NbrCarsCheckDiscordLimit(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.TextChanged, lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged
-
-        Dim lblLabel As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
+    Private Sub NbrCarsCheckDiscordLimit(lblLabel As Windows.Forms.Label)
 
         Select Case CInt(lblLabel.Text)
             Case > DiscordLimit
@@ -400,9 +399,37 @@ Public Class Main
                 lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
         End Select
 
+        If chkGroupSecondaryPosts.Checked Then
+            Select Case lblLabel.Name
+                Case "lblRestrictWeatherTotalCars"
+                    lblLabel.Visible = False
+                Case "lblNbrCarsFullDescResults"
+                    lblLabel.Visible = False
+                Case "lblWaypointsTotalCars"
+                    lblLabel.Visible = False
+                Case "lblAddOnsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        Else
+            Select Case lblLabel.Name
+                Case "lblAllSecPostsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        End If
+
+    End Sub
+    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.TextChanged, lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblAllSecPostsTotalCars.TextChanged, lblWaypointsTotalCars.TextChanged, lblAddOnsTotalCars.TextChanged
+
+        NbrCarsCheckDiscordLimit(DirectCast(sender, Windows.Forms.Label))
+
     End Sub
 
-    Private Sub SetDiscordLimitMessage(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.VisibleChanged, lblNbrCarsMainFP.VisibleChanged, lblNbrCarsFullDescResults.VisibleChanged
+    Private Sub SetDiscordLimitMessage(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.VisibleChanged,
+                                                                                 lblNbrCarsMainFP.VisibleChanged,
+                                                                                 lblNbrCarsFullDescResults.VisibleChanged,
+                                                                                 lblAddOnsTotalCars.VisibleChanged,
+                                                                                 lblWaypointsTotalCars.VisibleChanged,
+                                                                                 lblAllSecPostsTotalCars.VisibleChanged
 
         Dim lblLabel As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
 
@@ -441,11 +468,20 @@ Public Class Main
 
     Private Sub txtWeatherWinds_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherWinds.TextChanged
         lblNbrCarsWeatherWinds.Text = txtWeatherWinds.Text.Length
-
     End Sub
 
     Private Sub txtFilesText_TextChanged(sender As Object, e As EventArgs) Handles txtFilesText.TextChanged
         lblNbrCarsFilesText.Text = txtFilesText.Text.Length
+    End Sub
+
+    Private Sub txtWaypointsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtWaypointsDetails.TextChanged
+        lblWaypointsTotalCars.Text = txtWaypointsDetails.Text.Length
+        CalculateTotalNbrCars()
+    End Sub
+
+    Private Sub txtAddOnsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtAddOnsDetails.TextChanged
+        lblAddOnsTotalCars.Text = txtAddOnsDetails.Text.Length
+        CalculateTotalNbrCars()
     End Sub
 
     Private Sub txtLongDescription_Leave(sender As Object, e As EventArgs) Handles txtLongDescription.Leave
@@ -455,7 +491,7 @@ Public Class Main
 
     Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
         lblNbrCarsFullDescResults.Text = txtLongDescription.Text.Length
-
+        CalculateTotalNbrCars()
     End Sub
 
     Private Sub lblNbrCarsWeatherInfo_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsWeatherWinds.TextChanged, lblNbrCarsWeatherInfo.TextChanged, lblNbrCarsWeatherClouds.TextChanged, lblNbrCarsRestrictions.TextChanged
@@ -487,6 +523,9 @@ Public Class Main
         End If
 
         lblRestrictWeatherTotalCars.Text = lbl1 + lbl2 + lbl3 + lbl4
+
+        CalculateTotalNbrCars()
+
     End Sub
 
     Private Sub WeatherFieldChangeDetection(sender As Object, e As EventArgs) Handles txtWeatherSummary.Leave, chkUseOnlyWeatherSummary.CheckedChanged
@@ -520,9 +559,9 @@ Public Class Main
     Private Sub txtFlightPlanFile_TextChanged(sender As Object, e As EventArgs) Handles txtFlightPlanFile.TextChanged
 
         If txtFlightPlanFile.Text = String.Empty Then
-            grbTrackInfo.Enabled = False
+            grbTaskInfo.Enabled = False
         Else
-            grbTrackInfo.Enabled = True
+            grbTaskInfo.Enabled = True
         End If
 
     End Sub
@@ -580,17 +619,17 @@ Public Class Main
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
             If chkGroupSecondaryPosts.Checked Then
-                MessageBox.Show(Me, "Now paste the copied files as the final message.", "Step 3 - Inserting the files in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show(Me, "Now paste the copied files as the final message.", "Step 2 - Inserting the files in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 
             Else
-                MessageBox.Show(Me, "Now paste the copied files as the third message without posting it and come back for the text info (button 3b).", "Step 3a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show(Me, "Now paste the copied files as the third message without posting it and come back for the text info (button 2b).", "Step 2a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End If
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
             End If
         Else
-            MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show(Me, "No files to copy!", "Step 2a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 
         End If
 
@@ -755,6 +794,17 @@ Public Class Main
 
 #Region "Flight Plan tab Subs & Functions"
 
+    Private Sub CalculateTotalNbrCars()
+
+        Dim intNbrCarAltWeather As Integer = _SF.GetIntegerFromString(lblRestrictWeatherTotalCars.Text)
+        Dim intNbrCarFullDesc As Integer = _SF.GetIntegerFromString(lblNbrCarsFullDescResults.Text)
+        Dim intNbrCarWaypoints As Integer = _SF.GetIntegerFromString(lblWaypointsTotalCars.Text)
+        Dim intNbrCarAddOns As Integer = _SF.GetIntegerFromString(lblAddOnsTotalCars.Text)
+
+        lblAllSecPostsTotalCars.Text = (intNbrCarAltWeather + intNbrCarFullDesc + intNbrCarWaypoints + intNbrCarAddOns).ToString
+
+    End Sub
+
     Private Sub BuildFPResults()
 
         Dim sb As New StringBuilder()
@@ -792,13 +842,7 @@ Public Class Main
             txtFullDescriptionResults.Text = String.Empty
         End If
 
-        If chkAddWPCoords.Checked Then
-            'Add waypoints information to the description
-            If txtLongDescription.Text.Trim.Length > 0 Then
-                txtFullDescriptionResults.AppendText($"{Environment.NewLine}{Environment.NewLine}")
-            End If
-            txtFullDescriptionResults.AppendText(_SF.GetAllWPCoordinates())
-        End If
+        txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
 
     End Sub
 
@@ -925,16 +969,22 @@ Public Class Main
         If chkGroupSecondaryPosts.Checked Then
             btnCopyAllSecPosts.Visible = True
             btnAltRestricCopy.Visible = False
-            btnFilesTextCopy.Visible = False
+            btnWaypointsCopy.Visible = False
+            btnAddOnsCopy.Visible = False
             btnFullDescriptionCopy.Visible = False
-            btnFilesCopy.Text = "3. Files to clipboard"
         Else
             btnCopyAllSecPosts.Visible = False
             btnAltRestricCopy.Visible = True
-            btnFilesTextCopy.Visible = True
+            btnWaypointsCopy.Visible = True
+            btnAddOnsCopy.Visible = True
             btnFullDescriptionCopy.Visible = True
-            btnFilesCopy.Text = "3a. Files to clipboard"
         End If
+
+        NbrCarsCheckDiscordLimit(lblAllSecPostsTotalCars)
+        NbrCarsCheckDiscordLimit(lblRestrictWeatherTotalCars)
+        NbrCarsCheckDiscordLimit(lblNbrCarsFullDescResults)
+        NbrCarsCheckDiscordLimit(lblWaypointsTotalCars)
+        NbrCarsCheckDiscordLimit(lblAddOnsTotalCars)
 
     End Sub
 
@@ -1228,7 +1278,7 @@ Public Class Main
 
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
-        grpDiscordEvent.Enabled = chkActivateEvent.Checked
+        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
     End Sub
 
 #End Region
@@ -2286,6 +2336,11 @@ Public Class Main
 
     End Sub
 
+    Private Sub lblNbrCarsFilesText_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsFilesText.TextChanged
+
+        CalculateTotalNbrCars()
+
+    End Sub
 
 #End Region
 

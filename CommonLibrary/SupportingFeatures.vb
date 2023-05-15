@@ -1054,4 +1054,10 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Function GetIntegerFromString(ByVal input As String) As Integer
+        Dim result As Integer = 0
+        Integer.TryParse(input, result)
+        Return result
+    End Function
+
 End Class

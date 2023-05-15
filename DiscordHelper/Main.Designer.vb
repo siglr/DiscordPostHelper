@@ -27,33 +27,18 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
-        Me.chkGroupSecondaryPosts = New System.Windows.Forms.CheckBox()
-        Me.btnFilesCopy = New System.Windows.Forms.Button()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
-        Me.grbTrackInfo = New System.Windows.Forms.GroupBox()
-        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
-        Me.btnMoveCountryDown = New System.Windows.Forms.Button()
-        Me.btnMoveCountryUp = New System.Windows.Forms.Button()
-        Me.btnRemoveCountry = New System.Windows.Forms.Button()
-        Me.btnAddCountry = New System.Windows.Forms.Button()
-        Me.lstAllCountries = New System.Windows.Forms.ListBox()
-        Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
         Me.chkAddWPCoords = New System.Windows.Forms.CheckBox()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.btnExtraFileDown = New System.Windows.Forms.Button()
-        Me.btnExtraFileUp = New System.Windows.Forms.Button()
-        Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.chkTitleLock = New System.Windows.Forms.CheckBox()
-        Me.btnAddExtraFile = New System.Windows.Forms.Button()
         Me.chkArrivalLock = New System.Windows.Forms.CheckBox()
         Me.chkDepartureLock = New System.Windows.Forms.CheckBox()
-        Me.lstAllFiles = New System.Windows.Forms.ListBox()
         Me.chkSoaringTypeThermal = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeRidge = New System.Windows.Forms.CheckBox()
         Me.txtSoaringTypeExtraInfo = New System.Windows.Forms.TextBox()
@@ -77,15 +62,12 @@ Partial Class Main
         Me.txtTitle = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cboSpeedUnits = New System.Windows.Forms.ComboBox()
-        Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
         Me.txtMinAvgSpeed = New System.Windows.Forms.TextBox()
-        Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.txtMaxAvgSpeed = New System.Windows.Forms.TextBox()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.btnSelectWeatherFile = New System.Windows.Forms.Button()
         Me.txtWeatherFile = New System.Windows.Forms.TextBox()
-        Me.Label19 = New System.Windows.Forms.Label()
         Me.txtDurationMin = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.txtDurationMax = New System.Windows.Forms.TextBox()
@@ -108,56 +90,31 @@ Partial Class Main
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtLongDescription = New System.Windows.Forms.TextBox()
         Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
-        Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
-        Me.btnFilesTextCopy = New System.Windows.Forms.Button()
-        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
-        Me.txtFullDescriptionResults = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsFilesText = New System.Windows.Forms.Label()
-        Me.lblNbrCarsRestrictions = New System.Windows.Forms.Label()
-        Me.btnFPMainInfoCopy = New System.Windows.Forms.Button()
-        Me.txtFilesText = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
-        Me.txtFPResults = New System.Windows.Forms.TextBox()
-        Me.grpRestrictionsWeather = New System.Windows.Forms.GroupBox()
-        Me.btnCopyAllSecPosts = New System.Windows.Forms.Button()
-        Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
-        Me.lblRestrictWeatherTotalCars = New System.Windows.Forms.Label()
-        Me.txtWeatherFirstPart = New System.Windows.Forms.TextBox()
-        Me.txtWeatherWinds = New System.Windows.Forms.TextBox()
-        Me.txtWeatherClouds = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsWeatherInfo = New System.Windows.Forms.Label()
-        Me.lblNbrCarsWeatherWinds = New System.Windows.Forms.Label()
-        Me.txtAltRestrictions = New System.Windows.Forms.TextBox()
-        Me.btnAltRestricCopy = New System.Windows.Forms.Button()
+        Me.grpTaskPart2 = New System.Windows.Forms.GroupBox()
+        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
+        Me.btnMoveCountryDown = New System.Windows.Forms.Button()
+        Me.btnMoveCountryUp = New System.Windows.Forms.Button()
+        Me.btnRemoveCountry = New System.Windows.Forms.Button()
+        Me.btnAddCountry = New System.Windows.Forms.Button()
+        Me.lstAllCountries = New System.Windows.Forms.ListBox()
+        Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.btnExtraFileDown = New System.Windows.Forms.Button()
+        Me.btnExtraFileUp = New System.Windows.Forms.Button()
+        Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
+        Me.btnAddExtraFile = New System.Windows.Forms.Button()
+        Me.lstAllFiles = New System.Windows.Forms.ListBox()
+        Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
+        Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.tabEvent = New System.Windows.Forms.TabPage()
+        Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
         Me.btnEventGuideNext = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
-        Me.btnCopyReqFilesToClipboard = New System.Windows.Forms.Button()
-        Me.Label30 = New System.Windows.Forms.Label()
-        Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
-        Me.btnGroupFlightEventInfoToClipboard = New System.Windows.Forms.Button()
-        Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
-        Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
-        Me.Label46 = New System.Windows.Forms.Label()
-        Me.Label45 = New System.Windows.Forms.Label()
-        Me.btnEventDescriptionToClipboard = New System.Windows.Forms.Button()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.lblDiscordPostDateTime = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.btnEventTopicClipboard = New System.Windows.Forms.Button()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.lblDiscordEventVoice = New System.Windows.Forms.Label()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
-        Me.Label38 = New System.Windows.Forms.Label()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
         Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
         Me.chkIncludeGotGravelInvite = New System.Windows.Forms.CheckBox()
@@ -202,8 +159,65 @@ Partial Class Main
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
+        Me.tabDiscord = New System.Windows.Forms.TabPage()
+        Me.txtAddOnsDetails = New System.Windows.Forms.TextBox()
+        Me.txtWaypointsDetails = New System.Windows.Forms.TextBox()
+        Me.lblNbrCarsRestrictions = New System.Windows.Forms.Label()
+        Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
+        Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.btnFilesCopy = New System.Windows.Forms.Button()
+        Me.btnCopyAllSecPosts = New System.Windows.Forms.Button()
+        Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
+        Me.btnFilesTextCopy = New System.Windows.Forms.Button()
+        Me.btnAltRestricCopy = New System.Windows.Forms.Button()
+        Me.lblRestrictWeatherTotalCars = New System.Windows.Forms.Label()
+        Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
+        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
+        Me.btnWaypointsCopy = New System.Windows.Forms.Button()
+        Me.lblWaypointsTotalCars = New System.Windows.Forms.Label()
+        Me.btnAddOnsCopy = New System.Windows.Forms.Button()
+        Me.lblAddOnsTotalCars = New System.Windows.Forms.Label()
+        Me.chkGroupSecondaryPosts = New System.Windows.Forms.CheckBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.btnFPMainInfoCopy = New System.Windows.Forms.Button()
+        Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
+        Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
+        Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
+        Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
+        Me.txtFullDescriptionResults = New System.Windows.Forms.TextBox()
+        Me.txtWeatherFirstPart = New System.Windows.Forms.TextBox()
+        Me.txtFilesText = New System.Windows.Forms.TextBox()
+        Me.txtWeatherWinds = New System.Windows.Forms.TextBox()
+        Me.txtFPResults = New System.Windows.Forms.TextBox()
+        Me.txtWeatherClouds = New System.Windows.Forms.TextBox()
+        Me.lblNbrCarsWeatherInfo = New System.Windows.Forms.Label()
+        Me.txtAltRestrictions = New System.Windows.Forms.TextBox()
+        Me.lblNbrCarsWeatherWinds = New System.Windows.Forms.Label()
+        Me.lblNbrCarsFilesText = New System.Windows.Forms.Label()
+        Me.grpDiscordGroupFlight = New System.Windows.Forms.GroupBox()
+        Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.btnCopyReqFilesToClipboard = New System.Windows.Forms.Button()
+        Me.btnGroupFlightEventInfoToClipboard = New System.Windows.Forms.Button()
+        Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
+        Me.Label46 = New System.Windows.Forms.Label()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.btnEventDescriptionToClipboard = New System.Windows.Forms.Button()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.lblDiscordPostDateTime = New System.Windows.Forms.Label()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.btnEventTopicClipboard = New System.Windows.Forms.Button()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.lblDiscordEventVoice = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
+        Me.Label38 = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -214,22 +228,27 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        Me.grbTrackInfo.SuspendLayout()
-        Me.grpRestrictionsWeather.SuspendLayout()
+        Me.grbTaskInfo.SuspendLayout()
+        Me.grpTaskPart2.SuspendLayout()
         Me.tabEvent.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.grpDiscordEvent.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
+        Me.tabDiscord.SuspendLayout()
+        Me.grpDiscordTask.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.grpDiscordGroupFlight.SuspendLayout()
+        Me.grpGroupFlightEvent.SuspendLayout()
+        Me.grpDiscordEvent.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -240,10 +259,9 @@ Partial Class Main
         Me.pnlScrollableSurface.AutoScroll = True
         Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
-        Me.pnlScrollableSurface.MaximumSize = New System.Drawing.Size(1708, 1197)
-        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(800, 600)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1024, 768)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1708, 1197)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1487, 907)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -251,66 +269,32 @@ Partial Class Main
         Me.TabControl1.Controls.Add(Me.tabFlightPlan)
         Me.TabControl1.Controls.Add(Me.tabEvent)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
+        Me.TabControl1.Controls.Add(Me.tabDiscord)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
-        Me.TabControl1.Location = New System.Drawing.Point(0, 13)
+        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1708, 1184)
+        Me.TabControl1.Size = New System.Drawing.Size(1487, 907)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
         'tabFlightPlan
         '
-        Me.tabFlightPlan.Controls.Add(Me.chkGroupSecondaryPosts)
-        Me.tabFlightPlan.Controls.Add(Me.btnFilesCopy)
+        Me.tabFlightPlan.AutoScroll = True
         Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
-        Me.tabFlightPlan.Controls.Add(Me.grbTrackInfo)
+        Me.tabFlightPlan.Controls.Add(Me.grbTaskInfo)
         Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
-        Me.tabFlightPlan.Controls.Add(Me.btnFullDescriptionCopy)
         Me.tabFlightPlan.Controls.Add(Me.btnSelectFlightPlan)
-        Me.tabFlightPlan.Controls.Add(Me.btnFilesTextCopy)
-        Me.tabFlightPlan.Controls.Add(Me.lblNbrCarsFullDescResults)
-        Me.tabFlightPlan.Controls.Add(Me.txtFullDescriptionResults)
-        Me.tabFlightPlan.Controls.Add(Me.lblNbrCarsFilesText)
-        Me.tabFlightPlan.Controls.Add(Me.lblNbrCarsRestrictions)
-        Me.tabFlightPlan.Controls.Add(Me.btnFPMainInfoCopy)
-        Me.tabFlightPlan.Controls.Add(Me.txtFilesText)
-        Me.tabFlightPlan.Controls.Add(Me.lblNbrCarsMainFP)
-        Me.tabFlightPlan.Controls.Add(Me.txtFPResults)
-        Me.tabFlightPlan.Controls.Add(Me.grpRestrictionsWeather)
+        Me.tabFlightPlan.Controls.Add(Me.grpTaskPart2)
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1700, 1151)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1479, 874)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         Me.tabFlightPlan.UseVisualStyleBackColor = True
-        '
-        'chkGroupSecondaryPosts
-        '
-        Me.chkGroupSecondaryPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkGroupSecondaryPosts.Location = New System.Drawing.Point(1496, 269)
-        Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
-        Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(170, 56)
-        Me.chkGroupSecondaryPosts.TabIndex = 5
-        Me.chkGroupSecondaryPosts.Tag = ""
-        Me.chkGroupSecondaryPosts.Text = "Group all secondary posts"
-        Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to group all secondary posts into only one.")
-        Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
-        '
-        'btnFilesCopy
-        '
-        Me.btnFilesCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesCopy.Location = New System.Drawing.Point(1491, 919)
-        Me.btnFilesCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesCopy.Name = "btnFilesCopy"
-        Me.btnFilesCopy.Size = New System.Drawing.Size(175, 51)
-        Me.btnFilesCopy.TabIndex = 10
-        Me.btnFilesCopy.Tag = "23"
-        Me.btnFilesCopy.Text = "3a. Files to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
-        Me.btnFilesCopy.UseVisualStyleBackColor = True
         '
         'pnlGuide
         '
@@ -319,7 +303,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(698, 6)
+        Me.pnlGuide.Location = New System.Drawing.Point(720, 701)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -367,181 +351,70 @@ Partial Class Main
         Me.pnlArrow.Size = New System.Drawing.Size(91, 89)
         Me.pnlArrow.TabIndex = 80
         '
-        'grbTrackInfo
+        'grbTaskInfo
         '
-        Me.grbTrackInfo.Controls.Add(Me.chkLockCountries)
-        Me.grbTrackInfo.Controls.Add(Me.btnMoveCountryDown)
-        Me.grbTrackInfo.Controls.Add(Me.btnMoveCountryUp)
-        Me.grbTrackInfo.Controls.Add(Me.btnRemoveCountry)
-        Me.grbTrackInfo.Controls.Add(Me.btnAddCountry)
-        Me.grbTrackInfo.Controls.Add(Me.lstAllCountries)
-        Me.grbTrackInfo.Controls.Add(Me.cboCountryFlag)
-        Me.grbTrackInfo.Controls.Add(Me.Label11)
-        Me.grbTrackInfo.Controls.Add(Me.chkAddWPCoords)
-        Me.grbTrackInfo.Controls.Add(Me.Label10)
-        Me.grbTrackInfo.Controls.Add(Me.btnExtraFileDown)
-        Me.grbTrackInfo.Controls.Add(Me.btnExtraFileUp)
-        Me.grbTrackInfo.Controls.Add(Me.btnRemoveExtraFile)
-        Me.grbTrackInfo.Controls.Add(Me.Label9)
-        Me.grbTrackInfo.Controls.Add(Me.chkTitleLock)
-        Me.grbTrackInfo.Controls.Add(Me.btnAddExtraFile)
-        Me.grbTrackInfo.Controls.Add(Me.chkArrivalLock)
-        Me.grbTrackInfo.Controls.Add(Me.chkDepartureLock)
-        Me.grbTrackInfo.Controls.Add(Me.lstAllFiles)
-        Me.grbTrackInfo.Controls.Add(Me.chkSoaringTypeThermal)
-        Me.grbTrackInfo.Controls.Add(Me.chkSoaringTypeRidge)
-        Me.grbTrackInfo.Controls.Add(Me.txtSoaringTypeExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.Label8)
-        Me.grbTrackInfo.Controls.Add(Me.txtArrivalExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.txtArrivalName)
-        Me.grbTrackInfo.Controls.Add(Me.txtArrivalICAO)
-        Me.grbTrackInfo.Controls.Add(Me.Label7)
-        Me.grbTrackInfo.Controls.Add(Me.txtDepExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.txtDepName)
-        Me.grbTrackInfo.Controls.Add(Me.txtSimDateTimeExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.Label5)
-        Me.grbTrackInfo.Controls.Add(Me.dtSimLocalTime)
-        Me.grbTrackInfo.Controls.Add(Me.chkIncludeYear)
-        Me.grbTrackInfo.Controls.Add(Me.Label4)
-        Me.grbTrackInfo.Controls.Add(Me.dtSimDate)
-        Me.grbTrackInfo.Controls.Add(Me.txtDepartureICAO)
-        Me.grbTrackInfo.Controls.Add(Me.Label3)
-        Me.grbTrackInfo.Controls.Add(Me.txtMainArea)
-        Me.grbTrackInfo.Controls.Add(Me.Label2)
-        Me.grbTrackInfo.Controls.Add(Me.txtTitle)
-        Me.grbTrackInfo.Controls.Add(Me.Label1)
-        Me.grbTrackInfo.Controls.Add(Me.cboSpeedUnits)
-        Me.grbTrackInfo.Controls.Add(Me.chkUseOnlyWeatherSummary)
-        Me.grbTrackInfo.Controls.Add(Me.txtMinAvgSpeed)
-        Me.grbTrackInfo.Controls.Add(Me.txtWeatherSummary)
-        Me.grbTrackInfo.Controls.Add(Me.Label21)
-        Me.grbTrackInfo.Controls.Add(Me.txtMaxAvgSpeed)
-        Me.grbTrackInfo.Controls.Add(Me.Label22)
-        Me.grbTrackInfo.Controls.Add(Me.btnSelectWeatherFile)
-        Me.grbTrackInfo.Controls.Add(Me.txtWeatherFile)
-        Me.grbTrackInfo.Controls.Add(Me.Label19)
-        Me.grbTrackInfo.Controls.Add(Me.txtDurationMin)
-        Me.grbTrackInfo.Controls.Add(Me.Label12)
-        Me.grbTrackInfo.Controls.Add(Me.txtDurationMax)
-        Me.grbTrackInfo.Controls.Add(Me.Label13)
-        Me.grbTrackInfo.Controls.Add(Me.txtDurationExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.Label14)
-        Me.grbTrackInfo.Controls.Add(Me.txtCredits)
-        Me.grbTrackInfo.Controls.Add(Me.Label15)
-        Me.grbTrackInfo.Controls.Add(Me.Label18)
-        Me.grbTrackInfo.Controls.Add(Me.lblTotalDistanceAndMiles)
-        Me.grbTrackInfo.Controls.Add(Me.lblTrackDistanceAndMiles)
-        Me.grbTrackInfo.Controls.Add(Me.cboDifficulty)
-        Me.grbTrackInfo.Controls.Add(Me.txtDistanceTotal)
-        Me.grbTrackInfo.Controls.Add(Me.txtDistanceTrack)
-        Me.grbTrackInfo.Controls.Add(Me.cboRecommendedGliders)
-        Me.grbTrackInfo.Controls.Add(Me.txtDifficultyExtraInfo)
-        Me.grbTrackInfo.Controls.Add(Me.chkDescriptionLock)
-        Me.grbTrackInfo.Controls.Add(Me.Label16)
-        Me.grbTrackInfo.Controls.Add(Me.txtShortDescription)
-        Me.grbTrackInfo.Controls.Add(Me.Label17)
-        Me.grbTrackInfo.Controls.Add(Me.txtLongDescription)
-        Me.grbTrackInfo.Enabled = False
-        Me.grbTrackInfo.Location = New System.Drawing.Point(8, 57)
-        Me.grbTrackInfo.Name = "grbTrackInfo"
-        Me.grbTrackInfo.Size = New System.Drawing.Size(729, 1093)
-        Me.grbTrackInfo.TabIndex = 2
-        Me.grbTrackInfo.TabStop = False
-        '
-        'chkLockCountries
-        '
-        Me.chkLockCountries.AutoSize = True
-        Me.chkLockCountries.Location = New System.Drawing.Point(166, 845)
-        Me.chkLockCountries.Name = "chkLockCountries"
-        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockCountries.TabIndex = 54
-        Me.chkLockCountries.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
-        Me.chkLockCountries.UseVisualStyleBackColor = True
-        '
-        'btnMoveCountryDown
-        '
-        Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 872)
-        Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
-        Me.btnMoveCountryDown.Size = New System.Drawing.Size(38, 29)
-        Me.btnMoveCountryDown.TabIndex = 54
-        Me.btnMoveCountryDown.Tag = ""
-        Me.btnMoveCountryDown.Text = "▼"
-        Me.ToolTip1.SetToolTip(Me.btnMoveCountryDown, "Click to move the selected countries down in the list.")
-        Me.btnMoveCountryDown.UseVisualStyleBackColor = True
-        '
-        'btnMoveCountryUp
-        '
-        Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 836)
-        Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
-        Me.btnMoveCountryUp.Size = New System.Drawing.Size(38, 29)
-        Me.btnMoveCountryUp.TabIndex = 54
-        Me.btnMoveCountryUp.Tag = ""
-        Me.btnMoveCountryUp.Text = "▲"
-        Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
-        Me.btnMoveCountryUp.UseVisualStyleBackColor = True
-        '
-        'btnRemoveCountry
-        '
-        Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 872)
-        Me.btnRemoveCountry.Name = "btnRemoveCountry"
-        Me.btnRemoveCountry.Size = New System.Drawing.Size(125, 29)
-        Me.btnRemoveCountry.TabIndex = 54
-        Me.btnRemoveCountry.Tag = ""
-        Me.btnRemoveCountry.Text = "Remove Country"
-        Me.ToolTip1.SetToolTip(Me.btnRemoveCountry, "Remove the selected countries from the list")
-        Me.btnRemoveCountry.UseVisualStyleBackColor = True
-        '
-        'btnAddCountry
-        '
-        Me.btnAddCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddCountry.Location = New System.Drawing.Point(189, 837)
-        Me.btnAddCountry.Name = "btnAddCountry"
-        Me.btnAddCountry.Size = New System.Drawing.Size(125, 29)
-        Me.btnAddCountry.TabIndex = 54
-        Me.btnAddCountry.Tag = ""
-        Me.btnAddCountry.Text = "Add Country"
-        Me.ToolTip1.SetToolTip(Me.btnAddCountry, "Click to add the selected country to the list")
-        Me.btnAddCountry.UseVisualStyleBackColor = True
-        '
-        'lstAllCountries
-        '
-        Me.lstAllCountries.FormattingEnabled = True
-        Me.lstAllCountries.HorizontalScrollbar = True
-        Me.lstAllCountries.ItemHeight = 20
-        Me.lstAllCountries.Location = New System.Drawing.Point(364, 837)
-        Me.lstAllCountries.Name = "lstAllCountries"
-        Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllCountries.Size = New System.Drawing.Size(356, 64)
-        Me.lstAllCountries.TabIndex = 54
-        Me.lstAllCountries.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
-        '
-        'cboCountryFlag
-        '
-        Me.cboCountryFlag.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cboCountryFlag.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboCountryFlag.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cboCountryFlag.FormattingEnabled = True
-        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 799)
-        Me.cboCountryFlag.Name = "cboCountryFlag"
-        Me.cboCountryFlag.Size = New System.Drawing.Size(531, 32)
-        Me.cboCountryFlag.TabIndex = 54
-        Me.cboCountryFlag.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(6, 802)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(145, 26)
-        Me.Label11.TabIndex = 64
-        Me.Label11.Text = "Countries/Flags"
+        Me.grbTaskInfo.Controls.Add(Me.chkAddWPCoords)
+        Me.grbTaskInfo.Controls.Add(Me.Label10)
+        Me.grbTaskInfo.Controls.Add(Me.Label9)
+        Me.grbTaskInfo.Controls.Add(Me.chkTitleLock)
+        Me.grbTaskInfo.Controls.Add(Me.chkArrivalLock)
+        Me.grbTaskInfo.Controls.Add(Me.chkDepartureLock)
+        Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeThermal)
+        Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeRidge)
+        Me.grbTaskInfo.Controls.Add(Me.txtSoaringTypeExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.Label8)
+        Me.grbTaskInfo.Controls.Add(Me.txtArrivalExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.txtArrivalName)
+        Me.grbTaskInfo.Controls.Add(Me.txtArrivalICAO)
+        Me.grbTaskInfo.Controls.Add(Me.Label7)
+        Me.grbTaskInfo.Controls.Add(Me.txtDepExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.txtDepName)
+        Me.grbTaskInfo.Controls.Add(Me.txtSimDateTimeExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.Label5)
+        Me.grbTaskInfo.Controls.Add(Me.dtSimLocalTime)
+        Me.grbTaskInfo.Controls.Add(Me.chkIncludeYear)
+        Me.grbTaskInfo.Controls.Add(Me.Label4)
+        Me.grbTaskInfo.Controls.Add(Me.dtSimDate)
+        Me.grbTaskInfo.Controls.Add(Me.txtDepartureICAO)
+        Me.grbTaskInfo.Controls.Add(Me.Label3)
+        Me.grbTaskInfo.Controls.Add(Me.txtMainArea)
+        Me.grbTaskInfo.Controls.Add(Me.Label2)
+        Me.grbTaskInfo.Controls.Add(Me.txtTitle)
+        Me.grbTaskInfo.Controls.Add(Me.Label1)
+        Me.grbTaskInfo.Controls.Add(Me.cboSpeedUnits)
+        Me.grbTaskInfo.Controls.Add(Me.txtMinAvgSpeed)
+        Me.grbTaskInfo.Controls.Add(Me.Label21)
+        Me.grbTaskInfo.Controls.Add(Me.txtMaxAvgSpeed)
+        Me.grbTaskInfo.Controls.Add(Me.Label22)
+        Me.grbTaskInfo.Controls.Add(Me.btnSelectWeatherFile)
+        Me.grbTaskInfo.Controls.Add(Me.txtWeatherFile)
+        Me.grbTaskInfo.Controls.Add(Me.txtDurationMin)
+        Me.grbTaskInfo.Controls.Add(Me.Label12)
+        Me.grbTaskInfo.Controls.Add(Me.txtDurationMax)
+        Me.grbTaskInfo.Controls.Add(Me.Label13)
+        Me.grbTaskInfo.Controls.Add(Me.txtDurationExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.Label14)
+        Me.grbTaskInfo.Controls.Add(Me.txtCredits)
+        Me.grbTaskInfo.Controls.Add(Me.Label15)
+        Me.grbTaskInfo.Controls.Add(Me.Label18)
+        Me.grbTaskInfo.Controls.Add(Me.lblTotalDistanceAndMiles)
+        Me.grbTaskInfo.Controls.Add(Me.lblTrackDistanceAndMiles)
+        Me.grbTaskInfo.Controls.Add(Me.cboDifficulty)
+        Me.grbTaskInfo.Controls.Add(Me.txtDistanceTotal)
+        Me.grbTaskInfo.Controls.Add(Me.txtDistanceTrack)
+        Me.grbTaskInfo.Controls.Add(Me.cboRecommendedGliders)
+        Me.grbTaskInfo.Controls.Add(Me.txtDifficultyExtraInfo)
+        Me.grbTaskInfo.Controls.Add(Me.chkDescriptionLock)
+        Me.grbTaskInfo.Controls.Add(Me.Label16)
+        Me.grbTaskInfo.Controls.Add(Me.txtShortDescription)
+        Me.grbTaskInfo.Controls.Add(Me.Label17)
+        Me.grbTaskInfo.Controls.Add(Me.txtLongDescription)
+        Me.grbTaskInfo.Enabled = False
+        Me.grbTaskInfo.Location = New System.Drawing.Point(8, 57)
+        Me.grbTaskInfo.Name = "grbTaskInfo"
+        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 803)
+        Me.grbTaskInfo.TabIndex = 2
+        Me.grbTaskInfo.TabStop = False
         '
         'chkAddWPCoords
         '
@@ -564,45 +437,6 @@ Partial Class Main
         Me.Label10.TabIndex = 62
         Me.Label10.Text = "Add waypoint " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "coordinates" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(for Xbox)"
         '
-        'btnExtraFileDown
-        '
-        Me.btnExtraFileDown.Enabled = False
-        Me.btnExtraFileDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnExtraFileDown.Location = New System.Drawing.Point(99, 1031)
-        Me.btnExtraFileDown.Name = "btnExtraFileDown"
-        Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileDown.TabIndex = 60
-        Me.btnExtraFileDown.Tag = "18"
-        Me.btnExtraFileDown.Text = "Down"
-        Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
-        Me.btnExtraFileDown.UseVisualStyleBackColor = True
-        '
-        'btnExtraFileUp
-        '
-        Me.btnExtraFileUp.Enabled = False
-        Me.btnExtraFileUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnExtraFileUp.Location = New System.Drawing.Point(8, 1031)
-        Me.btnExtraFileUp.Name = "btnExtraFileUp"
-        Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileUp.TabIndex = 59
-        Me.btnExtraFileUp.Tag = "18"
-        Me.btnExtraFileUp.Text = "Up"
-        Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
-        Me.btnExtraFileUp.UseVisualStyleBackColor = True
-        '
-        'btnRemoveExtraFile
-        '
-        Me.btnRemoveExtraFile.Enabled = False
-        Me.btnRemoveExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRemoveExtraFile.Location = New System.Drawing.Point(8, 990)
-        Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
-        Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
-        Me.btnRemoveExtraFile.TabIndex = 58
-        Me.btnRemoveExtraFile.Tag = "18"
-        Me.btnRemoveExtraFile.Text = "Remove selected file"
-        Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the slelected extra file from the flight plan.")
-        Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
-        '
         'Label9
         '
         Me.Label9.AutoSize = True
@@ -623,18 +457,6 @@ Partial Class Main
         Me.chkTitleLock.Tag = "3"
         Me.ToolTip1.SetToolTip(Me.chkTitleLock, "When checked, title will not be read from flight plan.")
         Me.chkTitleLock.UseVisualStyleBackColor = True
-        '
-        'btnAddExtraFile
-        '
-        Me.btnAddExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddExtraFile.Location = New System.Drawing.Point(8, 949)
-        Me.btnAddExtraFile.Name = "btnAddExtraFile"
-        Me.btnAddExtraFile.Size = New System.Drawing.Size(175, 35)
-        Me.btnAddExtraFile.TabIndex = 57
-        Me.btnAddExtraFile.Tag = "18"
-        Me.btnAddExtraFile.Text = "Add extra file"
-        Me.ToolTip1.SetToolTip(Me.btnAddExtraFile, "Click to add an extra file to include with the flight plan.")
-        Me.btnAddExtraFile.UseVisualStyleBackColor = True
         '
         'chkArrivalLock
         '
@@ -657,19 +479,6 @@ Partial Class Main
         Me.chkDepartureLock.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.chkDepartureLock, "When checked, airport name will not be read from flight plan.")
         Me.chkDepartureLock.UseVisualStyleBackColor = True
-        '
-        'lstAllFiles
-        '
-        Me.lstAllFiles.FormattingEnabled = True
-        Me.lstAllFiles.HorizontalScrollbar = True
-        Me.lstAllFiles.ItemHeight = 20
-        Me.lstAllFiles.Location = New System.Drawing.Point(189, 949)
-        Me.lstAllFiles.Name = "lstAllFiles"
-        Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllFiles.Size = New System.Drawing.Size(531, 124)
-        Me.lstAllFiles.TabIndex = 61
-        Me.lstAllFiles.Tag = "18"
-        Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
         '
         'chkSoaringTypeThermal
         '
@@ -920,17 +729,6 @@ Partial Class Main
         Me.cboSpeedUnits.Tag = "10"
         Me.ToolTip1.SetToolTip(Me.cboSpeedUnits, "Select units to use for average speed input.")
         '
-        'chkUseOnlyWeatherSummary
-        '
-        Me.chkUseOnlyWeatherSummary.AutoSize = True
-        Me.chkUseOnlyWeatherSummary.Location = New System.Drawing.Point(168, 924)
-        Me.chkUseOnlyWeatherSummary.Name = "chkUseOnlyWeatherSummary"
-        Me.chkUseOnlyWeatherSummary.Size = New System.Drawing.Size(15, 14)
-        Me.chkUseOnlyWeatherSummary.TabIndex = 55
-        Me.chkUseOnlyWeatherSummary.Tag = "17"
-        Me.ToolTip1.SetToolTip(Me.chkUseOnlyWeatherSummary, "When checked, only summary will be used for weather information.")
-        Me.chkUseOnlyWeatherSummary.UseVisualStyleBackColor = True
-        '
         'txtMinAvgSpeed
         '
         Me.txtMinAvgSpeed.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -941,16 +739,6 @@ Partial Class Main
         Me.txtMinAvgSpeed.Tag = "10"
         Me.txtMinAvgSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMinAvgSpeed, "Minimum average speed - used to calculate maximum duration.")
-        '
-        'txtWeatherSummary
-        '
-        Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 911)
-        Me.txtWeatherSummary.Name = "txtWeatherSummary"
-        Me.txtWeatherSummary.Size = New System.Drawing.Size(531, 32)
-        Me.txtWeatherSummary.TabIndex = 56
-        Me.txtWeatherSummary.Tag = "17"
-        Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
         '
         'Label21
         '
@@ -1006,16 +794,6 @@ Partial Class Main
         Me.txtWeatherFile.TabStop = False
         Me.txtWeatherFile.Tag = "2"
         Me.ToolTip1.SetToolTip(Me.txtWeatherFile, "Current weather file selected.")
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(4, 914)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(166, 26)
-        Me.Label19.TabIndex = 54
-        Me.Label19.Text = "Weather Summary"
         '
         'txtDurationMin
         '
@@ -1258,18 +1036,6 @@ Partial Class Main
         Me.txtFlightPlanFile.Tag = "1"
         Me.ToolTip1.SetToolTip(Me.txtFlightPlanFile, "Current flight plan file selected.")
         '
-        'btnFullDescriptionCopy
-        '
-        Me.btnFullDescriptionCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFullDescriptionCopy.Location = New System.Drawing.Point(1491, 1030)
-        Me.btnFullDescriptionCopy.Name = "btnFullDescriptionCopy"
-        Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(175, 84)
-        Me.btnFullDescriptionCopy.TabIndex = 13
-        Me.btnFullDescriptionCopy.Tag = "25"
-        Me.btnFullDescriptionCopy.Text = "4. Full Description to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the last post content into the clipboard.")
-        Me.btnFullDescriptionCopy.UseVisualStyleBackColor = True
-        '
         'btnSelectFlightPlan
         '
         Me.btnSelectFlightPlan.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1282,273 +1048,244 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnSelectFlightPlan, "Click to select the flight plan file to use and extract information from.")
         Me.btnSelectFlightPlan.UseVisualStyleBackColor = True
         '
-        'btnFilesTextCopy
+        'grpTaskPart2
         '
-        Me.btnFilesTextCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesTextCopy.Location = New System.Drawing.Point(1491, 973)
-        Me.btnFilesTextCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
-        Me.btnFilesTextCopy.Size = New System.Drawing.Size(175, 51)
-        Me.btnFilesTextCopy.TabIndex = 11
-        Me.btnFilesTextCopy.Tag = "24"
-        Me.btnFilesTextCopy.Text = "3b. Files info to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the third post content into the clipboard.")
-        Me.btnFilesTextCopy.UseVisualStyleBackColor = True
+        Me.grpTaskPart2.Controls.Add(Me.chkLockCountries)
+        Me.grpTaskPart2.Controls.Add(Me.btnMoveCountryDown)
+        Me.grpTaskPart2.Controls.Add(Me.btnMoveCountryUp)
+        Me.grpTaskPart2.Controls.Add(Me.btnRemoveCountry)
+        Me.grpTaskPart2.Controls.Add(Me.btnAddCountry)
+        Me.grpTaskPart2.Controls.Add(Me.lstAllCountries)
+        Me.grpTaskPart2.Controls.Add(Me.cboCountryFlag)
+        Me.grpTaskPart2.Controls.Add(Me.Label11)
+        Me.grpTaskPart2.Controls.Add(Me.btnExtraFileDown)
+        Me.grpTaskPart2.Controls.Add(Me.btnExtraFileUp)
+        Me.grpTaskPart2.Controls.Add(Me.btnRemoveExtraFile)
+        Me.grpTaskPart2.Controls.Add(Me.btnAddExtraFile)
+        Me.grpTaskPart2.Controls.Add(Me.lstAllFiles)
+        Me.grpTaskPart2.Controls.Add(Me.chkUseOnlyWeatherSummary)
+        Me.grpTaskPart2.Controls.Add(Me.txtWeatherSummary)
+        Me.grpTaskPart2.Controls.Add(Me.Label19)
+        Me.grpTaskPart2.Location = New System.Drawing.Point(743, 57)
+        Me.grpTaskPart2.Name = "grpTaskPart2"
+        Me.grpTaskPart2.Size = New System.Drawing.Size(729, 803)
+        Me.grpTaskPart2.TabIndex = 83
+        Me.grpTaskPart2.TabStop = False
         '
-        'lblNbrCarsFullDescResults
+        'chkLockCountries
         '
-        Me.lblNbrCarsFullDescResults.AutoSize = True
-        Me.lblNbrCarsFullDescResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsFullDescResults.ForeColor = System.Drawing.Color.Red
-        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(1491, 1120)
-        Me.lblNbrCarsFullDescResults.Name = "lblNbrCarsFullDescResults"
-        Me.lblNbrCarsFullDescResults.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsFullDescResults.TabIndex = 77
-        Me.lblNbrCarsFullDescResults.Text = "0"
-        Me.ToolTip1.SetToolTip(Me.lblNbrCarsFullDescResults, "Caution! Approaching Discord limit!")
-        Me.lblNbrCarsFullDescResults.Visible = False
+        Me.chkLockCountries.AutoSize = True
+        Me.chkLockCountries.Location = New System.Drawing.Point(166, 70)
+        Me.chkLockCountries.Name = "chkLockCountries"
+        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCountries.TabIndex = 65
+        Me.chkLockCountries.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
+        Me.chkLockCountries.UseVisualStyleBackColor = True
         '
-        'txtFullDescriptionResults
+        'btnMoveCountryDown
         '
-        Me.txtFullDescriptionResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(752, 1030)
-        Me.txtFullDescriptionResults.Multiline = True
-        Me.txtFullDescriptionResults.Name = "txtFullDescriptionResults"
-        Me.txtFullDescriptionResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtFullDescriptionResults.Size = New System.Drawing.Size(733, 111)
-        Me.txtFullDescriptionResults.TabIndex = 12
-        Me.txtFullDescriptionResults.Tag = "25"
-        Me.ToolTip1.SetToolTip(Me.txtFullDescriptionResults, "This is the full description content for the fourth and last Discord post.")
+        Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 97)
+        Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
+        Me.btnMoveCountryDown.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryDown.TabIndex = 66
+        Me.btnMoveCountryDown.Tag = ""
+        Me.btnMoveCountryDown.Text = "▼"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryDown, "Click to move the selected countries down in the list.")
+        Me.btnMoveCountryDown.UseVisualStyleBackColor = True
         '
-        'lblNbrCarsFilesText
+        'btnMoveCountryUp
         '
-        Me.lblNbrCarsFilesText.AutoSize = True
-        Me.lblNbrCarsFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1491, 1006)
-        Me.lblNbrCarsFilesText.Name = "lblNbrCarsFilesText"
-        Me.lblNbrCarsFilesText.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsFilesText.TabIndex = 76
-        Me.lblNbrCarsFilesText.Text = "0"
-        Me.lblNbrCarsFilesText.Visible = False
+        Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 61)
+        Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
+        Me.btnMoveCountryUp.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryUp.TabIndex = 67
+        Me.btnMoveCountryUp.Tag = ""
+        Me.btnMoveCountryUp.Text = "▲"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
+        Me.btnMoveCountryUp.UseVisualStyleBackColor = True
         '
-        'lblNbrCarsRestrictions
+        'btnRemoveCountry
         '
-        Me.lblNbrCarsRestrictions.AutoSize = True
-        Me.lblNbrCarsRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsRestrictions.Location = New System.Drawing.Point(1491, 495)
-        Me.lblNbrCarsRestrictions.Name = "lblNbrCarsRestrictions"
-        Me.lblNbrCarsRestrictions.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsRestrictions.TabIndex = 70
-        Me.lblNbrCarsRestrictions.Text = "0"
-        Me.lblNbrCarsRestrictions.Visible = False
+        Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 97)
+        Me.btnRemoveCountry.Name = "btnRemoveCountry"
+        Me.btnRemoveCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnRemoveCountry.TabIndex = 68
+        Me.btnRemoveCountry.Tag = ""
+        Me.btnRemoveCountry.Text = "Remove Country"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveCountry, "Remove the selected countries from the list")
+        Me.btnRemoveCountry.UseVisualStyleBackColor = True
         '
-        'btnFPMainInfoCopy
+        'btnAddCountry
         '
-        Me.btnFPMainInfoCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFPMainInfoCopy.Location = New System.Drawing.Point(1491, 9)
-        Me.btnFPMainInfoCopy.Name = "btnFPMainInfoCopy"
-        Me.btnFPMainInfoCopy.Size = New System.Drawing.Size(175, 109)
-        Me.btnFPMainInfoCopy.TabIndex = 4
-        Me.btnFPMainInfoCopy.Tag = "21"
-        Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFPMainInfoCopy, "Click this button to put the first post content into the clipboard.")
-        Me.btnFPMainInfoCopy.UseVisualStyleBackColor = True
+        Me.btnAddCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddCountry.Location = New System.Drawing.Point(189, 62)
+        Me.btnAddCountry.Name = "btnAddCountry"
+        Me.btnAddCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnAddCountry.TabIndex = 69
+        Me.btnAddCountry.Tag = ""
+        Me.btnAddCountry.Text = "Add Country"
+        Me.ToolTip1.SetToolTip(Me.btnAddCountry, "Click to add the selected country to the list")
+        Me.btnAddCountry.UseVisualStyleBackColor = True
         '
-        'txtFilesText
+        'lstAllCountries
         '
-        Me.txtFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFilesText.Location = New System.Drawing.Point(752, 919)
-        Me.txtFilesText.Multiline = True
-        Me.txtFilesText.Name = "txtFilesText"
-        Me.txtFilesText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtFilesText.Size = New System.Drawing.Size(733, 105)
-        Me.txtFilesText.TabIndex = 9
-        Me.txtFilesText.Tag = "23"
-        Me.ToolTip1.SetToolTip(Me.txtFilesText, "This is the files content for the third Discord post.")
+        Me.lstAllCountries.FormattingEnabled = True
+        Me.lstAllCountries.HorizontalScrollbar = True
+        Me.lstAllCountries.ItemHeight = 20
+        Me.lstAllCountries.Location = New System.Drawing.Point(364, 62)
+        Me.lstAllCountries.Name = "lstAllCountries"
+        Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllCountries.Size = New System.Drawing.Size(356, 64)
+        Me.lstAllCountries.TabIndex = 70
+        Me.lstAllCountries.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
         '
-        'lblNbrCarsMainFP
+        'cboCountryFlag
         '
-        Me.lblNbrCarsMainFP.AutoSize = True
-        Me.lblNbrCarsMainFP.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsMainFP.ForeColor = System.Drawing.Color.Red
-        Me.lblNbrCarsMainFP.Location = New System.Drawing.Point(1491, 334)
-        Me.lblNbrCarsMainFP.Name = "lblNbrCarsMainFP"
-        Me.lblNbrCarsMainFP.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsMainFP.TabIndex = 78
-        Me.lblNbrCarsMainFP.Text = "0"
-        Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Caution! Approaching Discord limit!")
-        Me.lblNbrCarsMainFP.Visible = False
+        Me.cboCountryFlag.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cboCountryFlag.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboCountryFlag.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cboCountryFlag.FormattingEnabled = True
+        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 24)
+        Me.cboCountryFlag.Name = "cboCountryFlag"
+        Me.cboCountryFlag.Size = New System.Drawing.Size(531, 32)
+        Me.cboCountryFlag.TabIndex = 71
+        Me.cboCountryFlag.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
         '
-        'txtFPResults
+        'Label11
         '
-        Me.txtFPResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFPResults.Location = New System.Drawing.Point(752, 9)
-        Me.txtFPResults.Multiline = True
-        Me.txtFPResults.Name = "txtFPResults"
-        Me.txtFPResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtFPResults.Size = New System.Drawing.Size(733, 349)
-        Me.txtFPResults.TabIndex = 3
-        Me.txtFPResults.Tag = "21"
-        Me.ToolTip1.SetToolTip(Me.txtFPResults, "This is the content of the main Discord post for the flight plan.")
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.Location = New System.Drawing.Point(6, 27)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(145, 26)
+        Me.Label11.TabIndex = 80
+        Me.Label11.Text = "Countries/Flags"
         '
-        'grpRestrictionsWeather
+        'btnExtraFileDown
         '
-        Me.grpRestrictionsWeather.Controls.Add(Me.btnCopyAllSecPosts)
-        Me.grpRestrictionsWeather.Controls.Add(Me.lblNbrCarsWeatherClouds)
-        Me.grpRestrictionsWeather.Controls.Add(Me.lblRestrictWeatherTotalCars)
-        Me.grpRestrictionsWeather.Controls.Add(Me.txtWeatherFirstPart)
-        Me.grpRestrictionsWeather.Controls.Add(Me.txtWeatherWinds)
-        Me.grpRestrictionsWeather.Controls.Add(Me.txtWeatherClouds)
-        Me.grpRestrictionsWeather.Controls.Add(Me.lblNbrCarsWeatherInfo)
-        Me.grpRestrictionsWeather.Controls.Add(Me.lblNbrCarsWeatherWinds)
-        Me.grpRestrictionsWeather.Controls.Add(Me.txtAltRestrictions)
-        Me.grpRestrictionsWeather.Controls.Add(Me.btnAltRestricCopy)
-        Me.grpRestrictionsWeather.Location = New System.Drawing.Point(743, 364)
-        Me.grpRestrictionsWeather.Name = "grpRestrictionsWeather"
-        Me.grpRestrictionsWeather.Size = New System.Drawing.Size(937, 549)
-        Me.grpRestrictionsWeather.TabIndex = 6
-        Me.grpRestrictionsWeather.TabStop = False
-        Me.grpRestrictionsWeather.Text = "Restrictions and Weather"
+        Me.btnExtraFileDown.Enabled = False
+        Me.btnExtraFileDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnExtraFileDown.Location = New System.Drawing.Point(99, 256)
+        Me.btnExtraFileDown.Name = "btnExtraFileDown"
+        Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
+        Me.btnExtraFileDown.TabIndex = 78
+        Me.btnExtraFileDown.Tag = "18"
+        Me.btnExtraFileDown.Text = "Down"
+        Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
+        Me.btnExtraFileDown.UseVisualStyleBackColor = True
         '
-        'btnCopyAllSecPosts
+        'btnExtraFileUp
         '
-        Me.btnCopyAllSecPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCopyAllSecPosts.Location = New System.Drawing.Point(748, 169)
-        Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
-        Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(175, 109)
-        Me.btnCopyAllSecPosts.TabIndex = 5
-        Me.btnCopyAllSecPosts.Tag = "22"
-        Me.btnCopyAllSecPosts.Text = "2. All secondary post's content to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put the second post content into the clipboard.")
-        Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
-        Me.btnCopyAllSecPosts.Visible = False
+        Me.btnExtraFileUp.Enabled = False
+        Me.btnExtraFileUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnExtraFileUp.Location = New System.Drawing.Point(8, 256)
+        Me.btnExtraFileUp.Name = "btnExtraFileUp"
+        Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
+        Me.btnExtraFileUp.TabIndex = 77
+        Me.btnExtraFileUp.Tag = "18"
+        Me.btnExtraFileUp.Text = "Up"
+        Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
+        Me.btnExtraFileUp.UseVisualStyleBackColor = True
         '
-        'lblNbrCarsWeatherClouds
+        'btnRemoveExtraFile
         '
-        Me.lblNbrCarsWeatherClouds.AutoSize = True
-        Me.lblNbrCarsWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(748, 476)
-        Me.lblNbrCarsWeatherClouds.Name = "lblNbrCarsWeatherClouds"
-        Me.lblNbrCarsWeatherClouds.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsWeatherClouds.TabIndex = 14
-        Me.lblNbrCarsWeatherClouds.Text = "0"
-        Me.lblNbrCarsWeatherClouds.Visible = False
+        Me.btnRemoveExtraFile.Enabled = False
+        Me.btnRemoveExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveExtraFile.Location = New System.Drawing.Point(8, 215)
+        Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
+        Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
+        Me.btnRemoveExtraFile.TabIndex = 76
+        Me.btnRemoveExtraFile.Tag = "18"
+        Me.btnRemoveExtraFile.Text = "Remove selected file"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the slelected extra file from the flight plan.")
+        Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
         '
-        'lblRestrictWeatherTotalCars
+        'btnAddExtraFile
         '
-        Me.lblRestrictWeatherTotalCars.AutoSize = True
-        Me.lblRestrictWeatherTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRestrictWeatherTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblRestrictWeatherTotalCars.Location = New System.Drawing.Point(748, 517)
-        Me.lblRestrictWeatherTotalCars.Name = "lblRestrictWeatherTotalCars"
-        Me.lblRestrictWeatherTotalCars.Size = New System.Drawing.Size(22, 26)
-        Me.lblRestrictWeatherTotalCars.TabIndex = 15
-        Me.lblRestrictWeatherTotalCars.Text = "0"
-        Me.ToolTip1.SetToolTip(Me.lblRestrictWeatherTotalCars, "Caution! Approaching Discord limit!")
-        Me.lblRestrictWeatherTotalCars.Visible = False
+        Me.btnAddExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddExtraFile.Location = New System.Drawing.Point(8, 174)
+        Me.btnAddExtraFile.Name = "btnAddExtraFile"
+        Me.btnAddExtraFile.Size = New System.Drawing.Size(175, 35)
+        Me.btnAddExtraFile.TabIndex = 75
+        Me.btnAddExtraFile.Tag = "18"
+        Me.btnAddExtraFile.Text = "Add extra file"
+        Me.ToolTip1.SetToolTip(Me.btnAddExtraFile, "Click to add an extra file to include with the flight plan.")
+        Me.btnAddExtraFile.UseVisualStyleBackColor = True
         '
-        'txtWeatherFirstPart
+        'lstAllFiles
         '
-        Me.txtWeatherFirstPart.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(9, 159)
-        Me.txtWeatherFirstPart.Multiline = True
-        Me.txtWeatherFirstPart.Name = "txtWeatherFirstPart"
-        Me.txtWeatherFirstPart.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtWeatherFirstPart.Size = New System.Drawing.Size(733, 149)
-        Me.txtWeatherFirstPart.TabIndex = 1
-        Me.txtWeatherFirstPart.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.txtWeatherFirstPart, "This is the basic weather content for the second Discord post.")
+        Me.lstAllFiles.FormattingEnabled = True
+        Me.lstAllFiles.HorizontalScrollbar = True
+        Me.lstAllFiles.ItemHeight = 20
+        Me.lstAllFiles.Location = New System.Drawing.Point(189, 174)
+        Me.lstAllFiles.Name = "lstAllFiles"
+        Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllFiles.Size = New System.Drawing.Size(531, 124)
+        Me.lstAllFiles.TabIndex = 79
+        Me.lstAllFiles.Tag = "18"
+        Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
         '
-        'txtWeatherWinds
+        'chkUseOnlyWeatherSummary
         '
-        Me.txtWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherWinds.Location = New System.Drawing.Point(9, 313)
-        Me.txtWeatherWinds.Multiline = True
-        Me.txtWeatherWinds.Name = "txtWeatherWinds"
-        Me.txtWeatherWinds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtWeatherWinds.Size = New System.Drawing.Size(733, 111)
-        Me.txtWeatherWinds.TabIndex = 2
-        Me.txtWeatherWinds.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.txtWeatherWinds, "This is the wind layers content for the second Discord post.")
+        Me.chkUseOnlyWeatherSummary.AutoSize = True
+        Me.chkUseOnlyWeatherSummary.Location = New System.Drawing.Point(168, 149)
+        Me.chkUseOnlyWeatherSummary.Name = "chkUseOnlyWeatherSummary"
+        Me.chkUseOnlyWeatherSummary.Size = New System.Drawing.Size(15, 14)
+        Me.chkUseOnlyWeatherSummary.TabIndex = 73
+        Me.chkUseOnlyWeatherSummary.Tag = "17"
+        Me.ToolTip1.SetToolTip(Me.chkUseOnlyWeatherSummary, "When checked, only summary will be used for weather information.")
+        Me.chkUseOnlyWeatherSummary.UseVisualStyleBackColor = True
         '
-        'txtWeatherClouds
+        'txtWeatherSummary
         '
-        Me.txtWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherClouds.Location = New System.Drawing.Point(9, 428)
-        Me.txtWeatherClouds.Multiline = True
-        Me.txtWeatherClouds.Name = "txtWeatherClouds"
-        Me.txtWeatherClouds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtWeatherClouds.Size = New System.Drawing.Size(733, 111)
-        Me.txtWeatherClouds.TabIndex = 3
-        Me.txtWeatherClouds.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.txtWeatherClouds, "This is the cloud layers content for the second Discord post.")
+        Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 136)
+        Me.txtWeatherSummary.Name = "txtWeatherSummary"
+        Me.txtWeatherSummary.Size = New System.Drawing.Size(531, 32)
+        Me.txtWeatherSummary.TabIndex = 74
+        Me.txtWeatherSummary.Tag = "17"
+        Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
         '
-        'lblNbrCarsWeatherInfo
+        'Label19
         '
-        Me.lblNbrCarsWeatherInfo.AutoSize = True
-        Me.lblNbrCarsWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(748, 284)
-        Me.lblNbrCarsWeatherInfo.Name = "lblNbrCarsWeatherInfo"
-        Me.lblNbrCarsWeatherInfo.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsWeatherInfo.TabIndex = 11
-        Me.lblNbrCarsWeatherInfo.Text = "0"
-        Me.lblNbrCarsWeatherInfo.Visible = False
-        '
-        'lblNbrCarsWeatherWinds
-        '
-        Me.lblNbrCarsWeatherWinds.AutoSize = True
-        Me.lblNbrCarsWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(748, 400)
-        Me.lblNbrCarsWeatherWinds.Name = "lblNbrCarsWeatherWinds"
-        Me.lblNbrCarsWeatherWinds.Size = New System.Drawing.Size(22, 26)
-        Me.lblNbrCarsWeatherWinds.TabIndex = 12
-        Me.lblNbrCarsWeatherWinds.Text = "0"
-        Me.lblNbrCarsWeatherWinds.Visible = False
-        '
-        'txtAltRestrictions
-        '
-        Me.txtAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAltRestrictions.Location = New System.Drawing.Point(9, 17)
-        Me.txtAltRestrictions.Multiline = True
-        Me.txtAltRestrictions.Name = "txtAltRestrictions"
-        Me.txtAltRestrictions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtAltRestrictions.Size = New System.Drawing.Size(733, 138)
-        Me.txtAltRestrictions.TabIndex = 0
-        Me.txtAltRestrictions.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.txtAltRestrictions, "This is the altitude restrictions content for the second Discord post.")
-        '
-        'btnAltRestricCopy
-        '
-        Me.btnAltRestricCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAltRestricCopy.Location = New System.Drawing.Point(748, 17)
-        Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
-        Me.btnAltRestricCopy.Size = New System.Drawing.Size(175, 109)
-        Me.btnAltRestricCopy.TabIndex = 4
-        Me.btnAltRestricCopy.Tag = "22"
-        Me.btnAltRestricCopy.Text = "2. Restrictions and Weather to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the second post content into the clipboard.")
-        Me.btnAltRestricCopy.UseVisualStyleBackColor = True
+        Me.Label19.AutoSize = True
+        Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.Location = New System.Drawing.Point(4, 139)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(166, 26)
+        Me.Label19.TabIndex = 72
+        Me.Label19.Text = "Weather Summary"
         '
         'tabEvent
         '
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
         Me.tabEvent.Controls.Add(Me.pnlWizardEvent)
-        Me.tabEvent.Controls.Add(Me.btnCopyReqFilesToClipboard)
-        Me.tabEvent.Controls.Add(Me.Label30)
-        Me.tabEvent.Controls.Add(Me.txtDiscordEventTopic)
-        Me.tabEvent.Controls.Add(Me.Label23)
-        Me.tabEvent.Controls.Add(Me.txtDiscordEventDescription)
-        Me.tabEvent.Controls.Add(Me.btnGroupFlightEventInfoToClipboard)
-        Me.tabEvent.Controls.Add(Me.txtGroupFlightEventPost)
-        Me.tabEvent.Controls.Add(Me.grpDiscordEvent)
         Me.tabEvent.Controls.Add(Me.grpGroupEventPost)
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1700, 1151)
+        Me.tabEvent.Size = New System.Drawing.Size(1479, 874)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
+        '
+        'chkActivateEvent
+        '
+        Me.chkActivateEvent.AutoSize = True
+        Me.chkActivateEvent.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkActivateEvent.Location = New System.Drawing.Point(13, 6)
+        Me.chkActivateEvent.Name = "chkActivateEvent"
+        Me.chkActivateEvent.Size = New System.Drawing.Size(232, 25)
+        Me.chkActivateEvent.TabIndex = 84
+        Me.chkActivateEvent.Text = "Enable Group Event Details"
+        Me.ToolTip1.SetToolTip(Me.chkActivateEvent, "Check this to enable the event fields.")
+        Me.chkActivateEvent.UseVisualStyleBackColor = True
         '
         'pnlWizardEvent
         '
@@ -1557,7 +1294,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(852, 1003)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(725, 680)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1605,256 +1342,6 @@ Partial Class Main
         Me.pnlEventArrow.Size = New System.Drawing.Size(91, 89)
         Me.pnlEventArrow.TabIndex = 80
         '
-        'btnCopyReqFilesToClipboard
-        '
-        Me.btnCopyReqFilesToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCopyReqFilesToClipboard.Location = New System.Drawing.Point(1492, 24)
-        Me.btnCopyReqFilesToClipboard.Name = "btnCopyReqFilesToClipboard"
-        Me.btnCopyReqFilesToClipboard.Size = New System.Drawing.Size(175, 109)
-        Me.btnCopyReqFilesToClipboard.TabIndex = 3
-        Me.btnCopyReqFilesToClipboard.Tag = "40"
-        Me.btnCopyReqFilesToClipboard.Text = "Optional - Copy required files to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnCopyReqFilesToClipboard, "If you want to include the required files with the group flight post, click this " &
-        "button.")
-        Me.btnCopyReqFilesToClipboard.UseVisualStyleBackColor = True
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(860, 781)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(175, 26)
-        Me.Label30.TabIndex = 5
-        Me.Label30.Text = "Discord Event Topic"
-        '
-        'txtDiscordEventTopic
-        '
-        Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(860, 808)
-        Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
-        Me.txtDiscordEventTopic.Size = New System.Drawing.Size(626, 32)
-        Me.txtDiscordEventTopic.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventTopic, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
-        ") tab if created in the same session.")
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label23.Location = New System.Drawing.Point(860, 862)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(228, 26)
-        Me.Label23.TabIndex = 7
-        Me.Label23.Text = "Discord Event Description"
-        '
-        'txtDiscordEventDescription
-        '
-        Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(860, 889)
-        Me.txtDiscordEventDescription.Multiline = True
-        Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
-        Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtDiscordEventDescription.Size = New System.Drawing.Size(626, 190)
-        Me.txtDiscordEventDescription.TabIndex = 8
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventDescription, "This is the content of the Discord Event description field.")
-        '
-        'btnGroupFlightEventInfoToClipboard
-        '
-        Me.btnGroupFlightEventInfoToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(1492, 139)
-        Me.btnGroupFlightEventInfoToClipboard.Name = "btnGroupFlightEventInfoToClipboard"
-        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(175, 109)
-        Me.btnGroupFlightEventInfoToClipboard.TabIndex = 4
-        Me.btnGroupFlightEventInfoToClipboard.Tag = "41"
-        Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group Flight post info to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventInfoToClipboard, "Click this button to put the copy the group flight info to your clipboard.")
-        Me.btnGroupFlightEventInfoToClipboard.UseVisualStyleBackColor = True
-        '
-        'txtGroupFlightEventPost
-        '
-        Me.txtGroupFlightEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(860, 24)
-        Me.txtGroupFlightEventPost.Multiline = True
-        Me.txtGroupFlightEventPost.Name = "txtGroupFlightEventPost"
-        Me.txtGroupFlightEventPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtGroupFlightEventPost.Size = New System.Drawing.Size(626, 742)
-        Me.txtGroupFlightEventPost.TabIndex = 2
-        Me.txtGroupFlightEventPost.Tag = "41"
-        Me.ToolTip1.SetToolTip(Me.txtGroupFlightEventPost, "This is the content of the Discord group flight event post.")
-        '
-        'grpDiscordEvent
-        '
-        Me.grpDiscordEvent.Controls.Add(Me.Label6)
-        Me.grpDiscordEvent.Controls.Add(Me.btnDiscordGroupEventURL)
-        Me.grpDiscordEvent.Controls.Add(Me.Label46)
-        Me.grpDiscordEvent.Controls.Add(Me.Label45)
-        Me.grpDiscordEvent.Controls.Add(Me.btnEventDescriptionToClipboard)
-        Me.grpDiscordEvent.Controls.Add(Me.Label44)
-        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordPostDateTime)
-        Me.grpDiscordEvent.Controls.Add(Me.Label43)
-        Me.grpDiscordEvent.Controls.Add(Me.btnEventTopicClipboard)
-        Me.grpDiscordEvent.Controls.Add(Me.Label42)
-        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
-        Me.grpDiscordEvent.Controls.Add(Me.Label39)
-        Me.grpDiscordEvent.Controls.Add(Me.txtGroupEventPostURL)
-        Me.grpDiscordEvent.Controls.Add(Me.Label38)
-        Me.grpDiscordEvent.Enabled = False
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 701)
-        Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(848, 378)
-        Me.grpDiscordEvent.TabIndex = 1
-        Me.grpDiscordEvent.TabStop = False
-        Me.grpDiscordEvent.Text = "Step 2: Discord Event (if applicable)"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(7, 85)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(429, 26)
-        Me.Label6.TabIndex = 13
-        Me.Label6.Text = "1. Create a new Discord Event on the proper server"
-        '
-        'btnDiscordGroupEventURL
-        '
-        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(763, 33)
-        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
-        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(79, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 2
-        Me.btnDiscordGroupEventURL.Tag = "43"
-        Me.btnDiscordGroupEventURL.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
-        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
-        '
-        'Label46
-        '
-        Me.Label46.AutoSize = True
-        Me.Label46.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label46.Location = New System.Drawing.Point(7, 338)
-        Me.Label46.Name = "Label46"
-        Me.Label46.Size = New System.Drawing.Size(231, 26)
-        Me.Label46.TabIndex = 12
-        Me.Label46.Text = "7. Preview and post event !"
-        '
-        'Label45
-        '
-        Me.Label45.AutoSize = True
-        Me.Label45.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label45.Location = New System.Drawing.Point(6, 294)
-        Me.Label45.Name = "Label45"
-        Me.Label45.Size = New System.Drawing.Size(521, 26)
-        Me.Label45.TabIndex = 11
-        Me.Label45.Text = "6. Upload optional cover image (min. 800px wide by 320px tall)"
-        '
-        'btnEventDescriptionToClipboard
-        '
-        Me.btnEventDescriptionToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventDescriptionToClipboard.Location = New System.Drawing.Point(234, 250)
-        Me.btnEventDescriptionToClipboard.Name = "btnEventDescriptionToClipboard"
-        Me.btnEventDescriptionToClipboard.Size = New System.Drawing.Size(337, 29)
-        Me.btnEventDescriptionToClipboard.TabIndex = 10
-        Me.btnEventDescriptionToClipboard.Tag = "48"
-        Me.btnEventDescriptionToClipboard.Text = "Event Description to Clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnEventDescriptionToClipboard, "Click this button to copy the event's full description for the Discord Event post" &
-        " into the clipboard.")
-        Me.btnEventDescriptionToClipboard.UseVisualStyleBackColor = True
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = True
-        Me.Label44.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label44.Location = New System.Drawing.Point(7, 252)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(225, 26)
-        Me.Label44.TabIndex = 9
-        Me.Label44.Text = "5. Enter Event Description"
-        '
-        'lblDiscordPostDateTime
-        '
-        Me.lblDiscordPostDateTime.AutoSize = True
-        Me.lblDiscordPostDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordPostDateTime.Location = New System.Drawing.Point(307, 209)
-        Me.lblDiscordPostDateTime.Name = "lblDiscordPostDateTime"
-        Me.lblDiscordPostDateTime.Size = New System.Drawing.Size(157, 26)
-        Me.lblDiscordPostDateTime.TabIndex = 8
-        Me.lblDiscordPostDateTime.Text = "meet time results"
-        '
-        'Label43
-        '
-        Me.Label43.AutoSize = True
-        Me.Label43.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label43.Location = New System.Drawing.Point(7, 209)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(298, 26)
-        Me.Label43.TabIndex = 7
-        Me.Label43.Text = "4. Specify local start date and time:"
-        '
-        'btnEventTopicClipboard
-        '
-        Me.btnEventTopicClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventTopicClipboard.Location = New System.Drawing.Point(234, 167)
-        Me.btnEventTopicClipboard.Name = "btnEventTopicClipboard"
-        Me.btnEventTopicClipboard.Size = New System.Drawing.Size(337, 29)
-        Me.btnEventTopicClipboard.TabIndex = 6
-        Me.btnEventTopicClipboard.Tag = "46"
-        Me.btnEventTopicClipboard.Text = "Event Topic to Clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnEventTopicClipboard, "Click this button to copy the event's topic for the Discord Event post into the c" &
-        "lipboard.")
-        Me.btnEventTopicClipboard.UseVisualStyleBackColor = True
-        '
-        'Label42
-        '
-        Me.Label42.AutoSize = True
-        Me.Label42.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label42.Location = New System.Drawing.Point(7, 169)
-        Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(172, 26)
-        Me.Label42.TabIndex = 5
-        Me.Label42.Text = "3. Enter Event Topic"
-        '
-        'lblDiscordEventVoice
-        '
-        Me.lblDiscordEventVoice.AutoSize = True
-        Me.lblDiscordEventVoice.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordEventVoice.Location = New System.Drawing.Point(350, 128)
-        Me.lblDiscordEventVoice.Name = "lblDiscordEventVoice"
-        Me.lblDiscordEventVoice.Size = New System.Drawing.Size(126, 26)
-        Me.lblDiscordEventVoice.TabIndex = 4
-        Me.lblDiscordEventVoice.Text = "voice channel"
-        '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label39.Location = New System.Drawing.Point(7, 128)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(326, 26)
-        Me.Label39.TabIndex = 3
-        Me.Label39.Text = "2. Select Voice Channel and click next:"
-        '
-        'txtGroupEventPostURL
-        '
-        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 33)
-        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
-        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(565, 32)
-        Me.txtGroupEventPostURL.TabIndex = 1
-        Me.txtGroupEventPostURL.Tag = "43"
-        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
-        '
-        'Label38
-        '
-        Me.Label38.AutoSize = True
-        Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label38.Location = New System.Drawing.Point(7, 37)
-        Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(173, 26)
-        Me.Label38.TabIndex = 0
-        Me.Label38.Text = "URL to group event"
-        '
         'grpGroupEventPost
         '
         Me.grpGroupEventPost.Controls.Add(Me.lblLocalDSTWarning)
@@ -1901,10 +1388,9 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 689)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 667)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
-        Me.grpGroupEventPost.Text = "Step 1: Group Event Post"
         '
         'lblLocalDSTWarning
         '
@@ -1921,7 +1407,7 @@ Partial Class Main
         '
         Me.chkIncludeGotGravelInvite.AutoSize = True
         Me.chkIncludeGotGravelInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 536)
+        Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 622)
         Me.chkIncludeGotGravelInvite.Name = "chkIncludeGotGravelInvite"
         Me.chkIncludeGotGravelInvite.Size = New System.Drawing.Size(435, 30)
         Me.chkIncludeGotGravelInvite.TabIndex = 50
@@ -1944,7 +1430,7 @@ Partial Class Main
         '
         Me.lblEventTaskDistance.AutoSize = True
         Me.lblEventTaskDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTaskDistance.Location = New System.Drawing.Point(364, 469)
+        Me.lblEventTaskDistance.Location = New System.Drawing.Point(364, 555)
         Me.lblEventTaskDistance.Name = "lblEventTaskDistance"
         Me.lblEventTaskDistance.Size = New System.Drawing.Size(53, 26)
         Me.lblEventTaskDistance.TabIndex = 44
@@ -1954,7 +1440,7 @@ Partial Class Main
         'btnTaskFPURLPaste
         '
         Me.btnTaskFPURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTaskFPURLPaste.Location = New System.Drawing.Point(763, 501)
+        Me.btnTaskFPURLPaste.Location = New System.Drawing.Point(763, 587)
         Me.btnTaskFPURLPaste.Name = "btnTaskFPURLPaste"
         Me.btnTaskFPURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnTaskFPURLPaste.TabIndex = 49
@@ -2000,7 +1486,7 @@ Partial Class Main
         'txtTaskFlightPlanURL
         '
         Me.txtTaskFlightPlanURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTaskFlightPlanURL.Location = New System.Drawing.Point(192, 502)
+        Me.txtTaskFlightPlanURL.Location = New System.Drawing.Point(192, 588)
         Me.txtTaskFlightPlanURL.Name = "txtTaskFlightPlanURL"
         Me.txtTaskFlightPlanURL.Size = New System.Drawing.Size(565, 32)
         Me.txtTaskFlightPlanURL.TabIndex = 48
@@ -2011,7 +1497,7 @@ Partial Class Main
         '
         Me.Label37.AutoSize = True
         Me.Label37.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.Location = New System.Drawing.Point(7, 506)
+        Me.Label37.Location = New System.Drawing.Point(7, 592)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(191, 26)
         Me.Label37.TabIndex = 47
@@ -2023,7 +1509,7 @@ Partial Class Main
         Me.cboEligibleAward.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboEligibleAward.FormattingEnabled = True
         Me.cboEligibleAward.Items.AddRange(New Object() {"None", "Bronze", "Silver", "Gold", "Diamond"})
-        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 466)
+        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 552)
         Me.cboEligibleAward.Name = "cboEligibleAward"
         Me.cboEligibleAward.Size = New System.Drawing.Size(166, 32)
         Me.cboEligibleAward.TabIndex = 43
@@ -2034,7 +1520,7 @@ Partial Class Main
         '
         Me.Label36.AutoSize = True
         Me.Label36.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label36.Location = New System.Drawing.Point(7, 469)
+        Me.Label36.Location = New System.Drawing.Point(7, 555)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(177, 26)
         Me.Label36.TabIndex = 42
@@ -2113,7 +1599,7 @@ Partial Class Main
         Me.txtEventDescription.Multiline = True
         Me.txtEventDescription.Name = "txtEventDescription"
         Me.txtEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventDescription.Size = New System.Drawing.Size(650, 53)
+        Me.txtEventDescription.Size = New System.Drawing.Size(650, 139)
         Me.txtEventDescription.TabIndex = 41
         Me.txtEventDescription.Tag = "36"
         Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the flight - comes from the flight plan tab if created in th" &
@@ -2375,7 +1861,7 @@ Partial Class Main
         Me.tabBriefing.Controls.Add(Me.cboBriefingMap)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1700, 1151)
+        Me.tabBriefing.Size = New System.Drawing.Size(1479, 874)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
@@ -2388,8 +1874,20 @@ Partial Class Main
         Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
         Me.pnlBriefing.Location = New System.Drawing.Point(3, 43)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1698, 1112)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1480, 835)
         Me.pnlBriefing.TabIndex = 0
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1480, 835)
+        Me.BriefingControl1.TabIndex = 0
         '
         'Label20
         '
@@ -2412,14 +1910,718 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
         Me.cboBriefingMap.Visible = False
         '
+        'tabDiscord
+        '
+        Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
+        Me.tabDiscord.Controls.Add(Me.txtWaypointsDetails)
+        Me.tabDiscord.Controls.Add(Me.lblNbrCarsRestrictions)
+        Me.tabDiscord.Controls.Add(Me.txtGroupFlightEventPost)
+        Me.tabDiscord.Controls.Add(Me.grpDiscordTask)
+        Me.tabDiscord.Controls.Add(Me.txtDiscordEventDescription)
+        Me.tabDiscord.Controls.Add(Me.txtDiscordEventTopic)
+        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherClouds)
+        Me.tabDiscord.Controls.Add(Me.txtFullDescriptionResults)
+        Me.tabDiscord.Controls.Add(Me.txtWeatherFirstPart)
+        Me.tabDiscord.Controls.Add(Me.txtFilesText)
+        Me.tabDiscord.Controls.Add(Me.txtWeatherWinds)
+        Me.tabDiscord.Controls.Add(Me.txtFPResults)
+        Me.tabDiscord.Controls.Add(Me.txtWeatherClouds)
+        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherInfo)
+        Me.tabDiscord.Controls.Add(Me.txtAltRestrictions)
+        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherWinds)
+        Me.tabDiscord.Controls.Add(Me.lblNbrCarsFilesText)
+        Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
+        Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
+        Me.tabDiscord.Name = "tabDiscord"
+        Me.tabDiscord.Size = New System.Drawing.Size(1479, 874)
+        Me.tabDiscord.TabIndex = 3
+        Me.tabDiscord.Text = "Discord"
+        Me.tabDiscord.UseVisualStyleBackColor = True
+        '
+        'txtAddOnsDetails
+        '
+        Me.txtAddOnsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAddOnsDetails.Location = New System.Drawing.Point(1141, 246)
+        Me.txtAddOnsDetails.Multiline = True
+        Me.txtAddOnsDetails.Name = "txtAddOnsDetails"
+        Me.txtAddOnsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtAddOnsDetails.Size = New System.Drawing.Size(59, 23)
+        Me.txtAddOnsDetails.TabIndex = 93
+        Me.txtAddOnsDetails.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.txtAddOnsDetails, "This is the full description content for the fourth and last Discord post.")
+        Me.txtAddOnsDetails.Visible = False
+        '
+        'txtWaypointsDetails
+        '
+        Me.txtWaypointsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWaypointsDetails.Location = New System.Drawing.Point(1141, 217)
+        Me.txtWaypointsDetails.Multiline = True
+        Me.txtWaypointsDetails.Name = "txtWaypointsDetails"
+        Me.txtWaypointsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtWaypointsDetails.Size = New System.Drawing.Size(59, 23)
+        Me.txtWaypointsDetails.TabIndex = 92
+        Me.txtWaypointsDetails.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.txtWaypointsDetails, "This is the full description content for the fourth and last Discord post.")
+        Me.txtWaypointsDetails.Visible = False
+        '
+        'lblNbrCarsRestrictions
+        '
+        Me.lblNbrCarsRestrictions.AutoSize = True
+        Me.lblNbrCarsRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsRestrictions.Location = New System.Drawing.Point(1219, 43)
+        Me.lblNbrCarsRestrictions.Name = "lblNbrCarsRestrictions"
+        Me.lblNbrCarsRestrictions.Size = New System.Drawing.Size(22, 26)
+        Me.lblNbrCarsRestrictions.TabIndex = 71
+        Me.lblNbrCarsRestrictions.Text = "0"
+        Me.lblNbrCarsRestrictions.Visible = False
+        '
+        'txtGroupFlightEventPost
+        '
+        Me.txtGroupFlightEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(1141, 295)
+        Me.txtGroupFlightEventPost.Multiline = True
+        Me.txtGroupFlightEventPost.Name = "txtGroupFlightEventPost"
+        Me.txtGroupFlightEventPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtGroupFlightEventPost.Size = New System.Drawing.Size(59, 23)
+        Me.txtGroupFlightEventPost.TabIndex = 2
+        Me.txtGroupFlightEventPost.Tag = "41"
+        Me.ToolTip1.SetToolTip(Me.txtGroupFlightEventPost, "This is the content of the Discord group flight event post.")
+        Me.txtGroupFlightEventPost.Visible = False
+        '
+        'grpDiscordTask
+        '
+        Me.grpDiscordTask.Controls.Add(Me.GroupBox3)
+        Me.grpDiscordTask.Controls.Add(Me.GroupBox1)
+        Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
+        Me.grpDiscordTask.Name = "grpDiscordTask"
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 737)
+        Me.grpDiscordTask.TabIndex = 91
+        Me.grpDiscordTask.TabStop = False
+        Me.grpDiscordTask.Text = "Task"
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox3.Controls.Add(Me.FlowLayoutPanel1)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 137)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(393, 594)
+        Me.GroupBox3.TabIndex = 91
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Thread"
+        '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesTextCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.chkGroupSecondaryPosts)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnCopyAllSecPosts)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblAllSecPostsTotalCars)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnAltRestricCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblRestrictWeatherTotalCars)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnFullDescriptionCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsFullDescResults)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnWaypointsCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblWaypointsTotalCars)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnAddOnsCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblAddOnsTotalCars)
+        Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 26)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(393, 568)
+        Me.FlowLayoutPanel1.TabIndex = 82
+        '
+        'btnFilesCopy
+        '
+        Me.btnFilesCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFilesCopy.Location = New System.Drawing.Point(3, 3)
+        Me.btnFilesCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
+        Me.btnFilesCopy.Name = "btnFilesCopy"
+        Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnFilesCopy.TabIndex = 84
+        Me.btnFilesCopy.Tag = "23"
+        Me.btnFilesCopy.Text = "2a. Files to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
+        Me.btnFilesCopy.UseVisualStyleBackColor = True
+        '
+        'btnCopyAllSecPosts
+        '
+        Me.btnCopyAllSecPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCopyAllSecPosts.Location = New System.Drawing.Point(3, 145)
+        Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
+        Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
+        Me.btnCopyAllSecPosts.TabIndex = 5
+        Me.btnCopyAllSecPosts.Tag = "22"
+        Me.btnCopyAllSecPosts.Text = "3. All secondary post's content to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put the second post content into the clipboard.")
+        Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
+        Me.btnCopyAllSecPosts.Visible = False
+        '
+        'lblAllSecPostsTotalCars
+        '
+        Me.lblAllSecPostsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAllSecPostsTotalCars.ForeColor = System.Drawing.Color.Red
+        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(3, 199)
+        Me.lblAllSecPostsTotalCars.Name = "lblAllSecPostsTotalCars"
+        Me.lblAllSecPostsTotalCars.Size = New System.Drawing.Size(384, 26)
+        Me.lblAllSecPostsTotalCars.TabIndex = 90
+        Me.lblAllSecPostsTotalCars.Text = "0"
+        Me.lblAllSecPostsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblAllSecPostsTotalCars, "Caution! Approaching Discord limit!")
+        '
+        'btnFilesTextCopy
+        '
+        Me.btnFilesTextCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFilesTextCopy.Location = New System.Drawing.Point(3, 57)
+        Me.btnFilesTextCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
+        Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
+        Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnFilesTextCopy.TabIndex = 85
+        Me.btnFilesTextCopy.Tag = "24"
+        Me.btnFilesTextCopy.Text = "2b. Files info to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the third post content into the clipboard.")
+        Me.btnFilesTextCopy.UseVisualStyleBackColor = True
+        '
+        'btnAltRestricCopy
+        '
+        Me.btnAltRestricCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAltRestricCopy.Location = New System.Drawing.Point(3, 228)
+        Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
+        Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnAltRestricCopy.TabIndex = 4
+        Me.btnAltRestricCopy.Tag = "22"
+        Me.btnAltRestricCopy.Text = "3. Restrictions and Weather to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the second post content into the clipboard.")
+        Me.btnAltRestricCopy.UseVisualStyleBackColor = True
+        '
+        'lblRestrictWeatherTotalCars
+        '
+        Me.lblRestrictWeatherTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblRestrictWeatherTotalCars.ForeColor = System.Drawing.Color.Red
+        Me.lblRestrictWeatherTotalCars.Location = New System.Drawing.Point(3, 282)
+        Me.lblRestrictWeatherTotalCars.Name = "lblRestrictWeatherTotalCars"
+        Me.lblRestrictWeatherTotalCars.Size = New System.Drawing.Size(384, 26)
+        Me.lblRestrictWeatherTotalCars.TabIndex = 15
+        Me.lblRestrictWeatherTotalCars.Text = "0"
+        Me.lblRestrictWeatherTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblRestrictWeatherTotalCars, "Caution! Approaching Discord limit!")
+        '
+        'btnFullDescriptionCopy
+        '
+        Me.btnFullDescriptionCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFullDescriptionCopy.Location = New System.Drawing.Point(3, 311)
+        Me.btnFullDescriptionCopy.Name = "btnFullDescriptionCopy"
+        Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnFullDescriptionCopy.TabIndex = 87
+        Me.btnFullDescriptionCopy.Tag = "25"
+        Me.btnFullDescriptionCopy.Text = "4. Full Description to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the last post content into the clipboard.")
+        Me.btnFullDescriptionCopy.UseVisualStyleBackColor = True
+        '
+        'lblNbrCarsFullDescResults
+        '
+        Me.lblNbrCarsFullDescResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsFullDescResults.ForeColor = System.Drawing.Color.Red
+        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(3, 365)
+        Me.lblNbrCarsFullDescResults.Name = "lblNbrCarsFullDescResults"
+        Me.lblNbrCarsFullDescResults.Size = New System.Drawing.Size(384, 26)
+        Me.lblNbrCarsFullDescResults.TabIndex = 88
+        Me.lblNbrCarsFullDescResults.Text = "0"
+        Me.lblNbrCarsFullDescResults.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblNbrCarsFullDescResults, "Caution! Approaching Discord limit!")
+        '
+        'btnWaypointsCopy
+        '
+        Me.btnWaypointsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnWaypointsCopy.Location = New System.Drawing.Point(3, 394)
+        Me.btnWaypointsCopy.Name = "btnWaypointsCopy"
+        Me.btnWaypointsCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnWaypointsCopy.TabIndex = 88
+        Me.btnWaypointsCopy.Tag = "25"
+        Me.btnWaypointsCopy.Text = "5. Waypoint details to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnWaypointsCopy, "Click this button to put the last post content into the clipboard.")
+        Me.btnWaypointsCopy.UseVisualStyleBackColor = True
+        '
+        'lblWaypointsTotalCars
+        '
+        Me.lblWaypointsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWaypointsTotalCars.ForeColor = System.Drawing.Color.Red
+        Me.lblWaypointsTotalCars.Location = New System.Drawing.Point(3, 448)
+        Me.lblWaypointsTotalCars.Name = "lblWaypointsTotalCars"
+        Me.lblWaypointsTotalCars.Size = New System.Drawing.Size(384, 26)
+        Me.lblWaypointsTotalCars.TabIndex = 91
+        Me.lblWaypointsTotalCars.Text = "0"
+        Me.lblWaypointsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblWaypointsTotalCars, "Caution! Approaching Discord limit!")
+        '
+        'btnAddOnsCopy
+        '
+        Me.btnAddOnsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddOnsCopy.Location = New System.Drawing.Point(3, 477)
+        Me.btnAddOnsCopy.Name = "btnAddOnsCopy"
+        Me.btnAddOnsCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnAddOnsCopy.TabIndex = 89
+        Me.btnAddOnsCopy.Tag = "25"
+        Me.btnAddOnsCopy.Text = "6. Add-ons details to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnAddOnsCopy, "Click this button to put the last post content into the clipboard.")
+        Me.btnAddOnsCopy.UseVisualStyleBackColor = True
+        '
+        'lblAddOnsTotalCars
+        '
+        Me.lblAddOnsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAddOnsTotalCars.ForeColor = System.Drawing.Color.Red
+        Me.lblAddOnsTotalCars.Location = New System.Drawing.Point(3, 531)
+        Me.lblAddOnsTotalCars.Name = "lblAddOnsTotalCars"
+        Me.lblAddOnsTotalCars.Size = New System.Drawing.Size(384, 26)
+        Me.lblAddOnsTotalCars.TabIndex = 92
+        Me.lblAddOnsTotalCars.Text = "0"
+        Me.lblAddOnsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblAddOnsTotalCars, "Caution! Approaching Discord limit!")
+        '
+        'chkGroupSecondaryPosts
+        '
+        Me.chkGroupSecondaryPosts.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkGroupSecondaryPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkGroupSecondaryPosts.Location = New System.Drawing.Point(3, 111)
+        Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
+        Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(384, 28)
+        Me.chkGroupSecondaryPosts.TabIndex = 81
+        Me.chkGroupSecondaryPosts.Tag = ""
+        Me.chkGroupSecondaryPosts.Text = "Group remaining posts"
+        Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to group all secondary posts into only one.")
+        Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Controls.Add(Me.btnFPMainInfoCopy)
+        Me.GroupBox1.Controls.Add(Me.lblNbrCarsMainFP)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 104)
+        Me.GroupBox1.TabIndex = 90
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Main Post"
+        '
+        'btnFPMainInfoCopy
+        '
+        Me.btnFPMainInfoCopy.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFPMainInfoCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFPMainInfoCopy.Location = New System.Drawing.Point(6, 26)
+        Me.btnFPMainInfoCopy.Name = "btnFPMainInfoCopy"
+        Me.btnFPMainInfoCopy.Size = New System.Drawing.Size(381, 51)
+        Me.btnFPMainInfoCopy.TabIndex = 81
+        Me.btnFPMainInfoCopy.Tag = "21"
+        Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFPMainInfoCopy, "Click this button to put the first post content into the clipboard.")
+        Me.btnFPMainInfoCopy.UseVisualStyleBackColor = True
+        '
+        'lblNbrCarsMainFP
+        '
+        Me.lblNbrCarsMainFP.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblNbrCarsMainFP.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsMainFP.ForeColor = System.Drawing.Color.Red
+        Me.lblNbrCarsMainFP.Location = New System.Drawing.Point(0, 77)
+        Me.lblNbrCarsMainFP.Name = "lblNbrCarsMainFP"
+        Me.lblNbrCarsMainFP.Size = New System.Drawing.Size(393, 26)
+        Me.lblNbrCarsMainFP.TabIndex = 89
+        Me.lblNbrCarsMainFP.Text = "0"
+        Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Caution! Approaching Discord limit!")
+        '
+        'txtDiscordEventDescription
+        '
+        Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1271, 295)
+        Me.txtDiscordEventDescription.Multiline = True
+        Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
+        Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtDiscordEventDescription.Size = New System.Drawing.Size(59, 23)
+        Me.txtDiscordEventDescription.TabIndex = 8
+        Me.ToolTip1.SetToolTip(Me.txtDiscordEventDescription, "This is the content of the Discord Event description field.")
+        Me.txtDiscordEventDescription.Visible = False
+        '
+        'txtDiscordEventTopic
+        '
+        Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1206, 291)
+        Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
+        Me.txtDiscordEventTopic.Size = New System.Drawing.Size(59, 32)
+        Me.txtDiscordEventTopic.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.txtDiscordEventTopic, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
+        ") tab if created in the same session.")
+        Me.txtDiscordEventTopic.Visible = False
+        '
+        'lblNbrCarsWeatherClouds
+        '
+        Me.lblNbrCarsWeatherClouds.AutoSize = True
+        Me.lblNbrCarsWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(1219, 127)
+        Me.lblNbrCarsWeatherClouds.Name = "lblNbrCarsWeatherClouds"
+        Me.lblNbrCarsWeatherClouds.Size = New System.Drawing.Size(22, 26)
+        Me.lblNbrCarsWeatherClouds.TabIndex = 14
+        Me.lblNbrCarsWeatherClouds.Text = "0"
+        Me.lblNbrCarsWeatherClouds.Visible = False
+        '
+        'txtFullDescriptionResults
+        '
+        Me.txtFullDescriptionResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(1141, 188)
+        Me.txtFullDescriptionResults.Multiline = True
+        Me.txtFullDescriptionResults.Name = "txtFullDescriptionResults"
+        Me.txtFullDescriptionResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtFullDescriptionResults.Size = New System.Drawing.Size(59, 23)
+        Me.txtFullDescriptionResults.TabIndex = 86
+        Me.txtFullDescriptionResults.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.txtFullDescriptionResults, "This is the full description content for the fourth and last Discord post.")
+        Me.txtFullDescriptionResults.Visible = False
+        '
+        'txtWeatherFirstPart
+        '
+        Me.txtWeatherFirstPart.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(1141, 75)
+        Me.txtWeatherFirstPart.Multiline = True
+        Me.txtWeatherFirstPart.Name = "txtWeatherFirstPart"
+        Me.txtWeatherFirstPart.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtWeatherFirstPart.Size = New System.Drawing.Size(59, 23)
+        Me.txtWeatherFirstPart.TabIndex = 1
+        Me.txtWeatherFirstPart.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.txtWeatherFirstPart, "This is the basic weather content for the second Discord post.")
+        Me.txtWeatherFirstPart.Visible = False
+        '
+        'txtFilesText
+        '
+        Me.txtFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFilesText.Location = New System.Drawing.Point(1141, 162)
+        Me.txtFilesText.Multiline = True
+        Me.txtFilesText.Name = "txtFilesText"
+        Me.txtFilesText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtFilesText.Size = New System.Drawing.Size(59, 23)
+        Me.txtFilesText.TabIndex = 83
+        Me.txtFilesText.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.txtFilesText, "This is the files content for the third Discord post.")
+        Me.txtFilesText.Visible = False
+        '
+        'txtWeatherWinds
+        '
+        Me.txtWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeatherWinds.Location = New System.Drawing.Point(1141, 104)
+        Me.txtWeatherWinds.Multiline = True
+        Me.txtWeatherWinds.Name = "txtWeatherWinds"
+        Me.txtWeatherWinds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtWeatherWinds.Size = New System.Drawing.Size(59, 23)
+        Me.txtWeatherWinds.TabIndex = 2
+        Me.txtWeatherWinds.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.txtWeatherWinds, "This is the wind layers content for the second Discord post.")
+        Me.txtWeatherWinds.Visible = False
+        '
+        'txtFPResults
+        '
+        Me.txtFPResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFPResults.Location = New System.Drawing.Point(1141, 16)
+        Me.txtFPResults.Multiline = True
+        Me.txtFPResults.Name = "txtFPResults"
+        Me.txtFPResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtFPResults.Size = New System.Drawing.Size(59, 23)
+        Me.txtFPResults.TabIndex = 79
+        Me.txtFPResults.Tag = "21"
+        Me.ToolTip1.SetToolTip(Me.txtFPResults, "This is the content of the main Discord post for the flight plan.")
+        Me.txtFPResults.Visible = False
+        '
+        'txtWeatherClouds
+        '
+        Me.txtWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeatherClouds.Location = New System.Drawing.Point(1141, 133)
+        Me.txtWeatherClouds.Multiline = True
+        Me.txtWeatherClouds.Name = "txtWeatherClouds"
+        Me.txtWeatherClouds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtWeatherClouds.Size = New System.Drawing.Size(59, 23)
+        Me.txtWeatherClouds.TabIndex = 3
+        Me.txtWeatherClouds.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.txtWeatherClouds, "This is the cloud layers content for the second Discord post.")
+        Me.txtWeatherClouds.Visible = False
+        '
+        'lblNbrCarsWeatherInfo
+        '
+        Me.lblNbrCarsWeatherInfo.AutoSize = True
+        Me.lblNbrCarsWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(1219, 72)
+        Me.lblNbrCarsWeatherInfo.Name = "lblNbrCarsWeatherInfo"
+        Me.lblNbrCarsWeatherInfo.Size = New System.Drawing.Size(22, 26)
+        Me.lblNbrCarsWeatherInfo.TabIndex = 11
+        Me.lblNbrCarsWeatherInfo.Text = "0"
+        Me.lblNbrCarsWeatherInfo.Visible = False
+        '
+        'txtAltRestrictions
+        '
+        Me.txtAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAltRestrictions.Location = New System.Drawing.Point(1141, 46)
+        Me.txtAltRestrictions.Multiline = True
+        Me.txtAltRestrictions.Name = "txtAltRestrictions"
+        Me.txtAltRestrictions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtAltRestrictions.Size = New System.Drawing.Size(59, 23)
+        Me.txtAltRestrictions.TabIndex = 0
+        Me.txtAltRestrictions.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.txtAltRestrictions, "This is the altitude restrictions content for the second Discord post.")
+        Me.txtAltRestrictions.Visible = False
+        '
+        'lblNbrCarsWeatherWinds
+        '
+        Me.lblNbrCarsWeatherWinds.AutoSize = True
+        Me.lblNbrCarsWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(1219, 101)
+        Me.lblNbrCarsWeatherWinds.Name = "lblNbrCarsWeatherWinds"
+        Me.lblNbrCarsWeatherWinds.Size = New System.Drawing.Size(22, 26)
+        Me.lblNbrCarsWeatherWinds.TabIndex = 12
+        Me.lblNbrCarsWeatherWinds.Text = "0"
+        Me.lblNbrCarsWeatherWinds.Visible = False
+        '
+        'lblNbrCarsFilesText
+        '
+        Me.lblNbrCarsFilesText.AutoSize = True
+        Me.lblNbrCarsFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1219, 156)
+        Me.lblNbrCarsFilesText.Name = "lblNbrCarsFilesText"
+        Me.lblNbrCarsFilesText.Size = New System.Drawing.Size(22, 26)
+        Me.lblNbrCarsFilesText.TabIndex = 76
+        Me.lblNbrCarsFilesText.Text = "0"
+        Me.lblNbrCarsFilesText.Visible = False
+        '
+        'grpDiscordGroupFlight
+        '
+        Me.grpDiscordGroupFlight.Controls.Add(Me.grpGroupFlightEvent)
+        Me.grpDiscordGroupFlight.Controls.Add(Me.grpDiscordEvent)
+        Me.grpDiscordGroupFlight.Location = New System.Drawing.Point(419, 3)
+        Me.grpDiscordGroupFlight.Name = "grpDiscordGroupFlight"
+        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(685, 561)
+        Me.grpDiscordGroupFlight.TabIndex = 85
+        Me.grpDiscordGroupFlight.TabStop = False
+        Me.grpDiscordGroupFlight.Text = "Group Flight Event"
+        '
+        'grpGroupFlightEvent
+        '
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnCopyReqFilesToClipboard)
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventInfoToClipboard)
+        Me.grpGroupFlightEvent.Location = New System.Drawing.Point(6, 27)
+        Me.grpGroupFlightEvent.Name = "grpGroupFlightEvent"
+        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(673, 147)
+        Me.grpGroupFlightEvent.TabIndex = 2
+        Me.grpGroupFlightEvent.TabStop = False
+        Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
+        '
+        'btnCopyReqFilesToClipboard
+        '
+        Me.btnCopyReqFilesToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCopyReqFilesToClipboard.Location = New System.Drawing.Point(6, 26)
+        Me.btnCopyReqFilesToClipboard.Name = "btnCopyReqFilesToClipboard"
+        Me.btnCopyReqFilesToClipboard.Size = New System.Drawing.Size(661, 51)
+        Me.btnCopyReqFilesToClipboard.TabIndex = 3
+        Me.btnCopyReqFilesToClipboard.Tag = "40"
+        Me.btnCopyReqFilesToClipboard.Text = "Optional - Copy required files to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnCopyReqFilesToClipboard, "If you want to include the required files with the group flight post, click this " &
+        "button.")
+        Me.btnCopyReqFilesToClipboard.UseVisualStyleBackColor = True
+        '
+        'btnGroupFlightEventInfoToClipboard
+        '
+        Me.btnGroupFlightEventInfoToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(6, 83)
+        Me.btnGroupFlightEventInfoToClipboard.Name = "btnGroupFlightEventInfoToClipboard"
+        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(661, 51)
+        Me.btnGroupFlightEventInfoToClipboard.TabIndex = 4
+        Me.btnGroupFlightEventInfoToClipboard.Tag = "41"
+        Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group Flight post info to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventInfoToClipboard, "Click this button to put the copy the group flight info to your clipboard.")
+        Me.btnGroupFlightEventInfoToClipboard.UseVisualStyleBackColor = True
+        '
+        'grpDiscordEvent
+        '
+        Me.grpDiscordEvent.Controls.Add(Me.Label6)
+        Me.grpDiscordEvent.Controls.Add(Me.btnDiscordGroupEventURL)
+        Me.grpDiscordEvent.Controls.Add(Me.Label46)
+        Me.grpDiscordEvent.Controls.Add(Me.Label45)
+        Me.grpDiscordEvent.Controls.Add(Me.btnEventDescriptionToClipboard)
+        Me.grpDiscordEvent.Controls.Add(Me.Label44)
+        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordPostDateTime)
+        Me.grpDiscordEvent.Controls.Add(Me.Label43)
+        Me.grpDiscordEvent.Controls.Add(Me.btnEventTopicClipboard)
+        Me.grpDiscordEvent.Controls.Add(Me.Label42)
+        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
+        Me.grpDiscordEvent.Controls.Add(Me.Label39)
+        Me.grpDiscordEvent.Controls.Add(Me.txtGroupEventPostURL)
+        Me.grpDiscordEvent.Controls.Add(Me.Label38)
+        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 180)
+        Me.grpDiscordEvent.Name = "grpDiscordEvent"
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(673, 371)
+        Me.grpDiscordEvent.TabIndex = 1
+        Me.grpDiscordEvent.TabStop = False
+        Me.grpDiscordEvent.Text = "Step 2: Discord Event (if applicable)"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(7, 85)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(429, 26)
+        Me.Label6.TabIndex = 13
+        Me.Label6.Text = "1. Create a new Discord Event on the proper server"
+        '
+        'btnDiscordGroupEventURL
+        '
+        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(577, 34)
+        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
+        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(79, 29)
+        Me.btnDiscordGroupEventURL.TabIndex = 2
+        Me.btnDiscordGroupEventURL.Tag = "43"
+        Me.btnDiscordGroupEventURL.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
+        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
+        '
+        'Label46
+        '
+        Me.Label46.AutoSize = True
+        Me.Label46.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label46.Location = New System.Drawing.Point(7, 338)
+        Me.Label46.Name = "Label46"
+        Me.Label46.Size = New System.Drawing.Size(231, 26)
+        Me.Label46.TabIndex = 12
+        Me.Label46.Text = "7. Preview and post event !"
+        '
+        'Label45
+        '
+        Me.Label45.AutoSize = True
+        Me.Label45.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label45.Location = New System.Drawing.Point(6, 294)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(521, 26)
+        Me.Label45.TabIndex = 11
+        Me.Label45.Text = "6. Upload optional cover image (min. 800px wide by 320px tall)"
+        '
+        'btnEventDescriptionToClipboard
+        '
+        Me.btnEventDescriptionToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEventDescriptionToClipboard.Location = New System.Drawing.Point(234, 250)
+        Me.btnEventDescriptionToClipboard.Name = "btnEventDescriptionToClipboard"
+        Me.btnEventDescriptionToClipboard.Size = New System.Drawing.Size(337, 29)
+        Me.btnEventDescriptionToClipboard.TabIndex = 10
+        Me.btnEventDescriptionToClipboard.Tag = "48"
+        Me.btnEventDescriptionToClipboard.Text = "Event Description to Clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnEventDescriptionToClipboard, "Click this button to copy the event's full description for the Discord Event post" &
+        " into the clipboard.")
+        Me.btnEventDescriptionToClipboard.UseVisualStyleBackColor = True
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label44.Location = New System.Drawing.Point(7, 252)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(225, 26)
+        Me.Label44.TabIndex = 9
+        Me.Label44.Text = "5. Enter Event Description"
+        '
+        'lblDiscordPostDateTime
+        '
+        Me.lblDiscordPostDateTime.AutoSize = True
+        Me.lblDiscordPostDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDiscordPostDateTime.Location = New System.Drawing.Point(307, 209)
+        Me.lblDiscordPostDateTime.Name = "lblDiscordPostDateTime"
+        Me.lblDiscordPostDateTime.Size = New System.Drawing.Size(157, 26)
+        Me.lblDiscordPostDateTime.TabIndex = 8
+        Me.lblDiscordPostDateTime.Text = "meet time results"
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = True
+        Me.Label43.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label43.Location = New System.Drawing.Point(7, 209)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(298, 26)
+        Me.Label43.TabIndex = 7
+        Me.Label43.Text = "4. Specify local start date and time:"
+        '
+        'btnEventTopicClipboard
+        '
+        Me.btnEventTopicClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEventTopicClipboard.Location = New System.Drawing.Point(234, 167)
+        Me.btnEventTopicClipboard.Name = "btnEventTopicClipboard"
+        Me.btnEventTopicClipboard.Size = New System.Drawing.Size(337, 29)
+        Me.btnEventTopicClipboard.TabIndex = 6
+        Me.btnEventTopicClipboard.Tag = "46"
+        Me.btnEventTopicClipboard.Text = "Event Topic to Clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnEventTopicClipboard, "Click this button to copy the event's topic for the Discord Event post into the c" &
+        "lipboard.")
+        Me.btnEventTopicClipboard.UseVisualStyleBackColor = True
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = True
+        Me.Label42.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label42.Location = New System.Drawing.Point(7, 169)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(172, 26)
+        Me.Label42.TabIndex = 5
+        Me.Label42.Text = "3. Enter Event Topic"
+        '
+        'lblDiscordEventVoice
+        '
+        Me.lblDiscordEventVoice.AutoSize = True
+        Me.lblDiscordEventVoice.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDiscordEventVoice.Location = New System.Drawing.Point(350, 128)
+        Me.lblDiscordEventVoice.Name = "lblDiscordEventVoice"
+        Me.lblDiscordEventVoice.Size = New System.Drawing.Size(126, 26)
+        Me.lblDiscordEventVoice.TabIndex = 4
+        Me.lblDiscordEventVoice.Text = "voice channel"
+        '
+        'Label39
+        '
+        Me.Label39.AutoSize = True
+        Me.Label39.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label39.Location = New System.Drawing.Point(7, 128)
+        Me.Label39.Name = "Label39"
+        Me.Label39.Size = New System.Drawing.Size(326, 26)
+        Me.Label39.TabIndex = 3
+        Me.Label39.Text = "2. Select Voice Channel and click next:"
+        '
+        'txtGroupEventPostURL
+        '
+        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 33)
+        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
+        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(379, 32)
+        Me.txtGroupEventPostURL.TabIndex = 1
+        Me.txtGroupEventPostURL.Tag = "43"
+        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
+        '
+        'Label38
+        '
+        Me.Label38.AutoSize = True
+        Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label38.Location = New System.Drawing.Point(7, 37)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(173, 26)
+        Me.Label38.TabIndex = 0
+        Me.Label38.Text = "URL to group event"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
         'btnReset
         '
+        Me.btnReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReset.Location = New System.Drawing.Point(307, 3)
+        Me.btnReset.Location = New System.Drawing.Point(503, 3)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(118, 35)
         Me.btnReset.TabIndex = 1
@@ -2429,8 +2631,9 @@ Partial Class Main
         '
         'btnLoadConfig
         '
+        Me.btnLoadConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadConfig.Location = New System.Drawing.Point(431, 3)
+        Me.btnLoadConfig.Location = New System.Drawing.Point(627, 3)
         Me.btnLoadConfig.Name = "btnLoadConfig"
         Me.btnLoadConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnLoadConfig.TabIndex = 2
@@ -2441,8 +2644,9 @@ Partial Class Main
         '
         'btnSaveConfig
         '
+        Me.btnSaveConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveConfig.Location = New System.Drawing.Point(555, 3)
+        Me.btnSaveConfig.Location = New System.Drawing.Point(751, 3)
         Me.btnSaveConfig.Name = "btnSaveConfig"
         Me.btnSaveConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnSaveConfig.TabIndex = 3
@@ -2453,8 +2657,9 @@ Partial Class Main
         '
         'btnCreateShareablePack
         '
+        Me.btnCreateShareablePack.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCreateShareablePack.Location = New System.Drawing.Point(679, 3)
+        Me.btnCreateShareablePack.Location = New System.Drawing.Point(875, 3)
         Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
         Me.btnCreateShareablePack.Size = New System.Drawing.Size(135, 35)
         Me.btnCreateShareablePack.TabIndex = 4
@@ -2465,8 +2670,9 @@ Partial Class Main
         '
         'btnLoadB21Planner
         '
+        Me.btnLoadB21Planner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadB21Planner.Location = New System.Drawing.Point(820, 3)
+        Me.btnLoadB21Planner.Location = New System.Drawing.Point(1016, 3)
         Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
         Me.btnLoadB21Planner.Size = New System.Drawing.Size(152, 35)
         Me.btnLoadB21Planner.TabIndex = 5
@@ -2478,7 +2684,7 @@ Partial Class Main
         '
         Me.btnGuideMe.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideMe.Location = New System.Drawing.Point(1396, 3)
+        Me.btnGuideMe.Location = New System.Drawing.Point(1175, 3)
         Me.btnGuideMe.Name = "btnGuideMe"
         Me.btnGuideMe.Size = New System.Drawing.Size(155, 35)
         Me.btnGuideMe.TabIndex = 6
@@ -2490,7 +2696,7 @@ Partial Class Main
         '
         Me.btnTurnGuideOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1557, 3)
+        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1336, 3)
         Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
         Me.btnTurnGuideOff.Size = New System.Drawing.Size(139, 35)
         Me.btnTurnGuideOff.TabIndex = 83
@@ -2499,35 +2705,12 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'chkActivateEvent
-        '
-        Me.chkActivateEvent.AutoSize = True
-        Me.chkActivateEvent.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkActivateEvent.Location = New System.Drawing.Point(190, 5)
-        Me.chkActivateEvent.Name = "chkActivateEvent"
-        Me.chkActivateEvent.Size = New System.Drawing.Size(117, 24)
-        Me.chkActivateEvent.TabIndex = 84
-        Me.chkActivateEvent.Text = "Enable Event"
-        Me.ToolTip1.SetToolTip(Me.chkActivateEvent, "Check this to enable the event fields.")
-        Me.chkActivateEvent.UseVisualStyleBackColor = True
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1698, 1112)
-        Me.BriefingControl1.TabIndex = 0
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1708, 1205)
+        Me.ClientSize = New System.Drawing.Size(1487, 915)
         Me.Controls.Add(Me.btnTurnGuideOff)
         Me.Controls.Add(Me.btnGuideMe)
         Me.Controls.Add(Me.btnLoadB21Planner)
@@ -2537,8 +2720,7 @@ Partial Class Main
         Me.Controls.Add(Me.btnReset)
         Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximumSize = New System.Drawing.Size(1726, 1249)
-        Me.MinimumSize = New System.Drawing.Size(1024, 768)
+        Me.MinimumSize = New System.Drawing.Size(1366, 768)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -2549,28 +2731,36 @@ Partial Class Main
         Me.tabFlightPlan.PerformLayout()
         Me.pnlGuide.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
-        Me.grbTrackInfo.ResumeLayout(False)
-        Me.grbTrackInfo.PerformLayout()
-        Me.grpRestrictionsWeather.ResumeLayout(False)
-        Me.grpRestrictionsWeather.PerformLayout()
+        Me.grbTaskInfo.ResumeLayout(False)
+        Me.grbTaskInfo.PerformLayout()
+        Me.grpTaskPart2.ResumeLayout(False)
+        Me.grpTaskPart2.PerformLayout()
         Me.tabEvent.ResumeLayout(False)
         Me.tabEvent.PerformLayout()
         Me.pnlWizardEvent.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
-        Me.grpDiscordEvent.ResumeLayout(False)
-        Me.grpDiscordEvent.PerformLayout()
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
         Me.tabBriefing.ResumeLayout(False)
         Me.tabBriefing.PerformLayout()
         Me.pnlBriefing.ResumeLayout(False)
+        Me.tabDiscord.ResumeLayout(False)
+        Me.tabDiscord.PerformLayout()
+        Me.grpDiscordTask.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.FlowLayoutPanel1.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.grpDiscordGroupFlight.ResumeLayout(False)
+        Me.grpGroupFlightEvent.ResumeLayout(False)
+        Me.grpDiscordEvent.ResumeLayout(False)
+        Me.grpDiscordEvent.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
 
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents tabFlightPlan As TabPage
-    Friend WithEvents grbTrackInfo As GroupBox
+    Friend WithEvents grbTaskInfo As GroupBox
     Friend WithEvents Label9 As Label
     Friend WithEvents chkTitleLock As CheckBox
     Friend WithEvents ToolTip1 As ToolTip
@@ -2599,9 +2789,7 @@ Partial Class Main
     Friend WithEvents txtTitle As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents cboSpeedUnits As ComboBox
-    Friend WithEvents chkUseOnlyWeatherSummary As CheckBox
     Friend WithEvents txtMinAvgSpeed As TextBox
-    Friend WithEvents txtWeatherSummary As TextBox
     Friend WithEvents Label21 As Label
     Friend WithEvents btnSelectFlightPlan As Button
     Friend WithEvents txtMaxAvgSpeed As TextBox
@@ -2609,7 +2797,6 @@ Partial Class Main
     Friend WithEvents Label22 As Label
     Friend WithEvents btnSelectWeatherFile As Button
     Friend WithEvents txtWeatherFile As TextBox
-    Friend WithEvents Label19 As Label
     Friend WithEvents txtDurationMin As TextBox
     Friend WithEvents Label12 As Label
     Friend WithEvents txtDurationMax As TextBox
@@ -2631,33 +2818,9 @@ Partial Class Main
     Friend WithEvents txtShortDescription As TextBox
     Friend WithEvents Label17 As Label
     Friend WithEvents txtLongDescription As TextBox
-    Friend WithEvents btnFullDescriptionCopy As Button
-    Friend WithEvents btnFilesTextCopy As Button
-    Friend WithEvents lblNbrCarsFullDescResults As Label
-    Friend WithEvents txtFullDescriptionResults As TextBox
-    Friend WithEvents lblNbrCarsFilesText As Label
-    Friend WithEvents lblNbrCarsRestrictions As Label
-    Friend WithEvents btnAltRestricCopy As Button
-    Friend WithEvents btnFPMainInfoCopy As Button
-    Friend WithEvents txtAltRestrictions As TextBox
-    Friend WithEvents txtFilesText As TextBox
-    Friend WithEvents lblNbrCarsMainFP As Label
-    Friend WithEvents txtFPResults As TextBox
-    Friend WithEvents grpRestrictionsWeather As GroupBox
-    Friend WithEvents lblNbrCarsWeatherClouds As Label
-    Friend WithEvents lblRestrictWeatherTotalCars As Label
-    Friend WithEvents txtWeatherFirstPart As TextBox
-    Friend WithEvents txtWeatherWinds As TextBox
-    Friend WithEvents txtWeatherClouds As TextBox
-    Friend WithEvents lblNbrCarsWeatherInfo As Label
-    Friend WithEvents lblNbrCarsWeatherWinds As Label
     Friend WithEvents tabEvent As TabPage
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents btnReset As Button
-    Friend WithEvents btnFilesCopy As Button
-    Friend WithEvents lstAllFiles As ListBox
-    Friend WithEvents btnAddExtraFile As Button
-    Friend WithEvents btnRemoveExtraFile As Button
     Friend WithEvents grpGroupEventPost As GroupBox
     Friend WithEvents dtEventMeetTime As DateTimePicker
     Friend WithEvents Label26 As Label
@@ -2713,9 +2876,7 @@ Partial Class Main
     Friend WithEvents lblEventTaskDistance As Label
     Friend WithEvents Label48 As Label
     Friend WithEvents Label6 As Label
-    Friend WithEvents Label23 As Label
     Friend WithEvents txtDiscordEventDescription As TextBox
-    Friend WithEvents Label30 As Label
     Friend WithEvents txtDiscordEventTopic As TextBox
     Friend WithEvents btnLoadConfig As Button
     Friend WithEvents btnSaveConfig As Button
@@ -2738,26 +2899,67 @@ Partial Class Main
     Friend WithEvents pnlEventArrow As Panel
     Friend WithEvents dtEventMeetDate As DateTimePicker
     Friend WithEvents chkUseSyncFly As CheckBox
-    Friend WithEvents btnExtraFileDown As Button
-    Friend WithEvents btnExtraFileUp As Button
-    Friend WithEvents chkGroupSecondaryPosts As CheckBox
-    Friend WithEvents btnCopyAllSecPosts As Button
     Friend WithEvents tabBriefing As TabPage
     Friend WithEvents cboBriefingMap As ComboBox
     Friend WithEvents chkAddWPCoords As CheckBox
     Friend WithEvents Label10 As Label
-    Friend WithEvents cboCountryFlag As ComboBox
-    Friend WithEvents Label11 As Label
-    Friend WithEvents btnMoveCountryDown As Button
-    Friend WithEvents btnMoveCountryUp As Button
-    Friend WithEvents btnRemoveCountry As Button
-    Friend WithEvents btnAddCountry As Button
-    Friend WithEvents lstAllCountries As ListBox
-    Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents lblLocalDSTWarning As Label
     Friend WithEvents pnlBriefing As Panel
     Friend WithEvents BriefingControl1 As CommonLibrary.BriefingControl
     Friend WithEvents Label20 As Label
     Friend WithEvents pnlScrollableSurface As Panel
     Friend WithEvents chkActivateEvent As CheckBox
+    Friend WithEvents tabDiscord As TabPage
+    Friend WithEvents chkGroupSecondaryPosts As CheckBox
+    Friend WithEvents btnFilesCopy As Button
+    Friend WithEvents btnFullDescriptionCopy As Button
+    Friend WithEvents btnFilesTextCopy As Button
+    Friend WithEvents lblNbrCarsFullDescResults As Label
+    Friend WithEvents txtFullDescriptionResults As TextBox
+    Friend WithEvents txtFilesText As TextBox
+    Friend WithEvents lblNbrCarsMainFP As Label
+    Friend WithEvents txtFPResults As TextBox
+    Friend WithEvents lblNbrCarsRestrictions As Label
+    Friend WithEvents btnCopyAllSecPosts As Button
+    Friend WithEvents lblNbrCarsWeatherClouds As Label
+    Friend WithEvents lblRestrictWeatherTotalCars As Label
+    Friend WithEvents txtWeatherFirstPart As TextBox
+    Friend WithEvents txtWeatherWinds As TextBox
+    Friend WithEvents txtWeatherClouds As TextBox
+    Friend WithEvents lblNbrCarsWeatherInfo As Label
+    Friend WithEvents lblNbrCarsWeatherWinds As Label
+    Friend WithEvents txtAltRestrictions As TextBox
+    Friend WithEvents lblNbrCarsFilesText As Label
+    Friend WithEvents btnAltRestricCopy As Button
+    Friend WithEvents grpTaskPart2 As GroupBox
+    Friend WithEvents chkLockCountries As CheckBox
+    Friend WithEvents btnMoveCountryDown As Button
+    Friend WithEvents btnMoveCountryUp As Button
+    Friend WithEvents btnRemoveCountry As Button
+    Friend WithEvents btnAddCountry As Button
+    Friend WithEvents lstAllCountries As ListBox
+    Friend WithEvents cboCountryFlag As ComboBox
+    Friend WithEvents Label11 As Label
+    Friend WithEvents btnExtraFileDown As Button
+    Friend WithEvents btnExtraFileUp As Button
+    Friend WithEvents btnRemoveExtraFile As Button
+    Friend WithEvents btnAddExtraFile As Button
+    Friend WithEvents lstAllFiles As ListBox
+    Friend WithEvents chkUseOnlyWeatherSummary As CheckBox
+    Friend WithEvents txtWeatherSummary As TextBox
+    Friend WithEvents Label19 As Label
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents btnFPMainInfoCopy As Button
+    Friend WithEvents grpDiscordTask As GroupBox
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents btnWaypointsCopy As Button
+    Friend WithEvents btnAddOnsCopy As Button
+    Friend WithEvents lblAllSecPostsTotalCars As Label
+    Friend WithEvents lblWaypointsTotalCars As Label
+    Friend WithEvents lblAddOnsTotalCars As Label
+    Friend WithEvents grpDiscordGroupFlight As GroupBox
+    Friend WithEvents grpGroupFlightEvent As GroupBox
+    Friend WithEvents txtWaypointsDetails As TextBox
+    Friend WithEvents txtAddOnsDetails As TextBox
 End Class
