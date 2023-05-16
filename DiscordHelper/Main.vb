@@ -159,7 +159,6 @@ Public Class Main
         txtShortDescription.Text = String.Empty
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
-        chkAddWPCoords.Checked = False
         chkLockCountries.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
         txtWeatherSummary.Text = String.Empty
@@ -238,10 +237,12 @@ Public Class Main
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
         SetBriefingControlsVisiblity()
-        If TabControl1.SelectedTab.Name = "tabBriefing" Then
-
-            GenerateBriefing()
-        End If
+        Select Case TabControl1.SelectedTab.Name
+            Case "tabBriefing"
+                GenerateBriefing()
+            Case "tabDiscord"
+                SetDiscordTaskThreadHeight()
+        End Select
     End Sub
 
 #End Region
@@ -278,7 +279,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
+    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged
 
         BuildFPResults()
 
@@ -385,39 +386,6 @@ Public Class Main
         CalculateDuration()
     End Sub
 
-    Private Sub NbrCarsCheckDiscordLimit(lblLabel As Windows.Forms.Label)
-
-        Select Case CInt(lblLabel.Text)
-            Case > DiscordLimit
-                lblLabel.Visible = True
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style Or FontStyle.Bold)
-            Case > DiscordLimit - 200
-                lblLabel.Visible = True
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
-            Case Else
-                lblLabel.Visible = False
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
-        End Select
-
-        If chkGroupSecondaryPosts.Checked Then
-            Select Case lblLabel.Name
-                Case "lblRestrictWeatherTotalCars"
-                    lblLabel.Visible = False
-                Case "lblNbrCarsFullDescResults"
-                    lblLabel.Visible = False
-                Case "lblWaypointsTotalCars"
-                    lblLabel.Visible = False
-                Case "lblAddOnsTotalCars"
-                    lblLabel.Visible = False
-            End Select
-        Else
-            Select Case lblLabel.Name
-                Case "lblAllSecPostsTotalCars"
-                    lblLabel.Visible = False
-            End Select
-        End If
-
-    End Sub
     Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.TextChanged, lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblAllSecPostsTotalCars.TextChanged, lblWaypointsTotalCars.TextChanged, lblAddOnsTotalCars.TextChanged
 
         NbrCarsCheckDiscordLimit(DirectCast(sender, Windows.Forms.Label))
@@ -490,7 +458,7 @@ Public Class Main
     End Sub
 
     Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
-        lblNbrCarsFullDescResults.Text = txtLongDescription.Text.Length
+        lblNbrCarsFullDescResults.Text = txtFullDescriptionResults.Text.Length
         CalculateTotalNbrCars()
     End Sub
 
@@ -580,10 +548,66 @@ Public Class Main
 
     End Sub
 
+    Private Sub lblNbrCarsFilesText_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsFilesText.TextChanged
+
+        CalculateTotalNbrCars()
+
+    End Sub
+
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
-        MessageBox.Show(Me, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post", vbOKOnly, MessageBoxIcon.Information)
+        CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+    End Sub
+
+    Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
+        Dim allFiles As New Specialized.StringCollection
+        Dim contentForMessage As New StringBuilder
+
+        contentForMessage.AppendLine("FILES")
+
+        If File.Exists(txtFlightPlanFile.Text) Then
+            allFiles.Add(txtFlightPlanFile.Text)
+            contentForMessage.AppendLine(txtFlightPlanFile.Text)
+        End If
+        If File.Exists(txtWeatherFile.Text) Then
+            allFiles.Add(txtWeatherFile.Text)
+            contentForMessage.AppendLine(txtWeatherFile.Text)
+        End If
+
+        For i = 0 To lstAllFiles.Items.Count() - 1
+            If File.Exists(lstAllFiles.Items(i)) Then
+                allFiles.Add(lstAllFiles.Items(i))
+                contentForMessage.AppendLine(lstAllFiles.Items(i))
+            End If
+        Next
+
+        If allFiles.Count > 0 Then
+            Clipboard.SetFileDropList(allFiles)
+            CopyContent.ShowContent(Me,
+                                    contentForMessage.ToString,
+                                    "Now paste the copied files as the first message in the thread without posting it and come back for the text info (button 2b).",
+                                    "Step 2a - Creating the files post in the thread - actual files first")
+            If _GuideCurrentStep <> 0 Then
+                _GuideCurrentStep += 1
+                ShowGuide()
+            End If
+        Else
+            MessageBox.Show(Me, "No files to copy!", "Step 2a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End If
+
+    End Sub
+
+    Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
+        Clipboard.SetText(txtFilesText.Text)
+        CopyContent.ShowContent(Me,
+                                txtFilesText.Text,
+                                "Now enter the file info in the first message in the thread and post it. Also pin this message in the thread.",
+                                "Step 2b - Creating the files post in the thread - file info")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -592,71 +616,62 @@ Public Class Main
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
         Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf & ".")
-        MessageBox.Show(Me, "Now paste the content as the second message in the thread!", "Step 2 - Creating secondary post for weather in the thread.", vbOKOnly, MessageBoxIcon.Information)
+        CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Now paste the restrictions and weather content as the next message in the thread!",
+                                "Step 2 - Creating post for restrictions and weather in the thread.")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
 
-    End Sub
-
-    Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
-        Dim allFiles As New Specialized.StringCollection
-
-        If File.Exists(txtFlightPlanFile.Text) Then
-            allFiles.Add(txtFlightPlanFile.Text)
-        End If
-        If File.Exists(txtWeatherFile.Text) Then
-            allFiles.Add(txtWeatherFile.Text)
-        End If
-
-        For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) Then
-                allFiles.Add(lstAllFiles.Items(i))
-            End If
-        Next
-
-        If allFiles.Count > 0 Then
-            Clipboard.SetFileDropList(allFiles)
-            If chkGroupSecondaryPosts.Checked Then
-                MessageBox.Show(Me, "Now paste the copied files as the final message.", "Step 2 - Inserting the files in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-
-            Else
-                MessageBox.Show(Me, "Now paste the copied files as the third message without posting it and come back for the text info (button 2b).", "Step 2a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            End If
-            If _GuideCurrentStep <> 0 Then
-                _GuideCurrentStep += 1
-                ShowGuide()
-            End If
-        Else
-            MessageBox.Show(Me, "No files to copy!", "Step 2a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-
-        End If
-
-    End Sub
-
-    Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
-        Clipboard.SetText(txtFilesText.Text)
-        MessageBox.Show(Me, "Now enter the info (legend) in the third message and post it. Also pin this message in the thread.", "Step 3b - Creating the files post in the thread - file info", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        If _GuideCurrentStep <> 0 Then
-            _GuideCurrentStep += 1
-            ShowGuide()
-        End If
     End Sub
 
     Private Sub btnFullDescriptionCopy_Click(sender As Object, e As EventArgs) Handles btnFullDescriptionCopy.Click
 
         If txtFullDescriptionResults.Text.Length = 0 Then
-            MessageBox.Show(Me, "The last message (Full Description) is empty. Cannot proceed!", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(Me, "The full description is empty. Cannot proceed!", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
             Clipboard.SetText(txtFullDescriptionResults.Text)
-            MessageBox.Show(Me, "Now post the last message in the thread to complete your flight plan entry.", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            CopyContent.ShowContent(Me,
+                                txtFullDescriptionResults.Text,
+                                "Now post the full description as the next message in the thread.",
+                                "Step 4 - Creating full description post in the thread.")
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
             End If
         End If
 
+    End Sub
+
+    Private Sub btnWaypointsCopy_Click(sender As Object, e As EventArgs) Handles btnWaypointsCopy.Click
+        Clipboard.SetText(txtWaypointsDetails.Text)
+        CopyContent.ShowContent(Me,
+                                txtWaypointsDetails.Text,
+                                "Now post the waypoints details as the next message in the thread.",
+                                "Step 5 - Creating waypoints post in the thread.")
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
+    End Sub
+
+    Private Sub btnAddOnsCopy_Click(sender As Object, e As EventArgs) Handles btnAddOnsCopy.Click
+        If txtAddOnsDetails.Text.Length = 0 Then
+            MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Else
+            Clipboard.SetText(txtAddOnsDetails.Text)
+            CopyContent.ShowContent(Me,
+                                txtAddOnsDetails.Text,
+                                "Now post the add-ons details as the last message in the thread.",
+                                "Step 6 - Creating add-ons post in the thread.")
+            If _GuideCurrentStep <> 0 Then
+                _GuideCurrentStep += 1
+                ShowGuide()
+            End If
+        End If
     End Sub
 
     Private Sub chkGroupSecondaryPosts_CheckedChanged(sender As Object, e As EventArgs) Handles chkGroupSecondaryPosts.CheckedChanged
@@ -672,8 +687,12 @@ Public Class Main
                           txtWeatherWinds.Text & vbCrLf & vbCrLf &
                           txtWeatherClouds.Text & vbCrLf & vbCrLf &
                           txtFullDescriptionResults.Text & vbCrLf & vbCrLf &
-                          txtFilesText.Text & vbCrLf)
-        MessageBox.Show(Me, "Now paste the content as the second message in the thread!", "Step 2 - Creating secondary post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                          txtWaypointsDetails.Text & vbCrLf & vbCrLf &
+                          txtAddOnsDetails.Text & vbCrLf)
+        CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Now paste all remaining content as the next message in the thread!",
+                                "Step 3 - Creating remaining content post in the thread.")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -686,7 +705,7 @@ Public Class Main
 #Region "Extra files Controls events"
     Private Sub btnAddExtraFile_Click(sender As Object, e As EventArgs) Handles btnAddExtraFile.Click
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = "H: \MSFS WIP Flight plans\"
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -980,11 +999,78 @@ Public Class Main
             btnFullDescriptionCopy.Visible = True
         End If
 
-        NbrCarsCheckDiscordLimit(lblAllSecPostsTotalCars)
-        NbrCarsCheckDiscordLimit(lblRestrictWeatherTotalCars)
-        NbrCarsCheckDiscordLimit(lblNbrCarsFullDescResults)
-        NbrCarsCheckDiscordLimit(lblWaypointsTotalCars)
-        NbrCarsCheckDiscordLimit(lblAddOnsTotalCars)
+        NbrCarsCheckDiscordLimit(lblAllSecPostsTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblRestrictWeatherTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblNbrCarsFullDescResults, True)
+        NbrCarsCheckDiscordLimit(lblWaypointsTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblAddOnsTotalCars, False)
+
+    End Sub
+
+    Private Sub NbrCarsCheckDiscordLimit(lblLabel As Windows.Forms.Label, Optional skipSetHeight As Boolean = False)
+
+        Select Case CInt(lblLabel.Text)
+            Case > DiscordLimit
+                lblLabel.Visible = True
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style Or FontStyle.Bold)
+            Case > DiscordLimit - 200
+                lblLabel.Visible = True
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
+            Case Else
+                lblLabel.Visible = False
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
+        End Select
+
+        If chkGroupSecondaryPosts.Checked Then
+            Select Case lblLabel.Name
+                Case "lblRestrictWeatherTotalCars"
+                    lblLabel.Visible = False
+                Case "lblNbrCarsFullDescResults"
+                    lblLabel.Visible = False
+                Case "lblWaypointsTotalCars"
+                    lblLabel.Visible = False
+                Case "lblAddOnsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        Else
+            Select Case lblLabel.Name
+                Case "lblAllSecPostsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        End If
+
+        If Not skipSetHeight Then
+            SetDiscordTaskThreadHeight()
+        End If
+    End Sub
+
+    Private Sub SetDiscordTaskThreadHeight()
+
+        Dim height As Integer = 0
+
+        If chkGroupSecondaryPosts.Checked Then
+            height = 57
+            If lblAllSecPostsTotalCars.Visible Then
+                height += 26
+            End If
+        Else
+            height = 57 * 4
+            If lblRestrictWeatherTotalCars.Visible Then
+                height += 26
+            End If
+            If lblNbrCarsFullDescResults.Visible Then
+                height += 26
+            End If
+            If lblWaypointsTotalCars.Visible Then
+                height += 26
+            End If
+            If lblAddOnsTotalCars.Visible Then
+                height += 26
+            End If
+        End If
+
+        grpDiscordTaskThread.Height = height + 168
+        grpDiscordTask.Height = grpDiscordTaskThread.Height + 145
 
     End Sub
 
@@ -1604,7 +1690,7 @@ Public Class Main
                 btnTurnGuideOff.Visible = False
             Case 1 'Select flight plan
                 SetGuidePanelToLeft()
-                pnlGuide.Top = -9
+                pnlGuide.Top = -3
                 lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
                 SetFocusOnField(btnSelectFlightPlan, fromF1Key)
             Case 2 'Select weather file
@@ -1917,7 +2003,7 @@ Public Class Main
     Private Sub SetGuidePanelToLeft()
         pnlWizardEvent.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
-        pnlGuide.Left = 737
+        pnlGuide.Left = 718
         pnlGuide.Visible = True
         pnlArrow.Left = -6
         pnlArrow.Top = 0
@@ -2170,7 +2256,6 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
-            .AddWPCoordinates = chkAddWPCoords.Checked
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
@@ -2276,7 +2361,6 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
-                chkAddWPCoords.Checked = .AddWPCoordinates
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
                 If .ExtraFiles.Count > 0 Then
@@ -2333,12 +2417,6 @@ Public Class Main
             BuildDiscordEventDescription()
 
         End If
-
-    End Sub
-
-    Private Sub lblNbrCarsFilesText_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsFilesText.TextChanged
-
-        CalculateTotalNbrCars()
 
     End Sub
 

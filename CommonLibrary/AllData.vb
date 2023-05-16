@@ -105,9 +105,6 @@ Public Class AllData
     <XmlElement("CountryFlag")>
     Public Property CountryFlag As String
 
-    <XmlElement("AddWPCoordinates")>
-    Public Property AddWPCoordinates As Boolean
-
     <XmlElement("WeatherSummaryOnly")>
     Public Property WeatherSummaryOnly As Boolean
 
