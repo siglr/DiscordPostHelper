@@ -1,8 +1,8 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.18.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.16.1</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.5.18.1</ReleaseVersion>
+      <ReleaseVersion>23.5.16.1</ReleaseVersion>
       <ReleaseTitle>Fix Flight Plan folder not working in Settings</ReleaseTitle>
       <ReleaseNotes>
         When trying to set the flight plan folder in Settings, it would change the default DPHX Packages instead.
