@@ -77,16 +77,16 @@ Public Class Settings
         FolderBrowserDialog1.Description = "Please select a folder where to put flight plan files (.pln)"
         FolderBrowserDialog1.ShowNewFolderButton = True
 
-        If Directory.Exists(btnPackagesFolder.Text) Then
-            FolderBrowserDialog1.SelectedPath = btnPackagesFolder.Text
+        If Directory.Exists(btnFlightPlanFilesFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnFlightPlanFilesFolder.Text
         Else
             FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         End If
 
         If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             ' User selected a folder and clicked OK
-            btnPackagesFolder.Text = FolderBrowserDialog1.SelectedPath
-            ToolTip1.SetToolTip(btnPackagesFolder, FolderBrowserDialog1.SelectedPath)
+            btnFlightPlanFilesFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnFlightPlanFilesFolder, FolderBrowserDialog1.SelectedPath)
         End If
     End Sub
 
