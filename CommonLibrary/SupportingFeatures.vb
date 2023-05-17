@@ -1060,4 +1060,9 @@ Public Class SupportingFeatures
         Return result
     End Function
 
+    Public Shared Sub EnteringTextBox(txtbox As Windows.Forms.TextBox)
+        txtbox.SelectAll()
+        txtbox.SelectionStart = 0
+    End Sub
+
 End Class

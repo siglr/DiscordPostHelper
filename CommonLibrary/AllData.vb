@@ -1,4 +1,5 @@
-﻿Imports System.Xml.Serialization
+﻿Imports System.ComponentModel
+Imports System.Xml.Serialization
 
 <XmlRoot("AllData")>
 Public Class AllData
@@ -111,7 +112,9 @@ Public Class AllData
     <XmlElement("WeatherSummary")>
     Public Property WeatherSummary As String
 
-    <XmlElement("ExtraFiles")>
+    <XmlElement("RecommendedAddOns")>
+    Public Property RecommendedAddOns As New List(Of RecommendedAddOn)
+
     Public Property ExtraFiles As List(Of String) = New List(Of String)
 
     <XmlElement("LockCountries")>
@@ -119,6 +122,12 @@ Public Class AllData
 
     <XmlElement("Countries")>
     Public Property Countries As List(Of String) = New List(Of String)
+
+    <XmlElement("IncludeDPHXPackage")>
+    Public Property IncludeDPHXPackage As Boolean
+
+    <XmlElement("DPHXPackageFilename")>
+    Public Property DPHXPackageFilename As String
 
     <XmlElement("EventEnabled")>
     Public Property EventEnabled As Boolean
