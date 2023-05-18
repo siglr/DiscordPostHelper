@@ -115,6 +115,7 @@ Public Class AllData
     <XmlElement("RecommendedAddOns")>
     Public Property RecommendedAddOns As New List(Of RecommendedAddOn)
 
+    <XmlElement("ExtraFiles")>
     Public Property ExtraFiles As List(Of String) = New List(Of String)
 
     <XmlElement("LockCountries")>
