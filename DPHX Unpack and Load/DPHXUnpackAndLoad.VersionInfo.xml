@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.17.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.18.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.18.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for bug on extra files introduced by previous version</ReleaseTitle>
+      <ReleaseNotes>
+        This is a quick fix for a bug related to the storage of extra files.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.17.1</ReleaseVersion>
       <ReleaseTitle>New Add-ons tab</ReleaseTitle>
