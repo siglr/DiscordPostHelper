@@ -105,6 +105,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PresetEvent.vb" />
+    <Compile Include="RecommendedAddOn.vb" />
     <Compile Include="SupportingFeatures.vb" />
     <Compile Include="VersionInfo.vb" />
     <Compile Include="VersionInfoForm.Designer.vb">

@@ -1,6 +1,20 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.17.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.17.1</ReleaseVersion>
+      <ReleaseTitle>Major redesign of the window AND new features</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is a big revamping of the interface, to try and make the user experience easier and also accomodate new fields.
+        - Removed the “resulting text” fields on the right to make room for other input fields and possibly make the form fit on smaller screens.
+        - Whole new section for the recommended add-ons (with links) for the task, no need to put that in the description anymore.
+        - Added a section to include the DPHX package with the files to promote sharing it.
+        - Changed the order of the posts so that files come first in the thread.
+        - Adjusted the wizard (guide) for the major redesign of the form and the new features.
+        - New Add-Ons tab within the briefing to list recommendeded add-ons. Double-click the URL to open it.
+        - Several other small fixes and adjustments were also made along the way
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.11.1</ReleaseVersion>
       <ReleaseTitle>New compass roses for each wind layer</ReleaseTitle>

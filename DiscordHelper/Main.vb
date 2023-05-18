@@ -121,13 +121,9 @@ Public Class Main
         cboRecommendedGliders.SelectedIndex = 0
         lstAllFiles.Items.Clear()
         lstAllCountries.Items.Clear()
+        lstAllRecommendedAddOns.Items.Clear()
 
-        Dim sb As New StringBuilder
-        sb.AppendLine("**Files**")
-        sb.AppendLine("Required: Flight plan (.pln) and Weather preset (.wpr)")
-        sb.AppendLine("Optional: XCSoar Track (.trk)")
-        txtFilesText.Text = sb.ToString.Trim
-        sb.Clear()
+        txtFilesText.Text = String.Empty
 
         txtFlightPlanFile.Text = String.Empty
         txtWeatherFile.Text = String.Empty
@@ -159,7 +155,6 @@ Public Class Main
         txtShortDescription.Text = String.Empty
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
-        chkAddWPCoords.Checked = False
         chkLockCountries.Checked = False
         chkUseOnlyWeatherSummary.Checked = False
         txtWeatherSummary.Text = String.Empty
@@ -181,6 +176,8 @@ Public Class Main
         txtGroupEventPostURL.Text = String.Empty
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
+        chkDPHXPackageInclude.Checked = False
+        txtDPHXPackageFilename.Text = String.Empty
         cboBriefingMap.Items.Clear()
 
         btnRemoveExtraFile.Enabled = False
@@ -233,15 +230,17 @@ Public Class Main
     End Sub
 
     Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtDepartureICAO.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalICAO.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
-        EnteringTextBox(sender)
+        SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
         SetBriefingControlsVisiblity()
-        If TabControl1.SelectedTab.Name = "tabBriefing" Then
-
-            GenerateBriefing()
-        End If
+        Select Case TabControl1.SelectedTab.Name
+            Case "tabBriefing"
+                GenerateBriefing()
+            Case "tabDiscord"
+                SetDiscordTaskThreadHeight()
+        End Select
     End Sub
 
 #End Region
@@ -264,11 +263,6 @@ Public Class Main
         txtbox.SelectionStart = 0
     End Sub
 
-    Private Sub EnteringTextBox(txtbox As Windows.Forms.TextBox)
-        txtbox.SelectAll()
-        txtbox.SelectionStart = 0
-    End Sub
-
 #End Region
 
 
@@ -278,7 +272,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged, chkAddWPCoords.CheckedChanged
+    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged
 
         BuildFPResults()
 
@@ -370,6 +364,7 @@ Public Class Main
 
     Private Sub txtFPResults_TextChanged(sender As Object, e As EventArgs) Handles txtFPResults.TextChanged
         lblNbrCarsMainFP.Text = txtFPResults.Text.Length
+
     End Sub
 
     Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
@@ -384,25 +379,18 @@ Public Class Main
         CalculateDuration()
     End Sub
 
-    Private Sub NbrCarsCheckDiscordLimit(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.TextChanged, lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged
+    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.TextChanged, lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblAllSecPostsTotalCars.TextChanged, lblWaypointsTotalCars.TextChanged, lblAddOnsTotalCars.TextChanged
 
-        Dim lblLabel As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
-
-        Select Case CInt(lblLabel.Text)
-            Case > DiscordLimit
-                lblLabel.Visible = True
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style Or FontStyle.Bold)
-            Case > DiscordLimit - 200
-                lblLabel.Visible = True
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
-            Case Else
-                lblLabel.Visible = False
-                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
-        End Select
+        NbrCarsCheckDiscordLimit(DirectCast(sender, Windows.Forms.Label))
 
     End Sub
 
-    Private Sub SetDiscordLimitMessage(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.VisibleChanged, lblNbrCarsMainFP.VisibleChanged, lblNbrCarsFullDescResults.VisibleChanged
+    Private Sub SetDiscordLimitMessage(sender As Object, e As EventArgs) Handles lblRestrictWeatherTotalCars.VisibleChanged,
+                                                                                 lblNbrCarsMainFP.VisibleChanged,
+                                                                                 lblNbrCarsFullDescResults.VisibleChanged,
+                                                                                 lblAddOnsTotalCars.VisibleChanged,
+                                                                                 lblWaypointsTotalCars.VisibleChanged,
+                                                                                 lblAllSecPostsTotalCars.VisibleChanged
 
         Dim lblLabel As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
 
@@ -441,11 +429,20 @@ Public Class Main
 
     Private Sub txtWeatherWinds_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherWinds.TextChanged
         lblNbrCarsWeatherWinds.Text = txtWeatherWinds.Text.Length
-
     End Sub
 
     Private Sub txtFilesText_TextChanged(sender As Object, e As EventArgs) Handles txtFilesText.TextChanged
         lblNbrCarsFilesText.Text = txtFilesText.Text.Length
+    End Sub
+
+    Private Sub txtWaypointsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtWaypointsDetails.TextChanged
+        lblWaypointsTotalCars.Text = txtWaypointsDetails.Text.Length
+        CalculateTotalNbrCars()
+    End Sub
+
+    Private Sub txtAddOnsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtAddOnsDetails.TextChanged
+        lblAddOnsTotalCars.Text = txtAddOnsDetails.Text.Length
+        CalculateTotalNbrCars()
     End Sub
 
     Private Sub txtLongDescription_Leave(sender As Object, e As EventArgs) Handles txtLongDescription.Leave
@@ -454,8 +451,8 @@ Public Class Main
     End Sub
 
     Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
-        lblNbrCarsFullDescResults.Text = txtLongDescription.Text.Length
-
+        lblNbrCarsFullDescResults.Text = txtFullDescriptionResults.Text.Length
+        CalculateTotalNbrCars()
     End Sub
 
     Private Sub lblNbrCarsWeatherInfo_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsWeatherWinds.TextChanged, lblNbrCarsWeatherInfo.TextChanged, lblNbrCarsWeatherClouds.TextChanged, lblNbrCarsRestrictions.TextChanged
@@ -487,6 +484,9 @@ Public Class Main
         End If
 
         lblRestrictWeatherTotalCars.Text = lbl1 + lbl2 + lbl3 + lbl4
+
+        CalculateTotalNbrCars()
+
     End Sub
 
     Private Sub WeatherFieldChangeDetection(sender As Object, e As EventArgs) Handles txtWeatherSummary.Leave, chkUseOnlyWeatherSummary.CheckedChanged
@@ -520,9 +520,11 @@ Public Class Main
     Private Sub txtFlightPlanFile_TextChanged(sender As Object, e As EventArgs) Handles txtFlightPlanFile.TextChanged
 
         If txtFlightPlanFile.Text = String.Empty Then
-            grbTrackInfo.Enabled = False
+            grbTaskInfo.Enabled = False
+            grbTaskPart2.Enabled = False
         Else
-            grbTrackInfo.Enabled = True
+            grbTaskInfo.Enabled = True
+            grbTaskPart2.Enabled = True
         End If
 
     End Sub
@@ -541,10 +543,116 @@ Public Class Main
 
     End Sub
 
+    Private Sub lblNbrCarsFilesText_TextChanged(sender As Object, e As EventArgs) Handles lblNbrCarsFilesText.TextChanged
+
+        CalculateTotalNbrCars()
+
+    End Sub
+
+    Private Sub btnSelectDPHXPackageFile_Click(sender As Object, e As EventArgs) Handles btnSelectDPHXPackageFile.Click
+        If txtFlightPlanFile.Text = String.Empty Then
+            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+        Else
+            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
+        End If
+        OpenFileDialog1.FileName = ""
+        OpenFileDialog1.Title = "Select DPHX package file"
+        OpenFileDialog1.Filter = "DPHX Package|*.dphx"
+        OpenFileDialog1.Multiselect = False
+
+        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+
+        If result = DialogResult.OK Then
+            txtDPHXPackageFilename.Text = OpenFileDialog1.FileName
+        End If
+
+    End Sub
+
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
-        MessageBox.Show(Me, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post", vbOKOnly, MessageBoxIcon.Information)
+        CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+    End Sub
+
+    Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
+        Dim allFiles As New Specialized.StringCollection
+        Dim contentForMessage As New StringBuilder
+
+        contentForMessage.AppendLine("FILES")
+
+        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+            allFiles.Add(txtDPHXPackageFilename.Text)
+            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
+        End If
+        If File.Exists(txtFlightPlanFile.Text) Then
+            allFiles.Add(txtFlightPlanFile.Text)
+            contentForMessage.AppendLine(txtFlightPlanFile.Text)
+        End If
+        If File.Exists(txtWeatherFile.Text) Then
+            allFiles.Add(txtWeatherFile.Text)
+            contentForMessage.AppendLine(txtWeatherFile.Text)
+        End If
+
+        For i = 0 To lstAllFiles.Items.Count() - 1
+            If File.Exists(lstAllFiles.Items(i)) Then
+                allFiles.Add(lstAllFiles.Items(i))
+                contentForMessage.AppendLine(lstAllFiles.Items(i))
+            End If
+        Next
+
+        If allFiles.Count > 0 Then
+            Clipboard.SetFileDropList(allFiles)
+            CopyContent.ShowContent(Me,
+                                    contentForMessage.ToString,
+                                    "Now paste the copied files as the first message in the thread without posting it and come back for the text info (button 2b).",
+                                    "Step 2a - Creating the files post in the thread - actual files first")
+            If _GuideCurrentStep <> 0 Then
+                _GuideCurrentStep += 1
+                ShowGuide()
+            End If
+        Else
+            MessageBox.Show(Me, "No files to copy!", "Step 2a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End If
+
+    End Sub
+
+    Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
+
+        Dim sb As New StringBuilder
+        sb.AppendLine("**Files**")
+
+        'Check if the DPHX package is included
+        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+            sb.AppendLine("If using the *DPHX Unpack & Load* tool (https://discord.gg/ST4uTPU3cT), simply download the DPHX package.")
+            sb.AppendLine("Otherwise, you must download the required files and put them in the proper folders.")
+            sb.AppendLine()
+        Else
+            sb.AppendLine("You must download the required files and put them in the proper folders.")
+        End If
+
+        sb.AppendLine("Required: Flight plan (.pln)")
+        sb.AppendLine("Required: Weather preset (.wpr)")
+
+        'Check if there is a trk file in the files
+        For i = 0 To lstAllFiles.Items.Count() - 1
+            If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
+                sb.AppendLine("Optional: XCSoar Track (.trk) - only if you use the XCSoar program.")
+                Exit For
+            End If
+        Next
+
+        txtFilesText.Text = sb.ToString.Trim
+        sb.Clear()
+
+        Clipboard.SetText(txtFilesText.Text)
+        CopyContent.ShowContent(Me,
+                                txtFilesText.Text,
+                                "Now enter the file info in the first message in the thread and post it. Also pin this message in the thread.",
+                                "Step 2b - Creating the files post in the thread - file info")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -553,71 +661,62 @@ Public Class Main
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
         Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf & ".")
-        MessageBox.Show(Me, "Now paste the content as the second message in the thread!", "Step 2 - Creating secondary post for weather in the thread.", vbOKOnly, MessageBoxIcon.Information)
+        CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Now paste the restrictions and weather content as the next message in the thread!",
+                                "Step 2 - Creating post for restrictions and weather in the thread.")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
 
-    End Sub
-
-    Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
-        Dim allFiles As New Specialized.StringCollection
-
-        If File.Exists(txtFlightPlanFile.Text) Then
-            allFiles.Add(txtFlightPlanFile.Text)
-        End If
-        If File.Exists(txtWeatherFile.Text) Then
-            allFiles.Add(txtWeatherFile.Text)
-        End If
-
-        For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) Then
-                allFiles.Add(lstAllFiles.Items(i))
-            End If
-        Next
-
-        If allFiles.Count > 0 Then
-            Clipboard.SetFileDropList(allFiles)
-            If chkGroupSecondaryPosts.Checked Then
-                MessageBox.Show(Me, "Now paste the copied files as the final message.", "Step 3 - Inserting the files in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-
-            Else
-                MessageBox.Show(Me, "Now paste the copied files as the third message without posting it and come back for the text info (button 3b).", "Step 3a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            End If
-            If _GuideCurrentStep <> 0 Then
-                _GuideCurrentStep += 1
-                ShowGuide()
-            End If
-        Else
-            MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-
-        End If
-
-    End Sub
-
-    Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
-        Clipboard.SetText(txtFilesText.Text)
-        MessageBox.Show(Me, "Now enter the info (legend) in the third message and post it. Also pin this message in the thread.", "Step 3b - Creating the files post in the thread - file info", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        If _GuideCurrentStep <> 0 Then
-            _GuideCurrentStep += 1
-            ShowGuide()
-        End If
     End Sub
 
     Private Sub btnFullDescriptionCopy_Click(sender As Object, e As EventArgs) Handles btnFullDescriptionCopy.Click
 
         If txtFullDescriptionResults.Text.Length = 0 Then
-            MessageBox.Show(Me, "The last message (Full Description) is empty. Cannot proceed!", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(Me, "The full description is empty. Cannot proceed!", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
             Clipboard.SetText(txtFullDescriptionResults.Text)
-            MessageBox.Show(Me, "Now post the last message in the thread to complete your flight plan entry.", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            CopyContent.ShowContent(Me,
+                                txtFullDescriptionResults.Text,
+                                "Now post the full description as the next message in the thread.",
+                                "Step 4 - Creating full description post in the thread.")
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
             End If
         End If
 
+    End Sub
+
+    Private Sub btnWaypointsCopy_Click(sender As Object, e As EventArgs) Handles btnWaypointsCopy.Click
+        Clipboard.SetText(txtWaypointsDetails.Text)
+        CopyContent.ShowContent(Me,
+                                txtWaypointsDetails.Text,
+                                "Now post the waypoints details as the next message in the thread.",
+                                "Step 5 - Creating waypoints post in the thread.")
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
+    End Sub
+
+    Private Sub btnAddOnsCopy_Click(sender As Object, e As EventArgs) Handles btnAddOnsCopy.Click
+        If txtAddOnsDetails.Text.Length = 0 Then
+            MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Else
+            Clipboard.SetText(txtAddOnsDetails.Text)
+            CopyContent.ShowContent(Me,
+                                txtAddOnsDetails.Text,
+                                "Now post the add-ons details as the last message in the thread.",
+                                "Step 6 - Creating add-ons post in the thread.")
+            If _GuideCurrentStep <> 0 Then
+                _GuideCurrentStep += 1
+                ShowGuide()
+            End If
+        End If
     End Sub
 
     Private Sub chkGroupSecondaryPosts_CheckedChanged(sender As Object, e As EventArgs) Handles chkGroupSecondaryPosts.CheckedChanged
@@ -628,13 +727,18 @@ Public Class Main
 
     Private Sub btnCopyAllSecPosts_Click(sender As Object, e As EventArgs) Handles btnCopyAllSecPosts.Click
 
-        Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf &
-                          txtWeatherFirstPart.Text & vbCrLf & vbCrLf &
-                          txtWeatherWinds.Text & vbCrLf & vbCrLf &
-                          txtWeatherClouds.Text & vbCrLf & vbCrLf &
-                          txtFullDescriptionResults.Text & vbCrLf & vbCrLf &
-                          txtFilesText.Text & vbCrLf)
-        MessageBox.Show(Me, "Now paste the content as the second message in the thread!", "Step 2 - Creating secondary post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Clipboard.SetText(_SF.ValueToAppendIfNotEmpty(txtAltRestrictions.Text,,, 2) &
+                          _SF.ValueToAppendIfNotEmpty(txtWeatherFirstPart.Text,,, 2) &
+                          _SF.ValueToAppendIfNotEmpty(txtWeatherWinds.Text,,, 2) &
+                          _SF.ValueToAppendIfNotEmpty(txtWeatherClouds.Text,,, 2) &
+                          _SF.ValueToAppendIfNotEmpty(txtFullDescriptionResults.Text,,, 2) &
+                          _SF.ValueToAppendIfNotEmpty(txtWaypointsDetails.Text,,, 1) &
+                          _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text))
+
+        CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Now paste all remaining content as the next message in the thread!",
+                                "Step 3 - Creating remaining content post in the thread.")
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -647,7 +751,7 @@ Public Class Main
 #Region "Extra files Controls events"
     Private Sub btnAddExtraFile_Click(sender As Object, e As EventArgs) Handles btnAddExtraFile.Click
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = "H: \MSFS WIP Flight plans\"
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -662,7 +766,7 @@ Public Class Main
             For i As Integer = 0 To OpenFileDialog1.FileNames.Count - 1
                 'Check if one of the files is selected flight plan or weather file to exclude them
                 If OpenFileDialog1.FileNames(i) <> txtFlightPlanFile.Text And OpenFileDialog1.FileNames(i) <> txtWeatherFile.Text Then
-                    If lstAllFiles.Items.Count = 8 Then
+                    If lstAllFiles.Items.Count = 7 Then
                         MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit For
                     End If
@@ -723,6 +827,97 @@ Public Class Main
 
 #End Region
 
+#Region "Add-Ons Controls events"
+
+    Private Sub lstAllRecommendedAddOns_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAllRecommendedAddOns.SelectedIndexChanged
+
+        If lstAllRecommendedAddOns.SelectedIndex = -1 Then
+            btnEditSelectedAddOn.Enabled = False
+            btnRemoveSelectedAddOns.Enabled = False
+            btnAddOnUp.Enabled = False
+            btnAddOnDown.Enabled = False
+        ElseIf lstAllRecommendedAddOns.SelectedItems.Count > 1 Then
+            btnEditSelectedAddOn.Enabled = False
+            btnAddOnUp.Enabled = True
+            btnAddOnDown.Enabled = True
+            btnRemoveSelectedAddOns.Enabled = True
+        Else
+            btnEditSelectedAddOn.Enabled = True
+            btnAddOnUp.Enabled = True
+            btnAddOnDown.Enabled = True
+            btnRemoveSelectedAddOns.Enabled = True
+        End If
+
+    End Sub
+
+    Private Sub btnAddRecAddOn_Click(sender As Object, e As EventArgs) Handles btnAddRecAddOn.Click
+
+        Dim addOn As New RecommendedAddOn
+        addOn.Type = RecommendedAddOn.Types.Freeware
+
+        If RecommendedAddOnsForm.ShowForm(Me, addOn, False) = DialogResult.OK Then
+            lstAllRecommendedAddOns.Items.Add(addOn)
+        End If
+
+        'Update recommended add-ons textbox
+        BuildRecAddOnsText()
+
+    End Sub
+
+    Private Sub btnEditSelectedAddOn_Click(sender As Object, e As EventArgs) Handles btnEditSelectedAddOn.Click
+
+        Dim addOn As RecommendedAddOn = lstAllRecommendedAddOns.SelectedItem
+        Dim index As Integer = lstAllRecommendedAddOns.SelectedIndex
+
+        Select Case RecommendedAddOnsForm.ShowForm(Me, addOn, True)
+            Case DialogResult.OK
+                'Save - remove
+                lstAllRecommendedAddOns.Items.RemoveAt(index)
+                ' Re-insert the modified item at the same index
+                lstAllRecommendedAddOns.Items.Insert(index, addOn)
+                lstAllRecommendedAddOns.SelectedIndex = index
+            Case DialogResult.Cancel
+                'Cancel
+        End Select
+
+        'Update recommended add-ons textbox
+        BuildRecAddOnsText()
+
+    End Sub
+
+    Private Sub btnRemoveSelectedAddOns_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedAddOns.Click
+
+        For i As Integer = lstAllRecommendedAddOns.SelectedIndices.Count - 1 To 0 Step -1
+            lstAllRecommendedAddOns.Items.RemoveAt(lstAllRecommendedAddOns.SelectedIndices(i))
+        Next
+
+        'Update recommended add-ons textbox
+        BuildRecAddOnsText()
+
+    End Sub
+
+    Private Sub btnAddOnUp_Click(sender As Object, e As EventArgs) Handles btnAddOnUp.Click
+
+        MoveExtraFilesSelectedItems(-1, lstAllRecommendedAddOns)
+        btnAddOnUp.Focus()
+
+        'Update recommended add-ons textbox
+        BuildRecAddOnsText()
+
+    End Sub
+
+    Private Sub btnAddOnDown_Click(sender As Object, e As EventArgs) Handles btnAddOnDown.Click
+
+        MoveExtraFilesSelectedItems(1, lstAllRecommendedAddOns)
+        btnAddOnDown.Focus()
+
+        'Update recommended add-ons textbox
+        BuildRecAddOnsText()
+
+    End Sub
+
+#End Region
+
 #Region "Country controls events"
 
     Private Sub btnAddCountry_Click(sender As Object, e As EventArgs) Handles btnAddCountry.Click
@@ -754,6 +949,32 @@ Public Class Main
 #End Region
 
 #Region "Flight Plan tab Subs & Functions"
+
+    Private Sub BuildRecAddOnsText()
+
+        Dim sb As New StringBuilder
+
+        If lstAllRecommendedAddOns.Items.Count > 0 Then
+            sb.AppendLine("**Recommended add-ons**")
+            For Each addOn As RecommendedAddOn In lstAllRecommendedAddOns.Items
+                sb.AppendLine($"{addOn.Name} ({addOn.Type.ToString}) {addOn.URL}")
+            Next
+        End If
+
+        txtAddOnsDetails.Text = sb.ToString
+
+    End Sub
+
+    Private Sub CalculateTotalNbrCars()
+
+        Dim intNbrCarAltWeather As Integer = _SF.GetIntegerFromString(lblRestrictWeatherTotalCars.Text)
+        Dim intNbrCarFullDesc As Integer = _SF.GetIntegerFromString(lblNbrCarsFullDescResults.Text)
+        Dim intNbrCarWaypoints As Integer = _SF.GetIntegerFromString(lblWaypointsTotalCars.Text)
+        Dim intNbrCarAddOns As Integer = _SF.GetIntegerFromString(lblAddOnsTotalCars.Text)
+
+        lblAllSecPostsTotalCars.Text = (intNbrCarAltWeather + intNbrCarFullDesc + intNbrCarWaypoints + intNbrCarAddOns).ToString
+
+    End Sub
 
     Private Sub BuildFPResults()
 
@@ -792,13 +1013,7 @@ Public Class Main
             txtFullDescriptionResults.Text = String.Empty
         End If
 
-        If chkAddWPCoords.Checked Then
-            'Add waypoints information to the description
-            If txtLongDescription.Text.Trim.Length > 0 Then
-                txtFullDescriptionResults.AppendText($"{Environment.NewLine}{Environment.NewLine}")
-            End If
-            txtFullDescriptionResults.AppendText(_SF.GetAllWPCoordinates())
-        End If
+        txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
 
     End Sub
 
@@ -925,16 +1140,97 @@ Public Class Main
         If chkGroupSecondaryPosts.Checked Then
             btnCopyAllSecPosts.Visible = True
             btnAltRestricCopy.Visible = False
-            btnFilesTextCopy.Visible = False
+            btnWaypointsCopy.Visible = False
+            btnAddOnsCopy.Visible = False
             btnFullDescriptionCopy.Visible = False
-            btnFilesCopy.Text = "3. Files to clipboard"
+            If pnlWizardDiscord.Visible AndAlso _GuideCurrentStep >= 44 AndAlso _GuideCurrentStep < 59 Then
+                _GuideCurrentStep = 44
+                ShowGuide()
+            End If
         Else
             btnCopyAllSecPosts.Visible = False
             btnAltRestricCopy.Visible = True
-            btnFilesTextCopy.Visible = True
+            btnWaypointsCopy.Visible = True
+            btnAddOnsCopy.Visible = True
             btnFullDescriptionCopy.Visible = True
-            btnFilesCopy.Text = "3a. Files to clipboard"
+            If pnlWizardDiscord.Visible AndAlso _GuideCurrentStep = 58 Then
+                _GuideCurrentStep = 44
+                ShowGuide()
+            End If
         End If
+
+        NbrCarsCheckDiscordLimit(lblAllSecPostsTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblRestrictWeatherTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblNbrCarsFullDescResults, True)
+        NbrCarsCheckDiscordLimit(lblWaypointsTotalCars, True)
+        NbrCarsCheckDiscordLimit(lblAddOnsTotalCars, False)
+
+    End Sub
+
+    Private Sub NbrCarsCheckDiscordLimit(lblLabel As Windows.Forms.Label, Optional skipSetHeight As Boolean = False)
+
+        Select Case CInt(lblLabel.Text)
+            Case > DiscordLimit
+                lblLabel.Visible = True
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style Or FontStyle.Bold)
+            Case > DiscordLimit - 200
+                lblLabel.Visible = True
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
+            Case Else
+                lblLabel.Visible = False
+                lblLabel.Font = New Font(lblLabel.Font, lblLabel.Font.Style And Not FontStyle.Bold)
+        End Select
+
+        If chkGroupSecondaryPosts.Checked Then
+            Select Case lblLabel.Name
+                Case "lblRestrictWeatherTotalCars"
+                    lblLabel.Visible = False
+                Case "lblNbrCarsFullDescResults"
+                    lblLabel.Visible = False
+                Case "lblWaypointsTotalCars"
+                    lblLabel.Visible = False
+                Case "lblAddOnsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        Else
+            Select Case lblLabel.Name
+                Case "lblAllSecPostsTotalCars"
+                    lblLabel.Visible = False
+            End Select
+        End If
+
+        If Not skipSetHeight Then
+            SetDiscordTaskThreadHeight()
+        End If
+    End Sub
+
+    Private Sub SetDiscordTaskThreadHeight()
+
+        Dim height As Integer = 0
+
+        If chkGroupSecondaryPosts.Checked Then
+            height = 57
+            If lblAllSecPostsTotalCars.Visible Then
+                height += 26
+            End If
+        Else
+            height = 57 * 4
+            If lblRestrictWeatherTotalCars.Visible Then
+                height += 26
+            End If
+            If lblNbrCarsFullDescResults.Visible Then
+                height += 26
+            End If
+            If lblWaypointsTotalCars.Visible Then
+                height += 26
+            End If
+            If lblAddOnsTotalCars.Visible Then
+                height += 26
+            End If
+        End If
+
+        grpDiscordTaskThread.Height = height + 168
+        grpDiscordTask.Height = grpDiscordTaskThread.Height + 145
 
     End Sub
 
@@ -1228,7 +1524,7 @@ Public Class Main
 
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
-        grpDiscordEvent.Enabled = chkActivateEvent.Checked
+        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
     End Sub
 
 #End Region
@@ -1506,7 +1802,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnGuideNext_Click(sender As Object, e As EventArgs) Handles btnGuideNext.Click, btnEventGuideNext.Click
+    Private Sub btnGuideNext_Click(sender As Object, e As EventArgs) Handles btnGuideNext.Click, btnEventGuideNext.Click, btnDiscordGuideNext.Click
 
         _GuideCurrentStep += 1
         ShowGuide()
@@ -1554,7 +1850,7 @@ Public Class Main
                 btnTurnGuideOff.Visible = False
             Case 1 'Select flight plan
                 SetGuidePanelToLeft()
-                pnlGuide.Top = -9
+                pnlGuide.Top = -3
                 lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
                 SetFocusOnField(btnSelectFlightPlan, fromF1Key)
             Case 2 'Select weather file
@@ -1632,65 +1928,114 @@ Public Class Main
                 pnlGuide.Top = 627
                 lblGuideInstructions.Text = "Optionally, you should provide a more detailed description of the task. Context, history, hints, tips, tricks around waypoints, etc. Also possible to add waypoint coordinates."
                 SetFocusOnField(txtLongDescription, fromF1Key)
-            Case 17 'Weather summary
-                SetGuidePanelToLeft()
-                pnlGuide.Top = 942
+            Case 17 'Countries
+                SetGuidePanelToRight()
+                pnlGuide.Top = 88
+                lblGuideInstructions.Text = "Countries to show in the topic should be read from the waypoints, but you can optionally specify them yourself here."
+                SetFocusOnField(cboCountryFlag, fromF1Key)
+            Case 18 'Weather summary
+                SetGuidePanelToRight()
+                pnlGuide.Top = 163
                 lblGuideInstructions.Text = "Optional weather summary. If you don't want the full weather details to be included, tick the checkbox to the left. Only the summary will then be shown."
                 SetFocusOnField(txtWeatherSummary, fromF1Key)
-            Case 18 'Extra files
-                SetGuidePanelToLeft()
-                Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
-                pnlGuide.Top = 1006
+            Case 19 'Recommended add-ons
+                SetGuidePanelToRight()
+                pnlGuide.Top = 247
+                lblGuideInstructions.Text = "You can optionally recommend add-ons that go well with this task. Use this section to add, edit and remove recommended add-ons."
+                SetFocusOnField(btnAddRecAddOn, fromF1Key)
+            Case 20 'Extra files
+                SetGuidePanelToRight()
+                pnlGuide.Top = 414
                 lblGuideInstructions.Text = "Optionally, use this section to add and remove any extra files you want included with the task post. Maps, XCSoar track files, other images, etc."
                 SetFocusOnField(btnAddExtraFile, fromF1Key)
-            Case 19 'Save & Load
-                SetGuidePanelToTop()
-                pnlGuide.Left = 572
+            Case 21 'DPHX Package
+                SetGuidePanelToRight()
+                pnlGuide.Top = 524
+                lblGuideInstructions.Text = "When you are done and select to share a DPHX package of this task, use this section to select it and include it with the post."
+                SetFocusOnField(btnSelectDPHXPackageFile, fromF1Key)
+                _GuideCurrentStep = 29
+
+            Case 30 'Reset All
+                SetGuidePanelToTopArrowLeftSide()
+                pnlGuide.Left = btnReset.Left
+                lblGuideInstructions.Text = "If you want to start from a clean slate, click this button to reset/initialize EVERYTHING."
+                SetFocusOnField(btnReset, fromF1Key)
+            Case 31 'Save & Load
+                SetGuidePanelToTopArrowLeftSide()
+                pnlGuide.Left = btnLoadConfig.Left
                 lblGuideInstructions.Text = "Whenever you like, you can Save your current track's data to your computer and Load it back when you are ready to continue working on it."
                 SetFocusOnField(btnSaveConfig, fromF1Key)
-            Case 20 'Share package
-                SetGuidePanelToTop()
-                pnlGuide.Left = 700
-                lblGuideInstructions.Text = "You can also share your task's data and all the files by creating a package which you can zip and send to someone else."
+            Case 32 'Share package
+                SetGuidePanelToTopArrowRightSide()
+                pnlGuide.Left = (btnCreateShareablePack.Left + btnCreateShareablePack.Size.Width) - pnlGuide.Size.Width
+                lblGuideInstructions.Text = "You can also share your task's data and all the files by creating a DPHX package which you can zip and send to anybody."
                 SetFocusOnField(btnCreateShareablePack, fromF1Key)
-            Case 21 'Create FP post
-                SetGuidePanelToRight()
-                pnlGuide.Top = 21
-                lblGuideInstructions.Text = "You are now ready to create the task's primary post in Discord. Click this button to copy the content to your clipboard and receive instructions."
+            Case 33 'Open B21
+                SetGuidePanelToTopArrowRightSide()
+                pnlGuide.Left = (btnLoadB21Planner.Left + btnLoadB21Planner.Size.Width) - pnlGuide.Size.Width
+                lblGuideInstructions.Text = "You can open your current task using the B21 Task Planner by clicking this button."
+                SetFocusOnField(btnLoadB21Planner, fromF1Key)
+                _GuideCurrentStep = 38
+
+            Case 39 'Ready to post ?
+                If MessageBox.Show(Me, "The task's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    _GuideCurrentStep += 1
+                Else
+                    _GuideCurrentStep = 999
+                End If
+                ShowGuide()
+
+            Case 40 'Create FP post
+                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 38
+                lblDiscordGuideInstructions.Text = "You are now ready to create the task's primary post in Discord. Click this button to copy the content to your clipboard and receive instructions."
                 SetFocusOnField(btnFPMainInfoCopy, fromF1Key)
-            Case 22 'Create Restrictions and Weather post
-                SetGuidePanelToRight()
-                pnlGuide.Top = 392
-                lblGuideInstructions.Text = "Once you've created the primary post and the thread on Discord, click this second button and receive instructions for the next post."
-                SetFocusOnField(btnAltRestricCopy, fromF1Key)
-            Case 23 'Copy Files
-                SetGuidePanelToRight()
-                pnlGuide.Top = 899
-                lblGuideInstructions.Text = "Once you've created the second post, click this button to put the files into your clipboard and receive instructions."
+            Case 41 'Copy Files
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 151
+                lblDiscordGuideInstructions.Text = "Once you've created the primary post and thread on Discord, click this button to put the files into your clipboard and receive instructions."
                 SetFocusOnField(btnFilesCopy, fromF1Key)
-            Case 24 'Copy Files Legend
-                If Not chkGroupSecondaryPosts.Checked Then
-                    SetGuidePanelToRight()
-                    pnlGuide.Top = 954
-                    lblGuideInstructions.Text = "Once you've pasted the actual files in Discord, click this button to put the standard legend into your clipboard and receive instructions."
-                    SetFocusOnField(btnFilesTextCopy, fromF1Key)
-                Else
-                    _GuideCurrentStep += 1
-                    ShowGuide()
-                End If
+            Case 42 'Copy Files Legend
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 206
+                lblDiscordGuideInstructions.Text = "Once you've pasted the files in Discord, click this button to put the standard legend into your clipboard and receive instructions."
+                SetFocusOnField(btnFilesTextCopy, fromF1Key)
+            Case 43 'Merge remaining content
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 249
+                lblDiscordGuideInstructions.Text = "You can select to merge all remaining content in a single post, depending also on the size. Or, you can do individual posts in the thread."
+                SetFocusOnField(chkGroupSecondaryPosts, fromF1Key)
+            Case 44 'Remaining content OR Restrictions & Weather
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 293
+                If chkGroupSecondaryPosts.Checked Then
+                    lblDiscordGuideInstructions.Text = "You can now create the last post with all remaining task information. Watch out for Discord's post size limit!"
+                    SetFocusOnField(btnCopyAllSecPosts, fromF1Key)
+                    _GuideCurrentStep = 58
 
-            Case 25 'Copy Description
-                If Not chkGroupSecondaryPosts.Checked Then
-                    SetGuidePanelToRight()
-                    pnlGuide.Top = 1027
-                    lblGuideInstructions.Text = "One last step, click this button to copy the full description to your clipboard and receive instructions."
-                    SetFocusOnField(btnFullDescriptionCopy, fromF1Key)
                 Else
-                    _GuideCurrentStep += 1
-                    ShowGuide()
+                    lblDiscordGuideInstructions.Text = "Altitude Restrictions and Weather info - You can click this button and receive instructions for this next post."
+                    SetFocusOnField(btnAltRestricCopy, fromF1Key)
                 End If
+            Case 45 'Copy Description
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = btnFullDescriptionCopy.Top + 150
+                lblDiscordGuideInstructions.Text = "Click this button to copy the full description to your clipboard and receive instructions."
+                SetFocusOnField(btnFullDescriptionCopy, fromF1Key)
+            Case 46 'Waypoints
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = btnWaypointsCopy.Top + 150
+                lblDiscordGuideInstructions.Text = "Click this button to copy the waypoints details (very useful for xBox users) to your clipboard and receive instructions."
+                SetFocusOnField(btnWaypointsCopy, fromF1Key)
+            Case 47 'Recommended add-ons
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = btnAddOnsCopy.Top + 150
+                lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
+                SetFocusOnField(btnAddOnsCopy, fromF1Key)
+                _GuideCurrentStep = 58
 
-            Case 26 'Event
+            Case 59
                 If MessageBox.Show(Me, "The task's details are all posted. Are you also creating the group flight post on Discord?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     chkActivateEvent.Checked = True
                     _GuideCurrentStep += 1
@@ -1699,7 +2044,7 @@ Public Class Main
                 End If
                 ShowGuide()
 
-            Case 27 'Event
+            Case 60 'Event
                 'Resume wizard on the Event tab
                 TabControl1.SelectedTab = TabControl1.TabPages("tabEvent")
                 SetEventGuidePanelToLeft()
@@ -1707,91 +2052,101 @@ Public Class Main
                 lblEventGuideInstructions.Text = "Start by selecting the soaring club or known group for which you want to create a new event, if this applies to you."
                 SetFocusOnField(cboGroupOrClubName, fromF1Key)
 
-            Case 28 'Group flight title / topic
+            Case 61 'Group flight title / topic
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 108
                 lblEventGuideInstructions.Text = "If you would like to specify a different title for the group flight, you can do so now. Otherwise, this is the same as the task's title."
                 SetFocusOnField(txtEventTitle, fromF1Key)
 
-            Case 29 'MSFS Server
+            Case 62 'MSFS Server
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 143
                 lblEventGuideInstructions.Text = "Specify the MSFS Server to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboMSFSServer, fromF1Key)
 
-            Case 30 'Voice channel
+            Case 63 'Voice channel
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 179
                 lblEventGuideInstructions.Text = "Specify the Discord Voice channel to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboVoiceChannel, fromF1Key)
 
-            Case 31 'UTC Zulu
+            Case 64 'UTC Zulu
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 212
                 lblEventGuideInstructions.Text = "For the sake of simplicity, leave this checkbox ticked to use UTC (Zulu) entries. Local times are still displayed to the right."
                 SetFocusOnField(chkDateTimeUTC, fromF1Key)
 
-            Case 32 'Meet time
+            Case 65 'Meet time
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 251
                 lblEventGuideInstructions.Text = "Specify the meet date and time. This is the time when people will start gathering for the group flight and briefing."
                 SetFocusOnField(dtEventMeetDate, fromF1Key)
 
-            Case 33 'Sync Fly
+            Case 66 'Sync Fly
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 280
                 lblEventGuideInstructions.Text = "Only if the flight's conditions require a synchronized click ""Fly"", then tick the ""Yes"" checkbox and specify when it will happen."
                 SetFocusOnField(chkUseSyncFly, fromF1Key)
 
-            Case 34 'Launch Time
+            Case 67 'Launch Time
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 315
                 lblEventGuideInstructions.Text = "If you want to specify the time when people should start to launch from the airfield, tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseLaunch, fromF1Key)
 
-            Case 35 'Start Task Time
+            Case 68 'Start Task Time
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 349
                 lblEventGuideInstructions.Text = "If you want to specify a time for the start of the task (going through the start gate), tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseStart, fromF1Key)
 
-            Case 36 'Group flight description
+            Case 69 'Group flight description
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 394
                 lblEventGuideInstructions.Text = "If you would like to specify a different description for the group flight, you can do so now. Otherwise, this is the same as the task's short description."
                 SetFocusOnField(txtEventDescription, fromF1Key)
 
-            Case 37 'SSC Award
+            Case 70 'SSC Award
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 441
+                pnlWizardEvent.Top = 532
                 lblEventGuideInstructions.Text = "This is usually set automatically if the club is SSC Saturday and depending on the task's distance. You should leave it alone, unless it's incorrect."
                 SetFocusOnField(cboEligibleAward, fromF1Key)
 
-            Case 38 'Task URL
+            Case 71 'Task URL
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 477
+                pnlWizardEvent.Top = 563
                 lblEventGuideInstructions.Text = "In Discord, find the published task's main post (created earlier) and copy the link to that post (usually by using the ... menu associated with the post). Then click Paste here."
                 SetFocusOnField(btnTaskFPURLPaste, fromF1Key)
 
-            Case 39 'GotGravel Invite
+            Case 72 'GotGravel Invite
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 512
+                pnlWizardEvent.Top = 593
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you have the option to include an invite to the server along with the group flight info. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
+                _GuideCurrentStep = 78
 
-            Case 40 'Group flight post - files
-                SetEventGuidePanelToRight()
-                pnlWizardEvent.Top = 34
-                lblEventGuideInstructions.Text = "You are now ready to create the group flight post in Discord. Optionnaly, you can click this button to first put the files into your clipboard and receive instructions."
+            Case 79 'Ready to post ?
+                If MessageBox.Show(Me, "The group flight's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    _GuideCurrentStep += 1
+                Else
+                    _GuideCurrentStep = 999
+                End If
+                ShowGuide()
+
+            Case 80 'Create Group Flight post
+                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 108
+                lblDiscordGuideInstructions.Text = "You are now ready to create the group flight post in Discord. Optionnaly, you can click this button to first put the files into your clipboard and receive instructions."
                 SetFocusOnField(btnCopyReqFilesToClipboard, fromF1Key)
 
-            Case 41 'Group flight post
-                SetEventGuidePanelToRight()
-                pnlWizardEvent.Top = 149
-                lblEventGuideInstructions.Text = "Now click this button to copy the group flight's post content and receive instructions."
+            Case 81 'Group flight post
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 164
+                lblDiscordGuideInstructions.Text = "Now click this button to copy the group flight's post content and receive instructions."
                 SetFocusOnField(btnGroupFlightEventInfoToClipboard, fromF1Key)
 
-            Case 42 'Discord Event
+            Case 82 'Discord Event
                 If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     _GuideCurrentStep += 1
                 Else
@@ -1799,60 +2154,61 @@ Public Class Main
                 End If
                 ShowGuide()
 
-            Case 43 'Group flight post
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 705
-                lblEventGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
+            Case 83 'Group flight post
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 249
+                lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
                 SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
 
-            Case 44 'Create Discord Event
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 750
-                lblEventGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
+            Case 84 'Create Discord Event
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 296
+                lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 45 'Select voice channel for event
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 792
-                lblEventGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
+            Case 85 'Select voice channel for event
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 341
+                lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 46 'Topic name
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 832
-                lblEventGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
+            Case 86 'Topic name
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 381
+                lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventTopicClipboard, fromF1Key)
 
-            Case 47 'Event date & time
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 875
-                lblEventGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
+            Case 87 'Event date & time
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 418
+                lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 48 'Event description
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 918
-                lblEventGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
+            Case 88 'Event description
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 463
+                lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
-            Case 49 'Cover image
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 958
-                lblEventGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
+            Case 89 'Cover image
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 506
+                lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 50 'Cover image
-                SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 1003
-                lblEventGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
+            Case 90 'Preview and publish
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 549
+                lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case Else
                 _GuideCurrentStep = 0
                 pnlGuide.Visible = False
                 pnlWizardEvent.Visible = False
+                pnlWizardDiscord.Visible = False
                 btnTurnGuideOff.Visible = False
-                MessageBox.Show(Me, "The wizard's guidance ends here! If you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Select
     End Sub
 
@@ -1866,8 +2222,9 @@ Public Class Main
 
     Private Sub SetGuidePanelToLeft()
         pnlWizardEvent.Visible = False
+        pnlWizardDiscord.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
-        pnlGuide.Left = 737
+        pnlGuide.Left = 718
         pnlGuide.Visible = True
         pnlArrow.Left = -6
         pnlArrow.Top = 0
@@ -1875,8 +2232,9 @@ Public Class Main
         btnGuideNext.Top = 3
     End Sub
 
-    Private Sub SetGuidePanelToTop()
+    Private Sub SetGuidePanelToTopArrowLeftSide()
         pnlWizardEvent.Visible = False
+        pnlWizardDiscord.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
         pnlGuide.Top = 0
         pnlGuide.Visible = True
@@ -1886,10 +2244,23 @@ Public Class Main
         btnGuideNext.Top = 3
     End Sub
 
+    Private Sub SetGuidePanelToTopArrowRightSide()
+        pnlWizardEvent.Visible = False
+        pnlWizardDiscord.Visible = False
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
+        pnlGuide.Top = 0
+        pnlGuide.Visible = True
+        pnlArrow.Left = 667
+        pnlArrow.Top = 0
+        btnGuideNext.Left = 3
+        btnGuideNext.Top = 3
+    End Sub
+
     Private Sub SetGuidePanelToRight()
         pnlWizardEvent.Visible = False
+        pnlWizardDiscord.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
-        pnlGuide.Left = 737
+        pnlGuide.Left = 0
         pnlGuide.Visible = True
         pnlArrow.Left = 667
         pnlArrow.Top = 0
@@ -1899,26 +2270,52 @@ Public Class Main
 
     Private Sub SetEventGuidePanelToLeft()
         pnlGuide.Visible = False
+        pnlWizardDiscord.Visible = False
         Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
-        pnlWizardEvent.Left = 852
+        pnlWizardEvent.Left = 849
         pnlWizardEvent.Visible = True
         pnlEventArrow.Left = -6
         pnlEventArrow.Top = 0
-        btnEventGuideNext.Left = 674
+        btnEventGuideNext.Left = 552
         btnEventGuideNext.Top = 3
     End Sub
 
     Private Sub SetEventGuidePanelToRight()
         pnlGuide.Visible = False
+        pnlWizardDiscord.Visible = False
         Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
-        pnlWizardEvent.Left = 740
+        pnlWizardEvent.Left = 849
         pnlWizardEvent.Visible = True
-        pnlEventArrow.Left = 667
+        pnlEventArrow.Left = 545
         pnlEventArrow.Top = 0
         btnEventGuideNext.Left = 3
         btnEventGuideNext.Top = 3
     End Sub
 
+    Private Sub SetDiscordGuidePanelToLeft()
+        pnlGuide.Visible = False
+        pnlWizardEvent.Visible = False
+        Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
+        pnlWizardDiscord.Left = 405
+        pnlWizardDiscord.Visible = True
+        pnlDiscordArrow.Left = -6
+        pnlDiscordArrow.Top = 0
+        btnDiscordGuideNext.Left = 674
+        btnDiscordGuideNext.Top = 3
+    End Sub
+
+    Private Sub SetDiscordGuidePanelToTopArrowLeftSide()
+        pnlGuide.Visible = False
+        pnlWizardEvent.Visible = False
+        Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
+        pnlWizardDiscord.Left = 709
+        pnlWizardDiscord.Visible = True
+        pnlDiscordArrow.Left = -6
+        pnlDiscordArrow.Top = 0
+        btnDiscordGuideNext.Left = 674
+        btnDiscordGuideNext.Top = 3
+
+    End Sub
 
 #End Region
 
@@ -2120,7 +2517,6 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
-            .AddWPCoordinates = chkAddWPCoords.Checked
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
@@ -2130,6 +2526,11 @@ Public Class Main
             For i As Integer = 0 To lstAllCountries.Items.Count - 1
                 .Countries.Add(lstAllCountries.Items(i))
             Next
+            For i As Integer = 0 To lstAllRecommendedAddOns.Items.Count - 1
+                .RecommendedAddOns.Add(lstAllRecommendedAddOns.Items(i))
+            Next
+            .IncludeDPHXPackage = chkDPHXPackageInclude.Checked
+            .DPHXPackageFilename = txtDPHXPackageFilename.Text
             .EventEnabled = chkActivateEvent.Checked
             .GroupClub = cboGroupOrClubName.Text
             .EventTopic = txtEventTitle.Text
@@ -2226,7 +2627,6 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
-                chkAddWPCoords.Checked = .AddWPCoordinates
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
                 If .ExtraFiles.Count > 0 Then
@@ -2251,6 +2651,15 @@ Public Class Main
                             lstAllCountries.Items.Add(.Countries(i))
                         End If
                     Next
+                End If
+                If .RecommendedAddOns.Count > 0 Then
+                    For i As Integer = 0 To .RecommendedAddOns.Count - 1
+                        lstAllRecommendedAddOns.Items.Add(.RecommendedAddOns(i))
+                    Next
+                End If
+                If File.Exists(.DPHXPackageFilename) Then
+                    chkDPHXPackageInclude.Checked = .IncludeDPHXPackage
+                    txtDPHXPackageFilename.Text = .DPHXPackageFilename
                 End If
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClub
@@ -2279,13 +2688,13 @@ Public Class Main
 
             BuildFPResults()
             BuildWeatherInfoResults()
+            BuildRecAddOnsText()
             BuildGroupFlightPost()
             BuildDiscordEventDescription()
 
         End If
 
     End Sub
-
 
 #End Region
 

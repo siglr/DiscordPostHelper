@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.16.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.17.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.17.1</ReleaseVersion>
+      <ReleaseTitle>New Add-ons tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release focuses on the addition of the Add-ons tab to list recommendeded add-ons. Double-click the URL to open it.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.16.1</ReleaseVersion>
       <ReleaseTitle>Fix Flight Plan folder not working in Settings</ReleaseTitle>
