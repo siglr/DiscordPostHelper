@@ -29,6 +29,9 @@ Partial Class BriefingControl
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
         Me.mapSplitterUpDown = New System.Windows.Forms.SplitContainer()
+        Me.mapAndWindLayersSplitter = New System.Windows.Forms.SplitContainer()
+        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
+        Me.windLayersFlowLayoutPnl = New System.Windows.Forms.FlowLayoutPanel()
         Me.mapSplitterLeftRight = New System.Windows.Forms.SplitContainer()
         Me.txtFullDescription = New System.Windows.Forms.RichTextBox()
         Me.restrictionsDataGrid = New System.Windows.Forms.DataGridView()
@@ -53,9 +56,8 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.mapAndWindLayersSplitter = New System.Windows.Forms.SplitContainer()
-        Me.imageViewer = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
-        Me.windLayersFlowLayoutPnl = New System.Windows.Forms.FlowLayoutPanel()
+        Me.tbpgAddOns = New System.Windows.Forms.TabPage()
+        Me.AddOnsDataGrid = New System.Windows.Forms.DataGridView()
         Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
@@ -68,6 +70,10 @@ Partial Class BriefingControl
         Me.mapSplitterUpDown.Panel1.SuspendLayout()
         Me.mapSplitterUpDown.Panel2.SuspendLayout()
         Me.mapSplitterUpDown.SuspendLayout()
+        CType(Me.mapAndWindLayersSplitter, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mapAndWindLayersSplitter.Panel1.SuspendLayout()
+        Me.mapAndWindLayersSplitter.Panel2.SuspendLayout()
+        Me.mapAndWindLayersSplitter.SuspendLayout()
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mapSplitterLeftRight.Panel1.SuspendLayout()
         Me.mapSplitterLeftRight.Panel2.SuspendLayout()
@@ -85,10 +91,8 @@ Partial Class BriefingControl
         Me.imagesTabDivider.SuspendLayout()
         Me.tbpgXBOX.SuspendLayout()
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.mapAndWindLayersSplitter, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.mapAndWindLayersSplitter.Panel1.SuspendLayout()
-        Me.mapAndWindLayersSplitter.Panel2.SuspendLayout()
-        Me.mapAndWindLayersSplitter.SuspendLayout()
+        Me.tbpgAddOns.SuspendLayout()
+        CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -109,6 +113,7 @@ Partial Class BriefingControl
         Me.tabsBriefing.Controls.Add(Me.tbpgEventInfo)
         Me.tabsBriefing.Controls.Add(Me.tbpgImages)
         Me.tabsBriefing.Controls.Add(Me.tbpgXBOX)
+        Me.tabsBriefing.Controls.Add(Me.tbpgAddOns)
         Me.tabsBriefing.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tabsBriefing.Location = New System.Drawing.Point(7, 8)
         Me.tabsBriefing.Name = "tabsBriefing"
@@ -168,9 +173,51 @@ Partial Class BriefingControl
         'mapSplitterUpDown.Panel2
         '
         Me.mapSplitterUpDown.Panel2.Controls.Add(Me.mapSplitterLeftRight)
-        Me.mapSplitterUpDown.Size = New System.Drawing.Size(976, 704)
-        Me.mapSplitterUpDown.SplitterDistance = 324
+        Me.mapSplitterUpDown.Size = New System.Drawing.Size(976, 711)
+        Me.mapSplitterUpDown.SplitterDistance = 327
         Me.mapSplitterUpDown.TabIndex = 0
+        '
+        'mapAndWindLayersSplitter
+        '
+        Me.mapAndWindLayersSplitter.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.mapAndWindLayersSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.mapAndWindLayersSplitter.IsSplitterFixed = True
+        Me.mapAndWindLayersSplitter.Location = New System.Drawing.Point(0, 0)
+        Me.mapAndWindLayersSplitter.Name = "mapAndWindLayersSplitter"
+        '
+        'mapAndWindLayersSplitter.Panel1
+        '
+        Me.mapAndWindLayersSplitter.Panel1.Controls.Add(Me.imageViewer)
+        Me.mapAndWindLayersSplitter.Panel1MinSize = 500
+        '
+        'mapAndWindLayersSplitter.Panel2
+        '
+        Me.mapAndWindLayersSplitter.Panel2.Controls.Add(Me.windLayersFlowLayoutPnl)
+        Me.mapAndWindLayersSplitter.Panel2MinSize = 100
+        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(976, 327)
+        Me.mapAndWindLayersSplitter.SplitterDistance = 715
+        Me.mapAndWindLayersSplitter.TabIndex = 0
+        '
+        'imageViewer
+        '
+        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
+        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.imageViewer.Name = "imageViewer"
+        Me.imageViewer.Size = New System.Drawing.Size(715, 327)
+        Me.imageViewer.TabIndex = 1
+        '
+        'windLayersFlowLayoutPnl
+        '
+        Me.windLayersFlowLayoutPnl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.windLayersFlowLayoutPnl.AutoScroll = True
+        Me.windLayersFlowLayoutPnl.Location = New System.Drawing.Point(0, 0)
+        Me.windLayersFlowLayoutPnl.Name = "windLayersFlowLayoutPnl"
+        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(257, 327)
+        Me.windLayersFlowLayoutPnl.TabIndex = 0
         '
         'mapSplitterLeftRight
         '
@@ -185,7 +232,7 @@ Partial Class BriefingControl
         'mapSplitterLeftRight.Panel2
         '
         Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.restrictionsDataGrid)
-        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 376)
+        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 380)
         Me.mapSplitterLeftRight.SplitterDistance = 650
         Me.mapSplitterLeftRight.TabIndex = 0
         '
@@ -195,7 +242,7 @@ Partial Class BriefingControl
         Me.txtFullDescription.Location = New System.Drawing.Point(0, 0)
         Me.txtFullDescription.Name = "txtFullDescription"
         Me.txtFullDescription.ReadOnly = True
-        Me.txtFullDescription.Size = New System.Drawing.Size(650, 376)
+        Me.txtFullDescription.Size = New System.Drawing.Size(650, 380)
         Me.txtFullDescription.TabIndex = 0
         Me.txtFullDescription.Text = ""
         '
@@ -203,6 +250,7 @@ Partial Class BriefingControl
         '
         Me.restrictionsDataGrid.AllowUserToAddRows = False
         Me.restrictionsDataGrid.AllowUserToDeleteRows = False
+        Me.restrictionsDataGrid.AllowUserToResizeRows = False
         Me.restrictionsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.restrictionsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.restrictionsDataGrid.ColumnHeadersVisible = False
@@ -213,7 +261,7 @@ Partial Class BriefingControl
         Me.restrictionsDataGrid.RowHeadersVisible = False
         Me.restrictionsDataGrid.RowHeadersWidth = 47
         Me.restrictionsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 376)
+        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 380)
         Me.restrictionsDataGrid.TabIndex = 1
         '
         'tbpgEventInfo
@@ -369,7 +417,7 @@ Partial Class BriefingControl
         '
         Me.imagesTabDivider.Panel2.Controls.Add(Me.imagesListView)
         Me.imagesTabDivider.Panel2MinSize = 100
-        Me.imagesTabDivider.Size = New System.Drawing.Size(982, 710)
+        Me.imagesTabDivider.Size = New System.Drawing.Size(982, 717)
         Me.imagesTabDivider.SplitterDistance = 814
         Me.imagesTabDivider.TabIndex = 0
         '
@@ -380,7 +428,7 @@ Partial Class BriefingControl
         Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
         Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 717)
         Me.imagesTabViewerControl.TabIndex = 0
         '
         'imagesListView
@@ -391,7 +439,7 @@ Partial Class BriefingControl
         Me.imagesListView.Location = New System.Drawing.Point(0, 0)
         Me.imagesListView.MultiSelect = False
         Me.imagesListView.Name = "imagesListView"
-        Me.imagesListView.Size = New System.Drawing.Size(164, 710)
+        Me.imagesListView.Size = New System.Drawing.Size(164, 717)
         Me.imagesListView.TabIndex = 0
         Me.imagesListView.UseCompatibleStateImageBehavior = False
         '
@@ -445,6 +493,7 @@ Partial Class BriefingControl
         '
         Me.waypointCoordinatesDataGrid.AllowUserToAddRows = False
         Me.waypointCoordinatesDataGrid.AllowUserToDeleteRows = False
+        Me.waypointCoordinatesDataGrid.AllowUserToResizeRows = False
         Me.waypointCoordinatesDataGrid.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -460,47 +509,32 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'mapAndWindLayersSplitter
+        'tbpgAddOns
         '
-        Me.mapAndWindLayersSplitter.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.mapAndWindLayersSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
-        Me.mapAndWindLayersSplitter.IsSplitterFixed = True
-        Me.mapAndWindLayersSplitter.Location = New System.Drawing.Point(0, 0)
-        Me.mapAndWindLayersSplitter.Name = "mapAndWindLayersSplitter"
+        Me.tbpgAddOns.Controls.Add(Me.AddOnsDataGrid)
+        Me.tbpgAddOns.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgAddOns.Name = "tbpgAddOns"
+        Me.tbpgAddOns.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgAddOns.TabIndex = 5
+        Me.tbpgAddOns.Text = "Add-ons"
+        Me.tbpgAddOns.UseVisualStyleBackColor = True
         '
-        'mapAndWindLayersSplitter.Panel1
+        'AddOnsDataGrid
         '
-        Me.mapAndWindLayersSplitter.Panel1.Controls.Add(Me.imageViewer)
-        Me.mapAndWindLayersSplitter.Panel1MinSize = 500
-        '
-        'mapAndWindLayersSplitter.Panel2
-        '
-        Me.mapAndWindLayersSplitter.Panel2.Controls.Add(Me.windLayersFlowLayoutPnl)
-        Me.mapAndWindLayersSplitter.Panel2MinSize = 100
-        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(976, 324)
-        Me.mapAndWindLayersSplitter.SplitterDistance = 715
-        Me.mapAndWindLayersSplitter.TabIndex = 0
-        '
-        'imageViewer
-        '
-        Me.imageViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imageViewer.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.imageViewer.Location = New System.Drawing.Point(0, 0)
-        Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(715, 324)
-        Me.imageViewer.TabIndex = 1
-        '
-        'windLayersFlowLayoutPnl
-        '
-        Me.windLayersFlowLayoutPnl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.windLayersFlowLayoutPnl.AutoScroll = True
-        Me.windLayersFlowLayoutPnl.Location = New System.Drawing.Point(0, 0)
-        Me.windLayersFlowLayoutPnl.Name = "windLayersFlowLayoutPnl"
-        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(257, 324)
-        Me.windLayersFlowLayoutPnl.TabIndex = 0
+        Me.AddOnsDataGrid.AllowUserToAddRows = False
+        Me.AddOnsDataGrid.AllowUserToDeleteRows = False
+        Me.AddOnsDataGrid.AllowUserToResizeRows = False
+        Me.AddOnsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.AddOnsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.AddOnsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AddOnsDataGrid.Location = New System.Drawing.Point(0, 0)
+        Me.AddOnsDataGrid.Name = "AddOnsDataGrid"
+        Me.AddOnsDataGrid.ReadOnly = True
+        Me.AddOnsDataGrid.RowHeadersVisible = False
+        Me.AddOnsDataGrid.RowHeadersWidth = 47
+        Me.AddOnsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.AddOnsDataGrid.Size = New System.Drawing.Size(982, 710)
+        Me.AddOnsDataGrid.TabIndex = 2
         '
         'countDownTaskStart
         '
@@ -560,6 +594,10 @@ Partial Class BriefingControl
         Me.mapSplitterUpDown.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mapSplitterUpDown.ResumeLayout(False)
+        Me.mapAndWindLayersSplitter.Panel1.ResumeLayout(False)
+        Me.mapAndWindLayersSplitter.Panel2.ResumeLayout(False)
+        CType(Me.mapAndWindLayersSplitter, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mapAndWindLayersSplitter.ResumeLayout(False)
         Me.mapSplitterLeftRight.Panel1.ResumeLayout(False)
         Me.mapSplitterLeftRight.Panel2.ResumeLayout(False)
         CType(Me.mapSplitterLeftRight, System.ComponentModel.ISupportInitialize).EndInit()
@@ -578,10 +616,8 @@ Partial Class BriefingControl
         Me.tbpgXBOX.ResumeLayout(False)
         Me.tbpgXBOX.PerformLayout()
         CType(Me.waypointCoordinatesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.mapAndWindLayersSplitter.Panel1.ResumeLayout(False)
-        Me.mapAndWindLayersSplitter.Panel2.ResumeLayout(False)
-        CType(Me.mapAndWindLayersSplitter, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.mapAndWindLayersSplitter.ResumeLayout(False)
+        Me.tbpgAddOns.ResumeLayout(False)
+        CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -623,4 +659,6 @@ Partial Class BriefingControl
     Friend WithEvents mapAndWindLayersSplitter As Windows.Forms.SplitContainer
     Friend WithEvents imageViewer As ImageViewerControl
     Friend WithEvents windLayersFlowLayoutPnl As Windows.Forms.FlowLayoutPanel
+    Friend WithEvents tbpgAddOns As Windows.Forms.TabPage
+    Friend WithEvents AddOnsDataGrid As Windows.Forms.DataGridView
 End Class

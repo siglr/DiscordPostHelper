@@ -24,6 +24,7 @@ Public Class BriefingControl
         restrictionsDataGrid.DataSource = Nothing
         waypointCoordinatesDataGrid.DataSource = Nothing
         cboWayPointDistances.SelectedIndex = 0
+        AddOnsDataGrid.DataSource = Nothing
 
         If imagesListView.LargeImageList IsNot Nothing Then
             imagesListView.LargeImageList.Dispose()
@@ -230,6 +231,26 @@ Public Class BriefingControl
         restrictionsDataGrid.RowTemplate.Height = 28
         restrictionsDataGrid.RowHeadersVisible = False
         restrictionsDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+
+        'Build add-ons grid
+        Dim dtAddOns As New DataTable()
+        dtAddOns.Columns.Add("#", GetType(Integer))
+        dtAddOns.Columns.Add("Name", GetType(String))
+        dtAddOns.Columns.Add("Type", GetType(String))
+        dtAddOns.Columns.Add("URL (double-click to open in browser)", GetType(String))
+        Dim seqAddOn As Integer = 0
+        For Each addOn As RecommendedAddOn In sessionData.RecommendedAddOns
+            seqAddOn += 1
+            dtAddOns.Rows.Add(seqAddOn, addOn.Name, addOn.Type.ToString, addOn.URL)
+        Next
+        AddOnsDataGrid.DataSource = dtAddOns
+        AddOnsDataGrid.Font = New Font(restrictionsDataGrid.Font.FontFamily, 12)
+        AddOnsDataGrid.RowTemplate.Height = 28
+        AddOnsDataGrid.RowHeadersVisible = False
+        AddOnsDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        AddOnsDataGrid.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+        AddOnsDataGrid.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        AddOnsDataGrid.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
 
         'XBOX Coordinates
         waypointCoordinatesDataGrid.Font = New Font(waypointCoordinatesDataGrid.Font.FontFamily, 12)
@@ -610,4 +631,19 @@ Public Class BriefingControl
         msfsLocalTimeToSet.Text = msfsDateToDisplay.ToString("t", CultureInfo.CurrentCulture)
 
     End Sub
+
+    Private Sub AddOnsDataGrid_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles AddOnsDataGrid.CellDoubleClick
+        ' Check if a valid row index and URL column
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = 3 Then
+            ' Get the URL value from the clicked row
+            Dim url As String = AddOnsDataGrid.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+            ' Use the URL as needed (e.g., open in browser)
+            Try
+                Process.Start(url)
+            Catch ex As Exception
+                MessageBox.Show("An error occured trying to open the specified URL!", "Trying to open URL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
+    End Sub
+
 End Class
