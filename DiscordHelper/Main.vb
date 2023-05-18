@@ -2418,6 +2418,8 @@ Public Class Main
             allFiles.Add(SaveFileDialog1.FileName)
             Clipboard.SetFileDropList(allFiles)
             MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            txtDPHXPackageFilename.Text = SaveFileDialog1.FileName
+            chkDPHXPackageInclude.Checked = True
         End If
 
     End Sub
