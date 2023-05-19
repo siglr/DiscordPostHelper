@@ -1,5 +1,6 @@
 ﻿Imports System.Text
 Imports System.Xml
+Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class WeatherDetails
     Private ReadOnly _MSLPressureInPa As Single
@@ -59,15 +60,35 @@ Public Class WeatherDetails
 
     Public ReadOnly Property PresetName() As String
 
-    Public ReadOnly Property MSLTemperature As String
+    Public ReadOnly Property MSLTemperature(Optional prefUnits As PreferredUnits = Nothing) As String
         Get
-            Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(_MSLTempKelvin), Conversions.KelvinToFarenheit(_MSLTempKelvin))
+            If prefUnits Is Nothing OrElse prefUnits.Temperature = TemperatureUnits.Both Then
+                Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(_MSLTempKelvin), Conversions.KelvinToFarenheit(_MSLTempKelvin))
+            Else
+                Select Case prefUnits.Temperature
+                    Case TemperatureUnits.Celsius
+                        Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(_MSLTempKelvin))
+                    Case TemperatureUnits.Fahrenheit
+                        Return String.Format("{1:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
+                End Select
+            End If
+            Return String.Empty
         End Get
     End Property
 
-    Public ReadOnly Property MSLPressure As String
+    Public ReadOnly Property MSLPressure(Optional prefUnits As PreferredUnits = Nothing) As String
         Get
-            Return String.Format("{0:F2} inHg / {1:N0} hPa", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100)
+            If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
+                Return String.Format("{0:F2} inHg / {1:N0} hPa", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100)
+            Else
+                Select Case prefUnits.Barometric
+                    Case BarometricUnits.hPa
+                        Return String.Format("0:N0} hPa", _MSLPressureInPa / 100)
+                    Case BarometricUnits.inHg
+                        Return String.Format("{0:F2} inHg", Conversions.PaToInHg(_MSLPressureInPa))
+                End Select
+            End If
+            Return String.Empty
         End Get
     End Property
 
@@ -130,7 +151,7 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property CloudLayers As String
+    Public ReadOnly Property CloudLayers(Optional prefUnits As PreferredUnits = Nothing) As String
         Get
             Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
@@ -138,7 +159,7 @@ Public Class WeatherDetails
             For Each layer As CloudLayer In _CloudLayers
                 If layer.IsValidCloudLayer Then
                     countLayer = ++1
-                    results.AppendLine(layer.CloudLayerText)
+                    results.AppendLine(layer.CloudLayerText(prefUnits))
                 End If
             Next
 
@@ -151,7 +172,7 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property WindLayersAsString As String
+    Public ReadOnly Property WindLayersAsString(Optional prefUnits As PreferredUnits = Nothing) As String
         Get
             Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
@@ -159,7 +180,7 @@ Public Class WeatherDetails
             For Each layer As WindLayer In Me.WindLayers
                 If layer.IsValidWindLayer Then
                     countLayer = ++1
-                    results.AppendLine(layer.WindLayerText)
+                    results.AppendLine(layer.WindLayerText(prefUnits))
                 End If
             Next
 

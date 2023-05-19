@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Text
 Imports System.Windows.Forms
 Imports System.Xml
+Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class BriefingControl
 
@@ -14,7 +15,78 @@ Public Class BriefingControl
     Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
     Private _sessionData As AllData
     Private _unpackFolder As String = String.Empty
+    Private _initPrefUnits As Boolean = False
+    Private _onUnitsTab As Boolean = False
+
     Public Property EventIsEnabled As Boolean
+    Public Property PrefUnits As New PreferredUnits
+
+    Private Sub BriefingControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SetPrefUnits()
+    End Sub
+
+    Public Sub SetPrefUnits()
+
+        _initPrefUnits = True
+
+        Select Case PrefUnits.Altitude
+            Case AltitudeUnits.Metric
+                radioAltitudeMeters.Checked = True
+            Case AltitudeUnits.Imperial
+                radioAltitudeFeet.Checked = True
+            Case AltitudeUnits.Both
+                radioAltitudeBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.Distance
+            Case DistanceUnits.Metric
+                radioDistanceMetric.Checked = True
+            Case DistanceUnits.Imperial
+                radioDistanceImperial.Checked = True
+            Case DistanceUnits.Both
+                radioDistanceBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.GateDiameter
+            Case GateDiameterUnits.Metric
+                radioGateDiameterMetric.Checked = True
+            Case GateDiameterUnits.Imperial
+                radioGateDiameterImperial.Checked = True
+            Case GateDiameterUnits.Both
+                radioGateDiameterBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.WindSpeed
+            Case WindSpeedUnits.MeterPerSecond
+                radioWindSpeedMps.Checked = True
+            Case WindSpeedUnits.Knots
+                radioWindSpeedKnots.Checked = True
+            Case WindSpeedUnits.Both
+                radioWindSpeedBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.Barometric
+            Case BarometricUnits.hPa
+                radioBaroHPa.Checked = True
+            Case BarometricUnits.inHg
+                radioBaroInHg.Checked = True
+            Case BarometricUnits.Both
+                radioBaroBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.Temperature
+            Case TemperatureUnits.Celsius
+                radioTemperatureCelsius.Checked = True
+            Case TemperatureUnits.Fahrenheit
+                radioTemperatureFarenheit.Checked = True
+            Case TemperatureUnits.Both
+                radioTemperatureBoth.Checked = True
+        End Select
+
+        _initPrefUnits = False
+
+    End Sub
+
 
     Public Sub FullReset()
         txtBriefing.Clear()
@@ -69,6 +141,8 @@ Public Class BriefingControl
                                 Optional unpackFolder As String = "NONE")
 
         _SF = supportFeat
+        SupportingFeatures.PrefUnits = PrefUnits
+
         _sessionData = sessionData
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
@@ -76,14 +150,11 @@ Public Class BriefingControl
             _unpackFolder = unpackFolder
         End If
 
-        EventIsEnabled = sessionData.EventEnabled
+        EventIsEnabled = _sessionData.EventEnabled
 
         'Load flight plan
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocFlightPlan.Load(flightplanfile)
-        Dim totalDistance As Integer
-        Dim trackDistance As Integer
-        Dim altitudeRestrictions As String = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
 
         'Load weather info
         _XmlDocWeatherPreset = New XmlDocument
@@ -91,8 +162,19 @@ Public Class BriefingControl
         _WeatherDetails = Nothing
         _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
 
+        BuildTaskData()
+
+    End Sub
+
+    Private Sub BuildTaskData()
+        Dim totalDistance As Integer
+        Dim trackDistance As Integer
+
+        _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
+
+
         Dim dateFormat As String
-        If sessionData.IncludeYear Then
+        If _sessionData.IncludeYear Then
             dateFormat = "MMMM dd, yyyy"
         Else
             dateFormat = "MMMM dd"
@@ -102,46 +184,46 @@ Public Class BriefingControl
         sb.Append("{\rtf1\ansi ")
 
         'Title
-        sb.Append($"\b {sessionData.Title}\b0\line ")
-        sb.Append($"{sessionData.Credits}\line ")
+        sb.Append($"\b {_sessionData.Title}\b0\line ")
+        sb.Append($"{_sessionData.Credits}\line ")
         sb.Append("\line ")
 
         'Credits
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
 
         'Flight plan
-        sb.Append($"The flight plan to load is \b {Path.GetFileName(sessionData.FlightPlanFilename)}\b0\line ")
+        sb.Append($"The flight plan to load is \b {Path.GetFileName(_sessionData.FlightPlanFilename)}\b0\line ")
 
         sb.Append("\line ")
 
         'Departure airfield And runway
-        sb.Append($"You will depart from \b {_SF.ValueToAppendIfNotEmpty(sessionData.DepartureICAO)}{_SF.ValueToAppendIfNotEmpty(sessionData.DepartureName, True)}{_SF.ValueToAppendIfNotEmpty(sessionData.DepartureExtra, True, True)}\b0\line ")
+        sb.Append($"You will depart from \b {_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureICAO)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureName, True)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureExtra, True, True)}\b0\line ")
 
         'Arrival airfield And expected runway
-        sb.Append($"You will land at \b {_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalICAO)}{_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalName, True)}{_SF.ValueToAppendIfNotEmpty(sessionData.ArrivalExtra, True, True)}\b0\line ")
+        sb.Append($"You will land at \b {_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalICAO)}{_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalName, True)}{_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalExtra, True, True)}\b0\line ")
 
         'Type of soaring
         Dim soaringType As String = GetSoaringTypesSelected()
-        If soaringType.Trim <> String.Empty OrElse sessionData.SoaringExtraInfo <> String.Empty Then
-            sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(sessionData.SoaringExtraInfo, True, True)}\b0\line ")
+        If soaringType.Trim <> String.Empty OrElse _sessionData.SoaringExtraInfo <> String.Empty Then
+            sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(_sessionData.SoaringExtraInfo, True, True)}\b0\line ")
         End If
 
         'Task distance And total distance
-        sb.Append($"Distances are \b {_SF.GetDistance(totalDistance.ToString, trackDistance.ToString)}\b0\line ")
+        sb.Append($"Distance are \b {_SF.GetDistance(totalDistance.ToString, trackDistance.ToString, PrefUnits)}\b0\line ")
 
         'Approx. duration
-        sb.Append($"Approx. duration should be \b {_SF.GetDuration(sessionData.DurationMin, sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(sessionData.DurationExtraInfo, True, True)}\b0\line ")
+        sb.Append($"Approx. duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
 
         'Recommended gliders
-        If sessionData.RecommendedGliders.Trim <> String.Empty Then
-            sb.Append($"Recommended gliders: \b {_SF.ValueToAppendIfNotEmpty(sessionData.RecommendedGliders)}\b0\line ")
+        If _sessionData.RecommendedGliders.Trim <> String.Empty Then
+            sb.Append($"Recommended gliders: \b {_SF.ValueToAppendIfNotEmpty(_sessionData.RecommendedGliders)}\b0\line ")
         End If
 
         'Difficulty rating
-        If sessionData.DifficultyRating.Trim <> String.Empty OrElse sessionData.DifficultyExtraInfo.Trim <> String.Empty Then
-            sb.Append($"The difficulty is rated as \b {_SF.GetDifficulty(CInt(sessionData.DifficultyRating.Substring(0, 1)), sessionData.DifficultyExtraInfo, True)}\b0\line ")
+        If _sessionData.DifficultyRating.Trim <> String.Empty OrElse _sessionData.DifficultyExtraInfo.Trim <> String.Empty Then
+            sb.Append($"The difficulty is rated as \b {_SF.GetDifficulty(CInt(_sessionData.DifficultyRating.Substring(0, 1)), _sessionData.DifficultyExtraInfo, True)}\b0\line ")
         End If
 
         sb.Append("\line ")
@@ -149,16 +231,16 @@ Public Class BriefingControl
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
             sb.Append($"The weather profile to load is \b {_WeatherDetails.PresetName}\b0\line ")
-            If sessionData.WeatherSummary <> String.Empty Then
-                sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(sessionData.WeatherSummary)}\b0\line ")
+            If _sessionData.WeatherSummary <> String.Empty Then
+                sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}\b0\line ")
             End If
             If _WeatherDetails.AltitudeMeasurement = "AGL" Then
                 sb.Append($"The elevation measurement used is \b AGL (Above Ground Level)\b0\line ")
             Else
                 sb.Append($"The elevation measurement used is \b AMSL (Above Mean Sea Level)\b0\line ")
             End If
-            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure}\b0\line ")
-            sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature}\b0\line ")
+            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure(PrefUnits)}\b0\line ")
+            sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature(PrefUnits)}\b0\line ")
             sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
             If _WeatherDetails.HasPrecipitations Then
                 sb.Append($"Precipitations: \b {_WeatherDetails.Precipitations}\b0\line ")
@@ -168,7 +250,7 @@ Public Class BriefingControl
 
             'Winds
             sb.Append($"\b Wind Layers\b0\line ")
-            Dim lines As String() = _WeatherDetails.WindLayersAsString.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
+            Dim lines As String() = _WeatherDetails.WindLayersAsString(PrefUnits).Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
                 sb.Append($"{line}\line ")
             Next
@@ -177,7 +259,7 @@ Public Class BriefingControl
 
             'Clouds
             sb.Append($"\b Cloud Layers\b0\line ")
-            lines = _WeatherDetails.CloudLayers.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
+            lines = _WeatherDetails.CloudLayers(PrefUnits).Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
                 sb.Append($"{line}\line ")
             Next
@@ -187,7 +269,7 @@ Public Class BriefingControl
             For i As Integer = _WeatherDetails.WindLayers.Count - 1 To 0 Step -1
                 windLayer = _WeatherDetails.WindLayers(i)
                 If windLayer.IsValidWindLayer Then
-                    Dim windLayerControl As New WindLayerControl(windLayer)
+                    Dim windLayerControl As New WindLayerControl(windLayer, PrefUnits)
                     windLayersFlowLayoutPnl.Controls.Add(windLayerControl)
                 End If
             Next
@@ -200,10 +282,10 @@ Public Class BriefingControl
         sb.Clear()
 
         imageViewer.Visible = True
-        If sessionData.MapImageSelected = String.Empty Then
+        If _sessionData.MapImageSelected = String.Empty Then
             imageViewer.Enabled = False
         Else
-            Dim filename As String = sessionData.MapImageSelected
+            Dim filename As String = _sessionData.MapImageSelected
             If _unpackFolder <> String.Empty Then
                 filename = Path.Combine(_unpackFolder, Path.GetFileName(filename))
             End If
@@ -212,9 +294,9 @@ Public Class BriefingControl
 
 
         'Build full description
-        If sessionData.LongDescription <> String.Empty Then
+        If _sessionData.LongDescription <> String.Empty Then
             sb.AppendLine("**Full Description**")
-            sb.AppendLine(sessionData.LongDescription.Replace("($*$)", Environment.NewLine))
+            sb.AppendLine(_sessionData.LongDescription.Replace("($*$)", Environment.NewLine))
             _SF.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
 
         End If
@@ -224,7 +306,7 @@ Public Class BriefingControl
         dt.Columns.Add("Waypoint Name", GetType(String))
         dt.Columns.Add("Restrictions", GetType(String))
         For Each waypoint In _SF.AllWaypoints.Where(Function(x) x.ContainsRestriction)
-            dt.Rows.Add(waypoint.WaypointName, waypoint.Restrictions)
+            dt.Rows.Add(waypoint.WaypointName, waypoint.Restrictions(PrefUnits))
         Next
         restrictionsDataGrid.DataSource = dt
         restrictionsDataGrid.Font = New Font(restrictionsDataGrid.Font.FontFamily, 12)
@@ -239,7 +321,7 @@ Public Class BriefingControl
         dtAddOns.Columns.Add("Type", GetType(String))
         dtAddOns.Columns.Add("URL (double-click to open in browser)", GetType(String))
         Dim seqAddOn As Integer = 0
-        For Each addOn As RecommendedAddOn In sessionData.RecommendedAddOns
+        For Each addOn As RecommendedAddOn In _sessionData.RecommendedAddOns
             seqAddOn += 1
             dtAddOns.Rows.Add(seqAddOn, addOn.Name, addOn.Type.ToString, addOn.URL)
         Next
@@ -290,7 +372,6 @@ Public Class BriefingControl
         BuildEventInfoTab()
 
     End Sub
-
     Private Sub BuildEventInfoTab()
 
         Dim sb As New StringBuilder
@@ -468,14 +549,26 @@ Public Class BriefingControl
 
     Public Sub AdjustRTBoxControls()
 
+        'Check if we were on the Units tab - we may need to regenerate
+        If _onUnitsTab Then
+            FullReset()
+            BuildTaskData()
+            _onUnitsTab = False
+        End If
+
         If _SF IsNot Nothing Then
             Select Case tabsBriefing.SelectedIndex
-                Case 0
+                Case 0 'Main Task Info
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
-                Case 1
+                Case 1 'Map
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtFullDescription)
-                Case 2
+                Case 2 'Event Info
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
+                Case 3 'Images
+                Case 4 'All Waypoints
+                Case 5 'Add-ons
+                Case 6 'Units
+                    _onUnitsTab = True
             End Select
         End If
 
@@ -501,7 +594,7 @@ Public Class BriefingControl
     Private Sub SetWPGridColumnsVisibility()
 
         Try
-            'Distances
+            'Distance
             Select Case cboWayPointDistances.SelectedIndex
                 Case 0 'None
                     waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").Visible = False
@@ -646,4 +739,48 @@ Public Class BriefingControl
         End If
     End Sub
 
+    Private Sub UnitPrefChanged(radioBtn As RadioButton)
+
+        If Not _initPrefUnits AndAlso radioBtn.Checked Then
+
+            If radioBtn.Name.Contains("Altitude") Then
+                PrefUnits.Altitude = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("Distance") Then
+                PrefUnits.Distance = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("GateDiameter") Then
+                PrefUnits.GateDiameter = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("WindSpeed") Then
+                PrefUnits.WindSpeed = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("Baro") Then
+                PrefUnits.Barometric = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("Temperature") Then
+                PrefUnits.Temperature = CInt(radioBtn.Tag)
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub unitRadioBox_CheckedChanged(sender As Object, e As EventArgs) Handles radioDistanceMetric.CheckedChanged,
+                                                                                            radioDistanceImperial.CheckedChanged,
+                                                                                            radioDistanceBoth.CheckedChanged,
+                                                                                            radioBaroInHg.CheckedChanged,
+                                                                                            radioBaroHPa.CheckedChanged,
+                                                                                            radioBaroBoth.CheckedChanged,
+                                                                                            radioAltitudeMeters.CheckedChanged,
+                                                                                            radioAltitudeFeet.CheckedChanged,
+                                                                                            radioAltitudeBoth.CheckedChanged,
+                                                                                            radioWindSpeedMps.CheckedChanged,
+                                                                                            radioWindSpeedKnots.CheckedChanged,
+                                                                                            radioWindSpeedBoth.CheckedChanged,
+                                                                                            radioTemperatureFarenheit.CheckedChanged,
+                                                                                            radioTemperatureCelsius.CheckedChanged,
+                                                                                            radioTemperatureBoth.CheckedChanged,
+                                                                                            radioGateDiameterMetric.CheckedChanged,
+                                                                                            radioGateDiameterImperial.CheckedChanged,
+                                                                                            radioGateDiameterBoth.CheckedChanged
+
+        UnitPrefChanged(sender)
+
+    End Sub
 End Class

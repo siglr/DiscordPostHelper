@@ -7,11 +7,11 @@ Public Class WindLayerControl
     Private _windDirection As Double = 0
     Private Property WindLayer As WindLayer
 
-    Public Sub New(windLayer As WindLayer)
+    Public Sub New(windLayer As WindLayer, Optional prefUnits As PreferredUnits = Nothing)
         InitializeComponent()
         Me.WindLayer = windLayer
         WindDirection = Me.WindLayer.Angle
-        lblAltitude.Text = Me.WindLayer.WindLayerTextWithoutDirection
+        lblAltitude.Text = Me.WindLayer.WindLayerTextWithoutDirection(prefUnits)
     End Sub
 
     Public Property WindDirection As Double

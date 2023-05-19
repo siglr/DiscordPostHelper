@@ -1,0 +1,116 @@
+﻿Public Class PreferredUnits
+    Private _altitude As AltitudeUnits
+    Private _distance As DistanceUnits
+    Private _gateDiameter As GateDiameterUnits
+    Private _windSpeed As WindSpeedUnits
+    Private _barometric As BarometricUnits
+    Private _temperature As TemperatureUnits
+
+    Public Enum DistanceUnits As Integer
+        Metric = 0
+        Imperial = 1
+        Both = 2
+    End Enum
+
+    Public Enum BarometricUnits As Integer
+        hPa = 0
+        inHg = 1
+        Both = 2
+    End Enum
+
+    Public Enum TemperatureUnits As Integer
+        Celsius = 0
+        Fahrenheit = 1
+        Both = 2
+    End Enum
+
+    Public Enum WindSpeedUnits As Integer
+        MeterPerSecond = 0
+        Knots = 1
+        Both = 2
+    End Enum
+
+    Public Enum AltitudeUnits As Integer
+        Metric = 0
+        Imperial = 1
+        Both = 2
+    End Enum
+
+    Public Enum GateDiameterUnits As Integer
+        Metric = 0
+        Imperial = 1
+        Both = 2
+    End Enum
+
+    Public Sub New()
+
+        'Load values from registry
+        _distance = SupportingFeatures.ReadRegistryKey("DistanceUnit", DistanceUnits.Both)
+        _barometric = SupportingFeatures.ReadRegistryKey("BarometricUnit", BarometricUnits.Both)
+        _temperature = SupportingFeatures.ReadRegistryKey("TemperatureUnit", TemperatureUnits.Both)
+        _windSpeed = SupportingFeatures.ReadRegistryKey("WindSpeedUnit", WindSpeedUnits.Both)
+        _altitude = SupportingFeatures.ReadRegistryKey("AltitudeUnit", AltitudeUnits.Both)
+        _gateDiameter = SupportingFeatures.ReadRegistryKey("GateDiameterUnit", GateDiameterUnits.Both)
+
+    End Sub
+
+    Public Property Distance As DistanceUnits
+        Get
+            Return _distance
+        End Get
+        Set(value As DistanceUnits)
+            _distance = value
+            SupportingFeatures.WriteRegistryKey("DistanceUnit", _distance)
+        End Set
+    End Property
+
+    Public Property Barometric As BarometricUnits
+        Get
+            Return _barometric
+        End Get
+        Set(value As BarometricUnits)
+            _barometric = value
+            SupportingFeatures.WriteRegistryKey("BarometricUnit", _barometric)
+        End Set
+    End Property
+
+    Public Property Temperature As TemperatureUnits
+        Get
+            Return _temperature
+        End Get
+        Set(value As TemperatureUnits)
+            _temperature = value
+            SupportingFeatures.WriteRegistryKey("TemperatureUnit", _temperature)
+        End Set
+    End Property
+
+    Public Property WindSpeed As WindSpeedUnits
+        Get
+            Return _windSpeed
+        End Get
+        Set(value As WindSpeedUnits)
+            _windSpeed = value
+            SupportingFeatures.WriteRegistryKey("WindSpeedUnit", _windSpeed)
+        End Set
+    End Property
+
+    Public Property Altitude As AltitudeUnits
+        Get
+            Return _altitude
+        End Get
+        Set(value As AltitudeUnits)
+            _altitude = value
+            SupportingFeatures.WriteRegistryKey("AltitudeUnit", _altitude)
+        End Set
+    End Property
+
+    Public Property GateDiameter As GateDiameterUnits
+        Get
+            Return _gateDiameter
+        End Get
+        Set(value As GateDiameterUnits)
+            _gateDiameter = value
+            SupportingFeatures.WriteRegistryKey("GateDiameterUnit", _gateDiameter)
+        End Set
+    End Property
+End Class

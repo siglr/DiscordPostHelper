@@ -134,4 +134,10 @@ Public Class Conversions
 
     End Function
 
+    Public Shared Function KnotsToMps(knots As Integer) As Single
+        Dim kmh As Single = KnotsToKmh(knots)
+        Dim mps As Single = kmh * 1000 / 3600
+        Return mps
+    End Function
+
 End Class

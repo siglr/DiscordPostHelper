@@ -10,6 +10,7 @@ Imports System.Web
 Imports System.Windows.Forms
 Imports System.Xml
 Imports System.Xml.Serialization
+Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 Imports Microsoft.Win32
 
 
@@ -31,6 +32,8 @@ Public Class SupportingFeatures
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
     Public ReadOnly CountryFlagCodes As Dictionary(Of String, String)
     Private Shared _ClientRunning As ClientApp
+
+    Public Shared Property PrefUnits As PreferredUnits
 
     Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As IntPtr, ByVal nIndex As Integer) As Integer
     Public Declare Function GetSystemMetrics Lib "user32.dll" (ByVal nIndex As Integer) As Integer
@@ -93,7 +96,7 @@ Public Class SupportingFeatures
         Return Math.Ceiling(minutes / 15.0) * 15
     End Function
 
-    Public Function GetDistance(totalDistanceKm As String, trackDistanceKm As String) As String
+    Public Function GetDistance(totalDistanceKm As String, trackDistanceKm As String, Optional prefUnits As PreferredUnits = Nothing) As String
 
         Dim totalDistKm As Decimal
         Dim trackDistKm As Decimal
@@ -105,7 +108,18 @@ Public Class SupportingFeatures
         totalDistMiles = Conversions.KmToMiles(totalDistKm)
         trackDistMiles = Conversions.KmToMiles(trackDistKm)
 
-        Return String.Format("{0:N0} km total ({1:N0} km task) / {2:N0} mi total ({3:N0} mi task)", totalDistKm, trackDistKm, totalDistMiles, trackDistMiles)
+        If prefUnits Is Nothing OrElse prefUnits.Distance = PreferredUnits.DistanceUnits.Both Then
+            Return String.Format("{0:N0} km total ({1:N0} km task) / {2:N0} mi total ({3:N0} mi task)", totalDistKm, trackDistKm, totalDistMiles, trackDistMiles)
+        Else
+            Select Case prefUnits.Distance
+                Case DistanceUnits.Imperial
+                    Return String.Format("{0:N0} mi total ({1:N0} mi task)", totalDistMiles, trackDistMiles)
+                Case DistanceUnits.Metric
+                    Return String.Format("{0:N0} km total ({1:N0} km task)", totalDistKm, trackDistKm)
+            End Select
+        End If
+
+        Return String.Empty
 
     End Function
 
@@ -1064,5 +1078,41 @@ Public Class SupportingFeatures
         txtbox.SelectAll()
         txtbox.SelectionStart = 0
     End Sub
+
+    Public Shared Sub WriteRegistryKey(valueName As String, value As Integer)
+
+        Dim keyPath As String = "Software\SIGLR\MSFS Soaring Task Tools"
+
+        Try
+            Using key As RegistryKey = Registry.CurrentUser.CreateSubKey(keyPath)
+                key.SetValue(valueName, value)
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+    End Sub
+
+    Public Shared Function ReadRegistryKey(valueName As String, defaultValue As Integer) As Integer
+
+        Dim keyPath As String = "Software\SIGLR\MSFS Soaring Task Tools"
+
+        Dim value As Integer = defaultValue
+
+        Try
+            Using key As RegistryKey = Registry.CurrentUser.OpenSubKey(keyPath)
+                If key IsNot Nothing Then
+                    value = CInt(key.GetValue(valueName, defaultValue))
+                End If
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return value
+
+    End Function
 
 End Class
