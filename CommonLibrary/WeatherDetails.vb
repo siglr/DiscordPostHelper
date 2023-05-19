@@ -69,7 +69,7 @@ Public Class WeatherDetails
                     Case TemperatureUnits.Celsius
                         Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(_MSLTempKelvin))
                     Case TemperatureUnits.Fahrenheit
-                        Return String.Format("{1:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
+                        Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
                 End Select
             End If
             Return String.Empty
@@ -83,7 +83,7 @@ Public Class WeatherDetails
             Else
                 Select Case prefUnits.Barometric
                     Case BarometricUnits.hPa
-                        Return String.Format("0:N0} hPa", _MSLPressureInPa / 100)
+                        Return String.Format("{0:N0} hPa", _MSLPressureInPa / 100)
                     Case BarometricUnits.inHg
                         Return String.Format("{0:F2} inHg", Conversions.PaToInHg(_MSLPressureInPa))
                 End Select
