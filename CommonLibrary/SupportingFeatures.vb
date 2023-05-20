@@ -973,12 +973,15 @@ Public Class SupportingFeatures
 
     Public Function CheckRequiredNetFrameworkVersion() As Boolean
 
+        Const net481 As Integer = 533320
+        Const net480 As Integer = 528049
+
         Dim result As Boolean = False
         Dim subkey As String = "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
 
         Using ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey)
             If ndpKey IsNot Nothing AndAlso ndpKey.GetValue("Release") IsNot Nothing Then
-                If CInt(ndpKey.GetValue("Release")) >= 533320 Then
+                If CInt(ndpKey.GetValue("Release")) >= net480 Then
                     result = True
                 End If
             End If

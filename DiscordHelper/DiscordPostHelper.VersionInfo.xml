@@ -1,6 +1,16 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.18.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.19.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.19.1</ReleaseVersion>
+      <ReleaseTitle>Preferred units on Briefing page</ReleaseTitle>
+      <ReleaseNotes>
+        Most important feature added with this release is the support for preferred display units on the Briefing page.
+        But this release also includes:
+        - Inclusion of meters per second for wind speeds
+        - Downgrade of the .Net requirements to 4.8 which should make the tool run on more Windows versions
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.18.1</ReleaseVersion>
       <ReleaseTitle>Small fix for bug on extra files introduced by previous version</ReleaseTitle>
