@@ -288,27 +288,27 @@ namespace SIGLR.SoaringTools.ImageViewer
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            if (!this.IsPanning && !this.SizeToFit)
-            {
-                if (e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.None)
-                {
-                    if (this.Zoom >= 100)
-                        this.Zoom = (int)Math.Round((double)(this.Zoom + 100) / 100) * 100;
-                    else if (this.Zoom >= 75)
-                        this.Zoom = 100;
-                    else
-                        this.Zoom = (int)(this.Zoom / 0.75F);
-                }
-                else if (e.Button == MouseButtons.Right || (e.Button == MouseButtons.Left && Control.ModifierKeys != Keys.None))
-                {
-                    if (this.Zoom > 100 && this.Zoom <= 125)
-                        this.Zoom = 100;
-                    else if (this.Zoom > 100)
-                        this.Zoom = (int)Math.Round((double)(this.Zoom - 100) / 100) * 100;
-                    else
-                        this.Zoom = (int)(this.Zoom * 0.75F);
-                }
-            }
+            //if (!this.IsPanning && !this.SizeToFit)
+            //{
+            //    if (e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.None)
+            //    {
+            //        if (this.Zoom >= 100)
+            //            this.Zoom = (int)Math.Round((double)(this.Zoom + 100) / 100) * 100;
+            //        else if (this.Zoom >= 75)
+            //            this.Zoom = 100;
+            //        else
+            //            this.Zoom = (int)(this.Zoom / 0.75F);
+            //    }
+            //    else if (e.Button == MouseButtons.Right || (e.Button == MouseButtons.Left && Control.ModifierKeys != Keys.None))
+            //    {
+            //        if (this.Zoom > 100 && this.Zoom <= 125)
+            //            this.Zoom = 100;
+            //        else if (this.Zoom > 100)
+            //            this.Zoom = (int)Math.Round((double)(this.Zoom - 100) / 100) * 100;
+            //        else
+            //            this.Zoom = (int)(this.Zoom * 0.75F);
+            //    }
+            //}
 
             base.OnMouseClick(e);
         }
@@ -807,8 +807,8 @@ namespace SIGLR.SoaringTools.ImageViewer
                     _sizeToFit = value;
                     this.OnSizeToFitChanged(EventArgs.Empty);
 
-                    if (value)
-                        this.AutoPan = false;
+                    //if (value)
+                    //    this.AutoPan = false;
                 }
             }
         }
