@@ -8,6 +8,8 @@ Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class BriefingControl
 
+#Region "Constants and global members"
+
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
     Private _WeatherDetails As WeatherDetails = Nothing
@@ -21,9 +23,97 @@ Public Class BriefingControl
     Public Property EventIsEnabled As Boolean
     Public Property PrefUnits As New PreferredUnits
 
+#End Region
+
+#Region "Form events handlers"
+
     Private Sub BriefingControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetPrefUnits()
     End Sub
+
+    Private Sub tabsBriefing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabsBriefing.SelectedIndexChanged
+        AdjustRTBoxControls()
+    End Sub
+
+    Private Sub mapSplitterLeftRight_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles mapSplitterLeftRight.SplitterMoved, mapSplitterUpDown.SplitterMoved
+        AdjustRTBoxControls()
+    End Sub
+
+    Private Sub imagesListView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles imagesListView.SelectedIndexChanged
+
+
+        If imagesListView.SelectedItems.Count > 0 AndAlso imagesListView.SelectedItems(0).Tag <> String.Empty Then
+            imagesTabViewerControl.LoadImage(imagesListView.SelectedItems(0).Tag)
+        End If
+
+    End Sub
+
+    Private Sub cboWayPointDistances_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboWayPointDistances.SelectedIndexChanged
+        SetWPGridColumnsVisibility()
+    End Sub
+
+    Private Sub chkWPEnableLatLonColumns_CheckedChanged(sender As Object, e As EventArgs) Handles chkWPEnableLatLonColumns.CheckedChanged
+        SetWPGridColumnsVisibility()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+        countDownToMeet.UpdateTime()
+        If _sessionData.UseEventSyncFly Then
+            countDownToSyncFly.UpdateTime()
+        End If
+        If _sessionData.UseEventLaunch Then
+            countDownToLaunch.UpdateTime()
+        End If
+        If _sessionData.UseEventStartTask Then
+            countDownTaskStart.UpdateTime()
+        End If
+        AdjustMSFSLocalDateTime()
+
+    End Sub
+
+    Private Sub AddOnsDataGrid_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles AddOnsDataGrid.CellDoubleClick
+        ' Check if a valid row index and URL column
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = 3 Then
+            ' Get the URL value from the clicked row
+            Dim url As String = AddOnsDataGrid.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+            ' Use the URL as needed (e.g., open in browser)
+            Try
+                Process.Start(url)
+            Catch ex As Exception
+                MessageBox.Show("An error occured trying to open the specified URL!", "Trying to open URL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
+    End Sub
+
+    Private Sub unitRadioBox_CheckedChanged(sender As Object, e As EventArgs) Handles radioDistanceMetric.CheckedChanged,
+                                                                                            radioDistanceImperial.CheckedChanged,
+                                                                                            radioDistanceBoth.CheckedChanged,
+                                                                                            radioBaroInHg.CheckedChanged,
+                                                                                            radioBaroHPa.CheckedChanged,
+                                                                                            radioBaroBoth.CheckedChanged,
+                                                                                            radioAltitudeMeters.CheckedChanged,
+                                                                                            radioAltitudeFeet.CheckedChanged,
+                                                                                            radioAltitudeBoth.CheckedChanged,
+                                                                                            radioWindSpeedMps.CheckedChanged,
+                                                                                            radioWindSpeedKnots.CheckedChanged,
+                                                                                            radioWindSpeedBoth.CheckedChanged,
+                                                                                            radioTemperatureFarenheit.CheckedChanged,
+                                                                                            radioTemperatureCelsius.CheckedChanged,
+                                                                                            radioTemperatureBoth.CheckedChanged,
+                                                                                            radioGateDiameterMetric.CheckedChanged,
+                                                                                            radioGateDiameterImperial.CheckedChanged,
+                                                                                            radioGateDiameterBoth.CheckedChanged
+
+        UnitPrefChanged(sender)
+
+    End Sub
+
+#End Region
+
+#Region "Subs and functions"
+
+#Region "Public"
 
     Public Sub SetPrefUnits()
 
@@ -87,7 +177,6 @@ Public Class BriefingControl
 
     End Sub
 
-
     Public Sub FullReset()
         txtBriefing.Clear()
         imageViewer.ClearImage()
@@ -111,22 +200,6 @@ Public Class BriefingControl
         CountDownReset()
 
         GC.Collect()
-
-    End Sub
-
-    Private Sub CountDownReset()
-        Timer1.Stop()
-        countDownToMeet.ZoomFactor = 2
-        countDownToMeet.ResetToZero(True)
-        countDownToSyncFly.ZoomFactor = 2
-        countDownToSyncFly.ResetToZero(True)
-        countDownToLaunch.ZoomFactor = 2
-        countDownToLaunch.ResetToZero(True)
-        countDownTaskStart.ZoomFactor = 2
-        countDownTaskStart.ResetToZero(True)
-        lblInsideOutside60Minutes.Text = String.Empty
-        msfsLocalDateToSet.Text = String.Empty
-        msfsLocalTimeToSet.Text = String.Empty
 
     End Sub
 
@@ -163,6 +236,63 @@ Public Class BriefingControl
         _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
 
         BuildTaskData()
+
+    End Sub
+
+    Public Sub AdjustRTBoxControls()
+
+        'Check if we were on the Units tab - we may need to regenerate
+        If _onUnitsTab Then
+            FullReset()
+            BuildTaskData()
+            _onUnitsTab = False
+        End If
+
+        If _SF IsNot Nothing Then
+            Select Case tabsBriefing.SelectedIndex
+                Case 0 'Main Task Info
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
+                Case 1 'Map
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtFullDescription)
+                Case 2 'Event Info
+                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
+                Case 3 'Images
+                Case 4 'All Waypoints
+                Case 5 'Add-ons
+                Case 6 'Units
+                    _onUnitsTab = True
+            End Select
+        End If
+
+    End Sub
+
+    Public ReadOnly Property FlightPlanInnerXML As String
+        Get
+            If _XmlDocFlightPlan IsNot Nothing Then
+                Return _XmlDocFlightPlan.InnerXml
+            Else
+                Return String.Empty
+            End If
+        End Get
+    End Property
+
+#End Region
+
+#Region "Private"
+
+    Private Sub CountDownReset()
+        Timer1.Stop()
+        countDownToMeet.ZoomFactor = 2
+        countDownToMeet.ResetToZero(True)
+        countDownToSyncFly.ZoomFactor = 2
+        countDownToSyncFly.ResetToZero(True)
+        countDownToLaunch.ZoomFactor = 2
+        countDownToLaunch.ResetToZero(True)
+        countDownTaskStart.ZoomFactor = 2
+        countDownTaskStart.ResetToZero(True)
+        lblInsideOutside60Minutes.Text = String.Empty
+        msfsLocalDateToSet.Text = String.Empty
+        msfsLocalTimeToSet.Text = String.Empty
 
     End Sub
 
@@ -372,6 +502,7 @@ Public Class BriefingControl
         BuildEventInfoTab()
 
     End Sub
+
     Private Sub BuildEventInfoTab()
 
         Dim sb As New StringBuilder
@@ -531,66 +662,6 @@ Public Class BriefingControl
 
     End Function
 
-    Private Sub mapPictureBox_DoubleClick(sender As Object, e As EventArgs)
-
-        'Launch the ImageViewer program
-        Dim startInfo As New ProcessStartInfo($"{Application.StartupPath}\ImageViewer.exe", $"""{_sessionData.MapImageSelected}""")
-
-        Process.Start(startInfo)
-
-
-    End Sub
-
-    Private Sub tabsBriefing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabsBriefing.SelectedIndexChanged
-
-        AdjustRTBoxControls()
-
-    End Sub
-
-    Public Sub AdjustRTBoxControls()
-
-        'Check if we were on the Units tab - we may need to regenerate
-        If _onUnitsTab Then
-            FullReset()
-            BuildTaskData()
-            _onUnitsTab = False
-        End If
-
-        If _SF IsNot Nothing Then
-            Select Case tabsBriefing.SelectedIndex
-                Case 0 'Main Task Info
-                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
-                Case 1 'Map
-                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtFullDescription)
-                Case 2 'Event Info
-                    SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
-                Case 3 'Images
-                Case 4 'All Waypoints
-                Case 5 'Add-ons
-                Case 6 'Units
-                    _onUnitsTab = True
-            End Select
-        End If
-
-    End Sub
-
-    Private Sub mapSplitterLeftRight_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles mapSplitterLeftRight.SplitterMoved, mapSplitterUpDown.SplitterMoved
-        AdjustRTBoxControls()
-    End Sub
-
-    Private Sub imagesListView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles imagesListView.SelectedIndexChanged
-
-
-        If imagesListView.SelectedItems.Count > 0 AndAlso imagesListView.SelectedItems(0).Tag <> String.Empty Then
-            imagesTabViewerControl.LoadImage(imagesListView.SelectedItems(0).Tag)
-        End If
-
-    End Sub
-
-    Private Sub cboWayPointDistances_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboWayPointDistances.SelectedIndexChanged
-        SetWPGridColumnsVisibility()
-    End Sub
-
     Private Sub SetWPGridColumnsVisibility()
 
         Try
@@ -631,26 +702,6 @@ Public Class BriefingControl
         Catch ex As Exception
 
         End Try
-
-    End Sub
-
-    Private Sub chkWPEnableLatLonColumns_CheckedChanged(sender As Object, e As EventArgs) Handles chkWPEnableLatLonColumns.CheckedChanged
-        SetWPGridColumnsVisibility()
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-
-        countDownToMeet.UpdateTime()
-        If _sessionData.UseEventSyncFly Then
-            countDownToSyncFly.UpdateTime()
-        End If
-        If _sessionData.UseEventLaunch Then
-            countDownToLaunch.UpdateTime()
-        End If
-        If _sessionData.UseEventStartTask Then
-            countDownTaskStart.UpdateTime()
-        End If
-        AdjustMSFSLocalDateTime()
 
     End Sub
 
@@ -725,20 +776,6 @@ Public Class BriefingControl
 
     End Sub
 
-    Private Sub AddOnsDataGrid_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles AddOnsDataGrid.CellDoubleClick
-        ' Check if a valid row index and URL column
-        If e.RowIndex >= 0 AndAlso e.ColumnIndex = 3 Then
-            ' Get the URL value from the clicked row
-            Dim url As String = AddOnsDataGrid.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
-            ' Use the URL as needed (e.g., open in browser)
-            Try
-                Process.Start(url)
-            Catch ex As Exception
-                MessageBox.Show("An error occured trying to open the specified URL!", "Trying to open URL", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        End If
-    End Sub
-
     Private Sub UnitPrefChanged(radioBtn As RadioButton)
 
         If Not _initPrefUnits AndAlso radioBtn.Checked Then
@@ -761,26 +798,8 @@ Public Class BriefingControl
 
     End Sub
 
-    Private Sub unitRadioBox_CheckedChanged(sender As Object, e As EventArgs) Handles radioDistanceMetric.CheckedChanged,
-                                                                                            radioDistanceImperial.CheckedChanged,
-                                                                                            radioDistanceBoth.CheckedChanged,
-                                                                                            radioBaroInHg.CheckedChanged,
-                                                                                            radioBaroHPa.CheckedChanged,
-                                                                                            radioBaroBoth.CheckedChanged,
-                                                                                            radioAltitudeMeters.CheckedChanged,
-                                                                                            radioAltitudeFeet.CheckedChanged,
-                                                                                            radioAltitudeBoth.CheckedChanged,
-                                                                                            radioWindSpeedMps.CheckedChanged,
-                                                                                            radioWindSpeedKnots.CheckedChanged,
-                                                                                            radioWindSpeedBoth.CheckedChanged,
-                                                                                            radioTemperatureFarenheit.CheckedChanged,
-                                                                                            radioTemperatureCelsius.CheckedChanged,
-                                                                                            radioTemperatureBoth.CheckedChanged,
-                                                                                            radioGateDiameterMetric.CheckedChanged,
-                                                                                            radioGateDiameterImperial.CheckedChanged,
-                                                                                            radioGateDiameterBoth.CheckedChanged
+#End Region
 
-        UnitPrefChanged(sender)
+#End Region
 
-    End Sub
 End Class

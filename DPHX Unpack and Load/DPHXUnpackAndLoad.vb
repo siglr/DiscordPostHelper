@@ -1,27 +1,25 @@
 ﻿Imports System.Configuration
 Imports System.IO
 Imports System.Text
+Imports System.Threading
 Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class DPHXUnpackAndLoad
 
+#Region "Constants and other global variables"
+
+    Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+
     Private ReadOnly _SF As New SupportingFeatures(SupportingFeatures.ClientApp.DPHXUnpackAndLoad)
     Private _currentFile As String = String.Empty
     Private _abortingFirstRun As Boolean = False
     Private _allDPHData As AllData
 
-    Public Sub SetFormCaption(filename As String)
+#End Region
 
-        If filename = String.Empty Then
-            filename = "No DPHX package loaded"
-        End If
-
-        'Add version to form title
-        Me.Text = $"DPHX Unpack and Load v{Me.GetType.Assembly.GetName.Version} - {filename}"
-
-    End Sub
+#Region "Form events"
 
     Private Sub DPHXUnpackAndLoad_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -76,32 +74,29 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Public Sub CheckForNewVersion()
-        Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
-        Dim message As String = String.Empty
+    Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
-        If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
-            'New version available
-            If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
-                'update
-                'Download the file
-                If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
-                    Application.Exit()
+        If Not _abortingFirstRun Then
+            Dim nbrTries As Integer = 0
+            Do Until nbrTries = 10
+                nbrTries += 1
+                If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
+                    nbrTries = 10
                 Else
-                    'Show error updating
-                    MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Me.Refresh()
+                    Application.DoEvents()
                 End If
-            End If
+            Loop
+            Settings.SessionSettings.MainFormSize = Me.Size.ToString()
+            Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
+            Settings.SessionSettings.Save()
         End If
 
     End Sub
 
-    Private Function OpenSettingsWindow() As DialogResult
-        Dim formSettings As New Settings
-
-        Return formSettings.ShowDialog(Me)
-
-    End Function
+    Private Sub DPHXUnpackAndLoad_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
+        ctrlBriefing.AdjustRTBoxControls()
+    End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
 
@@ -133,6 +128,101 @@ Public Class DPHXUnpackAndLoad
         End If
 
     End Sub
+
+    Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles btnCopyFiles.Click
+
+        If warningMSFSRunningToolStrip.Visible Then
+            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be copied but weather preset will not be available in MSFS until it is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                UnpackFiles()
+            End If
+        Else
+            UnpackFiles()
+        End If
+    End Sub
+
+    Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles btnCleanup.Click
+
+        If warningMSFSRunningToolStrip.Visible Then
+            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                CleanupFiles()
+            End If
+        Else
+            CleanupFiles()
+        End If
+
+    End Sub
+
+    Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles btnLoadB21.Click
+
+        Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
+
+        If flightplanFilename Is String.Empty Then
+        Else
+            Dim tempFolderName As String = _SF.GenerateRandomFileName()
+            Dim flightPlanName As String = Path.GetFileNameWithoutExtension(flightplanFilename)
+
+            _SF.UploadFile(tempFolderName, flightPlanName, ctrlBriefing.FlightPlanInnerXML)
+
+            Process.Start(B21PlannerURL & "?pln=siglr.com/DiscordPostHelper/FlightPlans/" & tempFolderName & "/" & flightPlanName & ".pln")
+
+            'Wait 5 seconds
+            Thread.Sleep(5000)
+            _SF.DeleteTempFile(tempFolderName)
+
+        End If
+
+    End Sub
+
+    Private Sub ChkMSFS_Tick(sender As Object, e As EventArgs) Handles ChkMSFS.Tick
+        Dim processList As Process() = Process.GetProcessesByName("FlightSimulator")
+        If processList.Length > 0 Then
+            warningMSFSRunningToolStrip.Visible = True
+        Else
+            warningMSFSRunningToolStrip.Visible = False
+        End If
+    End Sub
+
+#End Region
+
+#Region "Subs and functions"
+
+    Private Sub SetFormCaption(filename As String)
+
+        If filename = String.Empty Then
+            filename = "No DPHX package loaded"
+        End If
+
+        'Add version to form title
+        Me.Text = $"DPHX Unpack and Load v{Me.GetType.Assembly.GetName.Version} - {filename}"
+
+    End Sub
+
+    Private Sub CheckForNewVersion()
+        Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
+        Dim message As String = String.Empty
+
+        If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
+            'New version available
+            If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
+                'update
+                'Download the file
+                If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
+                    Application.Exit()
+                Else
+                    'Show error updating
+                    MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Private Function OpenSettingsWindow() As DialogResult
+        Dim formSettings As New Settings
+
+        Return formSettings.ShowDialog(Me)
+
+    End Function
 
     Private Function TempDPHXUnpackFolder() As String
         Return Path.Combine(Settings.SessionSettings.UnpackingFolder, "TempDPHXUnpack")
@@ -192,6 +282,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub DisableUnpackButton()
         btnCopyFiles.Enabled = False
         btnCleanup.Enabled = False
+        btnLoadB21.Enabled = False
         pnlUnpackBtn.BackColor = SystemColors.Control
         btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
     End Sub
@@ -199,6 +290,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub EnableUnpackButton(emphasize As Boolean)
         btnCopyFiles.Enabled = True
         btnCleanup.Enabled = True
+        btnLoadB21.Enabled = True
         If emphasize Then
             pnlUnpackBtn.BackColor = Color.Red
             btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Bold)
@@ -206,26 +298,6 @@ Public Class DPHXUnpackAndLoad
             pnlUnpackBtn.BackColor = SystemColors.Control
             btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
         End If
-    End Sub
-
-    Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-
-        If Not _abortingFirstRun Then
-            Dim nbrTries As Integer = 0
-            Do Until nbrTries = 10
-                nbrTries += 1
-                If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
-                    nbrTries = 10
-                Else
-                    Me.Refresh()
-                    Application.DoEvents()
-                End If
-            Loop
-            Settings.SessionSettings.MainFormSize = Me.Size.ToString()
-            Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
-            Settings.SessionSettings.Save()
-        End If
-
     End Sub
 
     Private Sub RestoreMainFormLocationAndSize()
@@ -244,31 +316,6 @@ Public Class DPHXUnpackAndLoad
             Dim x As Integer = CInt(locationArray(0).Split("=")(1))
             Dim y As Integer = CInt(locationArray(1).Split("=")(1))
             Me.Location = New Point(x, y)
-        End If
-    End Sub
-
-
-    Private Sub DPHXUnpackAndLoad_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
-        ctrlBriefing.AdjustRTBoxControls()
-    End Sub
-
-    Private Sub ChkMSFS_Tick(sender As Object, e As EventArgs) Handles ChkMSFS.Tick
-        Dim processList As Process() = Process.GetProcessesByName("FlightSimulator")
-        If processList.Length > 0 Then
-            warningMSFSRunningToolStrip.Visible = True
-        Else
-            warningMSFSRunningToolStrip.Visible = False
-        End If
-    End Sub
-
-    Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles btnCopyFiles.Click
-
-        If warningMSFSRunningToolStrip.Visible Then
-            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be copied but weather preset will not be available in MSFS until it is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                UnpackFiles()
-            End If
-        Else
-            UnpackFiles()
         End If
     End Sub
 
@@ -378,18 +425,6 @@ Public Class DPHXUnpackAndLoad
 
     End Function
 
-    Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles btnCleanup.Click
-
-        If warningMSFSRunningToolStrip.Visible Then
-            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                CleanupFiles()
-            End If
-        Else
-            CleanupFiles()
-        End If
-
-    End Sub
-
     Private Sub CleanupFiles()
 
         Dim sb As New StringBuilder
@@ -423,5 +458,7 @@ Public Class DPHXUnpackAndLoad
         EnableUnpackButton(True)
 
     End Sub
+
+#End Region
 
 End Class

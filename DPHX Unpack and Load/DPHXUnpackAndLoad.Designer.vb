@@ -23,6 +23,7 @@ Partial Class DPHXUnpackAndLoad
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim PreferredUnits1 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Me.topButtonsArea = New System.Windows.Forms.Panel()
         Me.btnCleanup = New System.Windows.Forms.Button()
@@ -41,6 +42,7 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.btnLoadB21 = New System.Windows.Forms.Button()
         Me.topButtonsArea.SuspendLayout()
         Me.pnlUnpackBtn.SuspendLayout()
         Me.pnlPackageFileName.SuspendLayout()
@@ -50,6 +52,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'topButtonsArea
         '
+        Me.topButtonsArea.Controls.Add(Me.btnLoadB21)
         Me.topButtonsArea.Controls.Add(Me.btnCleanup)
         Me.topButtonsArea.Controls.Add(Me.pnlUnpackBtn)
         Me.topButtonsArea.Controls.Add(Me.LoadDPHX)
@@ -203,13 +206,32 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ctrlBriefing.EventIsEnabled = False
         Me.ctrlBriefing.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.ctrlBriefing.Location = New System.Drawing.Point(0, 109)
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.ctrlBriefing.PrefUnits = PreferredUnits1
         Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 635)
         Me.ctrlBriefing.TabIndex = 3
+        '
+        'btnLoadB21
+        '
+        Me.btnLoadB21.Enabled = False
+        Me.btnLoadB21.Location = New System.Drawing.Point(396, 6)
+        Me.btnLoadB21.Name = "btnLoadB21"
+        Me.btnLoadB21.Size = New System.Drawing.Size(123, 30)
+        Me.btnLoadB21.TabIndex = 5
+        Me.btnLoadB21.Text = "B21 Planner"
+        Me.ToolTip1.SetToolTip(Me.btnLoadB21, "Click to open the B21 Planner in your browser.")
+        Me.btnLoadB21.UseVisualStyleBackColor = True
         '
         'DPHXUnpackAndLoad
         '
@@ -259,4 +281,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents ChkMSFS As Timer
     Friend WithEvents warningMSFSRunningToolStrip As ToolStripStatusLabel
     Friend WithEvents btnCleanup As Button
+    Friend WithEvents btnLoadB21 As Button
 End Class
