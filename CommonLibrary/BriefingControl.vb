@@ -194,6 +194,8 @@ Public Class BriefingControl
         imagesListView.Items.Clear()
         imagesListView.Clear()
 
+        ClearCountryFlagPictures()
+
         EventIsEnabled = False
         windLayersFlowLayoutPnl.Controls.Clear()
 
@@ -235,7 +237,9 @@ Public Class BriefingControl
         _WeatherDetails = Nothing
         _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
 
+        _SF.DownloadCountryFlags(_sessionData.Countries)
         BuildTaskData()
+        AddCountryFlagPictures()
 
     End Sub
 
@@ -275,6 +279,44 @@ Public Class BriefingControl
             End If
         End Get
     End Property
+
+    Private Sub AddCountryFlagPictures()
+        Dim flagsDirectory As String = SupportingFeatures.ReadRegistryKey("CountryFlagsFolder", String.Empty)
+
+        For Each countryName As String In _sessionData.Countries
+            If countryName <> String.Empty AndAlso _SF.CountryFlagCodes.ContainsKey(countryName) Then
+                Dim countryCode As String = _SF.CountryFlagCodes(countryName)
+                Dim flagFileName As String = countryCode.Substring(6, 2) & ".png"
+                Dim flagFilePath As String = Path.Combine(flagsDirectory, flagFileName)
+
+                If File.Exists(flagFilePath) Then
+                    Dim pictureBox As New PictureBox()
+                    pictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                    pictureBox.Width = 56
+                    pictureBox.Height = 42
+                    pictureBox.Image = Image.FromFile(flagFilePath)
+
+                    ToolTip1.SetToolTip(pictureBox, countryName)
+
+                    countryFlagsLayoutPanel.Controls.Add(pictureBox)
+                End If
+            End If
+        Next
+    End Sub
+
+    Public Sub ClearCountryFlagPictures()
+        For Each control As Control In countryFlagsLayoutPanel.Controls
+            If TypeOf control Is PictureBox Then
+                Dim pictureBox As PictureBox = DirectCast(control, PictureBox)
+                pictureBox.Image?.Dispose() ' Dispose the image resource
+                pictureBox.Image = Nothing ' Clear the image property
+                pictureBox.Dispose() ' Dispose the PictureBox control itself
+            End If
+        Next
+
+        countryFlagsLayoutPanel.Controls.Clear() ' Clear all controls from the CountryFlagsPanel
+    End Sub
+
 
 #End Region
 

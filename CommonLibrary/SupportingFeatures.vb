@@ -1097,6 +1097,21 @@ Public Class SupportingFeatures
 
     End Sub
 
+    Public Shared Sub WriteRegistryKey(valueName As String, value As String)
+
+        Dim keyPath As String = "Software\SIGLR\MSFS Soaring Task Tools"
+
+        Try
+            Using key As RegistryKey = Registry.CurrentUser.CreateSubKey(keyPath)
+                key.SetValue(valueName, value)
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+    End Sub
+
     Public Shared Function ReadRegistryKey(valueName As String, defaultValue As Integer) As Integer
 
         Dim keyPath As String = "Software\SIGLR\MSFS Soaring Task Tools"
@@ -1117,5 +1132,64 @@ Public Class SupportingFeatures
         Return value
 
     End Function
+
+    Public Shared Function ReadRegistryKey(valueName As String, defaultValue As String) As String
+
+        Dim keyPath As String = "Software\SIGLR\MSFS Soaring Task Tools"
+
+        Dim value As String = defaultValue
+
+        Try
+            Using key As RegistryKey = Registry.CurrentUser.OpenSubKey(keyPath)
+                If key IsNot Nothing Then
+                    value = key.GetValue(valueName, defaultValue).ToString
+                End If
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return value
+
+    End Function
+
+    Public Sub DownloadCountryFlags(selectedCountries As List(Of String))
+
+        Dim flagsDirectory As String = ReadRegistryKey("CountryFlagsFolder", String.Empty)
+
+        If flagsDirectory = String.Empty Then
+            'Set the CountryFlags folder to use
+            flagsDirectory = Path.Combine(Application.StartupPath, "CountryFlags")
+            WriteRegistryKey("CountryFlagsFolder", flagsDirectory)
+        Else
+            If Not Directory.Exists(flagsDirectory) Then
+                flagsDirectory = Path.Combine(Application.StartupPath, "CountryFlags")
+                WriteRegistryKey("CountryFlagsFolder", flagsDirectory)
+            End If
+        End If
+
+        ' Create the CountryFlags directory if it doesn't exist
+        If Not Directory.Exists(flagsDirectory) Then
+            Directory.CreateDirectory(flagsDirectory)
+        End If
+
+        For Each countryName As String In selectedCountries
+            If countryName <> String.Empty AndAlso CountryFlagCodes.ContainsKey(countryName) Then
+                Dim countryCode As String = CountryFlagCodes(countryName)
+                Dim flagFileName As String = countryCode.Substring(6, 2) & ".png"
+                Dim flagFilePath As String = Path.Combine(flagsDirectory, flagFileName)
+
+                ' Check if the flag image is already downloaded
+                If Not File.Exists(flagFilePath) Then
+                    ' Download the flag image
+                    Dim flagUrl As String = $"https://flagcdn.com/56x42/{countryCode.Substring(6, 2)}.png"
+                    Using client As New WebClient()
+                        client.DownloadFile(flagUrl, flagFilePath)
+                    End Using
+                End If
+            End If
+        Next
+    End Sub
 
 End Class
