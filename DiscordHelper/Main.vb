@@ -1470,10 +1470,10 @@ Public Class Main
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
         Clipboard.SetText(txtGroupFlightEventPost.Text)
-        MessageBox.Show(Me, $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field on section 2 for Discord Event.",
-                        "Creating group flight post",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information)
+        CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field on section 2 for Discord Event.",
+                                "Creating group flight post")
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -1485,7 +1485,11 @@ Public Class Main
     Private Sub btnEventTopicClipboard_Click(sender As Object, e As EventArgs) Handles btnEventTopicClipboard.Click
         If txtDiscordEventTopic.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventTopic.Text)
-            MessageBox.Show(Me, "Paste the topic into the Event Topic field on Discord.", "Creating Discord Event", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Paste the topic into the Event Topic field on Discord.",
+                                "Creating Discord Event")
+
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -1497,7 +1501,10 @@ Public Class Main
     Private Sub btnEventDescriptionToClipboard_Click(sender As Object, e As EventArgs) Handles btnEventDescriptionToClipboard.Click
         If txtDiscordEventDescription.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventDescription.Text)
-            MessageBox.Show(Me, "Paste the description into the Event Description field on Discord.", "Creating Discord Event", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            CopyContent.ShowContent(Me,
+                                Clipboard.GetText,
+                                "Paste the description into the Event Description field on Discord.",
+                                "Creating Discord Event")
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -1526,21 +1533,29 @@ Public Class Main
     Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
 
         Dim allFiles As New Specialized.StringCollection
+        Dim contentForMessage As New StringBuilder
 
+        contentForMessage.AppendLine("FILES")
+
+        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+            allFiles.Add(txtDPHXPackageFilename.Text)
+            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
+        End If
         If File.Exists(txtFlightPlanFile.Text) Then
             allFiles.Add(txtFlightPlanFile.Text)
+            contentForMessage.AppendLine(txtFlightPlanFile.Text)
         End If
         If File.Exists(txtWeatherFile.Text) Then
             allFiles.Add(txtWeatherFile.Text)
+            contentForMessage.AppendLine(txtWeatherFile.Text)
         End If
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
-            MessageBox.Show(Me,
-                            "Now paste the copied files in a new post in the proper Discord channel for the club/group and come back for the text info (button 1 below).",
-                            "Optional - Including the required files in the group flight post",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation)
+            CopyContent.ShowContent(Me,
+                                    contentForMessage.ToString,
+                                    "Now paste the copied files in a new post in the proper Discord channel for the club/group and come back for the text info (button 1 below).",
+                                    "Optional - Including the required files in the group flight post")
         End If
 
         If _GuideCurrentStep <> 0 Then

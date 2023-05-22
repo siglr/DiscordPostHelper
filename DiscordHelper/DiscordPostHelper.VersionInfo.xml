@@ -1,6 +1,16 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.19.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.22.1</ReleaseVersion>
+      <ReleaseTitle>Briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release mostly features improvements to the briefing tab.
+        - Added mouse drag support on map and other images
+        - Added country flag support in the briefing viewer
+        - Added global exception handling (in case of crashes)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.19.1</ReleaseVersion>
       <ReleaseTitle>Preferred units on Briefing page</ReleaseTitle>
