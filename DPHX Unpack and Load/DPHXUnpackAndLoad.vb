@@ -1,10 +1,12 @@
 ﻿Imports System.Configuration
 Imports System.IO
+Imports System.Reflection
 Imports System.Text
 Imports System.Threading
 Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports SIGLR.SoaringTools.ImageViewer
 
 Public Class DPHXUnpackAndLoad
 
@@ -17,6 +19,38 @@ Public Class DPHXUnpackAndLoad
     Private _abortingFirstRun As Boolean = False
     Private _allDPHData As AllData
 
+#End Region
+
+#Region "Global exception handler"
+
+    Public Sub New()
+        ' Subscribe to global exception handlers
+        AddHandler Application.ThreadException, AddressOf Application_ThreadException
+        AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf CurrentDomain_UnhandledException
+
+        ' Initialize the form and other components
+        InitializeComponent()
+    End Sub
+
+    Private Sub Application_ThreadException(ByVal sender As Object, ByVal e As ThreadExceptionEventArgs)
+        ' Handle the exception
+        GlobalExceptionHandler(e.Exception)
+    End Sub
+
+    Private Sub CurrentDomain_UnhandledException(ByVal sender As Object, ByVal e As UnhandledExceptionEventArgs)
+        ' Handle the exception
+        GlobalExceptionHandler(e.ExceptionObject)
+    End Sub
+
+    Private Sub GlobalExceptionHandler(e As Exception)
+
+        Dim CommonLibraryAssembly As Assembly = GetType(SupportingFeatures).Assembly
+        Dim ImageViewerAssembly As Assembly = GetType(ImageBox).Assembly
+
+        Clipboard.SetText($"{Me.GetType.Assembly.GetName.ToString}{vbCrLf}{CommonLibraryAssembly.GetName.ToString}{vbCrLf}{ImageViewerAssembly.GetName.ToString}{vbCrLf}{vbCrLf}{e.Message}{vbCrLf}{vbCrLf}{e.ToString}")
+        MessageBox.Show($"An unhandled exception occurred and all details have been added to your clipboard.{vbCrLf}Please paste the content in the 'questions-support' channel on Discord.{vbCrLf}{vbCrLf}{Clipboard.GetText}", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Application.Exit()
+    End Sub
 #End Region
 
 #Region "Form events"

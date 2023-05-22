@@ -973,7 +973,7 @@ Public Class SupportingFeatures
 
     Public Function CheckRequiredNetFrameworkVersion() As Boolean
 
-        Const net481 As Integer = 533320
+        'Const net481 As Integer = 533320
         Const net480 As Integer = 528049
 
         Dim result As Boolean = False

@@ -163,6 +163,10 @@
       <Project>{8f737f27-41dd-492b-b023-d43501f38355}</Project>
       <Name>CommonLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ImageViewer\ImageViewer.csproj">
+      <Project>{8241a955-c8e4-4cfd-ba28-eeab34f6c00c}</Project>
+      <Name>ImageViewer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
