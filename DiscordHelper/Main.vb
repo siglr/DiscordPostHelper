@@ -1896,6 +1896,7 @@ Public Class Main
             Case 0
                 pnlGuide.Visible = False
                 pnlWizardEvent.Visible = False
+                pnlWizardDiscord.Visible = False
                 btnTurnGuideOff.Visible = False
             Case 1 'Select flight plan
                 SetGuidePanelToLeft()
@@ -2002,7 +2003,9 @@ Public Class Main
                 pnlGuide.Top = 524
                 lblGuideInstructions.Text = "When you are done and select to share a DPHX package of this task, use this section to select it and include it with the post."
                 SetFocusOnField(btnSelectDPHXPackageFile, fromF1Key)
-                _GuideCurrentStep = 29
+            Case 22 'End of flight plan data
+                _GuideCurrentStep = 30
+                ShowGuide()
 
             Case 30 'Reset All
                 SetGuidePanelToTopArrowLeftSide()
@@ -2024,7 +2027,9 @@ Public Class Main
                 pnlGuide.Left = (btnLoadB21Planner.Left + btnLoadB21Planner.Size.Width) - pnlGuide.Size.Width
                 lblGuideInstructions.Text = "You can open your current task using the B21 Task Planner by clicking this button."
                 SetFocusOnField(btnLoadB21Planner, fromF1Key)
-                _GuideCurrentStep = 38
+            Case 34 'End of buttons
+                _GuideCurrentStep = 39
+                ShowGuide()
 
             Case 39 'Ready to post ?
                 If MessageBox.Show(Me, "The task's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
@@ -2082,7 +2087,9 @@ Public Class Main
                 pnlWizardDiscord.Top = btnAddOnsCopy.Top + 150
                 lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
                 SetFocusOnField(btnAddOnsCopy, fromF1Key)
-                _GuideCurrentStep = 58
+            Case 48 'Next section
+                _GuideCurrentStep = 59
+                ShowGuide()
 
             Case 59
                 If MessageBox.Show(Me, "The task's details are all posted. Are you also creating the group flight post on Discord?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
@@ -2172,7 +2179,10 @@ Public Class Main
                 pnlWizardEvent.Top = 593
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you have the option to include an invite to the server along with the group flight info. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
-                _GuideCurrentStep = 78
+
+            Case 73 'Next section
+                _GuideCurrentStep = 79
+                ShowGuide()
 
             Case 79 'Ready to post ?
                 If MessageBox.Show(Me, "The group flight's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
