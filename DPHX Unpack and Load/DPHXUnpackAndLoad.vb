@@ -28,6 +28,17 @@ Public Class DPHXUnpackAndLoad
         AddHandler Application.ThreadException, AddressOf Application_ThreadException
         AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf CurrentDomain_UnhandledException
 
+        'Only one instance can run
+        Dim currentProcess As Process = Process.GetCurrentProcess()
+        Dim processes() As Process = Process.GetProcessesByName(currentProcess.ProcessName)
+
+        If processes.Length > 1 Then
+            ' Another instance is already running, show an error message or take appropriate action
+            MessageBox.Show("Another instance of the application is already running.", "Application Already Running", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Application.Exit()
+            End
+        End If
+
         ' Initialize the form and other components
         InitializeComponent()
     End Sub
