@@ -657,7 +657,7 @@ Public Class Main
     Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
 
         Dim sb As New StringBuilder
-        sb.AppendLine("**Files**")
+        sb.AppendLine(":file_folder: **Files** :file_folder:")
 
         'Check if the DPHX package is included
         If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
@@ -989,7 +989,7 @@ Public Class Main
         Dim sb As New StringBuilder
 
         If lstAllRecommendedAddOns.Items.Count > 0 Then
-            sb.AppendLine("**Recommended add-ons**")
+            sb.AppendLine(":dvd: **Recommended add-ons** :dvd:")
             For Each addOn As RecommendedAddOn In lstAllRecommendedAddOns.Items
                 sb.AppendLine($"{addOn.Name} ({addOn.Type.ToString}) {addOn.URL}")
             Next
@@ -1042,7 +1042,7 @@ Public Class Main
         txtFPResults.Text = sb.ToString.Trim
 
         If txtLongDescription.Text.Trim.Length > 0 Then
-            txtFullDescriptionResults.Text = $"**Full Description**{Environment.NewLine}{txtLongDescription.Text.Trim}"
+            txtFullDescriptionResults.Text = $":book: **Full Description** :book:{Environment.NewLine}{txtLongDescription.Text.Trim}"
         Else
             txtFullDescriptionResults.Text = String.Empty
         End If
@@ -1324,7 +1324,7 @@ Public Class Main
 
         Dim sb As New StringBuilder()
 
-        sb.AppendLine("**Weather Basic Information**")
+        sb.AppendLine(":thermometer: **Weather Basic Information** :thermometer:")
 
         If chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing Then
             sb.Append($"Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
@@ -1350,12 +1350,12 @@ Public Class Main
     End Sub
 
     Private Sub BuildWeatherCloudLayers()
-        txtWeatherClouds.Text = $"**Cloud Layers**{Environment.NewLine}"
+        txtWeatherClouds.Text = $":white_sun_cloud: **Cloud Layers** :white_sun_cloud:{Environment.NewLine}"
         txtWeatherClouds.AppendText(_WeatherDetails.CloudLayers)
     End Sub
 
     Private Sub BuildWeatherWindLayers()
-        txtWeatherWinds.Text = $"**Wind Layers**{Environment.NewLine}"
+        txtWeatherWinds.Text = $":wind_blowing_face: **Wind Layers** :wind_blowing_face:{Environment.NewLine}"
         txtWeatherWinds.AppendText(_WeatherDetails.WindLayersAsString)
     End Sub
 

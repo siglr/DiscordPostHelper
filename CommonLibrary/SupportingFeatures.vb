@@ -276,7 +276,7 @@ Public Class SupportingFeatures
         Next
         Dim strAltRestrictions As String
 
-        strAltRestrictions = $"**Altitude Restrictions**{If(strRestrictions = String.Empty, $"{Environment.NewLine}None", strRestrictions)}"
+        strAltRestrictions = $":warning: **Altitude Restrictions** :warning:{If(strRestrictions = String.Empty, $"{Environment.NewLine}None", strRestrictions)}"
 
         Return strAltRestrictions
 
@@ -450,7 +450,7 @@ Public Class SupportingFeatures
         Dim seq As Integer = 0
 
         If AllWaypoints.Count > 0 Then
-            sb.AppendLine("**Waypoint Coordinates for Xbox Users**")
+            sb.AppendLine(":map: **Waypoint Coordinates for Xbox Users** :map:")
             For Each wp As ATCWaypoint In AllWaypoints
                 seq += 1
                 If seq = 1 Or seq = AllWaypoints.Count Then

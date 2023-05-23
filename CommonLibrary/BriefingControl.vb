@@ -225,8 +225,6 @@ Public Class BriefingControl
             _unpackFolder = unpackFolder
         End If
 
-        EventIsEnabled = _sessionData.EventEnabled
-
         'Load flight plan
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocFlightPlan.Load(flightplanfile)
@@ -249,6 +247,8 @@ Public Class BriefingControl
         If _onUnitsTab Then
             FullReset()
             BuildTaskData()
+            BuildEventInfoTab()
+            AddCountryFlagPictures()
             _onUnitsTab = False
         End If
 
@@ -341,6 +341,8 @@ Public Class BriefingControl
     Private Sub BuildTaskData()
         Dim totalDistance As Integer
         Dim trackDistance As Integer
+
+        EventIsEnabled = _sessionData.EventEnabled
 
         _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
 
