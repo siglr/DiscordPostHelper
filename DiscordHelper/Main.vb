@@ -1351,7 +1351,7 @@ Public Class Main
 
     Private Sub BuildWeatherCloudLayers()
         txtWeatherClouds.Text = $":white_sun_cloud: **Cloud Layers** :white_sun_cloud:{Environment.NewLine}"
-        txtWeatherClouds.AppendText(_WeatherDetails.CloudLayers)
+        txtWeatherClouds.AppendText(_WeatherDetails.CloudLayersText)
     End Sub
 
     Private Sub BuildWeatherWindLayers()
