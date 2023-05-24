@@ -1,8 +1,19 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.24.1</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.5.22.1</ReleaseVersion>
+      <ReleaseVersion>23.5.24.1</ReleaseVersion>
+      <ReleaseTitle>Discord emojies and more briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release includes:
+        - Discord emojies to section titles in the posts content
+        - New Weather tab on briefing to display wind and cloud layers in grid formats like waypoints
+        - Fixed guide tooltip not closing when hitting F1 on the new Discord tab
+        - Fixed event info and add-ons info not reloading properly in the briefing when going in and out of the Units tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.24.1</ReleaseVersion>
       <ReleaseTitle>Briefing improvements</ReleaseTitle>
       <ReleaseNotes>
         This release mostly features improvements to the briefing tab.
