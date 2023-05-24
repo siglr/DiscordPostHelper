@@ -26,6 +26,7 @@ Partial Class BriefingControl
         Me.pnlTaskBriefing = New System.Windows.Forms.Panel()
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
+        Me.countryFlagsLayoutPanel = New System.Windows.Forms.FlowLayoutPanel()
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
         Me.mapSplitterUpDown = New System.Windows.Forms.SplitContainer()
@@ -89,7 +90,10 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.countryFlagsLayoutPanel = New System.Windows.Forms.FlowLayoutPanel()
+        Me.tbpgWeather = New System.Windows.Forms.TabPage()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.cloudLayersDatagrid = New System.Windows.Forms.DataGridView()
+        Me.windLayersDatagrid = New System.Windows.Forms.DataGridView()
         Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
@@ -138,6 +142,13 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
+        Me.tbpgWeather.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
+        CType(Me.cloudLayersDatagrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.windLayersDatagrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -158,6 +169,7 @@ Partial Class BriefingControl
         Me.tabsBriefing.Controls.Add(Me.tbpgEventInfo)
         Me.tabsBriefing.Controls.Add(Me.tbpgImages)
         Me.tabsBriefing.Controls.Add(Me.tbpgXBOX)
+        Me.tabsBriefing.Controls.Add(Me.tbpgWeather)
         Me.tabsBriefing.Controls.Add(Me.tbpgAddOns)
         Me.tabsBriefing.Controls.Add(Me.tabUnits)
         Me.tabsBriefing.Dock = System.Windows.Forms.DockStyle.Fill
@@ -181,6 +193,14 @@ Partial Class BriefingControl
         Me.tbpgMainTaskInfo.TabIndex = 0
         Me.tbpgMainTaskInfo.Text = "Main Task Info"
         Me.tbpgMainTaskInfo.UseVisualStyleBackColor = True
+        '
+        'countryFlagsLayoutPanel
+        '
+        Me.countryFlagsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.countryFlagsLayoutPanel.Location = New System.Drawing.Point(3, 3)
+        Me.countryFlagsLayoutPanel.Name = "countryFlagsLayoutPanel"
+        Me.countryFlagsLayoutPanel.Size = New System.Drawing.Size(976, 45)
+        Me.countryFlagsLayoutPanel.TabIndex = 5
         '
         'txtBriefing
         '
@@ -937,13 +957,65 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'countryFlagsLayoutPanel
+        'tbpgWeather
         '
-        Me.countryFlagsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top
-        Me.countryFlagsLayoutPanel.Location = New System.Drawing.Point(3, 3)
-        Me.countryFlagsLayoutPanel.Name = "countryFlagsLayoutPanel"
-        Me.countryFlagsLayoutPanel.Size = New System.Drawing.Size(976, 45)
-        Me.countryFlagsLayoutPanel.TabIndex = 5
+        Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
+        Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgWeather.Name = "tbpgWeather"
+        Me.tbpgWeather.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgWeather.TabIndex = 7
+        Me.tbpgWeather.Text = "Weather"
+        Me.tbpgWeather.UseVisualStyleBackColor = True
+        '
+        'SplitContainer1
+        '
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'SplitContainer1.Panel1
+        '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.cloudLayersDatagrid)
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.windLayersDatagrid)
+        Me.SplitContainer1.Size = New System.Drawing.Size(982, 710)
+        Me.SplitContainer1.SplitterDistance = 327
+        Me.SplitContainer1.TabIndex = 0
+        '
+        'cloudLayersDatagrid
+        '
+        Me.cloudLayersDatagrid.AllowUserToAddRows = False
+        Me.cloudLayersDatagrid.AllowUserToDeleteRows = False
+        Me.cloudLayersDatagrid.AllowUserToResizeRows = False
+        Me.cloudLayersDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.cloudLayersDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.cloudLayersDatagrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cloudLayersDatagrid.Location = New System.Drawing.Point(0, 0)
+        Me.cloudLayersDatagrid.Name = "cloudLayersDatagrid"
+        Me.cloudLayersDatagrid.ReadOnly = True
+        Me.cloudLayersDatagrid.RowHeadersWidth = 47
+        Me.cloudLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(982, 327)
+        Me.cloudLayersDatagrid.TabIndex = 1
+        '
+        'windLayersDatagrid
+        '
+        Me.windLayersDatagrid.AllowUserToAddRows = False
+        Me.windLayersDatagrid.AllowUserToDeleteRows = False
+        Me.windLayersDatagrid.AllowUserToResizeRows = False
+        Me.windLayersDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.windLayersDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.windLayersDatagrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.windLayersDatagrid.Location = New System.Drawing.Point(0, 0)
+        Me.windLayersDatagrid.Name = "windLayersDatagrid"
+        Me.windLayersDatagrid.ReadOnly = True
+        Me.windLayersDatagrid.RowHeadersWidth = 47
+        Me.windLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.windLayersDatagrid.Size = New System.Drawing.Size(982, 379)
+        Me.windLayersDatagrid.TabIndex = 2
         '
         'countDownTaskStart
         '
@@ -1046,6 +1118,13 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
+        Me.tbpgWeather.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
+        CType(Me.cloudLayersDatagrid, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.windLayersDatagrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1121,4 +1200,8 @@ Partial Class BriefingControl
     Friend WithEvents radioTemperatureFarenheit As Windows.Forms.RadioButton
     Friend WithEvents radioTemperatureBoth As Windows.Forms.RadioButton
     Friend WithEvents countryFlagsLayoutPanel As Windows.Forms.FlowLayoutPanel
+    Friend WithEvents tbpgWeather As Windows.Forms.TabPage
+    Friend WithEvents SplitContainer1 As Windows.Forms.SplitContainer
+    Friend WithEvents cloudLayersDatagrid As Windows.Forms.DataGridView
+    Friend WithEvents windLayersDatagrid As Windows.Forms.DataGridView
 End Class

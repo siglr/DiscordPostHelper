@@ -63,4 +63,62 @@ Public Class CloudLayer
         End Get
     End Property
 
+    Public ReadOnly Property AltitudeBottomCorrectUnit(prefUnits As PreferredUnits) As String
+        Get
+            If prefUnits.Altitude = AltitudeUnits.Both Then
+                Return String.Format("{0:N0} / {1:N0}",
+                                Conversions.MeterToFeet(_AltitudeBottom),
+                                _AltitudeBottom)
+            Else
+                Select Case prefUnits.Altitude
+                    Case AltitudeUnits.Metric
+                        Return String.Format("{0:N0}",
+                                Conversions.MeterToFeet(_AltitudeBottom))
+                    Case AltitudeUnits.Imperial
+                        Return String.Format("{0:N0}",
+                                _AltitudeBottom)
+                End Select
+            End If
+            Return String.Empty
+        End Get
+    End Property
+
+    Public ReadOnly Property AltitudeTopCorrectUnit(prefUnits As PreferredUnits) As String
+        Get
+            If prefUnits.Altitude = AltitudeUnits.Both Then
+                Return String.Format("{0:N0} / {1:N0}",
+                                Conversions.MeterToFeet(_AltitudeTop),
+                                _AltitudeTop)
+            Else
+                Select Case prefUnits.Altitude
+                    Case AltitudeUnits.Metric
+                        Return String.Format("{0:N0}",
+                                Conversions.MeterToFeet(_AltitudeTop))
+                    Case AltitudeUnits.Imperial
+                        Return String.Format("{0:N0}",
+                                _AltitudeTop)
+                End Select
+            End If
+            Return String.Empty
+        End Get
+    End Property
+
+    Public ReadOnly Property CoverageForGrid() As String
+        Get
+            Return FormatNumber(_Coverage, 0)
+        End Get
+    End Property
+
+    Public ReadOnly Property DensityForGrid() As String
+        Get
+            Return FormatNumber(_Density, 3)
+        End Get
+    End Property
+
+    Public ReadOnly Property ScatteringForGrid() As String
+        Get
+            Return FormatNumber(_Scattering, 0)
+        End Get
+    End Property
+
 End Class

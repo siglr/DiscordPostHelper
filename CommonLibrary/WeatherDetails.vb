@@ -10,7 +10,7 @@ Public Class WeatherDetails
     Private ReadOnly _PrecipitationType As String
     Private ReadOnly _SnowCover As Single
 
-    Private ReadOnly _CloudLayers As New List(Of CloudLayer)
+    Public ReadOnly CloudLayers As New List(Of CloudLayer)
     Public ReadOnly WindLayers As New List(Of WindLayer)
 
     Public Sub New(xmlWeatherXMLDoc As XmlDocument)
@@ -37,10 +37,10 @@ Public Class WeatherDetails
         End Try
 
         For Each xmlCloudNode As XmlNode In xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/CloudLayer")
-            _CloudLayers.Add(New CloudLayer(xmlCloudNode))
+            CloudLayers.Add(New CloudLayer(xmlCloudNode))
         Next
 
-        _CloudLayers = _CloudLayers.OrderBy(Function(x) x.AltitudeBottom).ToList()
+        CloudLayers = CloudLayers.OrderBy(Function(x) x.AltitudeBottom).ToList()
 
         For Each xmlWindNode As XmlNode In xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/WindLayer")
             Me.WindLayers.Add(New WindLayer(xmlWindNode, AltitudeMeasurement))
@@ -151,12 +151,12 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property CloudLayers(Optional prefUnits As PreferredUnits = Nothing) As String
+    Public ReadOnly Property CloudLayersText(Optional prefUnits As PreferredUnits = Nothing) As String
         Get
             Dim results As New StringBuilder()
             Dim countLayer As Integer = 0
 
-            For Each layer As CloudLayer In _CloudLayers
+            For Each layer As CloudLayer In CloudLayers
                 If layer.IsValidCloudLayer Then
                     countLayer = ++1
                     results.AppendLine(layer.CloudLayerText(prefUnits))

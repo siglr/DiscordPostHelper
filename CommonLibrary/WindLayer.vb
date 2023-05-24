@@ -244,7 +244,7 @@ Public Class WindLayer
         End Get
     End Property
 
-    Private Function GetGustText(Optional prefUnits As PreferredUnits = Nothing) As String
+    Public Function GetGustText(Optional prefUnits As PreferredUnits = Nothing) As String
         Dim results As String = String.Empty
         If _HasGust Then
             If prefUnits Is Nothing OrElse prefUnits.WindSpeed = WindSpeedUnits.Both Then
@@ -277,4 +277,43 @@ Public Class WindLayer
         Return results
     End Function
 
+    Public ReadOnly Property AltitudeCorrectUnit(prefUnits As PreferredUnits) As String
+        Get
+            If prefUnits.Altitude = AltitudeUnits.Both Then
+                Return String.Format("{0:N0} / {1:N0}",
+                                Conversions.MeterToFeet(Altitude),
+                                Altitude)
+            Else
+                Select Case prefUnits.Altitude
+                    Case AltitudeUnits.Metric
+                        Return String.Format("{0:N0}",
+                                Conversions.MeterToFeet(Altitude))
+                    Case AltitudeUnits.Imperial
+                        Return String.Format("{0:N0}",
+                                Altitude)
+                End Select
+            End If
+            Return String.Empty
+        End Get
+    End Property
+
+    Public ReadOnly Property SpeedCorrectUnit(prefUnits As PreferredUnits) As String
+        Get
+            If prefUnits.WindSpeed = WindSpeedUnits.Both Then
+                Return String.Format("{0} / {1:N1}",
+                                Speed.ToString(),
+                                Conversions.KnotsToMps(Speed))
+            Else
+                Select Case prefUnits.WindSpeed
+                    Case WindSpeedUnits.MeterPerSecond
+                        Return String.Format("{0:N1}",
+                                Conversions.KnotsToMps(Speed))
+                    Case WindSpeedUnits.Knots
+                        Return String.Format("{0}",
+                                Speed.ToString())
+                End Select
+            End If
+            Return String.Empty
+        End Get
+    End Property
 End Class
