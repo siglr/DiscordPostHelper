@@ -243,13 +243,23 @@ Public Class SupportingFeatures
 
         Dim xmlWaypointList As XmlNodeList = pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint")
         Dim ICAO As String = String.Empty
+        Dim nbrICAO As Integer = pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/ICAO/ICAOIdent").Count
         For i As Integer = 0 To xmlWaypointList.Count - 1
-            If i = 0 Or i = xmlWaypointList.Count - 1 Then
-                ICAO = pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/ICAO/ICAOIdent").Item(0).InnerText
+
+            Dim icaoNode As XmlNode = xmlWaypointList.Item(i).SelectSingleNode("ICAO/ICAOIdent")
+
+            If icaoNode IsNot Nothing Then
+                Dim icaoIdent As String = icaoNode.InnerText
+                ' Do something with the ICAO value
+                ICAO = icaoIdent
             Else
                 ICAO = String.Empty
             End If
-            Dim atcWaypoint As New ATCWaypoint(pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint").Item(i).Attributes(0).Value, pXmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/ATCWaypoint/WorldPosition").Item(i).FirstChild.Value, i, ICAO)
+
+            Dim atcWaypoint As New ATCWaypoint(xmlWaypointList.Item(i).Attributes(0).Value,
+                                               xmlWaypointList.Item(i).SelectNodes("WorldPosition").Item(0).FirstChild.Value,
+                                               i,
+                                               ICAO)
             AllWaypoints.Add(atcWaypoint)
             If atcWaypoint.ContainsRestriction Then
                 strRestrictions = $"{strRestrictions}{Environment.NewLine}{atcWaypoint.Restrictions(includeWPName)}"
@@ -447,14 +457,13 @@ Public Class SupportingFeatures
     Public Function GetAllWPCoordinates() As String
 
         Dim sb As New StringBuilder()
-        Dim seq As Integer = 0
 
         If AllWaypoints.Count > 0 Then
             sb.AppendLine(":map: **Waypoint Coordinates for Xbox Users** :map:")
             For Each wp As ATCWaypoint In AllWaypoints
-                seq += 1
-                If seq = 1 Or seq = AllWaypoints.Count Then
-                    'Departure and arrival airports - do not add them
+                If wp.ICAO <> String.Empty Then
+                    'Airports - add ICAO
+                    sb.AppendLine($"{wp.WaypointName}: {wp.ICAO}")
                 Else
                     sb.AppendLine($"{wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
                 End If
