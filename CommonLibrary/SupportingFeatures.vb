@@ -12,7 +12,7 @@ Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 Imports Microsoft.Win32
-
+Imports System.Reflection
 
 Public Class SupportingFeatures
     Public Enum DiscordTimeStampFormat As Integer
@@ -599,7 +599,7 @@ Public Class SupportingFeatures
 
     Public Function GetVersionInfo() As VersionInfo
 
-        LogDateTime()
+        LogDateTime($"{ClientRunning.ToString} {Assembly.GetExecutingAssembly().GetName().Version}")
 
         Dim url As String = $"https://siglr.com/DiscordPostHelper/{ClientRunning.ToString}.VersionInfo.xml"
         Dim client As New WebClient()
@@ -614,22 +614,20 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Sub LogDateTime()
-
-        Dim url As String = $"https://siglr.com/DiscordPostHelper/DPHGetVersionInfo.php"
+    Public Sub LogDateTime(parameter As String)
+        Dim url As String = $"https://siglr.com/DiscordPostHelper/DPHGetVersionInfo.php?param={Uri.EscapeDataString(parameter)}"
         Dim client As New WebClient()
-        Dim responseString As String
 
         If Debugger.IsAttached Or File.Exists($"{Application.StartupPath}\{Environment.UserName}.txt") Then
             'Do nothing
         Else
             Try
-                responseString = client.DownloadString(url)
+                client.DownloadString(url)
             Catch ex As Exception
             End Try
         End If
-
     End Sub
+
 
     Public Function FormatVersionNumber(versionNumber As String) As String
         Dim parts As String() = versionNumber.Split("."c)
