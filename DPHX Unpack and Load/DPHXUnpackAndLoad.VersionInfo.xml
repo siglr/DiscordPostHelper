@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.26.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.26.1</ReleaseVersion>
+      <ReleaseTitle>Short description and small fixes</ReleaseTitle>
+      <ReleaseNotes>
+        This release includes:
+        - Added short description to briefing, between task title and credits
+        - Fixed wrong ICAO codes in the waypoints grid on the briefing page and support more than two ICAO in the waypoints
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.24.1</ReleaseVersion>
       <ReleaseTitle>More briefing improvements</ReleaseTitle>

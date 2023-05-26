@@ -1,6 +1,17 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.26.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.26.1</ReleaseVersion>
+      <ReleaseTitle>Discord Markdown to enhance all posts</ReleaseTitle>
+      <ReleaseNotes>
+        This release mostly focuses on the addition of Discord Markdown to enhance all posts in Discord
+        - Improvements and fixes to the wizard guide to include the briefing tab
+        - Added airports ICAO to list of waypoints in the Discord post (useful when more than departure and arrival airports in the flight plan)
+        - Added short description to briefing, between task title and credits
+        - Fixed wrong ICAO codes in the waypoints grid on the briefing page and support more than two ICAO in the waypoints
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.24.1</ReleaseVersion>
       <ReleaseTitle>Discord emojies and more briefing improvements</ReleaseTitle>
