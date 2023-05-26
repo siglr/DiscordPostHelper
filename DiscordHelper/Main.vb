@@ -1043,7 +1043,7 @@ Public Class Main
         sb.AppendLine($"> **Difficulty:** {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
-        sb.Append("### See inside thread for most up-to-date files And more information.")
+        sb.Append("### See inside thread for most up-to-date files and more information.")
         txtFPResults.Text = sb.ToString.Trim
 
         If txtLongDescription.Text.Trim.Length > 0 Then

@@ -365,6 +365,9 @@ Public Class BriefingControl
 
         'Title
         sb.Append($"\b {_sessionData.Title}\b0\line ")
+        sb.Append("\line ")
+        sb.Append($"{_sessionData.ShortDescription}\line ")
+        sb.Append("\line ")
         sb.Append($"{_sessionData.Credits}\line ")
         sb.Append("\line ")
 
