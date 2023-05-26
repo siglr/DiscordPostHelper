@@ -159,7 +159,7 @@ Public Class WeatherDetails
             For Each layer As CloudLayer In CloudLayers
                 If layer.IsValidCloudLayer Then
                     countLayer = ++1
-                    results.AppendLine(layer.CloudLayerText(prefUnits))
+                    results.AppendLine($"- {layer.CloudLayerText(prefUnits)}")
                 End If
             Next
 
@@ -180,7 +180,7 @@ Public Class WeatherDetails
             For Each layer As WindLayer In Me.WindLayers
                 If layer.IsValidWindLayer Then
                     countLayer = ++1
-                    results.AppendLine(layer.WindLayerText(prefUnits))
+                    results.AppendLine($"- {layer.WindLayerText(prefUnits)}")
                 End If
             Next
 

@@ -317,6 +317,7 @@ Public Class Main
 
         'For text box, make sure to display the value from the start
         If TypeOf sender Is Windows.Forms.TextBox Then
+            _SF.RemoveForbiddenPrefixes(sender)
             LeavingTextBox(sender)
         End If
 
@@ -480,6 +481,7 @@ Public Class Main
     End Sub
 
     Private Sub txtLongDescription_Leave(sender As Object, e As EventArgs) Handles txtLongDescription.Leave
+        _SF.RemoveForbiddenPrefixes(txtLongDescription)
         BuildFPResults()
         LeavingTextBox(sender)
     End Sub
@@ -657,24 +659,28 @@ Public Class Main
     Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
 
         Dim sb As New StringBuilder
-        sb.AppendLine(":file_folder: **Files** :file_folder:")
+        sb.AppendLine("## 📁 **Files**")
 
         'Check if the DPHX package is included
         If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
-            sb.AppendLine("If using the *DPHX Unpack & Load* tool (https://discord.gg/ST4uTPU3cT), simply download the DPHX package.")
-            sb.AppendLine("Otherwise, you must download the required files and put them in the proper folders.")
-            sb.AppendLine()
+            sb.AppendLine("### DPHX Unpack & Load")
+            sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
+            sb.AppendLine("> *To get and install the tool: https://discord.gg/ST4uTPU3cT/*")
+            sb.AppendLine("> ")
+            sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
         Else
             sb.AppendLine("You must download the required files and put them in the proper folders.")
         End If
 
-        sb.AppendLine("Required: Flight plan (.pln)")
-        sb.AppendLine("Required: Weather preset (.wpr)")
+        sb.AppendLine("### Required")
+        sb.AppendLine("> Flight plan (.pln)")
+        sb.AppendLine("> Weather preset (.wpr)")
 
         'Check if there is a trk file in the files
         For i = 0 To lstAllFiles.Items.Count() - 1
             If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
-                sb.AppendLine("Optional: XCSoar Track (.trk) - only if you use the XCSoar program.")
+                sb.AppendLine("### Optional")
+                sb.AppendLine("> XCSoar Track (.trk) - only if you use the XCSoar program.")
                 Exit For
             End If
         Next
@@ -694,7 +700,7 @@ Public Class Main
     End Sub
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
-        Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf & ".")
+        Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf)
         CopyContent.ShowContent(Me,
                                 Clipboard.GetText,
                                 "Now paste the restrictions and weather content as the next message in the thread!",
@@ -989,9 +995,9 @@ Public Class Main
         Dim sb As New StringBuilder
 
         If lstAllRecommendedAddOns.Items.Count > 0 Then
-            sb.AppendLine(":dvd: **Recommended add-ons** :dvd:")
+            sb.AppendLine("## 📀 Recommended add-ons")
             For Each addOn As RecommendedAddOn In lstAllRecommendedAddOns.Items
-                sb.AppendLine($"{addOn.Name} ({addOn.Type.ToString}) {addOn.URL}")
+                sb.AppendLine($"- {addOn.Name} ({addOn.Type.ToString}) {addOn.URL}")
             Next
         End If
 
@@ -1021,28 +1027,28 @@ Public Class Main
             dateFormat = "MMMM dd"
         End If
 
-        sb.AppendLine($"**{txtTitle.Text}**{AddFlagsToTitle()}")
+        sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
-            sb.AppendLine("**Main area/POI:** " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
+            sb.AppendLine("> **Main area/POI:** " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
-        sb.AppendLine($"**Flight plan file:** ""{Path.GetFileName(txtFlightPlanFile.Text)}""")
-        sb.AppendLine($"**Departure:** {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
-        sb.AppendLine($"**Arrival:** {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
-        sb.AppendLine($"**Sim Date & Time:** {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
-        sb.AppendLine($"**Soaring Type:** {GetSoaringTypesSelected()}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
-        sb.AppendLine($"**Distance:** {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
-        sb.AppendLine($"**Duration:** {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
-        sb.AppendLine($"**Recommended gliders:** {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
-        sb.AppendLine($"**Difficulty:** {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
+        sb.AppendLine($"> **Flight plan file:** ""{Path.GetFileName(txtFlightPlanFile.Text)}""")
+        sb.AppendLine($"> **Departure:** {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> **Arrival:** {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> **Sim Date & Time:** {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
+        sb.AppendLine($"> **Soaring Type:** {GetSoaringTypesSelected()}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> **Distance:** {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
+        sb.AppendLine($"> **Duration:** {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> **Recommended gliders:** {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
+        sb.AppendLine($"> **Difficulty:** {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
         sb.AppendLine()
-        sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 2))
-        sb.Append("See inside thread for most up-to-date files And more information.")
+        sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
+        sb.Append("### See inside thread for most up-to-date files And more information.")
         txtFPResults.Text = sb.ToString.Trim
 
         If txtLongDescription.Text.Trim.Length > 0 Then
-            txtFullDescriptionResults.Text = $":book: **Full Description** :book:{Environment.NewLine}{txtLongDescription.Text.Trim}"
+            txtFullDescriptionResults.Text = $"## 📖 Full Description{Environment.NewLine}{txtLongDescription.Text.Trim}"
         Else
             txtFullDescriptionResults.Text = String.Empty
         End If
@@ -1324,24 +1330,24 @@ Public Class Main
 
         Dim sb As New StringBuilder()
 
-        sb.AppendLine(":thermometer: **Weather Basic Information** :thermometer:")
+        sb.AppendLine("## 🌡 Weather Basic Information")
 
         If chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing Then
-            sb.Append($"Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
+            sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
         Else
-            sb.Append($"Weather file & profile name: ""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName}){Environment.NewLine}")
+            sb.Append($"- Weather file & profile name: ""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName}){Environment.NewLine}")
             If Not txtWeatherSummary.Text.Trim = String.Empty Then
-                sb.Append($"Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}{Environment.NewLine}")
+                sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}{Environment.NewLine}")
             End If
-            sb.Append($"Elevation measurement: {_WeatherDetails.AltitudeMeasurement}{Environment.NewLine}")
-            sb.Append($"MSLPressure: {_WeatherDetails.MSLPressure}{Environment.NewLine}")
-            sb.Append($"MSLTemperature: {_WeatherDetails.MSLTemperature}{Environment.NewLine}")
-            sb.Append($"Humidity: {_WeatherDetails.Humidity}")
+            sb.Append($"- Elevation measurement: {_WeatherDetails.AltitudeMeasurement}{Environment.NewLine}")
+            sb.Append($"- MSLPressure: {_WeatherDetails.MSLPressure}{Environment.NewLine}")
+            sb.Append($"- MSLTemperature: {_WeatherDetails.MSLTemperature}{Environment.NewLine}")
+            sb.Append($"- Humidity: {_WeatherDetails.Humidity}")
             If _WeatherDetails.HasPrecipitations Then
-                sb.Append($"{Environment.NewLine}Precipitations: {_WeatherDetails.Precipitations}")
+                sb.Append($"{Environment.NewLine}- Precipitations: {_WeatherDetails.Precipitations}")
             End If
             If _WeatherDetails.HasSnowCover Then
-                sb.Append($"{Environment.NewLine}Snow Cover: {_WeatherDetails.SnowCover}")
+                sb.Append($"{Environment.NewLine}- Snow Cover: {_WeatherDetails.SnowCover}")
             End If
         End If
 
@@ -1350,12 +1356,12 @@ Public Class Main
     End Sub
 
     Private Sub BuildWeatherCloudLayers()
-        txtWeatherClouds.Text = $":white_sun_cloud: **Cloud Layers** :white_sun_cloud:{Environment.NewLine}"
+        txtWeatherClouds.Text = $"## 🌥 Cloud Layers{Environment.NewLine}"
         txtWeatherClouds.AppendText(_WeatherDetails.CloudLayersText)
     End Sub
 
     Private Sub BuildWeatherWindLayers()
-        txtWeatherWinds.Text = $":wind_blowing_face: **Wind Layers** :wind_blowing_face:{Environment.NewLine}"
+        txtWeatherWinds.Text = $"## 🌬 Wind Layers{Environment.NewLine}"
         txtWeatherWinds.AppendText(_WeatherDetails.WindLayersAsString)
     End Sub
 
@@ -1566,6 +1572,8 @@ Public Class Main
     End Sub
 
     Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.Leave, txtGroupFlightEventPost.Leave, txtGroupEventPostURL.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave
+
+        _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
         BuildGroupFlightPost()
         BuildDiscordEventDescription()
@@ -1661,69 +1669,67 @@ Public Class Main
 
         txtGroupFlightEventPost.Text = String.Empty
 
-        sb.AppendLine($"**{Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**")
+        sb.AppendLine($"## {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time")
         sb.AppendLine()
 
         If txtEventTitle.Text <> String.Empty Then
             If cboGroupOrClubName.SelectedIndex > -1 Then
-                sb.Append($"{_ClubPreset.ClubName} - ")
+                sb.Append($"# {_ClubPreset.ClubName} - ")
+            Else
+                sb.Append($"# ")
             End If
             sb.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
-            sb.AppendLine()
         End If
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
-        sb.AppendLine($"**Server:** {cboMSFSServer.Text}")
-        sb.AppendLine($"**Voice:** {cboVoiceChannel.Text}")
-        sb.AppendLine()
 
-        sb.AppendLine($"**Meet/Briefing:** {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time{Environment.NewLine}At this time we meet in the voice chat and get ready.")
+        sb.AppendLine($"## 💼 Meet/Briefing{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**{Environment.NewLine}> *At this time we meet in the voice chat and get ready.*")
+        sb.AppendLine("> ")
+        sb.AppendLine($"> 🗣 Voice: **{cboVoiceChannel.Text}**")
 
         If Not txtTaskFlightPlanURL.Text = String.Empty Then
-            sb.AppendLine()
-            sb.AppendLine($"**Flight Plan Details, Weather and files**{Environment.NewLine}{txtTaskFlightPlanURL.Text}")
-            sb.AppendLine()
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 🔗 Link to Flight Plan Details, Weather and files:{Environment.NewLine}> {txtTaskFlightPlanURL.Text}")
             If chkIncludeGotGravelInvite.Checked AndAlso chkIncludeGotGravelInvite.Enabled Then
-                sb.AppendLine("If you did not join Got Gravel already, you will need this invite link first: https://discord.gg/BqUcbvDP69")
-                sb.AppendLine()
+                sb.AppendLine("> *If you did not join Got Gravel already, you will need this invite link first:* https://discord.gg/BqUcbvDP69")
             End If
-        Else
-            sb.AppendLine()
         End If
-        sb.AppendLine($"**Sim date And time:** {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        sb.AppendLine("> ")
+        sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")
+        sb.AppendLine($"> 📆 Sim date And time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}**")
 
         If Not txtFlightPlanFile.Text = String.Empty Then
-            sb.AppendLine($"**Flight plan file:** ""{Path.GetFileName(txtFlightPlanFile.Text)}""")
+            sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
         End If
         If txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
-            sb.AppendLine("**Weather file & profile name:** """ & Path.GetFileName(txtWeatherFile.Text) & """ (" & _WeatherDetails.PresetName & ")")
+            sb.AppendLine("> 🌤 Weather file & profile name: **""" & Path.GetFileName(txtWeatherFile.Text) & """ (" & _WeatherDetails.PresetName & ")**")
         End If
-        sb.AppendLine()
+        sb.AppendLine("> ")
 
         If chkUseSyncFly.Checked Then
-            sb.AppendLine($"**Synchronized Fly:** {Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time{Environment.NewLine}At this time we simultaneously click fly to sync our weather.")
+            sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
+            sb.AppendLine($"## ⏱️ Sync Fly: {Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we simultaneously click fly to sync our weather.*")
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
-                sb.AppendLine("At this time we can also start launching from the airfield.")
-                sb.AppendLine()
-            Else
-                sb.AppendLine()
+                sb.AppendLine("> *At this time we can also start launching from the airfield.*")
             End If
+            sb.AppendLine("> ")
         End If
 
         If chkUseLaunch.Checked AndAlso (fullSyncFlyDateTimeLocal <> fullLaunchDateTimeLocal OrElse Not chkUseSyncFly.Checked) Then
-            sb.AppendLine($"**Launch:** {Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time{Environment.NewLine}At this time we can start launching from the airfield.")
-            sb.AppendLine()
+            sb.AppendLine($"## 🚀 Launch:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we can start launching from the airfield.*")
+            sb.AppendLine("> ")
         End If
 
         If chkUseStart.Checked Then
-            sb.AppendLine($"**Task Start:** {Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time{Environment.NewLine}At this time we cross the starting line and start the task.")
-            sb.AppendLine()
+            sb.AppendLine($"## 🟢 Task Start:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we cross the starting line and start the task.*")
+            sb.AppendLine("> ")
         End If
 
-        sb.AppendLine($"**Duration:** {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
+        sb.AppendLine()
+        sb.AppendLine($"🏁 Duration: **{_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
 
         If cboEligibleAward.SelectedIndex > 0 Then
             sb.AppendLine()
-            sb.AppendLine($"Pilots who finish this task successfully during the event will be eligible to apply for the {cboEligibleAward.Text} Soaring Badge :{cboEligibleAward.Text.ToLower()}:")
+            sb.AppendLine($"🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{cboEligibleAward.Text} Soaring Badge** :{cboEligibleAward.Text.ToLower()}:")
         End If
 
         If txtCredits.Text <> String.Empty Then

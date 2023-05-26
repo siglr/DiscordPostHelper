@@ -262,7 +262,7 @@ Public Class SupportingFeatures
                                                ICAO)
             AllWaypoints.Add(atcWaypoint)
             If atcWaypoint.ContainsRestriction Then
-                strRestrictions = $"{strRestrictions}{Environment.NewLine}{atcWaypoint.Restrictions(includeWPName)}"
+                strRestrictions = $"{strRestrictions}{Environment.NewLine}- {atcWaypoint.Restrictions(includeWPName)}"
             End If
             If i > 0 Then
                 'Start adding distance between this waypoint and previous one to the total distance
@@ -286,7 +286,7 @@ Public Class SupportingFeatures
         Next
         Dim strAltRestrictions As String
 
-        strAltRestrictions = $":warning: **Altitude Restrictions** :warning:{If(strRestrictions = String.Empty, $"{Environment.NewLine}None", strRestrictions)}"
+        strAltRestrictions = $"## ⚠️ Altitude Restrictions{If(strRestrictions = String.Empty, $"{Environment.NewLine}None", strRestrictions)}"
 
         Return strAltRestrictions
 
@@ -459,13 +459,13 @@ Public Class SupportingFeatures
         Dim sb As New StringBuilder()
 
         If AllWaypoints.Count > 0 Then
-            sb.AppendLine(":map: **Waypoint Coordinates for Xbox Users** :map:")
+            sb.AppendLine("## 🗺 Waypoint Coordinates for Xbox Users")
             For Each wp As ATCWaypoint In AllWaypoints
                 If wp.ICAO <> String.Empty Then
                     'Airports - add ICAO
-                    sb.AppendLine($"{wp.WaypointName}: {wp.ICAO}")
+                    sb.AppendLine($"- {wp.WaypointName}: {wp.ICAO}")
                 Else
-                    sb.AppendLine($"{wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
+                    sb.AppendLine($"- {wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
                 End If
             Next
         End If
@@ -1199,6 +1199,18 @@ Public Class SupportingFeatures
                 End If
             End If
         Next
+    End Sub
+
+    Public Sub RemoveForbiddenPrefixes(textCtrl As Windows.Forms.TextBox)
+        Dim pattern As String = "^\s*(#|##)\s"
+        Dim replacement As String = ""
+        Dim modifiedLines As New List(Of String)()
+
+        For Each line As String In textCtrl.Lines
+            modifiedLines.Add(Regex.Replace(line, pattern, replacement))
+        Next
+
+        textCtrl.Text = String.Join(Environment.NewLine, modifiedLines)
     End Sub
 
 End Class
