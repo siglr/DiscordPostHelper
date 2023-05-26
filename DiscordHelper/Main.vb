@@ -664,7 +664,7 @@ Public Class Main
         If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
             sb.AppendLine("### DPHX Unpack & Load")
             sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
-            sb.AppendLine("> *To get and install the tool: https://discord.gg/ST4uTPU3cT/*")
+            sb.AppendLine("> *To get and install the tool: https://discord.gg/eJYynsQnHV*")
             sb.AppendLine("> ")
             sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
         Else
