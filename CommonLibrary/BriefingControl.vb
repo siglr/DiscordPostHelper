@@ -223,6 +223,7 @@ Public Class BriefingControl
         _sessionData = sessionData
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
+            lblPrefUnitsMessage.Text = $"Units selected here are only used for YOUR briefing tabs.{Environment.NewLine}They DO NOT change the content of generated Discord posts which always include all formats.{Environment.NewLine}Also, any data specified in description fields is excluded and will appear as is."
         Else
             _unpackFolder = unpackFolder
         End If
@@ -266,8 +267,9 @@ Public Class BriefingControl
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
                 Case 3 'Images
                 Case 4 'All Waypoints
-                Case 5 'Add-ons
-                Case 6 'Units
+                Case 5 'Weather
+                Case 6 'Add-ons
+                Case 7 'Units
                     _onUnitsTab = True
             End Select
         End If

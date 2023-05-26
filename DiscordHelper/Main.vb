@@ -268,7 +268,6 @@ Public Class Main
     End Sub
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
-        SetBriefingControlsVisiblity()
         Select Case TabControl1.SelectedTab.Name
             Case "tabBriefing"
                 GenerateBriefing()
@@ -1773,11 +1772,6 @@ Public Class Main
 #Region "Briefing tab"
 
 #Region "Briefing tab event handlers"
-    Private Sub tabBriefingControl_SelectedIndexChanged(sender As Object, e As EventArgs)
-
-        SetBriefingControlsVisiblity()
-
-    End Sub
 
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
@@ -1788,16 +1782,6 @@ Public Class Main
 
 
 #End Region
-
-    Private Sub SetBriefingControlsVisiblity()
-
-        If TabControl1.SelectedTab.Name = "tabBriefing" Then
-            cboBriefingMap.Visible = True
-        Else
-            cboBriefingMap.Visible = False
-        End If
-
-    End Sub
 
     Private Sub LoadPossibleImagesInMapDropdown(Optional mapToSelect As String = "")
 
@@ -1846,18 +1830,34 @@ Public Class Main
 
     Private Sub btnGuideMe_Click(sender As Object, e As EventArgs) Handles btnGuideMe.Click
 
-        If MessageBox.Show(Me, "Do you want To start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-            ResetForm()
-        End If
+        Dim activateGuide As Boolean = False
 
-        TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
-        _GuideCurrentStep = 1
-        btnTurnGuideOff.Visible = True
-        ShowGuide()
+        Select Case TabControl1.SelectedTab.TabIndex
+            Case tabFlightPlan.TabIndex
+                If MessageBox.Show(Me, "Do you want to start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    ResetForm()
+                End If
+                _GuideCurrentStep = 1
+                activateGuide = True
+            Case tabEvent.TabIndex
+                _GuideCurrentStep = 60
+                activateGuide = True
+            Case tabDiscord.TabIndex
+                _GuideCurrentStep = 40
+                activateGuide = True
+            Case tabBriefing.TabIndex
+                _GuideCurrentStep = 100
+                activateGuide = True
+        End Select
+
+        If activateGuide Then
+            btnTurnGuideOff.Visible = True
+            ShowGuide()
+        End If
 
     End Sub
 
-    Private Sub btnGuideNext_Click(sender As Object, e As EventArgs) Handles btnGuideNext.Click, btnEventGuideNext.Click, btnDiscordGuideNext.Click
+    Private Sub btnGuideNext_Click(sender As Object, e As EventArgs) Handles btnGuideNext.Click, btnEventGuideNext.Click, btnDiscordGuideNext.Click, btnBriefingGuideNext.Click
 
         _GuideCurrentStep += 1
         ShowGuide()
@@ -1903,6 +1903,7 @@ Public Class Main
                 pnlGuide.Visible = False
                 pnlWizardEvent.Visible = False
                 pnlWizardDiscord.Visible = False
+                pnlWizardBriefing.Visible = False
                 btnTurnGuideOff.Visible = False
             Case 1 'Select flight plan
                 SetGuidePanelToLeft()
@@ -1982,7 +1983,7 @@ Public Class Main
             Case 16 'Long description
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 627
-                lblGuideInstructions.Text = "Optionally, you should provide a more detailed description of the task. Context, history, hints, tips, tricks around waypoints, etc. Also possible to add waypoint coordinates."
+                lblGuideInstructions.Text = "Optionally, you should provide a more detailed description of the task. Context, history, hints, tips, tricks around waypoints, etc."
                 SetFocusOnField(txtLongDescription, fromF1Key)
             Case 17 'Countries
                 SetGuidePanelToRight()
@@ -2004,12 +2005,17 @@ Public Class Main
                 pnlGuide.Top = 414
                 lblGuideInstructions.Text = "Optionally, use this section to add and remove any extra files you want included with the task post. Maps, XCSoar track files, other images, etc."
                 SetFocusOnField(btnAddExtraFile, fromF1Key)
-            Case 21 'DPHX Package
+            Case 21 'Map Image
                 SetGuidePanelToRight()
-                pnlGuide.Top = 524
+                pnlGuide.Top = 519
+                lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
+                SetFocusOnField(cboBriefingMap, fromF1Key)
+            Case 22 'DPHX Package
+                SetGuidePanelToRight()
+                pnlGuide.Top = 557
                 lblGuideInstructions.Text = "When you are done and select to share a DPHX package of this task, use this section to select it and include it with the post."
                 SetFocusOnField(btnSelectDPHXPackageFile, fromF1Key)
-            Case 22 'End of flight plan data
+            Case 23 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -2033,7 +2039,12 @@ Public Class Main
                 pnlGuide.Left = (btnLoadB21Planner.Left + btnLoadB21Planner.Size.Width) - pnlGuide.Size.Width
                 lblGuideInstructions.Text = "You can open your current task using the B21 Task Planner by clicking this button."
                 SetFocusOnField(btnLoadB21Planner, fromF1Key)
-            Case 34 'End of buttons
+            Case 34 'Briefing review
+                TabControl1.SelectedIndex = 3
+                SetBriefingGuidePanel()
+                lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
+                SetFocusOnField(BriefingControl1, fromF1Key)
+            Case 35 'We're done with the briefing
                 _GuideCurrentStep = 39
                 ShowGuide()
 
@@ -2186,7 +2197,13 @@ Public Class Main
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you have the option to include an invite to the server along with the group flight info. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
 
-            Case 73 'Next section
+            Case 73 'Briefing review
+                TabControl1.SelectedIndex = 3
+                SetBriefingGuidePanel()
+                lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
+                SetFocusOnField(BriefingControl1, fromF1Key)
+
+            Case 74 'Next section
                 _GuideCurrentStep = 79
                 ShowGuide()
 
@@ -2267,11 +2284,22 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
+            Case 91
+                _GuideCurrentStep = 999
+                ShowGuide()
+
+            Case 100
+                SetBriefingGuidePanel()
+                btnBriefingGuideNext.Visible = False
+                lblBriefingGuideInstructions.Text = "The briefing offers all of the task and event information in a friendly format and using your preferred units."
+                SetFocusOnField(BriefingControl1, fromF1Key)
+
             Case Else
                 _GuideCurrentStep = 0
                 pnlGuide.Visible = False
                 pnlWizardEvent.Visible = False
                 pnlWizardDiscord.Visible = False
+                pnlWizardBriefing.Visible = False
                 btnTurnGuideOff.Visible = False
                 MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Select
@@ -2288,6 +2316,7 @@ Public Class Main
     Private Sub SetGuidePanelToLeft()
         pnlWizardEvent.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
         pnlGuide.Left = 718
         pnlGuide.Visible = True
@@ -2300,6 +2329,7 @@ Public Class Main
     Private Sub SetGuidePanelToTopArrowLeftSide()
         pnlWizardEvent.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
         pnlGuide.Top = 0
         pnlGuide.Visible = True
@@ -2312,6 +2342,7 @@ Public Class Main
     Private Sub SetGuidePanelToTopArrowRightSide()
         pnlWizardEvent.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
         pnlGuide.Top = 0
         pnlGuide.Visible = True
@@ -2324,6 +2355,7 @@ Public Class Main
     Private Sub SetGuidePanelToRight()
         pnlWizardEvent.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         pnlGuide.Left = 0
         pnlGuide.Visible = True
@@ -2336,6 +2368,7 @@ Public Class Main
     Private Sub SetEventGuidePanelToLeft()
         pnlGuide.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
         pnlWizardEvent.Left = 849
         pnlWizardEvent.Visible = True
@@ -2348,6 +2381,7 @@ Public Class Main
     Private Sub SetEventGuidePanelToRight()
         pnlGuide.Visible = False
         pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
         pnlWizardEvent.Left = 849
         pnlWizardEvent.Visible = True
@@ -2360,6 +2394,7 @@ Public Class Main
     Private Sub SetDiscordGuidePanelToLeft()
         pnlGuide.Visible = False
         pnlWizardEvent.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
         pnlWizardDiscord.Left = 405
         pnlWizardDiscord.Visible = True
@@ -2372,6 +2407,7 @@ Public Class Main
     Private Sub SetDiscordGuidePanelToTopArrowLeftSide()
         pnlGuide.Visible = False
         pnlWizardEvent.Visible = False
+        pnlWizardBriefing.Visible = False
         Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.up_arrow
         pnlWizardDiscord.Left = 709
         pnlWizardDiscord.Visible = True
@@ -2379,6 +2415,14 @@ Public Class Main
         pnlDiscordArrow.Top = 0
         btnDiscordGuideNext.Left = 674
         btnDiscordGuideNext.Top = 3
+
+    End Sub
+
+    Private Sub SetBriefingGuidePanel()
+        pnlGuide.Visible = False
+        pnlWizardEvent.Visible = False
+        pnlWizardDiscord.Visible = False
+        pnlWizardBriefing.Visible = True
 
     End Sub
 
@@ -2762,6 +2806,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 

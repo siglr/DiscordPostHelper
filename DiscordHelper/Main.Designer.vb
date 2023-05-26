@@ -92,6 +92,8 @@ Partial Class Main
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.lstAllFiles = New System.Windows.Forms.ListBox()
         Me.btnAddExtraFile = New System.Windows.Forms.Button()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -231,8 +233,9 @@ Partial Class Main
         Me.Label38 = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
+        Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
+        Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -243,7 +246,7 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -269,6 +272,7 @@ Partial Class Main
         Me.grpDiscordEvent.SuspendLayout()
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
+        Me.pnlWizardBriefing.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -323,7 +327,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 385)
+        Me.pnlGuide.Location = New System.Drawing.Point(0, 557)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1070,6 +1074,8 @@ Partial Class Main
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.Label23)
+        Me.GroupBox3.Controls.Add(Me.cboBriefingMap)
         Me.GroupBox3.Controls.Add(Me.lstAllFiles)
         Me.GroupBox3.Controls.Add(Me.btnAddExtraFile)
         Me.GroupBox3.Controls.Add(Me.Label10)
@@ -1081,10 +1087,32 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.txtDPHXPackageFilename)
         Me.GroupBox3.Location = New System.Drawing.Point(6, 338)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(717, 201)
+        Me.GroupBox3.Size = New System.Drawing.Size(717, 229)
         Me.GroupBox3.TabIndex = 12
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Location = New System.Drawing.Point(0, 156)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(104, 26)
+        Me.Label23.TabIndex = 5
+        Me.Label23.Text = "Map Image"
+        '
+        'cboBriefingMap
+        '
+        Me.cboBriefingMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboBriefingMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.cboBriefingMap.FormattingEnabled = True
+        Me.cboBriefingMap.Location = New System.Drawing.Point(183, 156)
+        Me.cboBriefingMap.Name = "cboBriefingMap"
+        Me.cboBriefingMap.Size = New System.Drawing.Size(531, 28)
+        Me.cboBriefingMap.TabIndex = 6
+        Me.cboBriefingMap.Tag = "21"
+        Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
         '
         'lstAllFiles
         '
@@ -1095,7 +1123,7 @@ Partial Class Main
         Me.lstAllFiles.Name = "lstAllFiles"
         Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstAllFiles.Size = New System.Drawing.Size(531, 124)
-        Me.lstAllFiles.TabIndex = 4
+        Me.lstAllFiles.TabIndex = 1
         Me.lstAllFiles.Tag = "20"
         Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
         '
@@ -1115,10 +1143,10 @@ Partial Class Main
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(0, 160)
+        Me.Label10.Location = New System.Drawing.Point(0, 194)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(130, 26)
-        Me.Label10.TabIndex = 5
+        Me.Label10.TabIndex = 7
         Me.Label10.Text = "DPHX Package"
         '
         'btnRemoveExtraFile
@@ -1128,7 +1156,7 @@ Partial Class Main
         Me.btnRemoveExtraFile.Location = New System.Drawing.Point(2, 67)
         Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
         Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
-        Me.btnRemoveExtraFile.TabIndex = 1
+        Me.btnRemoveExtraFile.TabIndex = 2
         Me.btnRemoveExtraFile.Tag = "20"
         Me.btnRemoveExtraFile.Text = "Remove selected file"
         Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the selected extra file from the flight plan.")
@@ -1137,11 +1165,11 @@ Partial Class Main
         'btnSelectDPHXPackageFile
         '
         Me.btnSelectDPHXPackageFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectDPHXPackageFile.Location = New System.Drawing.Point(622, 156)
+        Me.btnSelectDPHXPackageFile.Location = New System.Drawing.Point(622, 190)
         Me.btnSelectDPHXPackageFile.Name = "btnSelectDPHXPackageFile"
         Me.btnSelectDPHXPackageFile.Size = New System.Drawing.Size(92, 32)
-        Me.btnSelectDPHXPackageFile.TabIndex = 8
-        Me.btnSelectDPHXPackageFile.Tag = "21"
+        Me.btnSelectDPHXPackageFile.TabIndex = 10
+        Me.btnSelectDPHXPackageFile.Tag = "22"
         Me.btnSelectDPHXPackageFile.Text = "Select"
         Me.ToolTip1.SetToolTip(Me.btnSelectDPHXPackageFile, "Click to select the DPHX package file linked with this task.")
         Me.btnSelectDPHXPackageFile.UseVisualStyleBackColor = True
@@ -1153,7 +1181,7 @@ Partial Class Main
         Me.btnExtraFileUp.Location = New System.Drawing.Point(2, 108)
         Me.btnExtraFileUp.Name = "btnExtraFileUp"
         Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileUp.TabIndex = 2
+        Me.btnExtraFileUp.TabIndex = 3
         Me.btnExtraFileUp.Tag = "20"
         Me.btnExtraFileUp.Text = "▲"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
@@ -1162,11 +1190,11 @@ Partial Class Main
         'chkDPHXPackageInclude
         '
         Me.chkDPHXPackageInclude.AutoSize = True
-        Me.chkDPHXPackageInclude.Location = New System.Drawing.Point(162, 166)
+        Me.chkDPHXPackageInclude.Location = New System.Drawing.Point(162, 200)
         Me.chkDPHXPackageInclude.Name = "chkDPHXPackageInclude"
         Me.chkDPHXPackageInclude.Size = New System.Drawing.Size(15, 14)
-        Me.chkDPHXPackageInclude.TabIndex = 6
-        Me.chkDPHXPackageInclude.Tag = "21"
+        Me.chkDPHXPackageInclude.TabIndex = 8
+        Me.chkDPHXPackageInclude.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.chkDPHXPackageInclude, "When checked, the DPHX package will be included with the files.")
         Me.chkDPHXPackageInclude.UseVisualStyleBackColor = True
         '
@@ -1177,7 +1205,7 @@ Partial Class Main
         Me.btnExtraFileDown.Location = New System.Drawing.Point(93, 108)
         Me.btnExtraFileDown.Name = "btnExtraFileDown"
         Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileDown.TabIndex = 3
+        Me.btnExtraFileDown.TabIndex = 4
         Me.btnExtraFileDown.Tag = "20"
         Me.btnExtraFileDown.Text = "▼"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
@@ -1186,13 +1214,13 @@ Partial Class Main
         'txtDPHXPackageFilename
         '
         Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(183, 156)
+        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(183, 190)
         Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
         Me.txtDPHXPackageFilename.ReadOnly = True
         Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(433, 32)
-        Me.txtDPHXPackageFilename.TabIndex = 7
+        Me.txtDPHXPackageFilename.TabIndex = 9
         Me.txtDPHXPackageFilename.TabStop = False
-        Me.txtDPHXPackageFilename.Tag = "21"
+        Me.txtDPHXPackageFilename.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
         '
         'GroupBox2
@@ -2769,8 +2797,6 @@ Partial Class Main
         'tabBriefing
         '
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
-        Me.tabBriefing.Controls.Add(Me.Label20)
-        Me.tabBriefing.Controls.Add(Me.cboBriefingMap)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
         Me.tabBriefing.Size = New System.Drawing.Size(1479, 874)
@@ -2780,35 +2806,58 @@ Partial Class Main
         '
         'pnlBriefing
         '
-        Me.pnlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlBriefing.Controls.Add(Me.pnlWizardBriefing)
         Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
-        Me.pnlBriefing.Location = New System.Drawing.Point(3, 43)
+        Me.pnlBriefing.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlBriefing.Location = New System.Drawing.Point(0, 0)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1480, 835)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1479, 874)
         Me.pnlBriefing.TabIndex = 0
         '
-        'Label20
+        'pnlWizardBriefing
         '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(20, 12)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(227, 20)
-        Me.Label20.TabIndex = 86
-        Me.Label20.Text = "Select image for the map display:"
+        Me.pnlWizardBriefing.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlWizardBriefing.BackColor = System.Drawing.Color.Gray
+        Me.pnlWizardBriefing.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pnlWizardBriefing.Controls.Add(Me.lblBriefingGuideInstructions)
+        Me.pnlWizardBriefing.Controls.Add(Me.btnBriefingGuideNext)
+        Me.pnlWizardBriefing.Location = New System.Drawing.Point(980, 0)
+        Me.pnlWizardBriefing.Name = "pnlWizardBriefing"
+        Me.pnlWizardBriefing.Size = New System.Drawing.Size(498, 46)
+        Me.pnlWizardBriefing.TabIndex = 95
+        Me.pnlWizardBriefing.Visible = False
         '
-        'cboBriefingMap
+        'btnBriefingGuideNext
         '
-        Me.cboBriefingMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboBriefingMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.cboBriefingMap.FormattingEnabled = True
-        Me.cboBriefingMap.Location = New System.Drawing.Point(274, 9)
-        Me.cboBriefingMap.Name = "cboBriefingMap"
-        Me.cboBriefingMap.Size = New System.Drawing.Size(524, 28)
-        Me.cboBriefingMap.TabIndex = 85
-        Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
-        Me.cboBriefingMap.Visible = False
+        Me.btnBriefingGuideNext.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btnBriefingGuideNext.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnBriefingGuideNext.Location = New System.Drawing.Point(425, 0)
+        Me.btnBriefingGuideNext.Name = "btnBriefingGuideNext"
+        Me.btnBriefingGuideNext.Size = New System.Drawing.Size(73, 46)
+        Me.btnBriefingGuideNext.TabIndex = 0
+        Me.btnBriefingGuideNext.Text = "Next"
+        Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
+        Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
         '
         'OpenFileDialog1
         '
@@ -2904,24 +2953,18 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'BriefingControl1
+        'lblBriefingGuideInstructions
         '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1480, 835)
-        Me.BriefingControl1.TabIndex = 0
+        Me.lblBriefingGuideInstructions.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblBriefingGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblBriefingGuideInstructions.ForeColor = System.Drawing.Color.White
+        Me.lblBriefingGuideInstructions.Location = New System.Drawing.Point(0, 0)
+        Me.lblBriefingGuideInstructions.Name = "lblBriefingGuideInstructions"
+        Me.lblBriefingGuideInstructions.Size = New System.Drawing.Size(425, 46)
+        Me.lblBriefingGuideInstructions.TabIndex = 1
+        Me.lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are " &
+    "satisfied, click Next."
+        Me.lblBriefingGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Main
         '
@@ -2975,8 +3018,8 @@ Partial Class Main
         Me.grpDiscordEvent.ResumeLayout(False)
         Me.grpDiscordEvent.PerformLayout()
         Me.tabBriefing.ResumeLayout(False)
-        Me.tabBriefing.PerformLayout()
         Me.pnlBriefing.ResumeLayout(False)
+        Me.pnlWizardBriefing.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -3123,11 +3166,9 @@ Partial Class Main
     Friend WithEvents dtEventMeetDate As DateTimePicker
     Friend WithEvents chkUseSyncFly As CheckBox
     Friend WithEvents tabBriefing As TabPage
-    Friend WithEvents cboBriefingMap As ComboBox
     Friend WithEvents lblLocalDSTWarning As Label
     Friend WithEvents pnlBriefing As Panel
     Friend WithEvents BriefingControl1 As CommonLibrary.BriefingControl
-    Friend WithEvents Label20 As Label
     Friend WithEvents pnlScrollableSurface As Panel
     Friend WithEvents chkActivateEvent As CheckBox
     Friend WithEvents tabDiscord As TabPage
@@ -3200,4 +3241,9 @@ Partial Class Main
     Friend WithEvents Panel4 As Panel
     Friend WithEvents lblDiscordGuideInstructions As Label
     Friend WithEvents pnlDiscordArrow As Panel
+    Friend WithEvents pnlWizardBriefing As Panel
+    Friend WithEvents btnBriefingGuideNext As Button
+    Friend WithEvents cboBriefingMap As ComboBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents lblBriefingGuideInstructions As Label
 End Class
