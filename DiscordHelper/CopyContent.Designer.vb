@@ -78,16 +78,18 @@ Partial Class CopyContent
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnOk
         Me.ClientSize = New System.Drawing.Size(687, 658)
+        Me.ControlBox = False
         Me.Controls.Add(Me.btnOk)
         Me.Controls.Add(Me.lblMessage)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtCopiedContent)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "CopyContent"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "CopyContent"
         Me.ResumeLayout(False)
