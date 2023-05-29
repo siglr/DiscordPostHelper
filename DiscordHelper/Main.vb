@@ -2235,7 +2235,7 @@ Public Class Main
             Case 32 'Share package
                 SetGuidePanelToTopArrowRightSide()
                 pnlGuide.Left = (btnCreateShareablePack.Left + btnCreateShareablePack.Size.Width) - pnlGuide.Size.Width
-                lblGuideInstructions.Text = "You can also share your task's data and all the files by creating a DPHX package which you can zip and send to anybody."
+                lblGuideInstructions.Text = "You can also share your task's data and all the files by copying the DPHX package and send it to anybody."
                 SetFocusOnField(btnCreateShareablePack, fromF1Key)
             Case 33 'Open B21
                 SetGuidePanelToTopArrowRightSide()
