@@ -9,10 +9,14 @@ Imports SIGLR.SoaringTools.CommonLibrary
 Imports System.Text.RegularExpressions
 Imports System.Reflection
 Imports SIGLR.SoaringTools.ImageViewer
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
+Imports System.Linq.Expressions
 
 Public Class Main
 
 #Region "Members, Constants and Enums"
+
+    Public Shared SessionSettings As New AllSettings
 
     Private Const DiscordLimit As Integer = 2000
     Private Const LimitMsg As String = "Caution! Discord Characters Limit: "
@@ -32,6 +36,8 @@ Public Class Main
     Private _FlightTotalDistanceInKm As Double = 0
     Private _TaskTotalDistanceInKm As Double = 0
     Private _CurrentSessionFile As String = String.Empty
+    Private _loadingFile As Boolean = False
+    Private _sessionModified As Boolean = False
 
 #End Region
 
@@ -83,14 +89,12 @@ Public Class Main
 
         SetTimePickerFormat()
 
+        SessionSettings.Load()
+
         'Adjust some button position
         btnCopyAllSecPosts.Top = btnAltRestricCopy.Top
 
-        'Adjust form based on screen size available
-        If Screen.PrimaryScreen.Bounds.Height > Me.Height Then
-        Else
-            Me.Height = Screen.PrimaryScreen.Bounds.Height - 20
-        End If
+        RestoreMainFormLocationAndSize()
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -101,19 +105,42 @@ Public Class Main
                 OpenFileDialog1.FileName = _SF.UnpackDPHXFile(_CurrentSessionFile)
 
                 If OpenFileDialog1.FileName = String.Empty Then
-                    _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
+                    _CurrentSessionFile = String.Empty
                 Else
                     _CurrentSessionFile = OpenFileDialog1.FileName
                 End If
             End If
         Else
             'Load previous session data
-            _CurrentSessionFile = $"{Application.StartupPath}\LastSession.dph"
+            If Not SessionSettings.LastFileLoaded = String.Empty Then
+                _CurrentSessionFile = SessionSettings.LastFileLoaded
+            End If
         End If
         Me.Refresh()
+        _loadingFile = True
         LoadSessionData(_CurrentSessionFile)
+        _loadingFile = False
         CheckForNewVersion()
 
+    End Sub
+
+    Private Sub RestoreMainFormLocationAndSize()
+        Dim sizeString As String = SessionSettings.MainFormSize
+        Dim locationString As String = SessionSettings.MainFormLocation
+
+        If sizeString <> "" Then
+            Dim sizeArray As String() = sizeString.TrimStart("{").TrimEnd("}").Split(",")
+            Dim width As Integer = CInt(sizeArray(0).Split("=")(1))
+            Dim height As Integer = CInt(sizeArray(1).Split("=")(1))
+            Me.Size = New Size(width, height)
+        End If
+
+        If locationString <> "" Then
+            Dim locationArray As String() = locationString.TrimStart("{").TrimEnd("}").Split(",")
+            Dim x As Integer = CInt(locationArray(0).Split("=")(1))
+            Dim y As Integer = CInt(locationArray(1).Split("=")(1))
+            Me.Location = New Point(x, y)
+        End If
     End Sub
 
     Private Sub SetTimePickerFormat()
@@ -137,6 +164,9 @@ Public Class Main
 
     End Sub
     Private Sub ResetForm()
+
+        _loadingFile = True
+        _CurrentSessionFile = String.Empty
 
         BriefingControl1.FullReset()
 
@@ -210,9 +240,9 @@ Public Class Main
         txtGroupEventPostURL.Text = String.Empty
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
-        chkDPHXPackageInclude.Checked = False
         txtDPHXPackageFilename.Text = String.Empty
         cboBriefingMap.Items.Clear()
+        txtEventTitle.Text = String.Empty
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -224,6 +254,10 @@ Public Class Main
         BuildFPResults()
         BuildGroupFlightPost()
         SetFormCaption(String.Empty)
+
+        _loadingFile = False
+
+        SessionUntouched()
 
     End Sub
 
@@ -255,15 +289,24 @@ Public Class Main
 
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
-        SaveSessionData($"{Application.StartupPath}\LastSession.dph")
+        If Not CheckUnsavedAndConfirmAction("exit") Then
+            e.Cancel = True
+        Else
+            SessionSettings.MainFormSize = Me.Size.ToString()
+            SessionSettings.MainFormLocation = Me.Location.ToString()
+            SessionSettings.LastFileLoaded = _CurrentSessionFile
+            SessionSettings.Save()
+        End If
 
     End Sub
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-        ResetForm()
+        If CheckUnsavedAndConfirmAction("reset all") Then
+            ResetForm()
+        End If
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtDepartureICAO.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalICAO.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -279,6 +322,24 @@ Public Class Main
 #End Region
 
 #Region "Global form subs & functions"
+
+    Public Function CheckUnsavedAndConfirmAction(action As String) As Boolean
+
+        If _sessionModified Then
+            ' Display a confirmation dialog to the user
+            Dim result As DialogResult = MessageBox.Show($"There are unsaved changes. Are you sure you want to {action} ?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+
+            ' If the user chooses not to exit, cancel the form closing
+            If result = DialogResult.No Then
+                Return False
+            Else
+                Return True
+            End If
+        Else
+            Return True
+        End If
+
+    End Function
 
     Public Sub SetFormCaption(filename As String)
 
@@ -305,13 +366,114 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub GeneralFPTabFieldChangeDetection(sender As Object, e As EventArgs) Handles txtTitle.Leave, txtSoaringTypeExtraInfo.Leave, txtSimDateTimeExtraInfo.Leave, txtShortDescription.Leave, txtMainArea.Leave, txtDurationMin.Leave, txtDurationMax.Leave, txtDurationExtraInfo.Leave, txtDifficultyExtraInfo.Leave, txtDepName.Leave, txtDepExtraInfo.Leave, txtDepartureICAO.Leave, txtCredits.Leave, txtArrivalName.Leave, txtArrivalICAO.Leave, txtArrivalExtraInfo.Leave, dtSimLocalTime.ValueChanged, dtSimLocalTime.Leave, dtSimDate.ValueChanged, dtSimDate.Leave, chkSoaringTypeRidge.CheckedChanged, chkIncludeYear.CheckedChanged, cboRecommendedGliders.SelectedIndexChanged, cboRecommendedGliders.Leave, cboDifficulty.SelectedIndexChanged
+    Private Sub lstAllCountries_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAllCountries.SelectedIndexChanged
+
+        If lstAllCountries.SelectedIndex = -1 Then
+            btnRemoveCountry.Enabled = False
+            btnMoveCountryDown.Enabled = False
+            btnMoveCountryUp.Enabled = False
+        Else
+            btnRemoveCountry.Enabled = True
+            If lstAllCountries.Items.Count > 1 Then
+                btnMoveCountryDown.Enabled = True
+                btnMoveCountryUp.Enabled = True
+            Else
+                btnMoveCountryDown.Enabled = False
+                btnMoveCountryUp.Enabled = False
+            End If
+        End If
+
+        If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
+            btnMoveCountryDown.Enabled = True
+            btnMoveCountryUp.Enabled = True
+        Else
+            btnMoveCountryDown.Enabled = False
+            btnMoveCountryUp.Enabled = False
+        End If
+
+    End Sub
+
+    Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
+                                                                          chkDepartureLock.CheckedChanged,
+                                                                          chkArrivalLock.CheckedChanged,
+                                                                          chkDescriptionLock.CheckedChanged,
+                                                                          chkLockCountries.CheckedChanged,
+                                                                          chkIncludeYear.CheckedChanged,
+                                                                          chkSoaringTypeRidge.CheckedChanged,
+                                                                          chkUseOnlyWeatherSummary.CheckedChanged,
+                                                                          txtLongDescription.TextChanged,
+                                                                          txtEventTitle.TextChanged,
+                                                                          txtEventDescription.TextChanged,
+                                                                          txtGroupEventPostURL.TextChanged,
+                                                                          txtWeatherSummary.TextChanged,
+                                                                          txtSimDateTimeExtraInfo.TextChanged,
+                                                                          txtShortDescription.TextChanged,
+                                                                          txtDurationMin.TextChanged,
+                                                                          txtDurationMax.TextChanged,
+                                                                          txtDurationExtraInfo.TextChanged,
+                                                                          txtCredits.TextChanged,
+                                                                          txtTitle.TextChanged,
+                                                                          txtMainArea.TextChanged,
+                                                                          txtDepName.TextChanged,
+                                                                          txtDepExtraInfo.TextChanged,
+                                                                          txtArrivalName.TextChanged,
+                                                                          txtArrivalExtraInfo.TextChanged,
+                                                                          txtSoaringTypeExtraInfo.TextChanged,
+                                                                          txtMinAvgSpeed.TextChanged,
+                                                                          txtMaxAvgSpeed.TextChanged,
+                                                                          txtDifficultyExtraInfo.TextChanged,
+                                                                          dtSimDate.ValueChanged,
+                                                                          dtSimLocalTime.ValueChanged,
+                                                                          cboRecommendedGliders.TextChanged,
+                                                                          cboRecommendedGliders.SelectedIndexChanged,
+                                                                          cboDifficulty.TextChanged,
+                                                                          cboDifficulty.SelectedIndexChanged
+
+
+        SessionModified()
+
+        'Some fields have an impact on the events tab
+        If sender Is dtSimDate OrElse
+           sender Is dtSimLocalTime OrElse
+           sender Is chkIncludeYear Then
+            CopyToEventFields(sender, e)
+        End If
+
+        If sender Is chkUseOnlyWeatherSummary Then
+            WeatherFieldChangeDetection()
+        End If
+
+        If TypeOf sender IsNot Windows.Forms.TextBox Then
+            GeneralFPTabFieldLeaveDetection(sender, e)
+        End If
+    End Sub
+
+    Private Sub GeneralFPTabFieldLeaveDetection(sender As Object, e As EventArgs) Handles txtSoaringTypeExtraInfo.Leave,
+                                                                                           txtSimDateTimeExtraInfo.Leave,
+                                                                                           txtTitle.Leave,
+                                                                                           txtShortDescription.Leave,
+                                                                                           txtMainArea.Leave,
+                                                                                           txtDurationMin.Leave,
+                                                                                           txtDurationMax.Leave,
+                                                                                           txtDurationExtraInfo.Leave,
+                                                                                           txtDifficultyExtraInfo.Leave,
+                                                                                           txtDepName.Leave,
+                                                                                           txtDepExtraInfo.Leave,
+                                                                                           txtCredits.Leave,
+                                                                                           txtArrivalName.Leave,
+                                                                                           txtArrivalExtraInfo.Leave,
+                                                                                           txtLongDescription.Leave,
+                                                                                           txtWeatherSummary.Leave
 
         BuildFPResults()
 
         'Some fields need to be copied to the Event tab
-        If sender Is dtSimDate Or sender Is dtSimLocalTime Or sender Is chkIncludeYear Then
+        If sender Is txtTitle OrElse sender Is txtShortDescription Then
             CopyToEventFields(sender, e)
+        End If
+
+        If sender Is txtWeatherSummary Then
+            WeatherFieldChangeDetection()
         End If
 
         'For text box, make sure to display the value from the start
@@ -329,29 +491,8 @@ Public Class Main
         End If
 
         'General object change processing
-        GeneralFPTabFieldChangeDetection(sender, e)
+        AllFieldChanges(sender, e)
 
-    End Sub
-
-    Private Sub DistanceNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDistanceTotal.KeyPress, txtDistanceTrack.KeyPress
-        Dim keyChar = e.KeyChar
-
-        If Char.IsControl(keyChar) Then
-            'Allow all control characters.
-        ElseIf Char.IsDigit(keyChar) OrElse keyChar = "."c Then
-            Dim text = sender.Text
-            Dim selectionStart = sender.SelectionStart
-            Dim selectionLength = sender.SelectionLength
-
-            text = text.Substring(0, selectionStart) & keyChar & text.Substring(selectionStart + selectionLength)
-
-            If Not (Integer.TryParse(text, New Integer) Or Double.TryParse(text, New Double)) Then
-                e.Handled = True
-            End If
-        Else
-            'Reject all other characters.
-            e.Handled = True
-        End If
     End Sub
 
     Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress, txtMaxAvgSpeed.KeyPress, txtMinAvgSpeed.KeyPress
@@ -398,7 +539,6 @@ Public Class Main
 
     Private Sub txtFPResults_TextChanged(sender As Object, e As EventArgs) Handles txtFPResults.TextChanged
         lblNbrCarsMainFP.Text = txtFPResults.Text.Length
-
     End Sub
 
     Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
@@ -410,6 +550,7 @@ Public Class Main
     End Sub
 
     Private Sub cboSpeedUnits_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSpeedUnits.SelectedIndexChanged
+        SessionModified()
         CalculateDuration()
     End Sub
 
@@ -479,12 +620,6 @@ Public Class Main
         CalculateTotalNbrCars()
     End Sub
 
-    Private Sub txtLongDescription_Leave(sender As Object, e As EventArgs) Handles txtLongDescription.Leave
-        _SF.RemoveForbiddenPrefixes(txtLongDescription)
-        BuildFPResults()
-        LeavingTextBox(sender)
-    End Sub
-
     Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
         lblNbrCarsFullDescResults.Text = txtFullDescriptionResults.Text.Length
         CalculateTotalNbrCars()
@@ -524,21 +659,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub WeatherFieldChangeDetection(sender As Object, e As EventArgs) Handles txtWeatherSummary.Leave, chkUseOnlyWeatherSummary.CheckedChanged
-        BuildWeatherInfoResults()
-        If Not (chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing) Then
-            BuildWeatherCloudLayers()
-            BuildWeatherWindLayers()
-        Else
-            txtWeatherClouds.Text = String.Empty
-            txtWeatherWinds.Text = String.Empty
-        End If
-        If TypeOf (sender) Is TextBox Then
-            LeavingTextBox(sender)
-        End If
-    End Sub
-
-    Private Sub CopyToEventFields(sender As Object, e As EventArgs) Handles txtTitle.TextChanged, txtSimDateTimeExtraInfo.TextChanged, txtShortDescription.TextChanged, txtDurationMin.TextChanged, txtDurationMax.TextChanged, txtDurationExtraInfo.TextChanged, txtCredits.TextChanged
+    Private Sub CopyToEventFields(sender As Object, e As EventArgs)
 
         If sender Is txtTitle Then
             txtEventTitle.Text = txtTitle.Text
@@ -584,25 +705,6 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnSelectDPHXPackageFile_Click(sender As Object, e As EventArgs) Handles btnSelectDPHXPackageFile.Click
-        If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
-        Else
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
-        End If
-        OpenFileDialog1.FileName = ""
-        OpenFileDialog1.Title = "Select DPHX package file"
-        OpenFileDialog1.Filter = "DPHX Package|*.dphx"
-        OpenFileDialog1.Multiselect = False
-
-        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
-
-        If result = DialogResult.OK Then
-            txtDPHXPackageFilename.Text = OpenFileDialog1.FileName
-        End If
-
-    End Sub
-
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
@@ -619,7 +721,7 @@ Public Class Main
 
         contentForMessage.AppendLine("FILES")
 
-        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+        If File.Exists(txtDPHXPackageFilename.Text) Then
             allFiles.Add(txtDPHXPackageFilename.Text)
             contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
         End If
@@ -661,7 +763,7 @@ Public Class Main
         sb.AppendLine("## 📁 **Files**")
 
         'Check if the DPHX package is included
-        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+        If File.Exists(txtDPHXPackageFilename.Text) Then
             sb.AppendLine("### DPHX Unpack & Load")
             sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
             sb.AppendLine("> *To get and install the tool: https://discord.gg/eJYynsQnHV*")
@@ -812,6 +914,7 @@ Public Class Main
                     If _SF.ExtraFileExtensionIsValid(OpenFileDialog1.FileNames(i)) Then
                         If Not lstAllFiles.Items.Contains(OpenFileDialog1.FileNames(i)) Then
                             lstAllFiles.Items.Add(OpenFileDialog1.FileNames(i))
+                            SessionModified()
                         Else
                             MessageBox.Show(Me, "This file already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End If
@@ -822,6 +925,14 @@ Public Class Main
             Next
         End If
 
+        If lstAllFiles.SelectedIndex > -1 AndAlso lstAllFiles.SelectedItems.Count < lstAllFiles.Items.Count Then
+            btnExtraFileDown.Enabled = True
+            btnExtraFileUp.Enabled = True
+        Else
+            btnExtraFileDown.Enabled = False
+            btnExtraFileUp.Enabled = False
+        End If
+
         LoadPossibleImagesInMapDropdown()
 
     End Sub
@@ -830,7 +941,16 @@ Public Class Main
 
         For i As Integer = lstAllFiles.SelectedIndices.Count - 1 To 0 Step -1
             lstAllFiles.Items.RemoveAt(lstAllFiles.SelectedIndices(i))
+            SessionModified()
         Next
+
+        If lstAllFiles.SelectedIndex > -1 AndAlso lstAllFiles.SelectedItems.Count < lstAllFiles.Items.Count Then
+            btnExtraFileDown.Enabled = True
+            btnExtraFileUp.Enabled = True
+        Else
+            btnExtraFileDown.Enabled = False
+            btnExtraFileUp.Enabled = False
+        End If
 
         LoadPossibleImagesInMapDropdown()
 
@@ -840,6 +960,7 @@ Public Class Main
 
         MoveExtraFilesSelectedItems(-1, lstAllFiles)
         btnExtraFileUp.Focus()
+        SessionModified()
 
     End Sub
 
@@ -847,6 +968,7 @@ Public Class Main
 
         MoveExtraFilesSelectedItems(1, lstAllFiles)
         btnExtraFileDown.Focus()
+        SessionModified()
 
     End Sub
 
@@ -858,8 +980,21 @@ Public Class Main
             btnExtraFileUp.Enabled = False
         Else
             btnRemoveExtraFile.Enabled = True
+            If lstAllFiles.Items.Count > 1 Then
+                btnExtraFileDown.Enabled = True
+                btnExtraFileUp.Enabled = True
+            Else
+                btnExtraFileDown.Enabled = False
+                btnExtraFileUp.Enabled = False
+            End If
+        End If
+
+        If lstAllFiles.SelectedIndex > -1 AndAlso lstAllFiles.SelectedItems.Count < lstAllFiles.Items.Count Then
             btnExtraFileDown.Enabled = True
             btnExtraFileUp.Enabled = True
+        Else
+            btnExtraFileDown.Enabled = False
+            btnExtraFileUp.Enabled = False
         End If
 
     End Sub
@@ -873,18 +1008,20 @@ Public Class Main
         If lstAllRecommendedAddOns.SelectedIndex = -1 Then
             btnEditSelectedAddOn.Enabled = False
             btnRemoveSelectedAddOns.Enabled = False
-            btnAddOnUp.Enabled = False
-            btnAddOnDown.Enabled = False
         ElseIf lstAllRecommendedAddOns.SelectedItems.Count > 1 Then
             btnEditSelectedAddOn.Enabled = False
-            btnAddOnUp.Enabled = True
-            btnAddOnDown.Enabled = True
             btnRemoveSelectedAddOns.Enabled = True
         Else
             btnEditSelectedAddOn.Enabled = True
+            btnRemoveSelectedAddOns.Enabled = True
+        End If
+
+        If lstAllRecommendedAddOns.SelectedIndex > -1 AndAlso lstAllRecommendedAddOns.SelectedItems.Count < lstAllRecommendedAddOns.Items.Count Then
             btnAddOnUp.Enabled = True
             btnAddOnDown.Enabled = True
-            btnRemoveSelectedAddOns.Enabled = True
+        Else
+            btnAddOnUp.Enabled = False
+            btnAddOnDown.Enabled = False
         End If
 
     End Sub
@@ -896,6 +1033,15 @@ Public Class Main
 
         If RecommendedAddOnsForm.ShowForm(Me, addOn, False) = DialogResult.OK Then
             lstAllRecommendedAddOns.Items.Add(addOn)
+            SessionModified()
+        End If
+
+        If lstAllRecommendedAddOns.SelectedIndex > -1 AndAlso lstAllRecommendedAddOns.SelectedItems.Count < lstAllRecommendedAddOns.Items.Count Then
+            btnAddOnUp.Enabled = True
+            btnAddOnDown.Enabled = True
+        Else
+            btnAddOnUp.Enabled = False
+            btnAddOnDown.Enabled = False
         End If
 
         'Update recommended add-ons textbox
@@ -915,6 +1061,7 @@ Public Class Main
                 ' Re-insert the modified item at the same index
                 lstAllRecommendedAddOns.Items.Insert(index, addOn)
                 lstAllRecommendedAddOns.SelectedIndex = index
+                SessionModified()
             Case DialogResult.Cancel
                 'Cancel
         End Select
@@ -928,7 +1075,16 @@ Public Class Main
 
         For i As Integer = lstAllRecommendedAddOns.SelectedIndices.Count - 1 To 0 Step -1
             lstAllRecommendedAddOns.Items.RemoveAt(lstAllRecommendedAddOns.SelectedIndices(i))
+            SessionModified()
         Next
+
+        If lstAllRecommendedAddOns.SelectedIndex > -1 AndAlso lstAllRecommendedAddOns.SelectedItems.Count < lstAllRecommendedAddOns.Items.Count Then
+            btnAddOnUp.Enabled = True
+            btnAddOnDown.Enabled = True
+        Else
+            btnAddOnUp.Enabled = False
+            btnAddOnDown.Enabled = False
+        End If
 
         'Update recommended add-ons textbox
         BuildRecAddOnsText()
@@ -943,6 +1099,8 @@ Public Class Main
         'Update recommended add-ons textbox
         BuildRecAddOnsText()
 
+        SessionModified()
+
     End Sub
 
     Private Sub btnAddOnDown_Click(sender As Object, e As EventArgs) Handles btnAddOnDown.Click
@@ -952,6 +1110,8 @@ Public Class Main
 
         'Update recommended add-ons textbox
         BuildRecAddOnsText()
+
+        SessionModified()
 
     End Sub
 
@@ -963,24 +1123,42 @@ Public Class Main
         If cboCountryFlag.SelectedIndex > 0 AndAlso Not lstAllCountries.Items.Contains(cboCountryFlag.Text) Then
             lstAllCountries.Items.Add(cboCountryFlag.Text)
             BuildFPResults()
+            SessionModified()
+            If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
+                btnMoveCountryDown.Enabled = True
+                btnMoveCountryUp.Enabled = True
+            Else
+                btnMoveCountryDown.Enabled = False
+                btnMoveCountryUp.Enabled = False
+            End If
         End If
     End Sub
 
     Private Sub btnRemoveCountry_Click(sender As Object, e As EventArgs) Handles btnRemoveCountry.Click
         For i As Integer = lstAllCountries.SelectedIndices.Count - 1 To 0 Step -1
             lstAllCountries.Items.RemoveAt(lstAllCountries.SelectedIndices(i))
+            SessionModified()
         Next
+        If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
+            btnMoveCountryDown.Enabled = True
+            btnMoveCountryUp.Enabled = True
+        Else
+            btnMoveCountryDown.Enabled = False
+            btnMoveCountryUp.Enabled = False
+        End If
         BuildFPResults()
     End Sub
 
     Private Sub btnMoveCountryUp_Click(sender As Object, e As EventArgs) Handles btnMoveCountryUp.Click
         MoveExtraFilesSelectedItems(-1, lstAllCountries)
         BuildFPResults()
+        SessionModified()
     End Sub
 
     Private Sub btnMoveCountryDown_Click(sender As Object, e As EventArgs) Handles btnMoveCountryDown.Click
         MoveExtraFilesSelectedItems(1, lstAllCountries)
         BuildFPResults()
+        SessionModified()
     End Sub
 
 #End Region
@@ -988,6 +1166,17 @@ Public Class Main
 #End Region
 
 #Region "Flight Plan tab Subs & Functions"
+
+    Private Sub WeatherFieldChangeDetection()
+        BuildWeatherInfoResults()
+        If Not (chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing) Then
+            BuildWeatherCloudLayers()
+            BuildWeatherWindLayers()
+        Else
+            txtWeatherClouds.Text = String.Empty
+            txtWeatherWinds.Text = String.Empty
+        End If
+    End Sub
 
     Private Sub BuildRecAddOnsText()
 
@@ -1172,6 +1361,8 @@ Public Class Main
         BuildFPResults()
         BuildGroupFlightPost()
 
+        SessionModified()
+
     End Sub
 
     Private Sub SetVisibilityForSecPosts()
@@ -1289,6 +1480,8 @@ Public Class Main
             BuildWeatherWindLayers()
         End If
 
+        SessionModified()
+
     End Sub
 
     Private Sub MoveExtraFilesSelectedItems(ByVal direction As Integer, ByVal listContrl As Windows.Forms.ListBox)
@@ -1374,7 +1567,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.Leave
+    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
 
@@ -1400,6 +1593,8 @@ Public Class Main
 
         BuildGroupFlightPost()
 
+        SessionModified()
+
     End Sub
 
     Private Sub EventDateChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyDate.ValueChanged, dtEventStartTaskDate.ValueChanged, dtEventMeetDate.ValueChanged, dtEventLaunchDate.ValueChanged
@@ -1419,7 +1614,7 @@ Public Class Main
         End Select
 
         BuildEventDatesTimes()
-
+        SessionModified()
     End Sub
 
     Private Sub EventTimeChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyTime.ValueChanged, dtEventStartTaskTime.ValueChanged, dtEventMeetTime.ValueChanged, dtEventLaunchTime.ValueChanged
@@ -1452,15 +1647,18 @@ Public Class Main
         End Select
 
         BuildEventDatesTimes()
+        SessionModified()
 
     End Sub
 
     Private Sub chkDateTimeUTC_CheckedChanged(sender As Object, e As EventArgs) Handles chkDateTimeUTC.CheckedChanged
         BuildEventDatesTimes()
+        SessionModified()
     End Sub
 
-    Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboVoiceChannel.Leave, cboMSFSServer.SelectedIndexChanged, cboMSFSServer.Leave, cboEligibleAward.SelectedIndexChanged, cboEligibleAward.Leave
+    Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboMSFSServer.SelectedIndexChanged, cboEligibleAward.SelectedIndexChanged
         BuildGroupFlightPost()
+        SessionModified()
     End Sub
 
     Private Sub btnTaskFPURLPaste_Click(sender As Object, e As EventArgs) Handles btnTaskFPURLPaste.Click
@@ -1521,6 +1719,7 @@ Public Class Main
 
     Private Sub chkIncludeGotGravelInvite_CheckedChanged(sender As Object, e As EventArgs) Handles chkIncludeGotGravelInvite.CheckedChanged
         BuildGroupFlightPost()
+        SessionModified()
     End Sub
 
     Private Sub txtTaskFlightPlanURL_TextChanged(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.TextChanged
@@ -1533,6 +1732,8 @@ Public Class Main
                 chkIncludeGotGravelInvite.Enabled = False
             End If
         End If
+        SessionModified()
+
     End Sub
 
     Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
@@ -1542,7 +1743,7 @@ Public Class Main
 
         contentForMessage.AppendLine("FILES")
 
-        If chkDPHXPackageInclude.Checked AndAlso File.Exists(txtDPHXPackageFilename.Text) Then
+        If File.Exists(txtDPHXPackageFilename.Text) Then
             allFiles.Add(txtDPHXPackageFilename.Text)
             contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
         End If
@@ -1581,6 +1782,7 @@ Public Class Main
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
+        SessionModified()
     End Sub
 
 #End Region
@@ -1775,6 +1977,8 @@ Public Class Main
 
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
+        SessionModified()
+
         'Load image
         BriefingControl1.ChangeImage(cboBriefingMap.SelectedItem.ToString)
 
@@ -1784,6 +1988,8 @@ Public Class Main
 #End Region
 
     Private Sub LoadPossibleImagesInMapDropdown(Optional mapToSelect As String = "")
+
+        _loadingFile = True
 
         Dim currentImage As String = String.Empty
 
@@ -1805,6 +2011,8 @@ Public Class Main
         Next
         If cboBriefingMap.SelectedIndex = -1 Then
         End If
+
+        _loadingFile = False
 
     End Sub
     Private Sub GenerateBriefing()
@@ -2010,12 +2218,7 @@ Public Class Main
                 pnlGuide.Top = 519
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 22 'DPHX Package
-                SetGuidePanelToRight()
-                pnlGuide.Top = 557
-                lblGuideInstructions.Text = "When you are done and select to share a DPHX package of this task, use this section to select it and include it with the post."
-                SetFocusOnField(btnSelectDPHXPackageFile, fromF1Key)
-            Case 23 'End of flight plan data
+            Case 22 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -2463,7 +2666,9 @@ Public Class Main
 #Region "Event Handlers"
 
     Private Sub btnLoadConfig_Click(sender As Object, e As EventArgs) Handles btnLoadConfig.Click
-        LoadFile()
+        If CheckUnsavedAndConfirmAction("load a file") Then
+            LoadFile()
+        End If
     End Sub
 
     Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles btnSaveConfig.Click
@@ -2481,54 +2686,55 @@ Public Class Main
         Dim result As DialogResult = SaveFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            Dim DPHXFilename As String = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(_CurrentSessionFile)}.dphx"
+            txtDPHXPackageFilename.Text = DPHXFilename
+
             SaveSessionData(SaveFileDialog1.FileName)
             _CurrentSessionFile = SaveFileDialog1.FileName
+
+            'Then save the DPHX as well
+            'Check if file already exists and delete it
+            If File.Exists(DPHXFilename) Then
+                File.Delete(DPHXFilename)
+            End If
+
+            ' Zip the selected files using the ZipFiles method
+            Dim filesToInclude As New List(Of String)()
+            filesToInclude.Add(_CurrentSessionFile)
+            If File.Exists(txtFlightPlanFile.Text) Then
+                filesToInclude.Add(txtFlightPlanFile.Text)
+            End If
+            If File.Exists(txtWeatherFile.Text) Then
+                filesToInclude.Add(txtWeatherFile.Text)
+            End If
+            For i As Integer = 0 To lstAllFiles.Items.Count - 1
+                filesToInclude.Add(lstAllFiles.Items(i))
+            Next
+
+            _SF.CreateDPHXFile(DPHXFilename, filesToInclude)
+
+            SessionUntouched()
+
         End If
 
     End Sub
 
     Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles btnCreateShareablePack.Click
 
-        If _CurrentSessionFile.EndsWith("LastSession.dph") Then
-            MessageBox.Show("You first need to save or load your session!", "Package creation error - cannot create from last session!", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
-
-        SaveFileDialog1.RestoreDirectory = True
-        If txtFlightPlanFile.Text = String.Empty Then
-            SaveFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
-        Else
-            SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
-        End If
-        SaveFileDialog1.FileName = txtTitle.Text
-        SaveFileDialog1.Title = "Select package file to save"
-        SaveFileDialog1.Filter = "Discord Post Helper package files (*.dphx)|*.dphx"
-
-        Dim result As DialogResult = SaveFileDialog1.ShowDialog()
-
-        If result = DialogResult.OK Then
-            'Check if file already exists and delete it
-            If File.Exists(SaveFileDialog1.FileName) Then
-                File.Delete(SaveFileDialog1.FileName)
+        If _CurrentSessionFile <> String.Empty Then
+            Dim DPHXFilename As String = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(_CurrentSessionFile)}.dphx"
+            If File.Exists(DPHXFilename) Then
+                If CheckUnsavedAndConfirmAction("share DPHX package") Then
+                    Dim allFiles As New Specialized.StringCollection
+                    allFiles.Add(DPHXFilename)
+                    Clipboard.SetFileDropList(allFiles)
+                    MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+            Else
+                MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
-            ' Zip the selected files using the ZipFiles method
-            Dim filesToInclude As New List(Of String)()
-            filesToInclude.Add(_CurrentSessionFile)
-            filesToInclude.Add(txtFlightPlanFile.Text)
-            filesToInclude.Add(txtWeatherFile.Text)
-            For i As Integer = 0 To lstAllFiles.Items.Count - 1
-                filesToInclude.Add(lstAllFiles.Items(i))
-            Next
-
-            _SF.CreateDPHXFile(SaveFileDialog1.FileName, filesToInclude)
-
-            Dim allFiles As New Specialized.StringCollection
-            allFiles.Add(SaveFileDialog1.FileName)
-            Clipboard.SetFileDropList(allFiles)
-            MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            txtDPHXPackageFilename.Text = SaveFileDialog1.FileName
-            chkDPHXPackageInclude.Checked = True
+        Else
+            MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
 
     End Sub
@@ -2568,9 +2774,11 @@ Public Class Main
 
             If validSessionFile Then
                 ResetForm()
+                _loadingFile = True
                 LoadSessionData(OpenFileDialog1.FileName)
                 _CurrentSessionFile = OpenFileDialog1.FileName
                 GenerateBriefing()
+                _loadingFile = False
             End If
         End If
 
@@ -2640,7 +2848,6 @@ Public Class Main
             For i As Integer = 0 To lstAllRecommendedAddOns.Items.Count - 1
                 .RecommendedAddOns.Add(lstAllRecommendedAddOns.Items(i))
             Next
-            .IncludeDPHXPackage = chkDPHXPackageInclude.Checked
             .DPHXPackageFilename = txtDPHXPackageFilename.Text
             .EventEnabled = chkActivateEvent.Checked
             .GroupClub = cboGroupOrClubName.Text
@@ -2691,7 +2898,9 @@ Public Class Main
                 If File.Exists(.FlightPlanFilename) Then
                 Else
                     'Should expect the file to be in the same folder as the .dph file
-                    .FlightPlanFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}"
+                    If File.Exists(.FlightPlanFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}") Then
+                        .FlightPlanFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}"
+                    End If
                 End If
                 txtFlightPlanFile.Text = .FlightPlanFilename
                 Me.Update()
@@ -2701,7 +2910,9 @@ Public Class Main
                 If File.Exists(.WeatherFilename) Then
                 Else
                     'Should expect the file to be in the same folder as the .dph file
-                    .WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}"
+                    If File.Exists(.WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}") Then
+                        .WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}"
+                    End If
                 End If
                 txtWeatherFile.Text = .WeatherFilename
                 Me.Update()
@@ -2769,7 +2980,6 @@ Public Class Main
                     Next
                 End If
                 If File.Exists(.DPHXPackageFilename) Then
-                    chkDPHXPackageInclude.Checked = .IncludeDPHXPackage
                     txtDPHXPackageFilename.Text = .DPHXPackageFilename
                 End If
                 chkActivateEvent.Checked = .EventEnabled
@@ -2803,6 +3013,36 @@ Public Class Main
             BuildGroupFlightPost()
             BuildDiscordEventDescription()
 
+            _sessionModified = False
+
+        End If
+
+    End Sub
+
+    Public Sub SessionModified()
+
+        If (Not _sessionModified) AndAlso (Not _loadingFile) Then
+            _sessionModified = True
+            SetSaveButtonFont()
+        End If
+
+    End Sub
+
+    Public Sub SessionUntouched()
+
+        If _sessionModified Then
+            _sessionModified = False
+            SetSaveButtonFont()
+        End If
+    End Sub
+    Public Sub SetSaveButtonFont()
+
+        If _sessionModified Then
+            btnSaveConfig.Font = New Font(btnSaveConfig.Font, FontStyle.Bold)
+            btnSaveConfig.ForeColor = Color.Red
+        Else
+            btnSaveConfig.Font = New Font(btnSaveConfig.Font, FontStyle.Regular)
+            btnSaveConfig.ForeColor = DefaultForeColor
         End If
 
     End Sub

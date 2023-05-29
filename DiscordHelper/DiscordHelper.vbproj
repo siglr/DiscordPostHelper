@@ -80,6 +80,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllSettings.vb" />
     <Compile Include="CopyContent.Designer.vb">
       <DependentUpon>CopyContent.vb</DependentUpon>
     </Compile>

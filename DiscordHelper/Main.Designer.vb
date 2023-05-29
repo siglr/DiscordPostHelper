@@ -98,9 +98,7 @@ Partial Class Main
         Me.btnAddExtraFile = New System.Windows.Forms.Button()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
-        Me.btnSelectDPHXPackageFile = New System.Windows.Forms.Button()
         Me.btnExtraFileUp = New System.Windows.Forms.Button()
-        Me.chkDPHXPackageInclude = New System.Windows.Forms.CheckBox()
         Me.btnExtraFileDown = New System.Windows.Forms.Button()
         Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -234,6 +232,7 @@ Partial Class Main
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
+        Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -246,7 +245,6 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1080,9 +1078,7 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.btnAddExtraFile)
         Me.GroupBox3.Controls.Add(Me.Label10)
         Me.GroupBox3.Controls.Add(Me.btnRemoveExtraFile)
-        Me.GroupBox3.Controls.Add(Me.btnSelectDPHXPackageFile)
         Me.GroupBox3.Controls.Add(Me.btnExtraFileUp)
-        Me.GroupBox3.Controls.Add(Me.chkDPHXPackageInclude)
         Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
         Me.GroupBox3.Controls.Add(Me.txtDPHXPackageFilename)
         Me.GroupBox3.Location = New System.Drawing.Point(6, 338)
@@ -1162,18 +1158,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the selected extra file from the flight plan.")
         Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
         '
-        'btnSelectDPHXPackageFile
-        '
-        Me.btnSelectDPHXPackageFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectDPHXPackageFile.Location = New System.Drawing.Point(622, 190)
-        Me.btnSelectDPHXPackageFile.Name = "btnSelectDPHXPackageFile"
-        Me.btnSelectDPHXPackageFile.Size = New System.Drawing.Size(92, 32)
-        Me.btnSelectDPHXPackageFile.TabIndex = 10
-        Me.btnSelectDPHXPackageFile.Tag = "22"
-        Me.btnSelectDPHXPackageFile.Text = "Select"
-        Me.ToolTip1.SetToolTip(Me.btnSelectDPHXPackageFile, "Click to select the DPHX package file linked with this task.")
-        Me.btnSelectDPHXPackageFile.UseVisualStyleBackColor = True
-        '
         'btnExtraFileUp
         '
         Me.btnExtraFileUp.Enabled = False
@@ -1186,17 +1170,6 @@ Partial Class Main
         Me.btnExtraFileUp.Text = "▲"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
         Me.btnExtraFileUp.UseVisualStyleBackColor = True
-        '
-        'chkDPHXPackageInclude
-        '
-        Me.chkDPHXPackageInclude.AutoSize = True
-        Me.chkDPHXPackageInclude.Location = New System.Drawing.Point(162, 200)
-        Me.chkDPHXPackageInclude.Name = "chkDPHXPackageInclude"
-        Me.chkDPHXPackageInclude.Size = New System.Drawing.Size(15, 14)
-        Me.chkDPHXPackageInclude.TabIndex = 8
-        Me.chkDPHXPackageInclude.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.chkDPHXPackageInclude, "When checked, the DPHX package will be included with the files.")
-        Me.chkDPHXPackageInclude.UseVisualStyleBackColor = True
         '
         'btnExtraFileDown
         '
@@ -1217,7 +1190,7 @@ Partial Class Main
         Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(183, 190)
         Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
         Me.txtDPHXPackageFilename.ReadOnly = True
-        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(433, 32)
+        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(531, 32)
         Me.txtDPHXPackageFilename.TabIndex = 9
         Me.txtDPHXPackageFilename.TabStop = False
         Me.txtDPHXPackageFilename.Tag = "22"
@@ -1328,6 +1301,7 @@ Partial Class Main
         '
         'btnMoveCountryDown
         '
+        Me.btnMoveCountryDown.Enabled = False
         Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 97)
         Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
@@ -1340,6 +1314,7 @@ Partial Class Main
         '
         'btnMoveCountryUp
         '
+        Me.btnMoveCountryUp.Enabled = False
         Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 61)
         Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
@@ -1352,6 +1327,7 @@ Partial Class Main
         '
         'btnRemoveCountry
         '
+        Me.btnRemoveCountry.Enabled = False
         Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 97)
         Me.btnRemoveCountry.Name = "btnRemoveCountry"
@@ -2827,6 +2803,19 @@ Partial Class Main
         Me.pnlWizardBriefing.TabIndex = 95
         Me.pnlWizardBriefing.Visible = False
         '
+        'lblBriefingGuideInstructions
+        '
+        Me.lblBriefingGuideInstructions.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblBriefingGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblBriefingGuideInstructions.ForeColor = System.Drawing.Color.White
+        Me.lblBriefingGuideInstructions.Location = New System.Drawing.Point(0, 0)
+        Me.lblBriefingGuideInstructions.Name = "lblBriefingGuideInstructions"
+        Me.lblBriefingGuideInstructions.Size = New System.Drawing.Size(425, 46)
+        Me.lblBriefingGuideInstructions.TabIndex = 1
+        Me.lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are " &
+    "satisfied, click Next."
+        Me.lblBriefingGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'btnBriefingGuideNext
         '
         Me.btnBriefingGuideNext.Dock = System.Windows.Forms.DockStyle.Right
@@ -2952,19 +2941,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
-        '
-        'lblBriefingGuideInstructions
-        '
-        Me.lblBriefingGuideInstructions.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblBriefingGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblBriefingGuideInstructions.ForeColor = System.Drawing.Color.White
-        Me.lblBriefingGuideInstructions.Location = New System.Drawing.Point(0, 0)
-        Me.lblBriefingGuideInstructions.Name = "lblBriefingGuideInstructions"
-        Me.lblBriefingGuideInstructions.Size = New System.Drawing.Size(425, 46)
-        Me.lblBriefingGuideInstructions.TabIndex = 1
-        Me.lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are " &
-    "satisfied, click Next."
-        Me.lblBriefingGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Main
         '
@@ -3225,8 +3201,6 @@ Partial Class Main
     Friend WithEvents txtWaypointsDetails As TextBox
     Friend WithEvents txtAddOnsDetails As TextBox
     Friend WithEvents Label10 As Label
-    Friend WithEvents btnSelectDPHXPackageFile As Button
-    Friend WithEvents chkDPHXPackageInclude As CheckBox
     Friend WithEvents txtDPHXPackageFilename As TextBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents lstAllRecommendedAddOns As ListBox
