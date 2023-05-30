@@ -196,6 +196,7 @@ Partial Class RecommendedAddOnsForm
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "RecommendedAddOnsForm"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Recommended Add-On"
         Me.FlowLayoutPanel1.ResumeLayout(False)

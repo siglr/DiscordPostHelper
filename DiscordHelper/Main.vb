@@ -39,6 +39,12 @@ Public Class Main
     Private _loadingFile As Boolean = False
     Private _sessionModified As Boolean = False
 
+    Private _OriginalFlightPlanTitle As String = String.Empty
+    Private _OriginalFlightPlanDeparture As String = String.Empty
+    Private _OriginalFlightPlanDepRwy As String = String.Empty
+    Private _OriginalFlightPlanArrival As String = String.Empty
+    Private _OriginalFlightPlanShortDesc As String = String.Empty
+
 #End Region
 
 #Region "Global exception handler"
@@ -191,19 +197,19 @@ Public Class Main
 
         txtFlightPlanFile.Text = String.Empty
         txtWeatherFile.Text = String.Empty
-        chkTitleLock.Checked = False
         txtTitle.Text = String.Empty
+        chkTitleLock.Checked = False
         chkIncludeYear.Checked = False
         txtSimDateTimeExtraInfo.Text = String.Empty
         txtMainArea.Text = String.Empty
         txtDepartureICAO.Text = String.Empty
         txtDepName.Text = String.Empty
-        chkDepartureLock.Checked = False
         txtDepExtraInfo.Text = String.Empty
+        chkDepartureLock.Checked = False
         txtArrivalICAO.Text = String.Empty
         txtArrivalName.Text = String.Empty
-        chkArrivalLock.Checked = False
         txtArrivalExtraInfo.Text = String.Empty
+        chkArrivalLock.Checked = False
         chkSoaringTypeRidge.Checked = False
         chkSoaringTypeThermal.Checked = False
         txtSoaringTypeExtraInfo.Text = String.Empty
@@ -215,8 +221,8 @@ Public Class Main
         txtDurationMin.Text = String.Empty
         txtDurationMax.Text = String.Empty
         txtDifficultyExtraInfo.Text = String.Empty
-        chkDescriptionLock.Checked = False
         txtShortDescription.Text = String.Empty
+        chkDescriptionLock.Checked = False
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkLockCountries.Checked = False
@@ -429,6 +435,22 @@ Public Class Main
                                                                           cboDifficulty.TextChanged,
                                                                           cboDifficulty.SelectedIndexChanged
 
+        'Check specific fields colateral actions
+        If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
+            chkTitleLock.Checked = True
+        End If
+        If sender Is txtShortDescription AndAlso chkDescriptionLock.Checked = False AndAlso txtShortDescription.Text <> _OriginalFlightPlanShortDesc Then
+            chkDescriptionLock.Checked = True
+        End If
+        If sender Is txtDepName AndAlso chkDepartureLock.Checked = False AndAlso txtDepName.Text <> _OriginalFlightPlanDeparture Then
+            chkDepartureLock.Checked = True
+        End If
+        If sender Is txtArrivalName AndAlso chkArrivalLock.Checked = False AndAlso txtArrivalName.Text <> _OriginalFlightPlanArrival Then
+            chkArrivalLock.Checked = True
+        End If
+        If sender Is txtDepExtraInfo AndAlso chkArrivalLock.Checked = False AndAlso txtDepExtraInfo.Text <> _OriginalFlightPlanDepRwy Then
+            chkDepartureLock.Checked = True
+        End If
 
         SessionModified()
 
@@ -709,6 +731,10 @@ Public Class Main
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
         Clipboard.SetText(txtFPResults.Text)
         CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
+
+        If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
+            MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -716,6 +742,17 @@ Public Class Main
     End Sub
 
     Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
+
+        If _sessionModified Then
+            Dim dlgResult As DialogResult
+            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! Do you want to save them first?", "Unsaved changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            Select Case dlgResult
+                Case DialogResult.Yes
+                    btnSaveConfig_Click(btnFilesCopy, e)
+                Case DialogResult.Cancel
+                    Return
+            End Select
+        End If
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
 
@@ -1323,25 +1360,32 @@ Public Class Main
         txtFlightPlanFile.Text = filename
         _XmlDocFlightPlan.Load(filename)
 
+        _OriginalFlightPlanTitle = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/Title").Item(0).FirstChild.Value
         If Not chkTitleLock.Checked Then
-            txtTitle.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/Title").Item(0).FirstChild.Value
+            txtTitle.Text = _OriginalFlightPlanTitle
         End If
 
-        If _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Count > 0 AndAlso (Not chkDepartureLock.Checked) Then
-            txtDepExtraInfo.Text = $"Rwy {_XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Item(0).FirstChild.Value}"
+        If _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Count > 0 Then
+            _OriginalFlightPlanDepRwy = $"Rwy {_XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Item(0).FirstChild.Value}"
+            If (Not chkDepartureLock.Checked) Then
+                txtDepExtraInfo.Text = _OriginalFlightPlanDepRwy
+            End If
         End If
 
+        _OriginalFlightPlanShortDesc = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/Descr").Item(0).FirstChild.Value
         If Not chkDescriptionLock.Checked Then
-            txtShortDescription.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/Descr").Item(0).FirstChild.Value
+            txtShortDescription.Text = _OriginalFlightPlanShortDesc
         End If
 
         txtDepartureICAO.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DepartureID").Item(0).FirstChild.Value
+        _OriginalFlightPlanDeparture = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DepartureName").Item(0).FirstChild.Value
         If Not chkDepartureLock.Checked Then
-            txtDepName.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DepartureName").Item(0).FirstChild.Value
+            txtDepName.Text = _OriginalFlightPlanDeparture
         End If
         txtArrivalICAO.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DestinationID").Item(0).FirstChild.Value
+        _OriginalFlightPlanArrival = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DestinationName").Item(0).FirstChild.Value
         If Not chkArrivalLock.Checked Then
-            txtArrivalName.Text = _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DestinationName").Item(0).FirstChild.Value
+            txtArrivalName.Text = _OriginalFlightPlanArrival
         End If
 
         txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm)
@@ -1738,6 +1782,17 @@ Public Class Main
 
     Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
 
+        If _sessionModified Then
+            Dim dlgResult As DialogResult
+            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! Do you want to save them first?", "Unsaved changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            Select Case dlgResult
+                Case DialogResult.Yes
+                    btnSaveConfig_Click(btnFilesCopy, e)
+                Case DialogResult.Cancel
+                    Return
+            End Select
+        End If
+
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
 
@@ -2114,6 +2169,7 @@ Public Class Main
                 pnlWizardBriefing.Visible = False
                 btnTurnGuideOff.Visible = False
             Case 1 'Select flight plan
+                TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
                 pnlGuide.Top = -3
                 lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
@@ -2248,15 +2304,7 @@ Public Class Main
                 lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
             Case 35 'We're done with the briefing
-                _GuideCurrentStep = 39
-                ShowGuide()
-
-            Case 39 'Ready to post ?
-                If MessageBox.Show(Me, "The task's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    _GuideCurrentStep += 1
-                Else
-                    _GuideCurrentStep = 999
-                End If
+                _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
             Case 40 'Create FP post
@@ -2286,7 +2334,7 @@ Public Class Main
                 If chkGroupSecondaryPosts.Checked Then
                     lblDiscordGuideInstructions.Text = "You can now create the last post with all remaining task information. Watch out for Discord's post size limit!"
                     SetFocusOnField(btnCopyAllSecPosts, fromF1Key)
-                    _GuideCurrentStep = 58
+                    _GuideCurrentStep = 48
 
                 Else
                     lblDiscordGuideInstructions.Text = "Altitude Restrictions and Weather info - You can click this button and receive instructions for this next post."
@@ -2308,16 +2356,7 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
                 SetFocusOnField(btnAddOnsCopy, fromF1Key)
             Case 48 'Next section
-                _GuideCurrentStep = 59
-                ShowGuide()
-
-            Case 59
-                If MessageBox.Show(Me, "The task's details are all posted. Are you also creating the group flight post on Discord?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    chkActivateEvent.Checked = True
-                    _GuideCurrentStep += 1
-                Else
-                    _GuideCurrentStep = 999
-                End If
+                _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
             Case 60 'Event
@@ -2391,13 +2430,13 @@ Public Class Main
             Case 71 'Task URL
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 563
-                lblEventGuideInstructions.Text = "In Discord, find the published task's main post (created earlier) and copy the link to that post (usually by using the ... menu associated with the post). Then click Paste here."
+                lblEventGuideInstructions.Text = "When the task's main post is created in Discord, copy the link to that post and click Paste (come back later if it's not already done)."
                 SetFocusOnField(btnTaskFPURLPaste, fromF1Key)
 
             Case 72 'GotGravel Invite
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 593
-                lblEventGuideInstructions.Text = "If the link above is from GotGravel, you have the option to include an invite to the server along with the group flight info. This is useful if published outside of GotGravel."
+                lblEventGuideInstructions.Text = "If the link above is from GotGravel, you can include an invite to the server. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
 
             Case 73 'Briefing review
@@ -2407,15 +2446,7 @@ Public Class Main
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
             Case 74 'Next section
-                _GuideCurrentStep = 79
-                ShowGuide()
-
-            Case 79 'Ready to post ?
-                If MessageBox.Show(Me, "The group flight's details are all set and you are ready to post it on Discord. Are you ready to continue on the Discord tab?", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    _GuideCurrentStep += 1
-                Else
-                    _GuideCurrentStep = 999
-                End If
+                _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
             Case 80 'Create Group Flight post
@@ -2488,7 +2519,7 @@ Public Class Main
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case 91
-                _GuideCurrentStep = 999
+                _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
             Case 100
@@ -2507,6 +2538,26 @@ Public Class Main
                 MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Select
     End Sub
+
+    Private Function AskWhereToGoNext() As Integer
+        Dim nextWizard As New WizardNextChoice
+        nextWizard.ShowDialog(Me)
+        Select Case nextWizard.UserChoice
+            Case WizardNextChoice.WhereToGoNext.StopWizard
+                Return 999
+            Case WizardNextChoice.WhereToGoNext.CreateTask
+                Return 1
+            Case WizardNextChoice.WhereToGoNext.CreateEvent
+                If Not chkActivateEvent.Checked Then
+                    chkActivateEvent.Checked = True
+                End If
+                Return 60
+            Case WizardNextChoice.WhereToGoNext.DiscordTask
+                Return 40
+            Case WizardNextChoice.WhereToGoNext.DiscordEvent
+                Return 80
+        End Select
+    End Function
 
     Private Sub SetFocusOnField(controlToPutFocus As Windows.Forms.Control, fromF1Key As Boolean)
 
