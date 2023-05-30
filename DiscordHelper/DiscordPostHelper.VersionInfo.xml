@@ -1,6 +1,22 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.5.26.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.5.30.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.5.30.1</ReleaseVersion>
+      <ReleaseTitle>Save process revisited and more</ReleaseTitle>
+      <ReleaseNotes>
+        This release changes how saving a session works:
+        - It now detects when changes are pending (Save button turns red)
+        - It now reopens the last file (if there's one) between runs
+        - It now always saves a DPHX package
+       
+        But this release also contains other changes:
+        - Other improvements to wizard guide (it now asks where you want to go between sections)
+        - Fix the Country area where buttons are not enabled at the right time (move up, down, remove)
+        - Save window location and size after each use
+        - Small fixes here and there
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.26.1</ReleaseVersion>
       <ReleaseTitle>Discord Markdown to enhance all posts</ReleaseTitle>
