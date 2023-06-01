@@ -69,7 +69,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub DPHXUnpackAndLoad_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If Not _SF.CheckRequiredNetFrameworkVersion Then
-            MessageBox.Show("This application requires Microsoft .NET Framework 4.8.1 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("This application requires Microsoft .NET Framework 4.8 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
             _abortingFirstRun = True
             Application.Exit()
             Exit Sub
