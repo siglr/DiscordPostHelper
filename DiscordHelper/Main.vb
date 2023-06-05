@@ -2737,7 +2737,7 @@ Public Class Main
         Dim result As DialogResult = SaveFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-            Dim DPHXFilename As String = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(_CurrentSessionFile)}.dphx"
+            Dim DPHXFilename As String = $"{Path.GetDirectoryName(SaveFileDialog1.FileName)}\{Path.GetFileNameWithoutExtension(SaveFileDialog1.FileName)}.dphx"
             txtDPHXPackageFilename.Text = DPHXFilename
 
             SaveSessionData(SaveFileDialog1.FileName)
