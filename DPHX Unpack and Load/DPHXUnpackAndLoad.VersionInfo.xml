@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.5.26.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.4.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.4.2</ReleaseVersion>
+      <ReleaseTitle>Fixed briefing altitudes (wrong units)</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug on the briefing tab that was displaying altitudes with the wrong units
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.5.26.1</ReleaseVersion>
       <ReleaseTitle>Short description and small fixes</ReleaseTitle>

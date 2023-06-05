@@ -286,11 +286,9 @@ Public Class WindLayer
             Else
                 Select Case prefUnits.Altitude
                     Case AltitudeUnits.Metric
-                        Return String.Format("{0:N0}",
-                                Conversions.MeterToFeet(Altitude))
+                        Return String.Format("{0:N0}", Altitude)
                     Case AltitudeUnits.Imperial
-                        Return String.Format("{0:N0}",
-                                Altitude)
+                        Return String.Format("{0:N0}", Conversions.MeterToFeet(Altitude))
                 End Select
             End If
             Return String.Empty

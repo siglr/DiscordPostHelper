@@ -33,10 +33,10 @@ Public Class CloudLayer
             Dim strResults As String = String.Empty
             If prefUnits Is Nothing OrElse prefUnits.Altitude = AltitudeUnits.Both Then
                 strResults = String.Format("From {2}' to {3}' / {0} m to {1} m, {4}% coverage, {5} density, {6}% scattering",
-                                                  FormatNumber(AltitudeBottom, 0,,, TriState.False),
-                                                  FormatNumber(_AltitudeTop, 0,,, TriState.False),
                                                   FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
                                                   FormatNumber(Conversions.MeterToFeet(_AltitudeTop), 0,,, TriState.False),
+                                                  FormatNumber(AltitudeBottom, 0,,, TriState.False),
+                                                  FormatNumber(_AltitudeTop, 0,,, TriState.False),
                                                   FormatNumber(_Coverage, 0),
                                                   FormatNumber(_Density, 3),
                                                   FormatNumber(_Scattering, 0))
@@ -44,15 +44,15 @@ Public Class CloudLayer
                 Select Case prefUnits.Altitude
                     Case AltitudeUnits.Metric
                         strResults = String.Format("From {0} m to {1} m, {2}% coverage, {3} density, {4}% scattering",
-                                                  FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
-                                                  FormatNumber(Conversions.MeterToFeet(_AltitudeTop), 0,,, TriState.False),
+                                                  FormatNumber(AltitudeBottom, 0,,, TriState.False),
+                                                  FormatNumber(_AltitudeTop, 0,,, TriState.False),
                                                   FormatNumber(_Coverage, 0),
                                                   FormatNumber(_Density, 3),
                                                   FormatNumber(_Scattering, 0))
                     Case AltitudeUnits.Imperial
                         strResults = String.Format("From {0}' to {1}', {2}% coverage, {3} density, {4}% scattering",
-                                                  FormatNumber(AltitudeBottom, 0,,, TriState.False),
-                                                  FormatNumber(_AltitudeTop, 0,,, TriState.False),
+                                                  FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
+                                                  FormatNumber(Conversions.MeterToFeet(_AltitudeTop), 0,,, TriState.False),
                                                   FormatNumber(_Coverage, 0),
                                                   FormatNumber(_Density, 3),
                                                   FormatNumber(_Scattering, 0))
@@ -72,11 +72,9 @@ Public Class CloudLayer
             Else
                 Select Case prefUnits.Altitude
                     Case AltitudeUnits.Metric
-                        Return String.Format("{0:N0}",
-                                Conversions.MeterToFeet(_AltitudeBottom))
+                        Return String.Format("{0:N0}", _AltitudeBottom)
                     Case AltitudeUnits.Imperial
-                        Return String.Format("{0:N0}",
-                                _AltitudeBottom)
+                        Return String.Format("{0:N0}", Conversions.MeterToFeet(_AltitudeBottom))
                 End Select
             End If
             Return String.Empty
@@ -92,11 +90,9 @@ Public Class CloudLayer
             Else
                 Select Case prefUnits.Altitude
                     Case AltitudeUnits.Metric
-                        Return String.Format("{0:N0}",
-                                Conversions.MeterToFeet(_AltitudeTop))
+                        Return String.Format("{0:N0}", _AltitudeTop)
                     Case AltitudeUnits.Imperial
-                        Return String.Format("{0:N0}",
-                                _AltitudeTop)
+                        Return String.Format("{0:N0}", Conversions.MeterToFeet(_AltitudeTop))
                 End Select
             End If
             Return String.Empty
