@@ -2949,7 +2949,7 @@ Public Class Main
                 If File.Exists(.FlightPlanFilename) Then
                 Else
                     'Should expect the file to be in the same folder as the .dph file
-                    If File.Exists(.FlightPlanFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}") Then
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}") Then
                         .FlightPlanFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.FlightPlanFilename)}"
                     End If
                 End If
@@ -2961,7 +2961,7 @@ Public Class Main
                 If File.Exists(.WeatherFilename) Then
                 Else
                     'Should expect the file to be in the same folder as the .dph file
-                    If File.Exists(.WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}") Then
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}") Then
                         .WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}"
                     End If
                 End If

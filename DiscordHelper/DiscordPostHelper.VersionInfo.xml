@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.6.4.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.5.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.5.1</ReleaseVersion>
+      <ReleaseTitle>Fixed loading shared DPHX</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug when loading a shared or downloaded DPHX file
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.4.2</ReleaseVersion>
       <ReleaseTitle>Fixed briefing altitudes (wrong units)</ReleaseTitle>
