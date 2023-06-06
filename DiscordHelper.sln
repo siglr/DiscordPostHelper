@@ -13,6 +13,12 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DPHX Unpack and Load", "DPH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageViewer", "ImageViewer\ImageViewer.csproj", "{8241A955-C8E4-4CFD-BA28-EEAB34F6C00C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{24B8B0D9-5CB8-4FC7-AD71-0B8D4C748A42}"
+	ProjectSection(SolutionItems) = preProject
+		DiscordPostHelper.VersionInfo.xml = DiscordPostHelper.VersionInfo.xml
+		DPHXUnpackAndLoad.VersionInfo.xml = DPHXUnpackAndLoad.VersionInfo.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

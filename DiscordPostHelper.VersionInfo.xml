@@ -1,4 +1,4 @@
-<VersionInfo>
+﻿<VersionInfo>
   <CurrentLatestVersion>23.6.6.1</CurrentLatestVersion>
   <Releases>
     <Release>
@@ -37,7 +37,7 @@
         - It now detects when changes are pending (Save button turns red)
         - It now reopens the last file (if there's one) between runs
         - It now always saves a DPHX package
-       
+
         But this release also contains other changes:
         - Other improvements to wizard guide (it now asks where you want to go between sections)
         - Fix the Country area where buttons are not enabled at the right time (move up, down, remove)
@@ -193,7 +193,7 @@
       <ReleaseTitle>Country Flags and known clubs name change</ReleaseTitle>
       <ReleaseNotes>
         New field to specify Country flag to use in the task's title
-        
+
         Several known clubs have changed their names, this update implements the new names.
       </ReleaseNotes>
     </Release>

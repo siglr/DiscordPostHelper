@@ -601,7 +601,7 @@ Public Class SupportingFeatures
 
         LogDateTime($"{ClientRunning.ToString} {Assembly.GetExecutingAssembly().GetName().Version}")
 
-        Dim url As String = $"https://siglr.com/DiscordPostHelper/{ClientRunning.ToString}.VersionInfo.xml"
+        Dim url As String = $"https://raw.githubusercontent.com/siglr/DiscordPostHelper/master/DiscordHelper/{ClientRunning.ToString}.VersionInfo.xml"
         Dim client As New WebClient()
         Dim responseBytes As Byte() = Nothing
 
