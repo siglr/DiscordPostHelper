@@ -603,7 +603,15 @@ Public Class SupportingFeatures
 
         Dim url As String = $"https://siglr.com/DiscordPostHelper/{ClientRunning.ToString}.VersionInfo.xml"
         Dim client As New WebClient()
-        Dim responseBytes As Byte() = client.DownloadData(url)
+        Dim responseBytes As Byte() = Nothing
+
+        Try
+            responseBytes = client.DownloadData(url)
+        Catch ex As WebException
+            MessageBox.Show("It appears it is impossible to retrieve version information right now. You will have to manually check for the latest version.", "Checking latest version", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
+        End Try
+
         Dim responseString As String = Encoding.UTF8.GetString(responseBytes)
 
         Dim serializer As New XmlSerializer(GetType(VersionInfo))

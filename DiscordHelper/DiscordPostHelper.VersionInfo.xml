@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>23.6.5.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.6.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.6.1</ReleaseVersion>
+      <ReleaseTitle>Fixed error when impossible to check for latest version</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug for some people that cannot reach the server to check for latest version.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.5.1</ReleaseVersion>
       <ReleaseTitle>Fixed loading shared DPHX</ReleaseTitle>

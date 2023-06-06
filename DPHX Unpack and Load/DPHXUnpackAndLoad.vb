@@ -246,16 +246,18 @@ Public Class DPHXUnpackAndLoad
         Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
         Dim message As String = String.Empty
 
-        If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
-            'New version available
-            If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
-                'update
-                'Download the file
-                If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
-                    Application.Exit()
-                Else
-                    'Show error updating
-                    MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        If myVersionInfo IsNot Nothing Then
+            If _SF.FormatVersionNumber(myVersionInfo.CurrentLatestVersion) > _SF.FormatVersionNumber(Me.GetType.Assembly.GetName.Version.ToString) Then
+                'New version available
+                If _SF.ShowVersionForm(myVersionInfo, Me.GetType.Assembly.GetName.Version.ToString) = DialogResult.Yes Then
+                    'update
+                    'Download the file
+                    If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
+                        Application.Exit()
+                    Else
+                        'Show error updating
+                        MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
                 End If
             End If
         End If
