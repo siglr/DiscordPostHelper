@@ -1,8 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.6.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.6.2</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.6.6.1</ReleaseVersion>
+      <ReleaseVersion>23.6.6.2</ReleaseVersion>
+      <ReleaseTitle>Version info files now on GitHub</ReleaseTitle>
+      <ReleaseNotes>
+        The location of XML files containing version information has been changed to be directly on GitHub, improving the release pipeline and workflow.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.6.2</ReleaseVersion>
       <ReleaseTitle>Fixed error when impossible to check for latest version</ReleaseTitle>
       <ReleaseNotes>
         This releases fixes a bug for some people that cannot reach the server to check for latest version.
