@@ -598,10 +598,9 @@ Public Class SupportingFeatures
     End Function
 
     Public Function GetVersionInfo() As VersionInfo
-
         LogDateTime($"{ClientRunning.ToString} {Assembly.GetExecutingAssembly().GetName().Version}")
 
-        Dim url As String = $"https://raw.githubusercontent.com/siglr/DiscordPostHelper/master/DiscordHelper/{ClientRunning.ToString}.VersionInfo.xml"
+        Dim url As String = $"https://raw.githubusercontent.com/siglr/DiscordPostHelper/master/{ClientRunning.ToString}.VersionInfo.xml"
         Dim client As New WebClient()
         Dim responseBytes As Byte() = Nothing
 
@@ -614,12 +613,14 @@ Public Class SupportingFeatures
 
         Dim responseString As String = Encoding.UTF8.GetString(responseBytes)
 
+        ' Remove ZWNBSP character using regular expression pattern
+        Dim cleanResponseString As String = Regex.Replace(responseString, "^\uFEFF", String.Empty)
+
         Dim serializer As New XmlSerializer(GetType(VersionInfo))
-        Dim reader As New StringReader(responseString)
+        Dim reader As New StringReader(cleanResponseString)
         Dim versionInfo As VersionInfo = DirectCast(serializer.Deserialize(reader), VersionInfo)
 
         Return versionInfo
-
     End Function
 
     Public Sub LogDateTime(parameter As String)
