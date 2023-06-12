@@ -49,15 +49,15 @@
     <EligibleAward>True</EligibleAward>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>AUS SATURDAY</ClubId>
-    <ClubName>AUS Tuesdays</ClubName>
+    <ClubId>AUSGLIDE TUE</ClubId>
+    <ClubName>AUSGlide Tuesdays</ClubName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>Flight 01</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
-    <ZuluTime>8:30 AM</ZuluTime>
+    <ZuluTime>9:30 AM</ZuluTime>
     <SyncFlyDelay>15</SyncFlyDelay>
     <LaunchDelay>0</LaunchDelay>
     <StartTaskDelay>15</StartTaskDelay>
-    <EligibleAward>True</EligibleAward>
+    <EligibleAward>False</EligibleAward>
   </KnownSoaringClub>
 </KnownSoaringClubs>
