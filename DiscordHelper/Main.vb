@@ -244,11 +244,13 @@ Public Class Main
         cboEligibleAward.SelectedIndex = -1
         txtTaskFlightPlanURL.Text = String.Empty
         txtGroupEventPostURL.Text = String.Empty
+        txtDiscordEventShareURL.Text = String.Empty
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
         txtDPHXPackageFilename.Text = String.Empty
         cboBriefingMap.Items.Clear()
         txtEventTitle.Text = String.Empty
+        chkActivateEvent.Checked = False
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -429,6 +431,8 @@ Public Class Main
                                                                           txtMinAvgSpeed.TextChanged,
                                                                           txtMaxAvgSpeed.TextChanged,
                                                                           txtDifficultyExtraInfo.TextChanged,
+                                                                          txtGroupEventPostURL.TextChanged,
+                                                                          txtDiscordEventShareURL.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
                                                                           cboRecommendedGliders.TextChanged,
@@ -1714,9 +1718,13 @@ Public Class Main
         BuildGroupFlightPost()
     End Sub
 
-    Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs)
+    Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordGroupEventURL.Click
         txtGroupEventPostURL.Text = Clipboard.GetText
         BuildDiscordEventDescription()
+    End Sub
+
+    Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
+        txtDiscordEventShareURL.Text = Clipboard.GetText
     End Sub
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
@@ -2966,6 +2974,7 @@ Public Class Main
             .EligibleAward = cboEligibleAward.SelectedIndex
             .URLFlightPlanPost = txtTaskFlightPlanURL.Text
             .URLGroupEventPost = txtGroupEventPostURL.Text
+            .URLDiscordEventInvite = txtDiscordEventShareURL.Text
             .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
             .MapImageSelected = cboBriefingMap.Text
 
@@ -3105,6 +3114,7 @@ Public Class Main
                 cboEligibleAward.SelectedIndex = .EligibleAward
                 txtTaskFlightPlanURL.Text = .URLFlightPlanPost
                 txtGroupEventPostURL.Text = .URLGroupEventPost
+                txtDiscordEventShareURL.Text = .URLDiscordEventInvite
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
 
                 If Not File.Exists(.MapImageSelected) Then
@@ -3155,6 +3165,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 

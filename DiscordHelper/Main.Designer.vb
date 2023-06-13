@@ -211,10 +211,18 @@ Partial Class Main
         Me.lblNbrCarsWeatherWinds = New System.Windows.Forms.Label()
         Me.lblNbrCarsFilesText = New System.Windows.Forms.Label()
         Me.grpDiscordGroupFlight = New System.Windows.Forms.GroupBox()
+        Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
+        Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
+        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
+        Me.Label38 = New System.Windows.Forms.Label()
         Me.btnCopyReqFilesToClipboard = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventInfoToClipboard = New System.Windows.Forms.Button()
         Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
+        Me.btnDiscordSharedEventURL = New System.Windows.Forms.Button()
+        Me.txtDiscordEventShareURL = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label46 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
@@ -231,6 +239,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -241,15 +250,6 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.btnDiscordSharedEventURL = New System.Windows.Forms.Button()
-        Me.txtDiscordEventShareURL = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
-        Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
-        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
-        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
-        Me.Label38 = New System.Windows.Forms.Label()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -271,12 +271,12 @@ Partial Class Main
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.grpDiscordGroupFlight.SuspendLayout()
+        Me.grpTaskFeatured.SuspendLayout()
         Me.grpGroupFlightEvent.SuspendLayout()
         Me.grpDiscordEvent.SuspendLayout()
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
-        Me.grpTaskFeatured.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -2570,6 +2570,29 @@ Partial Class Main
         Me.grpDiscordGroupFlight.TabStop = False
         Me.grpDiscordGroupFlight.Text = "Group Flight Event"
         '
+        'grpTaskFeatured
+        '
+        Me.grpTaskFeatured.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
+        Me.grpTaskFeatured.Location = New System.Drawing.Point(6, 549)
+        Me.grpTaskFeatured.Name = "grpTaskFeatured"
+        Me.grpTaskFeatured.Size = New System.Drawing.Size(673, 89)
+        Me.grpTaskFeatured.TabIndex = 2
+        Me.grpTaskFeatured.TabStop = False
+        Me.grpTaskFeatured.Text = "Step 3: Sharing the event"
+        '
+        'btnTaskFeaturedOnGroupFlight
+        '
+        Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTaskFeaturedOnGroupFlight.Location = New System.Drawing.Point(6, 26)
+        Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
+        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(661, 51)
+        Me.btnTaskFeaturedOnGroupFlight.TabIndex = 2
+        Me.btnTaskFeaturedOnGroupFlight.Tag = "92"
+        Me.btnTaskFeaturedOnGroupFlight.Text = "1. ""Task featured on group flight"" to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
+        "s to paste it in the Discord.")
+        Me.btnTaskFeaturedOnGroupFlight.UseVisualStyleBackColor = True
+        '
         'grpGroupFlightEvent
         '
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDiscordGroupEventURL)
@@ -2583,6 +2606,38 @@ Partial Class Main
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
+        '
+        'btnDiscordGroupEventURL
+        '
+        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(587, 141)
+        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
+        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(80, 29)
+        Me.btnDiscordGroupEventURL.TabIndex = 5
+        Me.btnDiscordGroupEventURL.Tag = "82"
+        Me.btnDiscordGroupEventURL.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
+        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
+        '
+        'txtGroupEventPostURL
+        '
+        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 140)
+        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
+        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(389, 32)
+        Me.txtGroupEventPostURL.TabIndex = 4
+        Me.txtGroupEventPostURL.Tag = "82"
+        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
+        '
+        'Label38
+        '
+        Me.Label38.AutoSize = True
+        Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label38.Location = New System.Drawing.Point(1, 144)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(173, 26)
+        Me.Label38.TabIndex = 3
+        Me.Label38.Text = "URL to group event"
         '
         'btnCopyReqFilesToClipboard
         '
@@ -2631,6 +2686,38 @@ Partial Class Main
         Me.grpDiscordEvent.TabIndex = 1
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Step 2: Discord Event (if applicable)"
+        '
+        'btnDiscordSharedEventURL
+        '
+        Me.btnDiscordSharedEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(587, 289)
+        Me.btnDiscordSharedEventURL.Name = "btnDiscordSharedEventURL"
+        Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(80, 29)
+        Me.btnDiscordSharedEventURL.TabIndex = 16
+        Me.btnDiscordSharedEventURL.Tag = "91"
+        Me.btnDiscordSharedEventURL.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordSharedEventURL, "Click this button to paste the group event's post URL from your clipboard")
+        Me.btnDiscordSharedEventURL.UseVisualStyleBackColor = True
+        '
+        'txtDiscordEventShareURL
+        '
+        Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(160, 288)
+        Me.txtDiscordEventShareURL.Name = "txtDiscordEventShareURL"
+        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(421, 32)
+        Me.txtDiscordEventShareURL.TabIndex = 15
+        Me.txtDiscordEventShareURL.Tag = "91"
+        Me.ToolTip1.SetToolTip(Me.txtDiscordEventShareURL, "Enter the URL to the Discord post created above in step 1.")
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label20.Location = New System.Drawing.Point(1, 291)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(153, 26)
+        Me.Label20.TabIndex = 14
+        Me.Label20.Text = "URL link to share:"
         '
         'Label6
         '
@@ -2806,6 +2893,26 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -2900,113 +3007,6 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'btnDiscordSharedEventURL
-        '
-        Me.btnDiscordSharedEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(587, 289)
-        Me.btnDiscordSharedEventURL.Name = "btnDiscordSharedEventURL"
-        Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(80, 29)
-        Me.btnDiscordSharedEventURL.TabIndex = 16
-        Me.btnDiscordSharedEventURL.Tag = "91"
-        Me.btnDiscordSharedEventURL.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordSharedEventURL, "Click this button to paste the group event's post URL from your clipboard")
-        Me.btnDiscordSharedEventURL.UseVisualStyleBackColor = True
-        '
-        'txtDiscordEventShareURL
-        '
-        Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(160, 288)
-        Me.txtDiscordEventShareURL.Name = "txtDiscordEventShareURL"
-        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(421, 32)
-        Me.txtDiscordEventShareURL.TabIndex = 15
-        Me.txtDiscordEventShareURL.Tag = "91"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventShareURL, "Enter the URL to the Discord post created above in step 1.")
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(1, 291)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(153, 26)
-        Me.Label20.TabIndex = 14
-        Me.Label20.Text = "URL link to share:"
-        '
-        'grpTaskFeatured
-        '
-        Me.grpTaskFeatured.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
-        Me.grpTaskFeatured.Location = New System.Drawing.Point(6, 549)
-        Me.grpTaskFeatured.Name = "grpTaskFeatured"
-        Me.grpTaskFeatured.Size = New System.Drawing.Size(673, 89)
-        Me.grpTaskFeatured.TabIndex = 2
-        Me.grpTaskFeatured.TabStop = False
-        Me.grpTaskFeatured.Text = "Step 3: Sharing the event"
-        '
-        'btnTaskFeaturedOnGroupFlight
-        '
-        Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTaskFeaturedOnGroupFlight.Location = New System.Drawing.Point(6, 26)
-        Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
-        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(661, 51)
-        Me.btnTaskFeaturedOnGroupFlight.TabIndex = 2
-        Me.btnTaskFeaturedOnGroupFlight.Tag = "92"
-        Me.btnTaskFeaturedOnGroupFlight.Text = "1. ""Task featured on group flight"" to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
-        "s to paste it in the Discord.")
-        Me.btnTaskFeaturedOnGroupFlight.UseVisualStyleBackColor = True
-        '
-        'btnDiscordGroupEventURL
-        '
-        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(587, 141)
-        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
-        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(80, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 5
-        Me.btnDiscordGroupEventURL.Tag = "82"
-        Me.btnDiscordGroupEventURL.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
-        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
-        '
-        'txtGroupEventPostURL
-        '
-        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 140)
-        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
-        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(389, 32)
-        Me.txtGroupEventPostURL.TabIndex = 4
-        Me.txtGroupEventPostURL.Tag = "82"
-        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
-        '
-        'Label38
-        '
-        Me.Label38.AutoSize = True
-        Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label38.Location = New System.Drawing.Point(1, 144)
-        Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(173, 26)
-        Me.Label38.TabIndex = 3
-        Me.Label38.Text = "URL to group event"
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3055,6 +3055,7 @@ Partial Class Main
         Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.grpDiscordGroupFlight.ResumeLayout(False)
+        Me.grpTaskFeatured.ResumeLayout(False)
         Me.grpGroupFlightEvent.ResumeLayout(False)
         Me.grpGroupFlightEvent.PerformLayout()
         Me.grpDiscordEvent.ResumeLayout(False)
@@ -3062,7 +3063,6 @@ Partial Class Main
         Me.tabBriefing.ResumeLayout(False)
         Me.pnlBriefing.ResumeLayout(False)
         Me.pnlWizardBriefing.ResumeLayout(False)
-        Me.grpTaskFeatured.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
