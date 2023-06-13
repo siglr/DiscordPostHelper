@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.6.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.13.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.13.1</ReleaseVersion>
+      <ReleaseTitle>Share a group event for a task</ReleaseTitle>
+      <ReleaseNotes>
+        When creating a group event, it's nice to share it directly in the task's thread, so now you can.
+        This release also adds a new club and fixes one or two small details. 
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.6.2</ReleaseVersion>
       <ReleaseTitle>Version info files now on GitHub</ReleaseTitle>
