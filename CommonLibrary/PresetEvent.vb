@@ -2,6 +2,7 @@
 
     Public ReadOnly Property ClubId As String
     Public ReadOnly Property ClubName As String
+    Public ReadOnly Property ClubFullName As String
     Public ReadOnly Property MSFSServer As String
     Public ReadOnly Property VoiceChannel As String
     Public ReadOnly Property EventDayOfWeek As DayOfWeek
@@ -14,6 +15,7 @@
 
     Public Sub New(pClubId As String,
                    pClubName As String,
+                   pClubFullName As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
                    pZuluDayOfWeek As DayOfWeek,
@@ -25,6 +27,7 @@
 
         ClubId = pClubId
         ClubName = pClubName
+        ClubFullName = pClubFullName
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
         EventDayOfWeek = pZuluDayOfWeek

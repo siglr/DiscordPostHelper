@@ -314,7 +314,7 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtGroupEventPostURL.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -412,7 +412,6 @@ Public Class Main
                                                                           txtLongDescription.TextChanged,
                                                                           txtEventTitle.TextChanged,
                                                                           txtEventDescription.TextChanged,
-                                                                          txtGroupEventPostURL.TextChanged,
                                                                           txtWeatherSummary.TextChanged,
                                                                           txtSimDateTimeExtraInfo.TextChanged,
                                                                           txtShortDescription.TextChanged,
@@ -840,9 +839,10 @@ Public Class Main
     End Sub
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
-        Clipboard.SetText(txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf)
+        Dim msg As String = txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
+        Clipboard.SetText(msg)
         CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
+                                msg,
                                 "Now paste the restrictions and weather content as the next message in the thread!",
                                 "Step 2 - Creating post for restrictions and weather in the thread.")
         If _GuideCurrentStep <> 0 Then
@@ -907,16 +907,18 @@ Public Class Main
 
     Private Sub btnCopyAllSecPosts_Click(sender As Object, e As EventArgs) Handles btnCopyAllSecPosts.Click
 
-        Clipboard.SetText(_SF.ValueToAppendIfNotEmpty(txtAltRestrictions.Text,,, 2) &
+        Dim msg As String = _SF.ValueToAppendIfNotEmpty(txtAltRestrictions.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtWeatherFirstPart.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtWeatherWinds.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtWeatherClouds.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtFullDescriptionResults.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtWaypointsDetails.Text,,, 1) &
-                          _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text))
+                          _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text)
+
+        Clipboard.SetText(msg)
 
         CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
+                                msg,
                                 "Now paste all remaining content as the next message in the thread!",
                                 "Step 3 - Creating remaining content post in the thread.")
         If _GuideCurrentStep <> 0 Then
@@ -1712,7 +1714,7 @@ Public Class Main
         BuildGroupFlightPost()
     End Sub
 
-    Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordGroupEventURL.Click
+    Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs)
         txtGroupEventPostURL.Text = Clipboard.GetText
         BuildDiscordEventDescription()
     End Sub
@@ -1720,8 +1722,8 @@ Public Class Main
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
-                                $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field on section 2 for Discord Event.",
+                                txtGroupFlightEventPost.Text,
+                                $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field just below for Discord Event.",
                                 "Creating group flight post")
 
         If _GuideCurrentStep <> 0 Then
@@ -1735,7 +1737,7 @@ Public Class Main
         If txtDiscordEventTopic.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventTopic.Text)
             CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
+                                txtDiscordEventTopic.Text,
                                 "Paste the topic into the Event Topic field on Discord.",
                                 "Creating Discord Event")
 
@@ -1751,7 +1753,7 @@ Public Class Main
         If txtDiscordEventDescription.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventDescription.Text)
             CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
+                                txtDiscordEventDescription.Text,
                                 "Paste the description into the Event Description field on Discord.",
                                 "Creating Discord Event")
 
@@ -1828,7 +1830,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.Leave, txtGroupFlightEventPost.Leave, txtGroupEventPostURL.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.Leave, txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave
 
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
@@ -1840,6 +1842,35 @@ Public Class Main
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
         SessionModified()
+    End Sub
+
+    Private Sub btnTaskFeaturedOnGroupFlight_Click(sender As Object, e As EventArgs) Handles btnTaskFeaturedOnGroupFlight.Click
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+
+        Dim sb As New StringBuilder
+
+        sb.AppendLine("## :calendar: Group Flight")
+        sb.AppendLine($"This flight will be featured on the {_ClubPreset.ClubFullName} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
+
+        'check which shared link is available
+        If txtDiscordEventShareURL.Text.Trim <> String.Empty Then
+            sb.AppendLine(txtDiscordEventShareURL.Text)
+        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty Then
+            sb.AppendLine(txtGroupEventPostURL.Text)
+        End If
+
+        Clipboard.SetText(sb.ToString)
+        CopyContent.ShowContent(Me,
+                                sb.ToString,
+                                "On the task's thread, paste the content of the message to share the event for this task.",
+                                "Sharing Discord Event to Task")
+
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
     End Sub
 
 #End Region
@@ -2276,7 +2307,7 @@ Public Class Main
                 pnlGuide.Top = 519
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 22 'End of flight plan data
+            Case 22 To 29 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -2305,7 +2336,7 @@ Public Class Main
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
-            Case 35 'We're done with the briefing
+            Case 35 To 39 'We're done with the briefing
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -2357,7 +2388,7 @@ Public Class Main
                 pnlWizardDiscord.Top = btnAddOnsCopy.Top + 150
                 lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
                 SetFocusOnField(btnAddOnsCopy, fromF1Key)
-            Case 48 'Next section
+            Case 48 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -2447,7 +2478,7 @@ Public Class Main
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
-            Case 74 'Next section
+            Case 74 To 79 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -2464,63 +2495,75 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "Now click this button to copy the group flight's post content and receive instructions."
                 SetFocusOnField(btnGroupFlightEventInfoToClipboard, fromF1Key)
 
-            Case 82 'Discord Event
-                If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    _GuideCurrentStep += 1
-                Else
-                    _GuideCurrentStep = 999
-                End If
-                ShowGuide()
-
-            Case 83 'Group flight post
+            Case 82 'Group flight URL
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 249
+                pnlWizardDiscord.Top = 204
                 lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
                 SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
 
+            Case 83 'Discord Event
+                If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    _GuideCurrentStep += 1
+                Else
+                    _GuideCurrentStep = AskWhereToGoNext()
+                End If
+                ShowGuide()
+
             Case 84 'Create Discord Event
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 296
+                pnlWizardDiscord.Top = 272
                 lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case 85 'Select voice channel for event
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 341
+                pnlWizardDiscord.Top = 309
                 lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case 86 'Topic name
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 381
+                pnlWizardDiscord.Top = 346
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventTopicClipboard, fromF1Key)
 
             Case 87 'Event date & time
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 418
+                pnlWizardDiscord.Top = 379
                 lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case 88 'Event description
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 463
+                pnlWizardDiscord.Top = 418
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
             Case 89 'Cover image
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 506
+                pnlWizardDiscord.Top = 455
                 lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
             Case 90 'Preview and publish
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 549
+                pnlWizardDiscord.Top = 492
                 lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 91
+            Case 91 'Paste link to Discord Event
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 538
+                lblDiscordGuideInstructions.Text = "From the Discord Event published window, copy the URL to share to and invite participants and click ""Paste"" here."
+                SetFocusOnField(btnEventGuideNext, fromF1Key)
+
+            Case 92 'Share the Discord Event on the task
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 631
+                lblDiscordGuideInstructions.Text = "Click this button to copy the message to post on the task and receive instructions to paste it in the Discord."
+                SetFocusOnField(btnEventGuideNext, fromF1Key)
+
+            Case 93 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -3034,6 +3077,12 @@ Public Class Main
                 End If
                 If File.Exists(.DPHXPackageFilename) Then
                     txtDPHXPackageFilename.Text = .DPHXPackageFilename
+                Else
+                    'Should expect the file to be in the same folder as the .dph file
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}") Then
+                        .DPHXPackageFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}"
+                        txtDPHXPackageFilename.Text = .DPHXPackageFilename
+                    End If
                 End If
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClub
@@ -3057,6 +3106,13 @@ Public Class Main
                 txtTaskFlightPlanURL.Text = .URLFlightPlanPost
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
+
+                If Not File.Exists(.MapImageSelected) Then
+                    'Should expect the file to be in the same folder as the .dph file
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.MapImageSelected)}") Then
+                        .MapImageSelected = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.MapImageSelected)}"
+                    End If
+                End If
                 LoadPossibleImagesInMapDropdown(.MapImageSelected)
             End With
 
@@ -3099,7 +3155,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 

@@ -69,6 +69,7 @@ Public Class SupportingFeatures
         For Each eventNode As XmlNode In events
             Dim clubId As String = eventNode("ClubId").InnerText
             Dim clubName As String = eventNode("ClubName").InnerText
+            Dim clubFullName As String = eventNode("ClubFullName").InnerText
             Dim msfsServer As String = eventNode("MSFSServer").InnerText
             Dim voiceChannel As String = eventNode("VoiceChannel").InnerText
             Dim dayOfWeek As DayOfWeek = [Enum].Parse(GetType(DayOfWeek), eventNode("ZuluDayOfWeek").InnerText)
@@ -78,7 +79,7 @@ Public Class SupportingFeatures
             Dim startTaskDelay As Integer = Integer.Parse(eventNode("StartTaskDelay").InnerText)
             Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
 
-            Dim presetEvent As New PresetEvent(clubId, clubName, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward)
+            Dim presetEvent As New PresetEvent(clubId, clubName, clubFullName, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward)
             DefaultKnownClubEvents.Add(clubId, presetEvent)
         Next
     End Sub

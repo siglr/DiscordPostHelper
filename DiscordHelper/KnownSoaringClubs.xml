@@ -3,6 +3,7 @@
   <KnownSoaringClub>
     <ClubId>GG-STC (DST)</ClubId>
     <ClubName>GG-STC</ClubName>
+    <ClubFullName>GotGravel Soaring Tuesday Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
@@ -15,6 +16,7 @@
   <KnownSoaringClub>
     <ClubId>GG-STC (NT)</ClubId>
     <ClubName>GG-STC</ClubName>
+    <ClubFullName>GotGravel Soaring Tuesday Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>
@@ -27,6 +29,7 @@
   <KnownSoaringClub>
     <ClubId>GG-SFC</ClubId>
     <ClubName>GG-SFC</ClubName>
+    <ClubFullName>GotGravel Soaring Friday Club</ClubFullName>
     <MSFSServer>West USA</MSFSServer>
     <VoiceChannel>Unicom 3</VoiceChannel>
     <ZuluDayOfWeek>Friday</ZuluDayOfWeek>
@@ -39,6 +42,7 @@
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY</ClubId>
     <ClubName>SSC Saturday</ClubName>
+    <ClubFullName>Sim Soaring Club Saturday</ClubFullName>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>Sim Soaring Club (PTT)</VoiceChannel>
     <ZuluDayOfWeek>Saturday</ZuluDayOfWeek>
@@ -51,6 +55,7 @@
   <KnownSoaringClub>
     <ClubId>AUSGLIDE TUE</ClubId>
     <ClubName>AUSGlide Tuesdays</ClubName>
+    <ClubFullName>AUS Glide Soaring Tuesday</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>Flight 01</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
