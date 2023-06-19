@@ -248,15 +248,20 @@ Public Class Main
         chkIncludeGotGravelInvite.Enabled = False
         chkIncludeGotGravelInvite.Checked = False
         txtDPHXPackageFilename.Text = String.Empty
+        txtAddOnsDetails.Text = String.Empty
+        txtWaypointsDetails.Text = String.Empty
         cboBriefingMap.Items.Clear()
         txtEventTitle.Text = String.Empty
         chkActivateEvent.Checked = False
+        grpGroupEventPost.Enabled = False
+        grpDiscordGroupFlight.Enabled = False
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
         btnExtraFileUp.Enabled = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
+        _SF.AllWaypoints.Clear()
 
         SetVisibilityForSecPosts()
         BuildFPResults()
@@ -748,16 +753,18 @@ Public Class Main
 
     Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
 
-        If _sessionModified Then
-            Dim dlgResult As DialogResult
-            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! Do you want to save them first?", "Unsaved changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+        Dim dlgResult As DialogResult
+
+        Do While _sessionModified
+            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
             Select Case dlgResult
-                Case DialogResult.Yes
+                Case DialogResult.OK
                     btnSaveConfig_Click(btnFilesCopy, e)
                 Case DialogResult.Cancel
                     Return
             End Select
-        End If
+        Loop
+
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
 
@@ -844,11 +851,17 @@ Public Class Main
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
         Dim msg As String = txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
-        Clipboard.SetText(msg)
-        CopyContent.ShowContent(Me,
+
+        If msg.Trim = String.Empty Then
+            MessageBox.Show(Me, "No restriction to post!", "Step 2 - Creating post for restrictions in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Else
+            Clipboard.SetText(msg)
+            CopyContent.ShowContent(Me,
                                 msg,
                                 "Now paste the restrictions and weather content as the next message in the thread!",
-                                "Step 2 - Creating post for restrictions and weather in the thread.")
+                                "Step 2 - Creating post for restrictions in the thread.")
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -875,11 +888,17 @@ Public Class Main
     End Sub
 
     Private Sub btnWaypointsCopy_Click(sender As Object, e As EventArgs) Handles btnWaypointsCopy.Click
-        Clipboard.SetText(txtWaypointsDetails.Text)
-        CopyContent.ShowContent(Me,
+
+        If txtWaypointsDetails.Text.Length = 0 Then
+            MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Else
+            Clipboard.SetText(txtWaypointsDetails.Text)
+            CopyContent.ShowContent(Me,
                                 txtWaypointsDetails.Text,
                                 "Now post the waypoints details as the next message in the thread.",
                                 "Step 5 - Creating waypoints post in the thread.")
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -919,16 +938,22 @@ Public Class Main
                           _SF.ValueToAppendIfNotEmpty(txtWaypointsDetails.Text,,, 1) &
                           _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text)
 
-        Clipboard.SetText(msg)
+        If msg.Trim = String.Empty Then
+            MessageBox.Show(Me, "Nothing to post!", "Step 3 - Creating remaining content post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Else
+            Clipboard.SetText(msg)
 
-        CopyContent.ShowContent(Me,
+            CopyContent.ShowContent(Me,
                                 msg,
                                 "Now paste all remaining content as the next message in the thread!",
                                 "Step 3 - Creating remaining content post in the thread.")
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+
 
     End Sub
 
@@ -1794,16 +1819,17 @@ Public Class Main
 
     Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
 
-        If _sessionModified Then
-            Dim dlgResult As DialogResult
-            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! Do you want to save them first?", "Unsaved changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+        Dim dlgResult As DialogResult
+
+        Do While _sessionModified
+            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
             Select Case dlgResult
-                Case DialogResult.Yes
+                Case DialogResult.OK
                     btnSaveConfig_Click(btnFilesCopy, e)
                 Case DialogResult.Cancel
                     Return
             End Select
-        End If
+        Loop
 
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
@@ -1853,6 +1879,11 @@ Public Class Main
     End Sub
 
     Private Sub btnTaskFeaturedOnGroupFlight_Click(sender As Object, e As EventArgs) Handles btnTaskFeaturedOnGroupFlight.Click
+
+        If _ClubPreset Is Nothing Then
+            MessageBox.Show(Me, "No club selected for the event!", "Discord Post Helper tool", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Exit Sub
+        End If
 
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
 
