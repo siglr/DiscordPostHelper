@@ -127,6 +127,10 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
+        Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
+        Me.cboBeginnersGuide = New System.Windows.Forms.ComboBox()
+        Me.Label30 = New System.Windows.Forms.Label()
         Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
         Me.chkIncludeGotGravelInvite = New System.Windows.Forms.CheckBox()
         Me.Label48 = New System.Windows.Forms.Label()
@@ -239,7 +243,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -250,6 +253,7 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1455,7 +1459,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 593)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 632)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1505,6 +1509,10 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
+        Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
+        Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
+        Me.grpGroupEventPost.Controls.Add(Me.cboBeginnersGuide)
+        Me.grpGroupEventPost.Controls.Add(Me.Label30)
         Me.grpGroupEventPost.Controls.Add(Me.lblLocalDSTWarning)
         Me.grpGroupEventPost.Controls.Add(Me.chkIncludeGotGravelInvite)
         Me.grpGroupEventPost.Controls.Add(Me.Label48)
@@ -1549,9 +1557,54 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 667)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 744)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
+        '
+        'btnPasteBeginnerLink
+        '
+        Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 699)
+        Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
+        Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
+        Me.btnPasteBeginnerLink.TabIndex = 44
+        Me.btnPasteBeginnerLink.Tag = "71"
+        Me.btnPasteBeginnerLink.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnPasteBeginnerLink, "Click this button to paste the beginner's link from your clipboard")
+        Me.btnPasteBeginnerLink.UseVisualStyleBackColor = True
+        '
+        'txtOtherBeginnerLink
+        '
+        Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 696)
+        Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
+        Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(565, 32)
+        Me.txtOtherBeginnerLink.TabIndex = 43
+        Me.txtOtherBeginnerLink.Tag = "73"
+        Me.ToolTip1.SetToolTip(Me.txtOtherBeginnerLink, "Specify the URL (link) to the guide you want to include")
+        '
+        'cboBeginnersGuide
+        '
+        Me.cboBeginnersGuide.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cboBeginnersGuide.FormattingEnabled = True
+        Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
+        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 658)
+        Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
+        Me.cboBeginnersGuide.Size = New System.Drawing.Size(650, 32)
+        Me.cboBeginnersGuide.TabIndex = 42
+        Me.cboBeginnersGuide.Tag = "73"
+        Me.ToolTip1.SetToolTip(Me.cboBeginnersGuide, "You can select a link to guide beginners into soaring group flights")
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label30.Location = New System.Drawing.Point(7, 661)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(127, 26)
+        Me.Label30.TabIndex = 41
+        Me.Label30.Text = "For beginners"
         '
         'lblLocalDSTWarning
         '
@@ -1570,10 +1623,10 @@ Partial Class Main
         Me.chkIncludeGotGravelInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 622)
         Me.chkIncludeGotGravelInvite.Name = "chkIncludeGotGravelInvite"
-        Me.chkIncludeGotGravelInvite.Size = New System.Drawing.Size(435, 30)
+        Me.chkIncludeGotGravelInvite.Size = New System.Drawing.Size(431, 30)
         Me.chkIncludeGotGravelInvite.TabIndex = 40
         Me.chkIncludeGotGravelInvite.Tag = "72"
-        Me.chkIncludeGotGravelInvite.Text = "Include the GotGravel server invite with the post."
+        Me.chkIncludeGotGravelInvite.Text = "Include the GotGravel server invite with the post"
         Me.ToolTip1.SetToolTip(Me.chkIncludeGotGravelInvite, "When checked, the invite to the GotGravel Server will be added to the post.")
         Me.chkIncludeGotGravelInvite.UseVisualStyleBackColor = True
         '
@@ -2893,26 +2946,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3006,6 +3039,26 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -3292,4 +3345,8 @@ Partial Class Main
     Friend WithEvents btnDiscordGroupEventURL As Button
     Friend WithEvents txtGroupEventPostURL As TextBox
     Friend WithEvents Label38 As Label
+    Friend WithEvents Label30 As Label
+    Friend WithEvents txtOtherBeginnerLink As TextBox
+    Friend WithEvents cboBeginnersGuide As ComboBox
+    Friend WithEvents btnPasteBeginnerLink As Button
 End Class

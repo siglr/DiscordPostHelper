@@ -214,6 +214,13 @@ Public Class AllData
     <XmlElement("MapImageHeight")>
     Public Property MapImageHeight As Integer
 
+    <XmlElement("BeginnersGuide")>
+    Public Property BeginnersGuide As String
+
+    <XmlElement("BeginnersGuideCustom")>
+    Public Property BeginnersGuideCustom As String
+
+
     Public Sub New()
 
     End Sub

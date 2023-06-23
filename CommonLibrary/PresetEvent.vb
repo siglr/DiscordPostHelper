@@ -11,6 +11,7 @@
     Public ReadOnly Property LaunchDelay As Integer
     Public ReadOnly Property StartTaskDelay As Integer
     Public ReadOnly Property EligibleAward As Boolean
+    Public ReadOnly Property BeginnerLink As String
 
 
     Public Sub New(pClubId As String,
@@ -23,7 +24,8 @@
                    pSyncFlyDelay As Integer,
                    pLaunchTDelay As Integer,
                    pStartTaskDelay As Integer,
-                   pEligibleAward As Boolean)
+                   pEligibleAward As Boolean,
+                   pBeginnerLink As String)
 
         ClubId = pClubId
         ClubName = pClubName
@@ -36,6 +38,7 @@
         LaunchDelay = pLaunchTDelay
         StartTaskDelay = pStartTaskDelay
         EligibleAward = pEligibleAward
+        BeginnerLink = pBeginnerLink
 
     End Sub
 

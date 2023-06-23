@@ -255,6 +255,7 @@ Public Class Main
         chkActivateEvent.Checked = False
         grpGroupEventPost.Enabled = False
         grpDiscordGroupFlight.Enabled = False
+        cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -264,8 +265,8 @@ Public Class Main
         _SF.AllWaypoints.Clear()
 
         SetVisibilityForSecPosts()
-        BuildFPResults()
-        BuildGroupFlightPost()
+        'BuildFPResults()
+        'BuildGroupFlightPost()
         SetFormCaption(String.Empty)
 
         _loadingFile = False
@@ -497,7 +498,7 @@ Public Class Main
                                                                                            txtLongDescription.Leave,
                                                                                            txtWeatherSummary.Leave
 
-        BuildFPResults()
+        'BuildFPResults()
 
         'Some fields need to be copied to the Event tab
         If sender Is txtTitle OrElse sender Is txtShortDescription Then
@@ -701,7 +702,7 @@ Public Class Main
             txtEventDescription.Text = txtShortDescription.Text
         End If
 
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
 
     End Sub
 
@@ -739,6 +740,7 @@ Public Class Main
 
 #Region "Clipboard buttons on the Flight Plan Tab"
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
+        BuildFPResults()
         Clipboard.SetText(txtFPResults.Text)
         CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
 
@@ -1192,7 +1194,7 @@ Public Class Main
     Private Sub btnAddCountry_Click(sender As Object, e As EventArgs) Handles btnAddCountry.Click
         If cboCountryFlag.SelectedIndex > 0 AndAlso Not lstAllCountries.Items.Contains(cboCountryFlag.Text) Then
             lstAllCountries.Items.Add(cboCountryFlag.Text)
-            BuildFPResults()
+            'BuildFPResults()
             SessionModified()
             If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
                 btnMoveCountryDown.Enabled = True
@@ -1216,18 +1218,18 @@ Public Class Main
             btnMoveCountryDown.Enabled = False
             btnMoveCountryUp.Enabled = False
         End If
-        BuildFPResults()
+        'BuildFPResults()
     End Sub
 
     Private Sub btnMoveCountryUp_Click(sender As Object, e As EventArgs) Handles btnMoveCountryUp.Click
         MoveExtraFilesSelectedItems(-1, lstAllCountries)
-        BuildFPResults()
+        'BuildFPResults()
         SessionModified()
     End Sub
 
     Private Sub btnMoveCountryDown_Click(sender As Object, e As EventArgs) Handles btnMoveCountryDown.Click
         MoveExtraFilesSelectedItems(1, lstAllCountries)
-        BuildFPResults()
+        'BuildFPResults()
         SessionModified()
     End Sub
 
@@ -1368,7 +1370,7 @@ Public Class Main
             End If
         End If
 
-        BuildFPResults()
+        'BuildFPResults()
 
     End Sub
 
@@ -1435,8 +1437,8 @@ Public Class Main
             Next
         End If
 
-        BuildFPResults()
-        BuildGroupFlightPost()
+        'BuildFPResults()
+        'BuildGroupFlightPost()
 
         SessionModified()
 
@@ -1550,7 +1552,7 @@ Public Class Main
         _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
 
         BuildWeatherInfoResults()
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
 
         If Not (chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing) Then
             BuildWeatherCloudLayers()
@@ -1644,7 +1646,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
+    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
 
@@ -1664,11 +1666,14 @@ Public Class Main
             dtEventLaunchTime.Value = dtEventSyncFlyTime.Value.AddMinutes(_ClubPreset.LaunchDelay)
             Application.DoEvents()
             dtEventStartTaskTime.Value = dtEventLaunchTime.Value.AddMinutes(_ClubPreset.StartTaskDelay)
+
+            cboBeginnersGuide.Text = _ClubPreset.BeginnerLink
+
         Else
             _ClubPreset = Nothing
         End If
 
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
 
         SessionModified()
 
@@ -1734,18 +1739,36 @@ Public Class Main
     End Sub
 
     Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboMSFSServer.SelectedIndexChanged, cboEligibleAward.SelectedIndexChanged
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
+        SessionModified()
+    End Sub
+
+    Private Sub cboBeginnersGuide_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBeginnersGuide.SelectedIndexChanged
+        If cboBeginnersGuide.Text = "Other (provide link below)" Then
+            txtOtherBeginnerLink.Enabled = True
+            btnPasteBeginnerLink.Enabled = True
+        Else
+            txtOtherBeginnerLink.Enabled = False
+            btnPasteBeginnerLink.Enabled = False
+            txtOtherBeginnerLink.Text = String.Empty
+        End If
+        'BuildGroupFlightPost()
         SessionModified()
     End Sub
 
     Private Sub btnTaskFPURLPaste_Click(sender As Object, e As EventArgs) Handles btnTaskFPURLPaste.Click
         txtTaskFlightPlanURL.Text = Clipboard.GetText
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
+    End Sub
+
+    Private Sub btnPasteBeginnerLink_Click(sender As Object, e As EventArgs) Handles btnPasteBeginnerLink.Click
+        txtOtherBeginnerLink.Text = Clipboard.GetText
+        'BuildGroupFlightPost()
     End Sub
 
     Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordGroupEventURL.Click
         txtGroupEventPostURL.Text = Clipboard.GetText
-        BuildDiscordEventDescription()
+        'BuildDiscordEventDescription()
     End Sub
 
     Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
@@ -1753,6 +1776,7 @@ Public Class Main
     End Sub
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
+        BuildGroupFlightPost()
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
@@ -1783,6 +1807,7 @@ Public Class Main
     End Sub
 
     Private Sub btnEventDescriptionToClipboard_Click(sender As Object, e As EventArgs) Handles btnEventDescriptionToClipboard.Click
+        BuildDiscordEventDescription()
         If txtDiscordEventDescription.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventDescription.Text)
             CopyContent.ShowContent(Me,
@@ -1799,7 +1824,12 @@ Public Class Main
     End Sub
 
     Private Sub chkIncludeGotGravelInvite_CheckedChanged(sender As Object, e As EventArgs) Handles chkIncludeGotGravelInvite.CheckedChanged
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
+        SessionModified()
+    End Sub
+
+    Private Sub chkIncludeBeginnersHelpLink_CheckedChanged(sender As Object, e As EventArgs)
+        'BuildGroupFlightPost()
         SessionModified()
     End Sub
 
@@ -1868,8 +1898,8 @@ Public Class Main
 
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
-        BuildGroupFlightPost()
-        BuildDiscordEventDescription()
+        'BuildGroupFlightPost()
+        'BuildDiscordEventDescription()
     End Sub
 
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
@@ -1972,7 +2002,7 @@ Public Class Main
         lblStartTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventStartTaskDate.Value.Year, dtEventStartTaskDate.Value.Month, dtEventStartTaskDate.Value.Day, dtEventStartTaskTime.Value.Hour, dtEventStartTaskTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
         ToolTip1.SetToolTip(lblStartTimeResult, eventDay.ToString)
 
-        BuildGroupFlightPost()
+        'BuildGroupFlightPost()
 
     End Sub
 
@@ -2060,6 +2090,21 @@ Public Class Main
             sb.AppendLine($"🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{cboEligibleAward.Text} Soaring Badge** :{cboEligibleAward.Text.ToLower()}:")
         End If
 
+        Dim urlBeginnerGuide As String = String.Empty
+        Select Case cboBeginnersGuide.Text
+            Case "Other (provide link below)"
+                urlBeginnerGuide = txtOtherBeginnerLink.Text
+            Case "The Beginner's Guide to Soaring Events (GotGravel)"
+                urlBeginnerGuide = "https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529"
+            Case "How to join our Group Flights (Sim Soaring Club)"
+                urlBeginnerGuide = "https://discord.com/channels/876123356385149009/1038819881396744285"
+            Case Else
+        End Select
+        If Not urlBeginnerGuide = String.Empty Then
+            sb.AppendLine()
+            sb.AppendLine($"‍:student: If it's your first time flying with us, please make sure to read the following guide: {urlBeginnerGuide}")
+        End If
+
         If txtCredits.Text <> String.Empty Then
             sb.AppendLine()
             sb.AppendLine(txtCredits.Text)
@@ -2067,7 +2112,7 @@ Public Class Main
 
         txtGroupFlightEventPost.Text = sb.ToString.Trim
 
-        BuildDiscordEventDescription()
+        'BuildDiscordEventDescription()
 
     End Sub
 
@@ -2511,13 +2556,19 @@ Public Class Main
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you can include an invite to the server. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
 
-            Case 73 'Briefing review
+            Case 73 'Beginner's link
+                SetEventGuidePanelToLeft()
+                pnlWizardEvent.Top = 632
+                lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
+                SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
+
+            Case 74 'Briefing review
                 TabControl1.SelectedIndex = 3
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
-            Case 74 To 79 'Next section
+            Case 75 To 79 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -3008,6 +3059,8 @@ Public Class Main
             .URLDiscordEventInvite = txtDiscordEventShareURL.Text
             .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
             .MapImageSelected = cboBriefingMap.Text
+            .BeginnersGuide = cboBeginnersGuide.Text
+            .BeginnersGuideCustom = txtOtherBeginnerLink.Text
 
         End With
 
@@ -3147,6 +3200,11 @@ Public Class Main
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 txtDiscordEventShareURL.Text = .URLDiscordEventInvite
                 chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
+                cboBeginnersGuide.Text = .BeginnersGuide
+                If cboBeginnersGuide.Text = String.Empty Then
+                    cboBeginnersGuide.Text = "None"
+                End If
+                txtOtherBeginnerLink.Text = .BeginnersGuideCustom
 
                 If Not File.Exists(.MapImageSelected) Then
                     'Should expect the file to be in the same folder as the .dph file
@@ -3157,11 +3215,11 @@ Public Class Main
                 LoadPossibleImagesInMapDropdown(.MapImageSelected)
             End With
 
-            BuildFPResults()
+            'BuildFPResults()
             BuildWeatherInfoResults()
             BuildRecAddOnsText()
-            BuildGroupFlightPost()
-            BuildDiscordEventDescription()
+            'BuildGroupFlightPost()
+            'BuildDiscordEventDescription()
 
             _sessionModified = False
 
@@ -3196,7 +3254,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 
