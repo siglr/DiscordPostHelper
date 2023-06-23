@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.19.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.23.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.23.1</ReleaseVersion>
+      <ReleaseTitle>Link to Beginner's Guide to Group Soaring Flights</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds an option to include a predefined or custom link to some existing guide for beginners that want to learn how to join the group soaring events.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.19.1</ReleaseVersion>
       <ReleaseTitle>Small required fixes</ReleaseTitle>
