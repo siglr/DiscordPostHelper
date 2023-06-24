@@ -852,6 +852,11 @@ Public Class Main
     End Sub
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
+        BuildFPResults()
+        BuildWeatherCloudLayers()
+        BuildWeatherWindLayers()
+        BuildWeatherInfoResults()
+
         Dim msg As String = txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
 
         If msg.Trim = String.Empty Then
@@ -873,6 +878,11 @@ Public Class Main
 
     Private Sub btnFullDescriptionCopy_Click(sender As Object, e As EventArgs) Handles btnFullDescriptionCopy.Click
 
+        BuildFPResults()
+        BuildWeatherCloudLayers()
+        BuildWeatherWindLayers()
+        BuildWeatherInfoResults()
+
         If txtFullDescriptionResults.Text.Length = 0 Then
             MessageBox.Show(Me, "The full description is empty. Cannot proceed!", "Step 4 - Creating full description post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
@@ -890,6 +900,11 @@ Public Class Main
     End Sub
 
     Private Sub btnWaypointsCopy_Click(sender As Object, e As EventArgs) Handles btnWaypointsCopy.Click
+
+        BuildFPResults()
+        BuildWeatherCloudLayers()
+        BuildWeatherWindLayers()
+        BuildWeatherInfoResults()
 
         If txtWaypointsDetails.Text.Length = 0 Then
             MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -909,6 +924,12 @@ Public Class Main
     End Sub
 
     Private Sub btnAddOnsCopy_Click(sender As Object, e As EventArgs) Handles btnAddOnsCopy.Click
+
+        BuildFPResults()
+        BuildWeatherCloudLayers()
+        BuildWeatherWindLayers()
+        BuildWeatherInfoResults()
+
         If txtAddOnsDetails.Text.Length = 0 Then
             MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
@@ -931,6 +952,10 @@ Public Class Main
     End Sub
 
     Private Sub btnCopyAllSecPosts_Click(sender As Object, e As EventArgs) Handles btnCopyAllSecPosts.Click
+        BuildFPResults()
+        BuildWeatherCloudLayers()
+        BuildWeatherWindLayers()
+        BuildWeatherInfoResults()
 
         Dim msg As String = _SF.ValueToAppendIfNotEmpty(txtAltRestrictions.Text,,, 2) &
                           _SF.ValueToAppendIfNotEmpty(txtWeatherFirstPart.Text,,, 2) &
