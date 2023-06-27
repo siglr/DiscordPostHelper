@@ -1,16 +1,6 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.23.1</CurrentLatestVersion>
   <Releases>
-    <Release>
-      <ReleaseVersion>23.6.27.1</ReleaseVersion>
-      <ReleaseTitle>
-        <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
-      </ReleaseTitle>
-      <ReleaseNotes>
-        The last version 23.6.23.1 introduced a bug where not all post content was included in the clipboard. This release fixes that bug.
-        Truly sorry about that!
-      </ReleaseNotes>
-    </Release>
     <Release>
       <ReleaseVersion>23.6.23.2</ReleaseVersion>
       <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
