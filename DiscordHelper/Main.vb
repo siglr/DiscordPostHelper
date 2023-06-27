@@ -1816,6 +1816,7 @@ Public Class Main
     End Sub
 
     Private Sub btnEventTopicClipboard_Click(sender As Object, e As EventArgs) Handles btnEventTopicClipboard.Click
+        BuildDiscordEventDescription()
         If txtDiscordEventTopic.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventTopic.Text)
             CopyContent.ShowContent(Me,
