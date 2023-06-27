@@ -7,7 +7,7 @@
         <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
       </ReleaseTitle>
       <ReleaseNotes>
-        This update only fixes a bug where the Event Topic would not copy to clipboard in a specific situation.
+        This update only fixes a bug where the Event Topic would not copy to clipboard in a specific situation
       </ReleaseNotes>
     </Release>
     <Release>
