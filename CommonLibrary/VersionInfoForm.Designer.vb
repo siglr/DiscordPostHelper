@@ -29,10 +29,9 @@ Partial Public Class VersionInfoForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblLatestVersion = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.txtReleaseNotes = New System.Windows.Forms.TextBox()
-        Me.lblReleaseTitle = New System.Windows.Forms.Label()
+        Me.txtReleaseNotes = New System.Windows.Forms.RichTextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtReleaseHistory = New System.Windows.Forms.TextBox()
+        Me.txtReleaseHistory = New System.Windows.Forms.RichTextBox()
         Me.SuspendLayout()
         '
         'btnUpdate
@@ -97,48 +96,38 @@ Partial Public Class VersionInfoForm
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(13, 79)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(130, 26)
+        Me.Label3.Size = New System.Drawing.Size(473, 26)
         Me.Label3.TabIndex = 6
-        Me.Label3.Text = "Release notes:"
+        Me.Label3.Text = "Cumulative release notes down to your current version:"
         '
         'txtReleaseNotes
         '
-        Me.txtReleaseNotes.Location = New System.Drawing.Point(12, 134)
-        Me.txtReleaseNotes.Multiline = True
+        Me.txtReleaseNotes.Location = New System.Drawing.Point(18, 108)
         Me.txtReleaseNotes.Name = "txtReleaseNotes"
         Me.txtReleaseNotes.ReadOnly = True
-        Me.txtReleaseNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtReleaseNotes.Size = New System.Drawing.Size(885, 190)
+        Me.txtReleaseNotes.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical
+        Me.txtReleaseNotes.Size = New System.Drawing.Size(885, 216)
         Me.txtReleaseNotes.TabIndex = 7
-        '
-        'lblReleaseTitle
-        '
-        Me.lblReleaseTitle.AutoSize = True
-        Me.lblReleaseTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblReleaseTitle.Location = New System.Drawing.Point(12, 105)
-        Me.lblReleaseTitle.Name = "lblReleaseTitle"
-        Me.lblReleaseTitle.Size = New System.Drawing.Size(166, 26)
-        Me.lblReleaseTitle.TabIndex = 8
-        Me.lblReleaseTitle.Text = "Version available:"
+        Me.txtReleaseNotes.Text = ""
         '
         'Label4
         '
         Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(13, 327)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(141, 26)
+        Me.Label4.Size = New System.Drawing.Size(215, 26)
         Me.Label4.TabIndex = 9
-        Me.Label4.Text = "Release history:"
+        Me.Label4.Text = "All prior releases history:"
         '
         'txtReleaseHistory
         '
         Me.txtReleaseHistory.Location = New System.Drawing.Point(12, 356)
-        Me.txtReleaseHistory.Multiline = True
         Me.txtReleaseHistory.Name = "txtReleaseHistory"
         Me.txtReleaseHistory.ReadOnly = True
-        Me.txtReleaseHistory.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtReleaseHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical
         Me.txtReleaseHistory.Size = New System.Drawing.Size(885, 235)
         Me.txtReleaseHistory.TabIndex = 10
+        Me.txtReleaseHistory.Text = ""
         '
         'VersionInfoForm
         '
@@ -150,7 +139,6 @@ Partial Public Class VersionInfoForm
         Me.ControlBox = False
         Me.Controls.Add(Me.txtReleaseHistory)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.lblReleaseTitle)
         Me.Controls.Add(Me.txtReleaseNotes)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.lblLatestVersion)
@@ -176,8 +164,7 @@ Partial Public Class VersionInfoForm
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents lblLatestVersion As Windows.Forms.Label
     Friend WithEvents Label3 As Windows.Forms.Label
-    Friend WithEvents txtReleaseNotes As Windows.Forms.TextBox
-    Friend WithEvents lblReleaseTitle As Windows.Forms.Label
+    Friend WithEvents txtReleaseNotes As Windows.Forms.RichTextBox
     Friend WithEvents Label4 As Windows.Forms.Label
-    Friend WithEvents txtReleaseHistory As Windows.Forms.TextBox
+    Friend WithEvents txtReleaseHistory As Windows.Forms.RichTextBox
 End Class

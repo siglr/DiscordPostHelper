@@ -600,29 +600,42 @@ Public Class SupportingFeatures
     End Function
 
     Public Function GetVersionInfo() As VersionInfo
-        LogDateTime($"{ClientRunning.ToString} {Assembly.GetExecutingAssembly().GetName().Version}")
 
-        Dim url As String = $"https://raw.githubusercontent.com/siglr/DiscordPostHelper/master/{ClientRunning.ToString}.VersionInfo.xml"
-        Dim client As New WebClient()
-        Dim responseBytes As Byte() = Nothing
+        Dim cleanResponseString As String = String.Empty
 
-        Try
-            responseBytes = client.DownloadData(url)
-        Catch ex As WebException
-            MessageBox.Show("It appears it is impossible to retrieve version information right now. You will have to manually check for the latest version.", "Checking latest version", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return Nothing
-        End Try
+        If Debugger.IsAttached Then
+            'Read the XML locally instead
+            Dim localFilePath As String = $"H:\DiscordHelper - 4.8.1\DiscordHelper\{ClientRunning.ToString}.VersionInfo.xml"
+            cleanResponseString = File.ReadAllText(localFilePath)
+        Else
+            'Read the XML from GitHub
+            LogDateTime($"{ClientRunning.ToString} {Assembly.GetExecutingAssembly().GetName().Version}")
 
-        Dim responseString As String = Encoding.UTF8.GetString(responseBytes)
+            Dim url As String = $"https://raw.githubusercontent.com/siglr/DiscordPostHelper/master/{ClientRunning.ToString}.VersionInfo.xml"
+            Dim client As New WebClient()
+            Dim responseBytes As Byte() = Nothing
 
-        ' Remove ZWNBSP character using regular expression pattern
-        Dim cleanResponseString As String = Regex.Replace(responseString, "^\uFEFF", String.Empty)
+            Try
+                responseBytes = client.DownloadData(url)
+            Catch ex As WebException
+                MessageBox.Show("It appears it is impossible to retrieve version information right now. You will have to manually check for the latest version.", "Checking latest version", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return Nothing
+            End Try
 
+            Dim responseString As String = Encoding.UTF8.GetString(responseBytes)
+
+            ' Remove ZWNBSP character using regular expression pattern
+            cleanResponseString = Regex.Replace(responseString, "^\uFEFF", String.Empty)
+
+        End If
+
+        Dim versionInfo As VersionInfo
         Dim serializer As New XmlSerializer(GetType(VersionInfo))
         Dim reader As New StringReader(cleanResponseString)
-        Dim versionInfo As VersionInfo = DirectCast(serializer.Deserialize(reader), VersionInfo)
+        versionInfo = DirectCast(serializer.Deserialize(reader), VersionInfo)
 
         Return versionInfo
+
     End Function
 
     Public Sub LogDateTime(parameter As String)
@@ -649,23 +662,38 @@ Public Class SupportingFeatures
     End Function
 
     Public Function ShowVersionForm(verInfo As VersionInfo, currentVersion As String) As DialogResult
-
         Dim versionForm As New VersionInfoForm
 
         versionForm.lblLocalVersion.Text = currentVersion
         versionForm.lblLatestVersion.Text = verInfo.CurrentLatestVersion
 
+        Dim sbCumulativeRelease As New StringBuilder
+        Dim sbHistoryRelease As New StringBuilder
+
+        sbCumulativeRelease.Append("{\rtf1\ansi ")
+        sbHistoryRelease.Append("{\rtf1\ansi ")
+
         For Each release As Release In verInfo.Releases
-            If release.ReleaseVersion = verInfo.CurrentLatestVersion Then
-                versionForm.lblReleaseTitle.Text = release.ReleaseTitle
-                versionForm.txtReleaseNotes.Text = release.ReleaseNotes.Replace(vbLf, vbCrLf)
+            If FormatVersionNumber(release.ReleaseVersion) > FormatVersionNumber(currentVersion) Then
+                ' Format release version and title as header or bold
+                sbCumulativeRelease.Append($"\b {release.ReleaseVersion} - {release.ReleaseTitle}\b0\line ")
+                sbCumulativeRelease.Append($"{release.ReleaseNotes.Replace("        ", "").Trim.Replace(vbLf, "\line ")}")
+                sbCumulativeRelease.Append("\line ")
+                sbCumulativeRelease.Append("\line ")
             Else
-                versionForm.txtReleaseHistory.Text = versionForm.txtReleaseHistory.Text & ($"{release.ReleaseVersion} - {release.ReleaseTitle}{Environment.NewLine}{release.ReleaseNotes.Replace(vbLf, vbCrLf)}{Environment.NewLine}{Environment.NewLine}")
+                ' Format release version and title as header or bold
+                sbHistoryRelease.Append($"\b {release.ReleaseVersion} - {release.ReleaseTitle}\b0\line ")
+                sbHistoryRelease.Append($"{release.ReleaseNotes.Replace("        ", "").Trim.Replace(vbLf, "\line ")}")
+                sbHistoryRelease.Append("\line ")
+                sbHistoryRelease.Append("\line ")
             End If
         Next
 
-        Return versionForm.ShowDialog()
+        ' Set formatted text to the controls
+        versionForm.txtReleaseNotes.Rtf = sbCumulativeRelease.ToString()
+        versionForm.txtReleaseHistory.Rtf = sbHistoryRelease.ToString()
 
+        Return versionForm.ShowDialog()
     End Function
 
     Public Function DownloadLatestUpdate(version As String, ByRef message As String) As Boolean
