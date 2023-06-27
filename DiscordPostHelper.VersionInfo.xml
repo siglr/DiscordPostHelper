@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.23.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.23.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.27.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for Event Topic copy to clipboard</ReleaseTitle>
+      <ReleaseNotes>
+        This update only fixes a bug where the Event Topic would not copy to clipboard in a specific situation.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.23.2</ReleaseVersion>
       <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
