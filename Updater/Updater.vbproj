@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EF1DB017-460D-4CDE-94F8-4F085B1912B0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <StartupObject>SIGLR.SoaringTools.Updater.MainModule</StartupObject>
     <RootNamespace>SIGLR.SoaringTools.Updater</RootNamespace>
     <AssemblyName>Updater</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Console</MyType>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -52,8 +52,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -89,6 +91,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UpdaterForm.Designer.vb">
+      <DependentUpon>UpdaterForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UpdaterForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitingToCloseApp.Designer.vb">
+      <DependentUpon>WaitingToCloseApp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WaitingToCloseApp.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -96,6 +110,12 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdaterForm.resx">
+      <DependentUpon>UpdaterForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaitingToCloseApp.resx">
+      <DependentUpon>WaitingToCloseApp.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
