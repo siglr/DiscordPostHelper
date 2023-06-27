@@ -7,7 +7,8 @@
         <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
       </ReleaseTitle>
       <ReleaseNotes>
-        This update only fixes a bug where the Event Topic would not copy to clipboard in a specific situation
+        The last version 23.6.23.1 introduced a bug where not all post content was included in the clipboard. This release fixes that bug.
+        Truly sorry about that!
       </ReleaseNotes>
     </Release>
     <Release>
