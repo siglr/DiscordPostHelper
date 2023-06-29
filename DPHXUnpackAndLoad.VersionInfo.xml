@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.6.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.6.29.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.6.29.1</ReleaseVersion>
+      <ReleaseTitle>Change to the auto-update process</ReleaseTitle>
+      <ReleaseNotes>
+        The auto-update program is now a Windows form with better formatting.
+        Also, the updater now displays all release notes between user's version and newest version available.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.6.2</ReleaseVersion>
       <ReleaseTitle>Version info files now on GitHub</ReleaseTitle>
