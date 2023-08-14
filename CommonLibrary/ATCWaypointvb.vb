@@ -1,4 +1,5 @@
-﻿Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
+﻿Imports System.Globalization
+Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class ATCWaypoint
 
@@ -148,7 +149,7 @@ Public Class ATCWaypoint
         Dim strParts As String() = strWorldPosition.Split(",")
         pLatitude = Conversions.ConvertToLatitude(strParts(0))
         pLongitude = Conversions.ConvertToLongitude(strParts(1))
-        pElevation = CDbl(strParts(2))
+        pElevation = Double.Parse(strParts(2), CultureInfo.InvariantCulture)
     End Sub
 
     Private Sub CheckTaskStartOrEnd()
