@@ -612,11 +612,11 @@ Public Class BriefingControl
 
             sb.Append($"The MSFS Local Date & Time should be: \b {fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {_SF.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}\b0 ")
             If _sessionData.UseEventSyncFly Then
-                sb.Append("when it's the Sync Fly time below. \line ")
+                sb.Append($" when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
             ElseIf _sessionData.UseEventLaunch Then
-                sb.Append("when it's the Launch time below \line ")
+                sb.Append($" when it's the Launch time ({fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
             Else
-                sb.Append("when it's the Meet time above \line ")
+                sb.Append($" when it's the Meet time ({fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
             End If
             sb.Append("\line ")
 

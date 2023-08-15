@@ -2079,7 +2079,16 @@ Public Class Main
         End If
         sb.AppendLine("> ")
         sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")
-        sb.AppendLine($"> 📆 Sim date And time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}**")
+
+        Dim theLocalTime As String = String.Empty
+        If chkUseSyncFly.Checked Then
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        ElseIf chkUseLaunch.Checked Then
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        Else
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        End If
+        sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time)**{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}**")
 
         If Not txtFlightPlanFile.Text = String.Empty Then
             sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
