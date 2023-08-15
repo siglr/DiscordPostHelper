@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.6.29.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.15.1</ReleaseVersion>
+      <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds the MSFS local times in relation to the event times (sync, launch, start) in the event post and the briefing's event info.
+        It also contains a fix for conversion of waypoint elevation for some regional settings.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.6.29.1</ReleaseVersion>
       <ReleaseTitle>Change to the auto-update process</ReleaseTitle>
