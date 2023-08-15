@@ -2039,6 +2039,22 @@ Public Class Main
         Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventLaunchDate, dtEventLaunchTime, chkDateTimeUTC.Checked)
         Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventStartTaskDate, dtEventStartTaskTime, chkDateTimeUTC.Checked)
 
+        Dim fullMeetDateTimeMSFS As DateTime
+        Dim fullSyncFlyDateTimeMSFS As DateTime
+        Dim fullLaunchDateTimeMSFS As DateTime
+        Dim fullStartTaskDateTimeMSFS As DateTime
+        _SF.ExpressEventTimesInMSFSTime(fullMeetDateTimeLocal,
+                                        fullSyncFlyDateTimeLocal,
+                                        fullLaunchDateTimeLocal,
+                                        fullStartTaskDateTimeLocal,
+                                        dtSimDate.Value.Date.Add(New TimeSpan(dtSimLocalTime.Value.Hour, dtSimLocalTime.Value.Minute, 0)),
+                                        chkUseSyncFly.Checked,
+                                        chkUseLaunch.Checked,
+                                        fullMeetDateTimeMSFS,
+                                        fullSyncFlyDateTimeMSFS,
+                                        fullLaunchDateTimeMSFS,
+                                        fullStartTaskDateTimeMSFS)
+
         Dim dateFormat As String
         If chkIncludeYear.Checked Then
             dateFormat = "MMMM dd, yyyy"
@@ -2100,7 +2116,7 @@ Public Class Main
 
         If chkUseSyncFly.Checked Then
             sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
-            sb.AppendLine($"## ⏱️ Sync Fly: {Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we simultaneously click fly to sync our weather.*")
+            sb.AppendLine($"## ⏱️ Sync Fly: {Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullSyncFlyDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we simultaneously click fly to sync our weather.*")
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
                 sb.AppendLine("> *At this time we can also start launching from the airfield.*")
             End If
@@ -2108,12 +2124,12 @@ Public Class Main
         End If
 
         If chkUseLaunch.Checked AndAlso (fullSyncFlyDateTimeLocal <> fullLaunchDateTimeLocal OrElse Not chkUseSyncFly.Checked) Then
-            sb.AppendLine($"## 🚀 Launch:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we can start launching from the airfield.*")
+            sb.AppendLine($"## 🚀 Launch:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullLaunchDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we can start launching from the airfield.*")
             sb.AppendLine("> ")
         End If
 
         If chkUseStart.Checked Then
-            sb.AppendLine($"## 🟢 Task Start:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time**{Environment.NewLine}> *At this time we cross the starting line and start the task.*")
+            sb.AppendLine($"## 🟢 Task Start:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullStartTaskDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we cross the starting line and start the task.*")
             sb.AppendLine("> ")
         End If
 

@@ -1250,4 +1250,30 @@ Public Class SupportingFeatures
         textCtrl.Text = String.Join(Environment.NewLine, modifiedLines)
     End Sub
 
+    Public Sub ExpressEventTimesInMSFSTime(fullMeetDateTimeLocal As DateTime,
+                                           fullSyncFlyDateTimeLocal As DateTime,
+                                           fullLaunchDateTimeLocal As DateTime,
+                                           fullStartTaskDateTimeLocal As DateTime,
+                                           fullMSFSLocalDateTime As DateTime,
+                                           useEventSyncFly As Boolean,
+                                           useEventLaunch As Boolean,
+                                           ByRef fullMeetDateTimeMSFS As DateTime,
+                                           ByRef fullSyncFlyDateTimeMSFS As DateTime,
+                                           ByRef fullLaunchDateTimeMSFS As DateTime,
+                                           ByRef fullStartTaskDateTimeMSFS As DateTime)
+
+        If useEventSyncFly Then
+            fullSyncFlyDateTimeMSFS = fullMSFSLocalDateTime
+            fullLaunchDateTimeMSFS = fullSyncFlyDateTimeMSFS.Add(fullLaunchDateTimeLocal - fullSyncFlyDateTimeLocal)
+            fullStartTaskDateTimeMSFS = fullSyncFlyDateTimeMSFS.Add(fullStartTaskDateTimeLocal - fullSyncFlyDateTimeLocal)
+        ElseIf useEventLaunch Then
+            fullLaunchDateTimeMSFS = fullMSFSLocalDateTime
+            fullStartTaskDateTimeMSFS = fullLaunchDateTimeMSFS.Add(fullStartTaskDateTimeLocal - fullLaunchDateTimeLocal)
+        Else
+            fullMeetDateTimeMSFS = fullMSFSLocalDateTime
+            fullStartTaskDateTimeMSFS = fullMeetDateTimeMSFS.Add(fullStartTaskDateTimeLocal - fullMeetDateTimeLocal)
+        End If
+
+    End Sub
+
 End Class

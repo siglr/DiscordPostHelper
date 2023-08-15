@@ -574,6 +574,22 @@ Public Class BriefingControl
             Dim fullStartTaskDateTimeLocal As DateTime = _sessionData.StartTaskLocalDateTime
             Dim fullMSFSLocalDateTime As DateTime = _sessionData.SimLocalDateTime
 
+            Dim fullMeetDateTimeMSFS As DateTime
+            Dim fullSyncFlyDateTimeMSFS As DateTime
+            Dim fullLaunchDateTimeMSFS As DateTime
+            Dim fullStartTaskDateTimeMSFS As DateTime
+            _SF.ExpressEventTimesInMSFSTime(fullMeetDateTimeLocal,
+                                        fullSyncFlyDateTimeLocal,
+                                        fullLaunchDateTimeLocal,
+                                        fullStartTaskDateTimeLocal,
+                                        fullMSFSLocalDateTime,
+                                        _sessionData.UseEventSyncFly,
+                                        _sessionData.UseEventLaunch,
+                                        fullMeetDateTimeMSFS,
+                                        fullSyncFlyDateTimeMSFS,
+                                        fullLaunchDateTimeMSFS,
+                                        fullStartTaskDateTimeMSFS)
+
             countDownToMeet.SetTargetDateTime(fullMeetDateTimeLocal)
 
             'Timezone
@@ -623,7 +639,7 @@ Public Class BriefingControl
             'Sync Start or not?
             If _sessionData.UseEventSyncFly Then
                 sb.Append($"This task requires a \b SYNC FLY \b0 so \b WAIT \b0 on the World Map for the signal. \line ")
-                sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+                sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullSyncFlyDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
                 countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal)
             Else
@@ -634,7 +650,7 @@ Public Class BriefingControl
 
             'Launch
             If _sessionData.UseEventLaunch Then
-                sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+                sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullLaunchDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
                 countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal)
             Else
@@ -645,7 +661,7 @@ Public Class BriefingControl
 
             'Start task
             If _sessionData.UseEventStartTask Then
-                sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) \line ")
+                sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullStartTaskDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
                 countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal)
             Else
