@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.17.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.17.1</ReleaseVersion>
+      <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds audio cues for all countdowns on the briefing's event tab, allowing to hear the countdowns without having to look at the tool's window.
+        It also contains a fix for a small formatting bug for the event post on Discord.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.15.1</ReleaseVersion>
       <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
