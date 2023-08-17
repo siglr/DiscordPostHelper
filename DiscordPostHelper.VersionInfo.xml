@@ -1,6 +1,22 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.17.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.17.3</ReleaseVersion>
+      <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds audio cues for all countdowns on the briefing's event tab, allowing to hear the countdowns without having to look at the tool's window.
+        It also contains a fix for a small formatting bug for the event post on Discord.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.15.1</ReleaseVersion>
+      <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds the MSFS local times in relation to the event times (sync, launch, start) in the event post and the briefing's event info.
+        It also contains a fix for conversion of waypoint elevation for some regional settings.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.15.1</ReleaseVersion>
       <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
