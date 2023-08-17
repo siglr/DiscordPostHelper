@@ -603,7 +603,7 @@ Public Class SupportingFeatures
 
         Dim cleanResponseString As String = String.Empty
 
-        If Debugger.IsAttached Then
+        If Debugger.IsAttached OrElse File.Exists($"{Application.StartupPath}\ForceLocalUpdate.txt") Then
             'Read the XML locally instead
             Dim localFilePath As String = $"H:\DiscordHelper - 4.8.1\DiscordHelper\{ClientRunning.ToString}.VersionInfo.xml"
             cleanResponseString = File.ReadAllText(localFilePath)
@@ -725,9 +725,13 @@ Public Class SupportingFeatures
                     localZip = $"{Application.StartupPath}\{zipFileName}"
             End Select
 
-            message = $"Downloading file {url} to {localZip}"
-            Dim client As New WebClient()
-            client.DownloadFile(url, localZip)
+            If File.Exists($"{Application.StartupPath}\ForceLocalUpdate.txt") Then
+                message = $"Forcing local update"
+            Else
+                message = $"Downloading file {url} to {localZip}"
+                Dim client As New WebClient()
+                client.DownloadFile(url, localZip)
+            End If
 
             message = $"Openening zip to check for Updater entry"
             'open zip and check if updater is there

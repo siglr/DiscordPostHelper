@@ -20,6 +20,17 @@ Module MainModule
 
         updateForm.txtParamCount.Text = My.Application.CommandLineArgs.Count.ToString
 
+        If My.Application.CommandLineArgs.Count = 3 Then
+            updateForm.lblChkMarkParameters.Visible = True
+        Else
+            Dim sb As New StringBuilder()
+            sb.AppendLine("An error occured! Incomplete update! You should get the latest release by yourself and copy the files over manually!")
+            sb.AppendLine()
+            sb.AppendLine("Incorrect number of parameters passed to the Updater process.")
+            MessageBox.Show(sb.ToString, "MSFS Soaring Task Tools Updater", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
         For Each arg In My.Application.CommandLineArgs
             argNo += 1
             Select Case argNo
@@ -40,18 +51,20 @@ Module MainModule
 
         updateForm.Refresh()
 
-        Try
-            Dim callingProcess As Process = Process.GetProcessById(processID)
-            If updateForm.ShowWaitingForProcess(callingProcess) Then
-                'Exited cleanly
-            Else
-                'Aborted
-                Exit Sub
-            End If
+        If Not processID = 0 Then
+            Try
+                Dim callingProcess As Process = Process.GetProcessById(processID)
+                If updateForm.ShowWaitingForProcess(callingProcess) Then
+                    'Exited cleanly
+                Else
+                    'Aborted
+                    Exit Sub
+                End If
 
-        Catch ex As Exception
-            'Process is already closed
-        End Try
+            Catch ex As Exception
+                'Process is already closed
+            End Try
+        End If
         updateForm.CallerIsTerminated()
 
         'Discord Post Helper
@@ -83,22 +96,27 @@ Module MainModule
                 For Each entry As ZipArchiveEntry In archive.Entries
                     If entry.Name <> "Updater.exe" Then
                         Dim entryFullName As String = entry.FullName
-                        Dim entryDirectory As String = Path.GetDirectoryName(entryFullName)
+                        Dim entryDirectory As String = Path.GetDirectoryName(entryFullName.Replace("/", "\"))
 
                         ' Combine the base directory with the entry's path to get the destination path
-                        Dim destinationPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entryFullName)
+                        Dim destinationPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entryFullName.Replace("/", "\"))
 
-                        ' Create the directory if it doesn't exist
-                        If Not Directory.Exists(entryDirectory) Then
-                            Directory.CreateDirectory(entryDirectory)
+                        If entry.Name = String.Empty Then
+                            ' Create the directory if it doesn't exist
+                            If entryDirectory <> String.Empty And Not Directory.Exists(entryDirectory) Then
+                                Directory.CreateDirectory(entryDirectory)
+                                updateForm.AddUnzippedFile($"Creating folder {entryDirectory}")
+                                updateForm.Refresh()
+                                Application.DoEvents()
+                            End If
+                        Else
+                            updateForm.AddUnzippedFile($"Extracting {destinationPath}")
+                            updateForm.Refresh()
+                            Application.DoEvents()
+                            ' Extract the entry to the specified destination path
+                            entry.ExtractToFile(destinationPath, True)
                         End If
 
-                        updateForm.AddUnzippedFile($"Extracting {destinationPath}")
-                        updateForm.Refresh()
-                        Application.DoEvents()
-
-                        ' Extract the entry to the specified destination path
-                        entry.ExtractToFile(destinationPath, True)
                     End If
                 Next
             End Using

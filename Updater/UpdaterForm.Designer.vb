@@ -39,6 +39,7 @@ Partial Class UpdaterForm
         Me.chkOtherSharedProcessesTerminated = New System.Windows.Forms.CheckBox()
         Me.chkCallerIsTerminated = New System.Windows.Forms.CheckBox()
         Me.btnUpdateCompleted = New System.Windows.Forms.Button()
+        Me.lblChkMarkParameters = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
@@ -47,6 +48,7 @@ Partial Class UpdaterForm
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Controls.Add(Me.lblChkMarkParameters)
         Me.GroupBox1.Controls.Add(Me.txtProcessID)
         Me.GroupBox1.Controls.Add(Me.Label4)
         Me.GroupBox1.Controls.Add(Me.txtApplication)
@@ -188,8 +190,10 @@ Partial Class UpdaterForm
         Me.txtUpdatedFiles.Multiline = True
         Me.txtUpdatedFiles.Name = "txtUpdatedFiles"
         Me.txtUpdatedFiles.ReadOnly = True
+        Me.txtUpdatedFiles.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.txtUpdatedFiles.Size = New System.Drawing.Size(716, 142)
         Me.txtUpdatedFiles.TabIndex = 2
+        Me.txtUpdatedFiles.WordWrap = False
         '
         'chkOtherSharedProcessesTerminated
         '
@@ -222,6 +226,17 @@ Partial Class UpdaterForm
         Me.btnUpdateCompleted.Text = "Update completed! Click here to resume."
         Me.btnUpdateCompleted.UseVisualStyleBackColor = True
         Me.btnUpdateCompleted.Visible = False
+        '
+        'lblChkMarkParameters
+        '
+        Me.lblChkMarkParameters.AutoSize = True
+        Me.lblChkMarkParameters.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblChkMarkParameters.Location = New System.Drawing.Point(184, 27)
+        Me.lblChkMarkParameters.Name = "lblChkMarkParameters"
+        Me.lblChkMarkParameters.Size = New System.Drawing.Size(30, 20)
+        Me.lblChkMarkParameters.TabIndex = 8
+        Me.lblChkMarkParameters.Text = "✅"
+        Me.lblChkMarkParameters.Visible = False
         '
         'UpdaterForm
         '
@@ -264,4 +279,5 @@ Partial Class UpdaterForm
     Friend WithEvents chkAllFilesUpdated As Windows.Forms.CheckBox
     Friend WithEvents chkZipFileDeleted As Windows.Forms.CheckBox
     Friend WithEvents btnUpdateCompleted As Windows.Forms.Button
+    Friend WithEvents lblChkMarkParameters As Windows.Forms.Label
 End Class
