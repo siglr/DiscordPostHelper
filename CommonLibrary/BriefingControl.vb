@@ -19,6 +19,7 @@ Public Class BriefingControl
     Private _unpackFolder As String = String.Empty
     Private _initPrefUnits As Boolean = False
     Private _onUnitsTab As Boolean = False
+    Private _loaded As Boolean = False
 
     Public Property EventIsEnabled As Boolean
     Public Property PrefUnits As New PreferredUnits
@@ -106,6 +107,26 @@ Public Class BriefingControl
                                                                                             radioGateDiameterBoth.CheckedChanged
 
         UnitPrefChanged(sender)
+
+    End Sub
+
+    Private Sub trackAudioCueVolume_ValueChanged(sender As Object, e As EventArgs) Handles trackAudioCueVolume.ValueChanged
+
+        If _loaded Then
+
+            Dim playCue As Boolean = True
+            If trackAudioCueVolume.Value = 0 Then
+                playCue = False
+            End If
+            countDownToMeet.PlayAudioCues = playCue
+            countDownToSyncFly.PlayAudioCues = playCue
+            countDownToLaunch.PlayAudioCues = playCue
+            countDownTaskStart.PlayAudioCues = playCue
+
+            countDownToMeet.SetOutputVolume(trackAudioCueVolume.Value)
+
+            SupportingFeatures.WriteRegistryKey("AudioCues", trackAudioCueVolume.Value)
+        End If
 
     End Sub
 
@@ -590,7 +611,17 @@ Public Class BriefingControl
                                         fullLaunchDateTimeMSFS,
                                         fullStartTaskDateTimeMSFS)
 
-            countDownToMeet.SetTargetDateTime(fullMeetDateTimeLocal)
+            'Define audio cues
+            Dim audioCueDictionary As New Dictionary(Of Integer, string)
+
+            ' Add cues with their associated embedded resource paths - for Meeting countdown
+            audioCueDictionary.Clear()
+            audioCueDictionary.Add(121, "2MinMeet") ' 2 minutes to meeting start
+            audioCueDictionary.Add(61, "60SecMeet") ' 60 seconds to meeting start
+            audioCueDictionary.Add(31, "30SecMeet") ' 30 seconds to meeting start
+            audioCueDictionary.Add(1, "MeetingHasStarted") ' Meeting has started, have a good flight!
+
+            countDownToMeet.SetTargetDateTime(fullMeetDateTimeLocal, audioCueDictionary)
 
             'Timezone
             Dim timezoneInfos As List(Of String) = SupportingFeatures.GetTimeZoneInformation
@@ -641,7 +672,16 @@ Public Class BriefingControl
                 sb.Append($"This task requires a \b SYNC FLY \b0 so \b WAIT \b0 on the World Map for the signal. \line ")
                 sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullSyncFlyDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
-                countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal)
+
+                ' Add cues with their associated embedded resource paths - for Sync Fly countdown
+                audioCueDictionary.Clear()
+                audioCueDictionary.Add(121, "2MinSyncFly") ' 2 minutes to sync fly
+                audioCueDictionary.Add(61, "60SecSyncFly") ' 60 seconds to sync fly
+                audioCueDictionary.Add(31, "30SecSyncFly") ' 30 seconds to sync fly
+                audioCueDictionary.Add(16, "15Seconds") ' 15 seconds
+                audioCueDictionary.Add(11, "From10ToClickFly") ' Countdown from 10 to now!
+
+                countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal, audioCueDictionary)
             Else
                 sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. \line ")
                 sb.Append("\line ")
@@ -652,7 +692,22 @@ Public Class BriefingControl
             If _sessionData.UseEventLaunch Then
                 sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullLaunchDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
-                countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal)
+
+                audioCueDictionary.Clear()
+
+                If _sessionData.UseEventSyncFly Then
+                    Dim diffBetweenSyncAndLaunch As TimeSpan = (fullLaunchDateTimeLocal - fullSyncFlyDateTimeLocal)
+                    If diffBetweenSyncAndLaunch.TotalMinutes >= 5 Then
+                        ' Add cues with their associated embedded resource paths - for Launch countdown
+                        audioCueDictionary.Add(121, "2MinLaunch") ' 2 minutes to launch
+                        audioCueDictionary.Add(61, "60SecLaunch") ' 60 seconds to launch
+                        audioCueDictionary.Add(31, "30SecLaunch") ' 30 seconds to launch
+                        audioCueDictionary.Add(16, "15Seconds") ' 15 seconds
+                        audioCueDictionary.Add(11, "From10ToLaunch") ' Countdown from 10 to now!
+                    End If
+                End If
+
+                countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal, audioCueDictionary)
             Else
                 sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. \line ")
                 sb.Append("\line ")
@@ -663,7 +718,16 @@ Public Class BriefingControl
             If _sessionData.UseEventStartTask Then
                 sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullStartTaskDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
                 sb.Append("\line ")
-                countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal)
+
+                ' Add cues with their associated embedded resource paths - for task start
+                audioCueDictionary.Clear()
+                audioCueDictionary.Add(121, "2MinTaskStart") ' 2 minutes to task start
+                audioCueDictionary.Add(61, "60SecTaskStart") ' 60 seconds to task start
+                audioCueDictionary.Add(31, "30SecTaskStart") ' 30 seconds to task start
+                audioCueDictionary.Add(16, "15Seconds") ' 15 seconds
+                audioCueDictionary.Add(11, "From10ToStartTask") ' Countdown from 10 to now!
+
+                countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal, audioCueDictionary)
             Else
                 sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. \line ")
                 sb.Append("\line ")
@@ -677,6 +741,9 @@ Public Class BriefingControl
             sb.Append("}")
             Timer1.Start()
         End If
+
+        _loaded = True
+        trackAudioCueVolume.Value = SupportingFeatures.ReadRegistryKey("AudioCues", 80)
 
         txtEventInfo.Rtf = sb.ToString()
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)

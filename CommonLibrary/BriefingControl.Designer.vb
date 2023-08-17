@@ -39,13 +39,19 @@ Partial Class BriefingControl
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.eventInfoSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
+        Me.trackAudioCueVolume = New System.Windows.Forms.TrackBar()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.lblInsideOutside60Minutes = New System.Windows.Forms.Label()
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
         Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
@@ -62,6 +68,7 @@ Partial Class BriefingControl
         Me.tbpgAddOns = New System.Windows.Forms.TabPage()
         Me.AddOnsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tabUnits = New System.Windows.Forms.TabPage()
+        Me.lblPrefUnitsMessage = New System.Windows.Forms.Label()
         Me.grbTemperature = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel6 = New System.Windows.Forms.FlowLayoutPanel()
         Me.radioTemperatureCelsius = New System.Windows.Forms.RadioButton()
@@ -94,11 +101,7 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.lblPrefUnitsMessage = New System.Windows.Forms.Label()
-        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -121,6 +124,7 @@ Partial Class BriefingControl
         Me.eventInfoSplitContainer.Panel1.SuspendLayout()
         Me.eventInfoSplitContainer.Panel2.SuspendLayout()
         Me.eventInfoSplitContainer.SuspendLayout()
+        CType(Me.trackAudioCueVolume, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbpgImages.SuspendLayout()
         CType(Me.imagesTabDivider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.imagesTabDivider.Panel1.SuspendLayout()
@@ -361,6 +365,9 @@ Partial Class BriefingControl
         'eventInfoSplitContainer.Panel2
         '
         Me.eventInfoSplitContainer.Panel2.AutoScroll = True
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label6)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.trackAudioCueVolume)
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Button1)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.lblInsideOutside60Minutes)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalTimeToSet)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalDateToSet)
@@ -388,14 +395,34 @@ Partial Class BriefingControl
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
         '
+        'trackAudioCueVolume
+        '
+        Me.trackAudioCueVolume.BackColor = System.Drawing.SystemColors.Control
+        Me.trackAudioCueVolume.Location = New System.Drawing.Point(8, 412)
+        Me.trackAudioCueVolume.Maximum = 100
+        Me.trackAudioCueVolume.Name = "trackAudioCueVolume"
+        Me.trackAudioCueVolume.Size = New System.Drawing.Size(170, 50)
+        Me.trackAudioCueVolume.TabIndex = 13
+        Me.trackAudioCueVolume.TickStyle = System.Windows.Forms.TickStyle.None
+        Me.ToolTip1.SetToolTip(Me.trackAudioCueVolume, "Adjust the output volume of the audio cues")
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(49, 652)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 55)
+        Me.Button1.TabIndex = 12
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'lblInsideOutside60Minutes
         '
         Me.lblInsideOutside60Minutes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblInsideOutside60Minutes.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(2, 382)
+        Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(10, 458)
         Me.lblInsideOutside60Minutes.Name = "lblInsideOutside60Minutes"
-        Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(183, 119)
+        Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(168, 119)
         Me.lblInsideOutside60Minutes.TabIndex = 10
         Me.lblInsideOutside60Minutes.Text = "Within 60 minutes of the event's time." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If clicking Fly now, MSFS local time sh" &
     "ould be:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
@@ -406,9 +433,9 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.msfsLocalTimeToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(2, 528)
+        Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(10, 604)
         Me.msfsLocalTimeToSet.Name = "msfsLocalTimeToSet"
-        Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(183, 32)
+        Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(168, 32)
         Me.msfsLocalTimeToSet.TabIndex = 9
         Me.msfsLocalTimeToSet.Text = "12:00 PM"
         Me.msfsLocalTimeToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -418,9 +445,9 @@ Partial Class BriefingControl
         Me.msfsLocalDateToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.msfsLocalDateToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.msfsLocalDateToSet.Location = New System.Drawing.Point(2, 500)
+        Me.msfsLocalDateToSet.Location = New System.Drawing.Point(10, 576)
         Me.msfsLocalDateToSet.Name = "msfsLocalDateToSet"
-        Me.msfsLocalDateToSet.Size = New System.Drawing.Size(183, 32)
+        Me.msfsLocalDateToSet.Size = New System.Drawing.Size(168, 32)
         Me.msfsLocalDateToSet.TabIndex = 8
         Me.msfsLocalDateToSet.Text = "September 31, 2014"
         Me.msfsLocalDateToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -434,6 +461,17 @@ Partial Class BriefingControl
         Me.Label5.Text = "Start task in"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownTaskStart
+        '
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.PlayAudioCues = False
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(4, 189)
@@ -442,6 +480,17 @@ Partial Class BriefingControl
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Launch in"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.PlayAudioCues = False
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
         '
         'Label3
         '
@@ -452,6 +501,17 @@ Partial Class BriefingControl
         Me.Label3.Text = "Sync Fly in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.PlayAudioCues = False
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 4)
@@ -460,6 +520,17 @@ Partial Class BriefingControl
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Meet in"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.PlayAudioCues = False
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
         '
         'tbpgImages
         '
@@ -678,6 +749,17 @@ Partial Class BriefingControl
         Me.tabUnits.TabIndex = 6
         Me.tabUnits.Text = "Units"
         Me.tabUnits.UseVisualStyleBackColor = True
+        '
+        'lblPrefUnitsMessage
+        '
+        Me.lblPrefUnitsMessage.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 606)
+        Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
+        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(982, 104)
+        Me.lblPrefUnitsMessage.TabIndex = 9
+        Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
+    "description fields is excluded and will appear as it is."
+        Me.lblPrefUnitsMessage.TextAlign = System.Drawing.ContentAlignment.BottomCenter
         '
         'grbTemperature
         '
@@ -1019,56 +1101,14 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'lblPrefUnitsMessage
+        'Label6
         '
-        Me.lblPrefUnitsMessage.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 606)
-        Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
-        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(982, 104)
-        Me.lblPrefUnitsMessage.TabIndex = 9
-        Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
-    "description fields is excluded and will appear as it is."
-        Me.lblPrefUnitsMessage.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        '
-        'countDownTaskStart
-        '
-        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
-        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownTaskStart.Name = "countDownTaskStart"
-        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
-        Me.countDownTaskStart.TabIndex = 6
-        Me.countDownTaskStart.ZoomFactor = 2.0!
-        '
-        'countDownToLaunch
-        '
-        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
-        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToLaunch.Name = "countDownToLaunch"
-        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToLaunch.TabIndex = 4
-        Me.countDownToLaunch.ZoomFactor = 2.0!
-        '
-        'countDownToSyncFly
-        '
-        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
-        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToSyncFly.Name = "countDownToSyncFly"
-        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToSyncFly.TabIndex = 2
-        Me.countDownToSyncFly.ZoomFactor = 2.0!
-        '
-        'countDownToMeet
-        '
-        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
-        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToMeet.Name = "countDownToMeet"
-        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToMeet.TabIndex = 0
-        Me.countDownToMeet.ZoomFactor = 2.0!
+        Me.Label6.Location = New System.Drawing.Point(4, 382)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(181, 30)
+        Me.Label6.TabIndex = 14
+        Me.Label6.Text = "Audio Cues Volume"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'BriefingControl
         '
@@ -1100,8 +1140,10 @@ Partial Class BriefingControl
         Me.tbpgEventInfo.ResumeLayout(False)
         Me.eventInfoSplitContainer.Panel1.ResumeLayout(False)
         Me.eventInfoSplitContainer.Panel2.ResumeLayout(False)
+        Me.eventInfoSplitContainer.Panel2.PerformLayout()
         CType(Me.eventInfoSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.eventInfoSplitContainer.ResumeLayout(False)
+        CType(Me.trackAudioCueVolume, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbpgImages.ResumeLayout(False)
         Me.imagesTabDivider.Panel1.ResumeLayout(False)
         Me.imagesTabDivider.Panel2.ResumeLayout(False)
@@ -1218,4 +1260,7 @@ Partial Class BriefingControl
     Friend WithEvents cloudLayersDatagrid As Windows.Forms.DataGridView
     Friend WithEvents windLayersDatagrid As Windows.Forms.DataGridView
     Friend WithEvents lblPrefUnitsMessage As Windows.Forms.Label
+    Friend WithEvents Button1 As Windows.Forms.Button
+    Friend WithEvents trackAudioCueVolume As Windows.Forms.TrackBar
+    Friend WithEvents Label6 As Windows.Forms.Label
 End Class
