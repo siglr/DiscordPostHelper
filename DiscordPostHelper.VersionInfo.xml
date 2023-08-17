@@ -1,8 +1,8 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.17.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.17.2</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.8.17.1</ReleaseVersion>
+      <ReleaseVersion>23.8.17.2</ReleaseVersion>
       <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
       <ReleaseNotes>
         This version adds audio cues for all countdowns on the briefing's event tab, allowing to hear the countdowns without having to look at the tool's window.
