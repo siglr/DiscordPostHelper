@@ -39,8 +39,8 @@ Partial Class BriefingControl
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.eventInfoSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.trackAudioCueVolume = New System.Windows.Forms.TrackBar()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.lblInsideOutside60Minutes = New System.Windows.Forms.Label()
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
@@ -101,7 +101,6 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -367,7 +366,6 @@ Partial Class BriefingControl
         Me.eventInfoSplitContainer.Panel2.AutoScroll = True
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label6)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.trackAudioCueVolume)
-        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Button1)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.lblInsideOutside60Minutes)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalTimeToSet)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.msfsLocalDateToSet)
@@ -395,6 +393,15 @@ Partial Class BriefingControl
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
         '
+        'Label6
+        '
+        Me.Label6.Location = New System.Drawing.Point(4, 382)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(181, 30)
+        Me.Label6.TabIndex = 14
+        Me.Label6.Text = "Audio Cues Volume"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'trackAudioCueVolume
         '
         Me.trackAudioCueVolume.BackColor = System.Drawing.SystemColors.Control
@@ -406,21 +413,12 @@ Partial Class BriefingControl
         Me.trackAudioCueVolume.TickStyle = System.Windows.Forms.TickStyle.None
         Me.ToolTip1.SetToolTip(Me.trackAudioCueVolume, "Adjust the output volume of the audio cues")
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(49, 652)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 55)
-        Me.Button1.TabIndex = 12
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'lblInsideOutside60Minutes
         '
         Me.lblInsideOutside60Minutes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblInsideOutside60Minutes.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(10, 458)
+        Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(10, 469)
         Me.lblInsideOutside60Minutes.Name = "lblInsideOutside60Minutes"
         Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(168, 119)
         Me.lblInsideOutside60Minutes.TabIndex = 10
@@ -433,7 +431,7 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.msfsLocalTimeToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(10, 604)
+        Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(10, 615)
         Me.msfsLocalTimeToSet.Name = "msfsLocalTimeToSet"
         Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(168, 32)
         Me.msfsLocalTimeToSet.TabIndex = 9
@@ -445,7 +443,7 @@ Partial Class BriefingControl
         Me.msfsLocalDateToSet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.msfsLocalDateToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.msfsLocalDateToSet.Location = New System.Drawing.Point(10, 576)
+        Me.msfsLocalDateToSet.Location = New System.Drawing.Point(10, 587)
         Me.msfsLocalDateToSet.Name = "msfsLocalDateToSet"
         Me.msfsLocalDateToSet.Size = New System.Drawing.Size(168, 32)
         Me.msfsLocalDateToSet.TabIndex = 8
@@ -1101,15 +1099,6 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'Label6
-        '
-        Me.Label6.Location = New System.Drawing.Point(4, 382)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(181, 30)
-        Me.Label6.TabIndex = 14
-        Me.Label6.Text = "Audio Cues Volume"
-        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -1260,7 +1249,6 @@ Partial Class BriefingControl
     Friend WithEvents cloudLayersDatagrid As Windows.Forms.DataGridView
     Friend WithEvents windLayersDatagrid As Windows.Forms.DataGridView
     Friend WithEvents lblPrefUnitsMessage As Windows.Forms.Label
-    Friend WithEvents Button1 As Windows.Forms.Button
     Friend WithEvents trackAudioCueVolume As Windows.Forms.TrackBar
     Friend WithEvents Label6 As Windows.Forms.Label
 End Class
