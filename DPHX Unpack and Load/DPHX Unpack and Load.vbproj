@@ -159,6 +159,10 @@
       <Project>{8241a955-c8e4-4cfd-ba28-eeab34f6c00c}</Project>
       <Name>ImageViewer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Updater\Updater.vbproj">
+      <Project>{ef1db017-460d-4cde-94f8-4f085b1912b0}</Project>
+      <Name>Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />

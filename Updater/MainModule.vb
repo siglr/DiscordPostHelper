@@ -82,10 +82,23 @@ Module MainModule
             Using archive As ZipArchive = ZipFile.OpenRead(zipFilename)
                 For Each entry As ZipArchiveEntry In archive.Entries
                     If entry.Name <> "Updater.exe" Then
-                        updateForm.AddUnzippedFile($"Extracting {AppDomain.CurrentDomain.BaseDirectory}{entry.Name}")
+                        Dim entryFullName As String = entry.FullName
+                        Dim entryDirectory As String = Path.GetDirectoryName(entryFullName)
+
+                        ' Combine the base directory with the entry's path to get the destination path
+                        Dim destinationPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entryFullName)
+
+                        ' Create the directory if it doesn't exist
+                        If Not Directory.Exists(entryDirectory) Then
+                            Directory.CreateDirectory(entryDirectory)
+                        End If
+
+                        updateForm.AddUnzippedFile($"Extracting {destinationPath}")
                         updateForm.Refresh()
                         Application.DoEvents()
-                        entry.ExtractToFile($"{AppDomain.CurrentDomain.BaseDirectory}{entry.Name}", True)
+
+                        ' Extract the entry to the specified destination path
+                        entry.ExtractToFile(destinationPath, True)
                     End If
                 Next
             End Using
