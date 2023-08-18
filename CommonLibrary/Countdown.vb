@@ -141,6 +141,9 @@ Public Class Countdown
         Dim filePath As String = Path.Combine(audioCuesDirectory, $"{fileName}.wav")
         Return filePath
     End Function
+    Public Sub TestAudioCueVolume(filename As String)
+        PlayAudioCue(filename, _audioVolume)
+    End Sub
 
 End Class
 

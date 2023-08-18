@@ -130,6 +130,13 @@ Public Class BriefingControl
 
     End Sub
 
+    Private Sub btnTestAudioCueVolume_Click(sender As Object, e As EventArgs) Handles btnTestAudioCueVolume.Click
+
+        countDownToMeet.SetOutputVolume(trackAudioCueVolume.Value)
+        countDownToMeet.TestAudioCueVolume("MeetingHasStarted")
+
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
@@ -1006,6 +1013,7 @@ Public Class BriefingControl
         cloudLayersDatagrid.Columns(4).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
 
     End Sub
+
 
 #End Region
 

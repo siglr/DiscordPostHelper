@@ -39,6 +39,7 @@ Partial Class BriefingControl
         Me.tbpgEventInfo = New System.Windows.Forms.TabPage()
         Me.eventInfoSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.txtEventInfo = New System.Windows.Forms.RichTextBox()
+        Me.btnTestAudioCueVolume = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.trackAudioCueVolume = New System.Windows.Forms.TrackBar()
         Me.lblInsideOutside60Minutes = New System.Windows.Forms.Label()
@@ -364,6 +365,7 @@ Partial Class BriefingControl
         'eventInfoSplitContainer.Panel2
         '
         Me.eventInfoSplitContainer.Panel2.AutoScroll = True
+        Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.btnTestAudioCueVolume)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label6)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.trackAudioCueVolume)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.lblInsideOutside60Minutes)
@@ -392,6 +394,16 @@ Partial Class BriefingControl
         Me.txtEventInfo.TabIndex = 6
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
+        '
+        'btnTestAudioCueVolume
+        '
+        Me.btnTestAudioCueVolume.Location = New System.Drawing.Point(136, 432)
+        Me.btnTestAudioCueVolume.Name = "btnTestAudioCueVolume"
+        Me.btnTestAudioCueVolume.Size = New System.Drawing.Size(42, 30)
+        Me.btnTestAudioCueVolume.TabIndex = 15
+        Me.btnTestAudioCueVolume.Text = "🔈"
+        Me.ToolTip1.SetToolTip(Me.btnTestAudioCueVolume, "Click to test volume output")
+        Me.btnTestAudioCueVolume.UseVisualStyleBackColor = True
         '
         'Label6
         '
@@ -1251,4 +1263,5 @@ Partial Class BriefingControl
     Friend WithEvents lblPrefUnitsMessage As Windows.Forms.Label
     Friend WithEvents trackAudioCueVolume As Windows.Forms.TrackBar
     Friend WithEvents Label6 As Windows.Forms.Label
+    Friend WithEvents btnTestAudioCueVolume As Windows.Forms.Button
 End Class
