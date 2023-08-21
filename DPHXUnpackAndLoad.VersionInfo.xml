@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.17.3</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.21.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.21.1</ReleaseVersion>
+      <ReleaseTitle>Test audio button and added main area/POI</ReleaseTitle>
+      <ReleaseNotes>
+        Added "Test" button to test output volume of audio cues.
+        Added the main area / POI to the task description on the briefing.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.17.3</ReleaseVersion>
       <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>

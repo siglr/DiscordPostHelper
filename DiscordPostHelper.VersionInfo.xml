@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.17.3</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.21.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.21.1</ReleaseVersion>
+      <ReleaseTitle>Task main post improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Changed the main task Discord post format to use more emojis and make it easier to read.
+        Modified "Soaring Tuesday Club" name to "Soaring Diamonds Club".
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.17.3</ReleaseVersion>
       <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
