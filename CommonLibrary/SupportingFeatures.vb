@@ -1280,4 +1280,20 @@ Public Class SupportingFeatures
 
     End Sub
 
+    Public Shared Function ConvertToUnicodeDecimal(input As String) As String
+        Dim result As New StringBuilder()
+
+        For i As Integer = 0 To input.Length - 1
+            If Char.IsSurrogatePair(input, i) Then
+                Dim codePoint As Integer = Char.ConvertToUtf32(input(i), input(i + 1))
+                result.Append("\u" + codePoint.ToString() + "  ")
+                i += 1 ' Skip the low surrogate
+            Else
+                result.Append(input(i))
+            End If
+        Next
+
+        Return result.ToString()
+    End Function
 End Class
+

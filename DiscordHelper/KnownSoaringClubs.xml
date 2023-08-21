@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <KnownSoaringClubs>
   <KnownSoaringClub>
-    <ClubId>GG-STC (DST)</ClubId>
-    <ClubName>GG-STC</ClubName>
-    <ClubFullName>GotGravel Soaring Tuesday Club</ClubFullName>
+    <ClubId>GG-💎 (DST)</ClubId>
+    <ClubName>GG-💎</ClubName>
+    <ClubFullName>GotGravel Soaring Diamonds Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
@@ -15,9 +15,9 @@
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>GG-STC (NT)</ClubId>
-    <ClubName>GG-STC</ClubName>
-    <ClubFullName>GotGravel Soaring Tuesday Club</ClubFullName>
+    <ClubId>GG-💎 (NT)</ClubId>
+    <ClubName>GG-💎</ClubName>
+    <ClubFullName>GotGravel Soaring Diamonds Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>

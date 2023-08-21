@@ -393,6 +393,7 @@ Public Class BriefingControl
 
         'Title
         sb.Append($"\b {_sessionData.Title}\b0\line ")
+        sb.Append($"{_sessionData.MainAreaPOI}\line ")
         sb.Append("\line ")
         sb.Append($"{_sessionData.ShortDescription}\line ")
         sb.Append("\line ")
@@ -594,7 +595,7 @@ Public Class BriefingControl
             CountDownReset()
         Else
             'Group/Club Name
-            sb.Append($"Group or Club: \b {_sessionData.GroupClub}\b0\line ")
+            sb.Append($"Group or Club: \b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClub)}\b0\line ")
 
             Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
             Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
@@ -619,7 +620,7 @@ Public Class BriefingControl
                                         fullStartTaskDateTimeMSFS)
 
             'Define audio cues
-            Dim audioCueDictionary As New Dictionary(Of Integer, string)
+            Dim audioCueDictionary As New Dictionary(Of Integer, String)
 
             ' Add cues with their associated embedded resource paths - for Meeting countdown
             audioCueDictionary.Clear()
