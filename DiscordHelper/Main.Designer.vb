@@ -254,6 +254,7 @@ Partial Class Main
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1459,7 +1460,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 632)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 470)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1509,6 +1510,7 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
+        Me.grpGroupEventPost.Controls.Add(Me.lblClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.cboBeginnersGuide)
@@ -1557,14 +1559,14 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 744)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 786)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         '
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 699)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 731)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteBeginnerLink.TabIndex = 44
@@ -1576,7 +1578,7 @@ Partial Class Main
         'txtOtherBeginnerLink
         '
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 696)
+        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 728)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
         Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(565, 32)
         Me.txtOtherBeginnerLink.TabIndex = 43
@@ -1589,7 +1591,7 @@ Partial Class Main
         Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboBeginnersGuide.FormattingEnabled = True
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
-        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 658)
+        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 690)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
         Me.cboBeginnersGuide.Size = New System.Drawing.Size(650, 32)
         Me.cboBeginnersGuide.TabIndex = 42
@@ -1600,7 +1602,7 @@ Partial Class Main
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(7, 661)
+        Me.Label30.Location = New System.Drawing.Point(7, 693)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(127, 26)
         Me.Label30.TabIndex = 41
@@ -1610,7 +1612,7 @@ Partial Class Main
         '
         Me.lblLocalDSTWarning.AutoSize = True
         Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 236)
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(579, 268)
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
         Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
         Me.lblLocalDSTWarning.TabIndex = 12
@@ -1621,7 +1623,7 @@ Partial Class Main
         '
         Me.chkIncludeGotGravelInvite.AutoSize = True
         Me.chkIncludeGotGravelInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 622)
+        Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 654)
         Me.chkIncludeGotGravelInvite.Name = "chkIncludeGotGravelInvite"
         Me.chkIncludeGotGravelInvite.Size = New System.Drawing.Size(431, 30)
         Me.chkIncludeGotGravelInvite.TabIndex = 40
@@ -1644,7 +1646,7 @@ Partial Class Main
         '
         Me.lblEventTaskDistance.AutoSize = True
         Me.lblEventTaskDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTaskDistance.Location = New System.Drawing.Point(364, 555)
+        Me.lblEventTaskDistance.Location = New System.Drawing.Point(364, 587)
         Me.lblEventTaskDistance.Name = "lblEventTaskDistance"
         Me.lblEventTaskDistance.Size = New System.Drawing.Size(53, 26)
         Me.lblEventTaskDistance.TabIndex = 36
@@ -1654,7 +1656,7 @@ Partial Class Main
         'btnTaskFPURLPaste
         '
         Me.btnTaskFPURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTaskFPURLPaste.Location = New System.Drawing.Point(763, 587)
+        Me.btnTaskFPURLPaste.Location = New System.Drawing.Point(763, 619)
         Me.btnTaskFPURLPaste.Name = "btnTaskFPURLPaste"
         Me.btnTaskFPURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnTaskFPURLPaste.TabIndex = 39
@@ -1679,7 +1681,7 @@ Partial Class Main
         'txtEventTitle
         '
         Me.txtEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventTitle.Location = New System.Drawing.Point(192, 131)
+        Me.txtEventTitle.Location = New System.Drawing.Point(192, 163)
         Me.txtEventTitle.Name = "txtEventTitle"
         Me.txtEventTitle.Size = New System.Drawing.Size(650, 32)
         Me.txtEventTitle.TabIndex = 5
@@ -1691,7 +1693,7 @@ Partial Class Main
         '
         Me.Label41.AutoSize = True
         Me.Label41.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label41.Location = New System.Drawing.Point(7, 135)
+        Me.Label41.Location = New System.Drawing.Point(7, 167)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(157, 26)
         Me.Label41.TabIndex = 4
@@ -1700,7 +1702,7 @@ Partial Class Main
         'txtTaskFlightPlanURL
         '
         Me.txtTaskFlightPlanURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTaskFlightPlanURL.Location = New System.Drawing.Point(192, 588)
+        Me.txtTaskFlightPlanURL.Location = New System.Drawing.Point(192, 620)
         Me.txtTaskFlightPlanURL.Name = "txtTaskFlightPlanURL"
         Me.txtTaskFlightPlanURL.Size = New System.Drawing.Size(565, 32)
         Me.txtTaskFlightPlanURL.TabIndex = 38
@@ -1711,7 +1713,7 @@ Partial Class Main
         '
         Me.Label37.AutoSize = True
         Me.Label37.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.Location = New System.Drawing.Point(7, 592)
+        Me.Label37.Location = New System.Drawing.Point(7, 624)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(191, 26)
         Me.Label37.TabIndex = 37
@@ -1723,7 +1725,7 @@ Partial Class Main
         Me.cboEligibleAward.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboEligibleAward.FormattingEnabled = True
         Me.cboEligibleAward.Items.AddRange(New Object() {"None", "Bronze", "Silver", "Gold", "Diamond"})
-        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 552)
+        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 584)
         Me.cboEligibleAward.Name = "cboEligibleAward"
         Me.cboEligibleAward.Size = New System.Drawing.Size(166, 32)
         Me.cboEligibleAward.TabIndex = 35
@@ -1734,7 +1736,7 @@ Partial Class Main
         '
         Me.Label36.AutoSize = True
         Me.Label36.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label36.Location = New System.Drawing.Point(7, 555)
+        Me.Label36.Location = New System.Drawing.Point(7, 587)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(177, 26)
         Me.Label36.TabIndex = 34
@@ -1755,7 +1757,7 @@ Partial Class Main
         '
         Me.Label34.AutoSize = True
         Me.Label34.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label34.Location = New System.Drawing.Point(7, 204)
+        Me.Label34.Location = New System.Drawing.Point(7, 236)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(128, 26)
         Me.Label34.TabIndex = 8
@@ -1766,7 +1768,7 @@ Partial Class Main
         Me.cboVoiceChannel.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboVoiceChannel.FormattingEnabled = True
         Me.cboVoiceChannel.Items.AddRange(New Object() {"Unicom 1", "Unicom 2", "Unicom 3", "Push to talk 1", "Sim Soaring Club (PTT)", "Flight 01", "Flight 02", "Thermal Smashing"})
-        Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 201)
+        Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 233)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
         Me.cboVoiceChannel.Size = New System.Drawing.Size(650, 32)
         Me.cboVoiceChannel.TabIndex = 9
@@ -1779,7 +1781,7 @@ Partial Class Main
         Me.cboMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboMSFSServer.FormattingEnabled = True
         Me.cboMSFSServer.Items.AddRange(New Object() {"West Europe", "North Europe", "West USA", "East USA", "Southeast Asia"})
-        Me.cboMSFSServer.Location = New System.Drawing.Point(192, 165)
+        Me.cboMSFSServer.Location = New System.Drawing.Point(192, 197)
         Me.cboMSFSServer.Name = "cboMSFSServer"
         Me.cboMSFSServer.Size = New System.Drawing.Size(200, 32)
         Me.cboMSFSServer.TabIndex = 7
@@ -1790,7 +1792,7 @@ Partial Class Main
         '
         Me.Label33.AutoSize = True
         Me.Label33.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label33.Location = New System.Drawing.Point(7, 168)
+        Me.Label33.Location = New System.Drawing.Point(7, 200)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(174, 26)
         Me.Label33.TabIndex = 6
@@ -1800,7 +1802,7 @@ Partial Class Main
         '
         Me.Label32.AutoSize = True
         Me.Label32.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label32.Location = New System.Drawing.Point(7, 411)
+        Me.Label32.Location = New System.Drawing.Point(7, 443)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(109, 26)
         Me.Label32.TabIndex = 32
@@ -1809,7 +1811,7 @@ Partial Class Main
         'txtEventDescription
         '
         Me.txtEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventDescription.Location = New System.Drawing.Point(192, 407)
+        Me.txtEventDescription.Location = New System.Drawing.Point(192, 439)
         Me.txtEventDescription.Multiline = True
         Me.txtEventDescription.Name = "txtEventDescription"
         Me.txtEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1823,7 +1825,7 @@ Partial Class Main
         '
         Me.lblStartTimeResult.AutoSize = True
         Me.lblStartTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStartTimeResult.Location = New System.Drawing.Point(516, 378)
+        Me.lblStartTimeResult.Location = New System.Drawing.Point(516, 410)
         Me.lblStartTimeResult.Name = "lblStartTimeResult"
         Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
         Me.lblStartTimeResult.TabIndex = 31
@@ -1833,7 +1835,7 @@ Partial Class Main
         '
         Me.lblLaunchTimeResult.AutoSize = True
         Me.lblLaunchTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(516, 344)
+        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(516, 376)
         Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
         Me.lblLaunchTimeResult.Size = New System.Drawing.Size(170, 26)
         Me.lblLaunchTimeResult.TabIndex = 26
@@ -1843,7 +1845,7 @@ Partial Class Main
         '
         Me.lblSyncTimeResult.AutoSize = True
         Me.lblSyncTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSyncTimeResult.Location = New System.Drawing.Point(516, 310)
+        Me.lblSyncTimeResult.Location = New System.Drawing.Point(516, 342)
         Me.lblSyncTimeResult.Name = "lblSyncTimeResult"
         Me.lblSyncTimeResult.Size = New System.Drawing.Size(154, 26)
         Me.lblSyncTimeResult.TabIndex = 21
@@ -1853,7 +1855,7 @@ Partial Class Main
         '
         Me.lblMeetTimeResult.AutoSize = True
         Me.lblMeetTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMeetTimeResult.Location = New System.Drawing.Point(516, 276)
+        Me.lblMeetTimeResult.Location = New System.Drawing.Point(516, 308)
         Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
         Me.lblMeetTimeResult.Size = New System.Drawing.Size(157, 26)
         Me.lblMeetTimeResult.TabIndex = 16
@@ -1863,7 +1865,7 @@ Partial Class Main
         '
         Me.chkUseStart.AutoSize = True
         Me.chkUseStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseStart.Location = New System.Drawing.Point(125, 376)
+        Me.chkUseStart.Location = New System.Drawing.Point(125, 408)
         Me.chkUseStart.Name = "chkUseStart"
         Me.chkUseStart.Size = New System.Drawing.Size(59, 30)
         Me.chkUseStart.TabIndex = 28
@@ -1877,7 +1879,7 @@ Partial Class Main
         Me.dtEventStartTaskTime.CustomFormat = "HH:mm tt"
         Me.dtEventStartTaskTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventStartTaskTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(398, 373)
+        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(398, 405)
         Me.dtEventStartTaskTime.Name = "dtEventStartTaskTime"
         Me.dtEventStartTaskTime.ShowUpDown = True
         Me.dtEventStartTaskTime.Size = New System.Drawing.Size(104, 31)
@@ -1889,7 +1891,7 @@ Partial Class Main
         '
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(7, 378)
+        Me.Label29.Location = New System.Drawing.Point(7, 410)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(90, 26)
         Me.Label29.TabIndex = 27
@@ -1898,7 +1900,7 @@ Partial Class Main
         'dtEventStartTaskDate
         '
         Me.dtEventStartTaskDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(192, 373)
+        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(192, 405)
         Me.dtEventStartTaskDate.Name = "dtEventStartTaskDate"
         Me.dtEventStartTaskDate.Size = New System.Drawing.Size(200, 31)
         Me.dtEventStartTaskDate.TabIndex = 29
@@ -1909,7 +1911,7 @@ Partial Class Main
         '
         Me.chkUseLaunch.AutoSize = True
         Me.chkUseLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 342)
+        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 374)
         Me.chkUseLaunch.Name = "chkUseLaunch"
         Me.chkUseLaunch.Size = New System.Drawing.Size(59, 30)
         Me.chkUseLaunch.TabIndex = 23
@@ -1924,7 +1926,7 @@ Partial Class Main
         Me.dtEventLaunchTime.CustomFormat = "HH:mm tt"
         Me.dtEventLaunchTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventLaunchTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventLaunchTime.Location = New System.Drawing.Point(398, 339)
+        Me.dtEventLaunchTime.Location = New System.Drawing.Point(398, 371)
         Me.dtEventLaunchTime.Name = "dtEventLaunchTime"
         Me.dtEventLaunchTime.ShowUpDown = True
         Me.dtEventLaunchTime.Size = New System.Drawing.Size(104, 31)
@@ -1936,7 +1938,7 @@ Partial Class Main
         '
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label28.Location = New System.Drawing.Point(7, 344)
+        Me.Label28.Location = New System.Drawing.Point(7, 376)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(73, 26)
         Me.Label28.TabIndex = 22
@@ -1945,7 +1947,7 @@ Partial Class Main
         'dtEventLaunchDate
         '
         Me.dtEventLaunchDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventLaunchDate.Location = New System.Drawing.Point(192, 339)
+        Me.dtEventLaunchDate.Location = New System.Drawing.Point(192, 371)
         Me.dtEventLaunchDate.Name = "dtEventLaunchDate"
         Me.dtEventLaunchDate.Size = New System.Drawing.Size(200, 31)
         Me.dtEventLaunchDate.TabIndex = 24
@@ -1956,7 +1958,7 @@ Partial Class Main
         '
         Me.chkUseSyncFly.AutoSize = True
         Me.chkUseSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 308)
+        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 340)
         Me.chkUseSyncFly.Name = "chkUseSyncFly"
         Me.chkUseSyncFly.Size = New System.Drawing.Size(59, 30)
         Me.chkUseSyncFly.TabIndex = 18
@@ -1970,7 +1972,7 @@ Partial Class Main
         Me.dtEventSyncFlyTime.CustomFormat = "HH:mm tt"
         Me.dtEventSyncFlyTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventSyncFlyTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(398, 305)
+        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(398, 337)
         Me.dtEventSyncFlyTime.Name = "dtEventSyncFlyTime"
         Me.dtEventSyncFlyTime.ShowUpDown = True
         Me.dtEventSyncFlyTime.Size = New System.Drawing.Size(104, 31)
@@ -1983,7 +1985,7 @@ Partial Class Main
         '
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label27.Location = New System.Drawing.Point(7, 310)
+        Me.Label27.Location = New System.Drawing.Point(7, 342)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(80, 26)
         Me.Label27.TabIndex = 17
@@ -1992,7 +1994,7 @@ Partial Class Main
         'dtEventSyncFlyDate
         '
         Me.dtEventSyncFlyDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(192, 305)
+        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(192, 337)
         Me.dtEventSyncFlyDate.Name = "dtEventSyncFlyDate"
         Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(200, 31)
         Me.dtEventSyncFlyDate.TabIndex = 19
@@ -2004,7 +2006,7 @@ Partial Class Main
         '
         Me.Label25.AutoSize = True
         Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label25.Location = New System.Drawing.Point(7, 239)
+        Me.Label25.Location = New System.Drawing.Point(7, 271)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(155, 26)
         Me.Label25.TabIndex = 10
@@ -2016,7 +2018,7 @@ Partial Class Main
         Me.chkDateTimeUTC.Checked = True
         Me.chkDateTimeUTC.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDateTimeUTC.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 237)
+        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 269)
         Me.chkDateTimeUTC.Name = "chkDateTimeUTC"
         Me.chkDateTimeUTC.Size = New System.Drawing.Size(355, 30)
         Me.chkDateTimeUTC.TabIndex = 11
@@ -2030,7 +2032,7 @@ Partial Class Main
         Me.dtEventMeetTime.CustomFormat = "HH:mm tt"
         Me.dtEventMeetTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventMeetTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventMeetTime.Location = New System.Drawing.Point(398, 271)
+        Me.dtEventMeetTime.Location = New System.Drawing.Point(398, 303)
         Me.dtEventMeetTime.Name = "dtEventMeetTime"
         Me.dtEventMeetTime.ShowUpDown = True
         Me.dtEventMeetTime.Size = New System.Drawing.Size(104, 31)
@@ -2042,7 +2044,7 @@ Partial Class Main
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(7, 276)
+        Me.Label26.Location = New System.Drawing.Point(7, 308)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(136, 26)
         Me.Label26.TabIndex = 13
@@ -2051,7 +2053,7 @@ Partial Class Main
         'dtEventMeetDate
         '
         Me.dtEventMeetDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventMeetDate.Location = New System.Drawing.Point(192, 271)
+        Me.dtEventMeetDate.Location = New System.Drawing.Point(192, 303)
         Me.dtEventMeetDate.Name = "dtEventMeetDate"
         Me.dtEventMeetDate.Size = New System.Drawing.Size(200, 31)
         Me.dtEventMeetDate.TabIndex = 14
@@ -3060,6 +3062,14 @@ Partial Class Main
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
+        'lblClubFullName
+        '
+        Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
+        Me.lblClubFullName.Name = "lblClubFullName"
+        Me.lblClubFullName.Size = New System.Drawing.Size(655, 26)
+        Me.lblClubFullName.TabIndex = 45
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3349,4 +3359,5 @@ Partial Class Main
     Friend WithEvents txtOtherBeginnerLink As TextBox
     Friend WithEvents cboBeginnersGuide As ComboBox
     Friend WithEvents btnPasteBeginnerLink As Button
+    Friend WithEvents lblClubFullName As Label
 End Class

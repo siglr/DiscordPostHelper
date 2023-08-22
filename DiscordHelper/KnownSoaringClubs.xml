@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <KnownSoaringClubs>
   <KnownSoaringClub>
-    <ClubId>GG-💎 (DST)</ClubId>
-    <ClubName>GG-💎</ClubName>
-    <ClubFullName>GotGravel Soaring Diamonds Club</ClubFullName>
+    <ClubId>💎 TUESDAY (EDT)</ClubId>
+    <ClubName>💎 Tuesday</ClubName>
+    <ClubFullName>GotGravel's Soaring Diamonds Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
@@ -15,9 +15,9 @@
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>GG-💎 (NT)</ClubId>
-    <ClubName>GG-💎</ClubName>
-    <ClubFullName>GotGravel Soaring Diamonds Club</ClubFullName>
+    <ClubId>💎 TUESDAY (EST)</ClubId>
+    <ClubName>💎 Tuesday</ClubName>
+    <ClubFullName>GotGravel's Soaring Diamonds Club</ClubFullName>
     <MSFSServer>East USA</MSFSServer>
     <VoiceChannel>Unicom 1</VoiceChannel>
     <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>
@@ -29,9 +29,37 @@
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
+    <ClubId>💎 SUNDAY (EDT)</ClubId>
+    <ClubName>💎 Sunday</ClubName>
+    <ClubFullName>GotGravel's Soaring Diamonds Club</ClubFullName>
+    <MSFSServer>East USA</MSFSServer>
+    <VoiceChannel>Unicom 1</VoiceChannel>
+    <ZuluDayOfWeek>Sunday</ZuluDayOfWeek>
+    <ZuluTime>11:30 PM</ZuluTime>
+    <SyncFlyDelay>10</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>10</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>💎 SUNDAY (EST)</ClubId>
+    <ClubName>💎 Sunday</ClubName>
+    <ClubFullName>GotGravel's Soaring Diamonds Club</ClubFullName>
+    <MSFSServer>East USA</MSFSServer>
+    <VoiceChannel>Unicom 1</VoiceChannel>
+    <ZuluDayOfWeek>Monday</ZuluDayOfWeek>
+    <ZuluTime>00:30 AM</ZuluTime>
+    <SyncFlyDelay>10</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>10</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
     <ClubId>GG-SFC</ClubId>
-    <ClubName>GG-SFC</ClubName>
-    <ClubFullName>GotGravel Soaring Friday Club</ClubFullName>
+    <ClubName>GG-Soaring Friday</ClubName>
+    <ClubFullName>GotGravel's Soaring Friday Club</ClubFullName>
     <MSFSServer>West USA</MSFSServer>
     <VoiceChannel>Unicom 3</VoiceChannel>
     <ZuluDayOfWeek>Friday</ZuluDayOfWeek>

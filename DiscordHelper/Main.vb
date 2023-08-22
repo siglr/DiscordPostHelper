@@ -234,6 +234,7 @@ Public Class Main
         txtWeatherClouds.Text = String.Empty
         txtFullDescriptionResults.Text = String.Empty
         cboGroupOrClubName.SelectedIndex = -1
+        lblClubFullName.Text = String.Empty
         cboMSFSServer.SelectedIndex = -1
         cboVoiceChannel.SelectedIndex = -1
         chkDateTimeUTC.Checked = True
@@ -1674,10 +1675,12 @@ Public Class Main
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
+        lblClubFullName.Text = String.Empty
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
             cboGroupOrClubName.Text = _ClubPreset.ClubId
+            lblClubFullName.Text = _ClubPreset.ClubFullName
             cboMSFSServer.Text = _ClubPreset.MSFSServer
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
@@ -2537,79 +2540,79 @@ Public Class Main
 
             Case 61 'Group flight title / topic
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 108
+                pnlWizardEvent.Top = 141
                 lblEventGuideInstructions.Text = "If you would like to specify a different title for the group flight, you can do so now. Otherwise, this is the same as the task's title."
                 SetFocusOnField(txtEventTitle, fromF1Key)
 
             Case 62 'MSFS Server
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 143
+                pnlWizardEvent.Top = 176
                 lblEventGuideInstructions.Text = "Specify the MSFS Server to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboMSFSServer, fromF1Key)
 
             Case 63 'Voice channel
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 179
+                pnlWizardEvent.Top = 212
                 lblEventGuideInstructions.Text = "Specify the Discord Voice channel to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboVoiceChannel, fromF1Key)
 
             Case 64 'UTC Zulu
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 212
+                pnlWizardEvent.Top = 251
                 lblEventGuideInstructions.Text = "For the sake of simplicity, leave this checkbox ticked to use UTC (Zulu) entries. Local times are still displayed to the right."
                 SetFocusOnField(chkDateTimeUTC, fromF1Key)
 
             Case 65 'Meet time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 251
+                pnlWizardEvent.Top = 280
                 lblEventGuideInstructions.Text = "Specify the meet date and time. This is the time when people will start gathering for the group flight and briefing."
                 SetFocusOnField(dtEventMeetDate, fromF1Key)
 
             Case 66 'Sync Fly
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 280
+                pnlWizardEvent.Top = 315
                 lblEventGuideInstructions.Text = "Only if the flight's conditions require a synchronized click ""Fly"", then tick the ""Yes"" checkbox and specify when it will happen."
                 SetFocusOnField(chkUseSyncFly, fromF1Key)
 
             Case 67 'Launch Time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 315
+                pnlWizardEvent.Top = 349
                 lblEventGuideInstructions.Text = "If you want to specify the time when people should start to launch from the airfield, tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseLaunch, fromF1Key)
 
             Case 68 'Start Task Time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 349
+                pnlWizardEvent.Top = 394
                 lblEventGuideInstructions.Text = "If you want to specify a time for the start of the task (going through the start gate), tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseStart, fromF1Key)
 
             Case 69 'Group flight description
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 394
+                pnlWizardEvent.Top = 470
                 lblEventGuideInstructions.Text = "If you would like to specify a different description for the group flight, you can do so now. Otherwise, this is the same as the task's short description."
                 SetFocusOnField(txtEventDescription, fromF1Key)
 
             Case 70 'SSC Award
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 532
+                pnlWizardEvent.Top = 563
                 lblEventGuideInstructions.Text = "This is usually set automatically if the club is SSC Saturday and depending on the task's distance. You should leave it alone, unless it's incorrect."
                 SetFocusOnField(cboEligibleAward, fromF1Key)
 
             Case 71 'Task URL
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 563
+                pnlWizardEvent.Top = 593
                 lblEventGuideInstructions.Text = "When the task's main post is created in Discord, copy the link to that post and click Paste (come back later if it's not already done)."
                 SetFocusOnField(btnTaskFPURLPaste, fromF1Key)
 
             Case 72 'GotGravel Invite
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 593
+                pnlWizardEvent.Top = 632
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you can include an invite to the server. This is useful if published outside of GotGravel."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
 
             Case 73 'Beginner's link
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 632
+                pnlWizardEvent.Top = 665
                 lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
                 SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
 
@@ -3087,7 +3090,14 @@ Public Class Main
             Next
             .DPHXPackageFilename = txtDPHXPackageFilename.Text
             .EventEnabled = chkActivateEvent.Checked
-            .GroupClub = cboGroupOrClubName.Text
+            .GroupClubId = cboGroupOrClubName.Text
+            Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
+            If clubExists Then
+                _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
+                .GroupClubName = _ClubPreset.ClubName
+            Else
+                .GroupClubName = String.Empty
+            End If
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
             .VoiceChannel = cboVoiceChannel.Text
@@ -3229,7 +3239,7 @@ Public Class Main
                     End If
                 End If
                 chkActivateEvent.Checked = .EventEnabled
-                cboGroupOrClubName.Text = .GroupClub
+                cboGroupOrClubName.Text = .GroupClubId
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
                 cboVoiceChannel.Text = .VoiceChannel

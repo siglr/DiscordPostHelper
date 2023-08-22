@@ -133,8 +133,11 @@ Public Class AllData
     <XmlElement("EventEnabled")>
     Public Property EventEnabled As Boolean
 
-    <XmlElement("GroupClub")>
-    Public Property GroupClub As String
+    <XmlElement("GroupClubId")>
+    Public Property GroupClubId As String
+
+    <XmlElement("GroupClubName")>
+    Public Property GroupClubName As String
 
     <XmlElement("EventTopic")>
     Public Property EventTopic As String

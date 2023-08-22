@@ -595,7 +595,7 @@ Public Class BriefingControl
             CountDownReset()
         Else
             'Group/Club Name
-            sb.Append($"Group or Club: \b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClub)}\b0\line ")
+            sb.Append($"Group or Club: \b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)}\b0\line ")
 
             Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
             Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
