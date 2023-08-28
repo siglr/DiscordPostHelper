@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.21.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.8.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.8.28.1</ReleaseVersion>
+      <ReleaseTitle>Cleanup, resync, rename club</ReleaseTitle>
+      <ReleaseNotes>
+        Renamed club "GG-💎" to "💎 Tuesday" and added "💎 Sunday" (both EDT and EST).
+        Clean up of the clubs and resync all libraries.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.21.1</ReleaseVersion>
       <ReleaseTitle>Task main post improvements</ReleaseTitle>
