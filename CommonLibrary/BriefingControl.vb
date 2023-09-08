@@ -304,6 +304,16 @@ Public Class BriefingControl
 
     End Sub
 
+    Public ReadOnly Property WeatherProfileInnerXML As String
+        Get
+            If _XmlDocWeatherPreset IsNot Nothing Then
+                Return _XmlDocWeatherPreset.InnerXml
+            Else
+                Return String.Empty
+            End If
+        End Get
+    End Property
+
     Public ReadOnly Property FlightPlanInnerXML As String
         Get
             If _XmlDocFlightPlan IsNot Nothing Then

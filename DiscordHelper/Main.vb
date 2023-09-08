@@ -2876,18 +2876,13 @@ Public Class Main
     Private Sub btnLoadB21Planner_Click(sender As Object, e As EventArgs) Handles btnLoadB21Planner.Click
 
         If txtFlightPlanFile.Text Is String.Empty Then
-            Process.Start(B21PlannerURL)
+            _SF.OpenB21Planner()
         Else
-            Dim tempFolderName As String = _SF.GenerateRandomFileName()
-            Dim flightPlanName As String = Path.GetFileNameWithoutExtension(txtFlightPlanFile.Text)
-
-            _SF.UploadFile(tempFolderName, flightPlanName, _XmlDocFlightPlan.InnerXml)
-
-            Process.Start(B21PlannerURL & "?pln=siglr.com/DiscordPostHelper/FlightPlans/" & tempFolderName & "/" & flightPlanName & ".pln")
-
-            'Wait 5 seconds
-            Thread.Sleep(5000)
-            _SF.DeleteTempFile(tempFolderName)
+            If _XmlDocWeatherPreset Is Nothing OrElse _XmlDocWeatherPreset.InnerXml = String.Empty Then
+                _SF.OpenB21Planner(txtFlightPlanFile.Text, _XmlDocFlightPlan.InnerXml)
+            Else
+                _SF.OpenB21Planner(txtFlightPlanFile.Text, _XmlDocFlightPlan.InnerXml, txtWeatherFile.Text, _XmlDocWeatherPreset.InnerXml)
+            End If
 
             If MessageBox.Show(Me, "After reviewing or editing the flight plan, did you make any modification and would like to reload the flight plan here?", "Coming back from B21 Planner", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 'Reload the flight plan

@@ -13,8 +13,12 @@ Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 Imports Microsoft.Win32
 Imports System.Reflection
+Imports System.Threading
 
 Public Class SupportingFeatures
+
+    Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
         FullDateTimeWithDayOfWeek = 1
@@ -388,7 +392,7 @@ Public Class SupportingFeatures
 
     Public Sub UploadFile(folderName As String, fileName As String, xmlString As String)
 
-        Dim request As WebRequest = WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveFlightPlanFileUnderTempFolder.php")
+        Dim request As WebRequest = WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveFileUnderTempFolder.php")
         request.Method = "POST"
         Dim postData As String = $"xmlString={HttpUtility.UrlEncode(xmlString)}&folderName={HttpUtility.UrlEncode(folderName)}&fileName={HttpUtility.UrlEncode(fileName)}"
         Dim byteArray As Byte() = Encoding.UTF8.GetBytes(postData)
@@ -1295,5 +1299,34 @@ Public Class SupportingFeatures
 
         Return result.ToString()
     End Function
+
+    Public Sub OpenB21Planner(Optional pFlightplanFilename As String = "",
+                              Optional pFlightplanXML As String = "",
+                              Optional pWeatherFilename As String = "",
+                              Optional pWeatherXML As String = "")
+
+        If pFlightplanFilename = String.Empty Then
+            Process.Start(B21PlannerURL)
+            Exit Sub
+        End If
+
+        Dim tempFolderName As String = GenerateRandomFileName()
+
+        Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
+        UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
+
+        If pWeatherFilename = String.Empty Then
+            Process.Start($"{B21PlannerURL}?pln=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{flightPlanFilename}")
+        Else
+            Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
+            UploadFile(tempFolderName, weatherFilename, pWeatherXML)
+            Process.Start($"{B21PlannerURL}?pln=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{flightPlanFilename}&wpr=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{weatherFilename}")
+        End If
+
+        'Wait 5 seconds
+        Thread.Sleep(5000)
+        DeleteTempFile(tempFolderName)
+
+    End Sub
 End Class
 

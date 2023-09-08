@@ -200,19 +200,19 @@ Public Class DPHXUnpackAndLoad
     Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles btnLoadB21.Click
 
         Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
+        Dim weatherFilename As String = String.Empty
+
+        If Not _allDPHData.WeatherFilename = String.Empty Then
+            weatherFilename = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename))
+        End If
 
         If flightplanFilename Is String.Empty Then
         Else
-            Dim tempFolderName As String = _SF.GenerateRandomFileName()
-            Dim flightPlanName As String = Path.GetFileNameWithoutExtension(flightplanFilename)
-
-            _SF.UploadFile(tempFolderName, flightPlanName, ctrlBriefing.FlightPlanInnerXML)
-
-            Process.Start(B21PlannerURL & "?pln=siglr.com/DiscordPostHelper/FlightPlans/" & tempFolderName & "/" & flightPlanName & ".pln")
-
-            'Wait 5 seconds
-            Thread.Sleep(5000)
-            _SF.DeleteTempFile(tempFolderName)
+            If weatherFilename = String.Empty OrElse ctrlBriefing.WeatherProfileInnerXML = String.Empty Then
+                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML)
+            Else
+                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML, weatherFilename, ctrlBriefing.WeatherProfileInnerXML)
+            End If
 
         End If
 
