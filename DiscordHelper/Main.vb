@@ -1317,7 +1317,7 @@ Public Class Main
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
-            sb.AppendLine("> **🗺** " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
+            sb.AppendLine("> 🗺 " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
         sb.AppendLine($"> 📁 ""{Path.GetFileName(txtFlightPlanFile.Text)}""")
         sb.AppendLine($"> 🛫 {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
