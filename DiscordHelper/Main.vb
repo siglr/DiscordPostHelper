@@ -410,6 +410,10 @@ Public Class Main
 
     End Sub
 
+    Private Sub btnDiscordTaskThreadURLPaste_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskThreadURLPaste.Click
+        txtDiscordTaskThreadURL.Text = Clipboard.GetText
+    End Sub
+
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
                                                                           chkDepartureLock.CheckedChanged,
                                                                           chkArrivalLock.CheckedChanged,
@@ -440,6 +444,7 @@ Public Class Main
                                                                           txtDifficultyExtraInfo.TextChanged,
                                                                           txtGroupEventPostURL.TextChanged,
                                                                           txtDiscordEventShareURL.TextChanged,
+                                                                          txtDiscordTaskThreadURL.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
                                                                           cboRecommendedGliders.TextChanged,
@@ -712,9 +717,11 @@ Public Class Main
         If txtFlightPlanFile.Text = String.Empty Then
             grbTaskInfo.Enabled = False
             grbTaskPart2.Enabled = False
+            grbTaskDiscord.Enabled = False
         Else
             grbTaskInfo.Enabled = True
             grbTaskPart2.Enabled = True
+            grbTaskDiscord.Enabled = True
         End If
 
     End Sub
@@ -747,6 +754,9 @@ Public Class Main
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
             MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+        If txtDiscordTaskThreadURL.Text = String.Empty Then
+            MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -2445,7 +2455,12 @@ Public Class Main
                 pnlGuide.Top = 519
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 22 To 29 'End of flight plan data
+            Case 22 'Map Image
+                SetGuidePanelToRight()
+                pnlGuide.Top = 640
+                lblGuideInstructions.Text = "Once you've create the task's thread on Discord and before posting the files, copy the thread's URL and paste it here."
+                SetFocusOnField(cboBriefingMap, fromF1Key)
+            Case 23 To 29 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -3093,6 +3108,7 @@ Public Class Main
             Else
                 .GroupClubName = String.Empty
             End If
+            .DiscordTaskThreadURL = txtDiscordTaskThreadURL.Text
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
             .VoiceChannel = cboVoiceChannel.Text
@@ -3233,6 +3249,7 @@ Public Class Main
                         txtDPHXPackageFilename.Text = .DPHXPackageFilename
                     End If
                 End If
+                txtDiscordTaskThreadURL.Text = .DiscordTaskThreadURL
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtEventTitle.Text = .EventTopic

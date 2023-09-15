@@ -98,6 +98,7 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.btnGotoDiscordTaskThread = New System.Windows.Forms.Button()
         Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
@@ -164,7 +165,7 @@ Partial Class BriefingControl
         Me.pnlTaskBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.pnlTaskBriefing.Name = "pnlTaskBriefing"
         Me.pnlTaskBriefing.Padding = New System.Windows.Forms.Padding(7, 8, 7, 8)
-        Me.pnlTaskBriefing.Size = New System.Drawing.Size(1004, 759)
+        Me.pnlTaskBriefing.Size = New System.Drawing.Size(975, 737)
         Me.pnlTaskBriefing.TabIndex = 4
         '
         'tabsBriefing
@@ -182,19 +183,20 @@ Partial Class BriefingControl
         Me.tabsBriefing.Location = New System.Drawing.Point(7, 8)
         Me.tabsBriefing.Name = "tabsBriefing"
         Me.tabsBriefing.SelectedIndex = 0
-        Me.tabsBriefing.Size = New System.Drawing.Size(990, 743)
+        Me.tabsBriefing.Size = New System.Drawing.Size(961, 721)
         Me.tabsBriefing.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.tabsBriefing.TabIndex = 0
         '
         'tbpgMainTaskInfo
         '
         Me.tbpgMainTaskInfo.AutoScroll = True
+        Me.tbpgMainTaskInfo.Controls.Add(Me.btnGotoDiscordTaskThread)
         Me.tbpgMainTaskInfo.Controls.Add(Me.countryFlagsLayoutPanel)
         Me.tbpgMainTaskInfo.Controls.Add(Me.txtBriefing)
         Me.tbpgMainTaskInfo.Location = New System.Drawing.Point(4, 29)
         Me.tbpgMainTaskInfo.Name = "tbpgMainTaskInfo"
         Me.tbpgMainTaskInfo.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpgMainTaskInfo.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgMainTaskInfo.Size = New System.Drawing.Size(953, 688)
         Me.tbpgMainTaskInfo.TabIndex = 0
         Me.tbpgMainTaskInfo.Text = "Main Task Info"
         Me.tbpgMainTaskInfo.UseVisualStyleBackColor = True
@@ -204,7 +206,7 @@ Partial Class BriefingControl
         Me.countryFlagsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top
         Me.countryFlagsLayoutPanel.Location = New System.Drawing.Point(3, 3)
         Me.countryFlagsLayoutPanel.Name = "countryFlagsLayoutPanel"
-        Me.countryFlagsLayoutPanel.Size = New System.Drawing.Size(976, 45)
+        Me.countryFlagsLayoutPanel.Size = New System.Drawing.Size(947, 45)
         Me.countryFlagsLayoutPanel.TabIndex = 5
         '
         'txtBriefing
@@ -212,11 +214,11 @@ Partial Class BriefingControl
         Me.txtBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtBriefing.Font = New System.Drawing.Font("Segoe UI Emoji", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBriefing.Font = New System.Drawing.Font("Segoe UI Emoji", 15.7!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtBriefing.Location = New System.Drawing.Point(3, 54)
         Me.txtBriefing.Name = "txtBriefing"
         Me.txtBriefing.ReadOnly = True
-        Me.txtBriefing.Size = New System.Drawing.Size(976, 653)
+        Me.txtBriefing.Size = New System.Drawing.Size(947, 591)
         Me.txtBriefing.TabIndex = 4
         Me.txtBriefing.Text = "⌚"
         Me.ToolTip1.SetToolTip(Me.txtBriefing, "Use CTRL-MouseWheel to make the content smaller or larger.")
@@ -228,7 +230,7 @@ Partial Class BriefingControl
         Me.tbpgMap.Location = New System.Drawing.Point(4, 29)
         Me.tbpgMap.Name = "tbpgMap"
         Me.tbpgMap.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpgMap.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgMap.Size = New System.Drawing.Size(953, 688)
         Me.tbpgMap.TabIndex = 1
         Me.tbpgMap.Text = "Map"
         Me.tbpgMap.UseVisualStyleBackColor = True
@@ -248,8 +250,8 @@ Partial Class BriefingControl
         'mapSplitterUpDown.Panel2
         '
         Me.mapSplitterUpDown.Panel2.Controls.Add(Me.mapSplitterLeftRight)
-        Me.mapSplitterUpDown.Size = New System.Drawing.Size(976, 704)
-        Me.mapSplitterUpDown.SplitterDistance = 323
+        Me.mapSplitterUpDown.Size = New System.Drawing.Size(947, 682)
+        Me.mapSplitterUpDown.SplitterDistance = 312
         Me.mapSplitterUpDown.TabIndex = 0
         '
         'mapAndWindLayersSplitter
@@ -269,8 +271,8 @@ Partial Class BriefingControl
         '
         Me.mapAndWindLayersSplitter.Panel2.Controls.Add(Me.windLayersFlowLayoutPnl)
         Me.mapAndWindLayersSplitter.Panel2MinSize = 100
-        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(976, 323)
-        Me.mapAndWindLayersSplitter.SplitterDistance = 715
+        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(947, 312)
+        Me.mapAndWindLayersSplitter.SplitterDistance = 686
         Me.mapAndWindLayersSplitter.TabIndex = 0
         '
         'imageViewer
@@ -280,7 +282,7 @@ Partial Class BriefingControl
         Me.imageViewer.Location = New System.Drawing.Point(0, 0)
         Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(715, 323)
+        Me.imageViewer.Size = New System.Drawing.Size(686, 312)
         Me.imageViewer.TabIndex = 1
         '
         'windLayersFlowLayoutPnl
@@ -291,7 +293,7 @@ Partial Class BriefingControl
         Me.windLayersFlowLayoutPnl.AutoScroll = True
         Me.windLayersFlowLayoutPnl.Location = New System.Drawing.Point(0, 0)
         Me.windLayersFlowLayoutPnl.Name = "windLayersFlowLayoutPnl"
-        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(257, 323)
+        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(257, 312)
         Me.windLayersFlowLayoutPnl.TabIndex = 0
         '
         'mapSplitterLeftRight
@@ -307,8 +309,8 @@ Partial Class BriefingControl
         'mapSplitterLeftRight.Panel2
         '
         Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.restrictionsDataGrid)
-        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(976, 377)
-        Me.mapSplitterLeftRight.SplitterDistance = 650
+        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(947, 366)
+        Me.mapSplitterLeftRight.SplitterDistance = 630
         Me.mapSplitterLeftRight.TabIndex = 0
         '
         'txtFullDescription
@@ -318,7 +320,7 @@ Partial Class BriefingControl
         Me.txtFullDescription.Location = New System.Drawing.Point(0, 0)
         Me.txtFullDescription.Name = "txtFullDescription"
         Me.txtFullDescription.ReadOnly = True
-        Me.txtFullDescription.Size = New System.Drawing.Size(650, 377)
+        Me.txtFullDescription.Size = New System.Drawing.Size(630, 366)
         Me.txtFullDescription.TabIndex = 0
         Me.txtFullDescription.Text = ""
         '
@@ -337,7 +339,7 @@ Partial Class BriefingControl
         Me.restrictionsDataGrid.RowHeadersVisible = False
         Me.restrictionsDataGrid.RowHeadersWidth = 47
         Me.restrictionsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.restrictionsDataGrid.Size = New System.Drawing.Size(322, 377)
+        Me.restrictionsDataGrid.Size = New System.Drawing.Size(313, 366)
         Me.restrictionsDataGrid.TabIndex = 1
         '
         'tbpgEventInfo
@@ -346,7 +348,7 @@ Partial Class BriefingControl
         Me.tbpgEventInfo.Controls.Add(Me.eventInfoSplitContainer)
         Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 29)
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
-        Me.tbpgEventInfo.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgEventInfo.Size = New System.Drawing.Size(953, 688)
         Me.tbpgEventInfo.TabIndex = 3
         Me.tbpgEventInfo.Text = "Event Info"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
@@ -380,8 +382,8 @@ Partial Class BriefingControl
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToSyncFly)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label1)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToMeet)
-        Me.eventInfoSplitContainer.Size = New System.Drawing.Size(982, 710)
-        Me.eventInfoSplitContainer.SplitterDistance = 790
+        Me.eventInfoSplitContainer.Size = New System.Drawing.Size(953, 688)
+        Me.eventInfoSplitContainer.SplitterDistance = 761
         Me.eventInfoSplitContainer.TabIndex = 0
         '
         'txtEventInfo
@@ -391,7 +393,7 @@ Partial Class BriefingControl
         Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
         Me.txtEventInfo.Name = "txtEventInfo"
         Me.txtEventInfo.ReadOnly = True
-        Me.txtEventInfo.Size = New System.Drawing.Size(790, 710)
+        Me.txtEventInfo.Size = New System.Drawing.Size(761, 688)
         Me.txtEventInfo.TabIndex = 6
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
@@ -505,7 +507,7 @@ Partial Class BriefingControl
         Me.tbpgImages.Controls.Add(Me.imagesTabDivider)
         Me.tbpgImages.Location = New System.Drawing.Point(4, 29)
         Me.tbpgImages.Name = "tbpgImages"
-        Me.tbpgImages.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgImages.Size = New System.Drawing.Size(953, 688)
         Me.tbpgImages.TabIndex = 2
         Me.tbpgImages.Text = "Images"
         Me.tbpgImages.UseVisualStyleBackColor = True
@@ -526,8 +528,8 @@ Partial Class BriefingControl
         '
         Me.imagesTabDivider.Panel2.Controls.Add(Me.imagesListView)
         Me.imagesTabDivider.Panel2MinSize = 100
-        Me.imagesTabDivider.Size = New System.Drawing.Size(982, 710)
-        Me.imagesTabDivider.SplitterDistance = 814
+        Me.imagesTabDivider.Size = New System.Drawing.Size(953, 688)
+        Me.imagesTabDivider.SplitterDistance = 785
         Me.imagesTabDivider.TabIndex = 0
         '
         'imagesTabViewerControl
@@ -537,7 +539,7 @@ Partial Class BriefingControl
         Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
         Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(814, 710)
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(785, 688)
         Me.imagesTabViewerControl.TabIndex = 0
         '
         'imagesListView
@@ -548,7 +550,7 @@ Partial Class BriefingControl
         Me.imagesListView.Location = New System.Drawing.Point(0, 0)
         Me.imagesListView.MultiSelect = False
         Me.imagesListView.Name = "imagesListView"
-        Me.imagesListView.Size = New System.Drawing.Size(164, 710)
+        Me.imagesListView.Size = New System.Drawing.Size(164, 688)
         Me.imagesListView.TabIndex = 0
         Me.imagesListView.UseCompatibleStateImageBehavior = False
         '
@@ -560,7 +562,7 @@ Partial Class BriefingControl
         Me.tbpgXBOX.Controls.Add(Me.waypointCoordinatesDataGrid)
         Me.tbpgXBOX.Location = New System.Drawing.Point(4, 29)
         Me.tbpgXBOX.Name = "tbpgXBOX"
-        Me.tbpgXBOX.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgXBOX.Size = New System.Drawing.Size(953, 688)
         Me.tbpgXBOX.TabIndex = 4
         Me.tbpgXBOX.Text = "All waypoints"
         Me.tbpgXBOX.UseVisualStyleBackColor = True
@@ -619,7 +621,7 @@ Partial Class BriefingControl
         Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
         Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
         Me.tbpgWeather.Name = "tbpgWeather"
-        Me.tbpgWeather.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgWeather.Size = New System.Drawing.Size(953, 688)
         Me.tbpgWeather.TabIndex = 7
         Me.tbpgWeather.Text = "Weather"
         Me.tbpgWeather.UseVisualStyleBackColor = True
@@ -638,8 +640,8 @@ Partial Class BriefingControl
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.windLayersDatagrid)
-        Me.SplitContainer1.Size = New System.Drawing.Size(982, 710)
-        Me.SplitContainer1.SplitterDistance = 327
+        Me.SplitContainer1.Size = New System.Drawing.Size(953, 688)
+        Me.SplitContainer1.SplitterDistance = 316
         Me.SplitContainer1.TabIndex = 0
         '
         'cloudLayersDatagrid
@@ -655,7 +657,7 @@ Partial Class BriefingControl
         Me.cloudLayersDatagrid.ReadOnly = True
         Me.cloudLayersDatagrid.RowHeadersWidth = 47
         Me.cloudLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(982, 327)
+        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(953, 316)
         Me.cloudLayersDatagrid.TabIndex = 1
         '
         'windLayersDatagrid
@@ -671,7 +673,7 @@ Partial Class BriefingControl
         Me.windLayersDatagrid.ReadOnly = True
         Me.windLayersDatagrid.RowHeadersWidth = 47
         Me.windLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.windLayersDatagrid.Size = New System.Drawing.Size(982, 379)
+        Me.windLayersDatagrid.Size = New System.Drawing.Size(953, 368)
         Me.windLayersDatagrid.TabIndex = 2
         '
         'tbpgAddOns
@@ -679,7 +681,7 @@ Partial Class BriefingControl
         Me.tbpgAddOns.Controls.Add(Me.AddOnsDataGrid)
         Me.tbpgAddOns.Location = New System.Drawing.Point(4, 29)
         Me.tbpgAddOns.Name = "tbpgAddOns"
-        Me.tbpgAddOns.Size = New System.Drawing.Size(982, 710)
+        Me.tbpgAddOns.Size = New System.Drawing.Size(953, 688)
         Me.tbpgAddOns.TabIndex = 5
         Me.tbpgAddOns.Text = "Add-ons"
         Me.tbpgAddOns.UseVisualStyleBackColor = True
@@ -698,7 +700,7 @@ Partial Class BriefingControl
         Me.AddOnsDataGrid.RowHeadersVisible = False
         Me.AddOnsDataGrid.RowHeadersWidth = 47
         Me.AddOnsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.AddOnsDataGrid.Size = New System.Drawing.Size(982, 710)
+        Me.AddOnsDataGrid.Size = New System.Drawing.Size(953, 688)
         Me.AddOnsDataGrid.TabIndex = 2
         '
         'tabUnits
@@ -712,7 +714,7 @@ Partial Class BriefingControl
         Me.tabUnits.Controls.Add(Me.grbAltitudes)
         Me.tabUnits.Location = New System.Drawing.Point(4, 29)
         Me.tabUnits.Name = "tabUnits"
-        Me.tabUnits.Size = New System.Drawing.Size(982, 710)
+        Me.tabUnits.Size = New System.Drawing.Size(953, 688)
         Me.tabUnits.TabIndex = 6
         Me.tabUnits.Text = "Units"
         Me.tabUnits.UseVisualStyleBackColor = True
@@ -720,9 +722,9 @@ Partial Class BriefingControl
         'lblPrefUnitsMessage
         '
         Me.lblPrefUnitsMessage.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 606)
+        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 584)
         Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
-        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(982, 104)
+        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(953, 104)
         Me.lblPrefUnitsMessage.TabIndex = 9
         Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
     "description fields is excluded and will appear as it is."
@@ -1068,6 +1070,16 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
+        'btnGotoDiscordTaskThread
+        '
+        Me.btnGotoDiscordTaskThread.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 651)
+        Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
+        Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(947, 34)
+        Me.btnGotoDiscordTaskThread.TabIndex = 7
+        Me.btnGotoDiscordTaskThread.Text = "Bring me to this task's discussion thread on Discord"
+        Me.btnGotoDiscordTaskThread.UseVisualStyleBackColor = True
+        '
         'countDownTaskStart
         '
         Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
@@ -1121,7 +1133,7 @@ Partial Class BriefingControl
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MinimumSize = New System.Drawing.Size(700, 500)
         Me.Name = "BriefingControl"
-        Me.Size = New System.Drawing.Size(1004, 759)
+        Me.Size = New System.Drawing.Size(975, 737)
         Me.pnlTaskBriefing.ResumeLayout(False)
         Me.tabsBriefing.ResumeLayout(False)
         Me.tbpgMainTaskInfo.ResumeLayout(False)
@@ -1265,4 +1277,5 @@ Partial Class BriefingControl
     Friend WithEvents trackAudioCueVolume As Windows.Forms.TrackBar
     Friend WithEvents Label6 As Windows.Forms.Label
     Friend WithEvents btnTestAudioCueVolume As Windows.Forms.Button
+    Friend WithEvents btnGotoDiscordTaskThread As Windows.Forms.Button
 End Class

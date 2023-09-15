@@ -271,6 +271,12 @@ Public Class BriefingControl
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
 
+        If _sessionData.DiscordTaskThreadURL = String.Empty OrElse SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) = False Then
+            btnGotoDiscordTaskThread.Enabled = False
+        Else
+            btnGotoDiscordTaskThread.Enabled = True
+        End If
+
     End Sub
 
     Public Sub AdjustRTBoxControls()
@@ -1023,6 +1029,13 @@ Public Class BriefingControl
         cloudLayersDatagrid.Columns(3).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
         cloudLayersDatagrid.Columns(4).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
 
+    End Sub
+
+    Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
+
+        If Not SupportingFeatures.LaunchURL(_sessionData.DiscordTaskThreadURL) Then
+            MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
 

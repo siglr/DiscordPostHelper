@@ -223,6 +223,11 @@ Public Class AllData
     <XmlElement("BeginnersGuideCustom")>
     Public Property BeginnersGuideCustom As String
 
+    <XmlElement("DiscordTaskThreadURL")>
+    Public Property DiscordTaskThreadURL As String
+
+    <XmlElement("DiscordEventThreadURL")>
+    Public Property DiscordEventThreadURL As String
 
     Public Sub New()
 

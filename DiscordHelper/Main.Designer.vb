@@ -119,6 +119,10 @@ Partial Class Main
         Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
+        Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
+        Me.txtDiscordTaskThreadURL = New System.Windows.Forms.TextBox()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -127,6 +131,7 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
         Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
         Me.cboBeginnersGuide = New System.Windows.Forms.ComboBox()
@@ -254,7 +259,6 @@ Partial Class Main
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -264,6 +268,7 @@ Partial Class Main
         Me.grbTaskPart2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
+        Me.grbTaskDiscord.SuspendLayout()
         Me.tabEvent.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -321,6 +326,7 @@ Partial Class Main
         Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
         Me.tabFlightPlan.Controls.Add(Me.btnSelectFlightPlan)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskPart2)
+        Me.tabFlightPlan.Controls.Add(Me.grbTaskDiscord)
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
@@ -336,7 +342,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 557)
+        Me.pnlGuide.Location = New System.Drawing.Point(0, 640)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1076,7 +1082,7 @@ Partial Class Main
         Me.grbTaskPart2.Enabled = False
         Me.grbTaskPart2.Location = New System.Drawing.Point(743, 57)
         Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(729, 803)
+        Me.grbTaskPart2.Size = New System.Drawing.Size(729, 579)
         Me.grbTaskPart2.TabIndex = 3
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
@@ -1204,7 +1210,7 @@ Partial Class Main
         Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(531, 32)
         Me.txtDPHXPackageFilename.TabIndex = 9
         Me.txtDPHXPackageFilename.TabStop = False
-        Me.txtDPHXPackageFilename.Tag = "22"
+        Me.txtDPHXPackageFilename.Tag = ""
         Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
         '
         'GroupBox2
@@ -1428,6 +1434,51 @@ Partial Class Main
         Me.Label19.TabIndex = 8
         Me.Label19.Text = "Weather Summary"
         '
+        'grbTaskDiscord
+        '
+        Me.grbTaskDiscord.Controls.Add(Me.btnDiscordTaskThreadURLPaste)
+        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskThreadURL)
+        Me.grbTaskDiscord.Controls.Add(Me.Label31)
+        Me.grbTaskDiscord.Enabled = False
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 642)
+        Me.grbTaskDiscord.Name = "grbTaskDiscord"
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(728, 72)
+        Me.grbTaskDiscord.TabIndex = 83
+        Me.grbTaskDiscord.TabStop = False
+        Me.grbTaskDiscord.Text = "Discord"
+        '
+        'btnDiscordTaskThreadURLPaste
+        '
+        Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(643, 27)
+        Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
+        Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
+        Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
+        Me.btnDiscordTaskThreadURLPaste.Tag = "22"
+        Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task's discussion thread URL from your clipboard")
+        Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
+        '
+        'txtDiscordTaskThreadURL
+        '
+        Me.txtDiscordTaskThreadURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordTaskThreadURL.Location = New System.Drawing.Point(189, 27)
+        Me.txtDiscordTaskThreadURL.Name = "txtDiscordTaskThreadURL"
+        Me.txtDiscordTaskThreadURL.Size = New System.Drawing.Size(448, 32)
+        Me.txtDiscordTaskThreadURL.TabIndex = 1
+        Me.txtDiscordTaskThreadURL.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The task's thread URL on Discord, i.e., where to post results among other things")
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.Location = New System.Drawing.Point(6, 30)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(106, 26)
+        Me.Label31.TabIndex = 0
+        Me.Label31.Text = "Task thread"
+        '
         'tabEvent
         '
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
@@ -1562,6 +1613,14 @@ Partial Class Main
         Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 786)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
+        '
+        'lblClubFullName
+        '
+        Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
+        Me.lblClubFullName.Name = "lblClubFullName"
+        Me.lblClubFullName.Size = New System.Drawing.Size(655, 26)
+        Me.lblClubFullName.TabIndex = 45
         '
         'btnPasteBeginnerLink
         '
@@ -3062,14 +3121,6 @@ Partial Class Main
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
-        'lblClubFullName
-        '
-        Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
-        Me.lblClubFullName.Name = "lblClubFullName"
-        Me.lblClubFullName.Size = New System.Drawing.Size(655, 26)
-        Me.lblClubFullName.TabIndex = 45
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3103,6 +3154,8 @@ Partial Class Main
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
+        Me.grbTaskDiscord.ResumeLayout(False)
+        Me.grbTaskDiscord.PerformLayout()
         Me.tabEvent.ResumeLayout(False)
         Me.tabEvent.PerformLayout()
         Me.pnlWizardEvent.ResumeLayout(False)
@@ -3360,4 +3413,8 @@ Partial Class Main
     Friend WithEvents cboBeginnersGuide As ComboBox
     Friend WithEvents btnPasteBeginnerLink As Button
     Friend WithEvents lblClubFullName As Label
+    Friend WithEvents grbTaskDiscord As GroupBox
+    Friend WithEvents txtDiscordTaskThreadURL As TextBox
+    Friend WithEvents Label31 As Label
+    Friend WithEvents btnDiscordTaskThreadURLPaste As Button
 End Class

@@ -1328,5 +1328,32 @@ Public Class SupportingFeatures
         DeleteTempFile(tempFolderName)
 
     End Sub
+
+    Public Shared Function LaunchURL(theURL As String) As Boolean
+
+        Dim isValid As Boolean = IsValidURL(theURL)
+
+        Try
+            If isValid Then
+                Process.Start(theURL)
+            End If
+
+        Catch ex As Exception
+            isValid = False
+        End Try
+
+        Return isValid
+
+    End Function
+
+    ' Function to validate a URL
+    Public Shared Function IsValidURL(url As String) As Boolean
+        ' Regular expression pattern for a URL
+        Dim pattern As String = "^(https?|ftp)://[^\s/$.?#].[^\s]*$"
+
+        ' Check if the URL matches the pattern
+        Return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase)
+    End Function
+
 End Class
 
