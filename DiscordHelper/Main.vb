@@ -2455,11 +2455,12 @@ Public Class Main
                 pnlGuide.Top = 519
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 22 'Map Image
+            Case 22 'Task Thread
                 SetGuidePanelToRight()
                 pnlGuide.Top = 640
                 lblGuideInstructions.Text = "Once you've create the task's thread on Discord and before posting the files, copy the thread's URL and paste it here."
-                SetFocusOnField(cboBriefingMap, fromF1Key)
+                SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
+
             Case 23 To 29 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
