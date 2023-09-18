@@ -94,11 +94,7 @@ Public Class WeatherDetails
             Dim notStdBaro As String = String.Empty
 
             If Not IsStandardMSLPressure Then
-                If useEmoji Then
-                    notStdBaro = " ⚠️ Non standard: Set your altimeter!"
-                Else
-                    notStdBaro = " * Non standard: Set your altimeter!"
-                End If
+                notStdBaro = If(useEmoji, " ⚠️ ", " * ") & "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
             End If
 
             If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
