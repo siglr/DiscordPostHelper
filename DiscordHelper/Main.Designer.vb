@@ -178,6 +178,7 @@ Partial Class Main
         Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
+        Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -190,19 +191,15 @@ Partial Class Main
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
         Me.grpDiscordTaskThread = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
+        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
         Me.btnFilesCopy = New System.Windows.Forms.Button()
         Me.btnFilesTextCopy = New System.Windows.Forms.Button()
         Me.chkGroupSecondaryPosts = New System.Windows.Forms.CheckBox()
         Me.btnCopyAllSecPosts = New System.Windows.Forms.Button()
-        Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.btnAltRestricCopy = New System.Windows.Forms.Button()
-        Me.lblRestrictWeatherTotalCars = New System.Windows.Forms.Label()
-        Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
-        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
         Me.btnWaypointsCopy = New System.Windows.Forms.Button()
-        Me.lblWaypointsTotalCars = New System.Windows.Forms.Label()
         Me.btnAddOnsCopy = New System.Windows.Forms.Button()
-        Me.lblAddOnsTotalCars = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.btnFPMainInfoCopy = New System.Windows.Forms.Button()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
@@ -248,6 +245,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -258,7 +256,6 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2131,6 +2128,7 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.lblAllSecPostsTotalCars)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
         Me.tabDiscord.Controls.Add(Me.txtWaypointsDetails)
@@ -2158,6 +2156,17 @@ Partial Class Main
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
         '
+        'lblAllSecPostsTotalCars
+        '
+        Me.lblAllSecPostsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAllSecPostsTotalCars.ForeColor = System.Drawing.Color.Red
+        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(311, 363)
+        Me.lblAllSecPostsTotalCars.Name = "lblAllSecPostsTotalCars"
+        Me.lblAllSecPostsTotalCars.Size = New System.Drawing.Size(90, 26)
+        Me.lblAllSecPostsTotalCars.TabIndex = 4
+        Me.lblAllSecPostsTotalCars.Text = "0"
+        Me.lblAllSecPostsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'pnlWizardDiscord
         '
         Me.pnlWizardDiscord.BackColor = System.Drawing.Color.Gray
@@ -2165,7 +2174,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(721, 631)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(414, 652)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2269,7 +2278,7 @@ Partial Class Main
         Me.grpDiscordTask.Controls.Add(Me.GroupBox1)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 728)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 648)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
@@ -2281,7 +2290,7 @@ Partial Class Main
         Me.grpDiscordTaskThread.Controls.Add(Me.FlowLayoutPanel1)
         Me.grpDiscordTaskThread.Location = New System.Drawing.Point(6, 137)
         Me.grpDiscordTaskThread.Name = "grpDiscordTaskThread"
-        Me.grpDiscordTaskThread.Size = New System.Drawing.Size(393, 583)
+        Me.grpDiscordTaskThread.Size = New System.Drawing.Size(393, 489)
         Me.grpDiscordTaskThread.TabIndex = 1
         Me.grpDiscordTaskThread.TabStop = False
         Me.grpDiscordTaskThread.Text = "Thread"
@@ -2291,124 +2300,30 @@ Partial Class Main
         Me.FlowLayoutPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnFullDescriptionCopy)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsFullDescResults)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesCopy)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesTextCopy)
         Me.FlowLayoutPanel1.Controls.Add(Me.chkGroupSecondaryPosts)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnCopyAllSecPosts)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblAllSecPostsTotalCars)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnAltRestricCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblRestrictWeatherTotalCars)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnFullDescriptionCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsFullDescResults)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnWaypointsCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblWaypointsTotalCars)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnAddOnsCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblAddOnsTotalCars)
         Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 26)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(393, 557)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(393, 463)
         Me.FlowLayoutPanel1.TabIndex = 82
-        '
-        'btnFilesCopy
-        '
-        Me.btnFilesCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesCopy.Location = New System.Drawing.Point(3, 3)
-        Me.btnFilesCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesCopy.Name = "btnFilesCopy"
-        Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFilesCopy.TabIndex = 0
-        Me.btnFilesCopy.Tag = "41"
-        Me.btnFilesCopy.Text = "2a. Files to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
-        Me.btnFilesCopy.UseVisualStyleBackColor = True
-        '
-        'btnFilesTextCopy
-        '
-        Me.btnFilesTextCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesTextCopy.Location = New System.Drawing.Point(3, 57)
-        Me.btnFilesTextCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
-        Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFilesTextCopy.TabIndex = 1
-        Me.btnFilesTextCopy.Tag = "42"
-        Me.btnFilesTextCopy.Text = "2b. Files info to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the second post content into the clipboard.")
-        Me.btnFilesTextCopy.UseVisualStyleBackColor = True
-        '
-        'chkGroupSecondaryPosts
-        '
-        Me.chkGroupSecondaryPosts.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkGroupSecondaryPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkGroupSecondaryPosts.Location = New System.Drawing.Point(3, 111)
-        Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
-        Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(384, 28)
-        Me.chkGroupSecondaryPosts.TabIndex = 2
-        Me.chkGroupSecondaryPosts.Tag = "43"
-        Me.chkGroupSecondaryPosts.Text = "Merge remaining posts"
-        Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to merge all secondary posts into only one.")
-        Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
-        '
-        'btnCopyAllSecPosts
-        '
-        Me.btnCopyAllSecPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCopyAllSecPosts.Location = New System.Drawing.Point(3, 145)
-        Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
-        Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
-        Me.btnCopyAllSecPosts.TabIndex = 3
-        Me.btnCopyAllSecPosts.Tag = "44"
-        Me.btnCopyAllSecPosts.Text = "3. All secondary post's content to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put all remaining content into the clipboard.")
-        Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
-        Me.btnCopyAllSecPosts.Visible = False
-        '
-        'lblAllSecPostsTotalCars
-        '
-        Me.lblAllSecPostsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblAllSecPostsTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(3, 199)
-        Me.lblAllSecPostsTotalCars.Name = "lblAllSecPostsTotalCars"
-        Me.lblAllSecPostsTotalCars.Size = New System.Drawing.Size(384, 26)
-        Me.lblAllSecPostsTotalCars.TabIndex = 4
-        Me.lblAllSecPostsTotalCars.Text = "0"
-        Me.lblAllSecPostsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblAllSecPostsTotalCars, "Caution! Approaching Discord limit!")
-        '
-        'btnAltRestricCopy
-        '
-        Me.btnAltRestricCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAltRestricCopy.Location = New System.Drawing.Point(3, 228)
-        Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
-        Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnAltRestricCopy.TabIndex = 5
-        Me.btnAltRestricCopy.Tag = "44"
-        Me.btnAltRestricCopy.Text = "3. Restrictions and Weather to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the restrictions and weather post content into the clipb" &
-        "oard.")
-        Me.btnAltRestricCopy.UseVisualStyleBackColor = True
-        '
-        'lblRestrictWeatherTotalCars
-        '
-        Me.lblRestrictWeatherTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRestrictWeatherTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblRestrictWeatherTotalCars.Location = New System.Drawing.Point(3, 282)
-        Me.lblRestrictWeatherTotalCars.Name = "lblRestrictWeatherTotalCars"
-        Me.lblRestrictWeatherTotalCars.Size = New System.Drawing.Size(384, 26)
-        Me.lblRestrictWeatherTotalCars.TabIndex = 6
-        Me.lblRestrictWeatherTotalCars.Text = "0"
-        Me.lblRestrictWeatherTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblRestrictWeatherTotalCars, "Caution! Approaching Discord limit!")
         '
         'btnFullDescriptionCopy
         '
         Me.btnFullDescriptionCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFullDescriptionCopy.Location = New System.Drawing.Point(3, 311)
+        Me.btnFullDescriptionCopy.Location = New System.Drawing.Point(3, 3)
         Me.btnFullDescriptionCopy.Name = "btnFullDescriptionCopy"
         Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFullDescriptionCopy.TabIndex = 7
-        Me.btnFullDescriptionCopy.Tag = "45"
-        Me.btnFullDescriptionCopy.Text = "4. Full Description to clipboard"
+        Me.btnFullDescriptionCopy.TabIndex = 0
+        Me.btnFullDescriptionCopy.Tag = "41"
+        Me.btnFullDescriptionCopy.Text = "2. Full Description to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the task's full description post content into the clipbo" &
         "ard.")
         Me.btnFullDescriptionCopy.UseVisualStyleBackColor = True
@@ -2417,61 +2332,102 @@ Partial Class Main
         '
         Me.lblNbrCarsFullDescResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNbrCarsFullDescResults.ForeColor = System.Drawing.Color.Red
-        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(3, 365)
+        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(3, 57)
         Me.lblNbrCarsFullDescResults.Name = "lblNbrCarsFullDescResults"
         Me.lblNbrCarsFullDescResults.Size = New System.Drawing.Size(384, 26)
         Me.lblNbrCarsFullDescResults.TabIndex = 8
         Me.lblNbrCarsFullDescResults.Text = "0"
         Me.lblNbrCarsFullDescResults.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblNbrCarsFullDescResults, "Caution! Approaching Discord limit!")
+        '
+        'btnFilesCopy
+        '
+        Me.btnFilesCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFilesCopy.Location = New System.Drawing.Point(3, 86)
+        Me.btnFilesCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
+        Me.btnFilesCopy.Name = "btnFilesCopy"
+        Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnFilesCopy.TabIndex = 1
+        Me.btnFilesCopy.Tag = "42"
+        Me.btnFilesCopy.Text = "3a. Files to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
+        Me.btnFilesCopy.UseVisualStyleBackColor = True
+        '
+        'btnFilesTextCopy
+        '
+        Me.btnFilesTextCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFilesTextCopy.Location = New System.Drawing.Point(3, 140)
+        Me.btnFilesTextCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
+        Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
+        Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnFilesTextCopy.TabIndex = 2
+        Me.btnFilesTextCopy.Tag = "43"
+        Me.btnFilesTextCopy.Text = "3b. Files info to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the second post content into the clipboard.")
+        Me.btnFilesTextCopy.UseVisualStyleBackColor = True
+        '
+        'chkGroupSecondaryPosts
+        '
+        Me.chkGroupSecondaryPosts.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkGroupSecondaryPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkGroupSecondaryPosts.Location = New System.Drawing.Point(3, 194)
+        Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
+        Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(384, 28)
+        Me.chkGroupSecondaryPosts.TabIndex = 3
+        Me.chkGroupSecondaryPosts.Tag = "44"
+        Me.chkGroupSecondaryPosts.Text = "Merge remaining posts"
+        Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to merge all secondary posts into only one.")
+        Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
+        '
+        'btnCopyAllSecPosts
+        '
+        Me.btnCopyAllSecPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCopyAllSecPosts.Location = New System.Drawing.Point(3, 228)
+        Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
+        Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
+        Me.btnCopyAllSecPosts.TabIndex = 4
+        Me.btnCopyAllSecPosts.Tag = "45"
+        Me.btnCopyAllSecPosts.Text = "4. All secondary post's content to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put all remaining content into the clipboard.")
+        Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
+        Me.btnCopyAllSecPosts.Visible = False
+        '
+        'btnAltRestricCopy
+        '
+        Me.btnAltRestricCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAltRestricCopy.Location = New System.Drawing.Point(3, 285)
+        Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
+        Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
+        Me.btnAltRestricCopy.TabIndex = 5
+        Me.btnAltRestricCopy.Tag = "45"
+        Me.btnAltRestricCopy.Text = "4. Restrictions and Weather to clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the restrictions and weather post content into the clipb" &
+        "oard.")
+        Me.btnAltRestricCopy.UseVisualStyleBackColor = True
         '
         'btnWaypointsCopy
         '
         Me.btnWaypointsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnWaypointsCopy.Location = New System.Drawing.Point(3, 394)
+        Me.btnWaypointsCopy.Location = New System.Drawing.Point(3, 342)
         Me.btnWaypointsCopy.Name = "btnWaypointsCopy"
         Me.btnWaypointsCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnWaypointsCopy.TabIndex = 9
+        Me.btnWaypointsCopy.TabIndex = 6
         Me.btnWaypointsCopy.Tag = "46"
         Me.btnWaypointsCopy.Text = "5. Waypoint details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnWaypointsCopy, "Click this button to put the waypoints post content into the clipboard.")
         Me.btnWaypointsCopy.UseVisualStyleBackColor = True
         '
-        'lblWaypointsTotalCars
-        '
-        Me.lblWaypointsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWaypointsTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblWaypointsTotalCars.Location = New System.Drawing.Point(3, 448)
-        Me.lblWaypointsTotalCars.Name = "lblWaypointsTotalCars"
-        Me.lblWaypointsTotalCars.Size = New System.Drawing.Size(384, 26)
-        Me.lblWaypointsTotalCars.TabIndex = 10
-        Me.lblWaypointsTotalCars.Text = "0"
-        Me.lblWaypointsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblWaypointsTotalCars, "Caution! Approaching Discord limit!")
-        '
         'btnAddOnsCopy
         '
         Me.btnAddOnsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddOnsCopy.Location = New System.Drawing.Point(3, 477)
+        Me.btnAddOnsCopy.Location = New System.Drawing.Point(3, 399)
         Me.btnAddOnsCopy.Name = "btnAddOnsCopy"
         Me.btnAddOnsCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnAddOnsCopy.TabIndex = 11
+        Me.btnAddOnsCopy.TabIndex = 7
         Me.btnAddOnsCopy.Tag = "47"
         Me.btnAddOnsCopy.Text = "6. Add-ons details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnAddOnsCopy, "Click this button to put the add-ons post content into the clipboard.")
         Me.btnAddOnsCopy.UseVisualStyleBackColor = True
-        '
-        'lblAddOnsTotalCars
-        '
-        Me.lblAddOnsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblAddOnsTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblAddOnsTotalCars.Location = New System.Drawing.Point(3, 531)
-        Me.lblAddOnsTotalCars.Name = "lblAddOnsTotalCars"
-        Me.lblAddOnsTotalCars.Size = New System.Drawing.Size(384, 26)
-        Me.lblAddOnsTotalCars.TabIndex = 12
-        Me.lblAddOnsTotalCars.Text = "0"
-        Me.lblAddOnsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblAddOnsTotalCars, "Caution! Approaching Discord limit!")
         '
         'GroupBox1
         '
@@ -2512,7 +2468,6 @@ Partial Class Main
         Me.lblNbrCarsMainFP.TabIndex = 1
         Me.lblNbrCarsMainFP.Text = "0"
         Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Caution! Approaching Discord limit!")
         '
         'txtDiscordEventDescription
         '
@@ -3007,6 +2962,26 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3100,26 +3075,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -3340,7 +3295,6 @@ Partial Class Main
     Friend WithEvents lblNbrCarsRestrictions As Label
     Friend WithEvents btnCopyAllSecPosts As Button
     Friend WithEvents lblNbrCarsWeatherClouds As Label
-    Friend WithEvents lblRestrictWeatherTotalCars As Label
     Friend WithEvents txtWeatherFirstPart As TextBox
     Friend WithEvents txtWeatherWinds As TextBox
     Friend WithEvents txtWeatherClouds As TextBox
@@ -3374,8 +3328,6 @@ Partial Class Main
     Friend WithEvents btnWaypointsCopy As Button
     Friend WithEvents btnAddOnsCopy As Button
     Friend WithEvents lblAllSecPostsTotalCars As Label
-    Friend WithEvents lblWaypointsTotalCars As Label
-    Friend WithEvents lblAddOnsTotalCars As Label
     Friend WithEvents grpDiscordGroupFlight As GroupBox
     Friend WithEvents grpGroupFlightEvent As GroupBox
     Friend WithEvents txtWaypointsDetails As TextBox
