@@ -1010,20 +1010,23 @@ Public Class SupportingFeatures
         Return localTimeZone.IsDaylightSavingTime(localDateTime)
     End Function
     Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox)
-        ' Regex patterns to match bold and italic texts
+
+        ' Regex patterns to match bold, italic, and underlined texts
+        Dim newlinePattern As String = "\(\$\*\$\)"
         Dim boldPattern As String = "\*\*(.+?)\*\*"
         Dim italicPattern As String = "(?<!\*)\*(.+?)\*(?!\*)"
+        Dim underlinePattern As String = "__(.+?)__"
 
-        ' Replace bold and italic markdown syntax with corresponding RTF code
-        Dim boldReplaced As String = Regex.Replace(input, boldPattern, "{\b $1\b0 }")
-        Dim rtfFormatted As String = Regex.Replace(boldReplaced, italicPattern, "{\i $1\i0 }")
-
-        ' Replace vbcrlf with RTF line break code
-        rtfFormatted = rtfFormatted.Replace(vbCrLf, "\line ")
+        ' Replace line break, bold, italic, and underlined markdown syntax with corresponding RTF code
+        Dim rtfFormatted As String = Regex.Replace(input, newlinePattern, "\line ")
+        rtfFormatted = Regex.Replace(rtfFormatted, boldPattern, "{\b $1\b0 }")
+        rtfFormatted = Regex.Replace(rtfFormatted, italicPattern, "{\i $1\i0 }")
+        rtfFormatted = Regex.Replace(rtfFormatted, underlinePattern, "{\ul $1\ul0 }")
 
         ' Set the RTF-formatted text to the RichTextBox control
         richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
     End Sub
+
 
     Public Function CheckRequiredNetFrameworkVersion() As Boolean
 

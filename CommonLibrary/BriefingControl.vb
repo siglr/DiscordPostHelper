@@ -405,7 +405,6 @@ Public Class BriefingControl
         End If
 
         Dim sb As New StringBuilder
-        sb.Append("{\rtf1\ansi ")
 
         'Title
         sb.Append($"\b {_sessionData.Title}\b0\line ")
@@ -504,7 +503,7 @@ Public Class BriefingControl
 
         End If
         sb.Append("}")
-        txtBriefing.Rtf = sb.ToString()
+        _SF.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
 
         sb.Clear()
@@ -520,11 +519,10 @@ Public Class BriefingControl
             imageViewer.LoadImage(filename)
         End If
 
-
         'Build full description
         If _sessionData.LongDescription <> String.Empty Then
-            sb.AppendLine("**Full Description**")
-            sb.AppendLine(_sessionData.LongDescription.Replace("($*$)", Environment.NewLine))
+            sb.AppendLine("**Full Description**($*$)")
+            sb.AppendLine(_sessionData.LongDescription)
             _SF.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
 
         End If
@@ -604,7 +602,7 @@ Public Class BriefingControl
     Private Sub BuildEventInfoTab()
 
         Dim sb As New StringBuilder
-        sb.Append("{\rtf1\ansi ")
+        'sb.Append("{\rtf1\ansi ")
 
         If Not EventIsEnabled Then
             sb.Append($"There is currently no group flight or event defined with this task. \line ")
@@ -775,7 +773,8 @@ Public Class BriefingControl
         _loaded = True
         trackAudioCueVolume.Value = SupportingFeatures.ReadRegistryKey("AudioCues", 80)
 
-        txtEventInfo.Rtf = sb.ToString()
+        _SF.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
+        'txtEventInfo.Rtf = sb.ToString()
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
 
     End Sub
