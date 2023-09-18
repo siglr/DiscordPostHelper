@@ -76,16 +76,39 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property MSLPressure(Optional prefUnits As PreferredUnits = Nothing) As String
+    Public ReadOnly Property IsStandardMSLPressure As Boolean
         Get
+            Dim roundedPaToInHg As Double = 0
+            Try
+                roundedPaToInHg = CDec(String.Format("{0:F2}", Conversions.PaToInHg(_MSLPressureInPa)))
+            Catch ex As Exception
+            End Try
+
+            Return roundedPaToInHg = 29.92
+        End Get
+    End Property
+
+    Public ReadOnly Property MSLPressure(Optional prefUnits As PreferredUnits = Nothing, Optional useEmoji As Boolean = True) As String
+        Get
+
+            Dim notStdBaro As String = String.Empty
+
+            If Not IsStandardMSLPressure Then
+                If useEmoji Then
+                    notStdBaro = " ⚠️ Non standard: Set your altimeter!"
+                Else
+                    notStdBaro = " * Non standard: Set your altimeter!"
+                End If
+            End If
+
             If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
-                Return String.Format("{0:F2} inHg / {1:N0} hPa", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100)
+                Return String.Format("{0:F2} inHg / {1:N0} hPa{2}", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100, notStdBaro)
             Else
                 Select Case prefUnits.Barometric
                     Case BarometricUnits.hPa
-                        Return String.Format("{0:N0} hPa", _MSLPressureInPa / 100)
+                        Return String.Format("{0:N0} hPa{1}", _MSLPressureInPa / 100, notStdBaro)
                     Case BarometricUnits.inHg
-                        Return String.Format("{0:F2} inHg", Conversions.PaToInHg(_MSLPressureInPa))
+                        Return String.Format("{0:F2} inHg{1}", Conversions.PaToInHg(_MSLPressureInPa), notStdBaro)
                 End Select
             End If
             Return String.Empty

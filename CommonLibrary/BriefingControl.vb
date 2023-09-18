@@ -467,7 +467,7 @@ Public Class BriefingControl
             Else
                 sb.Append($"The elevation measurement used is \b AMSL (Above Mean Sea Level)\b0\line ")
             End If
-            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure(PrefUnits)}\b0\line ")
+            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure(PrefUnits, False)}\b0\line ")
             sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature(PrefUnits)}\b0\line ")
             sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
             If _WeatherDetails.HasPrecipitations Then
@@ -710,6 +710,12 @@ Public Class BriefingControl
                 sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. \line ")
                 sb.Append("\line ")
                 countDownToSyncFly.ResetToZero(True)
+            End If
+
+            'Unstandard Barometric pressure
+            If Not _WeatherDetails.IsStandardMSLPressure Then
+                sb.Append($"Barometric pressure is {_WeatherDetails.MSLPressure(PrefUnits, False)} \line ")
+                sb.Append("\line ")
             End If
 
             'Launch

@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Web.ModelBinding
 Imports System.Xml
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
@@ -63,7 +64,7 @@ Public Class WindLayer
                     End Select
                 End If
                 sb.Append("Ground ")
-                    divider = 2
+                divider = 2
             Else
                 If prefUnits Is Nothing OrElse prefUnits.Altitude = AltitudeUnits.Both Then
                     sb.AppendFormat("{0:N0}' / {1:N0} m ",
@@ -113,33 +114,33 @@ Public Class WindLayer
                         End Select
                     End If
                 End If
-                sb.AppendFormat(" - {0}", GetGustText(prefUnits))
+                sb.AppendFormat("{0}", GetGustText(prefUnits, True))
             Else
                 If prefUnits Is Nothing OrElse prefUnits.WindSpeed = WindSpeedUnits.Both Then
-                    sb.AppendFormat("{0}° @ {1} kts ({2:N1} m/s) (raising to {3} kts ({4:N1} m/s) around {5}) - {6}",
+                    sb.AppendFormat("{0}° @ {1} kts ({2:N1} m/s) (raising to {3} kts ({4:N1} m/s) around {5}){6}",
                                 Angle.ToString(),
                                 (Speed / divider).ToString(),
                                 Conversions.KnotsToMps(Speed / divider),
                                 Speed.ToString(),
                                 Conversions.KnotsToMps(Speed),
                                 aroundAltString,
-                                GetGustText(prefUnits))
+                                GetGustText(prefUnits, True))
                 Else
                     Select Case prefUnits.WindSpeed
                         Case WindSpeedUnits.MeterPerSecond
-                            sb.AppendFormat("{0}° @ {1:N1} m/s (raising to {2:N1} m/s around {3}) - {4}",
+                            sb.AppendFormat("{0}° @ {1:N1} m/s (raising to {2:N1} m/s around {3}){4}",
                                 Angle.ToString(),
                                 Conversions.KnotsToMps(Speed / divider),
                                 Conversions.KnotsToMps(Speed),
                                 aroundAltString,
-                                GetGustText(prefUnits))
+                                GetGustText(prefUnits, True))
                         Case WindSpeedUnits.Knots
-                            sb.AppendFormat("{0}° @ {1} kts (raising to {2} kts around {3}) - {4}",
+                            sb.AppendFormat("{0}° @ {1} kts (raising to {2} kts around {3}){4}",
                                 Angle.ToString(),
                                 (Speed / divider).ToString(),
                                 Speed.ToString(),
                                 aroundAltString,
-                                GetGustText(prefUnits))
+                                GetGustText(prefUnits, True))
                     End Select
                 End If
             End If
@@ -244,11 +245,18 @@ Public Class WindLayer
         End Get
     End Property
 
-    Public Function GetGustText(Optional prefUnits As PreferredUnits = Nothing) As String
+    Public Function GetGustText(Optional prefUnits As PreferredUnits = Nothing, Optional includeHyphen As Boolean = False) As String
+
         Dim results As String = String.Empty
+        Dim prefix As String = String.Empty
+
+        If includeHyphen Then
+            prefix = " - "
+        End If
+
         If _HasGust Then
             If prefUnits Is Nothing OrElse prefUnits.WindSpeed = WindSpeedUnits.Both Then
-                results = String.Format("Gust {0}° @ {1} kts ({2:N1} m/s) every {3} seconds for {4} seconds :warning:*Gusts formats are currently bugged in MSFS*",
+                results = String.Format(prefix & "Gust {0}° @ {1} kts ({2:N1} m/s) every {3} seconds for {4} seconds :warning:*Gusts formats are currently bugged in MSFS*",
                                     _GustAngle,
                                     _GustSpeed,
                                     Conversions.KnotsToMps(_GustSpeed),
@@ -257,13 +265,13 @@ Public Class WindLayer
             Else
                 Select Case prefUnits.WindSpeed
                     Case WindSpeedUnits.MeterPerSecond
-                        results = String.Format("Gust {0}° @ {1:N1} m/s every {2} seconds for {3} seconds :warning:*Gusts formats are currently bugged in MSFS*",
+                        results = String.Format("prefix & Gust {0}° @ {1:N1} m/s every {2} seconds for {3} seconds :warning:*Gusts formats are currently bugged in MSFS*",
                                     _GustAngle,
                                     Conversions.KnotsToMps(_GustSpeed),
                                     _GustInterval,
                                     _GustDuration)
                     Case WindSpeedUnits.Knots
-                        results = String.Format("Gust {0}° @ {1} kts every {2} seconds for {3} seconds :warning:*Gusts formats are currently bugged in MSFS*",
+                        results = String.Format("prefix & Gust {0}° @ {1} kts every {2} seconds for {3} seconds :warning:*Gusts formats are currently bugged in MSFS*",
                                     _GustAngle,
                                     _GustSpeed,
                                     _GustInterval,
@@ -271,7 +279,7 @@ Public Class WindLayer
                 End Select
             End If
         Else
-            results = "No gust"
+            results = String.Empty
         End If
 
         Return results
