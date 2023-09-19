@@ -1038,7 +1038,7 @@ Public Class BriefingControl
 
     Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
 
-        If Not SupportingFeatures.LaunchURL(_sessionData.DiscordTaskThreadURL) Then
+        If Not SupportingFeatures.LaunchDiscordURL(_sessionData.DiscordTaskThreadURL) Then
             MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub

@@ -1332,21 +1332,34 @@ Public Class SupportingFeatures
 
     End Sub
 
-    Public Shared Function LaunchURL(theURL As String) As Boolean
-
+    Public Shared Function LaunchDiscordURL(ByRef theURL As String) As Boolean
         Dim isValid As Boolean = IsValidURL(theURL)
+        Dim discordWorked As Boolean = False
 
         Try
             If isValid Then
-                Process.Start(theURL)
-            End If
+                If theURL.StartsWith("http://discord.com") Or theURL.StartsWith("https://discord.com") Then
+                    Dim discordURL As String = String.Empty
+                    discordURL = theURL.Replace("http://discord.com", "discord://discord.com")
+                    discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                    Try
+                        Process.Start(discordURL)
+                        discordWorked = True
 
+                    Catch ex As Exception
+                        discordWorked = False
+                    End Try
+                End If
+
+                If Not discordWorked Then
+                    Process.Start(theURL)
+                End If
+            End If
         Catch ex As Exception
             isValid = False
         End Try
 
         Return isValid
-
     End Function
 
     ' Function to validate a URL
