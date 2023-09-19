@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.9.19.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.9.19.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Opening B21 Task Planner now passes both the PLN and WPR files if they're both present.
+        Added new field to store subthread URL for the task. Used on the briefing and DPHX Unpack and Load tool to bring the user to the right place to post results, screenshots, etc.
+        When barometric pressure is not standard, added a warning symbol to remind people to press "B" or manually adjust it in their glider.
+        Adjusted workflow to create the task thread and get the link before posting the files.
+        Removed the “No Gust” info when no gust is present.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.28.1</ReleaseVersion>
       <ReleaseTitle>Cleanup, resync, rename club</ReleaseTitle>

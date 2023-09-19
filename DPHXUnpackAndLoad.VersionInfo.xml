@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.8.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.9.19.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.9.19.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Opening B21 Task Planner now passes both the PLN and WPR files if they're both present.
+        Added button to bring you in the right Discord thread to post a task result, screenshot, track file, etc.
+        When barometric pressure is not standard, added a warning symbol to remind people to press "B" or manually adjust it in their glider.
+        Added more support for Discord's markdown codes and improved the briefing's text content.
+        Removed the “No Gust” info when no gust is present.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.8.28.1</ReleaseVersion>
       <ReleaseTitle>Cleanup, resync, rename club</ReleaseTitle>
