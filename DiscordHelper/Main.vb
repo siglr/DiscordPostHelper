@@ -11,6 +11,7 @@ Imports System.Reflection
 Imports SIGLR.SoaringTools.ImageViewer
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Imports System.Linq.Expressions
+Imports System.Web.UI
 
 Public Class Main
 
@@ -1426,6 +1427,10 @@ Public Class Main
 
         txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm)
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
+
+        If _TaskTotalDistanceInKm = 0 Then
+            MessageBox.Show(Me, "The task distance is 0! You should open the task in the B21 Online Task Planer and re-download the flight plan again.", "Possible error in flight plan data", vbOKOnly, MessageBoxIcon.Warning)
+        End If
         txtDistanceTrack.Text = FormatNumber(_TaskTotalDistanceInKm, 0)
 
         'Build countries
