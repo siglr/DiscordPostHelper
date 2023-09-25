@@ -94,9 +94,7 @@ Public Class ATCWaypoint
         End If
 
         'Read the radius part if any
-        If strFullATCId.Contains("x") Then
-            _Diameter = CInt(strFullATCId.Substring(strFullATCId.IndexOf("x") + 1))
-        Else
+        If Not (strFullATCId.Contains("x") AndAlso Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("x") + 1), _Diameter)) Then
             If ICAO = String.Empty Then
                 If IsTaskStart Then
                     _Diameter = 5000
@@ -129,17 +127,24 @@ Public Class ATCWaypoint
                 strFullATCId = strFullATCId.Substring(strFullATCId.IndexOfAny("/|"))
             End If
 
+            Dim tempValue As Integer = 0
             If strFullATCId.Contains("|") Then
                 'Contains maximum
                 If strFullATCId.Contains("/") Then
-                    _MaxAlt = CInt(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1, strFullATCId.IndexOfAny("/") - 1))
+                    If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1, strFullATCId.IndexOfAny("/") - 1), tempValue) Then
+                        _MaxAlt = tempValue
+                    End If
                 Else
-                    _MaxAlt = CInt(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1))
+                    If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1), tempValue) Then
+                        _MaxAlt = tempValue
+                    End If
                 End If
             End If
             If strFullATCId.Contains("/") Then
                 'Contains minimum
-                _MinAlt = CInt(strFullATCId.Substring(strFullATCId.IndexOf("/") + 1))
+                If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("/") + 1), tempValue) Then
+                    _MinAlt = tempValue
+                End If
             End If
 
         End If
