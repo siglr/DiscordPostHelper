@@ -157,7 +157,12 @@ Public Class SupportingFeatures
             maxHoursM = $"{(Math.Abs((Math.Floor(maxHours) * 60) - maxMinutes)):00}"
         End If
 
-        Return $"{minMinutes} to {maxMinutes} minutes ({minHoursH:D2}{minHoursM:D2} to {maxHoursH:D2}{maxHoursM:D2})"
+        If minMinutes = 0 AndAlso maxMinutes = 0 Then
+            Return $"Not specified"
+        Else
+            Return $"{minMinutes} to {maxMinutes} minutes ({minHoursH:D2}{minHoursM:D2} to {maxHoursH:D2}{maxHoursM:D2})"
+        End If
+
 
     End Function
 
