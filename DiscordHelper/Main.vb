@@ -464,6 +464,21 @@ Public Class Main
 
 #Region "Event Handlers"
 
+    Private Sub btnPasteUsernameCredits_Click(sender As Object, e As EventArgs) Handles btnPasteUsernameCredits.Click
+
+        Dim userNameFromCB As String = String.Empty
+
+        Try
+            userNameFromCB = Clipboard.GetText()
+        Catch ex As Exception
+        End Try
+
+        If Not userNameFromCB = String.Empty Then
+            txtCredits.Text = $"All credits to @{userNameFromCB} for this task."
+        End If
+
+    End Sub
+
     Private Sub lstAllCountries_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAllCountries.SelectedIndexChanged
 
         If lstAllCountries.SelectedIndex = -1 Then

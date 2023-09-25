@@ -245,6 +245,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -255,7 +256,7 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -339,7 +340,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 640)
+        Me.pnlGuide.Location = New System.Drawing.Point(0, 724)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -389,6 +390,7 @@ Partial Class Main
         '
         'grbTaskInfo
         '
+        Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
         Me.grbTaskInfo.Controls.Add(Me.Label9)
         Me.grbTaskInfo.Controls.Add(Me.chkTitleLock)
         Me.grbTaskInfo.Controls.Add(Me.chkArrivalLock)
@@ -875,7 +877,7 @@ Partial Class Main
         Me.txtCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtCredits.Location = New System.Drawing.Point(189, 535)
         Me.txtCredits.Name = "txtCredits"
-        Me.txtCredits.Size = New System.Drawing.Size(531, 32)
+        Me.txtCredits.Size = New System.Drawing.Size(446, 32)
         Me.txtCredits.TabIndex = 49
         Me.txtCredits.Tag = "15"
         Me.txtCredits.Text = "All credits to @UserName for this task."
@@ -1022,7 +1024,7 @@ Partial Class Main
         Me.Label17.Location = New System.Drawing.Point(4, 572)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(155, 26)
-        Me.Label17.TabIndex = 50
+        Me.Label17.TabIndex = 51
         Me.Label17.Text = "Long Description"
         '
         'txtLongDescription
@@ -1033,7 +1035,7 @@ Partial Class Main
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtLongDescription.Size = New System.Drawing.Size(531, 224)
-        Me.txtLongDescription.TabIndex = 51
+        Me.txtLongDescription.TabIndex = 52
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
         '
@@ -2962,6 +2964,26 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3056,25 +3078,17 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'BriefingControl1
+        'btnPasteUsernameCredits
         '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
+        Me.btnPasteUsernameCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(641, 536)
+        Me.btnPasteUsernameCredits.Name = "btnPasteUsernameCredits"
+        Me.btnPasteUsernameCredits.Size = New System.Drawing.Size(79, 29)
+        Me.btnPasteUsernameCredits.TabIndex = 50
+        Me.btnPasteUsernameCredits.Tag = "22"
+        Me.btnPasteUsernameCredits.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
+        Me.btnPasteUsernameCredits.UseVisualStyleBackColor = True
         '
         'Main
         '
@@ -3370,4 +3384,5 @@ Partial Class Main
     Friend WithEvents txtDiscordTaskThreadURL As TextBox
     Friend WithEvents Label31 As Label
     Friend WithEvents btnDiscordTaskThreadURLPaste As Button
+    Friend WithEvents btnPasteUsernameCredits As Button
 End Class
