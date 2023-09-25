@@ -259,6 +259,7 @@ Public Class Main
         grpGroupEventPost.Enabled = False
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
+        txtDiscordTaskThreadURL.Text = String.Empty
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -856,13 +857,17 @@ Public Class Main
 
         If txtFullDescriptionResults.Text.Length = 0 Then
             Clipboard.SetText("None")
-        Else
-            Clipboard.SetText(txtFullDescriptionResults.Text)
-        End If
-        CopyContent.ShowContent(Me,
-                                Clipboard.GetText,
+            CopyContent.ShowContent(Me,
+                                "None",
                                 "Now post the full description as the first message in the task's thread.",
                                 "Step 2 - Creating full description post in the thread.")
+        Else
+            Clipboard.SetText(txtFullDescriptionResults.Text)
+            CopyContent.ShowContent(Me,
+                                txtFullDescriptionResults.Text,
+                                "Now post the full description as the first message in the task's thread.",
+                                "Step 2 - Creating full description post in the thread.")
+        End If
         If txtDiscordTaskThreadURL.Text = String.Empty Then
             MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
