@@ -159,6 +159,10 @@ Public Class SupportingFeatures
 
         If minMinutes = 0 AndAlso maxMinutes = 0 Then
             Return $"Not specified"
+        ElseIf minMinutes > 0 AndAlso maxMinutes = 0 Then
+            Return $"Around {minMinutes} minutes ({minHoursH:D2}{minHoursM:D2})"
+        ElseIf (minMinutes = 0 AndAlso maxMinutes > 0) OrElse (minMinutes = maxMinutes) Then
+            Return $"Around {maxMinutes} minutes ({maxHoursH:D2}{maxHoursM:D2})"
         Else
             Return $"{minMinutes} to {maxMinutes} minutes ({minHoursH:D2}{minHoursM:D2} to {maxHoursH:D2}{maxHoursM:D2})"
         End If
