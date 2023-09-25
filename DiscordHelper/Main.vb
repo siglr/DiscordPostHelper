@@ -356,6 +356,71 @@ Public Class Main
 
 #Region "Global form subs & functions"
 
+    Private Sub SaveSession()
+
+        Dim saveWithoutAsking As Boolean = False
+        Dim result As DialogResult
+        Dim DPHFilename As String = txtTitle.Text
+        Dim DPHXFilename As String = String.Empty
+        If Not txtDPHXPackageFilename.Text = String.Empty Then
+            DPHXFilename = Path.GetFileNameWithoutExtension(txtDPHXPackageFilename.Text)
+        End If
+
+        If DPHFilename = DPHXFilename Then
+            saveWithoutAsking = True
+        End If
+
+        If saveWithoutAsking Then
+            DPHXFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHXFilename}.dphx"
+            DPHFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHFilename}.dph"
+        Else
+            If txtFlightPlanFile.Text = String.Empty Then
+                SaveFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            Else
+                SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
+            End If
+            SaveFileDialog1.FileName = txtTitle.Text
+            SaveFileDialog1.Title = "Select session file to save"
+            SaveFileDialog1.Filter = "Discord Post Helper Session|*.dph"
+            result = SaveFileDialog1.ShowDialog()
+            If result = DialogResult.OK Then
+                DPHFilename = SaveFileDialog1.FileName
+                DPHXFilename = $"{Path.GetDirectoryName(SaveFileDialog1.FileName)}\{Path.GetFileNameWithoutExtension(SaveFileDialog1.FileName)}.dphx"
+            End If
+        End If
+
+        If saveWithoutAsking OrElse result = DialogResult.OK Then
+            txtDPHXPackageFilename.Text = DPHXFilename
+
+            SaveSessionData(DPHFilename)
+            _CurrentSessionFile = DPHFilename
+
+            'Then save the DPHX as well
+            'Check if file already exists and delete it
+            If File.Exists(DPHXFilename) Then
+                File.Delete(DPHXFilename)
+            End If
+
+            ' Zip the selected files using the ZipFiles method
+            Dim filesToInclude As New List(Of String)()
+            filesToInclude.Add(_CurrentSessionFile)
+            If File.Exists(txtFlightPlanFile.Text) Then
+                filesToInclude.Add(txtFlightPlanFile.Text)
+            End If
+            If File.Exists(txtWeatherFile.Text) Then
+                filesToInclude.Add(txtWeatherFile.Text)
+            End If
+            For i As Integer = 0 To lstAllFiles.Items.Count - 1
+                filesToInclude.Add(lstAllFiles.Items(i))
+            Next
+
+            _SF.CreateDPHXFile(DPHXFilename, filesToInclude)
+
+            SessionUntouched()
+
+        End If
+    End Sub
+
     Public Function CheckUnsavedAndConfirmAction(action As String) As Boolean
 
         If _sessionModified Then
@@ -2262,7 +2327,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles TabControl1.KeyDown, MyBase.KeyDown
+    Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles TabControl1.KeyDown, Me.KeyDown
         If e.KeyCode = Keys.F1 Then
             Try
                 Dim controlTag As Integer = CInt(Me.ActiveControl.Tag)
@@ -2276,6 +2341,12 @@ Public Class Main
                 _GuideCurrentStep = CInt(Me.ActiveControl.Tag)
             End If
             ShowGuide(True)
+            e.SuppressKeyPress = True ' This prevents the beep sound
+        End If
+        If e.Control AndAlso e.KeyCode = Keys.S AndAlso _sessionModified Then
+            ' Handle the CTRL-S key combination (e.g., save the file)
+            SaveSession()
+            e.SuppressKeyPress = True ' This prevents the beep sound
         End If
 
     End Sub
@@ -2882,49 +2953,7 @@ Public Class Main
 
     Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles btnSaveConfig.Click
 
-        If txtFlightPlanFile.Text = String.Empty Then
-            SaveFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
-        Else
-            SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
-        End If
-
-        SaveFileDialog1.FileName = txtTitle.Text
-        SaveFileDialog1.Title = "Select session file to save"
-        SaveFileDialog1.Filter = "Discord Post Helper Session|*.dph"
-
-        Dim result As DialogResult = SaveFileDialog1.ShowDialog()
-
-        If result = DialogResult.OK Then
-            Dim DPHXFilename As String = $"{Path.GetDirectoryName(SaveFileDialog1.FileName)}\{Path.GetFileNameWithoutExtension(SaveFileDialog1.FileName)}.dphx"
-            txtDPHXPackageFilename.Text = DPHXFilename
-
-            SaveSessionData(SaveFileDialog1.FileName)
-            _CurrentSessionFile = SaveFileDialog1.FileName
-
-            'Then save the DPHX as well
-            'Check if file already exists and delete it
-            If File.Exists(DPHXFilename) Then
-                File.Delete(DPHXFilename)
-            End If
-
-            ' Zip the selected files using the ZipFiles method
-            Dim filesToInclude As New List(Of String)()
-            filesToInclude.Add(_CurrentSessionFile)
-            If File.Exists(txtFlightPlanFile.Text) Then
-                filesToInclude.Add(txtFlightPlanFile.Text)
-            End If
-            If File.Exists(txtWeatherFile.Text) Then
-                filesToInclude.Add(txtWeatherFile.Text)
-            End If
-            For i As Integer = 0 To lstAllFiles.Items.Count - 1
-                filesToInclude.Add(lstAllFiles.Items(i))
-            Next
-
-            _SF.CreateDPHXFile(DPHXFilename, filesToInclude)
-
-            SessionUntouched()
-
-        End If
+        SaveSession()
 
     End Sub
 

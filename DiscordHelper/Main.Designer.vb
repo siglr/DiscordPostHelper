@@ -245,7 +245,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -256,6 +255,7 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2962,26 +2962,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3076,6 +3056,26 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3091,6 +3091,7 @@ Partial Class Main
         Me.Controls.Add(Me.btnReset)
         Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(1366, 768)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
