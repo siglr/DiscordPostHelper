@@ -156,7 +156,8 @@ Public Class ATCWaypoint
         Dim strParts As String() = strWorldPosition.Split(",")
         pLatitude = Conversions.ConvertToLatitude(strParts(0))
         pLongitude = Conversions.ConvertToLongitude(strParts(1))
-        pElevation = Double.Parse(strParts(2), CultureInfo.InvariantCulture)
+        If Not Double.TryParse(strParts(2).Replace("-000-", "-"), NumberStyles.Number, CultureInfo.InvariantCulture, pElevation) Then
+        End If
     End Sub
 
     Private Sub CheckTaskStartOrEnd()
