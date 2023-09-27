@@ -542,8 +542,8 @@ Public Class Main
             Else
                 MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
         Next
+        LoadPossibleImagesInMapDropdown()
 
     End Sub
 
@@ -2411,30 +2411,35 @@ Public Class Main
 
         _loadingFile = True
 
-        Dim currentImage As String = String.Empty
-
-        'Load up the possible images in the dropdown list
-        If mapToSelect = "" Then
-            currentImage = cboBriefingMap.Text
-        Else
-            currentImage = mapToSelect
-        End If
+        ' Load up the possible images in the dropdown list
         cboBriefingMap.Items.Clear()
+        Dim mapItemSelected As Boolean = False ' Track if an item with "Map" is selected
+
         For Each item As String In lstAllFiles.Items
             Dim fileExtension As String = Path.GetExtension(item).ToLower
             If fileExtension = ".png" OrElse fileExtension = ".jpg" Then
                 cboBriefingMap.Items.Add(item)
-                If item = currentImage Then
+
+                ' Check if the item contains "Map" and select it
+                If Not mapItemSelected AndAlso item.Contains("Map") Then
                     cboBriefingMap.SelectedItem = item
+                    mapItemSelected = True
                 End If
             End If
         Next
-        If cboBriefingMap.SelectedIndex = -1 Then
+
+        ' If no item with "Map" was found, select the current image or the first item
+        If Not mapItemSelected Then
+            If mapToSelect <> "" AndAlso cboBriefingMap.Items.Contains(mapToSelect) Then
+                cboBriefingMap.SelectedItem = mapToSelect
+            ElseIf cboBriefingMap.Items.Count > 0 Then
+                cboBriefingMap.SelectedIndex = 0
+            End If
         End If
 
         _loadingFile = False
-
     End Sub
+
     Private Sub GenerateBriefing()
 
         LoadPossibleImagesInMapDropdown()
