@@ -3374,7 +3374,9 @@ Public Class Main
                 txtDurationMax.Text = .DurationMax
                 txtDurationExtraInfo.Text = .DurationExtraInfo
                 cboRecommendedGliders.Text = .RecommendedGliders
-                cboDifficulty.Text = .DifficultyRating
+                Dim diffRatingIndex As Integer = 0
+                Integer.TryParse(.DifficultyRating.Substring(0, 1), diffRatingIndex)
+                cboDifficulty.SelectedIndex = diffRatingIndex
                 txtDifficultyExtraInfo.Text = .DifficultyExtraInfo
                 chkDescriptionLock.Checked = .LockShortDescription
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
