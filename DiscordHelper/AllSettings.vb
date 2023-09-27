@@ -26,6 +26,12 @@ Public Class AllSettings
     <XmlElement("MainFormLocation")>
     Public Property MainFormLocation As String
 
+    <XmlElement("ExpertMode")>
+    Public Property ExpertMode As Boolean
+
+    <XmlElement("MergeSecondaryPosts")>
+    Public Property MergeSecondaryPosts As Boolean
+
     Public Sub New()
 
     End Sub
@@ -54,6 +60,8 @@ Public Class AllSettings
             _LastFileLoaded = settingsInFile.LastFileLoaded
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
+            ExpertMode = settingsInFile.ExpertMode
+            MergeSecondaryPosts = settingsInFile.MergeSecondaryPosts
 
         Else
             settingsFound = False

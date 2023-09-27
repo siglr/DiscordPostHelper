@@ -245,7 +245,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -257,6 +256,8 @@ Partial Class Main
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -297,7 +298,7 @@ Partial Class Main
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
         Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1024, 768)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1487, 907)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1412, 907)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -312,7 +313,7 @@ Partial Class Main
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1487, 907)
+        Me.TabControl1.Size = New System.Drawing.Size(1412, 907)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -2130,6 +2131,7 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Controls.Add(Me.lblAllSecPostsTotalCars)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
@@ -2153,7 +2155,7 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
-        Me.tabDiscord.Size = New System.Drawing.Size(1479, 874)
+        Me.tabDiscord.Size = New System.Drawing.Size(1404, 874)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
@@ -2227,7 +2229,7 @@ Partial Class Main
         'txtAddOnsDetails
         '
         Me.txtAddOnsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAddOnsDetails.Location = New System.Drawing.Point(1141, 246)
+        Me.txtAddOnsDetails.Location = New System.Drawing.Point(1124, 545)
         Me.txtAddOnsDetails.Multiline = True
         Me.txtAddOnsDetails.Name = "txtAddOnsDetails"
         Me.txtAddOnsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2240,7 +2242,7 @@ Partial Class Main
         'txtWaypointsDetails
         '
         Me.txtWaypointsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWaypointsDetails.Location = New System.Drawing.Point(1141, 217)
+        Me.txtWaypointsDetails.Location = New System.Drawing.Point(1124, 516)
         Me.txtWaypointsDetails.Multiline = True
         Me.txtWaypointsDetails.Name = "txtWaypointsDetails"
         Me.txtWaypointsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2254,7 +2256,7 @@ Partial Class Main
         '
         Me.lblNbrCarsRestrictions.AutoSize = True
         Me.lblNbrCarsRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsRestrictions.Location = New System.Drawing.Point(1219, 43)
+        Me.lblNbrCarsRestrictions.Location = New System.Drawing.Point(1202, 342)
         Me.lblNbrCarsRestrictions.Name = "lblNbrCarsRestrictions"
         Me.lblNbrCarsRestrictions.Size = New System.Drawing.Size(22, 26)
         Me.lblNbrCarsRestrictions.TabIndex = 71
@@ -2264,7 +2266,7 @@ Partial Class Main
         'txtGroupFlightEventPost
         '
         Me.txtGroupFlightEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(1141, 295)
+        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(1124, 594)
         Me.txtGroupFlightEventPost.Multiline = True
         Me.txtGroupFlightEventPost.Name = "txtGroupFlightEventPost"
         Me.txtGroupFlightEventPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2474,7 +2476,7 @@ Partial Class Main
         'txtDiscordEventDescription
         '
         Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1271, 295)
+        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1254, 594)
         Me.txtDiscordEventDescription.Multiline = True
         Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
         Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2486,7 +2488,7 @@ Partial Class Main
         'txtDiscordEventTopic
         '
         Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1206, 291)
+        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1189, 590)
         Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
         Me.txtDiscordEventTopic.Size = New System.Drawing.Size(59, 32)
         Me.txtDiscordEventTopic.TabIndex = 6
@@ -2498,7 +2500,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherClouds.AutoSize = True
         Me.lblNbrCarsWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(1219, 127)
+        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(1202, 426)
         Me.lblNbrCarsWeatherClouds.Name = "lblNbrCarsWeatherClouds"
         Me.lblNbrCarsWeatherClouds.Size = New System.Drawing.Size(22, 26)
         Me.lblNbrCarsWeatherClouds.TabIndex = 14
@@ -2508,7 +2510,7 @@ Partial Class Main
         'txtFullDescriptionResults
         '
         Me.txtFullDescriptionResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(1141, 188)
+        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(1124, 487)
         Me.txtFullDescriptionResults.Multiline = True
         Me.txtFullDescriptionResults.Name = "txtFullDescriptionResults"
         Me.txtFullDescriptionResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2521,7 +2523,7 @@ Partial Class Main
         'txtWeatherFirstPart
         '
         Me.txtWeatherFirstPart.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(1141, 75)
+        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(1124, 374)
         Me.txtWeatherFirstPart.Multiline = True
         Me.txtWeatherFirstPart.Name = "txtWeatherFirstPart"
         Me.txtWeatherFirstPart.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2534,7 +2536,7 @@ Partial Class Main
         'txtFilesText
         '
         Me.txtFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFilesText.Location = New System.Drawing.Point(1141, 162)
+        Me.txtFilesText.Location = New System.Drawing.Point(1124, 461)
         Me.txtFilesText.Multiline = True
         Me.txtFilesText.Name = "txtFilesText"
         Me.txtFilesText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2547,7 +2549,7 @@ Partial Class Main
         'txtWeatherWinds
         '
         Me.txtWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherWinds.Location = New System.Drawing.Point(1141, 104)
+        Me.txtWeatherWinds.Location = New System.Drawing.Point(1124, 403)
         Me.txtWeatherWinds.Multiline = True
         Me.txtWeatherWinds.Name = "txtWeatherWinds"
         Me.txtWeatherWinds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2560,7 +2562,7 @@ Partial Class Main
         'txtFPResults
         '
         Me.txtFPResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFPResults.Location = New System.Drawing.Point(1141, 16)
+        Me.txtFPResults.Location = New System.Drawing.Point(1124, 315)
         Me.txtFPResults.Multiline = True
         Me.txtFPResults.Name = "txtFPResults"
         Me.txtFPResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2573,7 +2575,7 @@ Partial Class Main
         'txtWeatherClouds
         '
         Me.txtWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherClouds.Location = New System.Drawing.Point(1141, 133)
+        Me.txtWeatherClouds.Location = New System.Drawing.Point(1124, 432)
         Me.txtWeatherClouds.Multiline = True
         Me.txtWeatherClouds.Name = "txtWeatherClouds"
         Me.txtWeatherClouds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2587,7 +2589,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherInfo.AutoSize = True
         Me.lblNbrCarsWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(1219, 72)
+        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(1202, 371)
         Me.lblNbrCarsWeatherInfo.Name = "lblNbrCarsWeatherInfo"
         Me.lblNbrCarsWeatherInfo.Size = New System.Drawing.Size(22, 26)
         Me.lblNbrCarsWeatherInfo.TabIndex = 11
@@ -2597,7 +2599,7 @@ Partial Class Main
         'txtAltRestrictions
         '
         Me.txtAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAltRestrictions.Location = New System.Drawing.Point(1141, 46)
+        Me.txtAltRestrictions.Location = New System.Drawing.Point(1124, 345)
         Me.txtAltRestrictions.Multiline = True
         Me.txtAltRestrictions.Name = "txtAltRestrictions"
         Me.txtAltRestrictions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2611,7 +2613,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherWinds.AutoSize = True
         Me.lblNbrCarsWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(1219, 101)
+        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(1202, 400)
         Me.lblNbrCarsWeatherWinds.Name = "lblNbrCarsWeatherWinds"
         Me.lblNbrCarsWeatherWinds.Size = New System.Drawing.Size(22, 26)
         Me.lblNbrCarsWeatherWinds.TabIndex = 12
@@ -2622,7 +2624,7 @@ Partial Class Main
         '
         Me.lblNbrCarsFilesText.AutoSize = True
         Me.lblNbrCarsFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1219, 156)
+        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1202, 455)
         Me.lblNbrCarsFilesText.Name = "lblNbrCarsFilesText"
         Me.lblNbrCarsFilesText.Size = New System.Drawing.Size(22, 26)
         Me.lblNbrCarsFilesText.TabIndex = 76
@@ -2964,26 +2966,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -2992,7 +2974,7 @@ Partial Class Main
         '
         Me.btnReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReset.Location = New System.Drawing.Point(503, 3)
+        Me.btnReset.Location = New System.Drawing.Point(428, 3)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(118, 35)
         Me.btnReset.TabIndex = 0
@@ -3005,7 +2987,7 @@ Partial Class Main
         '
         Me.btnLoadConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadConfig.Location = New System.Drawing.Point(627, 3)
+        Me.btnLoadConfig.Location = New System.Drawing.Point(552, 3)
         Me.btnLoadConfig.Name = "btnLoadConfig"
         Me.btnLoadConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnLoadConfig.TabIndex = 1
@@ -3018,7 +3000,7 @@ Partial Class Main
         '
         Me.btnSaveConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveConfig.Location = New System.Drawing.Point(751, 3)
+        Me.btnSaveConfig.Location = New System.Drawing.Point(676, 3)
         Me.btnSaveConfig.Name = "btnSaveConfig"
         Me.btnSaveConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnSaveConfig.TabIndex = 2
@@ -3031,7 +3013,7 @@ Partial Class Main
         '
         Me.btnCreateShareablePack.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCreateShareablePack.Location = New System.Drawing.Point(875, 3)
+        Me.btnCreateShareablePack.Location = New System.Drawing.Point(800, 3)
         Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
         Me.btnCreateShareablePack.Size = New System.Drawing.Size(135, 35)
         Me.btnCreateShareablePack.TabIndex = 3
@@ -3044,7 +3026,7 @@ Partial Class Main
         '
         Me.btnLoadB21Planner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadB21Planner.Location = New System.Drawing.Point(1016, 3)
+        Me.btnLoadB21Planner.Location = New System.Drawing.Point(941, 3)
         Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
         Me.btnLoadB21Planner.Size = New System.Drawing.Size(152, 35)
         Me.btnLoadB21Planner.TabIndex = 4
@@ -3057,7 +3039,7 @@ Partial Class Main
         '
         Me.btnGuideMe.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideMe.Location = New System.Drawing.Point(1175, 3)
+        Me.btnGuideMe.Location = New System.Drawing.Point(1100, 3)
         Me.btnGuideMe.Name = "btnGuideMe"
         Me.btnGuideMe.Size = New System.Drawing.Size(155, 35)
         Me.btnGuideMe.TabIndex = 5
@@ -3069,7 +3051,7 @@ Partial Class Main
         '
         Me.btnTurnGuideOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1336, 3)
+        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1261, 3)
         Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
         Me.btnTurnGuideOff.Size = New System.Drawing.Size(139, 35)
         Me.btnTurnGuideOff.TabIndex = 6
@@ -3090,12 +3072,46 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
         Me.btnPasteUsernameCredits.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'chkExpertMode
+        '
+        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
+        Me.chkExpertMode.Name = "chkExpertMode"
+        Me.chkExpertMode.Size = New System.Drawing.Size(291, 52)
+        Me.chkExpertMode.TabIndex = 95
+        Me.chkExpertMode.Tag = "44"
+        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
+        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
+        Me.chkExpertMode.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1487, 915)
+        Me.ClientSize = New System.Drawing.Size(1412, 915)
         Me.Controls.Add(Me.btnTurnGuideOff)
         Me.Controls.Add(Me.btnGuideMe)
         Me.Controls.Add(Me.btnLoadB21Planner)
@@ -3385,4 +3401,5 @@ Partial Class Main
     Friend WithEvents Label31 As Label
     Friend WithEvents btnDiscordTaskThreadURLPaste As Button
     Friend WithEvents btnPasteUsernameCredits As Button
+    Friend WithEvents chkExpertMode As CheckBox
 End Class

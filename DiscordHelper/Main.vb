@@ -128,6 +128,9 @@ Public Class Main
         _loadingFile = False
         CheckForNewVersion()
 
+        chkExpertMode.Checked = SessionSettings.ExpertMode
+        chkGroupSecondaryPosts.Checked = SessionSettings.MergeSecondaryPosts
+
     End Sub
 
     Private Sub RestoreMainFormLocationAndSize()
@@ -791,7 +794,15 @@ Public Class Main
     End Sub
 
 #Region "Clipboard buttons on the Flight Plan Tab"
+
+    Private Sub chkExpertMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkExpertMode.CheckedChanged
+        SessionSettings.ExpertMode = chkExpertMode.Checked
+    End Sub
+
     Private Sub btnFPMainInfoCopy_Click(sender As Object, e As EventArgs) Handles btnFPMainInfoCopy.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
         BuildFPResults()
         Clipboard.SetText(txtFPResults.Text)
         CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
@@ -809,16 +820,21 @@ Public Class Main
             End Try
             If txtTaskFlightPlanURL.Text = String.Empty Then
                 MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                autoContinue = False
             End If
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+        If autoContinue Then
+            btnFullDescriptionCopy_Click(sender, e)
+        End If
     End Sub
 
     Private Sub btnFilesCopy_Click(sender As Object, e As EventArgs) Handles btnFilesCopy.Click
 
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
         Dim dlgResult As DialogResult
 
         Do While _sessionModified
@@ -868,11 +884,17 @@ Public Class Main
             End If
         Else
             MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            autoContinue = False
+        End If
+        If autoContinue Then
+            btnFilesTextCopy_Click(sender, e)
         End If
 
     End Sub
 
     Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
         Dim sb As New StringBuilder
         sb.AppendLine("## 📁 **Files**")
@@ -913,9 +935,20 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+        If autoContinue Then
+            If chkGroupSecondaryPosts.Checked Then
+                btnCopyAllSecPosts_Click(sender, e)
+            Else
+                btnAltRestricCopy_Click(sender, e)
+            End If
+        End If
+
     End Sub
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
         BuildFPResults()
         BuildWeatherCloudLayers()
         BuildWeatherWindLayers()
@@ -924,7 +957,9 @@ Public Class Main
         Dim msg As String = txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
 
         If msg.Trim = String.Empty Then
-            MessageBox.Show(Me, "No restriction to post!", "Step 4 - Creating post for restrictions in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If sender Is btnAltRestricCopy Then
+                MessageBox.Show(Me, "No restriction to post!", "Step 4 - Creating post for restrictions in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         Else
             Clipboard.SetText(msg)
             CopyContent.ShowContent(Me,
@@ -938,9 +973,15 @@ Public Class Main
             ShowGuide()
         End If
 
+        If autoContinue Then
+            btnWaypointsCopy_Click(sender, e)
+        End If
+
     End Sub
 
     Private Sub btnFullDescriptionCopy_Click(sender As Object, e As EventArgs) Handles btnFullDescriptionCopy.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
         BuildFPResults()
         BuildWeatherCloudLayers()
@@ -973,16 +1014,22 @@ Public Class Main
             End Try
             If txtDiscordTaskThreadURL.Text = String.Empty Then
                 MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                autoContinue = False
             End If
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+        If autoContinue Then
+            btnFilesCopy_Click(sender, e)
+        End If
 
     End Sub
 
     Private Sub btnWaypointsCopy_Click(sender As Object, e As EventArgs) Handles btnWaypointsCopy.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
         BuildFPResults()
         BuildWeatherCloudLayers()
@@ -990,7 +1037,9 @@ Public Class Main
         BuildWeatherInfoResults()
 
         If txtWaypointsDetails.Text.Length = 0 Then
-            MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If sender Is btnWaypointsCopy Then
+                MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         Else
             Clipboard.SetText(txtWaypointsDetails.Text)
             CopyContent.ShowContent(Me,
@@ -1003,7 +1052,9 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-
+        If autoContinue Then
+            btnAddOnsCopy_Click(sender, e)
+        End If
     End Sub
 
     Private Sub btnAddOnsCopy_Click(sender As Object, e As EventArgs) Handles btnAddOnsCopy.Click
@@ -1014,7 +1065,9 @@ Public Class Main
         BuildWeatherInfoResults()
 
         If txtAddOnsDetails.Text.Length = 0 Then
-            MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If sender Is btnAddOnsCopy Then
+                MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         Else
             Clipboard.SetText(txtAddOnsDetails.Text)
             CopyContent.ShowContent(Me,
@@ -1030,6 +1083,7 @@ Public Class Main
 
     Private Sub chkGroupSecondaryPosts_CheckedChanged(sender As Object, e As EventArgs) Handles chkGroupSecondaryPosts.CheckedChanged
 
+        SessionSettings.MergeSecondaryPosts = chkGroupSecondaryPosts.Checked
         SetVisibilityForSecPosts()
 
     End Sub
@@ -3354,6 +3408,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 
