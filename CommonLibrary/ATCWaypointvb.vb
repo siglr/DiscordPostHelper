@@ -88,66 +88,68 @@ Public Class ATCWaypoint
             If WaypointName.StartsWith("*") Then
                 WaypointName = WaypointName.Substring(1, WaypointName.Length - 1)
             End If
+
+            'Read the radius part if any
+            If Not (strFullATCId.Contains("x") AndAlso Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("x") + 1), _Diameter)) Then
+                If ICAO = String.Empty Then
+                    If IsTaskStart Then
+                        _Diameter = 5000
+                    End If
+                    If IsTaskEnd Then
+                        _Diameter = 4000
+                    End If
+                    If Not IsTaskStart And Not IsTaskEnd Then
+                        _Diameter = 1000
+                    End If
+                End If
+            End If
+
+            'Remove radius part (when only radius is specified)
+            If strFullATCId.Contains("|x") Then
+                strFullATCId = strFullATCId.Substring(0, strFullATCId.IndexOf("|"))
+            End If
+            'Remove radius part
+            If strFullATCId.Contains("x") Then
+                strFullATCId = strFullATCId.Substring(0, strFullATCId.IndexOf("x"))
+            End If
+
+            'Check if waypoint contains encoding valid restriction data
+            If strFullATCId.Contains("|") OrElse strFullATCId.Contains("/") Then
+
+                ContainsRestriction = True
+
+                'Remove elevation part
+                If strFullATCId.Contains("+") Then
+                    strFullATCId = strFullATCId.Substring(strFullATCId.IndexOfAny("/|"))
+                End If
+
+                Dim tempValue As Integer = 0
+                If strFullATCId.Contains("|") Then
+                    'Contains maximum
+                    If strFullATCId.Contains("/") Then
+                        If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1, strFullATCId.IndexOfAny("/") - 1), tempValue) Then
+                            _MaxAlt = tempValue
+                        End If
+                    Else
+                        If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1), tempValue) Then
+                            _MaxAlt = tempValue
+                        End If
+                    End If
+                End If
+                If strFullATCId.Contains("/") Then
+                    'Contains minimum
+                    If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("/") + 1), tempValue) Then
+                        _MinAlt = tempValue
+                    End If
+                End If
+
+            End If
+
         Else
             'No encoding
             WaypointName = strFullATCId
         End If
 
-        'Read the radius part if any
-        If Not (strFullATCId.Contains("x") AndAlso Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("x") + 1), _Diameter)) Then
-            If ICAO = String.Empty Then
-                If IsTaskStart Then
-                    _Diameter = 5000
-                End If
-                If IsTaskEnd Then
-                    _Diameter = 4000
-                End If
-                If Not IsTaskStart And Not IsTaskEnd Then
-                    _Diameter = 1000
-                End If
-            End If
-        End If
-
-        'Remove radius part (when only radius is specified)
-        If strFullATCId.Contains("|x") Then
-            strFullATCId = strFullATCId.Substring(0, strFullATCId.IndexOf("|"))
-        End If
-        'Remove radius part
-        If strFullATCId.Contains("x") Then
-            strFullATCId = strFullATCId.Substring(0, strFullATCId.IndexOf("x"))
-        End If
-
-        'Check if waypoint contains encoding valid restriction data
-        If strFullATCId.Contains("|") OrElse strFullATCId.Contains("/") Then
-
-            ContainsRestriction = True
-
-            'Remove elevation part
-            If strFullATCId.Contains("+") Then
-                strFullATCId = strFullATCId.Substring(strFullATCId.IndexOfAny("/|"))
-            End If
-
-            Dim tempValue As Integer = 0
-            If strFullATCId.Contains("|") Then
-                'Contains maximum
-                If strFullATCId.Contains("/") Then
-                    If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1, strFullATCId.IndexOfAny("/") - 1), tempValue) Then
-                        _MaxAlt = tempValue
-                    End If
-                Else
-                    If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("|") + 1), tempValue) Then
-                        _MaxAlt = tempValue
-                    End If
-                End If
-            End If
-            If strFullATCId.Contains("/") Then
-                'Contains minimum
-                If Integer.TryParse(strFullATCId.Substring(strFullATCId.IndexOf("/") + 1), tempValue) Then
-                    _MinAlt = tempValue
-                End If
-            End If
-
-        End If
     End Sub
 
     Private Sub SetLatitudeAndLongitude(strWorldPosition As String, ByRef pLatitude As Double, ByRef pLongitude As Double, ByRef pElevation As Double)
