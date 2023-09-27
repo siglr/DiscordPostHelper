@@ -2,6 +2,26 @@
   <CurrentLatestVersion>23.9.19.1</CurrentLatestVersion>
   <Releases>
     <Release>
+      <ReleaseVersion>23.9.27.1</ReleaseVersion>
+      <ReleaseTitle>Major release with several new features and improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check and message if the task distance is 0 to fix a bug where a flight plan can miss the asterix (*) to identify start and finish, but have waypoints called START and FINISH instead which are being recognized.
+        Fixed the task thread field not reseting itself.
+        Fixed the task description not displayed when copying to clipboard.
+        Fixed duration text when no min or max specified or only one of them or both are the same.
+        Support CTRL-S to save and if the task title has not changed, then auto-save without the dialog box.
+        Added a "Paste" button to insert username in credits field so it's easier to do a copy/paste.
+        Reviewed the full decoding of waypoint ID to prevent some very specific bugs.
+        Auto paste URL from task and task thread when clipboard content is valid after returning from posting on Discord.
+        Added the expert mode to auto-click on the next step when posting on Discord: way faster!
+        Both "Expert mode" and "Merge remaining posts" are now saved between sessions.
+        Added file drop zone area to drop all kind of files (DPH, DPHX, PLN, WPR, others).
+        When adding other files, auto-select the first image containing "Map" or if none, select the first image.
+        Renamed difficulty rating "Experimented" to "Experienced" and made sure to select the rating based on the number and not the full text.
+        Fixed a rare error with some waypoint's badly formatted negative elevation.
+      </ReleaseNotes>
+    </Release>
+    <Release>
       <ReleaseVersion>23.9.19.1</ReleaseVersion>
       <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
       <ReleaseNotes>

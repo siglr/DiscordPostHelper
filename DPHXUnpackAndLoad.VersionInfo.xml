@@ -2,6 +2,14 @@
   <CurrentLatestVersion>23.9.19.1</CurrentLatestVersion>
   <Releases>
     <Release>
+      <ReleaseVersion>23.9.27.1</ReleaseVersion>
+      <ReleaseTitle>Small release to stay in-sync with DPH Tool</ReleaseTitle>
+      <ReleaseNotes>
+        When clicking the button to open the task's thread, try to open on Discord app directly then fall back to browser if it didn't work.
+        Fixed duration text when no min or max specified or only one of them or both are the same.
+      </ReleaseNotes>
+    </Release>
+    <Release>
       <ReleaseVersion>23.9.19.1</ReleaseVersion>
       <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
       <ReleaseNotes>
