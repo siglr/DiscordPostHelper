@@ -797,7 +797,19 @@ Public Class Main
         CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
-            MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
+            Dim taskURL As String
+            Try
+                taskURL = Clipboard.GetText
+                If (Not taskURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(taskURL) AndAlso taskURL.Contains("discord.com/channels") Then
+                    txtTaskFlightPlanURL.Text = taskURL
+                    SaveSession()
+                End If
+            Catch ex As Exception
+            End Try
+            If txtTaskFlightPlanURL.Text = String.Empty Then
+                MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -949,7 +961,19 @@ Public Class Main
                                 "Step 2 - Creating full description post in the thread.")
         End If
         If txtDiscordTaskThreadURL.Text = String.Empty Then
-            MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            'Check if the clipboard contains a valid URL, which would mean the task's thread has been copied
+            Dim taskThreadURL As String
+            Try
+                taskThreadURL = Clipboard.GetText
+                If (Not taskThreadURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(taskThreadURL) AndAlso taskThreadURL.Contains("discord.com/channels") Then
+                    txtDiscordTaskThreadURL.Text = taskThreadURL
+                    SaveSession()
+                End If
+            Catch ex As Exception
+            End Try
+            If txtDiscordTaskThreadURL.Text = String.Empty Then
+                MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
         End If
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
