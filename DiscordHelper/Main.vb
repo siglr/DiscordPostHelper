@@ -12,6 +12,7 @@ Imports SIGLR.SoaringTools.ImageViewer
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Imports System.Linq.Expressions
 Imports System.Web.UI
+Imports System.Web
 
 Public Class Main
 
@@ -466,6 +467,85 @@ Public Class Main
 #Region "Flight Plan Tab"
 
 #Region "Event Handlers"
+
+    Private Sub FileDropZone1_FilesDropped(sender As Object, e As FilesDroppedEventArgs) Handles FileDropZone1.FilesDropped
+
+        Dim droppedFlightPlan As String = String.Empty
+        Dim droppedWeather As String = String.Empty
+        Dim droppedDPH As String = String.Empty
+        Dim droppedDPHX As String = String.Empty
+        Dim droppedOtherFiles As List(Of String) = New List(Of String)
+
+        ' Iterate through the array of dropped file paths
+        For Each filePath As String In e.DroppedFiles
+            ' Process each file
+            Select Case Path.GetExtension(filePath).ToUpper
+                Case ".PLN"
+                    droppedFlightPlan = filePath
+                Case ".WPR"
+                    droppedWeather = filePath
+                Case ".DPH"
+                    droppedDPH = filePath
+                Case ".DPHX"
+                    droppedDPHX = filePath
+                Case Else
+                    droppedOtherFiles.Add(filePath)
+            End Select
+        Next
+
+        'Handle all invalid cases
+        Dim invalidMessage As String = String.Empty
+        If droppedDPH <> String.Empty AndAlso droppedDPHX <> String.Empty Then
+            invalidMessage = "Either one DPH or one DPHX files can be dropped here, not both."
+        End If
+        If (droppedDPH <> String.Empty OrElse droppedDPHX <> String.Empty) AndAlso
+                (droppedFlightPlan <> String.Empty OrElse
+                droppedWeather <> String.Empty OrElse
+                droppedOtherFiles.Count > 0) Then
+            invalidMessage = "A DPH or DPHX file cannot be dropped along with any other files."
+        End If
+        If Not grbTaskInfo.Enabled AndAlso droppedFlightPlan = String.Empty AndAlso (droppedWeather <> String.Empty OrElse droppedOtherFiles.Count > 0) Then
+            invalidMessage = "There is no flight plan loaded or dropped to load, so no other files can be specified in an empty session."
+        End If
+        If invalidMessage <> String.Empty Then
+            MessageBox.Show(Me, invalidMessage, "Invalid file drop", vbOKOnly, MessageBoxIcon.Error)
+            Return
+        End If
+
+        'Process files
+        If droppedDPH <> String.Empty Then
+            LoadFile(droppedDPH)
+            Return
+        End If
+        If droppedDPHX <> String.Empty Then
+            LoadFile(droppedDPHX)
+            Return
+        End If
+        If droppedFlightPlan <> String.Empty Then
+            LoadFlightPlan(droppedFlightPlan)
+        End If
+        If droppedWeather <> String.Empty Then
+            LoadWeatherfile(droppedWeather)
+        End If
+        For Each otherFile As String In droppedOtherFiles
+            If lstAllFiles.Items.Count = 7 Then
+                MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit For
+            End If
+            If _SF.ExtraFileExtensionIsValid(otherFile) Then
+                If Not lstAllFiles.Items.Contains(otherFile) Then
+                    lstAllFiles.Items.Add(otherFile)
+                    SessionModified()
+                Else
+                    MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+
+        Next
+
+    End Sub
 
     Private Sub btnPasteUsernameCredits_Click(sender As Object, e As EventArgs) Handles btnPasteUsernameCredits.Click
 
@@ -3029,7 +3109,7 @@ Public Class Main
 
     Private Sub btnLoadConfig_Click(sender As Object, e As EventArgs) Handles btnLoadConfig.Click
         If CheckUnsavedAndConfirmAction("load a file") Then
-            LoadFile()
+            LoadFileDialog()
         End If
         Select Case TabControl1.SelectedTab.Name
             Case "tabBriefing"
@@ -3072,7 +3152,7 @@ Public Class Main
 
 #End Region
 
-    Private Sub LoadFile()
+    Private Sub LoadFileDialog()
 
         If txtFlightPlanFile.Text = String.Empty Then
             OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
@@ -3088,33 +3168,37 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-
-            Dim validSessionFile As Boolean = True
-
-            'Check if the selected file is a dph or dphx files
-            If Path.GetExtension(OpenFileDialog1.FileName) = ".dphx" Then
-                'Package - we need to unpack it first
-                OpenFileDialog1.FileName = _SF.UnpackDPHXFile(OpenFileDialog1.FileName)
-
-                If OpenFileDialog1.FileName = String.Empty Then
-                    validSessionFile = False
-                Else
-                    validSessionFile = True
-                End If
-            End If
-
-            If validSessionFile Then
-                ResetForm()
-                _loadingFile = True
-                LoadSessionData(OpenFileDialog1.FileName)
-                _CurrentSessionFile = OpenFileDialog1.FileName
-                GenerateBriefing()
-                _loadingFile = False
-            End If
+            LoadFile(OpenFileDialog1.FileName)
         End If
 
     End Sub
 
+    Private Sub LoadFile(selectedFilename As String)
+
+        Dim validSessionFile As Boolean = True
+
+        'Check if the selected file is a dph or dphx files
+        If Path.GetExtension(selectedFilename) = ".dphx" Then
+            'Package - we need to unpack it first
+            selectedFilename = _SF.UnpackDPHXFile(selectedFilename)
+
+            If selectedFilename = String.Empty Then
+                validSessionFile = False
+            Else
+                validSessionFile = True
+            End If
+        End If
+
+        If validSessionFile Then
+            ResetForm()
+            _loadingFile = True
+            LoadSessionData(selectedFilename)
+            _CurrentSessionFile = selectedFilename
+            GenerateBriefing()
+            _loadingFile = False
+        End If
+
+    End Sub
     Private Sub SaveSessionData(filename As String)
 
         Dim allCurrentData As AllData = SetAndRetrieveSessionData()
@@ -3408,7 +3492,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 

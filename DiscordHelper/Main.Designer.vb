@@ -34,6 +34,7 @@ Partial Class Main
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.chkTitleLock = New System.Windows.Forms.CheckBox()
         Me.chkArrivalLock = New System.Windows.Forms.CheckBox()
@@ -178,6 +179,7 @@ Partial Class Main
         Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
+        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
@@ -255,9 +257,8 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -298,7 +299,7 @@ Partial Class Main
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
         Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1024, 768)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1412, 907)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1494, 907)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -313,13 +314,15 @@ Partial Class Main
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1412, 907)
+        Me.TabControl1.Size = New System.Drawing.Size(1494, 907)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
         'tabFlightPlan
         '
         Me.tabFlightPlan.AutoScroll = True
+        Me.tabFlightPlan.BackColor = System.Drawing.Color.Transparent
+        Me.tabFlightPlan.Controls.Add(Me.FileDropZone1)
         Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskInfo)
         Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
@@ -329,10 +332,9 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1479, 874)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1486, 874)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
-        Me.tabFlightPlan.UseVisualStyleBackColor = True
         '
         'pnlGuide
         '
@@ -452,6 +454,18 @@ Partial Class Main
         Me.grbTaskInfo.Size = New System.Drawing.Size(729, 803)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
+        '
+        'btnPasteUsernameCredits
+        '
+        Me.btnPasteUsernameCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(641, 536)
+        Me.btnPasteUsernameCredits.Name = "btnPasteUsernameCredits"
+        Me.btnPasteUsernameCredits.Size = New System.Drawing.Size(79, 29)
+        Me.btnPasteUsernameCredits.TabIndex = 50
+        Me.btnPasteUsernameCredits.Tag = "22"
+        Me.btnPasteUsernameCredits.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
+        Me.btnPasteUsernameCredits.UseVisualStyleBackColor = True
         '
         'Label9
         '
@@ -1487,7 +1501,7 @@ Partial Class Main
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1479, 874)
+        Me.tabEvent.Size = New System.Drawing.Size(1486, 874)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
@@ -2155,10 +2169,24 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
-        Me.tabDiscord.Size = New System.Drawing.Size(1404, 874)
+        Me.tabDiscord.Size = New System.Drawing.Size(1486, 874)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
+        '
+        'chkExpertMode
+        '
+        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
+        Me.chkExpertMode.Name = "chkExpertMode"
+        Me.chkExpertMode.Size = New System.Drawing.Size(373, 52)
+        Me.chkExpertMode.TabIndex = 95
+        Me.chkExpertMode.Tag = "44"
+        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
+        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
+        Me.chkExpertMode.UseVisualStyleBackColor = True
         '
         'lblAllSecPostsTotalCars
         '
@@ -2913,7 +2941,7 @@ Partial Class Main
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1479, 874)
+        Me.tabBriefing.Size = New System.Drawing.Size(1486, 874)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
@@ -2925,7 +2953,7 @@ Partial Class Main
         Me.pnlBriefing.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlBriefing.Location = New System.Drawing.Point(0, 0)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1479, 874)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1486, 874)
         Me.pnlBriefing.TabIndex = 0
         '
         'pnlWizardBriefing
@@ -2935,7 +2963,7 @@ Partial Class Main
         Me.pnlWizardBriefing.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.pnlWizardBriefing.Controls.Add(Me.lblBriefingGuideInstructions)
         Me.pnlWizardBriefing.Controls.Add(Me.btnBriefingGuideNext)
-        Me.pnlWizardBriefing.Location = New System.Drawing.Point(980, 0)
+        Me.pnlWizardBriefing.Location = New System.Drawing.Point(987, 0)
         Me.pnlWizardBriefing.Name = "pnlWizardBriefing"
         Me.pnlWizardBriefing.Size = New System.Drawing.Size(498, 46)
         Me.pnlWizardBriefing.TabIndex = 95
@@ -2974,7 +3002,7 @@ Partial Class Main
         '
         Me.btnReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReset.Location = New System.Drawing.Point(428, 3)
+        Me.btnReset.Location = New System.Drawing.Point(510, 3)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(118, 35)
         Me.btnReset.TabIndex = 0
@@ -2987,7 +3015,7 @@ Partial Class Main
         '
         Me.btnLoadConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadConfig.Location = New System.Drawing.Point(552, 3)
+        Me.btnLoadConfig.Location = New System.Drawing.Point(634, 3)
         Me.btnLoadConfig.Name = "btnLoadConfig"
         Me.btnLoadConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnLoadConfig.TabIndex = 1
@@ -3000,7 +3028,7 @@ Partial Class Main
         '
         Me.btnSaveConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveConfig.Location = New System.Drawing.Point(676, 3)
+        Me.btnSaveConfig.Location = New System.Drawing.Point(758, 3)
         Me.btnSaveConfig.Name = "btnSaveConfig"
         Me.btnSaveConfig.Size = New System.Drawing.Size(118, 35)
         Me.btnSaveConfig.TabIndex = 2
@@ -3013,7 +3041,7 @@ Partial Class Main
         '
         Me.btnCreateShareablePack.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCreateShareablePack.Location = New System.Drawing.Point(800, 3)
+        Me.btnCreateShareablePack.Location = New System.Drawing.Point(882, 3)
         Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
         Me.btnCreateShareablePack.Size = New System.Drawing.Size(135, 35)
         Me.btnCreateShareablePack.TabIndex = 3
@@ -3026,7 +3054,7 @@ Partial Class Main
         '
         Me.btnLoadB21Planner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadB21Planner.Location = New System.Drawing.Point(941, 3)
+        Me.btnLoadB21Planner.Location = New System.Drawing.Point(1023, 3)
         Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
         Me.btnLoadB21Planner.Size = New System.Drawing.Size(152, 35)
         Me.btnLoadB21Planner.TabIndex = 4
@@ -3039,7 +3067,7 @@ Partial Class Main
         '
         Me.btnGuideMe.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideMe.Location = New System.Drawing.Point(1100, 3)
+        Me.btnGuideMe.Location = New System.Drawing.Point(1182, 3)
         Me.btnGuideMe.Name = "btnGuideMe"
         Me.btnGuideMe.Size = New System.Drawing.Size(155, 35)
         Me.btnGuideMe.TabIndex = 5
@@ -3051,7 +3079,7 @@ Partial Class Main
         '
         Me.btnTurnGuideOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1261, 3)
+        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1343, 3)
         Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
         Me.btnTurnGuideOff.Size = New System.Drawing.Size(139, 35)
         Me.btnTurnGuideOff.TabIndex = 6
@@ -3060,17 +3088,13 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'btnPasteUsernameCredits
+        'FileDropZone1
         '
-        Me.btnPasteUsernameCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(641, 536)
-        Me.btnPasteUsernameCredits.Name = "btnPasteUsernameCredits"
-        Me.btnPasteUsernameCredits.Size = New System.Drawing.Size(79, 29)
-        Me.btnPasteUsernameCredits.TabIndex = 50
-        Me.btnPasteUsernameCredits.Tag = "22"
-        Me.btnPasteUsernameCredits.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
-        Me.btnPasteUsernameCredits.UseVisualStyleBackColor = True
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 720)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 140)
+        Me.FileDropZone1.TabIndex = 84
         '
         'BriefingControl1
         '
@@ -3088,30 +3112,16 @@ Partial Class Main
         PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
         PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
         Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1479, 874)
+        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
-        '
-        'chkExpertMode
-        '
-        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
-        Me.chkExpertMode.Name = "chkExpertMode"
-        Me.chkExpertMode.Size = New System.Drawing.Size(291, 52)
-        Me.chkExpertMode.TabIndex = 95
-        Me.chkExpertMode.Tag = "44"
-        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
-        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
-        Me.chkExpertMode.UseVisualStyleBackColor = True
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1412, 915)
+        Me.ClientSize = New System.Drawing.Size(1494, 915)
         Me.Controls.Add(Me.btnTurnGuideOff)
         Me.Controls.Add(Me.btnGuideMe)
         Me.Controls.Add(Me.btnLoadB21Planner)
@@ -3402,4 +3412,5 @@ Partial Class Main
     Friend WithEvents btnDiscordTaskThreadURLPaste As Button
     Friend WithEvents btnPasteUsernameCredits As Button
     Friend WithEvents chkExpertMode As CheckBox
+    Friend WithEvents FileDropZone1 As CommonLibrary.FileDropZone
 End Class

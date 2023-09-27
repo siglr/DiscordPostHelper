@@ -119,6 +119,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CountryGeo.vb" />
+    <Compile Include="FileDropZone.Designer.vb">
+      <DependentUpon>FileDropZone.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FileDropZone.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -161,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Countdown.resx">
       <DependentUpon>Countdown.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileDropZone.resx">
+      <DependentUpon>FileDropZone.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
