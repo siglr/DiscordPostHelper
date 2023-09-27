@@ -27,8 +27,8 @@ Public Class FileDropZone
         Me.AllowDrop = True
 
         ' Set the initial border color and style
-        originalBorderColor = SystemColors.ControlLight
-        borderPen = New Pen(originalBorderColor, 1) ' Set initial border width
+        originalBorderColor = SystemColors.ControlDark
+        borderPen = New Pen(originalBorderColor, 3) ' Set initial border width
 
         ' Attach event handlers
         AddHandler Me.DragEnter, AddressOf FileDropZone_DragEnter
@@ -42,8 +42,7 @@ Public Class FileDropZone
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
             isDraggingOver = True
             originalBorderColor = borderPen.Color ' Store the original border color
-            borderPen.Color = Color.Green ' Change the border color to green
-            borderPen.Width = 2 ' Set a thicker border in dragging mode
+            borderPen.Width = 5 ' Set a thicker border in dragging mode
             Me.Invalidate() ' Force a redraw to update the border
             Me.RefreshBackground() ' Refresh the background to change the color
             e.Effect = DragDropEffects.Copy
@@ -56,7 +55,6 @@ Public Class FileDropZone
         ' Reset the border style and color when dragging leaves
         isDraggingOver = False
         borderPen.Color = originalBorderColor ' Restore the original border color
-        borderPen.Width = 1 ' Restore the original border width
         Me.Invalidate() ' Force a redraw to update the border
         Me.RefreshBackground() ' Refresh the background to change the color
     End Sub
@@ -68,8 +66,6 @@ Public Class FileDropZone
 
         ' Reset the border style and color
         isDraggingOver = False
-        borderPen.Color = originalBorderColor ' Restore the original border color
-        borderPen.Width = 1 ' Restore the original border width
         Me.Invalidate() ' Force a redraw to update the border
         Me.RefreshBackground() ' Refresh the background to change the color
     End Sub
@@ -79,14 +75,22 @@ Public Class FileDropZone
 
         ' Set the border style to dashed if not dragging, otherwise solid
         If Not isDraggingOver Then
-            borderPen.DashStyle = Drawing2D.DashStyle.Dash
+            borderPen.Width = 1 ' Restore the original border width
+            borderPen.Color = originalBorderColor ' Restore the original border color
+            ' Set the border style to dashed with a custom dash pattern
+            borderPen.DashStyle = Drawing2D.DashStyle.Custom
+            ' Define a custom dash pattern (e.g., longer dash, more space, longer dash, more space)
+            borderPen.DashPattern = New Single() {5, 3, 5, 3} ' Adjust the values as needed
         Else
+            borderPen.Color = Color.Green ' Change the border color to green
+            borderPen.Width = 5 ' Restore the original border width
             borderPen.DashStyle = Drawing2D.DashStyle.Solid
         End If
 
         ' Draw the border with the specified color and style
         Dim rect As Rectangle = New Rectangle(0, 0, Me.Width - 1, Me.Height - 1)
         e.Graphics.DrawRectangle(borderPen, rect)
+
     End Sub
 
     Protected Overrides Sub OnPaintBackground(e As PaintEventArgs)
