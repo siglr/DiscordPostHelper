@@ -114,6 +114,12 @@ Public Class AllData
     <XmlElement("WeatherSummary")>
     Public Property WeatherSummary As String
 
+    <XmlElement("SuppressBaroPressureWarningSymbol")>
+    Public Property SuppressBaroPressureWarningSymbol As Boolean
+
+    <XmlElement("BaroPressureExtraInfo")>
+    Public Property BaroPressureExtraInfo As String
+
     <XmlElement("RecommendedAddOns")>
     Public Property RecommendedAddOns As New List(Of RecommendedAddOn)
 

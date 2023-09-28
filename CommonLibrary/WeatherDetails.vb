@@ -88,13 +88,13 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property MSLPressure(Optional prefUnits As PreferredUnits = Nothing, Optional useEmoji As Boolean = True) As String
+    Public ReadOnly Property MSLPressure(textForNonStandard As String, suppressNonStandardWarning As Boolean, Optional prefUnits As PreferredUnits = Nothing, Optional useEmoji As Boolean = True) As String
         Get
 
             Dim notStdBaro As String = String.Empty
 
             If Not IsStandardMSLPressure Then
-                notStdBaro = If(useEmoji, " ⚠️ ", " * ") & "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
+                notStdBaro = If(suppressNonStandardWarning, " ", If(useEmoji, " ⚠️ ", " * ")) & textForNonStandard
             End If
 
             If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then

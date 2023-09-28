@@ -28,7 +28,6 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -94,6 +93,9 @@ Partial Class Main
         Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
+        Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
+        Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
+        Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
@@ -249,7 +251,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -260,6 +261,8 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -337,14 +340,6 @@ Partial Class Main
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 720)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 140)
-        Me.FileDropZone1.TabIndex = 84
-        '
         'pnlGuide
         '
         Me.pnlGuide.BackColor = System.Drawing.Color.Gray
@@ -352,7 +347,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 724)
+        Me.pnlGuide.Location = New System.Drawing.Point(0, 615)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1103,6 +1098,9 @@ Partial Class Main
         '
         'grbTaskPart2
         '
+        Me.grbTaskPart2.Controls.Add(Me.chkSuppressWarningForBaroPressure)
+        Me.grbTaskPart2.Controls.Add(Me.txtBaroPressureExtraInfo)
+        Me.grbTaskPart2.Controls.Add(Me.lblNonStdBaroPressure)
         Me.grbTaskPart2.Controls.Add(Me.GroupBox3)
         Me.grbTaskPart2.Controls.Add(Me.GroupBox2)
         Me.grbTaskPart2.Controls.Add(Me.chkLockCountries)
@@ -1117,12 +1115,45 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
         Me.grbTaskPart2.Controls.Add(Me.Label19)
         Me.grbTaskPart2.Enabled = False
-        Me.grbTaskPart2.Location = New System.Drawing.Point(743, 57)
+        Me.grbTaskPart2.Location = New System.Drawing.Point(743, -5)
         Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(729, 579)
+        Me.grbTaskPart2.Size = New System.Drawing.Size(729, 613)
         Me.grbTaskPart2.TabIndex = 3
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
+        '
+        'chkSuppressWarningForBaroPressure
+        '
+        Me.chkSuppressWarningForBaroPressure.AutoSize = True
+        Me.chkSuppressWarningForBaroPressure.Location = New System.Drawing.Point(189, 177)
+        Me.chkSuppressWarningForBaroPressure.Name = "chkSuppressWarningForBaroPressure"
+        Me.chkSuppressWarningForBaroPressure.Size = New System.Drawing.Size(164, 24)
+        Me.chkSuppressWarningForBaroPressure.TabIndex = 12
+        Me.chkSuppressWarningForBaroPressure.Tag = "19"
+        Me.chkSuppressWarningForBaroPressure.Text = "Suppress ⚠️Symbol"
+        Me.ToolTip1.SetToolTip(Me.chkSuppressWarningForBaroPressure, "When checked, the warning symbol will not be added next to a non-standard baromet" &
+        "ric pressure.")
+        Me.chkSuppressWarningForBaroPressure.UseVisualStyleBackColor = True
+        '
+        'txtBaroPressureExtraInfo
+        '
+        Me.txtBaroPressureExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBaroPressureExtraInfo.Location = New System.Drawing.Point(359, 172)
+        Me.txtBaroPressureExtraInfo.Name = "txtBaroPressureExtraInfo"
+        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(361, 32)
+        Me.txtBaroPressureExtraInfo.TabIndex = 13
+        Me.txtBaroPressureExtraInfo.Tag = "19"
+        Me.ToolTip1.SetToolTip(Me.txtBaroPressureExtraInfo, "Any extra information to add to a non-standard barometric pressure.")
+        '
+        'lblNonStdBaroPressure
+        '
+        Me.lblNonStdBaroPressure.AutoSize = True
+        Me.lblNonStdBaroPressure.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNonStdBaroPressure.Location = New System.Drawing.Point(6, 175)
+        Me.lblNonStdBaroPressure.Name = "lblNonStdBaroPressure"
+        Me.lblNonStdBaroPressure.Size = New System.Drawing.Size(148, 26)
+        Me.lblNonStdBaroPressure.TabIndex = 11
+        Me.lblNonStdBaroPressure.Text = "Barom. pressure"
         '
         'GroupBox3
         '
@@ -1135,10 +1166,10 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.btnExtraFileUp)
         Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
         Me.GroupBox3.Controls.Add(Me.txtDPHXPackageFilename)
-        Me.GroupBox3.Location = New System.Drawing.Point(6, 338)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(717, 229)
-        Me.GroupBox3.TabIndex = 12
+        Me.GroupBox3.TabIndex = 15
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
         '
@@ -1161,7 +1192,7 @@ Partial Class Main
         Me.cboBriefingMap.Name = "cboBriefingMap"
         Me.cboBriefingMap.Size = New System.Drawing.Size(531, 28)
         Me.cboBriefingMap.TabIndex = 6
-        Me.cboBriefingMap.Tag = "21"
+        Me.cboBriefingMap.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display")
         '
         'lstAllFiles
@@ -1174,7 +1205,7 @@ Partial Class Main
         Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstAllFiles.Size = New System.Drawing.Size(531, 124)
         Me.lstAllFiles.TabIndex = 1
-        Me.lstAllFiles.Tag = "20"
+        Me.lstAllFiles.Tag = "21"
         Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
         '
         'btnAddExtraFile
@@ -1184,7 +1215,7 @@ Partial Class Main
         Me.btnAddExtraFile.Name = "btnAddExtraFile"
         Me.btnAddExtraFile.Size = New System.Drawing.Size(175, 35)
         Me.btnAddExtraFile.TabIndex = 0
-        Me.btnAddExtraFile.Tag = "20"
+        Me.btnAddExtraFile.Tag = "21"
         Me.btnAddExtraFile.Text = "Add extra file"
         Me.ToolTip1.SetToolTip(Me.btnAddExtraFile, "Click to add an extra file to include with the flight plan.")
         Me.btnAddExtraFile.UseVisualStyleBackColor = True
@@ -1207,7 +1238,7 @@ Partial Class Main
         Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
         Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
         Me.btnRemoveExtraFile.TabIndex = 2
-        Me.btnRemoveExtraFile.Tag = "20"
+        Me.btnRemoveExtraFile.Tag = "21"
         Me.btnRemoveExtraFile.Text = "Remove selected file"
         Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the selected extra file from the flight plan.")
         Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
@@ -1220,7 +1251,7 @@ Partial Class Main
         Me.btnExtraFileUp.Name = "btnExtraFileUp"
         Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
         Me.btnExtraFileUp.TabIndex = 3
-        Me.btnExtraFileUp.Tag = "20"
+        Me.btnExtraFileUp.Tag = "21"
         Me.btnExtraFileUp.Text = "▲"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
         Me.btnExtraFileUp.UseVisualStyleBackColor = True
@@ -1233,7 +1264,7 @@ Partial Class Main
         Me.btnExtraFileDown.Name = "btnExtraFileDown"
         Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
         Me.btnExtraFileDown.TabIndex = 4
-        Me.btnExtraFileDown.Tag = "20"
+        Me.btnExtraFileDown.Tag = "21"
         Me.btnExtraFileDown.Text = "▼"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
         Me.btnExtraFileDown.UseVisualStyleBackColor = True
@@ -1258,10 +1289,10 @@ Partial Class Main
         Me.GroupBox2.Controls.Add(Me.btnAddRecAddOn)
         Me.GroupBox2.Controls.Add(Me.btnAddOnUp)
         Me.GroupBox2.Controls.Add(Me.btnEditSelectedAddOn)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 172)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 210)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(717, 160)
-        Me.GroupBox2.TabIndex = 11
+        Me.GroupBox2.TabIndex = 14
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Recommended Add-Ons"
         '
@@ -1273,7 +1304,7 @@ Partial Class Main
         Me.btnRemoveSelectedAddOns.Name = "btnRemoveSelectedAddOns"
         Me.btnRemoveSelectedAddOns.Size = New System.Drawing.Size(84, 35)
         Me.btnRemoveSelectedAddOns.TabIndex = 2
-        Me.btnRemoveSelectedAddOns.Tag = "19"
+        Me.btnRemoveSelectedAddOns.Tag = "20"
         Me.btnRemoveSelectedAddOns.Text = "Remove"
         Me.ToolTip1.SetToolTip(Me.btnRemoveSelectedAddOns, "Click to remove any selected add-on(s).")
         Me.btnRemoveSelectedAddOns.UseVisualStyleBackColor = True
@@ -1288,7 +1319,7 @@ Partial Class Main
         Me.lstAllRecommendedAddOns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(531, 124)
         Me.lstAllRecommendedAddOns.TabIndex = 5
-        Me.lstAllRecommendedAddOns.Tag = "19"
+        Me.lstAllRecommendedAddOns.Tag = "20"
         Me.ToolTip1.SetToolTip(Me.lstAllRecommendedAddOns, "List of the recommended add-ons for this task.")
         '
         'btnAddOnDown
@@ -1299,7 +1330,7 @@ Partial Class Main
         Me.btnAddOnDown.Name = "btnAddOnDown"
         Me.btnAddOnDown.Size = New System.Drawing.Size(84, 35)
         Me.btnAddOnDown.TabIndex = 4
-        Me.btnAddOnDown.Tag = "19"
+        Me.btnAddOnDown.Tag = "20"
         Me.btnAddOnDown.Text = "▼"
         Me.ToolTip1.SetToolTip(Me.btnAddOnDown, "Click to move the selected add-on down in the list.")
         Me.btnAddOnDown.UseVisualStyleBackColor = True
@@ -1311,7 +1342,7 @@ Partial Class Main
         Me.btnAddRecAddOn.Name = "btnAddRecAddOn"
         Me.btnAddRecAddOn.Size = New System.Drawing.Size(175, 35)
         Me.btnAddRecAddOn.TabIndex = 0
-        Me.btnAddRecAddOn.Tag = "19"
+        Me.btnAddRecAddOn.Tag = "20"
         Me.btnAddRecAddOn.Text = "Add new add-on"
         Me.ToolTip1.SetToolTip(Me.btnAddRecAddOn, "Click to add a recommended add-on to the list")
         Me.btnAddRecAddOn.UseVisualStyleBackColor = True
@@ -1324,7 +1355,7 @@ Partial Class Main
         Me.btnAddOnUp.Name = "btnAddOnUp"
         Me.btnAddOnUp.Size = New System.Drawing.Size(84, 35)
         Me.btnAddOnUp.TabIndex = 3
-        Me.btnAddOnUp.Tag = "19"
+        Me.btnAddOnUp.Tag = "20"
         Me.btnAddOnUp.Text = "▲"
         Me.ToolTip1.SetToolTip(Me.btnAddOnUp, "Click to move the selected add-on up in the list.")
         Me.btnAddOnUp.UseVisualStyleBackColor = True
@@ -1337,7 +1368,7 @@ Partial Class Main
         Me.btnEditSelectedAddOn.Name = "btnEditSelectedAddOn"
         Me.btnEditSelectedAddOn.Size = New System.Drawing.Size(84, 35)
         Me.btnEditSelectedAddOn.TabIndex = 1
-        Me.btnEditSelectedAddOn.Tag = "19"
+        Me.btnEditSelectedAddOn.Tag = "20"
         Me.btnEditSelectedAddOn.Text = "Edit"
         Me.ToolTip1.SetToolTip(Me.btnEditSelectedAddOn, "Click to edit the selected add-on.")
         Me.btnEditSelectedAddOn.UseVisualStyleBackColor = True
@@ -1465,7 +1496,7 @@ Partial Class Main
         '
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(4, 137)
+        Me.Label19.Location = New System.Drawing.Point(6, 137)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(166, 26)
         Me.Label19.TabIndex = 8
@@ -1477,10 +1508,10 @@ Partial Class Main
         Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskThreadURL)
         Me.grbTaskDiscord.Controls.Add(Me.Label31)
         Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 642)
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 614)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(728, 72)
-        Me.grbTaskDiscord.TabIndex = 83
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(729, 72)
+        Me.grbTaskDiscord.TabIndex = 4
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord"
         '
@@ -1491,7 +1522,7 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
-        Me.btnDiscordTaskThreadURLPaste.Tag = "22"
+        Me.btnDiscordTaskThreadURLPaste.Tag = "23"
         Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task's discussion thread URL from your clipboard")
         Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
@@ -1503,7 +1534,7 @@ Partial Class Main
         Me.txtDiscordTaskThreadURL.Name = "txtDiscordTaskThreadURL"
         Me.txtDiscordTaskThreadURL.Size = New System.Drawing.Size(448, 32)
         Me.txtDiscordTaskThreadURL.TabIndex = 1
-        Me.txtDiscordTaskThreadURL.Tag = "22"
+        Me.txtDiscordTaskThreadURL.Tag = "23"
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The task's thread URL on Discord, i.e., where to post results among other things")
         '
         'Label31
@@ -3017,26 +3048,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3130,6 +3141,34 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
+        Me.FileDropZone1.TabIndex = 5
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -3429,4 +3468,7 @@ Partial Class Main
     Friend WithEvents chkExpertMode As CheckBox
     Friend WithEvents FileDropZone1 As CommonLibrary.FileDropZone
     Friend WithEvents chkSoaringTypeWave As CheckBox
+    Friend WithEvents chkSuppressWarningForBaroPressure As CheckBox
+    Friend WithEvents txtBaroPressureExtraInfo As TextBox
+    Friend WithEvents lblNonStdBaroPressure As Label
 End Class

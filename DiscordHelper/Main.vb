@@ -230,6 +230,8 @@ Public Class Main
         txtDifficultyExtraInfo.Text = String.Empty
         txtShortDescription.Text = String.Empty
         chkDescriptionLock.Checked = False
+        chkSuppressWarningForBaroPressure.Checked = False
+        txtBaroPressureExtraInfo.Text = "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkLockCountries.Checked = False
@@ -269,6 +271,9 @@ Public Class Main
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
         btnExtraFileUp.Enabled = False
+        chkSuppressWarningForBaroPressure.Enabled = False
+        txtBaroPressureExtraInfo.Enabled = False
+        lblNonStdBaroPressure.Enabled = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.AllWaypoints.Clear()
@@ -340,7 +345,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -602,6 +607,7 @@ Public Class Main
                                                                           chkIncludeYear.CheckedChanged,
                                                                           chkSoaringTypeRidge.CheckedChanged,
                                                                           chkUseOnlyWeatherSummary.CheckedChanged,
+                                                                          chkSuppressWarningForBaroPressure.CheckedChanged,
                                                                           txtLongDescription.TextChanged,
                                                                           txtEventTitle.TextChanged,
                                                                           txtEventDescription.TextChanged,
@@ -630,7 +636,7 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged
+                                                                          cboDifficulty.SelectedIndexChanged, txtBaroPressureExtraInfo.TextChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -682,7 +688,7 @@ Public Class Main
                                                                                            txtArrivalName.Leave,
                                                                                            txtArrivalExtraInfo.Leave,
                                                                                            txtLongDescription.Leave,
-                                                                                           txtWeatherSummary.Leave
+                                                                                           txtWeatherSummary.Leave, txtBaroPressureExtraInfo.Leave
 
         'BuildFPResults()
 
@@ -1792,6 +1798,17 @@ Public Class Main
             BuildWeatherWindLayers()
         End If
 
+        If _WeatherDetails.IsStandardMSLPressure Then
+            chkSuppressWarningForBaroPressure.Enabled = False
+            txtBaroPressureExtraInfo.Enabled = False
+            lblNonStdBaroPressure.Enabled = False
+
+        Else
+            chkSuppressWarningForBaroPressure.Enabled = True
+            txtBaroPressureExtraInfo.Enabled = True
+            lblNonStdBaroPressure.Enabled = True
+        End If
+
         SessionModified()
 
     End Sub
@@ -1844,7 +1861,7 @@ Public Class Main
                 sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}{Environment.NewLine}")
             End If
             sb.Append($"- Elevation measurement: {_WeatherDetails.AltitudeMeasurement}{Environment.NewLine}")
-            sb.Append($"- MSLPressure: {_WeatherDetails.MSLPressure}{Environment.NewLine}")
+            sb.Append($"- MSLPressure: {_WeatherDetails.MSLPressure(txtBaroPressureExtraInfo.Text, chkSuppressWarningForBaroPressure.Checked)}{Environment.NewLine}")
             sb.Append($"- MSLTemperature: {_WeatherDetails.MSLTemperature}{Environment.NewLine}")
             sb.Append($"- Humidity: {_WeatherDetails.Humidity}")
             If _WeatherDetails.HasPrecipitations Then
@@ -2644,36 +2661,41 @@ Public Class Main
                 SetFocusOnField(txtLongDescription, fromF1Key)
             Case 17 'Countries
                 SetGuidePanelToRight()
-                pnlGuide.Top = 88
+                pnlGuide.Top = 28
                 lblGuideInstructions.Text = "Countries to show in the topic should be read from the waypoints, but you can optionally specify them yourself here."
                 SetFocusOnField(cboCountryFlag, fromF1Key)
             Case 18 'Weather summary
                 SetGuidePanelToRight()
-                pnlGuide.Top = 163
+                pnlGuide.Top = 102
                 lblGuideInstructions.Text = "Optional weather summary. If you don't want the full weather details to be included, tick the checkbox to the left. Only the summary will then be shown."
                 SetFocusOnField(txtWeatherSummary, fromF1Key)
-            Case 19 'Recommended add-ons
+            Case 19 'Non standard Barometric Pressure
                 SetGuidePanelToRight()
-                pnlGuide.Top = 247
+                pnlGuide.Top = 139
+                lblGuideInstructions.Text = "If barometric pressure is non-standard, allow you to suppress the warning symbol and set any text you want to display with the barometric pressure."
+                SetFocusOnField(chkSuppressWarningForBaroPressure, fromF1Key)
+            Case 20 'Recommended add-ons
+                SetGuidePanelToRight()
+                pnlGuide.Top = 206
                 lblGuideInstructions.Text = "You can optionally recommend add-ons that go well with this task. Use this section to add, edit and remove recommended add-ons."
                 SetFocusOnField(btnAddRecAddOn, fromF1Key)
-            Case 20 'Extra files
+            Case 21 'Extra files
                 SetGuidePanelToRight()
-                pnlGuide.Top = 414
+                pnlGuide.Top = 372
                 lblGuideInstructions.Text = "Optionally, use this section to add and remove any extra files you want included with the task post. Maps, XCSoar track files, other images, etc."
                 SetFocusOnField(btnAddExtraFile, fromF1Key)
-            Case 21 'Map Image
+            Case 22 'Map Image
                 SetGuidePanelToRight()
-                pnlGuide.Top = 519
+                pnlGuide.Top = 497
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 22 'Task Thread
+            Case 23 'Task Thread
                 SetGuidePanelToRight()
-                pnlGuide.Top = 640
+                pnlGuide.Top = 615
                 lblGuideInstructions.Text = "Once you've create the task's thread on Discord and before posting the files, copy the thread's URL and paste it here."
                 SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
 
-            Case 23 To 29 'End of flight plan data
+            Case 24 To 29 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -3276,6 +3298,9 @@ Public Class Main
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
             .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
+            .SuppressBaroPressureWarningSymbol = chkSuppressWarningForBaroPressure.Checked
+            .BaroPressureExtraInfo = txtBaroPressureExtraInfo.Text
+
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
                 .ExtraFiles.Add(lstAllFiles.Items(i))
             Next
@@ -3403,6 +3428,9 @@ Public Class Main
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
                 chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
+                chkSuppressWarningForBaroPressure.Checked = .SuppressBaroPressureWarningSymbol
+                txtBaroPressureExtraInfo.Text = .BaroPressureExtraInfo
+
                 If .ExtraFiles.Count > 0 Then
                     For i As Integer = 0 To .ExtraFiles.Count - 1
 
