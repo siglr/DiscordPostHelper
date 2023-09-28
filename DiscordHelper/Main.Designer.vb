@@ -35,6 +35,7 @@ Partial Class Main
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.chkSoaringTypeWave = New System.Windows.Forms.CheckBox()
         Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.chkTitleLock = New System.Windows.Forms.CheckBox()
@@ -401,6 +402,7 @@ Partial Class Main
         '
         'grbTaskInfo
         '
+        Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
         Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
         Me.grbTaskInfo.Controls.Add(Me.Label9)
         Me.grbTaskInfo.Controls.Add(Me.chkTitleLock)
@@ -463,13 +465,26 @@ Partial Class Main
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
+        'chkSoaringTypeWave
+        '
+        Me.chkSoaringTypeWave.AutoSize = True
+        Me.chkSoaringTypeWave.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkSoaringTypeWave.Location = New System.Drawing.Point(377, 271)
+        Me.chkSoaringTypeWave.Name = "chkSoaringTypeWave"
+        Me.chkSoaringTypeWave.Size = New System.Drawing.Size(75, 30)
+        Me.chkSoaringTypeWave.TabIndex = 26
+        Me.chkSoaringTypeWave.Tag = "8"
+        Me.chkSoaringTypeWave.Text = "Wave"
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeWave, "Check if track involves wave soaring.")
+        Me.chkSoaringTypeWave.UseVisualStyleBackColor = True
+        '
         'btnPasteUsernameCredits
         '
         Me.btnPasteUsernameCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(641, 536)
         Me.btnPasteUsernameCredits.Name = "btnPasteUsernameCredits"
         Me.btnPasteUsernameCredits.Size = New System.Drawing.Size(79, 29)
-        Me.btnPasteUsernameCredits.TabIndex = 50
+        Me.btnPasteUsernameCredits.TabIndex = 53
         Me.btnPasteUsernameCredits.Tag = "22"
         Me.btnPasteUsernameCredits.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
@@ -482,7 +497,7 @@ Partial Class Main
         Me.Label9.Location = New System.Drawing.Point(4, 307)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(85, 26)
-        Me.Label9.TabIndex = 27
+        Me.Label9.TabIndex = 28
         Me.Label9.Text = "Distance"
         '
         'chkTitleLock
@@ -522,13 +537,13 @@ Partial Class Main
         '
         Me.chkSoaringTypeThermal.AutoSize = True
         Me.chkSoaringTypeThermal.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkSoaringTypeThermal.Location = New System.Drawing.Point(286, 271)
+        Me.chkSoaringTypeThermal.Location = New System.Drawing.Point(273, 271)
         Me.chkSoaringTypeThermal.Name = "chkSoaringTypeThermal"
-        Me.chkSoaringTypeThermal.Size = New System.Drawing.Size(107, 30)
+        Me.chkSoaringTypeThermal.Size = New System.Drawing.Size(98, 30)
         Me.chkSoaringTypeThermal.TabIndex = 25
         Me.chkSoaringTypeThermal.Tag = "8"
-        Me.chkSoaringTypeThermal.Text = "Thermals"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeThermal, "Check if track contains thermal soaring.")
+        Me.chkSoaringTypeThermal.Text = "Thermal"
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeThermal, "Check if track involves thermal soaring.")
         Me.chkSoaringTypeThermal.UseVisualStyleBackColor = True
         '
         'chkSoaringTypeRidge
@@ -541,16 +556,16 @@ Partial Class Main
         Me.chkSoaringTypeRidge.TabIndex = 24
         Me.chkSoaringTypeRidge.Tag = "8"
         Me.chkSoaringTypeRidge.Text = "Ridge"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeRidge, "Check if track contains ridge soaring.")
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeRidge, "Check if track involves ridge soaring.")
         Me.chkSoaringTypeRidge.UseVisualStyleBackColor = True
         '
         'txtSoaringTypeExtraInfo
         '
         Me.txtSoaringTypeExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSoaringTypeExtraInfo.Location = New System.Drawing.Point(412, 270)
+        Me.txtSoaringTypeExtraInfo.Location = New System.Drawing.Point(458, 270)
         Me.txtSoaringTypeExtraInfo.Name = "txtSoaringTypeExtraInfo"
-        Me.txtSoaringTypeExtraInfo.Size = New System.Drawing.Size(308, 32)
-        Me.txtSoaringTypeExtraInfo.TabIndex = 26
+        Me.txtSoaringTypeExtraInfo.Size = New System.Drawing.Size(262, 32)
+        Me.txtSoaringTypeExtraInfo.TabIndex = 27
         Me.txtSoaringTypeExtraInfo.Tag = "8"
         Me.ToolTip1.SetToolTip(Me.txtSoaringTypeExtraInfo, "Any extra information to add to the soaring type line.")
         '
@@ -763,7 +778,7 @@ Partial Class Main
         Me.cboSpeedUnits.Location = New System.Drawing.Point(337, 338)
         Me.cboSpeedUnits.Name = "cboSpeedUnits"
         Me.cboSpeedUnits.Size = New System.Drawing.Size(93, 32)
-        Me.cboSpeedUnits.TabIndex = 35
+        Me.cboSpeedUnits.TabIndex = 37
         Me.cboSpeedUnits.Tag = "10"
         Me.ToolTip1.SetToolTip(Me.cboSpeedUnits, "Select units to use for average speed input.")
         '
@@ -773,7 +788,7 @@ Partial Class Main
         Me.txtMinAvgSpeed.Location = New System.Drawing.Point(189, 338)
         Me.txtMinAvgSpeed.Name = "txtMinAvgSpeed"
         Me.txtMinAvgSpeed.Size = New System.Drawing.Size(50, 32)
-        Me.txtMinAvgSpeed.TabIndex = 33
+        Me.txtMinAvgSpeed.TabIndex = 34
         Me.txtMinAvgSpeed.Tag = "10"
         Me.txtMinAvgSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMinAvgSpeed, "Minimum average speed - used to calculate maximum duration.")
@@ -785,7 +800,7 @@ Partial Class Main
         Me.Label21.Location = New System.Drawing.Point(245, 341)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(30, 26)
-        Me.Label21.TabIndex = 34
+        Me.Label21.TabIndex = 35
         Me.Label21.Text = "to"
         '
         'txtMaxAvgSpeed
@@ -794,7 +809,7 @@ Partial Class Main
         Me.txtMaxAvgSpeed.Location = New System.Drawing.Point(281, 338)
         Me.txtMaxAvgSpeed.Name = "txtMaxAvgSpeed"
         Me.txtMaxAvgSpeed.Size = New System.Drawing.Size(50, 32)
-        Me.txtMaxAvgSpeed.TabIndex = 34
+        Me.txtMaxAvgSpeed.TabIndex = 36
         Me.txtMaxAvgSpeed.Tag = "10"
         Me.txtMaxAvgSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMaxAvgSpeed, "Maximum average speed - used to calculate minimum duration.")
@@ -806,7 +821,7 @@ Partial Class Main
         Me.Label22.Location = New System.Drawing.Point(4, 341)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(112, 26)
-        Me.Label22.TabIndex = 32
+        Me.Label22.TabIndex = 33
         Me.Label22.Text = "Avg. speeds"
         '
         'btnSelectWeatherFile
@@ -839,7 +854,7 @@ Partial Class Main
         Me.txtDurationMin.Location = New System.Drawing.Point(189, 372)
         Me.txtDurationMin.Name = "txtDurationMin"
         Me.txtDurationMin.Size = New System.Drawing.Size(50, 32)
-        Me.txtDurationMin.TabIndex = 37
+        Me.txtDurationMin.TabIndex = 39
         Me.txtDurationMin.Tag = "11"
         Me.txtDurationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDurationMin, "Approximate minimum duration in minutes")
@@ -851,7 +866,7 @@ Partial Class Main
         Me.Label12.Location = New System.Drawing.Point(4, 375)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(132, 26)
-        Me.Label12.TabIndex = 36
+        Me.Label12.TabIndex = 38
         Me.Label12.Text = "Duration (min)"
         '
         'txtDurationMax
@@ -860,7 +875,7 @@ Partial Class Main
         Me.txtDurationMax.Location = New System.Drawing.Point(281, 372)
         Me.txtDurationMax.Name = "txtDurationMax"
         Me.txtDurationMax.Size = New System.Drawing.Size(50, 32)
-        Me.txtDurationMax.TabIndex = 38
+        Me.txtDurationMax.TabIndex = 41
         Me.txtDurationMax.Tag = "11"
         Me.txtDurationMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDurationMax, "Approximate maximum duration in minutes")
@@ -872,7 +887,7 @@ Partial Class Main
         Me.Label13.Location = New System.Drawing.Point(245, 375)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(30, 26)
-        Me.Label13.TabIndex = 39
+        Me.Label13.TabIndex = 40
         Me.Label13.Text = "to"
         '
         'txtDurationExtraInfo
@@ -881,7 +896,7 @@ Partial Class Main
         Me.txtDurationExtraInfo.Location = New System.Drawing.Point(337, 372)
         Me.txtDurationExtraInfo.Name = "txtDurationExtraInfo"
         Me.txtDurationExtraInfo.Size = New System.Drawing.Size(383, 32)
-        Me.txtDurationExtraInfo.TabIndex = 39
+        Me.txtDurationExtraInfo.TabIndex = 42
         Me.txtDurationExtraInfo.Tag = "11"
         Me.ToolTip1.SetToolTip(Me.txtDurationExtraInfo, "Any extra information to add on the duration line.")
         '
@@ -892,7 +907,7 @@ Partial Class Main
         Me.Label14.Location = New System.Drawing.Point(4, 409)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(133, 26)
-        Me.Label14.TabIndex = 40
+        Me.Label14.TabIndex = 43
         Me.Label14.Text = "Recom. gliders"
         '
         'txtCredits
@@ -901,7 +916,7 @@ Partial Class Main
         Me.txtCredits.Location = New System.Drawing.Point(189, 535)
         Me.txtCredits.Name = "txtCredits"
         Me.txtCredits.Size = New System.Drawing.Size(446, 32)
-        Me.txtCredits.TabIndex = 49
+        Me.txtCredits.TabIndex = 52
         Me.txtCredits.Tag = "15"
         Me.txtCredits.Text = "All credits to @UserName for this task."
         Me.ToolTip1.SetToolTip(Me.txtCredits, "Specify credits for this flight as required.")
@@ -913,7 +928,7 @@ Partial Class Main
         Me.Label15.Location = New System.Drawing.Point(4, 443)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(144, 26)
-        Me.Label15.TabIndex = 42
+        Me.Label15.TabIndex = 45
         Me.Label15.Text = "Difficulty Rating"
         '
         'Label18
@@ -923,7 +938,7 @@ Partial Class Main
         Me.Label18.Location = New System.Drawing.Point(4, 538)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(73, 26)
-        Me.Label18.TabIndex = 48
+        Me.Label18.TabIndex = 51
         Me.Label18.Text = "Credits"
         '
         'lblTotalDistanceAndMiles
@@ -933,7 +948,7 @@ Partial Class Main
         Me.lblTotalDistanceAndMiles.Location = New System.Drawing.Point(245, 306)
         Me.lblTotalDistanceAndMiles.Name = "lblTotalDistanceAndMiles"
         Me.lblTotalDistanceAndMiles.Size = New System.Drawing.Size(160, 26)
-        Me.lblTotalDistanceAndMiles.TabIndex = 29
+        Me.lblTotalDistanceAndMiles.TabIndex = 30
         Me.lblTotalDistanceAndMiles.Text = "km / 9999 mi Total"
         '
         'lblTrackDistanceAndMiles
@@ -943,7 +958,7 @@ Partial Class Main
         Me.lblTrackDistanceAndMiles.Location = New System.Drawing.Point(468, 306)
         Me.lblTrackDistanceAndMiles.Name = "lblTrackDistanceAndMiles"
         Me.lblTrackDistanceAndMiles.Size = New System.Drawing.Size(156, 26)
-        Me.lblTrackDistanceAndMiles.TabIndex = 31
+        Me.lblTrackDistanceAndMiles.TabIndex = 32
         Me.lblTrackDistanceAndMiles.Text = "km / 9999 mi Task"
         '
         'cboDifficulty
@@ -955,7 +970,7 @@ Partial Class Main
         Me.cboDifficulty.Location = New System.Drawing.Point(189, 440)
         Me.cboDifficulty.Name = "cboDifficulty"
         Me.cboDifficulty.Size = New System.Drawing.Size(251, 32)
-        Me.cboDifficulty.TabIndex = 43
+        Me.cboDifficulty.TabIndex = 46
         Me.cboDifficulty.Tag = "13"
         Me.ToolTip1.SetToolTip(Me.cboDifficulty, "Select standard difficulty rating or None to use your own.")
         '
@@ -966,7 +981,7 @@ Partial Class Main
         Me.txtDistanceTotal.Name = "txtDistanceTotal"
         Me.txtDistanceTotal.ReadOnly = True
         Me.txtDistanceTotal.Size = New System.Drawing.Size(50, 32)
-        Me.txtDistanceTotal.TabIndex = 28
+        Me.txtDistanceTotal.TabIndex = 29
         Me.txtDistanceTotal.Tag = "9"
         Me.txtDistanceTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDistanceTotal, "Total flight distance (including distance outside the task) read from flight plan" &
@@ -979,7 +994,7 @@ Partial Class Main
         Me.txtDistanceTrack.Name = "txtDistanceTrack"
         Me.txtDistanceTrack.ReadOnly = True
         Me.txtDistanceTrack.Size = New System.Drawing.Size(50, 32)
-        Me.txtDistanceTrack.TabIndex = 30
+        Me.txtDistanceTrack.TabIndex = 31
         Me.txtDistanceTrack.Tag = "9"
         Me.txtDistanceTrack.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDistanceTrack, "Task distance (this is the distance shown by B21 Planner) read from flight plan f" &
@@ -993,7 +1008,7 @@ Partial Class Main
         Me.cboRecommendedGliders.Location = New System.Drawing.Point(189, 406)
         Me.cboRecommendedGliders.Name = "cboRecommendedGliders"
         Me.cboRecommendedGliders.Size = New System.Drawing.Size(531, 32)
-        Me.cboRecommendedGliders.TabIndex = 41
+        Me.cboRecommendedGliders.TabIndex = 44
         Me.cboRecommendedGliders.Tag = "12"
         Me.ToolTip1.SetToolTip(Me.cboRecommendedGliders, "Recommended gliders (suggestions in the list or enter your own)")
         '
@@ -1003,7 +1018,7 @@ Partial Class Main
         Me.txtDifficultyExtraInfo.Location = New System.Drawing.Point(446, 440)
         Me.txtDifficultyExtraInfo.Name = "txtDifficultyExtraInfo"
         Me.txtDifficultyExtraInfo.Size = New System.Drawing.Size(274, 32)
-        Me.txtDifficultyExtraInfo.TabIndex = 44
+        Me.txtDifficultyExtraInfo.TabIndex = 47
         Me.txtDifficultyExtraInfo.Tag = "13"
         Me.ToolTip1.SetToolTip(Me.txtDifficultyExtraInfo, "Any extra information or custom rating to use on the difficulty line.")
         '
@@ -1013,7 +1028,7 @@ Partial Class Main
         Me.chkDescriptionLock.Location = New System.Drawing.Point(168, 486)
         Me.chkDescriptionLock.Name = "chkDescriptionLock"
         Me.chkDescriptionLock.Size = New System.Drawing.Size(15, 14)
-        Me.chkDescriptionLock.TabIndex = 46
+        Me.chkDescriptionLock.TabIndex = 49
         Me.chkDescriptionLock.Tag = "14"
         Me.ToolTip1.SetToolTip(Me.chkDescriptionLock, "When checked, description will not be read from flight plan.")
         Me.chkDescriptionLock.UseVisualStyleBackColor = True
@@ -1025,7 +1040,7 @@ Partial Class Main
         Me.Label16.Location = New System.Drawing.Point(4, 480)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(160, 26)
-        Me.Label16.TabIndex = 45
+        Me.Label16.TabIndex = 48
         Me.Label16.Text = "Short Description"
         '
         'txtShortDescription
@@ -1036,7 +1051,7 @@ Partial Class Main
         Me.txtShortDescription.Name = "txtShortDescription"
         Me.txtShortDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtShortDescription.Size = New System.Drawing.Size(531, 53)
-        Me.txtShortDescription.TabIndex = 47
+        Me.txtShortDescription.TabIndex = 50
         Me.txtShortDescription.Tag = "14"
         Me.ToolTip1.SetToolTip(Me.txtShortDescription, "Short description of the flight, can come from the flight plan file.")
         '
@@ -1047,7 +1062,7 @@ Partial Class Main
         Me.Label17.Location = New System.Drawing.Point(4, 572)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(155, 26)
-        Me.Label17.TabIndex = 51
+        Me.Label17.TabIndex = 54
         Me.Label17.Text = "Long Description"
         '
         'txtLongDescription
@@ -1058,7 +1073,7 @@ Partial Class Main
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtLongDescription.Size = New System.Drawing.Size(531, 224)
-        Me.txtLongDescription.TabIndex = 52
+        Me.txtLongDescription.TabIndex = 55
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
         '
@@ -3413,4 +3428,5 @@ Partial Class Main
     Friend WithEvents btnPasteUsernameCredits As Button
     Friend WithEvents chkExpertMode As CheckBox
     Friend WithEvents FileDropZone1 As CommonLibrary.FileDropZone
+    Friend WithEvents chkSoaringTypeWave As CheckBox
 End Class

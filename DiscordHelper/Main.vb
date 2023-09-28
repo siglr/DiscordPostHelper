@@ -218,6 +218,7 @@ Public Class Main
         chkArrivalLock.Checked = False
         chkSoaringTypeRidge.Checked = False
         chkSoaringTypeThermal.Checked = False
+        chkSoaringTypeWave.Checked = False
         txtSoaringTypeExtraInfo.Text = String.Empty
         txtDistanceTotal.Text = String.Empty
         txtDistanceTrack.Text = String.Empty
@@ -705,6 +706,17 @@ Public Class Main
     Private Sub chkSoaringTypeThermal_CheckedChanged(sender As Object, e As EventArgs) Handles chkSoaringTypeThermal.CheckedChanged
 
         If chkSoaringTypeThermal.Checked Then
+            chkUseSyncFly.Checked = True
+        End If
+
+        'General object change processing
+        AllFieldChanges(sender, e)
+
+    End Sub
+
+    Private Sub chkSoaringTypeWave_CheckedChanged(sender As Object, e As EventArgs) Handles chkSoaringTypeWave.CheckedChanged
+
+        If chkSoaringTypeWave.Checked Then
             chkUseSyncFly.Checked = True
         End If
 
@@ -1620,17 +1632,22 @@ Public Class Main
     End Sub
 
     Private Function GetSoaringTypesSelected() As String
-        Dim types As String = String.Empty
+        Dim selectedTypes As New List(Of String)
 
-        If chkSoaringTypeRidge.Checked And chkSoaringTypeThermal.Checked Then
-            types = "Ridge and Thermals"
-        ElseIf chkSoaringTypeRidge.Checked Then
-            types = "Ridge"
-        ElseIf chkSoaringTypeThermal.Checked Then
-            types = "Thermals"
+        If chkSoaringTypeRidge.Checked Then
+            selectedTypes.Add("Ridge")
         End If
 
-        Return types
+        If chkSoaringTypeThermal.Checked Then
+            selectedTypes.Add("Thermal")
+        End If
+
+        If chkSoaringTypeWave.Checked Then
+            selectedTypes.Add("Wave")
+        End If
+
+        ' Join the selected types into a single string, separated by ", "
+        Return String.Join(", ", selectedTypes)
 
     End Function
 
@@ -3242,6 +3259,7 @@ Public Class Main
             .ArrivalExtra = txtArrivalExtraInfo.Text
             .SoaringRidge = chkSoaringTypeRidge.Checked
             .SoaringThermals = chkSoaringTypeThermal.Checked
+            .SoaringWaves = chkSoaringTypeWave.Checked
             .SoaringExtraInfo = txtSoaringTypeExtraInfo.Text
             .AvgSpeedsUnit = cboSpeedUnits.SelectedIndex
             .AvgMinSpeed = txtMinAvgSpeed.Text
@@ -3366,6 +3384,7 @@ Public Class Main
                 txtArrivalExtraInfo.Text = .ArrivalExtra
                 chkSoaringTypeRidge.Checked = .SoaringRidge
                 chkSoaringTypeThermal.Checked = .SoaringThermals
+                chkSoaringTypeWave.Checked = .SoaringWaves
                 txtSoaringTypeExtraInfo.Text = .SoaringExtraInfo
                 cboSpeedUnits.SelectedIndex = .AvgSpeedsUnit
                 txtMinAvgSpeed.Text = .AvgMinSpeed

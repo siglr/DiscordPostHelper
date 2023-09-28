@@ -813,18 +813,22 @@ Public Class BriefingControl
     End Sub
 
     Private Function GetSoaringTypesSelected() As String
-        Dim types As String = String.Empty
+        Dim selectedTypes As New List(Of String)
 
-        If _sessionData.SoaringRidge And _sessionData.SoaringThermals Then
-            types = "Ridge and Thermals"
-        ElseIf _sessionData.SoaringRidge Then
-            types = "Ridge"
-        ElseIf _sessionData.SoaringThermals Then
-            types = "Thermals"
+        If _sessionData.SoaringRidge Then
+            selectedTypes.Add("Ridge")
         End If
 
-        Return types
+        If _sessionData.SoaringThermals Then
+            selectedTypes.Add("Thermal")
+        End If
 
+        If _sessionData.SoaringWaves Then
+            selectedTypes.Add("Wave")
+        End If
+
+        ' Join the selected types into a single string, separated by " and "
+        Return String.Join(", ", selectedTypes)
     End Function
 
     Private Sub SetWPGridColumnsVisibility()
