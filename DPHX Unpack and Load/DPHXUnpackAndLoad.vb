@@ -108,12 +108,17 @@ Public Class DPHXUnpackAndLoad
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
             _currentFile = My.Application.CommandLineArgs(0)
-            'Check if the selected file is a dph or dphx files
-            If Path.GetExtension(_currentFile) = ".dphx" Then
-                LoadDPHXPackage(_currentFile)
-                If Settings.SessionSettings.AutoUnpack Then
-                    UnpackFiles()
-                End If
+        Else
+            ' Check the last file that was opened
+            If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
+                _currentFile = Settings.SessionSettings.LastDPHXOpened
+            End If
+        End If
+
+        If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
+            LoadDPHXPackage(_currentFile)
+            If Settings.SessionSettings.AutoUnpack Then
+                UnpackFiles()
             End If
         End If
 
@@ -322,6 +327,8 @@ Public Class DPHXUnpackAndLoad
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
                                           TempDPHXUnpackFolder)
+
+            Settings.SessionSettings.LastDPHXOpened = _currentFile
         End If
 
     End Sub

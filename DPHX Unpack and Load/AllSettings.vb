@@ -87,6 +87,9 @@ Public Class AllSettings
     <XmlElement("MainFormLocation")>
     Public Property MainFormLocation As String
 
+    <XmlElement("LastDPHXOpened")>
+    Public Property LastDPHXOpened As String
+
     <XmlElement("AutoUnpack")>
     Public Property AutoUnpack As Boolean
 
@@ -124,6 +127,7 @@ Public Class AllSettings
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
             AutoUnpack = settingsInFile.AutoUnpack
+            LastDPHXOpened = settingsInFile.LastDPHXOpened
 
         Else
             settingsFound = False
