@@ -2365,7 +2365,7 @@ Public Class Main
         End If
 
         sb.AppendLine()
-        sb.AppendLine($"🏁 Duration: **{_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
+        sb.AppendLine($"⏳ Duration: **{_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
 
         If cboEligibleAward.SelectedIndex > 0 Then
             sb.AppendLine()
