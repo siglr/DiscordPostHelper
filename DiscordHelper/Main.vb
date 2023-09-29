@@ -1668,7 +1668,7 @@ Public Class Main
             txtTitle.Text = _OriginalFlightPlanTitle
         End If
 
-        If _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Count > 0 Then
+        If _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Count > 0 AndAlso _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Item(0).FirstChild IsNot Nothing Then
             _OriginalFlightPlanDepRwy = $"Rwy {_XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/DeparturePosition").Item(0).FirstChild.Value}"
             If (Not chkDepartureLock.Checked) Then
                 txtDepExtraInfo.Text = _OriginalFlightPlanDepRwy
