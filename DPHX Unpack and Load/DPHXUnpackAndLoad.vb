@@ -103,6 +103,8 @@ Public Class DPHXUnpackAndLoad
 
         CheckForNewVersion()
 
+        lblAllFilesStatus.Text = String.Empty
+
         _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
         If My.Application.CommandLineArgs.Count > 0 Then
@@ -155,6 +157,8 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles LoadDPHX.Click
+
+        lblAllFilesStatus.Text = String.Empty
 
         If txtPackageName.Text = String.Empty Then
             If Directory.Exists(Settings.SessionSettings.PackagesFolder) Then
@@ -299,17 +303,6 @@ Public Class DPHXUnpackAndLoad
 
         newDPHFile = _SF.UnpackDPHXFileToTempFolder(dphxFilename, TempDPHXUnpackFolder)
 
-        If newDPHFile = String.Empty Then
-            'Invalid file loaded
-            txtPackageName.Text = String.Empty
-            _currentFile = String.Empty
-            DisableUnpackButton()
-        Else
-            txtPackageName.Text = dphxFilename
-            _currentFile = dphxFilename
-            txtDPHFilename.Text = newDPHFile
-            EnableUnpackButton(True)
-        End If
         SetFormCaption(_currentFile)
         packageNameToolStrip.Text = _currentFile
 
@@ -328,6 +321,18 @@ Public Class DPHXUnpackAndLoad
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
                                           TempDPHXUnpackFolder)
 
+            If newDPHFile = String.Empty Then
+                'Invalid file loaded
+                txtPackageName.Text = String.Empty
+                _currentFile = String.Empty
+                DisableUnpackButton()
+            Else
+                txtPackageName.Text = dphxFilename
+                _currentFile = dphxFilename
+                txtDPHFilename.Text = newDPHFile
+                EnableUnpackButton()
+            End If
+
             Settings.SessionSettings.LastDPHXOpened = _currentFile
         End If
 
@@ -341,19 +346,64 @@ Public Class DPHXUnpackAndLoad
         btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
     End Sub
 
-    Private Sub EnableUnpackButton(emphasize As Boolean)
+    Private Sub EnableUnpackButton()
         btnCopyFiles.Enabled = True
         btnCleanup.Enabled = True
         btnLoadB21.Enabled = True
-        If emphasize Then
+
+        If Not AreFilesAlreadyUnpacked() Then
             pnlUnpackBtn.BackColor = Color.Red
             btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Bold)
+            lblAllFilesStatus.Text = "One or more files are missing from their respective folder."
         Else
             pnlUnpackBtn.BackColor = SystemColors.Control
             btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
+            lblAllFilesStatus.Text = "All the files are present in their respective folder."
         End If
     End Sub
 
+    Private Function AreFilesAlreadyUnpacked() As Boolean
+
+        Dim filesAlreadyUnpacked As Boolean = True
+
+        'Check if files are already unpacked
+        'Flight plan
+        If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                             Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                             Path.Combine(Settings.SessionSettings.FlightPlansFolder,
+                                             Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
+            Return False
+        End If
+
+        'Weather file
+        If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                             Path.GetFileName(_allDPHData.WeatherFilename)),
+                                             Path.Combine(Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                                             Path.GetFileName(_allDPHData.WeatherFilename))) Then
+            Return False
+        End If
+
+        'XCSoar file
+        If Settings.SessionSettings.XCSoarTasksFolder IsNot Nothing Then
+            'Look in the other files for xcsoar file
+            For Each filepath As String In _allDPHData.ExtraFiles
+                If Path.GetExtension(filepath) = ".tsk" Then
+                    'XCSoar file
+                    If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                             Path.GetFileName(filepath)),
+                                             Path.Combine(Settings.SessionSettings.XCSoarTasksFolder,
+                                             Path.GetFileName(filepath))) Then
+                        Return False
+                    End If
+                End If
+            Next
+
+        End If
+
+
+        Return True
+
+    End Function
     Private Sub RestoreMainFormLocationAndSize()
         Dim sizeString As String = Settings.SessionSettings.MainFormSize
         Dim locationString As String = Settings.SessionSettings.MainFormLocation
@@ -407,7 +457,7 @@ Public Class DPHXUnpackAndLoad
         Next
 
         MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        EnableUnpackButton(False)
+        EnableUnpackButton()
 
     End Sub
 
@@ -509,7 +559,7 @@ Public Class DPHXUnpackAndLoad
         Next
 
         MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        EnableUnpackButton(True)
+        EnableUnpackButton()
 
     End Sub
 

@@ -26,6 +26,7 @@ Partial Class DPHXUnpackAndLoad
         Dim PreferredUnits1 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Me.topButtonsArea = New System.Windows.Forms.Panel()
+        Me.btnLoadB21 = New System.Windows.Forms.Button()
         Me.btnCleanup = New System.Windows.Forms.Button()
         Me.pnlUnpackBtn = New System.Windows.Forms.Panel()
         Me.btnCopyFiles = New System.Windows.Forms.Button()
@@ -42,7 +43,7 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.btnLoadB21 = New System.Windows.Forms.Button()
+        Me.lblAllFilesStatus = New System.Windows.Forms.Label()
         Me.topButtonsArea.SuspendLayout()
         Me.pnlUnpackBtn.SuspendLayout()
         Me.pnlPackageFileName.SuspendLayout()
@@ -52,6 +53,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'topButtonsArea
         '
+        Me.topButtonsArea.Controls.Add(Me.lblAllFilesStatus)
         Me.topButtonsArea.Controls.Add(Me.btnLoadB21)
         Me.topButtonsArea.Controls.Add(Me.btnCleanup)
         Me.topButtonsArea.Controls.Add(Me.pnlUnpackBtn)
@@ -63,6 +65,17 @@ Partial Class DPHXUnpackAndLoad
         Me.topButtonsArea.Padding = New System.Windows.Forms.Padding(5, 5, 5, 10)
         Me.topButtonsArea.Size = New System.Drawing.Size(1077, 45)
         Me.topButtonsArea.TabIndex = 0
+        '
+        'btnLoadB21
+        '
+        Me.btnLoadB21.Enabled = False
+        Me.btnLoadB21.Location = New System.Drawing.Point(396, 6)
+        Me.btnLoadB21.Name = "btnLoadB21"
+        Me.btnLoadB21.Size = New System.Drawing.Size(123, 30)
+        Me.btnLoadB21.TabIndex = 5
+        Me.btnLoadB21.Text = "B21 Planner"
+        Me.ToolTip1.SetToolTip(Me.btnLoadB21, "Click to open the B21 Planner in your browser.")
+        Me.btnLoadB21.UseVisualStyleBackColor = True
         '
         'btnCleanup
         '
@@ -94,7 +107,7 @@ Partial Class DPHXUnpackAndLoad
         Me.btnCopyFiles.Size = New System.Drawing.Size(123, 34)
         Me.btnCopyFiles.TabIndex = 2
         Me.btnCopyFiles.Text = "Unpack!"
-        Me.ToolTip1.SetToolTip(Me.btnCopyFiles, "Click to unpack the files to their right locations")
+        Me.ToolTip1.SetToolTip(Me.btnCopyFiles, "Click to unpack the files to their proper locations")
         Me.btnCopyFiles.UseVisualStyleBackColor = True
         '
         'LoadDPHX
@@ -222,16 +235,14 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Size = New System.Drawing.Size(1077, 635)
         Me.ctrlBriefing.TabIndex = 3
         '
-        'btnLoadB21
+        'lblAllFilesStatus
         '
-        Me.btnLoadB21.Enabled = False
-        Me.btnLoadB21.Location = New System.Drawing.Point(396, 6)
-        Me.btnLoadB21.Name = "btnLoadB21"
-        Me.btnLoadB21.Size = New System.Drawing.Size(123, 30)
-        Me.btnLoadB21.TabIndex = 5
-        Me.btnLoadB21.Text = "B21 Planner"
-        Me.ToolTip1.SetToolTip(Me.btnLoadB21, "Click to open the B21 Planner in your browser.")
-        Me.btnLoadB21.UseVisualStyleBackColor = True
+        Me.lblAllFilesStatus.AutoSize = True
+        Me.lblAllFilesStatus.Location = New System.Drawing.Point(525, 11)
+        Me.lblAllFilesStatus.Name = "lblAllFilesStatus"
+        Me.lblAllFilesStatus.Size = New System.Drawing.Size(324, 20)
+        Me.lblAllFilesStatus.TabIndex = 6
+        Me.lblAllFilesStatus.Text = "All the files are present in their respective folder."
         '
         'DPHXUnpackAndLoad
         '
@@ -252,6 +263,7 @@ Partial Class DPHXUnpackAndLoad
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"
         Me.topButtonsArea.ResumeLayout(False)
+        Me.topButtonsArea.PerformLayout()
         Me.pnlUnpackBtn.ResumeLayout(False)
         Me.pnlPackageFileName.ResumeLayout(False)
         Me.pnlPackageFileName.PerformLayout()
@@ -282,4 +294,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents warningMSFSRunningToolStrip As ToolStripStatusLabel
     Friend WithEvents btnCleanup As Button
     Friend WithEvents btnLoadB21 As Button
+    Friend WithEvents lblAllFilesStatus As Label
 End Class
