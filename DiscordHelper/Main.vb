@@ -3547,6 +3547,22 @@ Public Class Main
 
     End Sub
 
+    Private Sub txtBaroPressureExtraInfo_DoubleClick(sender As Object, e As EventArgs) Handles txtBaroPressureExtraInfo.DoubleClick
+
+        If txtBaroPressureExtraInfo.Text = String.Empty Then
+            txtBaroPressureExtraInfo.Text = "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
+        End If
+
+    End Sub
+
+    Private Sub txtCredits_DoubleClick(sender As Object, e As EventArgs) Handles txtCredits.DoubleClick
+
+        If txtCredits.Text = String.Empty Then
+            txtCredits.Text = "All credits to @UserName for this task."
+        End If
+
+    End Sub
+
 #End Region
 
 End Class
