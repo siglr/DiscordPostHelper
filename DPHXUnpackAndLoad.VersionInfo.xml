@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.9.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.9.29.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.9.29.1</ReleaseVersion>
+      <ReleaseTitle>Smarter and smarter</ReleaseTitle>
+      <ReleaseNotes>
+        Remember the last loaded DPHX file between sessions.
+        Added the ability to detect if all the files are already in their destinations to highlight or not "Unpack" and display a status message.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.9.27.1</ReleaseVersion>
       <ReleaseTitle>Small release to stay in-sync with DPH Tool</ReleaseTitle>

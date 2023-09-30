@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.9.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.9.29.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.9.29.1</ReleaseVersion>
+      <ReleaseTitle>A few more little goodies</ReleaseTitle>
+      <ReleaseNotes>
+        Added a "Wave" option in the lift types (good idea from @FF403).
+        Added option to suppress warning sign and set the extra text when non-standard barometric pressure.
+        Added support for double-click on Credits and BaroPressureExtraInfo when empty, to reset to default values.
+        Fixed a bug where a departure position in the flight plan could be empty.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.9.27.1</ReleaseVersion>
       <ReleaseTitle>Major release with several new features and improvements</ReleaseTitle>
