@@ -1556,7 +1556,6 @@ Public Class Main
         If txtMainArea.Text.Trim.Length > 0 Then
             sb.AppendLine("> 🗺 " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
-        sb.AppendLine($"> 📁 ""{Path.GetFileName(txtFlightPlanFile.Text)}""")
         sb.AppendLine($"> 🛫 {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
         sb.AppendLine($"> 🛬 {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
         sb.AppendLine($"> ⌚ {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local in MSFS{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
