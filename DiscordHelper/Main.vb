@@ -368,6 +368,11 @@ Public Class Main
 
     Private Sub SaveSession()
 
+        If txtTitle.Text.Trim = String.Empty Then
+            MessageBox.Show(Me, "A title is required before saving!", "Title required", vbOKOnly, vbCritical)
+            Return
+        End If
+
         Dim saveWithoutAsking As Boolean = False
         Dim result As DialogResult
         Dim DPHFilename As String = txtTitle.Text
@@ -671,6 +676,9 @@ Public Class Main
         If TypeOf sender IsNot Windows.Forms.TextBox Then
             GeneralFPTabFieldLeaveDetection(sender, e)
         End If
+
+        HighlightExpectedFields()
+
     End Sub
 
     Private Sub GeneralFPTabFieldLeaveDetection(sender As Object, e As EventArgs) Handles txtSoaringTypeExtraInfo.Leave,
@@ -902,6 +910,12 @@ Public Class Main
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
         BuildFPResults()
+
+        'Sanity Check
+        If HighlightExpectedFields(True) Then
+            Return
+        End If
+
         Clipboard.SetText(txtFPResults.Text)
         CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
 
@@ -1463,6 +1477,7 @@ Public Class Main
                 btnMoveCountryUp.Enabled = False
             End If
         End If
+        HighlightExpectedFields()
     End Sub
 
     Private Sub btnRemoveCountry_Click(sender As Object, e As EventArgs) Handles btnRemoveCountry.Click
@@ -1478,6 +1493,7 @@ Public Class Main
             btnMoveCountryUp.Enabled = False
         End If
         'BuildFPResults()
+        HighlightExpectedFields()
     End Sub
 
     Private Sub btnMoveCountryUp_Click(sender As Object, e As EventArgs) Handles btnMoveCountryUp.Click
@@ -1497,6 +1513,127 @@ Public Class Main
 #End Region
 
 #Region "Flight Plan tab Subs & Functions"
+
+    Private Function HighlightExpectedFields(Optional showMessageBox As Boolean = False) As Boolean
+
+        Dim messageText As New StringBuilder
+        Dim requiredText As New StringBuilder
+        Dim cannotContinue As Boolean = False
+
+        If txtTitle.Text.Trim = String.Empty Then
+            SetLabelFormat(lblTitle, LabelFormat.BoldRed, requiredText, "A title is required!")
+            cannotContinue = True
+        Else
+            SetLabelFormat(lblTitle, LabelFormat.Regular)
+        End If
+        If chkSoaringTypeRidge.Checked = False AndAlso chkSoaringTypeThermal.Checked = False AndAlso chkSoaringTypeWave.Checked = False Then
+            SetLabelFormat(lblSoaringType, LabelFormat.BoldRed, requiredText, "At least one soaring type is required!")
+            cannotContinue = True
+        Else
+            SetLabelFormat(lblSoaringType, LabelFormat.Regular)
+        End If
+
+        If txtMainArea.Text.Trim = String.Empty Then
+            SetLabelFormat(lblMainAreaPOI, LabelFormat.BoldBlack, messageText, "Missing Main Area / POI")
+        Else
+            SetLabelFormat(lblMainAreaPOI, LabelFormat.Regular)
+        End If
+
+        If txtDepExtraInfo.Text.Trim = String.Empty Then
+            SetLabelFormat(lblDeparture, LabelFormat.BoldBlack, messageText, "Possibly missing departure runway info?")
+        Else
+            SetLabelFormat(lblDeparture, LabelFormat.Regular)
+        End If
+
+        If txtDurationMin.Text.Trim = String.Empty AndAlso txtDurationMax.Text.Trim = String.Empty AndAlso txtDurationExtraInfo.Text.Trim = String.Empty Then
+            SetLabelFormat(lblDuration, LabelFormat.BoldBlack, messageText, "Possibly missing duration info?")
+        Else
+            SetLabelFormat(lblDuration, LabelFormat.Regular)
+        End If
+
+        If cboRecommendedGliders.Text.Trim = String.Empty Then
+            SetLabelFormat(lblRecommendedGliders, LabelFormat.BoldBlack, messageText, "Possibly missing recommended gliders?")
+        Else
+            SetLabelFormat(lblRecommendedGliders, LabelFormat.Regular)
+        End If
+
+        If cboDifficulty.SelectedIndex = 0 AndAlso txtDifficultyExtraInfo.Text.Trim = String.Empty Then
+            SetLabelFormat(lblDifficultyRating, LabelFormat.BoldBlack, messageText, "Possibly missing difficulty rating?")
+        Else
+            SetLabelFormat(lblDifficultyRating, LabelFormat.Regular)
+        End If
+
+        If txtCredits.Text.Trim = String.Empty OrElse txtCredits.Text.ToUpper.Contains("@USERNAME") Then
+            SetLabelFormat(lblCredits, LabelFormat.BoldBlack, messageText, "Possibly missing credits info or set to @UserName?")
+        Else
+            SetLabelFormat(lblCredits, LabelFormat.Regular)
+        End If
+
+        If lstAllCountries.Items.Count = 0 Then
+            SetLabelFormat(lblCountries, LabelFormat.BoldBlack, messageText, "Possibly missing country?")
+        Else
+            SetLabelFormat(lblCountries, LabelFormat.Regular)
+        End If
+
+        If txtWeatherSummary.Text.Trim = String.Empty Then
+            SetLabelFormat(lblWeatherSummary, LabelFormat.BoldBlack, messageText, "Possibly missing weather summary?")
+        Else
+            SetLabelFormat(lblWeatherSummary, LabelFormat.Regular)
+        End If
+
+        If cboBriefingMap.SelectedIndex = -1 Then
+            SetLabelFormat(lblMap, LabelFormat.BoldBlack, messageText, "Possibly missing a briefing map selection?")
+        Else
+            SetLabelFormat(lblMap, LabelFormat.Regular)
+        End If
+
+        If showMessageBox Then
+            If cannotContinue Then
+                MessageBox.Show(Me, $"Some fields are incomplete:{Environment.NewLine}{Environment.NewLine}{requiredText.ToString}", "Field validation prior to posting", vbOKOnly, vbCritical)
+                Return cannotContinue
+            Else
+                If MessageBox.Show(Me, $"Some fields may be incomplete, do you want to continue?{Environment.NewLine}{Environment.NewLine}{messageText.ToString}", "Field validation prior to posting", vbYesNo, vbQuestion) = DialogResult.No Then
+                    Return True
+                Else
+                    Return False
+                End If
+            End If
+        End If
+
+        Return cannotContinue
+
+    End Function
+
+    Private Enum LabelFormat
+        Regular = 0
+        BoldBlack = 1
+        BoldRed = 2
+    End Enum
+    Private Sub SetLabelFormat(labelToSet As Windows.Forms.Label, format As LabelFormat, Optional ByRef messageBuilder As StringBuilder = Nothing, Optional tooltipText As String = "")
+        Select Case format
+            Case LabelFormat.Regular
+                ' Set the font to regular (non-bold) and black color
+                labelToSet.Font = New Font(labelToSet.Font, FontStyle.Regular)
+                labelToSet.ForeColor = Color.Black
+                ToolTip1.SetToolTip(labelToSet, String.Empty)
+            Case LabelFormat.BoldBlack
+                ' Set the font to bold and black color
+                labelToSet.Font = New Font(labelToSet.Font, FontStyle.Bold)
+                labelToSet.ForeColor = Color.Black
+                ToolTip1.SetToolTip(labelToSet, tooltipText)
+                If messageBuilder IsNot Nothing Then
+                    messageBuilder.AppendLine(tooltipText)
+                End If
+            Case LabelFormat.BoldRed
+                ' Set the font to bold and red color
+                labelToSet.Font = New Font(labelToSet.Font, FontStyle.Bold)
+                labelToSet.ForeColor = Color.Red
+                ToolTip1.SetToolTip(labelToSet, tooltipText)
+                If messageBuilder IsNot Nothing Then
+                    messageBuilder.AppendLine(tooltipText)
+                End If
+        End Select
+    End Sub
 
     Private Sub WeatherFieldChangeDetection()
         BuildWeatherInfoResults()
@@ -1707,6 +1844,7 @@ Public Class Main
                 End If
             Next
         End If
+        HighlightExpectedFields()
 
         'BuildFPResults()
         'BuildGroupFlightPost()
@@ -2435,6 +2573,8 @@ Public Class Main
         'Load image
         BriefingControl1.ChangeImage(cboBriefingMap.SelectedItem.ToString)
 
+        HighlightExpectedFields()
+
     End Sub
 
 
@@ -2471,6 +2611,9 @@ Public Class Main
         End If
 
         _loadingFile = False
+
+        HighlightExpectedFields()
+
     End Sub
 
     Private Sub GenerateBriefing()

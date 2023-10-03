@@ -28,6 +28,7 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -43,7 +44,7 @@ Partial Class Main
         Me.chkSoaringTypeThermal = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeRidge = New System.Windows.Forms.CheckBox()
         Me.txtSoaringTypeExtraInfo = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.lblSoaringType = New System.Windows.Forms.Label()
         Me.txtArrivalExtraInfo = New System.Windows.Forms.TextBox()
         Me.txtArrivalName = New System.Windows.Forms.TextBox()
         Me.txtArrivalICAO = New System.Windows.Forms.TextBox()
@@ -57,11 +58,11 @@ Partial Class Main
         Me.Label4 = New System.Windows.Forms.Label()
         Me.dtSimDate = New System.Windows.Forms.DateTimePicker()
         Me.txtDepartureICAO = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.lblDeparture = New System.Windows.Forms.Label()
         Me.txtMainArea = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblMainAreaPOI = New System.Windows.Forms.Label()
         Me.txtTitle = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblTitle = New System.Windows.Forms.Label()
         Me.cboSpeedUnits = New System.Windows.Forms.ComboBox()
         Me.txtMinAvgSpeed = New System.Windows.Forms.TextBox()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -70,14 +71,14 @@ Partial Class Main
         Me.btnSelectWeatherFile = New System.Windows.Forms.Button()
         Me.txtWeatherFile = New System.Windows.Forms.TextBox()
         Me.txtDurationMin = New System.Windows.Forms.TextBox()
-        Me.Label12 = New System.Windows.Forms.Label()
+        Me.lblDuration = New System.Windows.Forms.Label()
         Me.txtDurationMax = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.txtDurationExtraInfo = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
+        Me.lblRecommendedGliders = New System.Windows.Forms.Label()
         Me.txtCredits = New System.Windows.Forms.TextBox()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
+        Me.lblDifficultyRating = New System.Windows.Forms.Label()
+        Me.lblCredits = New System.Windows.Forms.Label()
         Me.lblTotalDistanceAndMiles = New System.Windows.Forms.Label()
         Me.lblTrackDistanceAndMiles = New System.Windows.Forms.Label()
         Me.cboDifficulty = New System.Windows.Forms.ComboBox()
@@ -97,7 +98,7 @@ Partial Class Main
         Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
         Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.Label23 = New System.Windows.Forms.Label()
+        Me.lblMap = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.lstAllFiles = New System.Windows.Forms.ListBox()
         Me.btnAddExtraFile = New System.Windows.Forms.Button()
@@ -120,10 +121,10 @@ Partial Class Main
         Me.btnAddCountry = New System.Windows.Forms.Button()
         Me.lstAllCountries = New System.Windows.Forms.ListBox()
         Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.lblCountries = New System.Windows.Forms.Label()
         Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
-        Me.Label19 = New System.Windows.Forms.Label()
+        Me.lblWeatherSummary = New System.Windows.Forms.Label()
         Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskThreadURL = New System.Windows.Forms.TextBox()
@@ -251,6 +252,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -261,8 +263,6 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -340,6 +340,14 @@ Partial Class Main
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
+        Me.FileDropZone1.TabIndex = 5
+        '
         'pnlGuide
         '
         Me.pnlGuide.BackColor = System.Drawing.Color.Gray
@@ -406,7 +414,7 @@ Partial Class Main
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeThermal)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeRidge)
         Me.grbTaskInfo.Controls.Add(Me.txtSoaringTypeExtraInfo)
-        Me.grbTaskInfo.Controls.Add(Me.Label8)
+        Me.grbTaskInfo.Controls.Add(Me.lblSoaringType)
         Me.grbTaskInfo.Controls.Add(Me.txtArrivalExtraInfo)
         Me.grbTaskInfo.Controls.Add(Me.txtArrivalName)
         Me.grbTaskInfo.Controls.Add(Me.txtArrivalICAO)
@@ -420,11 +428,11 @@ Partial Class Main
         Me.grbTaskInfo.Controls.Add(Me.Label4)
         Me.grbTaskInfo.Controls.Add(Me.dtSimDate)
         Me.grbTaskInfo.Controls.Add(Me.txtDepartureICAO)
-        Me.grbTaskInfo.Controls.Add(Me.Label3)
+        Me.grbTaskInfo.Controls.Add(Me.lblDeparture)
         Me.grbTaskInfo.Controls.Add(Me.txtMainArea)
-        Me.grbTaskInfo.Controls.Add(Me.Label2)
+        Me.grbTaskInfo.Controls.Add(Me.lblMainAreaPOI)
         Me.grbTaskInfo.Controls.Add(Me.txtTitle)
-        Me.grbTaskInfo.Controls.Add(Me.Label1)
+        Me.grbTaskInfo.Controls.Add(Me.lblTitle)
         Me.grbTaskInfo.Controls.Add(Me.cboSpeedUnits)
         Me.grbTaskInfo.Controls.Add(Me.txtMinAvgSpeed)
         Me.grbTaskInfo.Controls.Add(Me.Label21)
@@ -433,14 +441,14 @@ Partial Class Main
         Me.grbTaskInfo.Controls.Add(Me.btnSelectWeatherFile)
         Me.grbTaskInfo.Controls.Add(Me.txtWeatherFile)
         Me.grbTaskInfo.Controls.Add(Me.txtDurationMin)
-        Me.grbTaskInfo.Controls.Add(Me.Label12)
+        Me.grbTaskInfo.Controls.Add(Me.lblDuration)
         Me.grbTaskInfo.Controls.Add(Me.txtDurationMax)
         Me.grbTaskInfo.Controls.Add(Me.Label13)
         Me.grbTaskInfo.Controls.Add(Me.txtDurationExtraInfo)
-        Me.grbTaskInfo.Controls.Add(Me.Label14)
+        Me.grbTaskInfo.Controls.Add(Me.lblRecommendedGliders)
         Me.grbTaskInfo.Controls.Add(Me.txtCredits)
-        Me.grbTaskInfo.Controls.Add(Me.Label15)
-        Me.grbTaskInfo.Controls.Add(Me.Label18)
+        Me.grbTaskInfo.Controls.Add(Me.lblDifficultyRating)
+        Me.grbTaskInfo.Controls.Add(Me.lblCredits)
         Me.grbTaskInfo.Controls.Add(Me.lblTotalDistanceAndMiles)
         Me.grbTaskInfo.Controls.Add(Me.lblTrackDistanceAndMiles)
         Me.grbTaskInfo.Controls.Add(Me.cboDifficulty)
@@ -564,15 +572,15 @@ Partial Class Main
         Me.txtSoaringTypeExtraInfo.Tag = "8"
         Me.ToolTip1.SetToolTip(Me.txtSoaringTypeExtraInfo, "Any extra information to add to the soaring type line.")
         '
-        'Label8
+        'lblSoaringType
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(4, 273)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(120, 26)
-        Me.Label8.TabIndex = 23
-        Me.Label8.Text = "Soaring Type"
+        Me.lblSoaringType.AutoSize = True
+        Me.lblSoaringType.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSoaringType.Location = New System.Drawing.Point(4, 273)
+        Me.lblSoaringType.Name = "lblSoaringType"
+        Me.lblSoaringType.Size = New System.Drawing.Size(120, 26)
+        Me.lblSoaringType.TabIndex = 23
+        Me.lblSoaringType.Text = "Soaring Type"
         '
         'txtArrivalExtraInfo
         '
@@ -714,15 +722,15 @@ Partial Class Main
         Me.txtDepartureICAO.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.txtDepartureICAO, "Departure airport ICAO, can come from the flight plan file.")
         '
-        'Label3
+        'lblDeparture
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(4, 205)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(97, 26)
-        Me.Label3.TabIndex = 13
-        Me.Label3.Text = "Departure"
+        Me.lblDeparture.AutoSize = True
+        Me.lblDeparture.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDeparture.Location = New System.Drawing.Point(4, 205)
+        Me.lblDeparture.Name = "lblDeparture"
+        Me.lblDeparture.Size = New System.Drawing.Size(97, 26)
+        Me.lblDeparture.TabIndex = 13
+        Me.lblDeparture.Text = "Departure"
         '
         'txtMainArea
         '
@@ -734,15 +742,15 @@ Partial Class Main
         Me.txtMainArea.Tag = "5"
         Me.ToolTip1.SetToolTip(Me.txtMainArea, "The main area and/or point of interest of the flight")
         '
-        'Label2
+        'lblMainAreaPOI
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(4, 171)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(137, 26)
-        Me.Label2.TabIndex = 11
-        Me.Label2.Text = "Main area / POI"
+        Me.lblMainAreaPOI.AutoSize = True
+        Me.lblMainAreaPOI.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblMainAreaPOI.Location = New System.Drawing.Point(4, 171)
+        Me.lblMainAreaPOI.Name = "lblMainAreaPOI"
+        Me.lblMainAreaPOI.Size = New System.Drawing.Size(137, 26)
+        Me.lblMainAreaPOI.TabIndex = 11
+        Me.lblMainAreaPOI.Text = "Main area / POI"
         '
         'txtTitle
         '
@@ -754,15 +762,15 @@ Partial Class Main
         Me.txtTitle.Tag = "3"
         Me.ToolTip1.SetToolTip(Me.txtTitle, "Track title - can come from the flight plan's title.")
         '
-        'Label1
+        'lblTitle
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(4, 70)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(47, 26)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Title"
+        Me.lblTitle.AutoSize = True
+        Me.lblTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTitle.Location = New System.Drawing.Point(4, 70)
+        Me.lblTitle.Name = "lblTitle"
+        Me.lblTitle.Size = New System.Drawing.Size(47, 26)
+        Me.lblTitle.TabIndex = 2
+        Me.lblTitle.Text = "Title"
         '
         'cboSpeedUnits
         '
@@ -854,15 +862,15 @@ Partial Class Main
         Me.txtDurationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDurationMin, "Approximate minimum duration in minutes")
         '
-        'Label12
+        'lblDuration
         '
-        Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(4, 375)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(132, 26)
-        Me.Label12.TabIndex = 38
-        Me.Label12.Text = "Duration (min)"
+        Me.lblDuration.AutoSize = True
+        Me.lblDuration.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDuration.Location = New System.Drawing.Point(4, 375)
+        Me.lblDuration.Name = "lblDuration"
+        Me.lblDuration.Size = New System.Drawing.Size(132, 26)
+        Me.lblDuration.TabIndex = 38
+        Me.lblDuration.Text = "Duration (min)"
         '
         'txtDurationMax
         '
@@ -895,15 +903,15 @@ Partial Class Main
         Me.txtDurationExtraInfo.Tag = "11"
         Me.ToolTip1.SetToolTip(Me.txtDurationExtraInfo, "Any extra information to add on the duration line.")
         '
-        'Label14
+        'lblRecommendedGliders
         '
-        Me.Label14.AutoSize = True
-        Me.Label14.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(4, 409)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(133, 26)
-        Me.Label14.TabIndex = 43
-        Me.Label14.Text = "Recom. gliders"
+        Me.lblRecommendedGliders.AutoSize = True
+        Me.lblRecommendedGliders.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblRecommendedGliders.Location = New System.Drawing.Point(4, 409)
+        Me.lblRecommendedGliders.Name = "lblRecommendedGliders"
+        Me.lblRecommendedGliders.Size = New System.Drawing.Size(133, 26)
+        Me.lblRecommendedGliders.TabIndex = 43
+        Me.lblRecommendedGliders.Text = "Recom. gliders"
         '
         'txtCredits
         '
@@ -916,25 +924,25 @@ Partial Class Main
         Me.txtCredits.Text = "All credits to @UserName for this task."
         Me.ToolTip1.SetToolTip(Me.txtCredits, "Specify credits for this flight as required.")
         '
-        'Label15
+        'lblDifficultyRating
         '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(4, 443)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(144, 26)
-        Me.Label15.TabIndex = 45
-        Me.Label15.Text = "Difficulty Rating"
+        Me.lblDifficultyRating.AutoSize = True
+        Me.lblDifficultyRating.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDifficultyRating.Location = New System.Drawing.Point(4, 443)
+        Me.lblDifficultyRating.Name = "lblDifficultyRating"
+        Me.lblDifficultyRating.Size = New System.Drawing.Size(144, 26)
+        Me.lblDifficultyRating.TabIndex = 45
+        Me.lblDifficultyRating.Text = "Difficulty Rating"
         '
-        'Label18
+        'lblCredits
         '
-        Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(4, 538)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(73, 26)
-        Me.Label18.TabIndex = 51
-        Me.Label18.Text = "Credits"
+        Me.lblCredits.AutoSize = True
+        Me.lblCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCredits.Location = New System.Drawing.Point(4, 538)
+        Me.lblCredits.Name = "lblCredits"
+        Me.lblCredits.Size = New System.Drawing.Size(73, 26)
+        Me.lblCredits.TabIndex = 51
+        Me.lblCredits.Text = "Credits"
         '
         'lblTotalDistanceAndMiles
         '
@@ -1110,10 +1118,10 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.btnAddCountry)
         Me.grbTaskPart2.Controls.Add(Me.lstAllCountries)
         Me.grbTaskPart2.Controls.Add(Me.cboCountryFlag)
-        Me.grbTaskPart2.Controls.Add(Me.Label11)
+        Me.grbTaskPart2.Controls.Add(Me.lblCountries)
         Me.grbTaskPart2.Controls.Add(Me.chkUseOnlyWeatherSummary)
         Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
-        Me.grbTaskPart2.Controls.Add(Me.Label19)
+        Me.grbTaskPart2.Controls.Add(Me.lblWeatherSummary)
         Me.grbTaskPart2.Enabled = False
         Me.grbTaskPart2.Location = New System.Drawing.Point(743, -5)
         Me.grbTaskPart2.Name = "grbTaskPart2"
@@ -1157,7 +1165,7 @@ Partial Class Main
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.Label23)
+        Me.GroupBox3.Controls.Add(Me.lblMap)
         Me.GroupBox3.Controls.Add(Me.cboBriefingMap)
         Me.GroupBox3.Controls.Add(Me.lstAllFiles)
         Me.GroupBox3.Controls.Add(Me.btnAddExtraFile)
@@ -1173,15 +1181,15 @@ Partial Class Main
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
         '
-        'Label23
+        'lblMap
         '
-        Me.Label23.AutoSize = True
-        Me.Label23.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label23.Location = New System.Drawing.Point(0, 156)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(104, 26)
-        Me.Label23.TabIndex = 5
-        Me.Label23.Text = "Map Image"
+        Me.lblMap.AutoSize = True
+        Me.lblMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblMap.Location = New System.Drawing.Point(0, 156)
+        Me.lblMap.Name = "lblMap"
+        Me.lblMap.Size = New System.Drawing.Size(104, 26)
+        Me.lblMap.TabIndex = 5
+        Me.lblMap.Text = "Map Image"
         '
         'cboBriefingMap
         '
@@ -1461,15 +1469,15 @@ Partial Class Main
         Me.cboCountryFlag.Tag = "17"
         Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
         '
-        'Label11
+        'lblCountries
         '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(6, 27)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(145, 26)
-        Me.Label11.TabIndex = 0
-        Me.Label11.Text = "Countries/Flags"
+        Me.lblCountries.AutoSize = True
+        Me.lblCountries.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCountries.Location = New System.Drawing.Point(6, 27)
+        Me.lblCountries.Name = "lblCountries"
+        Me.lblCountries.Size = New System.Drawing.Size(145, 26)
+        Me.lblCountries.TabIndex = 0
+        Me.lblCountries.Text = "Countries/Flags"
         '
         'chkUseOnlyWeatherSummary
         '
@@ -1492,15 +1500,15 @@ Partial Class Main
         Me.txtWeatherSummary.Tag = "18"
         Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
         '
-        'Label19
+        'lblWeatherSummary
         '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(6, 137)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(166, 26)
-        Me.Label19.TabIndex = 8
-        Me.Label19.Text = "Weather Summary"
+        Me.lblWeatherSummary.AutoSize = True
+        Me.lblWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWeatherSummary.Location = New System.Drawing.Point(6, 137)
+        Me.lblWeatherSummary.Name = "lblWeatherSummary"
+        Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
+        Me.lblWeatherSummary.TabIndex = 8
+        Me.lblWeatherSummary.Text = "Weather Summary"
         '
         'grbTaskDiscord
         '
@@ -3048,6 +3056,27 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3142,34 +3171,6 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
-        Me.FileDropZone1.TabIndex = 5
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3244,7 +3245,7 @@ Partial Class Main
     Friend WithEvents chkSoaringTypeThermal As CheckBox
     Friend WithEvents chkSoaringTypeRidge As CheckBox
     Friend WithEvents txtSoaringTypeExtraInfo As TextBox
-    Friend WithEvents Label8 As Label
+    Friend WithEvents lblSoaringType As Label
     Friend WithEvents txtArrivalExtraInfo As TextBox
     Friend WithEvents txtArrivalName As TextBox
     Friend WithEvents txtArrivalICAO As TextBox
@@ -3258,11 +3259,11 @@ Partial Class Main
     Friend WithEvents Label4 As Label
     Friend WithEvents dtSimDate As DateTimePicker
     Friend WithEvents txtDepartureICAO As TextBox
-    Friend WithEvents Label3 As Label
+    Friend WithEvents lblDeparture As Label
     Friend WithEvents txtMainArea As TextBox
-    Friend WithEvents Label2 As Label
+    Friend WithEvents lblMainAreaPOI As Label
     Friend WithEvents txtTitle As TextBox
-    Friend WithEvents Label1 As Label
+    Friend WithEvents lblTitle As Label
     Friend WithEvents cboSpeedUnits As ComboBox
     Friend WithEvents txtMinAvgSpeed As TextBox
     Friend WithEvents Label21 As Label
@@ -3273,14 +3274,14 @@ Partial Class Main
     Friend WithEvents btnSelectWeatherFile As Button
     Friend WithEvents txtWeatherFile As TextBox
     Friend WithEvents txtDurationMin As TextBox
-    Friend WithEvents Label12 As Label
+    Friend WithEvents lblDuration As Label
     Friend WithEvents txtDurationMax As TextBox
     Friend WithEvents Label13 As Label
     Friend WithEvents txtDurationExtraInfo As TextBox
-    Friend WithEvents Label14 As Label
+    Friend WithEvents lblRecommendedGliders As Label
     Friend WithEvents txtCredits As TextBox
-    Friend WithEvents Label15 As Label
-    Friend WithEvents Label18 As Label
+    Friend WithEvents lblDifficultyRating As Label
+    Friend WithEvents lblCredits As Label
     Friend WithEvents lblTotalDistanceAndMiles As Label
     Friend WithEvents lblTrackDistanceAndMiles As Label
     Friend WithEvents cboDifficulty As ComboBox
@@ -3406,7 +3407,7 @@ Partial Class Main
     Friend WithEvents btnAddCountry As Button
     Friend WithEvents lstAllCountries As ListBox
     Friend WithEvents cboCountryFlag As ComboBox
-    Friend WithEvents Label11 As Label
+    Friend WithEvents lblCountries As Label
     Friend WithEvents btnExtraFileDown As Button
     Friend WithEvents btnExtraFileUp As Button
     Friend WithEvents btnRemoveExtraFile As Button
@@ -3414,7 +3415,7 @@ Partial Class Main
     Friend WithEvents lstAllFiles As ListBox
     Friend WithEvents chkUseOnlyWeatherSummary As CheckBox
     Friend WithEvents txtWeatherSummary As TextBox
-    Friend WithEvents Label19 As Label
+    Friend WithEvents lblWeatherSummary As Label
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents btnFPMainInfoCopy As Button
     Friend WithEvents grpDiscordTask As GroupBox
@@ -3445,7 +3446,7 @@ Partial Class Main
     Friend WithEvents pnlWizardBriefing As Panel
     Friend WithEvents btnBriefingGuideNext As Button
     Friend WithEvents cboBriefingMap As ComboBox
-    Friend WithEvents Label23 As Label
+    Friend WithEvents lblMap As Label
     Friend WithEvents lblBriefingGuideInstructions As Label
     Friend WithEvents btnDiscordSharedEventURL As Button
     Friend WithEvents txtDiscordEventShareURL As TextBox
