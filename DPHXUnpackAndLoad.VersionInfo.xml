@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.9.29.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.3.1</ReleaseVersion>
+      <ReleaseTitle>Gate Diameter or Radius</ReleaseTitle>
+      <ReleaseNotes>
+        Added a new option to display gate sizes as Diameter or Radius.
+        Fixed the caption and status bar not displaying the current filename.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.9.29.1</ReleaseVersion>
       <ReleaseTitle>Smarter and smarter</ReleaseTitle>

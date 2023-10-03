@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.9.29.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.3.1</ReleaseVersion>
+      <ReleaseTitle>Sanity check before posting</ReleaseTitle>
+      <ReleaseNotes>
+        Added sanity check validations and labels highlighting for required / missing information.
+        Removed flight plan file from the task's main post as it is too technical.
+        Added a new option to display gate sizes as Diameter or Radius (Briefing).
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.9.29.1</ReleaseVersion>
       <ReleaseTitle>A few more little goodies</ReleaseTitle>
