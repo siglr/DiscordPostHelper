@@ -1,10 +1,11 @@
 ﻿Public Class PreferredUnits
     Private _altitude As AltitudeUnits
     Private _distance As DistanceUnits
-    Private _gateDiameter As GateDiameterUnits
+    Private _GateDiameter As GateDiameterUnits
     Private _windSpeed As WindSpeedUnits
     Private _barometric As BarometricUnits
     Private _temperature As TemperatureUnits
+    Private _GateMeasurement As GateMeasurementChoices
 
     Public Enum DistanceUnits As Integer
         Metric = 0
@@ -42,6 +43,11 @@
         Both = 2
     End Enum
 
+    Public Enum GateMeasurementChoices As Integer
+        Diameter = 0
+        Radius = 1
+    End Enum
+
     Public Sub New()
 
         'Load values from registry
@@ -50,9 +56,21 @@
         _temperature = SupportingFeatures.ReadRegistryKey("TemperatureUnit", TemperatureUnits.Both)
         _windSpeed = SupportingFeatures.ReadRegistryKey("WindSpeedUnit", WindSpeedUnits.Both)
         _altitude = SupportingFeatures.ReadRegistryKey("AltitudeUnit", AltitudeUnits.Both)
-        _gateDiameter = SupportingFeatures.ReadRegistryKey("GateDiameterUnit", GateDiameterUnits.Both)
+        _GateDiameter = SupportingFeatures.ReadRegistryKey("GateDiameterUnit", GateDiameterUnits.Both)
+        _GateMeasurement = SupportingFeatures.ReadRegistryKey("GateMeasurement", GateMeasurementChoices.Diameter)
 
     End Sub
+
+    Public ReadOnly Property GateLabel As String
+        Get
+            Select Case _GateMeasurement
+                Case GateMeasurementChoices.Diameter
+                    Return "Gate diameter"
+                Case GateMeasurementChoices.Radius
+                    Return "Gate radius"
+            End Select
+        End Get
+    End Property
 
     Public Property Distance As DistanceUnits
         Get
@@ -106,11 +124,22 @@
 
     Public Property GateDiameter As GateDiameterUnits
         Get
-            Return _gateDiameter
+            Return _GateDiameter
         End Get
         Set(value As GateDiameterUnits)
-            _gateDiameter = value
-            SupportingFeatures.WriteRegistryKey("GateDiameterUnit", _gateDiameter)
+            _GateDiameter = value
+            SupportingFeatures.WriteRegistryKey("GateDiameterUnit", _GateDiameter)
         End Set
     End Property
+
+    Public Property GateMeasurement As GateMeasurementChoices
+        Get
+            Return _GateMeasurement
+        End Get
+        Set(value As GateMeasurementChoices)
+            _GateMeasurement = value
+            SupportingFeatures.WriteRegistryKey("GateMeasurement", _GateMeasurement)
+        End Set
+    End Property
+
 End Class

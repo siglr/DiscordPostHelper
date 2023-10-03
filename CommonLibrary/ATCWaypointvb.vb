@@ -15,26 +15,34 @@ Public Class ATCWaypoint
             Dim result As String = String.Empty
             Dim diameter As String = String.Empty
 
+            Dim intDividingFactor As Integer = 1
+
+            If SupportingFeatures.PrefUnits Is Nothing OrElse SupportingFeatures.PrefUnits.GateMeasurement = GateMeasurementChoices.Diameter Then
+                intDividingFactor = 1
+            Else
+                intDividingFactor = 2
+            End If
+
             If _Diameter > 0 Then
                 Dim convImperial As Single
                 convImperial = Conversions.KmToMiles(_Diameter / 1000)
                 If SupportingFeatures.PrefUnits Is Nothing OrElse SupportingFeatures.PrefUnits.GateDiameter = GateDiameterUnits.Both Then
                     If convImperial < 1 Then
                         convImperial = Conversions.MeterToFeet(_Diameter)
-                        diameter = $"{Math.Round(convImperial, 0)}' ({_Diameter} m)"
+                        diameter = $"{Math.Round(convImperial / intDividingFactor, 0)}' ({Math.Round(_Diameter / intDividingFactor, 0)} m)"
                     Else
-                        diameter = $"{String.Format("{0:0.0}", Math.Round(convImperial, 1))} mi ({_Diameter} m)"
+                        diameter = $"{String.Format("{0:0.0}", Math.Round(convImperial / intDividingFactor, 1))} mi ({Math.Round(_Diameter / intDividingFactor, 0)} m)"
                     End If
                 Else
                     Select Case SupportingFeatures.PrefUnits.GateDiameter
                         Case GateDiameterUnits.Metric
-                            diameter = $"{_Diameter} m"
+                            diameter = $"{Math.Round(_Diameter / intDividingFactor, 0)} m"
                         Case GateDiameterUnits.Imperial
                             If convImperial < 1 Then
                                 convImperial = Conversions.MeterToFeet(_Diameter)
-                                diameter = $"{Math.Round(convImperial, 0)}'"
+                                diameter = $"{Math.Round(convImperial / intDividingFactor, 0)}'"
                             Else
-                                diameter = $"{String.Format("{0:0.0}", Math.Round(convImperial, 1))} mi"
+                                diameter = $"{String.Format("{0:0.0}", Math.Round(convImperial / intDividingFactor, 1))} mi"
                             End If
                     End Select
                 End If

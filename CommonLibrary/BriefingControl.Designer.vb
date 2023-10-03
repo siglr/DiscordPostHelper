@@ -26,6 +26,7 @@ Partial Class BriefingControl
         Me.pnlTaskBriefing = New System.Windows.Forms.Panel()
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
+        Me.btnGotoDiscordTaskThread = New System.Windows.Forms.Button()
         Me.countryFlagsLayoutPanel = New System.Windows.Forms.FlowLayoutPanel()
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tbpgMap = New System.Windows.Forms.TabPage()
@@ -65,6 +66,10 @@ Partial Class BriefingControl
         Me.tbpgAddOns = New System.Windows.Forms.TabPage()
         Me.AddOnsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tabUnits = New System.Windows.Forms.TabPage()
+        Me.grbGateDiameterOrRadius = New System.Windows.Forms.GroupBox()
+        Me.FlowLayoutPanel7 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.radioGateMeasurementDiameter = New System.Windows.Forms.RadioButton()
+        Me.radioGateMeasurementRadius = New System.Windows.Forms.RadioButton()
         Me.lblPrefUnitsMessage = New System.Windows.Forms.Label()
         Me.grbTemperature = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel6 = New System.Windows.Forms.FlowLayoutPanel()
@@ -98,7 +103,6 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.btnGotoDiscordTaskThread = New System.Windows.Forms.Button()
         Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
@@ -143,6 +147,8 @@ Partial Class BriefingControl
         Me.tbpgAddOns.SuspendLayout()
         CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabUnits.SuspendLayout()
+        Me.grbGateDiameterOrRadius.SuspendLayout()
+        Me.FlowLayoutPanel7.SuspendLayout()
         Me.grbTemperature.SuspendLayout()
         Me.FlowLayoutPanel6.SuspendLayout()
         Me.grbWindSpeed.SuspendLayout()
@@ -200,6 +206,16 @@ Partial Class BriefingControl
         Me.tbpgMainTaskInfo.TabIndex = 0
         Me.tbpgMainTaskInfo.Text = "Main Task Info"
         Me.tbpgMainTaskInfo.UseVisualStyleBackColor = True
+        '
+        'btnGotoDiscordTaskThread
+        '
+        Me.btnGotoDiscordTaskThread.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 651)
+        Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
+        Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(947, 34)
+        Me.btnGotoDiscordTaskThread.TabIndex = 7
+        Me.btnGotoDiscordTaskThread.Text = "Bring me to this task's discussion thread on Discord"
+        Me.btnGotoDiscordTaskThread.UseVisualStyleBackColor = True
         '
         'countryFlagsLayoutPanel
         '
@@ -705,6 +721,7 @@ Partial Class BriefingControl
         '
         'tabUnits
         '
+        Me.tabUnits.Controls.Add(Me.grbGateDiameterOrRadius)
         Me.tabUnits.Controls.Add(Me.lblPrefUnitsMessage)
         Me.tabUnits.Controls.Add(Me.grbTemperature)
         Me.tabUnits.Controls.Add(Me.grbWindSpeed)
@@ -719,13 +736,57 @@ Partial Class BriefingControl
         Me.tabUnits.Text = "Units"
         Me.tabUnits.UseVisualStyleBackColor = True
         '
+        'grbGateDiameterOrRadius
+        '
+        Me.grbGateDiameterOrRadius.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbGateDiameterOrRadius.Controls.Add(Me.FlowLayoutPanel7)
+        Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 129)
+        Me.grbGateDiameterOrRadius.Name = "grbGateDiameterOrRadius"
+        Me.grbGateDiameterOrRadius.Size = New System.Drawing.Size(947, 57)
+        Me.grbGateDiameterOrRadius.TabIndex = 2
+        Me.grbGateDiameterOrRadius.TabStop = False
+        Me.grbGateDiameterOrRadius.Text = "Gate Size Format"
+        '
+        'FlowLayoutPanel7
+        '
+        Me.FlowLayoutPanel7.Controls.Add(Me.radioGateMeasurementDiameter)
+        Me.FlowLayoutPanel7.Controls.Add(Me.radioGateMeasurementRadius)
+        Me.FlowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FlowLayoutPanel7.Location = New System.Drawing.Point(3, 23)
+        Me.FlowLayoutPanel7.Name = "FlowLayoutPanel7"
+        Me.FlowLayoutPanel7.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel7.TabIndex = 0
+        '
+        'radioGateMeasurementDiameter
+        '
+        Me.radioGateMeasurementDiameter.AutoSize = True
+        Me.radioGateMeasurementDiameter.Location = New System.Drawing.Point(3, 3)
+        Me.radioGateMeasurementDiameter.Name = "radioGateMeasurementDiameter"
+        Me.radioGateMeasurementDiameter.Size = New System.Drawing.Size(86, 24)
+        Me.radioGateMeasurementDiameter.TabIndex = 0
+        Me.radioGateMeasurementDiameter.Tag = "0"
+        Me.radioGateMeasurementDiameter.Text = "Diameter"
+        Me.radioGateMeasurementDiameter.UseVisualStyleBackColor = True
+        '
+        'radioGateMeasurementRadius
+        '
+        Me.radioGateMeasurementRadius.AutoSize = True
+        Me.radioGateMeasurementRadius.Location = New System.Drawing.Point(95, 3)
+        Me.radioGateMeasurementRadius.Name = "radioGateMeasurementRadius"
+        Me.radioGateMeasurementRadius.Size = New System.Drawing.Size(70, 24)
+        Me.radioGateMeasurementRadius.TabIndex = 1
+        Me.radioGateMeasurementRadius.Tag = "1"
+        Me.radioGateMeasurementRadius.Text = "Radius"
+        Me.radioGateMeasurementRadius.UseVisualStyleBackColor = True
+        '
         'lblPrefUnitsMessage
         '
         Me.lblPrefUnitsMessage.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 584)
         Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
         Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(953, 104)
-        Me.lblPrefUnitsMessage.TabIndex = 9
+        Me.lblPrefUnitsMessage.TabIndex = 7
         Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
     "description fields is excluded and will appear as it is."
         Me.lblPrefUnitsMessage.TextAlign = System.Drawing.ContentAlignment.BottomCenter
@@ -735,10 +796,10 @@ Partial Class BriefingControl
         Me.grbTemperature.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTemperature.Controls.Add(Me.FlowLayoutPanel6)
-        Me.grbTemperature.Location = New System.Drawing.Point(3, 318)
+        Me.grbTemperature.Location = New System.Drawing.Point(3, 381)
         Me.grbTemperature.Name = "grbTemperature"
-        Me.grbTemperature.Size = New System.Drawing.Size(976, 57)
-        Me.grbTemperature.TabIndex = 8
+        Me.grbTemperature.Size = New System.Drawing.Size(947, 57)
+        Me.grbTemperature.TabIndex = 6
         Me.grbTemperature.TabStop = False
         Me.grbTemperature.Text = "Temperature"
         '
@@ -750,7 +811,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel6.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel6.Name = "FlowLayoutPanel6"
-        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel6.TabIndex = 0
         '
         'radioTemperatureCelsius
@@ -791,10 +852,10 @@ Partial Class BriefingControl
         Me.grbWindSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbWindSpeed.Controls.Add(Me.FlowLayoutPanel5)
-        Me.grbWindSpeed.Location = New System.Drawing.Point(3, 192)
+        Me.grbWindSpeed.Location = New System.Drawing.Point(3, 255)
         Me.grbWindSpeed.Name = "grbWindSpeed"
-        Me.grbWindSpeed.Size = New System.Drawing.Size(976, 57)
-        Me.grbWindSpeed.TabIndex = 7
+        Me.grbWindSpeed.Size = New System.Drawing.Size(947, 57)
+        Me.grbWindSpeed.TabIndex = 4
         Me.grbWindSpeed.TabStop = False
         Me.grbWindSpeed.Text = "Wind Speed"
         '
@@ -806,7 +867,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
-        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel5.TabIndex = 0
         '
         'radioWindSpeedMps
@@ -847,12 +908,12 @@ Partial Class BriefingControl
         Me.grbGateDiameter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbGateDiameter.Controls.Add(Me.FlowLayoutPanel4)
-        Me.grbGateDiameter.Location = New System.Drawing.Point(3, 129)
+        Me.grbGateDiameter.Location = New System.Drawing.Point(3, 192)
         Me.grbGateDiameter.Name = "grbGateDiameter"
-        Me.grbGateDiameter.Size = New System.Drawing.Size(976, 57)
-        Me.grbGateDiameter.TabIndex = 6
+        Me.grbGateDiameter.Size = New System.Drawing.Size(947, 57)
+        Me.grbGateDiameter.TabIndex = 3
         Me.grbGateDiameter.TabStop = False
-        Me.grbGateDiameter.Text = "Gate Diameter"
+        Me.grbGateDiameter.Text = "Gate Measurement"
         '
         'FlowLayoutPanel4
         '
@@ -862,7 +923,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
-        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel4.TabIndex = 0
         '
         'radioGateDiameterMetric
@@ -905,8 +966,8 @@ Partial Class BriefingControl
         Me.grbDistances.Controls.Add(Me.FlowLayoutPanel2)
         Me.grbDistances.Location = New System.Drawing.Point(3, 66)
         Me.grbDistances.Name = "grbDistances"
-        Me.grbDistances.Size = New System.Drawing.Size(976, 57)
-        Me.grbDistances.TabIndex = 5
+        Me.grbDistances.Size = New System.Drawing.Size(947, 57)
+        Me.grbDistances.TabIndex = 1
         Me.grbDistances.TabStop = False
         Me.grbDistances.Text = "Distance"
         '
@@ -918,7 +979,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel2.TabIndex = 0
         '
         'radioDistanceMetric
@@ -959,10 +1020,10 @@ Partial Class BriefingControl
         Me.grbBarometric.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbBarometric.Controls.Add(Me.FlowLayoutPanel1)
-        Me.grbBarometric.Location = New System.Drawing.Point(3, 255)
+        Me.grbBarometric.Location = New System.Drawing.Point(3, 318)
         Me.grbBarometric.Name = "grbBarometric"
-        Me.grbBarometric.Size = New System.Drawing.Size(976, 57)
-        Me.grbBarometric.TabIndex = 4
+        Me.grbBarometric.Size = New System.Drawing.Size(947, 57)
+        Me.grbBarometric.TabIndex = 5
         Me.grbBarometric.TabStop = False
         Me.grbBarometric.Text = "Barometric Pressure"
         '
@@ -974,7 +1035,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel1.TabIndex = 0
         '
         'radioBaroHPa
@@ -1017,8 +1078,8 @@ Partial Class BriefingControl
         Me.grbAltitudes.Controls.Add(Me.FlowLayoutPanel3)
         Me.grbAltitudes.Location = New System.Drawing.Point(3, 3)
         Me.grbAltitudes.Name = "grbAltitudes"
-        Me.grbAltitudes.Size = New System.Drawing.Size(976, 57)
-        Me.grbAltitudes.TabIndex = 3
+        Me.grbAltitudes.Size = New System.Drawing.Size(947, 57)
+        Me.grbAltitudes.TabIndex = 0
         Me.grbAltitudes.TabStop = False
         Me.grbAltitudes.Text = "Altitude"
         '
@@ -1030,7 +1091,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
-        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(970, 31)
+        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(941, 31)
         Me.FlowLayoutPanel3.TabIndex = 0
         '
         'radioAltitudeMeters
@@ -1069,16 +1130,6 @@ Partial Class BriefingControl
         'Timer1
         '
         Me.Timer1.Interval = 1000
-        '
-        'btnGotoDiscordTaskThread
-        '
-        Me.btnGotoDiscordTaskThread.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 651)
-        Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
-        Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(947, 34)
-        Me.btnGotoDiscordTaskThread.TabIndex = 7
-        Me.btnGotoDiscordTaskThread.Text = "Bring me to this task's discussion thread on Discord"
-        Me.btnGotoDiscordTaskThread.UseVisualStyleBackColor = True
         '
         'countDownTaskStart
         '
@@ -1176,6 +1227,9 @@ Partial Class BriefingControl
         Me.tbpgAddOns.ResumeLayout(False)
         CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabUnits.ResumeLayout(False)
+        Me.grbGateDiameterOrRadius.ResumeLayout(False)
+        Me.FlowLayoutPanel7.ResumeLayout(False)
+        Me.FlowLayoutPanel7.PerformLayout()
         Me.grbTemperature.ResumeLayout(False)
         Me.FlowLayoutPanel6.ResumeLayout(False)
         Me.FlowLayoutPanel6.PerformLayout()
@@ -1278,4 +1332,8 @@ Partial Class BriefingControl
     Friend WithEvents Label6 As Windows.Forms.Label
     Friend WithEvents btnTestAudioCueVolume As Windows.Forms.Button
     Friend WithEvents btnGotoDiscordTaskThread As Windows.Forms.Button
+    Friend WithEvents grbGateDiameterOrRadius As Windows.Forms.GroupBox
+    Friend WithEvents FlowLayoutPanel7 As Windows.Forms.FlowLayoutPanel
+    Friend WithEvents radioGateMeasurementDiameter As Windows.Forms.RadioButton
+    Friend WithEvents radioGateMeasurementRadius As Windows.Forms.RadioButton
 End Class

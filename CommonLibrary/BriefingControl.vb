@@ -104,7 +104,9 @@ Public Class BriefingControl
                                                                                             radioTemperatureBoth.CheckedChanged,
                                                                                             radioGateDiameterMetric.CheckedChanged,
                                                                                             radioGateDiameterImperial.CheckedChanged,
-                                                                                            radioGateDiameterBoth.CheckedChanged
+                                                                                            radioGateDiameterBoth.CheckedChanged,
+                                                                                            radioGateMeasurementRadius.CheckedChanged,
+                                                                                            radioGateMeasurementDiameter.CheckedChanged
 
         UnitPrefChanged(sender)
 
@@ -172,6 +174,13 @@ Public Class BriefingControl
                 radioGateDiameterImperial.Checked = True
             Case GateDiameterUnits.Both
                 radioGateDiameterBoth.Checked = True
+        End Select
+
+        Select Case PrefUnits.GateMeasurement
+            Case GateMeasurementChoices.Diameter
+                radioGateMeasurementDiameter.Checked = True
+            Case GateMeasurementChoices.Radius
+                radioGateMeasurementRadius.Checked = True
         End Select
 
         Select Case PrefUnits.WindSpeed
@@ -576,7 +585,8 @@ Public Class BriefingControl
         waypointCoordinatesDataGrid.AllowUserToResizeColumns = True
         waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
         waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
-        waypointCoordinatesDataGrid.Columns("Gate").HeaderText = "Gate diameter"
+
+        waypointCoordinatesDataGrid.Columns("Gate").HeaderText = PrefUnits.GateLabel
         waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").DefaultCellStyle.Format = "N1"
         waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").HeaderText = "Previous (km)"
         waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").DefaultCellStyle.Format = "N1"
@@ -955,6 +965,8 @@ Public Class BriefingControl
                 PrefUnits.Distance = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("GateDiameter") Then
                 PrefUnits.GateDiameter = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("GateMeasurement") Then
+                PrefUnits.GateMeasurement = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("WindSpeed") Then
                 PrefUnits.WindSpeed = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("Baro") Then
