@@ -1592,10 +1592,12 @@ Public Class Main
                 MessageBox.Show(Me, $"Some fields are incomplete:{Environment.NewLine}{Environment.NewLine}{requiredText.ToString}", "Field validation prior to posting", vbOKOnly, vbCritical)
                 Return cannotContinue
             Else
-                If MessageBox.Show(Me, $"Some fields may be incomplete, do you want to continue?{Environment.NewLine}{Environment.NewLine}{messageText.ToString}", "Field validation prior to posting", vbYesNo, vbQuestion) = DialogResult.No Then
-                    Return True
-                Else
-                    Return False
+                If messageText.ToString <> String.Empty Then
+                    If MessageBox.Show(Me, $"Some fields may be incomplete, do you want to continue?{Environment.NewLine}{Environment.NewLine}{messageText.ToString}", "Field validation prior to posting", vbYesNo, vbQuestion) = DialogResult.No Then
+                        Return True
+                    Else
+                        Return False
+                    End If
                 End If
             End If
         End If
