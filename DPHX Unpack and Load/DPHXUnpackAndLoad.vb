@@ -303,9 +303,6 @@ Public Class DPHXUnpackAndLoad
 
         newDPHFile = _SF.UnpackDPHXFileToTempFolder(dphxFilename, TempDPHXUnpackFolder)
 
-        SetFormCaption(_currentFile)
-        packageNameToolStrip.Text = _currentFile
-
         If File.Exists(newDPHFile) Then
             Dim serializer As New XmlSerializer(GetType(AllData))
 
@@ -335,6 +332,9 @@ Public Class DPHXUnpackAndLoad
 
             Settings.SessionSettings.LastDPHXOpened = _currentFile
         End If
+
+        SetFormCaption(_currentFile)
+        packageNameToolStrip.Text = _currentFile
 
     End Sub
 
