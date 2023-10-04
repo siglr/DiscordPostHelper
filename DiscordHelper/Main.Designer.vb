@@ -490,7 +490,8 @@ Partial Class Main
         Me.btnPasteUsernameCredits.TabIndex = 53
         Me.btnPasteUsernameCredits.Tag = "22"
         Me.btnPasteUsernameCredits.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to paste the username into the credits field.")
+        Me.ToolTip1.SetToolTip(Me.btnPasteUsernameCredits, "Click this button to set the credits field along with the username in the clipboa" &
+        "rd.")
         Me.btnPasteUsernameCredits.UseVisualStyleBackColor = True
         '
         'Label9
