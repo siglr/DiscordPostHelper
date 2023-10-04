@@ -184,7 +184,6 @@ Partial Class Main
         Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
-        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
@@ -227,6 +226,8 @@ Partial Class Main
         Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.btnGroupFlightEventThreadLogistics = New System.Windows.Forms.Button()
+        Me.btnGroupFlightEventThreadTitle = New System.Windows.Forms.Button()
         Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
         Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
@@ -247,6 +248,7 @@ Partial Class Main
         Me.Label42 = New System.Windows.Forms.Label()
         Me.lblDiscordEventVoice = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
+        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
@@ -1238,6 +1240,7 @@ Partial Class Main
         Me.Label10.Size = New System.Drawing.Size(130, 26)
         Me.Label10.TabIndex = 7
         Me.Label10.Text = "DPHX Package"
+        Me.Label10.Visible = False
         '
         'btnRemoveExtraFile
         '
@@ -1289,6 +1292,7 @@ Partial Class Main
         Me.txtDPHXPackageFilename.TabStop = False
         Me.txtDPHXPackageFilename.Tag = ""
         Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
+        Me.txtDPHXPackageFilename.Visible = False
         '
         'GroupBox2
         '
@@ -2208,7 +2212,6 @@ Partial Class Main
         '
         'tabDiscord
         '
-        Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Controls.Add(Me.lblAllSecPostsTotalCars)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
@@ -2230,26 +2233,13 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherWinds)
         Me.tabDiscord.Controls.Add(Me.lblNbrCarsFilesText)
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
+        Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
         Me.tabDiscord.Size = New System.Drawing.Size(1486, 874)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
-        '
-        'chkExpertMode
-        '
-        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
-        Me.chkExpertMode.Name = "chkExpertMode"
-        Me.chkExpertMode.Size = New System.Drawing.Size(373, 52)
-        Me.chkExpertMode.TabIndex = 95
-        Me.chkExpertMode.Tag = "44"
-        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
-        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
-        Me.chkExpertMode.UseVisualStyleBackColor = True
         '
         'lblAllSecPostsTotalCars
         '
@@ -2269,7 +2259,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(414, 652)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(709, 490)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2729,7 +2719,7 @@ Partial Class Main
         Me.grpDiscordGroupFlight.Controls.Add(Me.grpDiscordEvent)
         Me.grpDiscordGroupFlight.Location = New System.Drawing.Point(419, 3)
         Me.grpDiscordGroupFlight.Name = "grpDiscordGroupFlight"
-        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(685, 648)
+        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(685, 755)
         Me.grpDiscordGroupFlight.TabIndex = 1
         Me.grpDiscordGroupFlight.TabStop = False
         Me.grpDiscordGroupFlight.Text = "Group Flight Event"
@@ -2737,9 +2727,9 @@ Partial Class Main
         'grpTaskFeatured
         '
         Me.grpTaskFeatured.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
-        Me.grpTaskFeatured.Location = New System.Drawing.Point(6, 549)
+        Me.grpTaskFeatured.Location = New System.Drawing.Point(6, 663)
         Me.grpTaskFeatured.Name = "grpTaskFeatured"
-        Me.grpTaskFeatured.Size = New System.Drawing.Size(673, 89)
+        Me.grpTaskFeatured.Size = New System.Drawing.Size(673, 84)
         Me.grpTaskFeatured.TabIndex = 2
         Me.grpTaskFeatured.TabStop = False
         Me.grpTaskFeatured.Text = "Step 3: Sharing the event"
@@ -2759,6 +2749,8 @@ Partial Class Main
         '
         'grpGroupFlightEvent
         '
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadLogistics)
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadTitle)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDiscordGroupEventURL)
         Me.grpGroupFlightEvent.Controls.Add(Me.txtGroupEventPostURL)
         Me.grpGroupFlightEvent.Controls.Add(Me.Label38)
@@ -2766,10 +2758,34 @@ Partial Class Main
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventInfoToClipboard)
         Me.grpGroupFlightEvent.Location = New System.Drawing.Point(6, 27)
         Me.grpGroupFlightEvent.Name = "grpGroupFlightEvent"
-        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(673, 181)
+        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(673, 293)
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
+        '
+        'btnGroupFlightEventThreadLogistics
+        '
+        Me.btnGroupFlightEventThreadLogistics.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGroupFlightEventThreadLogistics.Location = New System.Drawing.Point(6, 235)
+        Me.btnGroupFlightEventThreadLogistics.Name = "btnGroupFlightEventThreadLogistics"
+        Me.btnGroupFlightEventThreadLogistics.Size = New System.Drawing.Size(661, 51)
+        Me.btnGroupFlightEventThreadLogistics.TabIndex = 7
+        Me.btnGroupFlightEventThreadLogistics.Tag = "84"
+        Me.btnGroupFlightEventThreadLogistics.Text = "3b. Group Flight thread logistic instructions"
+        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventThreadLogistics, "Click this button to copy the thread logistic instructions to your clipboard.")
+        Me.btnGroupFlightEventThreadLogistics.UseVisualStyleBackColor = True
+        '
+        'btnGroupFlightEventThreadTitle
+        '
+        Me.btnGroupFlightEventThreadTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGroupFlightEventThreadTitle.Location = New System.Drawing.Point(6, 178)
+        Me.btnGroupFlightEventThreadTitle.Name = "btnGroupFlightEventThreadTitle"
+        Me.btnGroupFlightEventThreadTitle.Size = New System.Drawing.Size(661, 51)
+        Me.btnGroupFlightEventThreadTitle.TabIndex = 6
+        Me.btnGroupFlightEventThreadTitle.Tag = "83"
+        Me.btnGroupFlightEventThreadTitle.Text = "3a. Group Flight thread title"
+        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventThreadTitle, "Click this button to put the group flight title into your clipboard.")
+        Me.btnGroupFlightEventThreadTitle.UseVisualStyleBackColor = True
         '
         'btnDiscordGroupEventURL
         '
@@ -2825,7 +2841,7 @@ Partial Class Main
         Me.btnGroupFlightEventInfoToClipboard.TabIndex = 1
         Me.btnGroupFlightEventInfoToClipboard.Tag = "81"
         Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group Flight post info to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventInfoToClipboard, "Click this button to put the copy the group flight info to your clipboard.")
+        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventInfoToClipboard, "Click this button to put the group flight info into your clipboard.")
         Me.btnGroupFlightEventInfoToClipboard.UseVisualStyleBackColor = True
         '
         'grpDiscordEvent
@@ -2844,9 +2860,9 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label42)
         Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 214)
+        Me.grpDiscordEvent.Location = New System.Drawing.Point(6, 326)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(673, 329)
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(673, 331)
         Me.grpDiscordEvent.TabIndex = 1
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Step 2: Discord Event (if applicable)"
@@ -2998,6 +3014,20 @@ Partial Class Main
         Me.Label39.Size = New System.Drawing.Size(326, 26)
         Me.Label39.TabIndex = 4
         Me.Label39.Text = "2. Select Voice Channel and click next:"
+        '
+        'chkExpertMode
+        '
+        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
+        Me.chkExpertMode.Name = "chkExpertMode"
+        Me.chkExpertMode.Size = New System.Drawing.Size(373, 52)
+        Me.chkExpertMode.TabIndex = 95
+        Me.chkExpertMode.Tag = "44"
+        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
+        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
+        Me.chkExpertMode.UseVisualStyleBackColor = True
         '
         'tabBriefing
         '
@@ -3473,4 +3503,6 @@ Partial Class Main
     Friend WithEvents chkSuppressWarningForBaroPressure As CheckBox
     Friend WithEvents txtBaroPressureExtraInfo As TextBox
     Friend WithEvents lblNonStdBaroPressure As Label
+    Friend WithEvents btnGroupFlightEventThreadLogistics As Button
+    Friend WithEvents btnGroupFlightEventThreadTitle As Button
 End Class

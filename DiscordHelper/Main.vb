@@ -2171,6 +2171,8 @@ Public Class Main
     End Sub
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
         BuildGroupFlightPost()
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         CopyContent.ShowContent(Me,
@@ -2178,10 +2180,76 @@ Public Class Main
                                 $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field just below for Discord Event.",
                                 "Creating group flight post")
 
+        If txtGroupEventPostURL.Text = String.Empty Then
+            'Check if the clipboard contains a valid URL, which would mean the group flight URL has been copied
+            Dim groupFlightURL As String
+            Try
+                groupFlightURL = Clipboard.GetText
+                If (Not groupFlightURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(groupFlightURL) AndAlso groupFlightURL.Contains("discord.com/channels") Then
+                    txtGroupEventPostURL.Text = groupFlightURL
+                    SaveSession()
+                End If
+            Catch ex As Exception
+            End Try
+            If txtGroupEventPostURL.Text = String.Empty Then
+                MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Copy URL to Group Flight Event", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                autoContinue = False
+            End If
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+
+        If autoContinue Then
+            btnGroupFlightEventThreadTitle_Click(sender, e)
+        End If
+    End Sub
+    Private Sub btnGroupFlightEventThreadTitle_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventThreadTitle.Click
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
+        BuildDiscordEventDescription()
+        If txtDiscordEventTopic.Text <> String.Empty Then
+            Clipboard.SetText(txtDiscordEventTopic.Text)
+            CopyContent.ShowContent(Me,
+                                txtDiscordEventTopic.Text,
+                                "Create a thread for the newly created group flight event, paste the title from your clipboard and then come back for the content of the first message.",
+                                "Creating group flight post")
+
+        End If
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+        If autoContinue Then
+            btnGroupFlightEventThreadLogistics_Click(sender, e)
+        End If
+
+    End Sub
+
+    Private Sub btnGroupFlightEventThreadLogistics_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventThreadLogistics.Click
+        Dim logisticInstructions As New StringBuilder
+
+        logisticInstructions.AppendLine("# 🗣 Event Logistics")
+        logisticInstructions.AppendLine("**Use this thread only to discuss logistics for this event!**")
+        logisticInstructions.AppendLine("> Focus on:")
+        logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
+        logisticInstructions.AppendLine("> - Providing feedback on the event's organization and coordination")
+        logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
+        logisticInstructions.AppendLine($"⏩{txtDiscordTaskThreadURL.Text}")
+
+        Clipboard.SetText(logisticInstructions.ToString)
+        CopyContent.ShowContent(Me,
+                                logisticInstructions.ToString,
+                                "Now paste the message content into the thread and post it.",
+                                "Creating group flight post")
+
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
 
     End Sub
 
@@ -2245,6 +2313,8 @@ Public Class Main
 
     Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
 
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
         Dim dlgResult As DialogResult
 
         Do While _sessionModified
@@ -2286,6 +2356,10 @@ Public Class Main
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
+        End If
+
+        If autoContinue Then
+            btnGroupFlightEventInfoToClipboard_Click(sender, e)
         End If
 
     End Sub
@@ -3040,7 +3114,19 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
                 SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
 
-            Case 83 'Discord Event
+            Case 83 'Group flight thread title
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 259
+                lblDiscordGuideInstructions.Text = "Click this button to copy the group flight's thread title and receive instructions."
+                SetFocusOnField(btnGroupFlightEventThreadTitle, fromF1Key)
+
+            Case 84 'Group flight thread logistic instructions
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 318
+                lblDiscordGuideInstructions.Text = "Click this button to copy the group flight's thread logistic information and and receive instructions."
+                SetFocusOnField(btnGroupFlightEventThreadTitle, fromF1Key)
+
+            Case 85 'Discord Event
                 If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     _GuideCurrentStep += 1
                 Else
@@ -3048,61 +3134,61 @@ Public Class Main
                 End If
                 ShowGuide()
 
-            Case 84 'Create Discord Event
+            Case 86 'Create Discord Event
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 272
+                pnlWizardDiscord.Top = 382
                 lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 85 'Select voice channel for event
+            Case 87 'Select voice channel for event
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 309
+                pnlWizardDiscord.Top = 420
                 lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 86 'Topic name
+            Case 88 'Topic name
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 346
+                pnlWizardDiscord.Top = 458
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventTopicClipboard, fromF1Key)
 
-            Case 87 'Event date & time
+            Case 89 'Event date & time
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 379
+                pnlWizardDiscord.Top = 490
                 lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 88 'Event description
+            Case 90 'Event description
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 418
+                pnlWizardDiscord.Top = 529
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
-            Case 89 'Cover image
+            Case 91 'Cover image
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 455
+                pnlWizardDiscord.Top = 566
                 lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 90 'Preview and publish
+            Case 92 'Preview and publish
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 492
+                pnlWizardDiscord.Top = 603
                 lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 91 'Paste link to Discord Event
+            Case 93 'Paste link to Discord Event
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 538
+                pnlWizardDiscord.Top = 649
                 lblDiscordGuideInstructions.Text = "From the Discord Event published window, copy the URL to share to and invite participants and click ""Paste"" here."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 92 'Share the Discord Event on the task
+            Case 94 'Share the Discord Event on the task
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 631
+                pnlWizardDiscord.Top = 742
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to post on the task and receive instructions to paste it in the Discord."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 93 To 99
+            Case 95 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -3706,6 +3792,8 @@ Public Class Main
         End If
 
     End Sub
+
+
 
 #End Region
 
