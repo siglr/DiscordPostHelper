@@ -97,8 +97,12 @@
     <None Include="Resources\magnifier-zoom.png" />
     <Content Include="Resources\sample.png" />
     <None Include="Resources\zone.png" />
+    <None Include="UpdateVersion.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "H:\DiscordHelper - 4.8.1\DiscordHelper\ImageViewer\UpdateVersion.ps1"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

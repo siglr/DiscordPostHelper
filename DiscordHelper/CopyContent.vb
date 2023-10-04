@@ -23,6 +23,10 @@ Public Class CopyContent
 
     Private Sub btnAutoPaste_Click(sender As Object, e As EventArgs) Handles btnAutoPaste.Click
 
+        If Clipboard.ContainsText Then
+            Clipboard.SetText(txtCopiedContent.Text)
+        End If
+
         Dim discordProcess As Process = SupportingFeatures.BringWindowToTopWithExe("Discord", "Discord.exe")
         If discordProcess IsNot Nothing Then
             For Each keySequence As String In _keySequences

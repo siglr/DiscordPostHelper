@@ -344,7 +344,7 @@ Public Class BriefingControl
 
         For Each countryName As String In _sessionData.Countries
             If countryName <> String.Empty AndAlso _SF.CountryFlagCodes.ContainsKey(countryName) Then
-                Dim countryCode As String = _SF.CountryFlagCodes(countryName)
+                Dim countryCode As String = _SF.CountryFlagCodes(countryName).Item2
                 Dim flagFileName As String = countryCode.Substring(6, 2) & ".png"
                 Dim flagFilePath As String = Path.Combine(flagsDirectory, flagFileName)
 

@@ -129,6 +129,10 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="UpdateVersion.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "H:\DiscordHelper - 4.8.1\DiscordHelper\Updater\UpdateVersion.ps1"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

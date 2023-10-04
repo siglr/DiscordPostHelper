@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Tool to help in the creation of MSFS Glider task and event posts in Discord")>
 <Assembly: AssemblyCompany("Services Informatiques GLR Inc.")>
 <Assembly: AssemblyProduct("SIGLR Soaring Tools - Discord Post Helper")>
-<Assembly: AssemblyCopyright("Copyright ©  2023")>
+<Assembly: AssemblyCopyright("Copyright �  2023")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("23.10.03.1")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("23.10.4.3")>
+<Assembly: AssemblyFileVersion("23.10.4.3")>

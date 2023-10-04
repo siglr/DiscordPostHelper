@@ -943,7 +943,7 @@ Public Class Main
             End Try
         End If
 
-        Dim fpTitle As String = $"# {txtTitle.Text}{AddFlagsToTitle()}"
+        Dim fpTitle As String = $"{txtTitle.Text}{AddFlagsToTitle()}"
         Clipboard.SetText(fpTitle)
         autoContinue = CopyContent.ShowContent(Me,
                             fpTitle,
@@ -1766,7 +1766,7 @@ Public Class Main
 
         If lstAllCountries.Items.Count > 0 Then
             For Each country As String In lstAllCountries.Items
-                answer.Append($" {_SF.CountryFlagCodes(country)}")
+                answer.Append($" {_SF.CountryFlagCodes(country).Item1}")
             Next
         End If
 
