@@ -14,10 +14,13 @@ Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 Imports Microsoft.Win32
 Imports System.Reflection
 Imports System.Threading
+Imports NAudio.Utils
+Imports System.Runtime.InteropServices
 
 Public Class SupportingFeatures
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+    Private Const SW_RESTORE As Integer = 9
 
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
@@ -1414,5 +1417,59 @@ Public Class SupportingFeatures
         Return True
     End Function
 
+    ' Function to bring a specific window to the top and unminimize it if minimized
+    Public Shared Function BringWindowToTopWithExe(partialTitle As String, exeFilePath As String) As Process
+        Try
+            Dim processes() As Process = Process.GetProcesses()
+
+            For Each p As Process In processes
+                Try
+                    If Not String.IsNullOrEmpty(p.MainWindowTitle) AndAlso p.MainWindowTitle.Contains(partialTitle) Then
+                        ' Check if the executable file path matches the specified one
+                        If String.Compare(Path.GetFileName(p.MainModule.FileName), exeFilePath, StringComparison.OrdinalIgnoreCase) = 0 Then
+                            Dim handle As IntPtr = p.MainWindowHandle
+
+                            If NativeMethods.IsIconic(handle) Then
+                                ' If the window is minimized, unminimize it
+                                NativeMethods.ShowWindow(handle, SW_RESTORE)
+                            End If
+
+                            NativeMethods.SetForegroundWindow(handle)
+                            Return p ' Found and brought to the top
+                        End If
+                    End If
+
+                Catch ex As Exception
+                End Try
+            Next
+
+            ' If we reach here, the window was not found
+            ' Handle as needed or ignore the error
+        Catch ex As Exception
+            ' Handle any other exceptions here if needed
+        End Try
+
+        Return Nothing ' Window not found or other error occurred
+    End Function
+
+    Public Shared Sub BringDPHToolToTop(handle As IntPtr)
+        NativeMethods.SetForegroundWindow(handle)
+    End Sub
+
 End Class
+
+Public Class NativeMethods
+    <DllImport("user32.dll")>
+    Public Shared Function SetForegroundWindow(hWnd As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Public Shared Function IsIconic(hWnd As IntPtr) As Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Public Shared Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
+    End Function
+End Class
+
 

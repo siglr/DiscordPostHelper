@@ -26,6 +26,8 @@ Partial Class CopyContent
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblMessage = New System.Windows.Forms.Label()
         Me.btnOk = New System.Windows.Forms.Button()
+        Me.btnStopExpert = New System.Windows.Forms.Button()
+        Me.btnAutoPaste = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'txtCopiedContent
@@ -71,6 +73,27 @@ Partial Class CopyContent
         Me.btnOk.Text = "Ok"
         Me.btnOk.UseVisualStyleBackColor = True
         '
+        'btnStopExpert
+        '
+        Me.btnStopExpert.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnStopExpert.Location = New System.Drawing.Point(397, 612)
+        Me.btnStopExpert.Name = "btnStopExpert"
+        Me.btnStopExpert.Size = New System.Drawing.Size(104, 34)
+        Me.btnStopExpert.TabIndex = 4
+        Me.btnStopExpert.Text = "Stop Expert"
+        Me.btnStopExpert.UseVisualStyleBackColor = True
+        Me.btnStopExpert.Visible = False
+        '
+        'btnAutoPaste
+        '
+        Me.btnAutoPaste.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnAutoPaste.Location = New System.Drawing.Point(177, 612)
+        Me.btnAutoPaste.Name = "btnAutoPaste"
+        Me.btnAutoPaste.Size = New System.Drawing.Size(104, 34)
+        Me.btnAutoPaste.TabIndex = 5
+        Me.btnAutoPaste.Text = "Auto paste"
+        Me.btnAutoPaste.UseVisualStyleBackColor = True
+        '
         'CopyContent
         '
         Me.AcceptButton = Me.btnOk
@@ -79,6 +102,8 @@ Partial Class CopyContent
         Me.CancelButton = Me.btnOk
         Me.ClientSize = New System.Drawing.Size(687, 658)
         Me.ControlBox = False
+        Me.Controls.Add(Me.btnAutoPaste)
+        Me.Controls.Add(Me.btnStopExpert)
         Me.Controls.Add(Me.btnOk)
         Me.Controls.Add(Me.lblMessage)
         Me.Controls.Add(Me.Label1)
@@ -101,4 +126,6 @@ Partial Class CopyContent
     Friend WithEvents Label1 As Label
     Friend WithEvents lblMessage As Label
     Friend WithEvents btnOk As Button
+    Friend WithEvents btnStopExpert As Button
+    Friend WithEvents btnAutoPaste As Button
 End Class

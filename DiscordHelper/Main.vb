@@ -917,9 +917,20 @@ Public Class Main
         End If
 
         Clipboard.SetText(txtFPResults.Text)
-        CopyContent.ShowContent(Me, txtFPResults.Text, "You can now post the main flight plan message directly in the tasks/plans channel, then create a thread (make sure the name is the same as the title) where we will put the other informations.", "Step 1 - Creating main FP post")
+
+        autoContinue = CopyContent.ShowContent(Me,
+                                txtFPResults.Text,
+                                "You can now post the main flight plan message directly in the tasks/plans channel. Then get the link to that newly created post in Discord.", "Step 1 - Creating main FP post",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
+            Dim message As String = "Please get the link to that newly created post in Discord (""...More menu"" and ""Copy Message Link"""
+            Dim waitingForm As New WaitingForURLForm(message)
+            waitingForm.ShowDialog()
+
+            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+
             'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
             Dim taskURL As String
             Try
@@ -930,11 +941,21 @@ Public Class Main
                 End If
             Catch ex As Exception
             End Try
-            If txtTaskFlightPlanURL.Text = String.Empty Then
-                MessageBox.Show(Me, "Since it looks like you are also creating a group event, take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                autoContinue = False
-            End If
         End If
+
+        Dim fpTitle As String = $"# {txtTitle.Text}{AddFlagsToTitle()}"
+        Clipboard.SetText(fpTitle)
+        autoContinue = CopyContent.ShowContent(Me,
+                            fpTitle,
+                            "Now create a thread and position the cursor on the thread name field.", "Step 1 - Creating main FP post",
+                            New List(Of String) From {"^v"},
+                            autoContinue, False)
+
+        If txtTaskFlightPlanURL.Text = String.Empty Then
+            MessageBox.Show(Me, "Since it looks like you are also creating a group event, you should really take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            autoContinue = False
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -986,10 +1007,13 @@ Public Class Main
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                     contentForMessage.ToString,
-                                    "Now paste the copied files as the second message in the thread WITHOUT posting it and come back for the text info (button 3b).",
-                                    "Step 3a - Creating the files post in the thread - actual files first")
+                                    $"Make sure you are back on the thread's message field.{Environment.NewLine}Now paste the copied files as the second message in the thread WITHOUT posting it and come back for the text info (button 3b).",
+                                    "Step 3a - Creating the files post in the thread - actual files first",
+                                    New List(Of String) From {"^v"},
+                                    autoContinue,
+                                    False)
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
@@ -1039,10 +1063,12 @@ Public Class Main
         sb.Clear()
 
         Clipboard.SetText(txtFilesText.Text)
-        CopyContent.ShowContent(Me,
+        autoContinue = CopyContent.ShowContent(Me,
                                 txtFilesText.Text,
                                 "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
-                                "Step 3b - Creating the files post in the thread - file info")
+                                "Step 3b - Creating the files post in the thread - file info",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
@@ -1074,10 +1100,12 @@ Public Class Main
             End If
         Else
             Clipboard.SetText(msg)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                 msg,
                                 "Now paste the restrictions and weather content as the next message in the thread!",
-                                "Step 4 - Creating post for restrictions in the thread.")
+                                "Step 4 - Creating post for restrictions in the thread.",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -1102,18 +1130,29 @@ Public Class Main
 
         If txtFullDescriptionResults.Text.Length = 0 Then
             Clipboard.SetText("None")
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                 "None",
-                                "Now post the full description as the first message in the task's thread.",
-                                "Step 2 - Creating full description post in the thread.")
+                                $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
+                                "Step 2 - Creating full description post in the thread.",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
         Else
             Clipboard.SetText(txtFullDescriptionResults.Text)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                 txtFullDescriptionResults.Text,
-                                "Now post the full description as the first message in the task's thread.",
-                                "Step 2 - Creating full description post in the thread.")
+                                $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
+                                "Step 2 - Creating full description post in the thread.",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
         End If
+
         If txtDiscordTaskThreadURL.Text = String.Empty Then
+            Dim message As String = "Please get the link to the task's thread in Discord (Right click On the thread under the channel list On the left and ""Copy Message Link"""
+            Dim waitingForm As New WaitingForURLForm(message)
+            waitingForm.ShowDialog()
+
+            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+
             'Check if the clipboard contains a valid URL, which would mean the task's thread has been copied
             Dim taskThreadURL As String
             Try
@@ -1125,7 +1164,7 @@ Public Class Main
             Catch ex As Exception
             End Try
             If txtDiscordTaskThreadURL.Text = String.Empty Then
-                MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show(Me, "Take a minute To copy the Discord link To the task's thread you've just created and go paste it in the URL field on the Flight Plan tab.", "Copy URL to Task Thread", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 autoContinue = False
             End If
         End If
@@ -1154,10 +1193,12 @@ Public Class Main
             End If
         Else
             Clipboard.SetText(txtWaypointsDetails.Text)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                 txtWaypointsDetails.Text,
                                 "Now post the waypoints details as the next message in the thread.",
-                                "Step 5 - Creating waypoints post in the thread.")
+                                "Step 5 - Creating waypoints post in the thread.",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -1185,7 +1226,8 @@ Public Class Main
             CopyContent.ShowContent(Me,
                                 txtAddOnsDetails.Text,
                                 "Now post the add-ons details as the last message in the thread.",
-                                "Step 6 - Creating add-ons post in the thread.")
+                                "Step 6 - Creating add-ons post in the thread.",
+                                New List(Of String) From {"^v"})
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
@@ -1221,7 +1263,8 @@ Public Class Main
             CopyContent.ShowContent(Me,
                                 msg,
                                 "Now paste all remaining content as the next message in the thread!",
-                                "Step 4 - Creating remaining content post in the thread.")
+                                "Step 4 - Creating remaining content post in the thread.",
+                                New List(Of String) From {"^v"})
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -2175,10 +2218,12 @@ Public Class Main
 
         BuildGroupFlightPost()
         Clipboard.SetText(txtGroupFlightEventPost.Text)
-        CopyContent.ShowContent(Me,
+        autoContinue = CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
                                 $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field just below for Discord Event.",
-                                "Creating group flight post")
+                                "Creating group flight post",
+                                New List(Of String) From {"^v"},
+                                autoContinue)
 
         If txtGroupEventPostURL.Text = String.Empty Then
             'Check if the clipboard contains a valid URL, which would mean the group flight URL has been copied
@@ -2212,10 +2257,13 @@ Public Class Main
         BuildDiscordEventDescription()
         If txtDiscordEventTopic.Text <> String.Empty Then
             Clipboard.SetText(txtDiscordEventTopic.Text)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                 txtDiscordEventTopic.Text,
                                 "Create a thread for the newly created group flight event, paste the title from your clipboard and then come back for the content of the first message.",
-                                "Creating group flight post")
+                                "Creating group flight post",
+                                New List(Of String) From {"^v"},
+                                autoContinue,
+                                False)
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2243,7 +2291,8 @@ Public Class Main
         CopyContent.ShowContent(Me,
                                 logisticInstructions.ToString,
                                 "Now paste the message content into the thread and post it.",
-                                "Creating group flight post")
+                                "Creating group flight post",
+                                New List(Of String) From {"^v"})
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -2260,7 +2309,8 @@ Public Class Main
             CopyContent.ShowContent(Me,
                                 txtDiscordEventTopic.Text,
                                 "Paste the topic into the Event Topic field on Discord.",
-                                "Creating Discord Event")
+                                "Creating Discord Event",
+                                New List(Of String) From {"^v"})
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2277,7 +2327,8 @@ Public Class Main
             CopyContent.ShowContent(Me,
                                 txtDiscordEventDescription.Text,
                                 "Paste the description into the Event Description field on Discord.",
-                                "Creating Discord Event")
+                                "Creating Discord Event",
+                                New List(Of String) From {"^v"})
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2347,10 +2398,13 @@ Public Class Main
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
-            CopyContent.ShowContent(Me,
+            autoContinue = CopyContent.ShowContent(Me,
                                     contentForMessage.ToString,
                                     "Now paste the copied files in a new post in the proper Discord channel for the club/group and come back for the text info (button 1 below).",
-                                    "Optional - Including the required files in the group flight post")
+                                    "Optional - Including the required files in the group flight post",
+                                    New List(Of String) From {"^v"},
+                                    autoContinue,
+                                    False)
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -2403,7 +2457,8 @@ Public Class Main
         CopyContent.ShowContent(Me,
                                 sb.ToString,
                                 "On the task's thread, paste the content of the message to share the event for this task.",
-                                "Sharing Discord Event to Task")
+                                "Sharing Discord Event to Task",
+                                New List(Of String) From {"^v"})
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
