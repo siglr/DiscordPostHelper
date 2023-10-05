@@ -1142,7 +1142,7 @@ Public Class Main
         BuildWeatherInfoResults()
 
         'Cover?
-        If cboCoverImage.SelectedItem.ToString <> String.Empty Then
+        If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             Dim allFiles As New Specialized.StringCollection
             If File.Exists(cboCoverImage.SelectedItem) Then
                 allFiles.Add(cboCoverImage.SelectedItem)
