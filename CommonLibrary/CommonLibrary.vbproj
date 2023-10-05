@@ -267,6 +267,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "H:\DiscordHelper - 4.8.1\DiscordHelper\CommonLibrary\UpdateVersion.ps1"</PreBuildEvent>
+    <PreBuildEvent>IF "$(ConfigurationName)" == "Release" (
+powershell.exe -ExecutionPolicy Bypass -File "H:\DiscordHelper - 4.8.1\DiscordHelper\CommonLibrary\UpdateVersion.ps1"
+)</PreBuildEvent>
   </PropertyGroup>
 </Project>
