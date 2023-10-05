@@ -86,7 +86,6 @@ Partial Class CopyContent
         '
         'btnAutoPaste
         '
-        Me.btnAutoPaste.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnAutoPaste.Location = New System.Drawing.Point(177, 612)
         Me.btnAutoPaste.Name = "btnAutoPaste"
         Me.btnAutoPaste.Size = New System.Drawing.Size(104, 34)

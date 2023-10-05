@@ -24,6 +24,7 @@ Public Class CopyContent
 
         If Clipboard.ContainsText Then
             Clipboard.SetText(txtCopiedContent.Text)
+            Threading.Thread.Sleep(250)
             Application.DoEvents()
         End If
 
@@ -37,7 +38,10 @@ Public Class CopyContent
             End If
         End If
         Application.DoEvents()
+        Threading.Thread.Sleep(250)
         SupportingFeatures.BringDPHToolToTop(Me.Handle)
+
+        Me.Close()
 
     End Sub
 
