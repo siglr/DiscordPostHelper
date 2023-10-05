@@ -951,7 +951,7 @@ Public Class Main
                             New List(Of String) From {"^v"},
                             autoContinue, False)
 
-        If txtTaskFlightPlanURL.Text = String.Empty Then
+        If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
             MessageBox.Show(Me, "Since it looks like you are also creating a group event, you should really take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
             autoContinue = False
         End If

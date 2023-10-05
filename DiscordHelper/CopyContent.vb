@@ -9,7 +9,6 @@ Public Class CopyContent
 
     Private _Continue As Boolean = True
     Private _AutoPost As Boolean = True
-    Private _WaitForAction As String = String.Empty
     Private _keySequences As List(Of String) = Nothing
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
@@ -25,6 +24,7 @@ Public Class CopyContent
 
         If Clipboard.ContainsText Then
             Clipboard.SetText(txtCopiedContent.Text)
+            Application.DoEvents()
         End If
 
         Dim discordProcess As Process = SupportingFeatures.BringWindowToTopWithExe("Discord", "Discord.exe")
@@ -36,12 +36,8 @@ Public Class CopyContent
                 My.Computer.Keyboard.SendKeys("{ENTER}", True)
             End If
         End If
-        Me.Focus()
+        Application.DoEvents()
         SupportingFeatures.BringDPHToolToTop(Me.Handle)
-
-        If Not _WaitForAction = String.Empty Then
-
-        End If
 
     End Sub
 
@@ -51,12 +47,10 @@ Public Class CopyContent
                                 title As String,
                                 Optional keySequences As List(Of String) = Nothing,
                                 Optional expertMode As Boolean = False,
-                                Optional autoPastePost As Boolean = True,
-                                Optional waitForAction As String = "") As Boolean
+                                Optional autoPastePost As Boolean = True) As Boolean
 
         _Continue = True
         _AutoPost = autoPastePost
-        _WaitForAction = waitForAction
         _keySequences = keySequences
 
         Me.Text = title
