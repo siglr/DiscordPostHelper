@@ -931,9 +931,11 @@ Public Class Main
 
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFPResults.Text,
-                                "You can now post the main flight plan message directly in the tasks/plans channel. Then get the link to that newly created post in Discord.", "Step 1 - Creating main FP post",
+                                $"You can now post the main flight plan message directly in the tasks/plans channel. Then get the link to that newly created post in Discord.{Environment.NewLine}Skip (Ok) if already done.", "Step 1 - Creating main FP post",
                                 New List(Of String) From {"^v"},
                                 autoContinue)
+
+        If Not autoContinue Then Exit Sub
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
             Dim message As String = "Please get the link to that newly created post in Discord (""...More menu"" and ""Copy Message Link"""
@@ -1140,6 +1142,21 @@ Public Class Main
         BuildWeatherInfoResults()
 
         'Cover?
+        If cboCoverImage.SelectedItem.ToString <> String.Empty Then
+            Dim allFiles As New Specialized.StringCollection
+            If File.Exists(cboCoverImage.SelectedItem) Then
+                allFiles.Add(cboCoverImage.SelectedItem)
+                Clipboard.SetFileDropList(allFiles)
+                autoContinue = CopyContent.ShowContent(Me,
+                                    cboCoverImage.SelectedItem,
+                                    $"Make sure you are back on the thread's message field.{Environment.NewLine}Now paste the copied cover image as the very first message in the task's thread.{Environment.NewLine}Skip (Ok) if already done.",
+                                    "Step 2 - Posting the cover image for the task in the thread.",
+                                    New List(Of String) From {"^v"},
+                                    autoContinue)
+            End If
+        End If
+
+        If Not autoContinue Then Exit Sub
 
         Dim finalDescription As String = String.Empty
         If txtFullDescriptionResults.Text.Length = 0 Then

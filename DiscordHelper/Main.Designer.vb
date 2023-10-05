@@ -97,6 +97,8 @@ Partial Class Main
         Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
         Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.chkLockCoverImage = New System.Windows.Forms.CheckBox()
+        Me.chkLockMapImage = New System.Windows.Forms.CheckBox()
         Me.cboCoverImage = New System.Windows.Forms.ComboBox()
         Me.lblMap = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
@@ -266,8 +268,6 @@ Partial Class Main
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.chkLockMapImage = New System.Windows.Forms.CheckBox()
-        Me.chkLockCoverImage = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -331,13 +331,13 @@ Partial Class Main
         '
         Me.tabFlightPlan.AutoScroll = True
         Me.tabFlightPlan.BackColor = System.Drawing.Color.Transparent
-        Me.tabFlightPlan.Controls.Add(Me.FileDropZone1)
         Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskInfo)
         Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
         Me.tabFlightPlan.Controls.Add(Me.btnSelectFlightPlan)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskPart2)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskDiscord)
+        Me.tabFlightPlan.Controls.Add(Me.FileDropZone1)
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
@@ -1181,6 +1181,28 @@ Partial Class Main
         Me.GroupBox3.TabIndex = 15
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
+        '
+        'chkLockCoverImage
+        '
+        Me.chkLockCoverImage.AutoSize = True
+        Me.chkLockCoverImage.Location = New System.Drawing.Point(162, 197)
+        Me.chkLockCoverImage.Name = "chkLockCoverImage"
+        Me.chkLockCoverImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCoverImage.TabIndex = 11
+        Me.chkLockCoverImage.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.chkLockCoverImage, "When checked, cover image will not be auto selected")
+        Me.chkLockCoverImage.UseVisualStyleBackColor = True
+        '
+        'chkLockMapImage
+        '
+        Me.chkLockMapImage.AutoSize = True
+        Me.chkLockMapImage.Location = New System.Drawing.Point(162, 166)
+        Me.chkLockMapImage.Name = "chkLockMapImage"
+        Me.chkLockMapImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockMapImage.TabIndex = 10
+        Me.chkLockMapImage.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.chkLockMapImage, "When checked, map will not be auto selected")
+        Me.chkLockMapImage.UseVisualStyleBackColor = True
         '
         'cboCoverImage
         '
@@ -3218,28 +3240,6 @@ Partial Class Main
         Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
-        '
-        'chkLockMapImage
-        '
-        Me.chkLockMapImage.AutoSize = True
-        Me.chkLockMapImage.Location = New System.Drawing.Point(162, 166)
-        Me.chkLockMapImage.Name = "chkLockMapImage"
-        Me.chkLockMapImage.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockMapImage.TabIndex = 10
-        Me.chkLockMapImage.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.chkLockMapImage, "When checked, map will not be auto selected")
-        Me.chkLockMapImage.UseVisualStyleBackColor = True
-        '
-        'chkLockCoverImage
-        '
-        Me.chkLockCoverImage.AutoSize = True
-        Me.chkLockCoverImage.Location = New System.Drawing.Point(162, 197)
-        Me.chkLockCoverImage.Name = "chkLockCoverImage"
-        Me.chkLockCoverImage.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockCoverImage.TabIndex = 11
-        Me.chkLockCoverImage.Tag = "23"
-        Me.ToolTip1.SetToolTip(Me.chkLockCoverImage, "When checked, cover image will not be auto selected")
-        Me.chkLockCoverImage.UseVisualStyleBackColor = True
         '
         'Main
         '
