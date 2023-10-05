@@ -210,6 +210,15 @@ Public Class AllData
     <XmlElement("IncludeGGServerInvite")>
     Public Property IncludeGGServerInvite As Boolean
 
+    <XmlElement("LockCoverImage")>
+    Public Property LockCoverImage As Boolean
+
+    <XmlElement("CoverImageSelected")>
+    Public Property CoverImageSelected As String
+
+    <XmlElement("LockMapImage")>
+    Public Property LockMapImage As Boolean
+
     <XmlElement("MapImageSelected")>
     Public Property MapImageSelected As String
 

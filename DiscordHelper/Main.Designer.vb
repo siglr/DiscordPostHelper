@@ -28,7 +28,6 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -98,6 +97,7 @@ Partial Class Main
         Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
         Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.cboCoverImage = New System.Windows.Forms.ComboBox()
         Me.lblMap = New System.Windows.Forms.Label()
         Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
         Me.lstAllFiles = New System.Windows.Forms.ListBox()
@@ -106,7 +106,6 @@ Partial Class Main
         Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
         Me.btnExtraFileUp = New System.Windows.Forms.Button()
         Me.btnExtraFileDown = New System.Windows.Forms.Button()
-        Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.btnRemoveSelectedAddOns = New System.Windows.Forms.Button()
         Me.lstAllRecommendedAddOns = New System.Windows.Forms.ListBox()
@@ -117,6 +116,7 @@ Partial Class Main
         Me.chkLockCountries = New System.Windows.Forms.CheckBox()
         Me.btnMoveCountryDown = New System.Windows.Forms.Button()
         Me.btnMoveCountryUp = New System.Windows.Forms.Button()
+        Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
         Me.btnRemoveCountry = New System.Windows.Forms.Button()
         Me.btnAddCountry = New System.Windows.Forms.Button()
         Me.lstAllCountries = New System.Windows.Forms.ListBox()
@@ -254,7 +254,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -265,6 +264,10 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.chkLockMapImage = New System.Windows.Forms.CheckBox()
+        Me.chkLockCoverImage = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -342,14 +345,6 @@ Partial Class Main
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
-        Me.FileDropZone1.TabIndex = 5
-        '
         'pnlGuide
         '
         Me.pnlGuide.BackColor = System.Drawing.Color.Gray
@@ -357,7 +352,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 615)
+        Me.pnlGuide.Location = New System.Drawing.Point(0, 646)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1117,6 +1112,7 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.chkLockCountries)
         Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryDown)
         Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryUp)
+        Me.grbTaskPart2.Controls.Add(Me.txtDPHXPackageFilename)
         Me.grbTaskPart2.Controls.Add(Me.btnRemoveCountry)
         Me.grbTaskPart2.Controls.Add(Me.btnAddCountry)
         Me.grbTaskPart2.Controls.Add(Me.lstAllCountries)
@@ -1168,6 +1164,9 @@ Partial Class Main
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.chkLockCoverImage)
+        Me.GroupBox3.Controls.Add(Me.chkLockMapImage)
+        Me.GroupBox3.Controls.Add(Me.cboCoverImage)
         Me.GroupBox3.Controls.Add(Me.lblMap)
         Me.GroupBox3.Controls.Add(Me.cboBriefingMap)
         Me.GroupBox3.Controls.Add(Me.lstAllFiles)
@@ -1176,13 +1175,24 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.btnRemoveExtraFile)
         Me.GroupBox3.Controls.Add(Me.btnExtraFileUp)
         Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
-        Me.GroupBox3.Controls.Add(Me.txtDPHXPackageFilename)
         Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(717, 229)
         Me.GroupBox3.TabIndex = 15
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
+        '
+        'cboCoverImage
+        '
+        Me.cboCoverImage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCoverImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.cboCoverImage.FormattingEnabled = True
+        Me.cboCoverImage.Location = New System.Drawing.Point(183, 190)
+        Me.cboCoverImage.Name = "cboCoverImage"
+        Me.cboCoverImage.Size = New System.Drawing.Size(531, 28)
+        Me.cboCoverImage.TabIndex = 8
+        Me.cboCoverImage.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.cboCoverImage, "Select the image to post as cover for the flight/task")
         '
         'lblMap
         '
@@ -1235,12 +1245,11 @@ Partial Class Main
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(0, 194)
+        Me.Label10.Location = New System.Drawing.Point(0, 190)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(130, 26)
+        Me.Label10.Size = New System.Drawing.Size(117, 26)
         Me.Label10.TabIndex = 7
-        Me.Label10.Text = "DPHX Package"
-        Me.Label10.Visible = False
+        Me.Label10.Text = "Cover Image"
         '
         'btnRemoveExtraFile
         '
@@ -1280,19 +1289,6 @@ Partial Class Main
         Me.btnExtraFileDown.Text = "▼"
         Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
         Me.btnExtraFileDown.UseVisualStyleBackColor = True
-        '
-        'txtDPHXPackageFilename
-        '
-        Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(183, 190)
-        Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
-        Me.txtDPHXPackageFilename.ReadOnly = True
-        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(531, 32)
-        Me.txtDPHXPackageFilename.TabIndex = 9
-        Me.txtDPHXPackageFilename.TabStop = False
-        Me.txtDPHXPackageFilename.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
-        Me.txtDPHXPackageFilename.Visible = False
         '
         'GroupBox2
         '
@@ -1389,7 +1385,7 @@ Partial Class Main
         'chkLockCountries
         '
         Me.chkLockCountries.AutoSize = True
-        Me.chkLockCountries.Location = New System.Drawing.Point(166, 70)
+        Me.chkLockCountries.Location = New System.Drawing.Point(168, 70)
         Me.chkLockCountries.Name = "chkLockCountries"
         Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
         Me.chkLockCountries.TabIndex = 2
@@ -1422,6 +1418,19 @@ Partial Class Main
         Me.btnMoveCountryUp.Text = "▲"
         Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
         Me.btnMoveCountryUp.UseVisualStyleBackColor = True
+        '
+        'txtDPHXPackageFilename
+        '
+        Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(11, 83)
+        Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
+        Me.txtDPHXPackageFilename.ReadOnly = True
+        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(43, 32)
+        Me.txtDPHXPackageFilename.TabIndex = 9
+        Me.txtDPHXPackageFilename.TabStop = False
+        Me.txtDPHXPackageFilename.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
+        Me.txtDPHXPackageFilename.Visible = False
         '
         'btnRemoveCountry
         '
@@ -1535,7 +1544,7 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
-        Me.btnDiscordTaskThreadURLPaste.Tag = "23"
+        Me.btnDiscordTaskThreadURLPaste.Tag = "24"
         Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task's discussion thread URL from your clipboard")
         Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
@@ -1547,7 +1556,7 @@ Partial Class Main
         Me.txtDiscordTaskThreadURL.Name = "txtDiscordTaskThreadURL"
         Me.txtDiscordTaskThreadURL.Size = New System.Drawing.Size(448, 32)
         Me.txtDiscordTaskThreadURL.TabIndex = 1
-        Me.txtDiscordTaskThreadURL.Tag = "23"
+        Me.txtDiscordTaskThreadURL.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The task's thread URL on Discord, i.e., where to post results among other things")
         '
         'Label31
@@ -3087,27 +3096,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3201,6 +3189,57 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
+        Me.FileDropZone1.TabIndex = 5
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1486, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'chkLockMapImage
+        '
+        Me.chkLockMapImage.AutoSize = True
+        Me.chkLockMapImage.Location = New System.Drawing.Point(162, 166)
+        Me.chkLockMapImage.Name = "chkLockMapImage"
+        Me.chkLockMapImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockMapImage.TabIndex = 10
+        Me.chkLockMapImage.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.chkLockMapImage, "When checked, map will not be auto selected")
+        Me.chkLockMapImage.UseVisualStyleBackColor = True
+        '
+        'chkLockCoverImage
+        '
+        Me.chkLockCoverImage.AutoSize = True
+        Me.chkLockCoverImage.Location = New System.Drawing.Point(162, 197)
+        Me.chkLockCoverImage.Name = "chkLockCoverImage"
+        Me.chkLockCoverImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCoverImage.TabIndex = 11
+        Me.chkLockCoverImage.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.chkLockCoverImage, "When checked, cover image will not be auto selected")
+        Me.chkLockCoverImage.UseVisualStyleBackColor = True
         '
         'Main
         '
@@ -3505,4 +3544,7 @@ Partial Class Main
     Friend WithEvents lblNonStdBaroPressure As Label
     Friend WithEvents btnGroupFlightEventThreadLogistics As Button
     Friend WithEvents btnGroupFlightEventThreadTitle As Button
+    Friend WithEvents cboCoverImage As ComboBox
+    Friend WithEvents chkLockCoverImage As CheckBox
+    Friend WithEvents chkLockMapImage As CheckBox
 End Class

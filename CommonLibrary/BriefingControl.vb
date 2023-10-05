@@ -42,7 +42,6 @@ Public Class BriefingControl
 
     Private Sub imagesListView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles imagesListView.SelectedIndexChanged
 
-
         If imagesListView.SelectedItems.Count > 0 AndAlso imagesListView.SelectedItems(0).Tag <> String.Empty Then
             imagesTabViewerControl.LoadImage(imagesListView.SelectedItems(0).Tag)
         End If
@@ -245,7 +244,11 @@ Public Class BriefingControl
     End Sub
 
     Public Sub ChangeImage(imgFilename As String)
-        imageViewer.LoadImage(imgFilename)
+        If imgFilename = String.Empty Then
+            imageViewer.ClearImage()
+        Else
+            imageViewer.LoadImage(imgFilename)
+        End If
     End Sub
 
     Public Sub GenerateBriefing(supportFeat As SupportingFeatures,

@@ -260,7 +260,10 @@ Public Class Main
         txtDPHXPackageFilename.Text = String.Empty
         txtAddOnsDetails.Text = String.Empty
         txtWaypointsDetails.Text = String.Empty
+        chkLockCoverImage.Checked = False
+        chkLockMapImage.Checked = False
         cboBriefingMap.Items.Clear()
+        cboCoverImage.Items.Clear()
         txtEventTitle.Text = String.Empty
         chkActivateEvent.Checked = False
         grpGroupEventPost.Enabled = False
@@ -543,19 +546,24 @@ Public Class Main
                 MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit For
             End If
-            If _SF.ExtraFileExtensionIsValid(otherFile) Then
-                If Not lstAllFiles.Items.Contains(otherFile) Then
-                    lstAllFiles.Items.Add(otherFile)
-                    SessionModified()
-                Else
-                    MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End If
-            Else
-                MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End If
+            AddExtraFile(otherFile)
         Next
-        LoadPossibleImagesInMapDropdown()
+        LoadPossibleImagesInMapDropdown(cboBriefingMap.SelectedItem)
+        LoadPossibleImagesInCoverDropdown(cboCoverImage.SelectedItem)
 
+    End Sub
+
+    Private Sub AddExtraFile(otherFile As String)
+        If _SF.ExtraFileExtensionIsValid(otherFile) Then
+            If Not lstAllFiles.Items.Contains(otherFile) Then
+                lstAllFiles.Items.Add(otherFile)
+                SessionModified()
+            Else
+                MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        Else
+            MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub btnPasteUsernameCredits_Click(sender As Object, e As EventArgs) Handles btnPasteUsernameCredits.Click
@@ -613,6 +621,8 @@ Public Class Main
                                                                           chkSoaringTypeRidge.CheckedChanged,
                                                                           chkUseOnlyWeatherSummary.CheckedChanged,
                                                                           chkSuppressWarningForBaroPressure.CheckedChanged,
+                                                                          chkLockMapImage.CheckedChanged,
+                                                                          chkLockCoverImage.CheckedChanged,
                                                                           txtLongDescription.TextChanged,
                                                                           txtEventTitle.TextChanged,
                                                                           txtEventDescription.TextChanged,
@@ -636,12 +646,13 @@ Public Class Main
                                                                           txtGroupEventPostURL.TextChanged,
                                                                           txtDiscordEventShareURL.TextChanged,
                                                                           txtDiscordTaskThreadURL.TextChanged,
+                                                                          txtBaroPressureExtraInfo.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged, txtBaroPressureExtraInfo.TextChanged
+                                                                          cboDifficulty.SelectedIndexChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -1128,23 +1139,21 @@ Public Class Main
         BuildWeatherWindLayers()
         BuildWeatherInfoResults()
 
+        'Cover?
+
+        Dim finalDescription As String = String.Empty
         If txtFullDescriptionResults.Text.Length = 0 Then
-            Clipboard.SetText("None")
-            autoContinue = CopyContent.ShowContent(Me,
-                                "None",
-                                $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
-                                "Step 2 - Creating full description post in the thread.",
-                                New List(Of String) From {"^v"},
-                                autoContinue)
+            finalDescription = "None"
         Else
-            Clipboard.SetText(txtFullDescriptionResults.Text)
-            autoContinue = CopyContent.ShowContent(Me,
-                                txtFullDescriptionResults.Text,
+            finalDescription = txtFullDescriptionResults.Text
+        End If
+        Clipboard.SetText(finalDescription)
+        autoContinue = CopyContent.ShowContent(Me,
+                                finalDescription,
                                 $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
                                 "Step 2 - Creating full description post in the thread.",
                                 New List(Of String) From {"^v"},
                                 autoContinue)
-        End If
 
         If txtDiscordTaskThreadURL.Text = String.Empty Then
             Dim message As String = "Please get the link to the task's thread in Discord (Right click On the thread under the channel list On the left and ""Copy Message Link"""
@@ -1299,16 +1308,7 @@ Public Class Main
                         MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit For
                     End If
-                    If _SF.ExtraFileExtensionIsValid(OpenFileDialog1.FileNames(i)) Then
-                        If Not lstAllFiles.Items.Contains(OpenFileDialog1.FileNames(i)) Then
-                            lstAllFiles.Items.Add(OpenFileDialog1.FileNames(i))
-                            SessionModified()
-                        Else
-                            MessageBox.Show(Me, "This file already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        End If
-                    Else
-                        MessageBox.Show(Me, "This file type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
+                    AddExtraFile(OpenFileDialog1.FileNames(i))
                 End If
             Next
         End If
@@ -1321,7 +1321,8 @@ Public Class Main
             btnExtraFileUp.Enabled = False
         End If
 
-        LoadPossibleImagesInMapDropdown()
+        LoadPossibleImagesInMapDropdown(cboBriefingMap.SelectedItem)
+        LoadPossibleImagesInCoverDropdown(cboCoverImage.SelectedItem)
 
     End Sub
 
@@ -1340,7 +1341,8 @@ Public Class Main
             btnExtraFileUp.Enabled = False
         End If
 
-        LoadPossibleImagesInMapDropdown()
+        LoadPossibleImagesInMapDropdown(cboBriefingMap.SelectedItem)
+        LoadPossibleImagesInCoverDropdown(cboCoverImage.SelectedItem)
 
     End Sub
 
@@ -2697,6 +2699,12 @@ Public Class Main
 
 #Region "Briefing tab event handlers"
 
+    Private Sub cboCoverImage_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCoverImage.SelectedIndexChanged
+
+        SessionModified()
+
+    End Sub
+
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
         SessionModified()
@@ -2711,33 +2719,72 @@ Public Class Main
 
 #End Region
 
+    Private Sub LoadPossibleImagesInCoverDropdown(Optional coverToSelect As String = "")
+
+        _loadingFile = True
+
+        ' Load up the possible images in the dropdown list
+        cboCoverImage.Items.Clear()
+        cboCoverImage.Items.Add("")
+
+        For Each item As String In lstAllFiles.Items
+            Dim fileExtension As String = Path.GetExtension(item).ToLower
+            If fileExtension = ".png" OrElse fileExtension = ".jpg" Then
+                cboCoverImage.Items.Add(item)
+            End If
+        Next
+
+        'Check if coverToSelect is specified and present
+        If coverToSelect <> String.Empty AndAlso cboCoverImage.Items.Contains(coverToSelect) Then
+            cboCoverImage.SelectedItem = coverToSelect
+        Else
+            If Not chkLockCoverImage.Checked Then
+                For Each item As String In cboCoverImage.Items
+                    If item.ToUpper.Contains("COVER") Then
+                        cboCoverImage.SelectedItem = item
+                        Exit For
+                    End If
+                Next
+            End If
+        End If
+
+        _loadingFile = False
+
+    End Sub
+
     Private Sub LoadPossibleImagesInMapDropdown(Optional mapToSelect As String = "")
 
         _loadingFile = True
 
         ' Load up the possible images in the dropdown list
         cboBriefingMap.Items.Clear()
+        cboBriefingMap.Items.Add("")
         Dim mapItemSelected As Boolean = False ' Track if an item with "Map" is selected
 
         For Each item As String In lstAllFiles.Items
             Dim fileExtension As String = Path.GetExtension(item).ToLower
             If fileExtension = ".png" OrElse fileExtension = ".jpg" Then
                 cboBriefingMap.Items.Add(item)
-
-                ' Check if the item contains "Map" and select it
-                If Not mapItemSelected AndAlso item.Contains("Map") Then
-                    cboBriefingMap.SelectedItem = item
-                    mapItemSelected = True
-                End If
             End If
         Next
 
-        ' If no item with "Map" was found, select the current image or the first item
-        If Not mapItemSelected Then
-            If mapToSelect <> "" AndAlso cboBriefingMap.Items.Contains(mapToSelect) Then
-                cboBriefingMap.SelectedItem = mapToSelect
-            ElseIf cboBriefingMap.Items.Count > 0 Then
-                cboBriefingMap.SelectedIndex = 0
+        'Check if mapToSelect is specified and present
+        If mapToSelect <> String.Empty AndAlso cboBriefingMap.Items.Contains(mapToSelect) Then
+            cboBriefingMap.SelectedItem = mapToSelect
+        Else
+            If Not chkLockMapImage.Checked Then
+                'Select the first image with "MAP" in it
+                For Each item As String In cboBriefingMap.Items
+                    If item.ToUpper.Contains("MAP") Then
+                        cboBriefingMap.SelectedItem = item
+                        mapItemSelected = True
+                        Exit For
+                    End If
+                Next
+                If Not mapItemSelected AndAlso cboBriefingMap.Items.Count > 1 Then
+                    cboBriefingMap.SelectedItem = 1
+                    mapItemSelected = True
+                End If
             End If
         End If
 
@@ -2749,7 +2796,7 @@ Public Class Main
 
     Private Sub GenerateBriefing()
 
-        LoadPossibleImagesInMapDropdown()
+        LoadPossibleImagesInMapDropdown(cboBriefingMap.SelectedItem)
 
         BriefingControl1.FullReset()
 
@@ -2962,13 +3009,18 @@ Public Class Main
                 pnlGuide.Top = 497
                 lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
-            Case 23 'Task Thread
+            Case 23 'Cover image
+                SetGuidePanelToRight()
+                pnlGuide.Top = 531
+                lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord."
+                SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
+            Case 24 'Task Thread
                 SetGuidePanelToRight()
                 pnlGuide.Top = 615
                 lblGuideInstructions.Text = "Once you've create the task's thread on Discord and before posting the files, copy the thread's URL and paste it here."
                 SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
 
-            Case 24 To 29 'End of flight plan data
+            Case 25 To 29 'End of flight plan data
                 _GuideCurrentStep = 30
                 ShowGuide()
 
@@ -3629,6 +3681,9 @@ Public Class Main
             .URLDiscordEventInvite = txtDiscordEventShareURL.Text
             .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
             .MapImageSelected = cboBriefingMap.Text
+            .LockMapImage = chkLockMapImage.Checked
+            .CoverImageSelected = cboCoverImage.Text
+            .LockCoverImage = chkLockCoverImage.Checked
             .BeginnersGuide = cboBeginnersGuide.Text
             .BeginnersGuideCustom = txtOtherBeginnerLink.Text
 
@@ -3782,6 +3837,8 @@ Public Class Main
                     cboBeginnersGuide.Text = "None"
                 End If
                 txtOtherBeginnerLink.Text = .BeginnersGuideCustom
+                chkLockMapImage.Checked = .LockMapImage
+                chkLockCoverImage.Checked = .LockCoverImage
 
                 If Not File.Exists(.MapImageSelected) Then
                     'Should expect the file to be in the same folder as the .dph file
@@ -3790,6 +3847,13 @@ Public Class Main
                     End If
                 End If
                 LoadPossibleImagesInMapDropdown(.MapImageSelected)
+                If Not File.Exists(.CoverImageSelected) Then
+                    'Should expect the file to be in the same folder as the .dph file
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.CoverImageSelected)}") Then
+                        .CoverImageSelected = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.CoverImageSelected)}"
+                    End If
+                End If
+                LoadPossibleImagesInCoverDropdown(.CoverImageSelected)
             End With
 
             'BuildFPResults()
