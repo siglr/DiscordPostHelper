@@ -1,6 +1,19 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.5.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.5.2</ReleaseVersion>
+      <ReleaseTitle>Auto-paste, Cover image and more</ReleaseTitle>
+      <ReleaseNotes>
+        Added an optional cover image as the first post in the thread.
+        Added posting of group event thread and logistics with link to task's thread.
+        Added Expert-mode to the posting of group events.
+        Added auto-paste to automatically select Discord (true Windows app only, no browser) and paste the content of the clipboard, then continue. Makes the workflow even faster with less clicks and keyboard keys.
+        Revisited map selection, added cover image selection, added lock preventing auto-selection of map and cover images.
+        Improved the country emojies and codes to work everywhere.
+        Improved workflow of auto-continue (expert mode) and auto-paste.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.3.1</ReleaseVersion>
       <ReleaseTitle>Sanity check before posting</ReleaseTitle>

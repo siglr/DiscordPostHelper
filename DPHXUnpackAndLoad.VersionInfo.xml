@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.5.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.5.2</ReleaseVersion>
+      <ReleaseTitle>Remove the wath symbol and sync with DPH tool</ReleaseTitle>
+      <ReleaseNotes>
+        Removed the invalid watch symbol from the empty Main Task Info in the Briefing control.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.3.1</ReleaseVersion>
       <ReleaseTitle>Gate Diameter or Radius</ReleaseTitle>
