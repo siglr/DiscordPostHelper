@@ -3,7 +3,7 @@
   <Releases>
     <Release>
       <ReleaseVersion>23.10.5.2</ReleaseVersion>
-      <ReleaseTitle>Remove the wath symbol and sync with DPH tool</ReleaseTitle>
+      <ReleaseTitle>Remove the watch symbol and sync with DPH tool</ReleaseTitle>
       <ReleaseNotes>
         Removed the invalid watch symbol from the empty Main Task Info in the Briefing control.
       </ReleaseNotes>
