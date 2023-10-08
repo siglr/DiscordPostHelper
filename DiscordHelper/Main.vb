@@ -336,6 +336,7 @@ Public Class Main
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         If CheckUnsavedAndConfirmAction("reset all") Then
             ResetForm()
+            TabControl1.SelectTab(0)
             Select Case TabControl1.SelectedTab.Name
                 Case "tabDiscord"
                     BuildFPResults()
@@ -1012,7 +1013,7 @@ Public Class Main
         End If
 
         For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) Then
+            If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
                 allFiles.Add(lstAllFiles.Items(i))
                 contentForMessage.AppendLine(lstAllFiles.Items(i))
             End If
@@ -1052,7 +1053,7 @@ Public Class Main
         If File.Exists(txtDPHXPackageFilename.Text) Then
             sb.AppendLine("### DPHX Unpack & Load")
             sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
-            sb.AppendLine("> *To get and install the tool: https://discord.gg/eJYynsQnHV*")
+            sb.AppendLine("> *To get and install the tool [click this link](https://discord.gg/eJYynsQnHV)*")
             sb.AppendLine("> ")
             sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
         Else
@@ -1717,7 +1718,9 @@ Public Class Main
         If lstAllRecommendedAddOns.Items.Count > 0 Then
             sb.AppendLine("## 📀 Recommended add-ons")
             For Each addOn As RecommendedAddOn In lstAllRecommendedAddOns.Items
-                sb.AppendLine($"- {addOn.Name} ({addOn.Type.ToString}) {addOn.URL}")
+                If SupportingFeatures.IsValidURL(addOn.URL) Then
+                    sb.AppendLine($"- [{addOn.Name} ({addOn.Type.ToString})]({addOn.URL})")
+                End If
             Next
         End If
 
@@ -2296,6 +2299,7 @@ Public Class Main
     End Sub
 
     Private Sub btnGroupFlightEventThreadLogistics_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventThreadLogistics.Click
+
         Dim logisticInstructions As New StringBuilder
 
         logisticInstructions.AppendLine("# 🗣 Event Logistics")
@@ -2304,7 +2308,7 @@ Public Class Main
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
         logisticInstructions.AppendLine("> - Providing feedback on the event's organization and coordination")
         logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
-        logisticInstructions.AppendLine($"⏩{txtDiscordTaskThreadURL.Text}")
+        logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}]({txtDiscordTaskThreadURL.Text})")
 
         Clipboard.SetText(logisticInstructions.ToString)
         CopyContent.ShowContent(Me,
@@ -2466,10 +2470,10 @@ Public Class Main
         sb.AppendLine($"This flight will be featured on the {_ClubPreset.ClubFullName} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
 
         'check which shared link is available
-        If txtDiscordEventShareURL.Text.Trim <> String.Empty Then
-            sb.AppendLine(txtDiscordEventShareURL.Text)
-        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty Then
-            sb.AppendLine(txtGroupEventPostURL.Text)
+        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
+            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Discord Event Link]({txtDiscordEventShareURL.Text})")
+        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
+            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Group Event Link]({txtGroupEventPostURL.Text})")
         End If
 
         Clipboard.SetText(sb.ToString)
@@ -2606,9 +2610,9 @@ Public Class Main
 
         If Not txtTaskFlightPlanURL.Text = String.Empty Then
             sb.AppendLine("> ")
-            sb.AppendLine($"> 🔗 Link to Flight Plan Details, Weather and files:{Environment.NewLine}> {txtTaskFlightPlanURL.Text}")
+            sb.AppendLine($"> 🔗 [Link to Flight Plan Details, Weather and files]({txtTaskFlightPlanURL.Text})")
             If chkIncludeGotGravelInvite.Checked AndAlso chkIncludeGotGravelInvite.Enabled Then
-                sb.AppendLine("> *If you did not join Got Gravel already, you will need this invite link first:* https://discord.gg/BqUcbvDP69")
+                sb.AppendLine("> *If you did not join Got Gravel already, you will need this [invite link](https://discord.gg/BqUcbvDP69) first*")
             End If
         End If
         sb.AppendLine("> ")
@@ -2662,11 +2666,13 @@ Public Class Main
         Dim urlBeginnerGuide As String = String.Empty
         Select Case cboBeginnersGuide.Text
             Case "Other (provide link below)"
-                urlBeginnerGuide = txtOtherBeginnerLink.Text
+                If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
+                    urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
+                End If
             Case "The Beginner's Guide to Soaring Events (GotGravel)"
-                urlBeginnerGuide = "https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529"
+                urlBeginnerGuide = "[The Beginner's Guide to Soaring Events (GotGravel)](https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529)"
             Case "How to join our Group Flights (Sim Soaring Club)"
-                urlBeginnerGuide = "https://discord.com/channels/876123356385149009/1038819881396744285"
+                urlBeginnerGuide = "[How to join our Group Flights (Sim Soaring Club)](https://discord.com/channels/876123356385149009/1038819881396744285)"
             Case Else
         End Select
         If Not urlBeginnerGuide = String.Empty Then
