@@ -321,6 +321,7 @@ Partial Class Main
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.MinimumSize = New System.Drawing.Size(1494, 907)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(1494, 907)
@@ -2290,7 +2291,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(709, 490)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(709, 520)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94

@@ -1159,15 +1159,9 @@ Public Class Main
 
         If Not autoContinue Then Exit Sub
 
-        Dim finalDescription As String = String.Empty
-        If txtFullDescriptionResults.Text.Length = 0 Then
-            finalDescription = "None"
-        Else
-            finalDescription = txtFullDescriptionResults.Text
-        End If
-        Clipboard.SetText(finalDescription)
+        Clipboard.SetText(txtFullDescriptionResults.Text.Trim)
         autoContinue = CopyContent.ShowContent(Me,
-                                finalDescription,
+                                txtFullDescriptionResults.Text.Trim,
                                 $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
                                 "Step 2 - Creating full description post in the thread.",
                                 New List(Of String) From {"^v"},
@@ -1776,7 +1770,7 @@ Public Class Main
         If txtLongDescription.Text.Trim.Length > 0 Then
             txtFullDescriptionResults.Text = $"## 📖 Full Description{Environment.NewLine}{txtLongDescription.Text.Trim}"
         Else
-            txtFullDescriptionResults.Text = String.Empty
+            txtFullDescriptionResults.Text = $"## 📖 Full Description{Environment.NewLine}None provided"
         End If
 
         txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
