@@ -306,25 +306,25 @@ Partial Class Main
         Me.pnlScrollableSurface.AutoScroll = True
         Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
-        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1024, 768)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1489, 907)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1494, 907)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1489, 907)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
         '
+        Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.tabFlightPlan)
         Me.TabControl1.Controls.Add(Me.tabEvent)
         Me.TabControl1.Controls.Add(Me.tabDiscord)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.MinimumSize = New System.Drawing.Size(1494, 907)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1494, 907)
+        Me.TabControl1.Size = New System.Drawing.Size(1489, 907)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -342,7 +342,7 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1486, 874)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1481, 874)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
@@ -403,6 +403,8 @@ Partial Class Main
         '
         'grbTaskInfo
         '
+        Me.grbTaskInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
         Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
         Me.grbTaskInfo.Controls.Add(Me.Label9)
@@ -1069,6 +1071,8 @@ Partial Class Main
         '
         'txtLongDescription
         '
+        Me.txtLongDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtLongDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtLongDescription.Location = New System.Drawing.Point(189, 569)
         Me.txtLongDescription.Multiline = True
@@ -3216,6 +3220,8 @@ Partial Class Main
         'FileDropZone1
         '
         Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
         Me.FileDropZone1.Name = "FileDropZone1"
         Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
@@ -3258,7 +3264,7 @@ Partial Class Main
         Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1366, 768)
+        Me.MinimumSize = New System.Drawing.Size(1512, 959)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
