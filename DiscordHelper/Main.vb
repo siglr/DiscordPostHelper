@@ -2470,7 +2470,7 @@ Public Class Main
 
         'check which shared link is available
         If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
-            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Discord Event Link]({txtDiscordEventShareURL.Text})")
+            sb.AppendLine($"{txtDiscordEventShareURL.Text}")
         ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
             sb.AppendLine($"[{_ClubPreset.ClubFullName} - Group Event Link]({txtGroupEventPostURL.Text})")
         End If
