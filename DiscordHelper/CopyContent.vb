@@ -61,17 +61,19 @@ Public Class CopyContent
         lblMessage.Text = message
         txtCopiedContent.Text = contentCopied
 
-        btnStopExpert.Visible = False
         btnStopExpert.Visible = expertMode
-        Me.AcceptButton = btnOk
+
         If expertMode Then
             Me.CancelButton = btnStopExpert
+            Me.AcceptButton = btnAutoPaste
+            btnAutoPaste.Focus()
+            Me.ActiveControl = btnAutoPaste
         Else
             Me.CancelButton = btnOk
+            Me.AcceptButton = btnOk
+            btnOk.Focus()
+            Me.ActiveControl = btnOk
         End If
-
-        btnOk.Focus()
-        Me.ActiveControl = btnOk
 
         Me.ShowDialog(parent)
 

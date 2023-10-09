@@ -934,9 +934,9 @@ Public Class Main
                                 txtFPResults.Text,
                                 $"You can now post the main flight plan message directly in the tasks/plans channel. Then get the link to that newly created post in Discord.{Environment.NewLine}Skip (Ok) if already done.", "Step 1 - Creating main FP post",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
 
-        If Not autoContinue Then Exit Sub
+        If (Not autoContinue) OrElse (Not SessionSettings.ExpertMode) Then Exit Sub
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
             Dim message As String = "Please get the link to that newly created post in Discord (""...More menu"" and ""Copy Message Link"""
@@ -963,7 +963,7 @@ Public Class Main
                             fpTitle,
                             "Now create a thread and position the cursor on the thread name field.", "Step 1 - Creating main FP post",
                             New List(Of String) From {"^v"},
-                            autoContinue, False)
+                            SessionSettings.ExpertMode, False)
 
         If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
             MessageBox.Show(Me, "Since it looks like you are also creating a group event, you should really take a minute to copy the Discord link to the main message you've just posted and go paste it in the URL field on the Event tab.", "Copy URL to Main Post", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -974,7 +974,7 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnFullDescriptionCopy_Click(sender, e)
         End If
     End Sub
@@ -1026,7 +1026,7 @@ Public Class Main
                                     $"Make sure you are back on the thread's message field.{Environment.NewLine}Now paste the copied files as the second message in the thread WITHOUT posting it and come back for the text info (button 3b).",
                                     "Step 3a - Creating the files post in the thread - actual files first",
                                     New List(Of String) From {"^v"},
-                                    autoContinue,
+                                    SessionSettings.ExpertMode,
                                     False)
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
@@ -1036,7 +1036,7 @@ Public Class Main
             MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             autoContinue = False
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnFilesTextCopy_Click(sender, e)
         End If
 
@@ -1082,12 +1082,12 @@ Public Class Main
                                 "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
                                 "Step 3b - Creating the files post in the thread - file info",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             If chkGroupSecondaryPosts.Checked Then
                 btnCopyAllSecPosts_Click(sender, e)
             Else
@@ -1119,7 +1119,7 @@ Public Class Main
                                 "Now paste the restrictions and weather content as the next message in the thread!",
                                 "Step 4 - Creating post for restrictions in the thread.",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -1127,7 +1127,7 @@ Public Class Main
             ShowGuide()
         End If
 
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnWaypointsCopy_Click(sender, e)
         End If
 
@@ -1153,7 +1153,7 @@ Public Class Main
                                     $"Make sure you are back on the thread's message field.{Environment.NewLine}Now paste the copied cover image as the very first message in the task's thread.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Step 2 - Posting the cover image for the task in the thread.",
                                     New List(Of String) From {"^v"},
-                                    autoContinue)
+                                    SessionSettings.ExpertMode)
             End If
         End If
 
@@ -1165,7 +1165,7 @@ Public Class Main
                                 $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the full description as the first message in the task's thread.",
                                 "Step 2 - Creating full description post in the thread.",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
 
         If txtDiscordTaskThreadURL.Text = String.Empty Then
             Dim message As String = "Please get the link to the task's thread in Discord (Right click On the thread under the channel list On the left and ""Copy Message Link"""
@@ -1193,7 +1193,7 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnFilesCopy_Click(sender, e)
         End If
 
@@ -1219,14 +1219,14 @@ Public Class Main
                                 "Now post the waypoints details as the next message in the thread.",
                                 "Step 5 - Creating waypoints post in the thread.",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
         End If
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnAddOnsCopy_Click(sender, e)
         End If
     End Sub
@@ -1248,7 +1248,8 @@ Public Class Main
                                 txtAddOnsDetails.Text,
                                 "Now post the add-ons details as the last message in the thread.",
                                 "Step 6 - Creating add-ons post in the thread.",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
             If _GuideCurrentStep <> 0 Then
                 _GuideCurrentStep += 1
                 ShowGuide()
@@ -1285,7 +1286,8 @@ Public Class Main
                                 msg,
                                 "Now paste all remaining content as the next message in the thread!",
                                 "Step 4 - Creating remaining content post in the thread.",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
         End If
 
         If _GuideCurrentStep <> 0 Then
@@ -2239,7 +2241,7 @@ Public Class Main
                                 $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field just below for Discord Event.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
-                                autoContinue)
+                                SessionSettings.ExpertMode)
 
         If txtGroupEventPostURL.Text = String.Empty Then
             'Check if the clipboard contains a valid URL, which would mean the group flight URL has been copied
@@ -2263,7 +2265,7 @@ Public Class Main
             ShowGuide()
         End If
 
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnGroupFlightEventThreadTitle_Click(sender, e)
         End If
     End Sub
@@ -2278,7 +2280,7 @@ Public Class Main
                                 "Create a thread for the newly created group flight event, paste the title from your clipboard and then come back for the content of the first message.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
-                                autoContinue,
+                                SessionSettings.ExpertMode,
                                 False)
 
         End If
@@ -2286,7 +2288,7 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnGroupFlightEventThreadLogistics_Click(sender, e)
         End If
 
@@ -2309,7 +2311,8 @@ Public Class Main
                                 logisticInstructions.ToString,
                                 "Now paste the message content into the thread and post it.",
                                 "Creating group flight post",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -2327,7 +2330,8 @@ Public Class Main
                                 txtDiscordEventTopic.Text,
                                 "Paste the topic into the Event Topic field on Discord.",
                                 "Creating Discord Event",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                True)
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2345,7 +2349,8 @@ Public Class Main
                                 txtDiscordEventDescription.Text,
                                 "Paste the description into the Event Description field on Discord.",
                                 "Creating Discord Event",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                True)
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2420,7 +2425,7 @@ Public Class Main
                                     "Now paste the copied files in a new post in the proper Discord channel for the club/group and come back for the text info (button 1 below).",
                                     "Optional - Including the required files in the group flight post",
                                     New List(Of String) From {"^v"},
-                                    autoContinue,
+                                    SessionSettings.ExpertMode,
                                     False)
         End If
 
@@ -2429,7 +2434,7 @@ Public Class Main
             ShowGuide()
         End If
 
-        If autoContinue Then
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
             btnGroupFlightEventInfoToClipboard_Click(sender, e)
         End If
 
@@ -2475,7 +2480,8 @@ Public Class Main
                                 sb.ToString,
                                 "On the task's thread, paste the content of the message to share the event for this task.",
                                 "Sharing Discord Event to Task",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                True)
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
