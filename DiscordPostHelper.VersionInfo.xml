@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.5.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.9.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.9.1</ReleaseVersion>
+      <ReleaseTitle>Various improvements in several areas</ReleaseTitle>
+      <ReleaseNotes>
+        Changed links to use markdown, so links will be clearer to read and more precise.
+        When clicking Reset All, take the user back to the Flight Plan tab.
+        Do not post the cover image twice (don’t include within the files).
+        Made the vertical size of long description and the file drop zone auto-adjust to available space.
+        Fixed and improved auto-expert workflow.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.5.2</ReleaseVersion>
       <ReleaseTitle>Auto-paste, Cover image and more</ReleaseTitle>
