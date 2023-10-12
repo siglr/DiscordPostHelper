@@ -131,7 +131,6 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskThreadURL = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -257,7 +256,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -268,6 +266,11 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.grpRepost = New System.Windows.Forms.GroupBox()
+        Me.chkRepost = New System.Windows.Forms.CheckBox()
+        Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -296,6 +299,7 @@ Partial Class Main
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
+        Me.grpRepost.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -1596,17 +1600,6 @@ Partial Class Main
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task thread"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
         'tabEvent
         '
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
@@ -2292,7 +2285,7 @@ Partial Class Main
         '
         Me.lblAllSecPostsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblAllSecPostsTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(311, 363)
+        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(311, 434)
         Me.lblAllSecPostsTotalCars.Name = "lblAllSecPostsTotalCars"
         Me.lblAllSecPostsTotalCars.Size = New System.Drawing.Size(90, 26)
         Me.lblAllSecPostsTotalCars.TabIndex = 4
@@ -2306,7 +2299,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(709, 520)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 110)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2406,11 +2399,12 @@ Partial Class Main
         '
         'grpDiscordTask
         '
+        Me.grpDiscordTask.Controls.Add(Me.grpRepost)
         Me.grpDiscordTask.Controls.Add(Me.grpDiscordTaskThread)
         Me.grpDiscordTask.Controls.Add(Me.GroupBox1)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 648)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 755)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
@@ -2420,10 +2414,10 @@ Partial Class Main
         Me.grpDiscordTaskThread.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpDiscordTaskThread.Controls.Add(Me.FlowLayoutPanel1)
-        Me.grpDiscordTaskThread.Location = New System.Drawing.Point(6, 137)
+        Me.grpDiscordTaskThread.Location = New System.Drawing.Point(6, 210)
         Me.grpDiscordTaskThread.Name = "grpDiscordTaskThread"
         Me.grpDiscordTaskThread.Size = New System.Drawing.Size(393, 489)
-        Me.grpDiscordTaskThread.TabIndex = 1
+        Me.grpDiscordTaskThread.TabIndex = 2
         Me.grpDiscordTaskThread.TabStop = False
         Me.grpDiscordTaskThread.Text = "Thread"
         '
@@ -2454,7 +2448,7 @@ Partial Class Main
         Me.btnFullDescriptionCopy.Name = "btnFullDescriptionCopy"
         Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFullDescriptionCopy.TabIndex = 0
-        Me.btnFullDescriptionCopy.Tag = "41"
+        Me.btnFullDescriptionCopy.Tag = "42"
         Me.btnFullDescriptionCopy.Text = "2. Full Description to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the task's full description post content into the clipbo" &
         "ard.")
@@ -2479,7 +2473,7 @@ Partial Class Main
         Me.btnFilesCopy.Name = "btnFilesCopy"
         Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFilesCopy.TabIndex = 1
-        Me.btnFilesCopy.Tag = "42"
+        Me.btnFilesCopy.Tag = "43"
         Me.btnFilesCopy.Text = "3a. Files to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
         Me.btnFilesCopy.UseVisualStyleBackColor = True
@@ -2492,7 +2486,7 @@ Partial Class Main
         Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
         Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFilesTextCopy.TabIndex = 2
-        Me.btnFilesTextCopy.Tag = "43"
+        Me.btnFilesTextCopy.Tag = "44"
         Me.btnFilesTextCopy.Text = "3b. Files info to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the second post content into the clipboard.")
         Me.btnFilesTextCopy.UseVisualStyleBackColor = True
@@ -2506,7 +2500,7 @@ Partial Class Main
         Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
         Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(384, 28)
         Me.chkGroupSecondaryPosts.TabIndex = 3
-        Me.chkGroupSecondaryPosts.Tag = "44"
+        Me.chkGroupSecondaryPosts.Tag = "45"
         Me.chkGroupSecondaryPosts.Text = "Merge remaining posts"
         Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to merge all secondary posts into only one.")
         Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
@@ -2518,7 +2512,7 @@ Partial Class Main
         Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
         Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
         Me.btnCopyAllSecPosts.TabIndex = 4
-        Me.btnCopyAllSecPosts.Tag = "45"
+        Me.btnCopyAllSecPosts.Tag = "46"
         Me.btnCopyAllSecPosts.Text = "4. All secondary post's content to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put all remaining content into the clipboard.")
         Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
@@ -2531,7 +2525,7 @@ Partial Class Main
         Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
         Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnAltRestricCopy.TabIndex = 5
-        Me.btnAltRestricCopy.Tag = "45"
+        Me.btnAltRestricCopy.Tag = "46"
         Me.btnAltRestricCopy.Text = "4. Restrictions and Weather to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the restrictions and weather post content into the clipb" &
         "oard.")
@@ -2544,7 +2538,7 @@ Partial Class Main
         Me.btnWaypointsCopy.Name = "btnWaypointsCopy"
         Me.btnWaypointsCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnWaypointsCopy.TabIndex = 6
-        Me.btnWaypointsCopy.Tag = "46"
+        Me.btnWaypointsCopy.Tag = "47"
         Me.btnWaypointsCopy.Text = "5. Waypoint details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnWaypointsCopy, "Click this button to put the waypoints post content into the clipboard.")
         Me.btnWaypointsCopy.UseVisualStyleBackColor = True
@@ -2556,7 +2550,7 @@ Partial Class Main
         Me.btnAddOnsCopy.Name = "btnAddOnsCopy"
         Me.btnAddOnsCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnAddOnsCopy.TabIndex = 7
-        Me.btnAddOnsCopy.Tag = "47"
+        Me.btnAddOnsCopy.Tag = "48"
         Me.btnAddOnsCopy.Text = "6. Add-ons details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnAddOnsCopy, "Click this button to put the add-ons post content into the clipboard.")
         Me.btnAddOnsCopy.UseVisualStyleBackColor = True
@@ -2567,10 +2561,10 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.btnFPMainInfoCopy)
         Me.GroupBox1.Controls.Add(Me.lblNbrCarsMainFP)
-        Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 100)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(393, 104)
-        Me.GroupBox1.TabIndex = 0
+        Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Main Post"
         '
@@ -2583,7 +2577,7 @@ Partial Class Main
         Me.btnFPMainInfoCopy.Name = "btnFPMainInfoCopy"
         Me.btnFPMainInfoCopy.Size = New System.Drawing.Size(381, 51)
         Me.btnFPMainInfoCopy.TabIndex = 0
-        Me.btnFPMainInfoCopy.Tag = "40"
+        Me.btnFPMainInfoCopy.Tag = "41"
         Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFPMainInfoCopy, "Click this button to put the first post content into the clipboard.")
         Me.btnFPMainInfoCopy.UseVisualStyleBackColor = True
@@ -3134,27 +3128,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3249,6 +3222,73 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'grpRepost
+        '
+        Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
+        Me.grpRepost.Controls.Add(Me.chkRepost)
+        Me.grpRepost.Location = New System.Drawing.Point(6, 26)
+        Me.grpRepost.Name = "grpRepost"
+        Me.grpRepost.Size = New System.Drawing.Size(393, 68)
+        Me.grpRepost.TabIndex = 0
+        Me.grpRepost.TabStop = False
+        '
+        'chkRepost
+        '
+        Me.chkRepost.AutoSize = True
+        Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.chkRepost.Location = New System.Drawing.Point(8, 0)
+        Me.chkRepost.Name = "chkRepost"
+        Me.chkRepost.Size = New System.Drawing.Size(126, 24)
+        Me.chkRepost.TabIndex = 0
+        Me.chkRepost.Text = "This is a repost"
+        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
+        Me.chkRepost.UseVisualStyleBackColor = True
+        '
+        'dtRepostOriginalDate
+        '
+        Me.dtRepostOriginalDate.Enabled = False
+        Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 26)
+        Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
+        Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
+        Me.dtRepostOriginalDate.TabIndex = 1
+        Me.dtRepostOriginalDate.Tag = "4"
+        Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date to set in MSFS for the flight")
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3308,6 +3348,8 @@ Partial Class Main
         Me.tabBriefing.ResumeLayout(False)
         Me.pnlBriefing.ResumeLayout(False)
         Me.pnlWizardBriefing.ResumeLayout(False)
+        Me.grpRepost.ResumeLayout(False)
+        Me.grpRepost.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3555,4 +3597,7 @@ Partial Class Main
     Friend WithEvents cboCoverImage As ComboBox
     Friend WithEvents chkLockCoverImage As CheckBox
     Friend WithEvents chkLockMapImage As CheckBox
+    Friend WithEvents grpRepost As GroupBox
+    Friend WithEvents chkRepost As CheckBox
+    Friend WithEvents dtRepostOriginalDate As DateTimePicker
 End Class

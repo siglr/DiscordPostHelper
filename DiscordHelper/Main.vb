@@ -277,6 +277,7 @@ Public Class Main
         chkSuppressWarningForBaroPressure.Enabled = False
         txtBaroPressureExtraInfo.Enabled = False
         lblNonStdBaroPressure.Enabled = False
+        chkRepost.Checked = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.AllWaypoints.Clear()
@@ -912,6 +913,12 @@ Public Class Main
     End Sub
 
 #Region "Clipboard buttons on the Flight Plan Tab"
+
+    Private Sub chkRepost_CheckedChanged(sender As Object, e As EventArgs) Handles chkRepost.CheckedChanged
+
+        dtRepostOriginalDate.Enabled = chkRepost.Checked
+
+    End Sub
 
     Private Sub chkExpertMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkExpertMode.CheckedChanged
         SessionSettings.ExpertMode = chkExpertMode.Checked
@@ -1751,6 +1758,9 @@ Public Class Main
         End If
 
         sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
+        If chkRepost.Checked Then
+            sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+        End If
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
@@ -1977,8 +1987,8 @@ Public Class Main
             End If
         End If
 
-        grpDiscordTaskThread.Height = height + 168
-        grpDiscordTask.Height = grpDiscordTaskThread.Height + 145
+        grpDiscordTaskThread.Height = height + 175
+        'grpDiscordTask.Height = grpDiscordTaskThread.Height + 214
 
     End Sub
 
@@ -3076,35 +3086,41 @@ Public Class Main
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
-            Case 40 'Create FP post
+            Case 40 'Repost checkbox and date
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 38
+                pnlWizardDiscord.Top = 26
+                lblDiscordGuideInstructions.Text = "If this is a repost on an existing task, enable this to set the original date the task was published."
+                SetFocusOnField(chkRepost, fromF1Key)
+            Case 41 'Create FP post
+                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 110
                 lblDiscordGuideInstructions.Text = "You are now ready to create the task's primary post in Discord. Click this button to copy the content to your clipboard and receive instructions."
                 SetFocusOnField(btnFPMainInfoCopy, fromF1Key)
-            Case 41 'Copy Description
+            Case 42 'Copy Description
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 151
+                pnlWizardDiscord.Top = 223
                 lblDiscordGuideInstructions.Text = "Click this button to copy the full description to your clipboard and receive instructions."
                 SetFocusOnField(btnFullDescriptionCopy, fromF1Key)
-            Case 42 'Copy Files
+            Case 43 'Copy Files
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 235
+                pnlWizardDiscord.Top = 307
                 lblDiscordGuideInstructions.Text = "Once you've created the primary post and thread on Discord, click this button to put the files into your clipboard and receive instructions."
                 SetFocusOnField(btnFilesCopy, fromF1Key)
-            Case 43 'Copy Files Legend
+            Case 44 'Copy Files Legend
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 288
+                pnlWizardDiscord.Top = 360
                 lblDiscordGuideInstructions.Text = "Once you've pasted the files in Discord, click this button to put the standard legend into your clipboard and receive instructions."
                 SetFocusOnField(btnFilesTextCopy, fromF1Key)
-            Case 44 'Merge remaining content
+            Case 45 'Merge remaining content
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 333
+                pnlWizardDiscord.Top = 405
                 lblDiscordGuideInstructions.Text = "You can select to merge all remaining content in a single post, depending also on the size. Or, you can do individual posts in the thread."
                 SetFocusOnField(chkGroupSecondaryPosts, fromF1Key)
-            Case 45 'Remaining content OR Restrictions & Weather
+            Case 46 'Remaining content OR Restrictions & Weather
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 377
+                pnlWizardDiscord.Top = 449
                 If chkGroupSecondaryPosts.Checked Then
                     lblDiscordGuideInstructions.Text = "You can now create the last post with all remaining task information. Watch out for Discord's post size limit!"
                     SetFocusOnField(btnCopyAllSecPosts, fromF1Key)
@@ -3115,17 +3131,18 @@ Public Class Main
                     SetFocusOnField(btnAltRestricCopy, fromF1Key)
                 End If
 
-            Case 46 'Waypoints
+            Case 47 'Waypoints
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = btnWaypointsCopy.Top + 150
                 lblDiscordGuideInstructions.Text = "Click this button to copy the waypoints details (very useful for xBox users) to your clipboard and receive instructions."
                 SetFocusOnField(btnWaypointsCopy, fromF1Key)
-            Case 47 'Recommended add-ons
+            Case 48 'Recommended add-ons
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = btnAddOnsCopy.Top + 150
                 lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
                 SetFocusOnField(btnAddOnsCopy, fromF1Key)
-            Case 48 To 59 'Next section
+
+            Case 49 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -3934,8 +3951,6 @@ Public Class Main
         End If
 
     End Sub
-
-
 
 #End Region
 
