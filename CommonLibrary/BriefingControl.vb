@@ -224,6 +224,7 @@ Public Class BriefingControl
         cloudLayersDatagrid.DataSource = Nothing
         cboWayPointDistances.SelectedIndex = 0
         AddOnsDataGrid.DataSource = Nothing
+        btnGotoDiscordTaskThread.Enabled = False
 
         If imagesListView.LargeImageList IsNot Nothing Then
             imagesListView.LargeImageList.Dispose()

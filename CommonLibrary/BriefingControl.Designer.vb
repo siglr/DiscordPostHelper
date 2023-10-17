@@ -210,6 +210,7 @@ Partial Class BriefingControl
         'btnGotoDiscordTaskThread
         '
         Me.btnGotoDiscordTaskThread.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.btnGotoDiscordTaskThread.Enabled = False
         Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 651)
         Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
         Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(947, 34)
