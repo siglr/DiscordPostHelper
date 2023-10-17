@@ -207,8 +207,14 @@ Public Class AllData
     <XmlElement("URLDiscordEventInvite")>
     Public Property URLDiscordEventInvite As String
 
-    <XmlElement("IncludeGGServerInvite")>
-    Public Property IncludeGGServerInvite As Boolean
+    <XmlElement("IncludeServerInvite")>
+    Public Property IncludeServerInvite As Boolean
+
+    <XmlElement("ServerInviteSelected")>
+    Public Property ServerInviteSelected As Integer
+
+    <XmlElement("OtherServerInviteLink")>
+    Public Property OtherServerInviteLink As String
 
     <XmlElement("LockCoverImage")>
     Public Property LockCoverImage As Boolean

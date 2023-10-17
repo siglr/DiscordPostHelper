@@ -139,13 +139,17 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.btnPasteDiscordInviteLink = New System.Windows.Forms.Button()
+        Me.txtOtherDiscordInviteLink = New System.Windows.Forms.TextBox()
+        Me.cboDiscordInvite = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
         Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
         Me.cboBeginnersGuide = New System.Windows.Forms.ComboBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
-        Me.chkIncludeGotGravelInvite = New System.Windows.Forms.CheckBox()
+        Me.chkIncludeDiscordInvite = New System.Windows.Forms.CheckBox()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.lblEventTaskDistance = New System.Windows.Forms.Label()
         Me.btnTaskFPURLPaste = New System.Windows.Forms.Button()
@@ -197,6 +201,9 @@ Partial Class Main
         Me.lblNbrCarsRestrictions = New System.Windows.Forms.Label()
         Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
+        Me.grpRepost = New System.Windows.Forms.GroupBox()
+        Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
+        Me.chkRepost = New System.Windows.Forms.CheckBox()
         Me.grpDiscordTaskThread = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
@@ -268,9 +275,6 @@ Partial Class Main
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.grpRepost = New System.Windows.Forms.GroupBox()
-        Me.chkRepost = New System.Windows.Forms.CheckBox()
-        Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -289,6 +293,7 @@ Partial Class Main
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
+        Me.grpRepost.SuspendLayout()
         Me.grpDiscordTaskThread.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -299,7 +304,6 @@ Partial Class Main
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
-        Me.grpRepost.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -1682,13 +1686,17 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
+        Me.grpGroupEventPost.Controls.Add(Me.btnPasteDiscordInviteLink)
+        Me.grpGroupEventPost.Controls.Add(Me.txtOtherDiscordInviteLink)
+        Me.grpGroupEventPost.Controls.Add(Me.cboDiscordInvite)
+        Me.grpGroupEventPost.Controls.Add(Me.Label1)
         Me.grpGroupEventPost.Controls.Add(Me.lblClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.cboBeginnersGuide)
         Me.grpGroupEventPost.Controls.Add(Me.Label30)
         Me.grpGroupEventPost.Controls.Add(Me.lblLocalDSTWarning)
-        Me.grpGroupEventPost.Controls.Add(Me.chkIncludeGotGravelInvite)
+        Me.grpGroupEventPost.Controls.Add(Me.chkIncludeDiscordInvite)
         Me.grpGroupEventPost.Controls.Add(Me.Label48)
         Me.grpGroupEventPost.Controls.Add(Me.lblEventTaskDistance)
         Me.grpGroupEventPost.Controls.Add(Me.btnTaskFPURLPaste)
@@ -1731,9 +1739,54 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 786)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 855)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
+        '
+        'btnPasteDiscordInviteLink
+        '
+        Me.btnPasteDiscordInviteLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPasteDiscordInviteLink.Location = New System.Drawing.Point(763, 731)
+        Me.btnPasteDiscordInviteLink.Name = "btnPasteDiscordInviteLink"
+        Me.btnPasteDiscordInviteLink.Size = New System.Drawing.Size(79, 29)
+        Me.btnPasteDiscordInviteLink.TabIndex = 49
+        Me.btnPasteDiscordInviteLink.Tag = "72"
+        Me.btnPasteDiscordInviteLink.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnPasteDiscordInviteLink, "Click this button to paste the Discord invite link from your clipboard")
+        Me.btnPasteDiscordInviteLink.UseVisualStyleBackColor = True
+        '
+        'txtOtherDiscordInviteLink
+        '
+        Me.txtOtherDiscordInviteLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtOtherDiscordInviteLink.Location = New System.Drawing.Point(192, 728)
+        Me.txtOtherDiscordInviteLink.Name = "txtOtherDiscordInviteLink"
+        Me.txtOtherDiscordInviteLink.Size = New System.Drawing.Size(565, 32)
+        Me.txtOtherDiscordInviteLink.TabIndex = 48
+        Me.txtOtherDiscordInviteLink.Tag = "72"
+        Me.ToolTip1.SetToolTip(Me.txtOtherDiscordInviteLink, "Specify your own Discord invite link you want to include")
+        '
+        'cboDiscordInvite
+        '
+        Me.cboDiscordInvite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDiscordInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cboDiscordInvite.FormattingEnabled = True
+        Me.cboDiscordInvite.Items.AddRange(New Object() {"None", "GotGravel", "MSFS Soaring Task Tools", "Sim Soaring Club", "Other (provide link below)"})
+        Me.cboDiscordInvite.Location = New System.Drawing.Point(192, 690)
+        Me.cboDiscordInvite.Name = "cboDiscordInvite"
+        Me.cboDiscordInvite.Size = New System.Drawing.Size(650, 32)
+        Me.cboDiscordInvite.TabIndex = 47
+        Me.cboDiscordInvite.Tag = "72"
+        Me.ToolTip1.SetToolTip(Me.cboDiscordInvite, "You can select a Discord invite link to include with the post")
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(7, 693)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(127, 26)
+        Me.Label1.TabIndex = 46
+        Me.Label1.Text = "Discord Invite"
         '
         'lblClubFullName
         '
@@ -1746,11 +1799,11 @@ Partial Class Main
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 731)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 807)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteBeginnerLink.TabIndex = 44
-        Me.btnPasteBeginnerLink.Tag = "71"
+        Me.btnPasteBeginnerLink.Tag = "73"
         Me.btnPasteBeginnerLink.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnPasteBeginnerLink, "Click this button to paste the beginner's link from your clipboard")
         Me.btnPasteBeginnerLink.UseVisualStyleBackColor = True
@@ -1758,7 +1811,7 @@ Partial Class Main
         'txtOtherBeginnerLink
         '
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 728)
+        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 804)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
         Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(565, 32)
         Me.txtOtherBeginnerLink.TabIndex = 43
@@ -1771,7 +1824,7 @@ Partial Class Main
         Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboBeginnersGuide.FormattingEnabled = True
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
-        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 690)
+        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 766)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
         Me.cboBeginnersGuide.Size = New System.Drawing.Size(650, 32)
         Me.cboBeginnersGuide.TabIndex = 42
@@ -1782,7 +1835,7 @@ Partial Class Main
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(7, 693)
+        Me.Label30.Location = New System.Drawing.Point(7, 769)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(127, 26)
         Me.Label30.TabIndex = 41
@@ -1799,18 +1852,19 @@ Partial Class Main
         Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
         Me.lblLocalDSTWarning.Visible = False
         '
-        'chkIncludeGotGravelInvite
+        'chkIncludeDiscordInvite
         '
-        Me.chkIncludeGotGravelInvite.AutoSize = True
-        Me.chkIncludeGotGravelInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkIncludeGotGravelInvite.Location = New System.Drawing.Point(192, 654)
-        Me.chkIncludeGotGravelInvite.Name = "chkIncludeGotGravelInvite"
-        Me.chkIncludeGotGravelInvite.Size = New System.Drawing.Size(431, 30)
-        Me.chkIncludeGotGravelInvite.TabIndex = 40
-        Me.chkIncludeGotGravelInvite.Tag = "72"
-        Me.chkIncludeGotGravelInvite.Text = "Include the GotGravel server invite with the post"
-        Me.ToolTip1.SetToolTip(Me.chkIncludeGotGravelInvite, "When checked, the invite to the GotGravel Server will be added to the post.")
-        Me.chkIncludeGotGravelInvite.UseVisualStyleBackColor = True
+        Me.chkIncludeDiscordInvite.AutoSize = True
+        Me.chkIncludeDiscordInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkIncludeDiscordInvite.Location = New System.Drawing.Point(192, 658)
+        Me.chkIncludeDiscordInvite.Name = "chkIncludeDiscordInvite"
+        Me.chkIncludeDiscordInvite.Size = New System.Drawing.Size(413, 30)
+        Me.chkIncludeDiscordInvite.TabIndex = 40
+        Me.chkIncludeDiscordInvite.Tag = "72"
+        Me.chkIncludeDiscordInvite.Text = "Include the Discord server invite with the post"
+        Me.ToolTip1.SetToolTip(Me.chkIncludeDiscordInvite, "When checked, the invite to the Discord server selected below will be added to th" &
+        "e post.")
+        Me.chkIncludeDiscordInvite.UseVisualStyleBackColor = True
         '
         'Label48
         '
@@ -2299,7 +2353,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 110)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 762)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2408,6 +2462,41 @@ Partial Class Main
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
+        '
+        'grpRepost
+        '
+        Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
+        Me.grpRepost.Controls.Add(Me.chkRepost)
+        Me.grpRepost.Location = New System.Drawing.Point(6, 26)
+        Me.grpRepost.Name = "grpRepost"
+        Me.grpRepost.Size = New System.Drawing.Size(393, 68)
+        Me.grpRepost.TabIndex = 0
+        Me.grpRepost.TabStop = False
+        '
+        'dtRepostOriginalDate
+        '
+        Me.dtRepostOriginalDate.Enabled = False
+        Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 26)
+        Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
+        Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
+        Me.dtRepostOriginalDate.TabIndex = 1
+        Me.dtRepostOriginalDate.Tag = "4"
+        Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date to set in MSFS for the flight")
+        '
+        'chkRepost
+        '
+        Me.chkRepost.AutoSize = True
+        Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.chkRepost.Location = New System.Drawing.Point(8, 0)
+        Me.chkRepost.Name = "chkRepost"
+        Me.chkRepost.Size = New System.Drawing.Size(126, 24)
+        Me.chkRepost.TabIndex = 0
+        Me.chkRepost.Text = "This is a repost"
+        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
+        Me.chkRepost.UseVisualStyleBackColor = True
         '
         'grpDiscordTaskThread
         '
@@ -3254,41 +3343,6 @@ Partial Class Main
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
-        'grpRepost
-        '
-        Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
-        Me.grpRepost.Controls.Add(Me.chkRepost)
-        Me.grpRepost.Location = New System.Drawing.Point(6, 26)
-        Me.grpRepost.Name = "grpRepost"
-        Me.grpRepost.Size = New System.Drawing.Size(393, 68)
-        Me.grpRepost.TabIndex = 0
-        Me.grpRepost.TabStop = False
-        '
-        'chkRepost
-        '
-        Me.chkRepost.AutoSize = True
-        Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.chkRepost.Location = New System.Drawing.Point(8, 0)
-        Me.chkRepost.Name = "chkRepost"
-        Me.chkRepost.Size = New System.Drawing.Size(126, 24)
-        Me.chkRepost.TabIndex = 0
-        Me.chkRepost.Text = "This is a repost"
-        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
-        Me.chkRepost.UseVisualStyleBackColor = True
-        '
-        'dtRepostOriginalDate
-        '
-        Me.dtRepostOriginalDate.Enabled = False
-        Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 26)
-        Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
-        Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
-        Me.dtRepostOriginalDate.TabIndex = 1
-        Me.dtRepostOriginalDate.Tag = "4"
-        Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date to set in MSFS for the flight")
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3336,6 +3390,8 @@ Partial Class Main
         Me.pnlWizardDiscord.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.grpDiscordTask.ResumeLayout(False)
+        Me.grpRepost.ResumeLayout(False)
+        Me.grpRepost.PerformLayout()
         Me.grpDiscordTaskThread.ResumeLayout(False)
         Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
@@ -3348,8 +3404,6 @@ Partial Class Main
         Me.tabBriefing.ResumeLayout(False)
         Me.pnlBriefing.ResumeLayout(False)
         Me.pnlWizardBriefing.ResumeLayout(False)
-        Me.grpRepost.ResumeLayout(False)
-        Me.grpRepost.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3475,7 +3529,7 @@ Partial Class Main
     Friend WithEvents btnSaveConfig As Button
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents btnCreateShareablePack As Button
-    Friend WithEvents chkIncludeGotGravelInvite As CheckBox
+    Friend WithEvents chkIncludeDiscordInvite As CheckBox
     Friend WithEvents btnLoadB21Planner As Button
     Friend WithEvents btnCopyReqFilesToClipboard As Button
     Friend WithEvents btnGuideMe As Button
@@ -3600,4 +3654,8 @@ Partial Class Main
     Friend WithEvents grpRepost As GroupBox
     Friend WithEvents chkRepost As CheckBox
     Friend WithEvents dtRepostOriginalDate As DateTimePicker
+    Friend WithEvents btnPasteDiscordInviteLink As Button
+    Friend WithEvents txtOtherDiscordInviteLink As TextBox
+    Friend WithEvents cboDiscordInvite As ComboBox
+    Friend WithEvents Label1 As Label
 End Class

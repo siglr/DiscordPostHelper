@@ -255,8 +255,9 @@ Public Class Main
         txtTaskFlightPlanURL.Text = String.Empty
         txtGroupEventPostURL.Text = String.Empty
         txtDiscordEventShareURL.Text = String.Empty
-        chkIncludeGotGravelInvite.Enabled = False
-        chkIncludeGotGravelInvite.Checked = False
+        chkIncludeDiscordInvite.Enabled = False
+        chkIncludeDiscordInvite.Checked = False
+        cboDiscordInvite.Enabled = False
         txtDPHXPackageFilename.Text = String.Empty
         txtAddOnsDetails.Text = String.Empty
         txtWaypointsDetails.Text = String.Empty
@@ -270,6 +271,8 @@ Public Class Main
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
         txtDiscordTaskThreadURL.Text = String.Empty
+        cboDiscordInvite.SelectedIndex = 0
+        txtOtherDiscordInviteLink.Text = String.Empty
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -350,7 +353,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtTaskFlightPlanURL.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherDiscordInviteLink.Enter, txtOtherBeginnerLink.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -611,7 +614,9 @@ Public Class Main
     End Sub
 
     Private Sub btnDiscordTaskThreadURLPaste_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskThreadURLPaste.Click
-        txtDiscordTaskThreadURL.Text = Clipboard.GetText
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtDiscordTaskThreadURL.Text = Clipboard.GetText
+        End If
     End Sub
 
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
@@ -654,7 +659,7 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged
+                                                                          cboDifficulty.SelectedIndexChanged, txtOtherDiscordInviteLink.TextChanged, txtOtherBeginnerLink.TextChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -2209,6 +2214,19 @@ Public Class Main
         SessionModified()
     End Sub
 
+    Private Sub cboDiscordInvite_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDiscordInvite.SelectedIndexChanged
+        If cboDiscordInvite.Text = "Other (provide link below)" Then
+            txtOtherDiscordInviteLink.Enabled = True
+            btnPasteDiscordInviteLink.Enabled = True
+        Else
+            txtOtherDiscordInviteLink.Enabled = False
+            btnPasteDiscordInviteLink.Enabled = False
+            txtOtherDiscordInviteLink.Text = String.Empty
+        End If
+        'BuildGroupFlightPost()
+        SessionModified()
+    End Sub
+
     Private Sub cboBeginnersGuide_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBeginnersGuide.SelectedIndexChanged
         If cboBeginnersGuide.Text = "Other (provide link below)" Then
             txtOtherBeginnerLink.Enabled = True
@@ -2223,22 +2241,37 @@ Public Class Main
     End Sub
 
     Private Sub btnTaskFPURLPaste_Click(sender As Object, e As EventArgs) Handles btnTaskFPURLPaste.Click
-        txtTaskFlightPlanURL.Text = Clipboard.GetText
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtTaskFlightPlanURL.Text = Clipboard.GetText
+        End If
+        'BuildGroupFlightPost()
+    End Sub
+
+    Private Sub btnPasteDiscordInviteLink_Click(sender As Object, e As EventArgs) Handles btnPasteDiscordInviteLink.Click
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtOtherDiscordInviteLink.Text = Clipboard.GetText
+        End If
         'BuildGroupFlightPost()
     End Sub
 
     Private Sub btnPasteBeginnerLink_Click(sender As Object, e As EventArgs) Handles btnPasteBeginnerLink.Click
-        txtOtherBeginnerLink.Text = Clipboard.GetText
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtOtherBeginnerLink.Text = Clipboard.GetText
+        End If
         'BuildGroupFlightPost()
     End Sub
 
     Private Sub btnDiscordGroupEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordGroupEventURL.Click
-        txtGroupEventPostURL.Text = Clipboard.GetText
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtGroupEventPostURL.Text = Clipboard.GetText
+        End If
         'BuildDiscordEventDescription()
     End Sub
 
     Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
-        txtDiscordEventShareURL.Text = Clipboard.GetText
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtDiscordEventShareURL.Text = Clipboard.GetText
+        End If
     End Sub
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
@@ -2370,7 +2403,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub chkIncludeGotGravelInvite_CheckedChanged(sender As Object, e As EventArgs) Handles chkIncludeGotGravelInvite.CheckedChanged
+    Private Sub chkIncludeDiscordInvite_CheckedChanged(sender As Object, e As EventArgs) Handles chkIncludeDiscordInvite.CheckedChanged
         'BuildGroupFlightPost()
         SessionModified()
     End Sub
@@ -2382,13 +2415,24 @@ Public Class Main
 
     Private Sub txtTaskFlightPlanURL_TextChanged(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.TextChanged
         If txtTaskFlightPlanURL.Text <> String.Empty Then
+            chkIncludeDiscordInvite.Enabled = True
+            cboDiscordInvite.Enabled = True
             If txtTaskFlightPlanURL.Text.Contains("channels/793376245915189268") Then
                 'Got Gravel
-                chkIncludeGotGravelInvite.Enabled = True
+                cboDiscordInvite.SelectedIndex = 1
+            ElseIf txtTaskFlightPlanURL.Text.Contains("channels/1022705603489042472") Then
+                'MSFS Soaring Task Tools
+                cboDiscordInvite.SelectedIndex = 2
+            ElseIf txtTaskFlightPlanURL.Text.Contains("channels/876123356385149009") Then
+                'SSC
+                cboDiscordInvite.SelectedIndex = 3
             Else
-                chkIncludeGotGravelInvite.Checked = False
-                chkIncludeGotGravelInvite.Enabled = False
+                cboDiscordInvite.SelectedIndex = 0
             End If
+        Else
+            chkIncludeDiscordInvite.Checked = False
+            chkIncludeDiscordInvite.Enabled = False
+            cboDiscordInvite.Enabled = False
         End If
         SessionModified()
 
@@ -2450,7 +2494,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.Leave, txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtTaskFlightPlanURL.Leave, txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherDiscordInviteLink.Leave, txtOtherBeginnerLink.Leave
 
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
@@ -2621,8 +2665,19 @@ Public Class Main
         If Not txtTaskFlightPlanURL.Text = String.Empty Then
             sb.AppendLine("> ")
             sb.AppendLine($"> 🔗 [Link to Flight Plan Details, Weather and files]({txtTaskFlightPlanURL.Text})")
-            If chkIncludeGotGravelInvite.Checked AndAlso chkIncludeGotGravelInvite.Enabled Then
-                sb.AppendLine("> *If you did not join Got Gravel already, you will need this [invite link](https://discord.gg/BqUcbvDP69) first*")
+            If chkIncludeDiscordInvite.Checked AndAlso cboDiscordInvite.SelectedIndex > 0 Then
+                Select Case cboDiscordInvite.SelectedIndex
+                    Case 1 'GotGravel
+                        sb.AppendLine("> *If you did not join Got Gravel already, you will need this [invite link](https://discord.gg/BqUcbvDP69) first*")
+                    Case 2 'MSFS Soaring Task Tools
+                        sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
+                    Case 3 'SSC
+                        sb.AppendLine("> *If you did not join Sim Soaring Club already, you will need this [invite link](https://discord.gg/NEZ9MenHYu) first*")
+                    Case 4 'Other
+                        If SupportingFeatures.IsValidURL(txtOtherDiscordInviteLink.Text) Then
+                            sb.AppendLine($"> *If you did not join this Discord server already, you will need this [invite link]({txtOtherDiscordInviteLink.Text}) first*")
+                        End If
+                End Select
             End If
         End If
         sb.AppendLine("> ")
@@ -3224,13 +3279,13 @@ Public Class Main
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 632
                 lblEventGuideInstructions.Text = "If the link above is from GotGravel, you can include an invite to the server. This is useful if published outside of GotGravel."
-                SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
+                SetFocusOnField(chkIncludeDiscordInvite, fromF1Key)
 
             Case 73 'Beginner's link
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 665
                 lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
-                SetFocusOnField(chkIncludeGotGravelInvite, fromF1Key)
+                SetFocusOnField(chkIncludeDiscordInvite, fromF1Key)
 
             Case 74 'Briefing review
                 TabControl1.SelectedIndex = 3
@@ -3719,13 +3774,16 @@ Public Class Main
             .URLFlightPlanPost = txtTaskFlightPlanURL.Text
             .URLGroupEventPost = txtGroupEventPostURL.Text
             .URLDiscordEventInvite = txtDiscordEventShareURL.Text
-            .IncludeGGServerInvite = chkIncludeGotGravelInvite.Checked
+            .IncludeServerInvite = chkIncludeDiscordInvite.Checked
             .MapImageSelected = cboBriefingMap.Text
             .LockMapImage = chkLockMapImage.Checked
             .CoverImageSelected = cboCoverImage.Text
             .LockCoverImage = chkLockCoverImage.Checked
             .BeginnersGuide = cboBeginnersGuide.Text
             .BeginnersGuideCustom = txtOtherBeginnerLink.Text
+            .OtherServerInviteLink = txtOtherDiscordInviteLink.Text
+            .IncludeServerInvite = chkIncludeDiscordInvite.Checked
+            .ServerInviteSelected = cboDiscordInvite.SelectedIndex
 
         End With
 
@@ -3871,7 +3929,9 @@ Public Class Main
                 txtTaskFlightPlanURL.Text = .URLFlightPlanPost
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 txtDiscordEventShareURL.Text = .URLDiscordEventInvite
-                chkIncludeGotGravelInvite.Checked = .IncludeGGServerInvite
+                txtOtherDiscordInviteLink.Text = .OtherServerInviteLink
+                chkIncludeDiscordInvite.Checked = .IncludeServerInvite
+                cboDiscordInvite.SelectedIndex = .ServerInviteSelected
                 cboBeginnersGuide.Text = .BeginnersGuide
                 If cboBeginnersGuide.Text = String.Empty Then
                     cboBeginnersGuide.Text = "None"
