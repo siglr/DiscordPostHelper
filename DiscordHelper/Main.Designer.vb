@@ -1636,7 +1636,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 470)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 745)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83

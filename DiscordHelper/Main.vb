@@ -3277,13 +3277,13 @@ Public Class Main
 
             Case 72 'GotGravel Invite
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 632
-                lblEventGuideInstructions.Text = "If the link above is from GotGravel, you can include an invite to the server. This is useful if published outside of GotGravel."
+                pnlWizardEvent.Top = 635
+                lblEventGuideInstructions.Text = "If you want, you can include an invite to a Discord server. This is useful if an event and task are not on the same Discord."
                 SetFocusOnField(chkIncludeDiscordInvite, fromF1Key)
 
             Case 73 'Beginner's link
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 665
+                pnlWizardEvent.Top = 745
                 lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
                 SetFocusOnField(chkIncludeDiscordInvite, fromF1Key)
 
