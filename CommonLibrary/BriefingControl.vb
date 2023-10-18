@@ -1086,7 +1086,7 @@ Public Class BriefingControl
 
                 Select Case SupportingFeatures.ReturnDiscordServer(_sessionData.DiscordTaskThreadURL)
                     Case "Got Gravel"
-                        inviteURL = "https://discord.gg/BqUcbvDP69"
+                        inviteURL = "https://discord.gg/got-gravel"
                     Case "MSFS Soaring Task Tools"
                         inviteURL = "https://discord.gg/aW8YYe3HJF"
                     Case "Sim Soaring Club"
@@ -1094,9 +1094,8 @@ Public Class BriefingControl
                     Case "unknown"
                 End Select
                 If inviteURL <> String.Empty Then
-                    If Not SupportingFeatures.LaunchDiscordURL(inviteURL) Then
-                        MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
+                    Clipboard.SetText(inviteURL)
+                    MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
             End If
         End If

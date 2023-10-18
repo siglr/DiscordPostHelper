@@ -2667,7 +2667,7 @@ Public Class Main
             If chkIncludeDiscordInvite.Checked AndAlso cboDiscordInvite.SelectedIndex > 0 Then
                 Select Case cboDiscordInvite.SelectedIndex
                     Case 1 'GotGravel
-                        sb.AppendLine("> *If you did not join Got Gravel already, you will need this [invite link](https://discord.gg/BqUcbvDP69) first*")
+                        sb.AppendLine("> *If you did not join Got Gravel already, you will need this [invite link](https://discord.gg/got-gravel) first*")
                     Case 2 'MSFS Soaring Task Tools
                         sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
                     Case 3 'SSC
