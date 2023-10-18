@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.5.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.17.5</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.17.5</ReleaseVersion>
+      <ReleaseTitle>Bring me button fix and Invite links</ReleaseTitle>
+      <ReleaseNotes>
+        Disabled the "Bring me..." button when no file is currently loaded
+        Added Invite link/button to Discord server.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.5.2</ReleaseVersion>
       <ReleaseTitle>Remove the watch symbol and sync with DPH tool</ReleaseTitle>

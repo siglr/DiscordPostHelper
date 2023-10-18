@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.9.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.17.5</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.17.5</ReleaseVersion>
+      <ReleaseTitle>Repost info and Invite links</ReleaseTitle>
+      <ReleaseNotes>
+        Added "Repost" checkbox and date on the Discord tab when posting an preexisting task.
+        Added invite link to include in group event post.
+        Adjusted all soaring club infos and added SSC Wednesday.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.9.1</ReleaseVersion>
       <ReleaseTitle>Various improvements in several areas</ReleaseTitle>
