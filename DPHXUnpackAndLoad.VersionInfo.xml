@@ -1,8 +1,8 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.17.5</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.17.3</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>23.10.17.5</ReleaseVersion>
+      <ReleaseVersion>23.10.17.3</ReleaseVersion>
       <ReleaseTitle>Bring me button fix and Invite links</ReleaseTitle>
       <ReleaseNotes>
         Disabled the "Bring me..." button when no file is currently loaded
