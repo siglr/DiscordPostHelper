@@ -285,8 +285,13 @@ Public Class BriefingControl
         AddCountryFlagPictures()
 
         If _sessionData.DiscordTaskThreadURL = String.Empty OrElse SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) = False Then
+            btnGotoDiscordTaskThread.Text = $"No task thread defined"
             btnGotoDiscordTaskThread.Enabled = False
         Else
+            'Find out which Discord Server
+            Dim buttonLabelText As String = String.Empty
+            buttonLabelText = SupportingFeatures.ReturnDiscordServer(_sessionData.DiscordTaskThreadURL)
+            btnGotoDiscordTaskThread.Text = $"Bring me to this task's discussion thread on {buttonLabelText} Discord server (right click if you need invite)"
             btnGotoDiscordTaskThread.Enabled = True
         End If
 
@@ -1063,7 +1068,42 @@ Public Class BriefingControl
         End If
     End Sub
 
+    Private isRightMousePressed As Boolean = False
 
+    Private Sub btnGotoDiscordTaskThread_MouseDown(sender As Object, e As MouseEventArgs) Handles btnGotoDiscordTaskThread.MouseDown
+        If e.Button = MouseButtons.Right Then
+            ' Mark that the right mouse button is pressed
+            isRightMousePressed = True
+        End If
+    End Sub
+
+    Private Sub btnGotoDiscordTaskThread_MouseUp(sender As Object, e As MouseEventArgs) Handles btnGotoDiscordTaskThread.MouseUp
+        If e.Button = MouseButtons.Right AndAlso isRightMousePressed Then
+            ' Check if the right mouse button was pressed and released within the button
+            If btnGotoDiscordTaskThread.ClientRectangle.Contains(e.Location) Then
+                ' Programmatically trigger the button's click event
+                Dim inviteURL As String = String.Empty
+
+                Select Case SupportingFeatures.ReturnDiscordServer(_sessionData.DiscordTaskThreadURL)
+                    Case "Got Gravel"
+                        inviteURL = "https://discord.gg/BqUcbvDP69"
+                    Case "MSFS Soaring Task Tools"
+                        inviteURL = "https://discord.gg/aW8YYe3HJF"
+                    Case "Sim Soaring Club"
+                        inviteURL = "https://discord.gg/NEZ9MenHYu"
+                    Case "unknown"
+                End Select
+                If inviteURL <> String.Empty Then
+                    If Not SupportingFeatures.LaunchDiscordURL(inviteURL) Then
+                        MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                End If
+            End If
+        End If
+
+        ' Reset the flag when the mouse button is released
+        isRightMousePressed = False
+    End Sub
 #End Region
 
 #End Region

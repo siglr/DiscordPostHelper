@@ -1418,6 +1418,23 @@ Public Class SupportingFeatures
         Return True
     End Function
 
+    Public Shared Function ReturnDiscordServer(urlExtract As String) As String
+
+        If urlExtract.Contains("channels/793376245915189268") Then
+            'Got Gravel
+            Return "Got Gravel"
+        ElseIf urlExtract.Contains("channels/1022705603489042472") Then
+            'MSFS Soaring Task Tools
+            Return "MSFS Soaring Task Tools"
+        ElseIf urlExtract.Contains("channels/876123356385149009") Then
+            'SSC
+            Return "Sim Soaring Club"
+        Else
+            Return "unknown"
+        End If
+
+    End Function
+
     ' Function to bring a specific window to the top and unminimize it if minimized
     Public Shared Function BringWindowToTopWithExe(partialTitle As String, exeFilePath As String) As Process
         Try

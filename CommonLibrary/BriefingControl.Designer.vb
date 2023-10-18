@@ -215,7 +215,7 @@ Partial Class BriefingControl
         Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
         Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(947, 34)
         Me.btnGotoDiscordTaskThread.TabIndex = 7
-        Me.btnGotoDiscordTaskThread.Text = "Bring me to this task's discussion thread on Discord"
+        Me.btnGotoDiscordTaskThread.Text = "No task thread defined"
         Me.btnGotoDiscordTaskThread.UseVisualStyleBackColor = True
         '
         'countryFlagsLayoutPanel
@@ -235,7 +235,7 @@ Partial Class BriefingControl
         Me.txtBriefing.Location = New System.Drawing.Point(3, 54)
         Me.txtBriefing.Name = "txtBriefing"
         Me.txtBriefing.ReadOnly = True
-        Me.txtBriefing.Size = New System.Drawing.Size(947, 591)
+        Me.txtBriefing.Size = New System.Drawing.Size(950, 591)
         Me.txtBriefing.TabIndex = 4
         Me.txtBriefing.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtBriefing, "Use CTRL-MouseWheel to make the content smaller or larger.")

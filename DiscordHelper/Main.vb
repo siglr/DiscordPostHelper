@@ -2417,18 +2417,17 @@ Public Class Main
         If txtTaskFlightPlanURL.Text <> String.Empty Then
             chkIncludeDiscordInvite.Enabled = True
             cboDiscordInvite.Enabled = True
-            If txtTaskFlightPlanURL.Text.Contains("channels/793376245915189268") Then
-                'Got Gravel
-                cboDiscordInvite.SelectedIndex = 1
-            ElseIf txtTaskFlightPlanURL.Text.Contains("channels/1022705603489042472") Then
-                'MSFS Soaring Task Tools
-                cboDiscordInvite.SelectedIndex = 2
-            ElseIf txtTaskFlightPlanURL.Text.Contains("channels/876123356385149009") Then
-                'SSC
-                cboDiscordInvite.SelectedIndex = 3
-            Else
-                cboDiscordInvite.SelectedIndex = 0
-            End If
+
+            Select Case SupportingFeatures.ReturnDiscordServer(txtTaskFlightPlanURL.Text)
+                Case "Got Gravel"
+                    cboDiscordInvite.SelectedIndex = 1
+                Case "MSFS Soaring Task Tools"
+                    cboDiscordInvite.SelectedIndex = 2
+                Case "Sim Soaring Club"
+                    cboDiscordInvite.SelectedIndex = 3
+                Case "unknown"
+                    cboDiscordInvite.SelectedIndex = 0
+            End Select
         Else
             chkIncludeDiscordInvite.Checked = False
             chkIncludeDiscordInvite.Enabled = False
