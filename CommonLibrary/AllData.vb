@@ -63,6 +63,10 @@ Public Class AllData
 
     <XmlElement("SoaringWaves")>
     Public Property SoaringWaves As Boolean
+
+    <XmlElement("SoaringDynamic")>
+    Public Property SoaringDynamic As Boolean
+
     <XmlElement("SoaringExtraInfo")>
     Public Property SoaringExtraInfo As String
 

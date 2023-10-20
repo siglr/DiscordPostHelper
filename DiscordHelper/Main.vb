@@ -217,6 +217,7 @@ Public Class Main
         txtArrivalExtraInfo.Text = String.Empty
         chkArrivalLock.Checked = False
         chkSoaringTypeRidge.Checked = False
+        chkSoaringTypeDynamic.Checked = False
         chkSoaringTypeThermal.Checked = False
         chkSoaringTypeWave.Checked = False
         txtSoaringTypeExtraInfo.Text = String.Empty
@@ -659,7 +660,7 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged, txtOtherDiscordInviteLink.TextChanged, txtOtherBeginnerLink.TextChanged
+                                                                          cboDifficulty.SelectedIndexChanged, txtOtherDiscordInviteLink.TextChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -1597,7 +1598,7 @@ Public Class Main
         Else
             SetLabelFormat(lblTitle, LabelFormat.Regular)
         End If
-        If chkSoaringTypeRidge.Checked = False AndAlso chkSoaringTypeThermal.Checked = False AndAlso chkSoaringTypeWave.Checked = False Then
+        If chkSoaringTypeRidge.Checked = False AndAlso chkSoaringTypeThermal.Checked = False AndAlso chkSoaringTypeWave.Checked = False AndAlso chkSoaringTypeDynamic.Checked = False Then
             SetLabelFormat(lblSoaringType, LabelFormat.BoldRed, requiredText, "At least one soaring type is required!")
             cannotContinue = True
         Else
@@ -1864,6 +1865,10 @@ Public Class Main
 
         If chkSoaringTypeWave.Checked Then
             selectedTypes.Add("Wave")
+        End If
+
+        If chkSoaringTypeDynamic.Checked Then
+            selectedTypes.Add("Dynamic")
         End If
 
         ' Join the selected types into a single string, separated by ", "
@@ -3713,6 +3718,7 @@ Public Class Main
             .SoaringRidge = chkSoaringTypeRidge.Checked
             .SoaringThermals = chkSoaringTypeThermal.Checked
             .SoaringWaves = chkSoaringTypeWave.Checked
+            .SoaringDynamic = chkSoaringTypeDynamic.Checked
             .SoaringExtraInfo = txtSoaringTypeExtraInfo.Text
             .AvgSpeedsUnit = cboSpeedUnits.SelectedIndex
             .AvgMinSpeed = txtMinAvgSpeed.Text
@@ -3845,6 +3851,7 @@ Public Class Main
                 txtArrivalName.Text = .ArrivalName
                 txtArrivalExtraInfo.Text = .ArrivalExtra
                 chkSoaringTypeRidge.Checked = .SoaringRidge
+                chkSoaringTypeDynamic.Checked = .SoaringDynamic
                 chkSoaringTypeThermal.Checked = .SoaringThermals
                 chkSoaringTypeWave.Checked = .SoaringWaves
                 txtSoaringTypeExtraInfo.Text = .SoaringExtraInfo

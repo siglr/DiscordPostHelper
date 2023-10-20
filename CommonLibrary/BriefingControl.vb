@@ -846,6 +846,10 @@ Public Class BriefingControl
             selectedTypes.Add("Wave")
         End If
 
+        If _sessionData.SoaringDynamic Then
+            selectedTypes.Add("Dynamic")
+        End If
+
         ' Join the selected types into a single string, separated by " and "
         Return String.Join(", ", selectedTypes)
     End Function
