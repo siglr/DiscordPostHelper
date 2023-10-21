@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.17.3</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.21.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.21.2</ReleaseVersion>
+      <ReleaseTitle>Dynamic soaring and much more...</ReleaseTitle>
+      <ReleaseNotes>
+        Added Dynamic as soaring type.
+        Moving towards a new Soaring Task Browser app, made several changes to accommodate that in relation to proper identification of a task.
+        Several small bug fixes along the way.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.17.3</ReleaseVersion>
       <ReleaseTitle>Bring me button fix and Invite links</ReleaseTitle>
