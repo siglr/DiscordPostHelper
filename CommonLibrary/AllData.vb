@@ -250,8 +250,12 @@ Public Class AllData
     <XmlElement("BeginnersGuideCustom")>
     Public Property BeginnersGuideCustom As String
 
+    'Deprecated - only there for legacy
     <XmlElement("DiscordTaskThreadURL")>
     Public Property DiscordTaskThreadURL As String
+
+    <XmlElement("DiscordTaskID")>
+    Public Property DiscordTaskID As String
 
     <XmlElement("DiscordEventThreadURL")>
     Public Property DiscordEventThreadURL As String

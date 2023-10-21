@@ -616,7 +616,7 @@ Public Class Main
 
     Private Sub btnDiscordTaskThreadURLPaste_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskThreadURLPaste.Click
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
-            txtDiscordTaskThreadURL.Text = Clipboard.GetText
+            txtDiscordTaskThreadURL.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
         End If
     End Sub
 
@@ -3106,10 +3106,10 @@ Public Class Main
                 pnlGuide.Top = 531
                 lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord."
                 SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
-            Case 24 'Task Thread
+            Case 24 'Task ID
                 SetGuidePanelToRight()
                 pnlGuide.Top = 615
-                lblGuideInstructions.Text = "Once you've create the task's thread on Discord and before posting the files, copy the thread's URL and paste it here."
+                lblGuideInstructions.Text = "Once you've posted the task on Discord and before posting the files, copy the task URL and paste it here."
                 SetFocusOnField(txtDiscordTaskThreadURL, fromF1Key)
 
             Case 25 To 29 'End of flight plan data
@@ -3758,7 +3758,7 @@ Public Class Main
             Else
                 .GroupClubName = String.Empty
             End If
-            .DiscordTaskThreadURL = txtDiscordTaskThreadURL.Text
+            .DiscordTaskID = txtDiscordTaskThreadURL.Text
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
             .VoiceChannel = cboVoiceChannel.Text
@@ -3912,7 +3912,10 @@ Public Class Main
                         txtDPHXPackageFilename.Text = .DPHXPackageFilename
                     End If
                 End If
-                txtDiscordTaskThreadURL.Text = .DiscordTaskThreadURL
+                If .DiscordTaskID = String.Empty AndAlso .DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(.DiscordTaskThreadURL) Then
+                    .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
+                End If
+                txtDiscordTaskThreadURL.Text = .DiscordTaskID
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtEventTitle.Text = .EventTopic

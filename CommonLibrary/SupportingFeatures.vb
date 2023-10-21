@@ -21,6 +21,8 @@ Public Class SupportingFeatures
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
     Private Const SW_RESTORE As Integer = 9
+    Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
+    Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
 
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
@@ -1384,6 +1386,42 @@ Public Class SupportingFeatures
         Return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase)
     End Function
 
+    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False) As String
+
+        ' Check if the inputURL starts with the expected base URL
+        Dim baseURL As String = $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/"
+        If inputURL.StartsWith(baseURL) Then
+            ' Remove the base URL
+            Dim remainingURL As String = inputURL.Substring(baseURL.Length)
+
+            ' Split the remaining URL by '/'
+            Dim parts As String() = remainingURL.Split("/"c)
+
+            ' Check if there are 1 or 2 parts
+            If parts.Length = 2 AndAlso parts(0) = MSFSSoaringToolsLibraryID Then
+                ' Two parts, the first is the library ID and the second is the message ID
+                Return parts(1)
+            ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
+                Return parts(0)
+            End If
+        End If
+
+        ' Return blank if URL doesn't match the expected format
+        Return String.Empty
+    End Function
+
+    Public Shared ReadOnly Property GetMSFSSoaringToolsDiscordID As String
+        Get
+            Return MSFSSoaringToolsDiscordID
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property GetMSFSSoaringToolsLibraryID As String
+        Get
+            Return MSFSSoaringToolsLibraryID
+        End Get
+    End Property
+
     Public Shared Function AreFilesIdentical(file1Path As String, file2Path As String) As Boolean
         ' Check if the file paths are the same
         If String.Equals(file1Path, file2Path, StringComparison.OrdinalIgnoreCase) Then
@@ -1418,12 +1456,12 @@ Public Class SupportingFeatures
         Return True
     End Function
 
-    Public Shared Function ReturnDiscordServer(urlExtract As String) As String
+    Public Shared Function ReturnDiscordServer(urlExtract As String, Optional forceMSFSSoaringTools As Boolean = False) As String
 
         If urlExtract.Contains("channels/793376245915189268") Then
             'Got Gravel
             Return "Got Gravel"
-        ElseIf urlExtract.Contains("channels/1022705603489042472") Then
+        ElseIf urlExtract.Contains($"channels/{MSFSSoaringToolsDiscordID}") OrElse forceMSFSSoaringTools Then
             'MSFS Soaring Task Tools
             Return "MSFS Soaring Task Tools"
         ElseIf urlExtract.Contains("channels/876123356385149009") Then

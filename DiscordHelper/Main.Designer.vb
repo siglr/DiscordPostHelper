@@ -34,6 +34,7 @@ Partial Class Main
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeWave = New System.Windows.Forms.CheckBox()
         Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -131,7 +132,6 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskThreadURL = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -264,7 +264,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnReset = New System.Windows.Forms.Button()
@@ -275,7 +274,8 @@ Partial Class Main
         Me.btnGuideMe = New System.Windows.Forms.Button()
         Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -477,6 +477,19 @@ Partial Class Main
         Me.grbTaskInfo.Size = New System.Drawing.Size(729, 803)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
+        '
+        'chkSoaringTypeDynamic
+        '
+        Me.chkSoaringTypeDynamic.AutoSize = True
+        Me.chkSoaringTypeDynamic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkSoaringTypeDynamic.Location = New System.Drawing.Point(338, 271)
+        Me.chkSoaringTypeDynamic.Name = "chkSoaringTypeDynamic"
+        Me.chkSoaringTypeDynamic.Size = New System.Drawing.Size(44, 30)
+        Me.chkSoaringTypeDynamic.TabIndex = 56
+        Me.chkSoaringTypeDynamic.Tag = "8"
+        Me.chkSoaringTypeDynamic.Text = "D"
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeDynamic, "Check if track involves dynamic soaring.")
+        Me.chkSoaringTypeDynamic.UseVisualStyleBackColor = True
         '
         'chkSoaringTypeWave
         '
@@ -1572,7 +1585,7 @@ Partial Class Main
         Me.grbTaskDiscord.Size = New System.Drawing.Size(729, 72)
         Me.grbTaskDiscord.TabIndex = 4
         Me.grbTaskDiscord.TabStop = False
-        Me.grbTaskDiscord.Text = "Discord"
+        Me.grbTaskDiscord.Text = "Discord / Task ID"
         '
         'btnDiscordTaskThreadURLPaste
         '
@@ -1583,7 +1596,7 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
         Me.btnDiscordTaskThreadURLPaste.Tag = "24"
         Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task's discussion thread URL from your clipboard")
+        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task ID from your clipboard")
         Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
         '
         'txtDiscordTaskThreadURL
@@ -1591,10 +1604,11 @@ Partial Class Main
         Me.txtDiscordTaskThreadURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDiscordTaskThreadURL.Location = New System.Drawing.Point(189, 27)
         Me.txtDiscordTaskThreadURL.Name = "txtDiscordTaskThreadURL"
+        Me.txtDiscordTaskThreadURL.ReadOnly = True
         Me.txtDiscordTaskThreadURL.Size = New System.Drawing.Size(448, 32)
         Me.txtDiscordTaskThreadURL.TabIndex = 1
         Me.txtDiscordTaskThreadURL.Tag = "24"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The task's thread URL on Discord, i.e., where to post results among other things")
+        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The ID of the task on Discord, i.e., where to post results among other things")
         '
         'Label31
         '
@@ -1602,20 +1616,9 @@ Partial Class Main
         Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label31.Location = New System.Drawing.Point(6, 30)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(106, 26)
+        Me.Label31.Size = New System.Drawing.Size(69, 26)
         Me.Label31.TabIndex = 0
-        Me.Label31.Text = "Task thread"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        Me.Label31.Text = "Task ID"
         '
         'tabEvent
         '
@@ -3230,27 +3233,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 874)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3345,18 +3327,37 @@ Partial Class Main
         Me.btnTurnGuideOff.UseVisualStyleBackColor = True
         Me.btnTurnGuideOff.Visible = False
         '
-        'chkSoaringTypeDynamic
+        'FileDropZone1
         '
-        Me.chkSoaringTypeDynamic.AutoSize = True
-        Me.chkSoaringTypeDynamic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkSoaringTypeDynamic.Location = New System.Drawing.Point(338, 271)
-        Me.chkSoaringTypeDynamic.Name = "chkSoaringTypeDynamic"
-        Me.chkSoaringTypeDynamic.Size = New System.Drawing.Size(44, 30)
-        Me.chkSoaringTypeDynamic.TabIndex = 56
-        Me.chkSoaringTypeDynamic.Tag = "8"
-        Me.chkSoaringTypeDynamic.Text = "D"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeDynamic, "Check if track involves dynamic soaring.")
-        Me.chkSoaringTypeDynamic.UseVisualStyleBackColor = True
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits1
+        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 874)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '

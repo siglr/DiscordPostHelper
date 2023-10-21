@@ -284,14 +284,15 @@ Public Class BriefingControl
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
 
-        If _sessionData.DiscordTaskThreadURL = String.Empty OrElse SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) = False Then
+        If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
+            _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
+        End If
+
+        If _sessionData.DiscordTaskID = String.Empty Then
             btnGotoDiscordTaskThread.Text = $"No task thread defined"
             btnGotoDiscordTaskThread.Enabled = False
         Else
-            'Find out which Discord Server
-            Dim buttonLabelText As String = String.Empty
-            buttonLabelText = SupportingFeatures.ReturnDiscordServer(_sessionData.DiscordTaskThreadURL)
-            btnGotoDiscordTaskThread.Text = $"Bring me to this task's discussion thread on {buttonLabelText} Discord server (right click if you need invite)"
+            btnGotoDiscordTaskThread.Text = $"Bring me to this task's discussion thread on {SupportingFeatures.ReturnDiscordServer(String.Empty, True)} Discord server (right click if you need invite)"
             btnGotoDiscordTaskThread.Enabled = True
         End If
 
@@ -1067,7 +1068,7 @@ Public Class BriefingControl
 
     Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
 
-        If Not SupportingFeatures.LaunchDiscordURL(_sessionData.DiscordTaskThreadURL) Then
+        If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_sessionData.DiscordTaskID}") Then
             MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
@@ -1088,15 +1089,9 @@ Public Class BriefingControl
                 ' Programmatically trigger the button's click event
                 Dim inviteURL As String = String.Empty
 
-                Select Case SupportingFeatures.ReturnDiscordServer(_sessionData.DiscordTaskThreadURL)
-                    Case "Got Gravel"
-                        inviteURL = "https://discord.gg/got-gravel"
-                    Case "MSFS Soaring Task Tools"
-                        inviteURL = "https://discord.gg/aW8YYe3HJF"
-                    Case "Sim Soaring Club"
-                        inviteURL = "https://discord.gg/NEZ9MenHYu"
-                    Case "unknown"
-                End Select
+                If _sessionData.DiscordTaskID <> String.Empty Then
+                    inviteURL = "https://discord.gg/aW8YYe3HJF"
+                End If
                 If inviteURL <> String.Empty Then
                     Clipboard.SetText(inviteURL)
                     MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
