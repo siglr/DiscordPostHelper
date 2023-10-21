@@ -129,8 +129,9 @@ Partial Class Main
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
         Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
+        Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
-        Me.txtDiscordTaskThreadURL = New System.Windows.Forms.TextBox()
+        Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
@@ -140,25 +141,17 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
-        Me.btnPasteDiscordInviteLink = New System.Windows.Forms.Button()
-        Me.txtOtherDiscordInviteLink = New System.Windows.Forms.TextBox()
-        Me.cboDiscordInvite = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
         Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
         Me.cboBeginnersGuide = New System.Windows.Forms.ComboBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.lblLocalDSTWarning = New System.Windows.Forms.Label()
-        Me.chkIncludeDiscordInvite = New System.Windows.Forms.CheckBox()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.lblEventTaskDistance = New System.Windows.Forms.Label()
-        Me.btnTaskFPURLPaste = New System.Windows.Forms.Button()
         Me.cboGroupOrClubName = New System.Windows.Forms.ComboBox()
         Me.txtEventTitle = New System.Windows.Forms.TextBox()
         Me.Label41 = New System.Windows.Forms.Label()
-        Me.txtTaskFlightPlanURL = New System.Windows.Forms.TextBox()
-        Me.Label37 = New System.Windows.Forms.Label()
         Me.cboEligibleAward = New System.Windows.Forms.ComboBox()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
@@ -1576,8 +1569,9 @@ Partial Class Main
         '
         'grbTaskDiscord
         '
+        Me.grbTaskDiscord.Controls.Add(Me.btnDeleteDiscordID)
         Me.grbTaskDiscord.Controls.Add(Me.btnDiscordTaskThreadURLPaste)
-        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskThreadURL)
+        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
         Me.grbTaskDiscord.Controls.Add(Me.Label31)
         Me.grbTaskDiscord.Enabled = False
         Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 614)
@@ -1587,10 +1581,22 @@ Partial Class Main
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord / Task ID"
         '
+        'btnDeleteDiscordID
+        '
+        Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(644, 28)
+        Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
+        Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
+        Me.btnDeleteDiscordID.TabIndex = 3
+        Me.btnDeleteDiscordID.Tag = "24"
+        Me.btnDeleteDiscordID.Text = "Clear"
+        Me.ToolTip1.SetToolTip(Me.btnDeleteDiscordID, "Click this button to clear the Discord ID linked with this task")
+        Me.btnDeleteDiscordID.UseVisualStyleBackColor = True
+        '
         'btnDiscordTaskThreadURLPaste
         '
         Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(643, 27)
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(559, 28)
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
@@ -1599,16 +1605,16 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task ID from your clipboard")
         Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
         '
-        'txtDiscordTaskThreadURL
+        'txtDiscordTaskID
         '
-        Me.txtDiscordTaskThreadURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordTaskThreadURL.Location = New System.Drawing.Point(189, 27)
-        Me.txtDiscordTaskThreadURL.Name = "txtDiscordTaskThreadURL"
-        Me.txtDiscordTaskThreadURL.ReadOnly = True
-        Me.txtDiscordTaskThreadURL.Size = New System.Drawing.Size(448, 32)
-        Me.txtDiscordTaskThreadURL.TabIndex = 1
-        Me.txtDiscordTaskThreadURL.Tag = "24"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskThreadURL, "The ID of the task on Discord, i.e., where to post results among other things")
+        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
+        Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
+        Me.txtDiscordTaskID.ReadOnly = True
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(364, 32)
+        Me.txtDiscordTaskID.TabIndex = 1
+        Me.txtDiscordTaskID.Tag = "24"
+        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
         '
         'Label31
         '
@@ -1616,9 +1622,9 @@ Partial Class Main
         Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label31.Location = New System.Drawing.Point(6, 30)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(69, 26)
+        Me.Label31.Size = New System.Drawing.Size(109, 26)
         Me.Label31.TabIndex = 0
-        Me.Label31.Text = "Task ID"
+        Me.Label31.Text = "Task Post ID"
         '
         'tabEvent
         '
@@ -1652,7 +1658,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 745)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 622)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1702,25 +1708,17 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
-        Me.grpGroupEventPost.Controls.Add(Me.btnPasteDiscordInviteLink)
-        Me.grpGroupEventPost.Controls.Add(Me.txtOtherDiscordInviteLink)
-        Me.grpGroupEventPost.Controls.Add(Me.cboDiscordInvite)
-        Me.grpGroupEventPost.Controls.Add(Me.Label1)
         Me.grpGroupEventPost.Controls.Add(Me.lblClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.cboBeginnersGuide)
         Me.grpGroupEventPost.Controls.Add(Me.Label30)
         Me.grpGroupEventPost.Controls.Add(Me.lblLocalDSTWarning)
-        Me.grpGroupEventPost.Controls.Add(Me.chkIncludeDiscordInvite)
         Me.grpGroupEventPost.Controls.Add(Me.Label48)
         Me.grpGroupEventPost.Controls.Add(Me.lblEventTaskDistance)
-        Me.grpGroupEventPost.Controls.Add(Me.btnTaskFPURLPaste)
         Me.grpGroupEventPost.Controls.Add(Me.cboGroupOrClubName)
         Me.grpGroupEventPost.Controls.Add(Me.txtEventTitle)
         Me.grpGroupEventPost.Controls.Add(Me.Label41)
-        Me.grpGroupEventPost.Controls.Add(Me.txtTaskFlightPlanURL)
-        Me.grpGroupEventPost.Controls.Add(Me.Label37)
         Me.grpGroupEventPost.Controls.Add(Me.cboEligibleAward)
         Me.grpGroupEventPost.Controls.Add(Me.Label36)
         Me.grpGroupEventPost.Controls.Add(Me.Label35)
@@ -1755,54 +1753,9 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 855)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 705)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
-        '
-        'btnPasteDiscordInviteLink
-        '
-        Me.btnPasteDiscordInviteLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteDiscordInviteLink.Location = New System.Drawing.Point(763, 731)
-        Me.btnPasteDiscordInviteLink.Name = "btnPasteDiscordInviteLink"
-        Me.btnPasteDiscordInviteLink.Size = New System.Drawing.Size(79, 29)
-        Me.btnPasteDiscordInviteLink.TabIndex = 49
-        Me.btnPasteDiscordInviteLink.Tag = "72"
-        Me.btnPasteDiscordInviteLink.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnPasteDiscordInviteLink, "Click this button to paste the Discord invite link from your clipboard")
-        Me.btnPasteDiscordInviteLink.UseVisualStyleBackColor = True
-        '
-        'txtOtherDiscordInviteLink
-        '
-        Me.txtOtherDiscordInviteLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOtherDiscordInviteLink.Location = New System.Drawing.Point(192, 728)
-        Me.txtOtherDiscordInviteLink.Name = "txtOtherDiscordInviteLink"
-        Me.txtOtherDiscordInviteLink.Size = New System.Drawing.Size(565, 32)
-        Me.txtOtherDiscordInviteLink.TabIndex = 48
-        Me.txtOtherDiscordInviteLink.Tag = "72"
-        Me.ToolTip1.SetToolTip(Me.txtOtherDiscordInviteLink, "Specify your own Discord invite link you want to include")
-        '
-        'cboDiscordInvite
-        '
-        Me.cboDiscordInvite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboDiscordInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cboDiscordInvite.FormattingEnabled = True
-        Me.cboDiscordInvite.Items.AddRange(New Object() {"None", "GotGravel", "MSFS Soaring Task Tools", "Sim Soaring Club", "Other (provide link below)"})
-        Me.cboDiscordInvite.Location = New System.Drawing.Point(192, 690)
-        Me.cboDiscordInvite.Name = "cboDiscordInvite"
-        Me.cboDiscordInvite.Size = New System.Drawing.Size(650, 32)
-        Me.cboDiscordInvite.TabIndex = 47
-        Me.cboDiscordInvite.Tag = "72"
-        Me.ToolTip1.SetToolTip(Me.cboDiscordInvite, "You can select a Discord invite link to include with the post")
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(7, 693)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(127, 26)
-        Me.Label1.TabIndex = 46
-        Me.Label1.Text = "Discord Invite"
         '
         'lblClubFullName
         '
@@ -1815,11 +1768,11 @@ Partial Class Main
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 807)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 663)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteBeginnerLink.TabIndex = 44
-        Me.btnPasteBeginnerLink.Tag = "73"
+        Me.btnPasteBeginnerLink.Tag = "71"
         Me.btnPasteBeginnerLink.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnPasteBeginnerLink, "Click this button to paste the beginner's link from your clipboard")
         Me.btnPasteBeginnerLink.UseVisualStyleBackColor = True
@@ -1827,11 +1780,11 @@ Partial Class Main
         'txtOtherBeginnerLink
         '
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 804)
+        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 660)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
         Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(565, 32)
         Me.txtOtherBeginnerLink.TabIndex = 43
-        Me.txtOtherBeginnerLink.Tag = "73"
+        Me.txtOtherBeginnerLink.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.txtOtherBeginnerLink, "Specify the URL (link) to the guide you want to include")
         '
         'cboBeginnersGuide
@@ -1840,18 +1793,18 @@ Partial Class Main
         Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboBeginnersGuide.FormattingEnabled = True
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
-        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 766)
+        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 622)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
         Me.cboBeginnersGuide.Size = New System.Drawing.Size(650, 32)
         Me.cboBeginnersGuide.TabIndex = 42
-        Me.cboBeginnersGuide.Tag = "73"
+        Me.cboBeginnersGuide.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.cboBeginnersGuide, "You can select a link to guide beginners into soaring group flights")
         '
         'Label30
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(7, 769)
+        Me.Label30.Location = New System.Drawing.Point(7, 625)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(127, 26)
         Me.Label30.TabIndex = 41
@@ -1867,20 +1820,6 @@ Partial Class Main
         Me.lblLocalDSTWarning.TabIndex = 12
         Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
         Me.lblLocalDSTWarning.Visible = False
-        '
-        'chkIncludeDiscordInvite
-        '
-        Me.chkIncludeDiscordInvite.AutoSize = True
-        Me.chkIncludeDiscordInvite.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkIncludeDiscordInvite.Location = New System.Drawing.Point(192, 658)
-        Me.chkIncludeDiscordInvite.Name = "chkIncludeDiscordInvite"
-        Me.chkIncludeDiscordInvite.Size = New System.Drawing.Size(413, 30)
-        Me.chkIncludeDiscordInvite.TabIndex = 40
-        Me.chkIncludeDiscordInvite.Tag = "72"
-        Me.chkIncludeDiscordInvite.Text = "Include the Discord server invite with the post"
-        Me.ToolTip1.SetToolTip(Me.chkIncludeDiscordInvite, "When checked, the invite to the Discord server selected below will be added to th" &
-        "e post.")
-        Me.chkIncludeDiscordInvite.UseVisualStyleBackColor = True
         '
         'Label48
         '
@@ -1902,18 +1841,6 @@ Partial Class Main
         Me.lblEventTaskDistance.TabIndex = 36
         Me.lblEventTaskDistance.Text = "0 Km"
         Me.lblEventTaskDistance.Visible = False
-        '
-        'btnTaskFPURLPaste
-        '
-        Me.btnTaskFPURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTaskFPURLPaste.Location = New System.Drawing.Point(763, 619)
-        Me.btnTaskFPURLPaste.Name = "btnTaskFPURLPaste"
-        Me.btnTaskFPURLPaste.Size = New System.Drawing.Size(79, 29)
-        Me.btnTaskFPURLPaste.TabIndex = 39
-        Me.btnTaskFPURLPaste.Tag = "71"
-        Me.btnTaskFPURLPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnTaskFPURLPaste, "Click this button to paste the task's flight plan URL from your clipboard")
-        Me.btnTaskFPURLPaste.UseVisualStyleBackColor = True
         '
         'cboGroupOrClubName
         '
@@ -1948,26 +1875,6 @@ Partial Class Main
         Me.Label41.Size = New System.Drawing.Size(157, 26)
         Me.Label41.TabIndex = 4
         Me.Label41.Text = "Event Title / Topic"
-        '
-        'txtTaskFlightPlanURL
-        '
-        Me.txtTaskFlightPlanURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTaskFlightPlanURL.Location = New System.Drawing.Point(192, 620)
-        Me.txtTaskFlightPlanURL.Name = "txtTaskFlightPlanURL"
-        Me.txtTaskFlightPlanURL.Size = New System.Drawing.Size(565, 32)
-        Me.txtTaskFlightPlanURL.TabIndex = 38
-        Me.txtTaskFlightPlanURL.Tag = "71"
-        Me.ToolTip1.SetToolTip(Me.txtTaskFlightPlanURL, "Enter the URL to the Discord post containing the related task's flight plan.")
-        '
-        'Label37
-        '
-        Me.Label37.AutoSize = True
-        Me.Label37.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.Location = New System.Drawing.Point(7, 624)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(191, 26)
-        Me.Label37.TabIndex = 37
-        Me.Label37.Text = "URL to task flight plan"
         '
         'cboEligibleAward
         '
@@ -3517,8 +3424,6 @@ Partial Class Main
     Friend WithEvents Label35 As Label
     Friend WithEvents cboEligibleAward As ComboBox
     Friend WithEvents Label36 As Label
-    Friend WithEvents txtTaskFlightPlanURL As TextBox
-    Friend WithEvents Label37 As Label
     Friend WithEvents grpDiscordEvent As GroupBox
     Friend WithEvents lblDiscordEventVoice As Label
     Friend WithEvents Label39 As Label
@@ -3533,7 +3438,6 @@ Partial Class Main
     Friend WithEvents lblDiscordPostDateTime As Label
     Friend WithEvents Label45 As Label
     Friend WithEvents Label46 As Label
-    Friend WithEvents btnTaskFPURLPaste As Button
     Friend WithEvents btnGroupFlightEventInfoToClipboard As Button
     Friend WithEvents txtGroupFlightEventPost As TextBox
     Friend WithEvents lblEventTaskDistance As Label
@@ -3545,7 +3449,6 @@ Partial Class Main
     Friend WithEvents btnSaveConfig As Button
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents btnCreateShareablePack As Button
-    Friend WithEvents chkIncludeDiscordInvite As CheckBox
     Friend WithEvents btnLoadB21Planner As Button
     Friend WithEvents btnCopyReqFilesToClipboard As Button
     Friend WithEvents btnGuideMe As Button
@@ -3652,7 +3555,7 @@ Partial Class Main
     Friend WithEvents btnPasteBeginnerLink As Button
     Friend WithEvents lblClubFullName As Label
     Friend WithEvents grbTaskDiscord As GroupBox
-    Friend WithEvents txtDiscordTaskThreadURL As TextBox
+    Friend WithEvents txtDiscordTaskID As TextBox
     Friend WithEvents Label31 As Label
     Friend WithEvents btnDiscordTaskThreadURLPaste As Button
     Friend WithEvents btnPasteUsernameCredits As Button
@@ -3670,9 +3573,6 @@ Partial Class Main
     Friend WithEvents grpRepost As GroupBox
     Friend WithEvents chkRepost As CheckBox
     Friend WithEvents dtRepostOriginalDate As DateTimePicker
-    Friend WithEvents btnPasteDiscordInviteLink As Button
-    Friend WithEvents txtOtherDiscordInviteLink As TextBox
-    Friend WithEvents cboDiscordInvite As ComboBox
-    Friend WithEvents Label1 As Label
     Friend WithEvents chkSoaringTypeDynamic As CheckBox
+    Friend WithEvents btnDeleteDiscordID As Button
 End Class

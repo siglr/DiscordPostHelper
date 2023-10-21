@@ -202,9 +202,6 @@ Public Class AllData
     <XmlElement("EligibleAward")>
     Public Property EligibleAward As Integer
 
-    <XmlElement("URLFlightPlanPost")>
-    Public Property URLFlightPlanPost As String
-
     <XmlElement("URLGroupEventPost")>
     Public Property URLGroupEventPost As String
 

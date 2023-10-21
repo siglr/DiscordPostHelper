@@ -400,7 +400,7 @@ Partial Class BriefingControl
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label1)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToMeet)
         Me.eventInfoSplitContainer.Size = New System.Drawing.Size(953, 688)
-        Me.eventInfoSplitContainer.SplitterDistance = 761
+        Me.eventInfoSplitContainer.SplitterDistance = 758
         Me.eventInfoSplitContainer.TabIndex = 0
         '
         'txtEventInfo
@@ -410,7 +410,7 @@ Partial Class BriefingControl
         Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
         Me.txtEventInfo.Name = "txtEventInfo"
         Me.txtEventInfo.ReadOnly = True
-        Me.txtEventInfo.Size = New System.Drawing.Size(761, 688)
+        Me.txtEventInfo.Size = New System.Drawing.Size(758, 688)
         Me.txtEventInfo.TabIndex = 6
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
@@ -452,7 +452,7 @@ Partial Class BriefingControl
         Me.lblInsideOutside60Minutes.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.lblInsideOutside60Minutes.Location = New System.Drawing.Point(10, 469)
         Me.lblInsideOutside60Minutes.Name = "lblInsideOutside60Minutes"
-        Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(168, 119)
+        Me.lblInsideOutside60Minutes.Size = New System.Drawing.Size(171, 119)
         Me.lblInsideOutside60Minutes.TabIndex = 10
         Me.lblInsideOutside60Minutes.Text = "Within 60 minutes of the event's time." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If clicking Fly now, MSFS local time sh" &
     "ould be:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
@@ -465,7 +465,7 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
         Me.msfsLocalTimeToSet.Location = New System.Drawing.Point(10, 615)
         Me.msfsLocalTimeToSet.Name = "msfsLocalTimeToSet"
-        Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(168, 32)
+        Me.msfsLocalTimeToSet.Size = New System.Drawing.Size(171, 32)
         Me.msfsLocalTimeToSet.TabIndex = 9
         Me.msfsLocalTimeToSet.Text = "12:00 PM"
         Me.msfsLocalTimeToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -477,7 +477,7 @@ Partial Class BriefingControl
         Me.msfsLocalDateToSet.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
         Me.msfsLocalDateToSet.Location = New System.Drawing.Point(10, 587)
         Me.msfsLocalDateToSet.Name = "msfsLocalDateToSet"
-        Me.msfsLocalDateToSet.Size = New System.Drawing.Size(168, 32)
+        Me.msfsLocalDateToSet.Size = New System.Drawing.Size(171, 32)
         Me.msfsLocalDateToSet.TabIndex = 8
         Me.msfsLocalDateToSet.Text = "September 31, 2014"
         Me.msfsLocalDateToSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

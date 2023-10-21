@@ -18,7 +18,7 @@ Public Class WaitingForURLForm
         Dim clipboardText As String
         Try
             clipboardText = Clipboard.GetText
-            If (Not clipboardText = String.Empty) AndAlso SupportingFeatures.IsValidURL(clipboardText) AndAlso clipboardText.Contains("discord.com/channels") Then
+            If (Not clipboardText = String.Empty) AndAlso SupportingFeatures.IsValidURL(clipboardText) AndAlso clipboardText.Contains($"discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/") Then
                 Me.Close()
             End If
         Catch ex As Exception
