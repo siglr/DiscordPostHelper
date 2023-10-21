@@ -2325,7 +2325,7 @@ Public Class Main
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
         logisticInstructions.AppendLine("> - Providing feedback on the event's organization and coordination")
         logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
-        logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}]({txtDiscordTaskID.Text})")
+        logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
 
         Clipboard.SetText(logisticInstructions.ToString)
         CopyContent.ShowContent(Me,
