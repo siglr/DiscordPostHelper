@@ -12,5 +12,5 @@ For support and more information about the tool, you can visit this Discord Serv
 There you will also find links to tutorial videos explaining how to use it.
 
 Tutorial/Videos: https://discord.gg/HbKMjjbW
-Questions/Support: https://discord.gg/fUnUg2E58N
 
+Questions/Support: https://discord.gg/fUnUg2E58N
