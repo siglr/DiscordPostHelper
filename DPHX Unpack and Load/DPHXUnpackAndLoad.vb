@@ -447,12 +447,12 @@ Public Class DPHXUnpackAndLoad
 
         'Look in the other files for xcsoar file
         For Each filepath As String In _allDPHData.ExtraFiles
-            If Path.GetExtension(filepath) = ".tsk" Then
+            If Path.GetExtension(filepath) = ".tsk" OrElse Path.GetExtension(filepath) = ".xcm" Then
                 'XCSoar file
                 sb.AppendLine(CopyFile(Path.GetFileName(filepath),
                                     TempDPHXUnpackFolder,
                                     Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task"))
+                                    "XCSoar File"))
             End If
         Next
 
@@ -550,11 +550,11 @@ Public Class DPHXUnpackAndLoad
 
         'Look in the other files for xcsoar file
         For Each filepath As String In _allDPHData.ExtraFiles
-            If Path.GetExtension(filepath) = ".tsk" Then
+            If Path.GetExtension(filepath) = ".tsk" OrElse Path.GetExtension(filepath) = ".xcm" Then
                 'XCSoar file
                 sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
                                     Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task"))
+                                    "XCSoar File"))
             End If
         Next
 

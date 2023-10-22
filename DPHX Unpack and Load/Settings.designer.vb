@@ -299,9 +299,11 @@ Partial Class Settings
         Me.btnXCSoarFilesFolder.Name = "btnXCSoarFilesFolder"
         Me.btnXCSoarFilesFolder.Size = New System.Drawing.Size(422, 37)
         Me.btnXCSoarFilesFolder.TabIndex = 1
-        Me.btnXCSoarFilesFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
+        Me.btnXCSoarFilesFolder.Text = "Select the folder containing XCSoar files like tasks (.tsk) and maps (.xcm) (opti" &
+    "onal)"
         Me.btnXCSoarFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnXCSoarFilesFolder, "Select the folder containing XCSoar tasks (.tsk) (optional)")
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarFilesFolder, "Select the folder containing XCSoar files like tasks (.tsk) and maps (.xcm) (opti" &
+        "onal)")
         Me.btnXCSoarFilesFolder.UseVisualStyleBackColor = True
         '
         'pblWeatherPresetsFolder
@@ -342,9 +344,9 @@ Partial Class Settings
         Me.Label8.AutoSize = True
         Me.Label8.Location = New System.Drawing.Point(5, 12)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(144, 20)
+        Me.Label8.Size = New System.Drawing.Size(139, 20)
         Me.Label8.TabIndex = 0
-        Me.Label8.Text = "XCSoar Tasks Folder:"
+        Me.Label8.Text = "XCSoar Data Folder:"
         '
         'pnlUnpackingFolder
         '
