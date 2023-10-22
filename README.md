@@ -10,6 +10,8 @@ To download the latest release, click here: https://github.com/siglr/DiscordPost
 
 ⚠️Notice: Because the file contains executable files and is not a known file for Chrome or other browser, you may get a warning message when trying to download it. You need to click on "Continue download" to proceed.
 
+![image](https://github.com/siglr/DiscordPostHelper/assets/49131205/c951d69c-0e80-4fed-a112-7adf0c70a14c)
+
 For support and more information about the tool, you can visit this Discord Server.
 There you will also find links to tutorial videos explaining how to use it.
 
