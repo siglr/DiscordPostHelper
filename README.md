@@ -6,7 +6,7 @@ You can download the .NET Framework here: https://dotnet.microsoft.com/en-us/dow
 
 To install for the first time, simply create a folder anywhere on your computer and extract the files in that folder. After first installation, the application supports auto-update so shouldn't be a problem anymore.
 
-To download the latest release from flightsim.to, click here: https://github.com/siglr/DiscordPostHelper/releases/latest
+To download the latest release from flightsim.to, click here: [https://flightsim.to/file/62571/msfs-soaring-task-tools-discord-post-helper](https://flightsim.to/file/62571/msfs-soaring-task-tools-discord-post-helper)
 
 For support and more information about the tool, you can visit this Discord Server.
 There you will also find links to tutorial videos explaining how to use it.
