@@ -11,6 +11,6 @@ To download the latest release from flightsim.to, click here: [https://flightsim
 For support and more information about the tool, you can visit this Discord Server.
 There you will also find links to tutorial videos explaining how to use it.
 
-Tutorial/Videos: [https://discord.gg/HbKMjjbW](https://discord.gg/K8xuShyTfN)
+Tutorial/Videos: https://discord.gg/MrUvkJ8Ydw
 
-Questions/Support: [https://discord.gg/fUnUg2E58N](https://discord.gg/fUnUg2E58N)
+Questions/Support: https://discord.gg/fUnUg2E58N
