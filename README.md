@@ -14,3 +14,5 @@ There you will also find links to tutorial videos explaining how to use it.
 Tutorial/Videos: https://discord.gg/MrUvkJ8Ydw
 
 Questions/Support: https://discord.gg/fUnUg2E58N
+
+*Note: Some users report that Windows Defender is detecting threats from the main executable in this tool, they seem to be false positive as running analysis with BitDefender or Kasperky online returns zero threat at all. I've submitted the file to Microsoft Security Intelligence for an in-depth analysis and will report back with the final result, but the file right now shows "no malware detected".*
