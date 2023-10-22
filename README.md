@@ -1,4 +1,4 @@
-# DiscordHelper
+# Discord Post Helper
 This tool's purpose is to help its users in the publishing of Discord posts related to the creation of soaring/gliding flight plans/tasks and group flights and events.
 
 It is a Windows forms application based on the Microsoft .NET Framework and as such, requires version 4.8 or later of that framework.
