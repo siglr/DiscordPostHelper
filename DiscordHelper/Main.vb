@@ -3041,12 +3041,12 @@ Public Class Main
             Case 22 'Map Image
                 SetGuidePanelToRight()
                 pnlGuide.Top = 497
-                lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab."
+                lblGuideInstructions.Text = "Select the image that will be used as map on the briefing tab. Any image you add named ""Map"" will be automatically selected."
                 SetFocusOnField(cboBriefingMap, fromF1Key)
             Case 23 'Cover image
                 SetGuidePanelToRight()
                 pnlGuide.Top = 531
-                lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord."
+                lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord. Any image you add named ""Cover"" will be automatically selected."
                 SetFocusOnField(txtDiscordTaskID, fromF1Key)
             Case 24 'Task ID
                 SetGuidePanelToRight()
