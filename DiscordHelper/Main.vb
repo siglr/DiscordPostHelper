@@ -1104,7 +1104,7 @@ Public Class Main
                     sb.AppendLine("> *Only if you use the XCSoar program.*")
                     optionalAdded = True
                 End If
-                sb.AppendLine("> XCSoar Track (.tsk)")
+                sb.AppendLine("> XCSoar Task (.tsk)")
             ElseIf File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".xcm" Then
                 If Not optionalAdded Then
                     sb.AppendLine("### XCSoar Files - Optional")
