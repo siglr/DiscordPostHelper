@@ -1095,12 +1095,23 @@ Public Class Main
         sb.AppendLine("> Flight plan (.pln)")
         sb.AppendLine("> Weather preset (.wpr)")
 
-        'Check if there is a trk file in the files
+        'Check if there is a tsk file in the files
+        Dim optionalAdded As Boolean = False
         For i = 0 To lstAllFiles.Items.Count() - 1
             If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
-                sb.AppendLine("### Optional")
-                sb.AppendLine("> XCSoar Track (.trk) - only if you use the XCSoar program.")
-                Exit For
+                If Not optionalAdded Then
+                    sb.AppendLine("### XCSoar Files - Optional")
+                    sb.AppendLine("> *Only if you use the XCSoar program.*")
+                    optionalAdded = True
+                End If
+                sb.AppendLine("> XCSoar Track (.tsk)")
+            ElseIf File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".xcm" Then
+                If Not optionalAdded Then
+                    sb.AppendLine("### XCSoar Files - Optional")
+                    sb.AppendLine("> *Only if you use the XCSoar program.*")
+                    optionalAdded = True
+                End If
+                sb.AppendLine("> XCSoar Map (.xcm)")
             End If
         Next
 
