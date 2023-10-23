@@ -1084,7 +1084,7 @@ Public Class Main
         If File.Exists(txtDPHXPackageFilename.Text) Then
             sb.AppendLine("### DPHX Unpack & Load")
             sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
-            sb.AppendLine("> *To get and install the tool [click this link](https://discord.gg/eJYynsQnHV)*")
+            sb.AppendLine("> *To get and install the tool [click this link](https://flightsim.to/file/62573/msfs-soaring-task-tools-dphx-unpack-load)*")
             sb.AppendLine("> ")
             sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
         Else
