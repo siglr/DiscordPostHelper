@@ -4148,6 +4148,28 @@ Public Class Main
 
     End Sub
 
+    Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
+
+        Dim inviteURL As String = "https://discord.gg/aW8YYe3HJF"
+        Clipboard.SetText(inviteURL)
+        Using New Centered_MessageBox()
+            MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+
+    End Sub
+
+    Private Sub DiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordChannelToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587750862893117")
+
+    End Sub
+
+    Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587681531035781")
+
+    End Sub
+
 #End Region
 
 End Class
