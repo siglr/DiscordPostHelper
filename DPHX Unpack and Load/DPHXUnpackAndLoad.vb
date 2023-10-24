@@ -172,7 +172,7 @@ Public Class DPHXUnpackAndLoad
 
         OpenFileDialog1.FileName = String.Empty
         OpenFileDialog1.Title = "Select DPHX package file to load"
-        OpenFileDialog1.Filter = "Discord Post Helper Pacakge|*.dphx"
+        OpenFileDialog1.Filter = "Discord Post Helper Package|*.dphx"
         OpenFileDialog1.Multiselect = False
 
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
