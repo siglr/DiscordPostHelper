@@ -385,9 +385,11 @@ Public Class DPHXUnpackAndLoad
 
         If Not AreFilesAlreadyUnpacked() Then
             toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
+            toolStripUnpack.ForeColor = Color.Red
             lblAllFilesStatus.Text = "One or more files are missing from their respective folder."
         Else
             toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+            toolStripUnpack.ForeColor = DefaultForeColor
             lblAllFilesStatus.Text = "All the files are present in their respective folder."
         End If
     End Sub
@@ -417,7 +419,7 @@ Public Class DPHXUnpackAndLoad
         If Settings.SessionSettings.XCSoarTasksFolder IsNot Nothing Then
             'Look in the other files for xcsoar file
             For Each filepath As String In _allDPHData.ExtraFiles
-                If Path.GetExtension(filepath) = ".tsk" Then
+                If Path.GetExtension(filepath) = ".tsk" OrElse Path.GetExtension(filepath) = ".xcm" Then
                     'XCSoar file
                     If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                              Path.GetFileName(filepath)),
