@@ -37,24 +37,25 @@ Public Class Settings
         Else
             'Save settings
             SessionSettings.FlightPlansFolder = btnFlightPlanFilesFolder.Text
-                SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
-                SessionSettings.XCSoarTasksFolder = btnXCSoarFilesFolder.Text
-                SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
-                SessionSettings.PackagesFolder = btnPackagesFolder.Text
-                SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
+            SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
+            SessionSettings.XCSoarTasksFolder = btnXCSoarTasksFolder.Text
+            SessionSettings.XCSoarMapsFolder = btnXCSoarMapsFolder.Text
+            SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
+            SessionSettings.PackagesFolder = btnPackagesFolder.Text
+            SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
 
-                If optOverwriteAlwaysOverwrite.Checked Then
-                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                End If
-                If optOverwriteAlwaysSkip.Checked Then
-                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysSkip
-                End If
-                If optOverwriteAlwaysAsk.Checked Then
-                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysAsk
-                End If
-                SessionSettings.Save()
-                Me.DialogResult = DialogResult.OK
-                Me.Close()
+            If optOverwriteAlwaysOverwrite.Checked Then
+                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
+            End If
+            If optOverwriteAlwaysSkip.Checked Then
+                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysSkip
+            End If
+            If optOverwriteAlwaysAsk.Checked Then
+                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysAsk
+            End If
+            SessionSettings.Save()
+            Me.DialogResult = DialogResult.OK
+            Me.Close()
         End If
 
     End Sub
@@ -145,30 +146,62 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnXCSoarFilesFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarFilesFolder.Click
-        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .tsk files are located"
+    Private Sub btnXCSoarMapsFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarMapsFolder.Click
+        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .xcm files are located"
         FolderBrowserDialog1.ShowNewFolderButton = True
-        If Directory.Exists(btnXCSoarFilesFolder.Text) Then
-            FolderBrowserDialog1.SelectedPath = btnXCSoarFilesFolder.Text
+        If Directory.Exists(btnXCSoarMapsFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnXCSoarMapsFolder.Text
         Else
             FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         End If
 
         If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             ' User selected a folder and clicked OK
-            btnXCSoarFilesFolder.Text = FolderBrowserDialog1.SelectedPath
-            ToolTip1.SetToolTip(btnXCSoarFilesFolder, FolderBrowserDialog1.SelectedPath)
+            btnXCSoarMapsFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnXCSoarMapsFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
     End Sub
 
-    Private Sub btnXCSoarFilesFolderPaste_Click(sender As Object, e As EventArgs) Handles btnXCSoarFilesFolderPaste.Click
+    Private Sub btnXCSoarTasksFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarTasksFolder.Click
+        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .tsk files are located"
+        FolderBrowserDialog1.ShowNewFolderButton = True
+        If Directory.Exists(btnXCSoarTasksFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnXCSoarTasksFolder.Text
+        Else
+            FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        End If
+
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+            ' User selected a folder and clicked OK
+            btnXCSoarTasksFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnXCSoarTasksFolder, FolderBrowserDialog1.SelectedPath)
+        End If
+
+    End Sub
+
+    Private Sub btnXCSoarMapsFolderPaste_Click(sender As Object, e As EventArgs) Handles btnXCSoarMapsFolderPaste.Click
 
         Dim folderPath As String = Clipboard.GetText()
         If Directory.Exists(folderPath) Then
             ' folderPath is a valid folder
-            btnXCSoarFilesFolder.Text = folderPath
-            ToolTip1.SetToolTip(btnXCSoarFilesFolder, folderPath)
+            btnXCSoarMapsFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnXCSoarMapsFolder, folderPath)
+        Else
+            ' folderPath is not a valid folder
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+    End Sub
+
+    Private Sub btnXCSoarFilesFolderPaste_Click(sender As Object, e As EventArgs) Handles btnXCSoarTasksFolderPaste.Click
+
+        Dim folderPath As String = Clipboard.GetText()
+        If Directory.Exists(folderPath) Then
+            ' folderPath is a valid folder
+            btnXCSoarTasksFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnXCSoarTasksFolder, folderPath)
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
@@ -258,8 +291,12 @@ Public Class Settings
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If
         If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
-            btnXCSoarFilesFolder.Text = SessionSettings.XCSoarTasksFolder
-            ToolTip1.SetToolTip(btnXCSoarFilesFolder, SessionSettings.XCSoarTasksFolder)
+            btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
+            ToolTip1.SetToolTip(btnXCSoarTasksFolder, SessionSettings.XCSoarTasksFolder)
+        End If
+        If Directory.Exists(SessionSettings.XCSoarMapsFolder) Then
+            btnXCSoarMapsFolder.Text = SessionSettings.XCSoarMapsFolder
+            ToolTip1.SetToolTip(btnXCSoarMapsFolder, SessionSettings.XCSoarMapsFolder)
         End If
 
         Select Case SessionSettings.AutoOverwriteFiles
@@ -275,7 +312,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnFlightPlanFilesFolder.MouseUp, btnWeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarFilesFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnFlightPlanFilesFolder.MouseUp, btnWeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)

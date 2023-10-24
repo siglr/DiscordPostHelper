@@ -52,6 +52,19 @@ Public Class AllSettings
         End Set
     End Property
 
+    Private _XCSoarMapsFolder As String
+    <XmlElement("XCSoarMapsFolder")>
+    Public Property XCSoarMapsFolder As String
+        Get
+            Return _XCSoarMapsFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _XCSoarMapsFolder = value
+            End If
+        End Set
+    End Property
+
     Private _UnpackingFolder As String
     <XmlElement("UnpackingFolder")>
     Public Property UnpackingFolder As String
@@ -121,6 +134,7 @@ Public Class AllSettings
             _MSFSWeatherPresetsFolder = settingsInFile.MSFSWeatherPresetsFolder
             _FlightPlansFolder = settingsInFile.FlightPlansFolder
             _XCSoarTasksFolder = settingsInFile.XCSoarTasksFolder
+            _XCSoarMapsFolder = settingsInFile.XCSoarMapsFolder
             _UnpackingFolder = settingsInFile.UnpackingFolder
             _PackagesFolder = settingsInFile.PackagesFolder
             MainFormLocation = settingsInFile.MainFormLocation
