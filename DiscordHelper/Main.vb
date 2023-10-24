@@ -13,6 +13,7 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Imports System.Linq.Expressions
 Imports System.Web.UI
 Imports System.Web
+Imports System.Collections.Specialized
 
 Public Class Main
 
@@ -268,6 +269,9 @@ Public Class Main
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
         txtDiscordTaskID.Text = String.Empty
+        txtEventTeaserAreaMapImage.Text = String.Empty
+        txtEventTeaserMessage.Text = String.Empty
+        chkEventTeaser.Checked = False
 
         btnRemoveExtraFile.Enabled = False
         btnExtraFileDown.Enabled = False
@@ -348,7 +352,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -660,7 +664,7 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged
+                                                                          cboDifficulty.SelectedIndexChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged, txtEventTeaserMessage.TextChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -974,25 +978,6 @@ Public Class Main
             End If
         End If
 
-        'If chkActivateEvent.Checked AndAlso txtTaskFlightPlanURL.Text = String.Empty Then
-        '    Dim message As String = "Please get the link to that newly created post in Discord (""...More menu"" and ""Copy Message Link"""
-        '    Dim waitingForm As New WaitingForURLForm(message)
-        '    waitingForm.ShowDialog()
-
-        '    SupportingFeatures.BringDPHToolToTop(Me.Handle)
-
-        '    'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
-        '    Dim taskURL As String
-        '    Try
-        '        taskURL = Clipboard.GetText
-        '        If (Not taskURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(taskURL) AndAlso taskURL.Contains("discord.com/channels") Then
-        '            txtTaskFlightPlanURL.Text = taskURL
-        '            SaveSession()
-        '        End If
-        '    Catch ex As Exception
-        '    End Try
-        'End If
-
         Dim fpTitle As String = $"{txtTitle.Text}{AddFlagsToTitle()}"
         Clipboard.SetText(fpTitle)
         autoContinue = CopyContent.ShowContent(Me,
@@ -1027,28 +1012,7 @@ Public Class Main
 
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
-
-        contentForMessage.AppendLine("FILES")
-
-        If File.Exists(txtDPHXPackageFilename.Text) Then
-            allFiles.Add(txtDPHXPackageFilename.Text)
-            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
-        End If
-        If File.Exists(txtFlightPlanFile.Text) Then
-            allFiles.Add(txtFlightPlanFile.Text)
-            contentForMessage.AppendLine(txtFlightPlanFile.Text)
-        End If
-        If File.Exists(txtWeatherFile.Text) Then
-            allFiles.Add(txtWeatherFile.Text)
-            contentForMessage.AppendLine(txtWeatherFile.Text)
-        End If
-
-        For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
-                allFiles.Add(lstAllFiles.Items(i))
-                contentForMessage.AppendLine(lstAllFiles.Items(i))
-            End If
-        Next
+        GetAllFilesForMessage(allFiles, contentForMessage)
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
@@ -1073,10 +1037,56 @@ Public Class Main
 
     End Sub
 
+    Private Sub GetAllFilesForMessage(allFiles As StringCollection, contentForMessage As StringBuilder)
+        contentForMessage.AppendLine("FILES")
+        If File.Exists(txtDPHXPackageFilename.Text) Then
+            allFiles.Add(txtDPHXPackageFilename.Text)
+            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
+        End If
+        If File.Exists(txtFlightPlanFile.Text) Then
+            allFiles.Add(txtFlightPlanFile.Text)
+            contentForMessage.AppendLine(txtFlightPlanFile.Text)
+        End If
+        If File.Exists(txtWeatherFile.Text) Then
+            allFiles.Add(txtWeatherFile.Text)
+            contentForMessage.AppendLine(txtWeatherFile.Text)
+        End If
+
+        For i = 0 To lstAllFiles.Items.Count() - 1
+            If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
+                allFiles.Add(lstAllFiles.Items(i))
+                contentForMessage.AppendLine(lstAllFiles.Items(i))
+            End If
+        Next
+    End Sub
+
     Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
 
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
+        BuildFileInfoText()
+        Clipboard.SetText(txtFilesText.Text)
+        autoContinue = CopyContent.ShowContent(Me,
+                                txtFilesText.Text,
+                                "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
+                                "Step 3b - Creating the files post in the thread - file info",
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
+            If chkGroupSecondaryPosts.Checked Then
+                btnCopyAllSecPosts_Click(sender, e)
+            Else
+                btnAltRestricCopy_Click(sender, e)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub BuildFileInfoText()
         Dim sb As New StringBuilder
         sb.AppendLine("## 📁 **Files**")
 
@@ -1117,26 +1127,6 @@ Public Class Main
 
         txtFilesText.Text = sb.ToString.Trim
         sb.Clear()
-
-        Clipboard.SetText(txtFilesText.Text)
-        autoContinue = CopyContent.ShowContent(Me,
-                                txtFilesText.Text,
-                                "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
-                                "Step 3b - Creating the files post in the thread - file info",
-                                New List(Of String) From {"^v"},
-                                SessionSettings.ExpertMode)
-        If _GuideCurrentStep <> 0 Then
-            _GuideCurrentStep += 1
-            ShowGuide()
-        End If
-        If autoContinue AndAlso SessionSettings.ExpertMode Then
-            If chkGroupSecondaryPosts.Checked Then
-                btnCopyAllSecPosts_Click(sender, e)
-            Else
-                btnAltRestricCopy_Click(sender, e)
-            End If
-        End If
-
     End Sub
 
     Private Sub btnAltRestricCopy_Click(sender As Object, e As EventArgs) Handles btnAltRestricCopy.Click
@@ -2264,7 +2254,29 @@ Public Class Main
     End Sub
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
+
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
+        If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
+            Dim allFiles As New Specialized.StringCollection
+            If File.Exists(cboCoverImage.SelectedItem) Then
+                allFiles.Add(cboCoverImage.SelectedItem)
+                Clipboard.SetFileDropList(allFiles)
+                autoContinue = CopyContent.ShowContent(Me,
+                                    cboCoverImage.SelectedItem,
+                                    $"You will start by just pasting the copied cover image for your new group flight event.{Environment.NewLine}Skip (Ok) if already done.",
+                                    "Creating group flight post",
+                                    New List(Of String) From {"^v"},
+                                    SessionSettings.ExpertMode,
+                                    False)
+            Else
+                autoContinue = True
+            End If
+        Else
+            autoContinue = True
+        End If
+
+        If Not autoContinue Then Exit Sub
 
         BuildGroupFlightPost()
         Clipboard.SetText(txtGroupFlightEventPost.Text)
@@ -2275,53 +2287,98 @@ Public Class Main
                                 New List(Of String) From {"^v"},
                                 SessionSettings.ExpertMode)
 
+        If Not autoContinue Then Exit Sub
+
         If txtGroupEventPostURL.Text = String.Empty Then
-            'Check if the clipboard contains a valid URL, which would mean the group flight URL has been copied
-            Dim groupFlightURL As String
+            Dim message As String = "Please get the link to the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim waitingForm As New WaitingForURLForm(message)
+            waitingForm.ShowDialog()
+
+            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+
+            'Check if the clipboard contains a valid URL, which would mean the group event's URL has been copied
+            Dim groupEventPostURL As String
             Try
-                groupFlightURL = Clipboard.GetText
-                If (Not groupFlightURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(groupFlightURL) AndAlso groupFlightURL.Contains("discord.com/channels") Then
-                    txtGroupEventPostURL.Text = groupFlightURL
+                groupEventPostURL = Clipboard.GetText
+                If (Not groupEventPostURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(groupEventPostURL) AndAlso groupEventPostURL.Contains($"discord.com/channels/") Then
+                    txtGroupEventPostURL.Text = groupEventPostURL
                     SaveSession()
                 End If
             Catch ex As Exception
             End Try
             If txtGroupEventPostURL.Text = String.Empty Then
-                MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Copy URL to Group Flight Event", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 autoContinue = False
             End If
         End If
 
+        Dim fpTitle As New StringBuilder
+        If txtEventTitle.Text <> String.Empty Then
+            If cboGroupOrClubName.SelectedIndex > -1 Then
+                fpTitle.Append($"# {_ClubPreset.ClubName} - ")
+            Else
+                fpTitle.Append($"# ")
+            End If
+            fpTitle.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
+        End If
+        Clipboard.SetText(fpTitle.ToString)
+        autoContinue = CopyContent.ShowContent(Me,
+                            fpTitle.ToString,
+                            "Now create a thread and position the cursor on the thread name field.", "Creating group flight thread",
+                            New List(Of String) From {"^v"},
+                            SessionSettings.ExpertMode, False)
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
         End If
 
         If autoContinue AndAlso SessionSettings.ExpertMode Then
-            btnGroupFlightEventThreadTitle_Click(sender, e)
+            If btnGroupFlightEventTeaser.Enabled Then
+                btnGroupFlightEventTeaser_Click(sender, e)
+            Else
+
+            End If
         End If
     End Sub
-    Private Sub btnGroupFlightEventThreadTitle_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventThreadTitle.Click
+    Private Sub btnGroupFlightEventTeaser_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventTeaser.Click
+
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
-        BuildDiscordEventDescription()
-        If txtDiscordEventTopic.Text <> String.Empty Then
-            Clipboard.SetText(txtDiscordEventTopic.Text)
+        If txtEventTeaserAreaMapImage.Text <> String.Empty AndAlso File.Exists(txtEventTeaserAreaMapImage.Text) Then
+            Dim allFiles As New Specialized.StringCollection
+            allFiles.Add(txtEventTeaserAreaMapImage.Text)
+            Clipboard.SetFileDropList(allFiles)
             autoContinue = CopyContent.ShowContent(Me,
-                                txtDiscordEventTopic.Text,
-                                "Create a thread for the newly created group flight event, paste the title from your clipboard and then come back for the content of the first message.",
-                                "Creating group flight post",
-                                New List(Of String) From {"^v"},
-                                SessionSettings.ExpertMode,
-                                False)
-
+                                    txtEventTeaserAreaMapImage.Text,
+                                    $"Position the cursor on the message field in the group event thread and paste the copied teaser image for your first message.{Environment.NewLine}Skip (Ok) if already done.",
+                                    "Pasting teaser area map image",
+                                    New List(Of String) From {"^v"},
+                                    SessionSettings.ExpertMode,
+                                    False)
+        Else
+            autoContinue = True
         End If
+
+        If Not autoContinue Then Exit Sub
+
+        'Teaser message
+        If txtEventTeaserMessage.Text.Trim <> String.Empty Then
+            Dim teaser As New StringBuilder
+            teaser.AppendLine("# 🤐 Teaser")
+            teaser.AppendLine(txtEventTeaserMessage.Text.Trim)
+            Clipboard.SetText(teaser.ToString)
+            autoContinue = CopyContent.ShowContent(Me,
+                            teaser.ToString,
+                            $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the teaser message as the first message in the event's thread.",
+                            "Posting teaser.",
+                            New List(Of String) From {"^v"},
+                            SessionSettings.ExpertMode)
+        End If
+
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
             ShowGuide()
-        End If
-        If autoContinue AndAlso SessionSettings.ExpertMode Then
-            btnGroupFlightEventThreadLogistics_Click(sender, e)
         End If
 
     End Sub
@@ -2330,7 +2387,7 @@ Public Class Main
 
         Dim logisticInstructions As New StringBuilder
 
-        logisticInstructions.AppendLine("# 🗣 Event Logistics")
+        logisticInstructions.AppendLine("## 🗣 Event Logistics")
         logisticInstructions.AppendLine("**Use this thread only to discuss logistics for this event!**")
         logisticInstructions.AppendLine("> Focus on:")
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
@@ -2397,7 +2454,7 @@ Public Class Main
         SessionModified()
     End Sub
 
-    Private Sub btnCopyReqFilesToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyReqFilesToClipboard.Click
+    Private Sub bbtnEventFilesAndFilesInfo_Click(sender As Object, e As EventArgs) Handles btnEventFilesAndFilesInfo.Click
 
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
@@ -2416,31 +2473,29 @@ Public Class Main
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
 
-        contentForMessage.AppendLine("FILES")
-
-        If File.Exists(txtDPHXPackageFilename.Text) Then
-            allFiles.Add(txtDPHXPackageFilename.Text)
-            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
-        End If
-        If File.Exists(txtFlightPlanFile.Text) Then
-            allFiles.Add(txtFlightPlanFile.Text)
-            contentForMessage.AppendLine(txtFlightPlanFile.Text)
-        End If
-        If File.Exists(txtWeatherFile.Text) Then
-            allFiles.Add(txtWeatherFile.Text)
-            contentForMessage.AppendLine(txtWeatherFile.Text)
-        End If
+        GetAllFilesForMessage(allFiles, contentForMessage)
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
             autoContinue = CopyContent.ShowContent(Me,
                                     contentForMessage.ToString,
-                                    "Now paste the copied files in a new post in the proper Discord channel for the club/group and come back for the text info (button 1 below).",
-                                    "Optional - Including the required files in the group flight post",
+                                    "Now paste the copied files in a new post under the group event's thread and come back for the text info (coming next).",
+                                    "Including the required files in the group flight thread",
                                     New List(Of String) From {"^v"},
                                     SessionSettings.ExpertMode,
                                     False)
         End If
+
+        If Not autoContinue Then Exit Sub
+
+        BuildFileInfoText()
+        Clipboard.SetText(txtFilesText.Text)
+        autoContinue = CopyContent.ShowContent(Me,
+                                txtFilesText.Text,
+                                "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
+                                "Step 3b - Creating the files post in the thread - file info",
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -2448,12 +2503,35 @@ Public Class Main
         End If
 
         If autoContinue AndAlso SessionSettings.ExpertMode Then
-            btnGroupFlightEventInfoToClipboard_Click(sender, e)
+            btnEventTaskDetails_Click(sender, e)
         End If
 
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave
+    Private Sub btnEventTaskDetails_Click(sender As Object, e As EventArgs) Handles btnEventTaskDetails.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
+        Dim taskDetails As String = BuildLightTaskDetailsForEventPost()
+        Clipboard.SetText(taskDetails)
+        autoContinue = CopyContent.ShowContent(Me,
+                                taskDetails,
+                                "Now paste the remaining and relevant task details for the group flight event.",
+                                "Pasting remaining task info",
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
+
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
+            btnGroupFlightEventThreadLogistics_Click(sender, e)
+        End If
+
+    End Sub
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave
 
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
@@ -2465,6 +2543,38 @@ Public Class Main
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
         SessionModified()
+    End Sub
+
+    Private Sub chkEventTeaser_CheckedChanged(sender As Object, e As EventArgs) Handles chkEventTeaser.CheckedChanged
+        grpEventTeaser.Enabled = chkEventTeaser.Checked
+        btnGroupFlightEventTeaser.Enabled = chkEventTeaser.Checked
+        SessionModified()
+    End Sub
+
+    Private Sub btnClearEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnClearEventTeaserAreaMap.Click
+        txtEventTeaserAreaMapImage.Text = String.Empty
+        SessionModified()
+    End Sub
+
+    Private Sub btnSelectEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnSelectEventTeaserAreaMap.Click
+
+        If txtFlightPlanFile.Text = String.Empty Then
+            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+        Else
+            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
+        End If
+        OpenFileDialog1.FileName = ""
+        OpenFileDialog1.Title = "Select teaser area map image"
+        OpenFileDialog1.Filter = "Image files|*.jpg;*.png"
+        OpenFileDialog1.Multiselect = False
+
+        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+
+        If result = DialogResult.OK Then
+            txtEventTeaserAreaMapImage.Text = OpenFileDialog1.FileName
+            SessionModified()
+        End If
+
     End Sub
 
     Private Sub btnTaskFeaturedOnGroupFlight_Click(sender As Object, e As EventArgs) Handles btnTaskFeaturedOnGroupFlight.Click
@@ -2567,6 +2677,44 @@ Public Class Main
 
     End Sub
 
+    Private Function BuildLightTaskDetailsForEventPost() As String
+
+        Dim dateFormat As String
+        If chkIncludeYear.Checked Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+
+        Dim sb As New StringBuilder
+
+        If Not txtDiscordTaskID.Text = String.Empty Then
+            sb.AppendLine("## ❗ Final task details and reminders")
+            sb.AppendLine($"> 🔗 [Link to complete task details, including full briefing, restrictions, weather and more]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})")
+            sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
+            sb.AppendLine("> ")
+        End If
+
+        If Not txtFlightPlanFile.Text = String.Empty Then
+            sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
+        End If
+        If txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
+            sb.AppendLine("> 🌤 Weather file & profile name: **""" & Path.GetFileName(txtWeatherFile.Text) & """ (" & _WeatherDetails.PresetName & ")**")
+        End If
+        sb.AppendLine("> ")
+
+        sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+
+        If chkUseSyncFly.Checked Then
+            sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
+        End If
+
+        sb.AppendLine()
+        sb.AppendLine($"*Don't forget to review the details for this group flight event (first post of the thread).*")
+
+        Return sb.ToString.Trim
+
+    End Function
     Private Sub BuildGroupFlightPost()
 
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
@@ -2621,10 +2769,12 @@ Public Class Main
         sb.AppendLine("> ")
         sb.AppendLine($"> 🗣 Voice: **{cboVoiceChannel.Text}**")
 
-        If Not txtDiscordTaskID.Text = String.Empty Then
+        If chkEventTeaser.Checked Then
             sb.AppendLine("> ")
-            sb.AppendLine($"> 🔗 [Link to Flight Plan Details, Weather and files]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})")
-            sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
+            sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
+        Else
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 📁 All files are shared inside the thread below")
         End If
         sb.AppendLine("> ")
         sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")
@@ -2639,12 +2789,6 @@ Public Class Main
         End If
         sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
 
-        If Not txtFlightPlanFile.Text = String.Empty Then
-            sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
-        End If
-        If txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
-            sb.AppendLine("> 🌤 Weather file & profile name: **""" & Path.GetFileName(txtWeatherFile.Text) & """ (" & _WeatherDetails.PresetName & ")**")
-        End If
         sb.AppendLine("> ")
 
         If chkUseSyncFly.Checked Then
@@ -2697,8 +2841,6 @@ Public Class Main
         End If
 
         txtGroupFlightEventPost.Text = sb.ToString.Trim
-
-        'BuildDiscordEventDescription()
 
     End Sub
 
@@ -3221,48 +3363,60 @@ Public Class Main
                 lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
                 SetFocusOnField(cboBeginnersGuide, fromF1Key)
 
-            Case 72 'Briefing review
+            Case 72 'Teaser section
+                SetEventGuidePanelToLeft()
+                pnlWizardEvent.Top = 702
+                lblEventGuideInstructions.Text = "You can opt to first post a teaser only for your group event. Check this box, select a teaser image and message."
+                SetFocusOnField(chkEventTeaser, fromF1Key)
+
+            Case 73 'Briefing review
                 TabControl1.SelectedIndex = 3
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
-            Case 73 To 79 'Next section
+            Case 74 To 79 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
-            Case 80 'Create Group Flight post
+            Case 80 'Create Group Event Flight post
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 108
-                lblDiscordGuideInstructions.Text = "You are now ready to create the group flight post in Discord. Optionnaly, you can click this button to first put the files into your clipboard and receive instructions."
-                SetFocusOnField(btnCopyReqFilesToClipboard, fromF1Key)
-
-            Case 81 'Group flight post
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 164
-                lblDiscordGuideInstructions.Text = "Now click this button to copy the group flight's post content and receive instructions."
+                pnlWizardDiscord.Top = 94
+                lblDiscordGuideInstructions.Text = "You are now ready to create the group flight post in Discord. Click this button to copy the group flight's post content and receive instructions."
                 SetFocusOnField(btnGroupFlightEventInfoToClipboard, fromF1Key)
 
-            Case 82 'Group flight URL
+            Case 81 'Group flight URL
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 204
+                pnlWizardDiscord.Top = 134
                 lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
                 SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
 
-            Case 83 'Group flight thread title
+            Case 82 'Group flight Teaser message
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 174
+                lblDiscordGuideInstructions.Text = "You have selected to post a teaser. Click this button to copy the teaser's post content and receive instructions."
+                SetFocusOnField(btnGroupFlightEventTeaser, fromF1Key)
+
+            Case 83 'Task files and info
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Top = 217
+                lblDiscordGuideInstructions.Text = "Click and follow the instructions to post all task files and the file notice information."
+                SetFocusOnField(btnEventFilesAndFilesInfo, fromF1Key)
+
+            Case 84 'Relevant task details
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 259
-                lblDiscordGuideInstructions.Text = "Click this button to copy the group flight's thread title and receive instructions."
-                SetFocusOnField(btnGroupFlightEventThreadTitle, fromF1Key)
+                lblDiscordGuideInstructions.Text = "Click this button to copy the relevant task details for the group event and receive instructions."
+                SetFocusOnField(btnEventTaskDetails, fromF1Key)
 
-            Case 84 'Group flight thread logistic instructions
+            Case 85 'Group flight thread logistic instructions
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 318
+                pnlWizardDiscord.Top = 303
                 lblDiscordGuideInstructions.Text = "Click this button to copy the group flight's thread logistic information and and receive instructions."
-                SetFocusOnField(btnGroupFlightEventThreadTitle, fromF1Key)
+                SetFocusOnField(btnGroupFlightEventTeaser, fromF1Key)
 
-            Case 85 'Discord Event
+            Case 86 'Discord Event
                 If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     _GuideCurrentStep += 1
                 Else
@@ -3270,61 +3424,61 @@ Public Class Main
                 End If
                 ShowGuide()
 
-            Case 86 'Create Discord Event
+            Case 87 'Create Discord Event
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 382
                 lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 87 'Select voice channel for event
+            Case 88 'Select voice channel for event
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 420
                 lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 88 'Topic name
+            Case 89 'Topic name
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 458
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventTopicClipboard, fromF1Key)
 
-            Case 89 'Event date & time
+            Case 90 'Event date & time
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 490
                 lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 90 'Event description
+            Case 91 'Event description
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 529
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
-            Case 91 'Cover image
+            Case 92 'Cover image
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 566
                 lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 92 'Preview and publish
+            Case 93 'Preview and publish
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 603
                 lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 93 'Paste link to Discord Event
+            Case 94 'Paste link to Discord Event
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 649
                 lblDiscordGuideInstructions.Text = "From the Discord Event published window, copy the URL to share to and invite participants and click ""Paste"" here."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 94 'Share the Discord Event on the task
+            Case 95 'Share the Discord Event on the task
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Top = 742
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to post on the task and receive instructions to paste it in the Discord."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 95 To 99
+            Case 96 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -3714,6 +3868,9 @@ Public Class Main
             .LockCoverImage = chkLockCoverImage.Checked
             .BeginnersGuide = cboBeginnersGuide.Text
             .BeginnersGuideCustom = txtOtherBeginnerLink.Text
+            .GroupEventTeaserEnabled = chkEventTeaser.Checked
+            .GroupEventTeaserMessage = txtEventTeaserMessage.Text
+            .GroupEventTeaserAreaMapImage = txtEventTeaserAreaMapImage.Text
 
         End With
 
@@ -3869,6 +4026,16 @@ Public Class Main
                 txtOtherBeginnerLink.Text = .BeginnersGuideCustom
                 chkLockMapImage.Checked = .LockMapImage
                 chkLockCoverImage.Checked = .LockCoverImage
+                chkEventTeaser.Checked = .GroupEventTeaserEnabled
+                txtEventTeaserMessage.Text = .GroupEventTeaserMessage
+
+                If Not File.Exists(.GroupEventTeaserAreaMapImage) Then
+                    'Should expect the file to be in the same folder as the .dph file
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.GroupEventTeaserAreaMapImage)}") Then
+                        .GroupEventTeaserAreaMapImage = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.GroupEventTeaserAreaMapImage)}"
+                    End If
+                End If
+                txtEventTeaserAreaMapImage.Text = .GroupEventTeaserAreaMapImage
 
                 If Not File.Exists(.MapImageSelected) Then
                     'Should expect the file to be in the same folder as the .dph file
@@ -3941,7 +4108,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 

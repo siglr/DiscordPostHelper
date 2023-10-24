@@ -257,6 +257,15 @@ Public Class AllData
     <XmlElement("DiscordEventThreadURL")>
     Public Property DiscordEventThreadURL As String
 
+    <XmlElement("GroupEventTeaserEnabled")>
+    Public Property GroupEventTeaserEnabled As Boolean
+
+    <XmlElement("GroupEventTeaserAreaMapImage")>
+    Public Property GroupEventTeaserAreaMapImage As String
+
+    <XmlElement("GroupEventTeaserMessage")>
+    Public Property GroupEventTeaserMessage As String
+
     Public Sub New()
 
     End Sub

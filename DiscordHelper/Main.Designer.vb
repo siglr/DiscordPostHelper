@@ -142,6 +142,14 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.chkEventTeaser = New System.Windows.Forms.CheckBox()
+        Me.grpEventTeaser = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtEventTeaserMessage = New System.Windows.Forms.TextBox()
+        Me.btnSelectEventTeaserAreaMap = New System.Windows.Forms.Button()
+        Me.btnClearEventTeaserAreaMap = New System.Windows.Forms.Button()
+        Me.txtEventTeaserAreaMapImage = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
         Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
@@ -230,12 +238,13 @@ Partial Class Main
         Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.btnEventTaskDetails = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventThreadLogistics = New System.Windows.Forms.Button()
-        Me.btnGroupFlightEventThreadTitle = New System.Windows.Forms.Button()
+        Me.btnGroupFlightEventTeaser = New System.Windows.Forms.Button()
         Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
         Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
-        Me.btnCopyReqFilesToClipboard = New System.Windows.Forms.Button()
+        Me.btnEventFilesAndFilesInfo = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventInfoToClipboard = New System.Windows.Forms.Button()
         Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
         Me.btnDiscordSharedEventURL = New System.Windows.Forms.Button()
@@ -283,6 +292,7 @@ Partial Class Main
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
+        Me.grpEventTeaser.SuspendLayout()
         Me.tabDiscord.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -1671,7 +1681,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 622)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 702)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1721,6 +1731,8 @@ Partial Class Main
         '
         'grpGroupEventPost
         '
+        Me.grpGroupEventPost.Controls.Add(Me.chkEventTeaser)
+        Me.grpGroupEventPost.Controls.Add(Me.grpEventTeaser)
         Me.grpGroupEventPost.Controls.Add(Me.lblClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
@@ -1766,9 +1778,107 @@ Partial Class Main
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 705)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(848, 855)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
+        '
+        'chkEventTeaser
+        '
+        Me.chkEventTeaser.AutoSize = True
+        Me.chkEventTeaser.BackColor = System.Drawing.SystemColors.Control
+        Me.chkEventTeaser.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.chkEventTeaser.Location = New System.Drawing.Point(15, 697)
+        Me.chkEventTeaser.Name = "chkEventTeaser"
+        Me.chkEventTeaser.Size = New System.Drawing.Size(109, 24)
+        Me.chkEventTeaser.TabIndex = 85
+        Me.chkEventTeaser.Tag = "72"
+        Me.chkEventTeaser.Text = "Event Teaser"
+        Me.ToolTip1.SetToolTip(Me.chkEventTeaser, "Check this if you will be posting a group event teaser")
+        Me.chkEventTeaser.UseVisualStyleBackColor = False
+        '
+        'grpEventTeaser
+        '
+        Me.grpEventTeaser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpEventTeaser.Controls.Add(Me.Label2)
+        Me.grpEventTeaser.Controls.Add(Me.txtEventTeaserMessage)
+        Me.grpEventTeaser.Controls.Add(Me.btnSelectEventTeaserAreaMap)
+        Me.grpEventTeaser.Controls.Add(Me.btnClearEventTeaserAreaMap)
+        Me.grpEventTeaser.Controls.Add(Me.txtEventTeaserAreaMapImage)
+        Me.grpEventTeaser.Controls.Add(Me.Label1)
+        Me.grpEventTeaser.Location = New System.Drawing.Point(7, 698)
+        Me.grpEventTeaser.Name = "grpEventTeaser"
+        Me.grpEventTeaser.Size = New System.Drawing.Size(836, 151)
+        Me.grpEventTeaser.TabIndex = 50
+        Me.grpEventTeaser.TabStop = False
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(6, 67)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(87, 26)
+        Me.Label2.TabIndex = 4
+        Me.Label2.Text = "Message"
+        '
+        'txtEventTeaserMessage
+        '
+        Me.txtEventTeaserMessage.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEventTeaserMessage.Location = New System.Drawing.Point(185, 64)
+        Me.txtEventTeaserMessage.Multiline = True
+        Me.txtEventTeaserMessage.Name = "txtEventTeaserMessage"
+        Me.txtEventTeaserMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(645, 81)
+        Me.txtEventTeaserMessage.TabIndex = 5
+        Me.txtEventTeaserMessage.Tag = "72"
+        Me.ToolTip1.SetToolTip(Me.txtEventTeaserMessage, "Specify any message you want to be posted with the teaser")
+        '
+        'btnSelectEventTeaserAreaMap
+        '
+        Me.btnSelectEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(666, 27)
+        Me.btnSelectEventTeaserAreaMap.Name = "btnSelectEventTeaserAreaMap"
+        Me.btnSelectEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
+        Me.btnSelectEventTeaserAreaMap.TabIndex = 2
+        Me.btnSelectEventTeaserAreaMap.Tag = "72"
+        Me.btnSelectEventTeaserAreaMap.Text = "Select"
+        Me.ToolTip1.SetToolTip(Me.btnSelectEventTeaserAreaMap, "Click this button to browse and select the teaser area map")
+        Me.btnSelectEventTeaserAreaMap.UseVisualStyleBackColor = True
+        '
+        'btnClearEventTeaserAreaMap
+        '
+        Me.btnClearEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(751, 26)
+        Me.btnClearEventTeaserAreaMap.Name = "btnClearEventTeaserAreaMap"
+        Me.btnClearEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
+        Me.btnClearEventTeaserAreaMap.TabIndex = 3
+        Me.btnClearEventTeaserAreaMap.Tag = "72"
+        Me.btnClearEventTeaserAreaMap.Text = "Clear"
+        Me.ToolTip1.SetToolTip(Me.btnClearEventTeaserAreaMap, "Click this button to clear the teaser area map")
+        Me.btnClearEventTeaserAreaMap.UseVisualStyleBackColor = True
+        '
+        'txtEventTeaserAreaMapImage
+        '
+        Me.txtEventTeaserAreaMapImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEventTeaserAreaMapImage.Location = New System.Drawing.Point(185, 26)
+        Me.txtEventTeaserAreaMapImage.Name = "txtEventTeaserAreaMapImage"
+        Me.txtEventTeaserAreaMapImage.ReadOnly = True
+        Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(475, 32)
+        Me.txtEventTeaserAreaMapImage.TabIndex = 1
+        Me.txtEventTeaserAreaMapImage.Tag = "72"
+        Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
+        ") tab if created in the same session.")
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(6, 29)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(146, 26)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Area Map Image"
         '
         'lblClubFullName
         '
@@ -2289,7 +2399,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 762)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 750)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2425,6 +2535,7 @@ Partial Class Main
         'chkRepost
         '
         Me.chkRepost.AutoSize = True
+        Me.chkRepost.BackColor = System.Drawing.SystemColors.Control
         Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.chkRepost.Location = New System.Drawing.Point(8, 0)
         Me.chkRepost.Name = "chkRepost"
@@ -2432,7 +2543,7 @@ Partial Class Main
         Me.chkRepost.TabIndex = 0
         Me.chkRepost.Text = "This is a repost"
         Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
-        Me.chkRepost.UseVisualStyleBackColor = True
+        Me.chkRepost.UseVisualStyleBackColor = False
         '
         'grpDiscordTaskThread
         '
@@ -2474,7 +2585,7 @@ Partial Class Main
         Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFullDescriptionCopy.TabIndex = 0
         Me.btnFullDescriptionCopy.Tag = "42"
-        Me.btnFullDescriptionCopy.Text = "2. Full Description to clipboard"
+        Me.btnFullDescriptionCopy.Text = "2. Thread - Full Description to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the task's full description post content into the clipbo" &
         "ard.")
         Me.btnFullDescriptionCopy.UseVisualStyleBackColor = True
@@ -2499,7 +2610,7 @@ Partial Class Main
         Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFilesCopy.TabIndex = 1
         Me.btnFilesCopy.Tag = "43"
-        Me.btnFilesCopy.Text = "3a. Files to clipboard"
+        Me.btnFilesCopy.Text = "3a. Thread - Files to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
         Me.btnFilesCopy.UseVisualStyleBackColor = True
         '
@@ -2512,7 +2623,7 @@ Partial Class Main
         Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnFilesTextCopy.TabIndex = 2
         Me.btnFilesTextCopy.Tag = "44"
-        Me.btnFilesTextCopy.Text = "3b. Files info to clipboard"
+        Me.btnFilesTextCopy.Text = "3b. Thread - Files info to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the second post content into the clipboard.")
         Me.btnFilesTextCopy.UseVisualStyleBackColor = True
         '
@@ -2538,7 +2649,7 @@ Partial Class Main
         Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
         Me.btnCopyAllSecPosts.TabIndex = 4
         Me.btnCopyAllSecPosts.Tag = "46"
-        Me.btnCopyAllSecPosts.Text = "4. All secondary post's content to clipboard"
+        Me.btnCopyAllSecPosts.Text = "4. Thread - All secondary post's content to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put all remaining content into the clipboard.")
         Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
         Me.btnCopyAllSecPosts.Visible = False
@@ -2551,7 +2662,7 @@ Partial Class Main
         Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnAltRestricCopy.TabIndex = 5
         Me.btnAltRestricCopy.Tag = "46"
-        Me.btnAltRestricCopy.Text = "4. Restrictions and Weather to clipboard"
+        Me.btnAltRestricCopy.Text = "4. Thread - Restrictions and Weather to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the restrictions and weather post content into the clipb" &
         "oard.")
         Me.btnAltRestricCopy.UseVisualStyleBackColor = True
@@ -2564,7 +2675,7 @@ Partial Class Main
         Me.btnWaypointsCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnWaypointsCopy.TabIndex = 6
         Me.btnWaypointsCopy.Tag = "47"
-        Me.btnWaypointsCopy.Text = "5. Waypoint details to clipboard"
+        Me.btnWaypointsCopy.Text = "5. Thread - Waypoint details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnWaypointsCopy, "Click this button to put the waypoints post content into the clipboard.")
         Me.btnWaypointsCopy.UseVisualStyleBackColor = True
         '
@@ -2576,7 +2687,7 @@ Partial Class Main
         Me.btnAddOnsCopy.Size = New System.Drawing.Size(384, 51)
         Me.btnAddOnsCopy.TabIndex = 7
         Me.btnAddOnsCopy.Tag = "48"
-        Me.btnAddOnsCopy.Text = "6. Add-ons details to clipboard"
+        Me.btnAddOnsCopy.Text = "6. Thread - Add-ons details to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnAddOnsCopy, "Click this button to put the add-ons post content into the clipboard.")
         Me.btnAddOnsCopy.UseVisualStyleBackColor = True
         '
@@ -2603,7 +2714,7 @@ Partial Class Main
         Me.btnFPMainInfoCopy.Size = New System.Drawing.Size(381, 51)
         Me.btnFPMainInfoCopy.TabIndex = 0
         Me.btnFPMainInfoCopy.Tag = "41"
-        Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard"
+        Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard then thread title"
         Me.ToolTip1.SetToolTip(Me.btnFPMainInfoCopy, "Click this button to put the first post content into the clipboard.")
         Me.btnFPMainInfoCopy.UseVisualStyleBackColor = True
         '
@@ -2807,7 +2918,7 @@ Partial Class Main
         Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
         Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(661, 51)
         Me.btnTaskFeaturedOnGroupFlight.TabIndex = 2
-        Me.btnTaskFeaturedOnGroupFlight.Tag = "92"
+        Me.btnTaskFeaturedOnGroupFlight.Tag = "95"
         Me.btnTaskFeaturedOnGroupFlight.Text = "1. ""Task featured on group flight"" to clipboard"
         Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
         "s to paste it in the Discord.")
@@ -2815,12 +2926,13 @@ Partial Class Main
         '
         'grpGroupFlightEvent
         '
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnEventTaskDetails)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadLogistics)
-        Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadTitle)
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventTeaser)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDiscordGroupEventURL)
         Me.grpGroupFlightEvent.Controls.Add(Me.txtGroupEventPostURL)
         Me.grpGroupFlightEvent.Controls.Add(Me.Label38)
-        Me.grpGroupFlightEvent.Controls.Add(Me.btnCopyReqFilesToClipboard)
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnEventFilesAndFilesInfo)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventInfoToClipboard)
         Me.grpGroupFlightEvent.Location = New System.Drawing.Point(6, 27)
         Me.grpGroupFlightEvent.Name = "grpGroupFlightEvent"
@@ -2829,38 +2941,50 @@ Partial Class Main
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
         '
+        'btnEventTaskDetails
+        '
+        Me.btnEventTaskDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEventTaskDetails.Location = New System.Drawing.Point(6, 192)
+        Me.btnEventTaskDetails.Name = "btnEventTaskDetails"
+        Me.btnEventTaskDetails.Size = New System.Drawing.Size(661, 37)
+        Me.btnEventTaskDetails.TabIndex = 6
+        Me.btnEventTaskDetails.Tag = "84"
+        Me.btnEventTaskDetails.Text = "4. Thread - Relevant task details"
+        Me.ToolTip1.SetToolTip(Me.btnEventTaskDetails, "Click this button to copy the relevant task information to be posted next.")
+        Me.btnEventTaskDetails.UseVisualStyleBackColor = True
+        '
         'btnGroupFlightEventThreadLogistics
         '
         Me.btnGroupFlightEventThreadLogistics.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGroupFlightEventThreadLogistics.Location = New System.Drawing.Point(6, 235)
         Me.btnGroupFlightEventThreadLogistics.Name = "btnGroupFlightEventThreadLogistics"
-        Me.btnGroupFlightEventThreadLogistics.Size = New System.Drawing.Size(661, 51)
+        Me.btnGroupFlightEventThreadLogistics.Size = New System.Drawing.Size(661, 37)
         Me.btnGroupFlightEventThreadLogistics.TabIndex = 7
-        Me.btnGroupFlightEventThreadLogistics.Tag = "84"
-        Me.btnGroupFlightEventThreadLogistics.Text = "3b. Group Flight thread logistic instructions"
+        Me.btnGroupFlightEventThreadLogistics.Tag = "85"
+        Me.btnGroupFlightEventThreadLogistics.Text = "5. Thread - Logistic instructions"
         Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventThreadLogistics, "Click this button to copy the thread logistic instructions to your clipboard.")
         Me.btnGroupFlightEventThreadLogistics.UseVisualStyleBackColor = True
         '
-        'btnGroupFlightEventThreadTitle
+        'btnGroupFlightEventTeaser
         '
-        Me.btnGroupFlightEventThreadTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGroupFlightEventThreadTitle.Location = New System.Drawing.Point(6, 178)
-        Me.btnGroupFlightEventThreadTitle.Name = "btnGroupFlightEventThreadTitle"
-        Me.btnGroupFlightEventThreadTitle.Size = New System.Drawing.Size(661, 51)
-        Me.btnGroupFlightEventThreadTitle.TabIndex = 6
-        Me.btnGroupFlightEventThreadTitle.Tag = "83"
-        Me.btnGroupFlightEventThreadTitle.Text = "3a. Group Flight thread title"
-        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventThreadTitle, "Click this button to put the group flight title into your clipboard.")
-        Me.btnGroupFlightEventThreadTitle.UseVisualStyleBackColor = True
+        Me.btnGroupFlightEventTeaser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGroupFlightEventTeaser.Location = New System.Drawing.Point(6, 106)
+        Me.btnGroupFlightEventTeaser.Name = "btnGroupFlightEventTeaser"
+        Me.btnGroupFlightEventTeaser.Size = New System.Drawing.Size(661, 37)
+        Me.btnGroupFlightEventTeaser.TabIndex = 4
+        Me.btnGroupFlightEventTeaser.Tag = "82"
+        Me.btnGroupFlightEventTeaser.Text = "2. Thread - Group event Teaser section"
+        Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventTeaser, "Click this button to post the teaser section.")
+        Me.btnGroupFlightEventTeaser.UseVisualStyleBackColor = True
         '
         'btnDiscordGroupEventURL
         '
         Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(587, 141)
+        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(587, 69)
         Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
         Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(80, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 5
-        Me.btnDiscordGroupEventURL.Tag = "82"
+        Me.btnDiscordGroupEventURL.TabIndex = 3
+        Me.btnDiscordGroupEventURL.Tag = "81"
         Me.btnDiscordGroupEventURL.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
         Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
@@ -2868,45 +2992,44 @@ Partial Class Main
         'txtGroupEventPostURL
         '
         Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 140)
+        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 68)
         Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
         Me.txtGroupEventPostURL.Size = New System.Drawing.Size(389, 32)
-        Me.txtGroupEventPostURL.TabIndex = 4
-        Me.txtGroupEventPostURL.Tag = "82"
+        Me.txtGroupEventPostURL.TabIndex = 2
+        Me.txtGroupEventPostURL.Tag = "81"
         Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
         '
         'Label38
         '
         Me.Label38.AutoSize = True
         Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label38.Location = New System.Drawing.Point(1, 144)
+        Me.Label38.Location = New System.Drawing.Point(6, 71)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(173, 26)
-        Me.Label38.TabIndex = 3
+        Me.Label38.TabIndex = 1
         Me.Label38.Text = "URL to group event"
         '
-        'btnCopyReqFilesToClipboard
+        'btnEventFilesAndFilesInfo
         '
-        Me.btnCopyReqFilesToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCopyReqFilesToClipboard.Location = New System.Drawing.Point(6, 26)
-        Me.btnCopyReqFilesToClipboard.Name = "btnCopyReqFilesToClipboard"
-        Me.btnCopyReqFilesToClipboard.Size = New System.Drawing.Size(661, 51)
-        Me.btnCopyReqFilesToClipboard.TabIndex = 0
-        Me.btnCopyReqFilesToClipboard.Tag = "80"
-        Me.btnCopyReqFilesToClipboard.Text = "Optional - Copy required files to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnCopyReqFilesToClipboard, "If you want to include the required files with the group flight post, click this " &
-        "button.")
-        Me.btnCopyReqFilesToClipboard.UseVisualStyleBackColor = True
+        Me.btnEventFilesAndFilesInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEventFilesAndFilesInfo.Location = New System.Drawing.Point(6, 149)
+        Me.btnEventFilesAndFilesInfo.Name = "btnEventFilesAndFilesInfo"
+        Me.btnEventFilesAndFilesInfo.Size = New System.Drawing.Size(661, 37)
+        Me.btnEventFilesAndFilesInfo.TabIndex = 5
+        Me.btnEventFilesAndFilesInfo.Tag = "83"
+        Me.btnEventFilesAndFilesInfo.Text = "3. Thread - Files and files info"
+        Me.ToolTip1.SetToolTip(Me.btnEventFilesAndFilesInfo, "Click this button to first paste the files and then files legend information.")
+        Me.btnEventFilesAndFilesInfo.UseVisualStyleBackColor = True
         '
         'btnGroupFlightEventInfoToClipboard
         '
         Me.btnGroupFlightEventInfoToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(6, 83)
+        Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(6, 25)
         Me.btnGroupFlightEventInfoToClipboard.Name = "btnGroupFlightEventInfoToClipboard"
-        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(661, 51)
-        Me.btnGroupFlightEventInfoToClipboard.TabIndex = 1
-        Me.btnGroupFlightEventInfoToClipboard.Tag = "81"
-        Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group Flight post info to clipboard"
+        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(661, 37)
+        Me.btnGroupFlightEventInfoToClipboard.TabIndex = 0
+        Me.btnGroupFlightEventInfoToClipboard.Tag = "80"
+        Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group event post info to clipboard then thread title"
         Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventInfoToClipboard, "Click this button to put the group flight info into your clipboard.")
         Me.btnGroupFlightEventInfoToClipboard.UseVisualStyleBackColor = True
         '
@@ -3045,7 +3168,7 @@ Partial Class Main
         Me.btnEventTopicClipboard.Name = "btnEventTopicClipboard"
         Me.btnEventTopicClipboard.Size = New System.Drawing.Size(337, 29)
         Me.btnEventTopicClipboard.TabIndex = 7
-        Me.btnEventTopicClipboard.Tag = "86"
+        Me.btnEventTopicClipboard.Tag = "87"
         Me.btnEventTopicClipboard.Text = "Event Topic to Clipboard"
         Me.ToolTip1.SetToolTip(Me.btnEventTopicClipboard, "Click this button to copy the event's topic for the Discord Event post into the c" &
         "lipboard.")
@@ -3310,6 +3433,8 @@ Partial Class Main
         Me.Panel2.ResumeLayout(False)
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
+        Me.grpEventTeaser.ResumeLayout(False)
+        Me.grpEventTeaser.PerformLayout()
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
         Me.pnlWizardDiscord.ResumeLayout(False)
@@ -3452,7 +3577,7 @@ Partial Class Main
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents btnCreateShareablePack As Button
     Friend WithEvents btnLoadB21Planner As Button
-    Friend WithEvents btnCopyReqFilesToClipboard As Button
+    Friend WithEvents btnEventFilesAndFilesInfo As Button
     Friend WithEvents btnGuideMe As Button
     Friend WithEvents pnlGuide As Panel
     Friend WithEvents Panel3 As Panel
@@ -3568,7 +3693,7 @@ Partial Class Main
     Friend WithEvents txtBaroPressureExtraInfo As TextBox
     Friend WithEvents lblNonStdBaroPressure As Label
     Friend WithEvents btnGroupFlightEventThreadLogistics As Button
-    Friend WithEvents btnGroupFlightEventThreadTitle As Button
+    Friend WithEvents btnGroupFlightEventTeaser As Button
     Friend WithEvents cboCoverImage As ComboBox
     Friend WithEvents chkLockCoverImage As CheckBox
     Friend WithEvents chkLockMapImage As CheckBox
@@ -3577,4 +3702,13 @@ Partial Class Main
     Friend WithEvents dtRepostOriginalDate As DateTimePicker
     Friend WithEvents chkSoaringTypeDynamic As CheckBox
     Friend WithEvents btnDeleteDiscordID As Button
+    Friend WithEvents grpEventTeaser As GroupBox
+    Friend WithEvents btnSelectEventTeaserAreaMap As Button
+    Friend WithEvents btnClearEventTeaserAreaMap As Button
+    Friend WithEvents txtEventTeaserAreaMapImage As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents txtEventTeaserMessage As TextBox
+    Friend WithEvents chkEventTeaser As CheckBox
+    Friend WithEvents btnEventTaskDetails As Button
 End Class
