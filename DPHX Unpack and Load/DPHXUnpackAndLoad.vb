@@ -18,6 +18,8 @@ Public Class DPHXUnpackAndLoad
     Private _currentFile As String = String.Empty
     Private _abortingFirstRun As Boolean = False
     Private _allDPHData As AllData
+    Private _filesToUnpack As New Dictionary(Of String, String)
+    Private _filesCurrentlyUnpacked As New Dictionary(Of String, String)
 
 #End Region
 
@@ -378,41 +380,28 @@ Public Class DPHXUnpackAndLoad
         toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
     End Sub
 
-    Private Sub EnableUnpackButton()
-        toolStripUnpack.Enabled = True
-        toolStripCleanup.Enabled = True
-        toolStripB21Planner.Enabled = True
+    Private Sub SetFilesToUnpack()
 
-        If Not AreFilesAlreadyUnpacked() Then
-            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
-            toolStripUnpack.ForeColor = Color.Red
-            lblAllFilesStatus.Text = "One or more files are missing from their respective folder."
-        Else
-            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
-            toolStripUnpack.ForeColor = DefaultForeColor
-            lblAllFilesStatus.Text = "All the files are present in their respective folder."
-        End If
-    End Sub
-
-    Private Function AreFilesAlreadyUnpacked() As Boolean
-
-        Dim filesAlreadyUnpacked As Boolean = True
+        _filesToUnpack.Clear()
+        _filesCurrentlyUnpacked.Clear()
 
         'Check if files are already unpacked
         'Flight plan
-        If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
-                                             Path.GetFileName(_allDPHData.FlightPlanFilename)),
-                                             Path.Combine(Settings.SessionSettings.FlightPlansFolder,
-                                             Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
-            Return False
+        _filesToUnpack.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
+        If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                                Path.Combine(Settings.SessionSettings.FlightPlansFolder,
+                                                Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
+            _filesCurrentlyUnpacked.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
         End If
 
         'Weather file
-        If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
-                                             Path.GetFileName(_allDPHData.WeatherFilename)),
-                                             Path.Combine(Settings.SessionSettings.MSFSWeatherPresetsFolder,
-                                             Path.GetFileName(_allDPHData.WeatherFilename))) Then
-            Return False
+        _filesToUnpack.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+        If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                Path.GetFileName(_allDPHData.WeatherFilename)),
+                                                Path.Combine(Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                                                Path.GetFileName(_allDPHData.WeatherFilename))) Then
+            _filesCurrentlyUnpacked.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
         End If
 
         'XCSoar task
@@ -421,11 +410,12 @@ Public Class DPHXUnpackAndLoad
             For Each filepath As String In _allDPHData.ExtraFiles
                 If Path.GetExtension(filepath) = ".tsk" Then
                     'XCSoar task
-                    If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
-                                             Path.GetFileName(filepath)),
-                                             Path.Combine(Settings.SessionSettings.XCSoarTasksFolder,
-                                             Path.GetFileName(filepath))) Then
-                        Return False
+                    _filesToUnpack.Add("XCSoar Task", Path.GetFileName(filepath))
+                    If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                            Path.GetFileName(filepath)),
+                                                            Path.Combine(Settings.SessionSettings.XCSoarTasksFolder,
+                                                            Path.GetFileName(filepath))) Then
+                        _filesCurrentlyUnpacked.Add("XCSoar Task", Path.GetFileName(filepath))
                     End If
                 End If
             Next
@@ -437,19 +427,75 @@ Public Class DPHXUnpackAndLoad
             For Each filepath As String In _allDPHData.ExtraFiles
                 If Path.GetExtension(filepath) = ".xcm" Then
                     'XCSoar map
-                    If Not SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
-                                             Path.GetFileName(filepath)),
-                                             Path.Combine(Settings.SessionSettings.XCSoarMapsFolder,
-                                             Path.GetFileName(filepath))) Then
-                        Return False
+                    _filesToUnpack.Add("XCSoar Map", Path.GetFileName(filepath))
+                    If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                            Path.GetFileName(filepath)),
+                                                            Path.Combine(Settings.SessionSettings.XCSoarMapsFolder,
+                                                            Path.GetFileName(filepath))) Then
+                        _filesCurrentlyUnpacked.Add("XCSoar Map", Path.GetFileName(filepath))
                     End If
                 End If
             Next
         End If
 
-        Return True
+    End Sub
+
+    Private Sub EnableUnpackButton()
+        toolStripUnpack.Enabled = True
+        toolStripCleanup.Enabled = True
+        toolStripB21Planner.Enabled = True
+
+        SetFilesToUnpack()
+
+        If _filesToUnpack.Count <> _filesCurrentlyUnpacked.Count Then
+            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
+            toolStripUnpack.ForeColor = Color.Red
+            If _filesCurrentlyUnpacked.Count = 0 Then
+                lblAllFilesStatus.Text = $"All files ({GetListOfFilesMissing()}) are MISSING from their respective folder."
+            Else
+                lblAllFilesStatus.Text = $"{_filesCurrentlyUnpacked.Count} out of {_filesToUnpack.Count} files are present: {GetListOfFilesPresent()}. MISSING files: {GetListOfFilesMissing()}"
+            End If
+        Else
+            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+            toolStripUnpack.ForeColor = DefaultForeColor
+            lblAllFilesStatus.Text = $"All the files ({GetListOfFilesPresent()}) are present in their respective folder."
+        End If
+    End Sub
+
+    Private Function GetListOfFilesPresent() As String
+
+        Dim result As String = String.Empty
+
+        For Each fileType In _filesCurrentlyUnpacked.Keys
+            If result = String.Empty Then
+                result = $"{fileType}"
+            Else
+                result = $"{result}, {fileType}"
+            End If
+        Next
+
+        Return result
 
     End Function
+
+    Private Function GetListOfFilesMissing() As String
+
+        Dim result As String = String.Empty
+
+        For Each fileType In _filesToUnpack.Keys
+            If Not _filesCurrentlyUnpacked.Keys.Contains(fileType) Then
+                If result = String.Empty Then
+                    result = $"{fileType}"
+                Else
+                    result = $"{result}, {fileType}"
+                End If
+            End If
+        Next
+
+        Return result
+
+    End Function
+
     Private Sub RestoreMainFormLocationAndSize()
         Dim sizeString As String = Settings.SessionSettings.MainFormSize
         Dim locationString As String = Settings.SessionSettings.MainFormLocation
