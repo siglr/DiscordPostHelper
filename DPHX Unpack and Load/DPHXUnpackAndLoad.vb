@@ -150,13 +150,13 @@ Public Class DPHXUnpackAndLoad
         ctrlBriefing.AdjustRTBoxControls()
     End Sub
 
-    Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
+    Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
 
         OpenSettingsWindow()
 
     End Sub
 
-    Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles LoadDPHX.Click
+    Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles toolStripOpen.Click
 
         lblAllFilesStatus.Text = String.Empty
 
@@ -183,7 +183,7 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles btnCopyFiles.Click
+    Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles toolStripUnpack.Click
 
         If warningMSFSRunningToolStrip.Visible Then
             Using New Centered_MessageBox(Me)
@@ -196,7 +196,7 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles btnCleanup.Click
+    Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles toolStripCleanup.Click
 
         If warningMSFSRunningToolStrip.Visible Then
             Using New Centered_MessageBox(Me)
@@ -210,7 +210,7 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles btnLoadB21.Click
+    Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles toolStripB21Planner.Click
 
         Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
         Dim weatherFilename As String = String.Empty
@@ -238,6 +238,34 @@ Public Class DPHXUnpackAndLoad
         Else
             warningMSFSRunningToolStrip.Visible = False
         End If
+    End Sub
+
+    Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
+
+        Dim inviteURL As String = "https://discord.gg/aW8YYe3HJF"
+        Clipboard.SetText(inviteURL)
+        Using New Centered_MessageBox()
+            MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+
+    End Sub
+
+    Private Sub DiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordChannelToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1101255857683042466")
+
+    End Sub
+
+    Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1101255812883693588")
+
+    End Sub
+
+    Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
+
     End Sub
 
 #End Region
@@ -332,7 +360,6 @@ Public Class DPHXUnpackAndLoad
             Else
                 txtPackageName.Text = dphxFilename
                 _currentFile = dphxFilename
-                txtDPHFilename.Text = newDPHFile
                 EnableUnpackButton()
             End If
 
@@ -345,25 +372,22 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub DisableUnpackButton()
-        btnCopyFiles.Enabled = False
-        btnCleanup.Enabled = False
-        btnLoadB21.Enabled = False
-        pnlUnpackBtn.BackColor = SystemColors.Control
-        btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
+        toolStripUnpack.Enabled = False
+        toolStripCleanup.Enabled = False
+        toolStripB21Planner.Enabled = False
+        toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
     End Sub
 
     Private Sub EnableUnpackButton()
-        btnCopyFiles.Enabled = True
-        btnCleanup.Enabled = True
-        btnLoadB21.Enabled = True
+        toolStripUnpack.Enabled = True
+        toolStripCleanup.Enabled = True
+        toolStripB21Planner.Enabled = True
 
         If Not AreFilesAlreadyUnpacked() Then
-            pnlUnpackBtn.BackColor = Color.Red
-            btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Bold)
+            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
             lblAllFilesStatus.Text = "One or more files are missing from their respective folder."
         Else
-            pnlUnpackBtn.BackColor = SystemColors.Control
-            btnCopyFiles.Font = New Font(btnCopyFiles.Font, FontStyle.Regular)
+            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
             lblAllFilesStatus.Text = "All the files are present in their respective folder."
         End If
     End Sub

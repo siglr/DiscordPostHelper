@@ -22,9 +22,8 @@ Partial Class Main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
+        Dim PreferredUnits2 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
-        Dim PreferredUnits3 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
@@ -133,6 +132,7 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -266,14 +266,18 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
         Me.toolStripResetAll = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.toolStripDiscordTaskLibrary = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripB21Planner = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripSharePackage = New System.Windows.Forms.ToolStripButton()
@@ -282,13 +286,8 @@ Partial Class Main
         Me.toolStripStopGuide = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.toolStripDiscordTaskLibrary = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
+        Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1649,6 +1648,17 @@ Partial Class Main
         Me.Label31.Size = New System.Drawing.Size(109, 26)
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task Post ID"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'tabEvent
         '
@@ -3277,6 +3287,27 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        PreferredUnits2.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits2.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits2.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits2.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits2.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits2.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits2.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits2
+        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 867)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -3310,6 +3341,16 @@ Partial Class Main
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
+        'toolStripReload
+        '
+        Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
+        Me.toolStripReload.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripReload.Name = "toolStripReload"
+        Me.toolStripReload.Size = New System.Drawing.Size(84, 26)
+        Me.toolStripReload.Text = "Discard"
+        Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
+        Me.toolStripReload.Visible = False
+        '
         'toolStripResetAll
         '
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
@@ -3323,6 +3364,20 @@ Partial Class Main
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        '
+        'toolStripDiscordTaskLibrary
+        '
+        Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
+        Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
+        Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
+        Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripB21Planner
         '
@@ -3367,93 +3422,38 @@ Partial Class Main
         Me.toolStripStopGuide.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripStopGuide.Name = "toolStripStopGuide"
         Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 26)
-        Me.toolStripStopGuide.Text = "Turn guide off"
+        Me.toolStripStopGuide.Text = "&Turn guide off"
         Me.toolStripStopGuide.ToolTipText = "Click to disable wizard"
         Me.toolStripStopGuide.Visible = False
         '
         'ToolStripDropDownButton1
         '
+        Me.ToolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DiscordChannelToolStripMenuItem, Me.GoToFeedbackChannelOnDiscordToolStripMenuItem, Me.DiscordInviteToolStripMenuItem})
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
         Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
-        Me.ToolStripDropDownButton1.Text = "I need support!"
+        Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
         'DiscordChannelToolStripMenuItem
         '
         Me.DiscordChannelToolStripMenuItem.Name = "DiscordChannelToolStripMenuItem"
-        Me.DiscordChannelToolStripMenuItem.Size = New System.Drawing.Size(329, 26)
-        Me.DiscordChannelToolStripMenuItem.Text = "Go to support channel on Discord"
-        '
-        'DiscordInviteToolStripMenuItem
-        '
-        Me.DiscordInviteToolStripMenuItem.Name = "DiscordInviteToolStripMenuItem"
-        Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(329, 26)
-        Me.DiscordInviteToolStripMenuItem.Text = "Copy Discord invite link"
+        Me.DiscordChannelToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
+        Me.DiscordChannelToolStripMenuItem.Text = "&1. Go to support channel on Discord"
         '
         'GoToFeedbackChannelOnDiscordToolStripMenuItem
         '
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem.Name = "GoToFeedbackChannelOnDiscordToolStripMenuItem"
-        Me.GoToFeedbackChannelOnDiscordToolStripMenuItem.Size = New System.Drawing.Size(329, 26)
-        Me.GoToFeedbackChannelOnDiscordToolStripMenuItem.Text = "Go to feedback channel on Discord"
+        Me.GoToFeedbackChannelOnDiscordToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
+        Me.GoToFeedbackChannelOnDiscordToolStripMenuItem.Text = "&2. Go to feedback channel on Discord"
         '
-        'FileDropZone1
+        'DiscordInviteToolStripMenuItem
         '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits3.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits3.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits3.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits3.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits3.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits3.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits3.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits3
-        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 867)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
-        'toolStripDiscordTaskLibrary
-        '
-        Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
-        Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
-        Me.toolStripDiscordTaskLibrary.Text = "Task Library"
-        Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
-        '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
-        '
-        'toolStripReload
-        '
-        Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
-        Me.toolStripReload.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.toolStripReload.Name = "toolStripReload"
-        Me.toolStripReload.Size = New System.Drawing.Size(84, 26)
-        Me.toolStripReload.Text = "Discard"
-        Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
-        Me.toolStripReload.Visible = False
+        Me.DiscordInviteToolStripMenuItem.Name = "DiscordInviteToolStripMenuItem"
+        Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
+        Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
         '
         'Main
         '
