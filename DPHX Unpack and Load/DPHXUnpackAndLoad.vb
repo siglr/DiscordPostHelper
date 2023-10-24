@@ -562,7 +562,7 @@ Public Class DPHXUnpackAndLoad
 
     End Function
 
-    Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String) As String
+    Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String, excludeFromCleanup As Boolean) As String
         Dim fullSourceFilename As String
         Dim messageToReturn As String = String.Empty
 
@@ -570,8 +570,12 @@ Public Class DPHXUnpackAndLoad
             fullSourceFilename = Path.Combine(sourcePath, filename)
             If File.Exists(fullSourceFilename) Then
                 Try
-                    File.Delete(fullSourceFilename)
-                    messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
+                    If Not excludeFromCleanup Then
+                        File.Delete(fullSourceFilename)
+                        messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
+                    Else
+                        messageToReturn = $"{msgToAsk} ""{filename}"" excluded from cleanup"
+                    End If
                 Catch ex As Exception
                     messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to deleted it:{Environment.NewLine}{ex.Message}"
                 End Try
@@ -597,13 +601,15 @@ Public Class DPHXUnpackAndLoad
         'Flight plan
         sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  Settings.SessionSettings.FlightPlansFolder,
-                 "Flight Plan"))
+                 "Flight Plan",
+                 Settings.SessionSettings.ExcludeFlightPlanFromCleanup))
         sb.AppendLine()
 
         'Weather file
         sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  Settings.SessionSettings.MSFSWeatherPresetsFolder,
-                 "Weather Preset"))
+                 "Weather Preset",
+                 Settings.SessionSettings.ExcludeWeatherFileFromCleanup))
         sb.AppendLine()
 
         'Look in the other files for xcsoar file
@@ -612,13 +618,15 @@ Public Class DPHXUnpackAndLoad
                 'XCSoar task
                 sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
                                     Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task"))
+                                    "XCSoar Task",
+                                    Settings.SessionSettings.ExcludeXCSoarTaskFileFromCleanup))
             End If
             If Path.GetExtension(filepath) = ".xcm" Then
                 'XCSoar map
                 sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
                                     Settings.SessionSettings.XCSoarMapsFolder,
-                                    "XCSoar Map"))
+                                    "XCSoar Map",
+                                    Settings.SessionSettings.ExcludeXCSoarMapFileFromCleanup))
             End If
         Next
 

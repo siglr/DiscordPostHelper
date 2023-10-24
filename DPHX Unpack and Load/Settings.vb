@@ -43,6 +43,10 @@ Public Class Settings
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
             SessionSettings.PackagesFolder = btnPackagesFolder.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
+            SessionSettings.ExcludeFlightPlanFromCleanup = chkExcludeFlightPlanFromCleanup.Checked
+            SessionSettings.ExcludeWeatherFileFromCleanup = chkExcludeWeatherFileFromCleanup.Checked
+            SessionSettings.ExcludeXCSoarTaskFileFromCleanup = chkExcludeXCSoarTaskFileFromCleanup.Checked
+            SessionSettings.ExcludeXCSoarMapFileFromCleanup = chkExcludeXCSoarMapFileFromCleanup.Checked
 
             If optOverwriteAlwaysOverwrite.Checked Then
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -309,6 +313,10 @@ Public Class Settings
         End Select
 
         chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
+        chkExcludeFlightPlanFromCleanup.Checked = SessionSettings.ExcludeFlightPlanFromCleanup
+        chkExcludeWeatherFileFromCleanup.Checked = SessionSettings.ExcludeWeatherFileFromCleanup
+        chkExcludeXCSoarTaskFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarTaskFileFromCleanup
+        chkExcludeXCSoarMapFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarMapFileFromCleanup
 
     End Sub
 

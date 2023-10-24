@@ -106,6 +106,18 @@ Public Class AllSettings
     <XmlElement("AutoUnpack")>
     Public Property AutoUnpack As Boolean
 
+    <XmlElement("ExcludeFlightPlanFromCleanup")>
+    Public Property ExcludeFlightPlanFromCleanup As Boolean
+
+    <XmlElement("ExcludeWeatherFileFromCleanup")>
+    Public Property ExcludeWeatherFileFromCleanup As Boolean
+
+    <XmlElement("ExcludeXCSoarTaskFileFromCleanup")>
+    Public Property ExcludeXCSoarTaskFileFromCleanup As Boolean
+
+    <XmlElement("ExcludeXCSoarMapFileFromCleanup")>
+    Public Property ExcludeXCSoarMapFileFromCleanup As Boolean
+
     Public Sub New()
 
     End Sub
@@ -142,7 +154,10 @@ Public Class AllSettings
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
             AutoUnpack = settingsInFile.AutoUnpack
             LastDPHXOpened = settingsInFile.LastDPHXOpened
-
+            ExcludeFlightPlanFromCleanup = settingsInFile.ExcludeFlightPlanFromCleanup
+            ExcludeWeatherFileFromCleanup = settingsInFile.ExcludeWeatherFileFromCleanup
+            ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
+            ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
         Else
             settingsFound = False
 

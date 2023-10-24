@@ -61,6 +61,10 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlXCSoarMapsFolder = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.chkExcludeFlightPlanFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.chkExcludeWeatherFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.chkExcludeXCSoarTaskFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.chkExcludeXCSoarMapFileFromCleanup = New System.Windows.Forms.CheckBox()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
@@ -111,6 +115,7 @@ Partial Class Settings
         '
         'pnlFlightPlanFilesFolder
         '
+        Me.pnlFlightPlanFilesFolder.Controls.Add(Me.chkExcludeFlightPlanFromCleanup)
         Me.pnlFlightPlanFilesFolder.Controls.Add(Me.btnFlightPlansFolderPaste)
         Me.pnlFlightPlanFilesFolder.Controls.Add(Me.btnFlightPlanFilesFolder)
         Me.pnlFlightPlanFilesFolder.Controls.Add(Me.Label1)
@@ -141,7 +146,7 @@ Partial Class Settings
         Me.btnFlightPlanFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnFlightPlanFilesFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnFlightPlanFilesFolder.Name = "btnFlightPlanFilesFolder"
-        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(501, 37)
         Me.btnFlightPlanFilesFolder.TabIndex = 1
         Me.btnFlightPlanFilesFolder.Text = "Select the folder for the flight plan files (.pln)"
         Me.btnFlightPlanFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -166,7 +171,7 @@ Partial Class Settings
         Me.btnWeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnWeatherPresetsFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnWeatherPresetsFolder.Name = "btnWeatherPresetsFolder"
-        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(501, 37)
         Me.btnWeatherPresetsFolder.TabIndex = 1
         Me.btnWeatherPresetsFolder.Text = "Select the MSFS folder containing weather presets (.wpr)"
         Me.btnWeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -307,7 +312,7 @@ Partial Class Settings
         Me.btnXCSoarTasksFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnXCSoarTasksFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnXCSoarTasksFolder.Name = "btnXCSoarTasksFolder"
-        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(501, 37)
         Me.btnXCSoarTasksFolder.TabIndex = 1
         Me.btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
         Me.btnXCSoarTasksFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -334,7 +339,7 @@ Partial Class Settings
         Me.btnXCSoarMapsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnXCSoarMapsFolder.Location = New System.Drawing.Point(176, 4)
         Me.btnXCSoarMapsFolder.Name = "btnXCSoarMapsFolder"
-        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(501, 37)
         Me.btnXCSoarMapsFolder.TabIndex = 4
         Me.btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
         Me.btnXCSoarMapsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -343,6 +348,7 @@ Partial Class Settings
         '
         'pblWeatherPresetsFolder
         '
+        Me.pblWeatherPresetsFolder.Controls.Add(Me.chkExcludeWeatherFileFromCleanup)
         Me.pblWeatherPresetsFolder.Controls.Add(Me.btnWeatherPresetsFolderPaste)
         Me.pblWeatherPresetsFolder.Controls.Add(Me.btnWeatherPresetsFolder)
         Me.pblWeatherPresetsFolder.Controls.Add(Me.Label2)
@@ -364,6 +370,7 @@ Partial Class Settings
         '
         'pnlXCSoarTasksFolder
         '
+        Me.pnlXCSoarTasksFolder.Controls.Add(Me.chkExcludeXCSoarTaskFileFromCleanup)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.btnXCSoarTasksFolderPaste)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.btnXCSoarTasksFolder)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.Label8)
@@ -481,6 +488,7 @@ Partial Class Settings
         '
         'pnlXCSoarMapsFolder
         '
+        Me.pnlXCSoarMapsFolder.Controls.Add(Me.chkExcludeXCSoarMapFileFromCleanup)
         Me.pnlXCSoarMapsFolder.Controls.Add(Me.btnXCSoarMapsFolderPaste)
         Me.pnlXCSoarMapsFolder.Controls.Add(Me.btnXCSoarMapsFolder)
         Me.pnlXCSoarMapsFolder.Controls.Add(Me.Label9)
@@ -498,6 +506,46 @@ Partial Class Settings
         Me.Label9.Size = New System.Drawing.Size(146, 20)
         Me.Label9.TabIndex = 3
         Me.Label9.Text = "XCSoar Maps Folder:"
+        '
+        'chkExcludeFlightPlanFromCleanup
+        '
+        Me.chkExcludeFlightPlanFromCleanup.AutoSize = True
+        Me.chkExcludeFlightPlanFromCleanup.Location = New System.Drawing.Point(683, 18)
+        Me.chkExcludeFlightPlanFromCleanup.Name = "chkExcludeFlightPlanFromCleanup"
+        Me.chkExcludeFlightPlanFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeFlightPlanFromCleanup.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.chkExcludeFlightPlanFromCleanup, "Check this to exclude flight plan files from cleanup")
+        Me.chkExcludeFlightPlanFromCleanup.UseVisualStyleBackColor = True
+        '
+        'chkExcludeWeatherFileFromCleanup
+        '
+        Me.chkExcludeWeatherFileFromCleanup.AutoSize = True
+        Me.chkExcludeWeatherFileFromCleanup.Location = New System.Drawing.Point(683, 16)
+        Me.chkExcludeWeatherFileFromCleanup.Name = "chkExcludeWeatherFileFromCleanup"
+        Me.chkExcludeWeatherFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeWeatherFileFromCleanup.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.chkExcludeWeatherFileFromCleanup, "Check this to exclude weather files from cleanup")
+        Me.chkExcludeWeatherFileFromCleanup.UseVisualStyleBackColor = True
+        '
+        'chkExcludeXCSoarTaskFileFromCleanup
+        '
+        Me.chkExcludeXCSoarTaskFileFromCleanup.AutoSize = True
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(683, 18)
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarTaskFileFromCleanup, "Check this to exclude XCSoar task files from cleanup")
+        Me.chkExcludeXCSoarTaskFileFromCleanup.UseVisualStyleBackColor = True
+        '
+        'chkExcludeXCSoarMapFileFromCleanup
+        '
+        Me.chkExcludeXCSoarMapFileFromCleanup.AutoSize = True
+        Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(683, 16)
+        Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
+        Me.chkExcludeXCSoarMapFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarMapFileFromCleanup, "Check this to exclude XCSoar map files from cleanup")
+        Me.chkExcludeXCSoarMapFileFromCleanup.UseVisualStyleBackColor = True
         '
         'Settings
         '
@@ -588,4 +636,8 @@ Partial Class Settings
     Friend WithEvents btnXCSoarMapsFolderPaste As Button
     Friend WithEvents btnXCSoarMapsFolder As Button
     Friend WithEvents Label9 As Label
+    Friend WithEvents chkExcludeFlightPlanFromCleanup As CheckBox
+    Friend WithEvents chkExcludeWeatherFileFromCleanup As CheckBox
+    Friend WithEvents chkExcludeXCSoarTaskFileFromCleanup As CheckBox
+    Friend WithEvents chkExcludeXCSoarMapFileFromCleanup As CheckBox
 End Class
