@@ -629,7 +629,14 @@ Public Class Main
 
     Private Sub btnDiscordTaskThreadURLPaste_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskThreadURLPaste.Click
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
-            txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
+            Dim extractedID As String = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
+            If extractedID <> String.Empty Then
+                txtDiscordTaskID.Text = extractedID
+            Else
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "The URL you copied does not contain a valid ID for the task. The URL must come from a task published in the Task Library on Discord.", "Error extracting task ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End If
         End If
     End Sub
 
@@ -4125,9 +4132,11 @@ Public Class Main
         If _sessionModified Then
             toolStripSave.Font = New Font(toolStripSave.Font, FontStyle.Bold)
             toolStripSave.ForeColor = Color.Red
+            toolStripReload.Visible = True
         Else
             toolStripSave.Font = New Font(toolStripSave.Font, FontStyle.Regular)
             toolStripSave.ForeColor = DefaultForeColor
+            toolStripReload.Visible = False
         End If
 
     End Sub
@@ -4167,6 +4176,31 @@ Public Class Main
     Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
 
         SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587681531035781")
+
+    End Sub
+
+    Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
+
+    End Sub
+
+    Private Sub toolStripReload_Click(sender As Object, e As EventArgs) Handles toolStripReload.Click
+
+        If CheckUnsavedAndConfirmAction("discard changes and reload current file") Then
+            Dim currentFile As String = _CurrentSessionFile
+            ResetForm()
+            LoadFile(currentFile)
+            TabControl1.SelectTab(0)
+            Select Case TabControl1.SelectedTab.Name
+                Case "tabDiscord"
+                    BuildFPResults()
+                    BuildWeatherCloudLayers()
+                    BuildWeatherWindLayers()
+                    BuildWeatherInfoResults()
+                    SetDiscordTaskThreadHeight()
+            End Select
+        End If
 
     End Sub
 
