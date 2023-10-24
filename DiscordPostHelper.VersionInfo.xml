@@ -1,6 +1,19 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.21.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.24.5</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.24.5</ReleaseVersion>
+      <ReleaseTitle>New toolbar, new links, new group event posts, and more.</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed XCSoar "trk" by "tsk" and added file info for .xcm files too.
+        Fixed label "XCSoar Track" to "XCSoar Task".
+        Replaced the link to download the DPHX tool from GitHub to FlightSim.to.
+        Changed workflow and content of group flight event posts to allow for "teaser" like and delayed completion for remaining task details, aka "SSC" style.
+        Centered all message boxes and moved main buttons to a toolbar.
+        Added new "I need support!" toolbar items with links to Discord.
+        Added two more toolbar actions: Discard changes and go to Task Library.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.21.2</ReleaseVersion>
       <ReleaseTitle>Dynamic soaring and much more...</ReleaseTitle>
