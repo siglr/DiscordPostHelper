@@ -35,7 +35,9 @@ Public Class CountryGeo
                     System.Threading.Thread.Sleep(1000) ' Wait for 1 second
                 Else
                     NotSupported = True
-                    MessageBox.Show("It appears the retrieval of country information is not supported right now.", "Country info retrieval error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Using New Centered_MessageBox()
+                        MessageBox.Show("It appears the retrieval of country information is not supported right now.", "Country info retrieval error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Using
                     Return String.Empty
                 End If
             End Try
@@ -43,7 +45,9 @@ Public Class CountryGeo
 
         If attempts = 10 Then
             NotSupported = True
-            MessageBox.Show("It appears the retrieval of country information is not supported or unavailable right now from your location.", "Country info retrieval error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("It appears the retrieval of country information is not supported or unavailable right now from your location.", "Country info retrieval error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
             Return String.Empty
         End If
 

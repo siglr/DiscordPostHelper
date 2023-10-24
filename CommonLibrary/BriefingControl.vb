@@ -81,7 +81,9 @@ Public Class BriefingControl
             Try
                 Process.Start(url)
             Catch ex As Exception
-                MessageBox.Show("An error occured trying to open the specified URL!", "Trying to open URL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox()
+                    MessageBox.Show("An error occured trying to open the specified URL!", "Trying to open URL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End Try
         End If
     End Sub
@@ -1069,7 +1071,9 @@ Public Class BriefingControl
     Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
 
         If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_sessionData.DiscordTaskID}") Then
-            MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
     End Sub
 
@@ -1094,7 +1098,9 @@ Public Class BriefingControl
                 End If
                 If inviteURL <> String.Empty Then
                     Clipboard.SetText(inviteURL)
-                    MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Using New Centered_MessageBox()
+                        MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
                 End If
             End If
         End If

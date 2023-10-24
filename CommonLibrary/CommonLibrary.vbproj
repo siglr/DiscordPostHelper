@@ -110,6 +110,7 @@
     <Compile Include="BriefingControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="CenteredMsgBox.vb" />
     <Compile Include="CloudLayer.vb" />
     <Compile Include="Conversions.vb" />
     <Compile Include="Countdown.Designer.vb">

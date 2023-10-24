@@ -23,8 +23,8 @@ Partial Class Main
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim PreferredUnits1 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
+        Dim PreferredUnits4 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
@@ -133,7 +133,6 @@ Partial Class Main
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -267,17 +266,22 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnReset = New System.Windows.Forms.Button()
-        Me.btnLoadConfig = New System.Windows.Forms.Button()
-        Me.btnSaveConfig = New System.Windows.Forms.Button()
-        Me.btnCreateShareablePack = New System.Windows.Forms.Button()
-        Me.btnLoadB21Planner = New System.Windows.Forms.Button()
-        Me.btnGuideMe = New System.Windows.Forms.Button()
-        Me.btnTurnGuideOff = New System.Windows.Forms.Button()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripResetAll = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.toolStripB21Planner = New System.Windows.Forms.ToolStripButton()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.toolStripSharePackage = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.toolStripGuideMe = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripStopGuide = New System.Windows.Forms.ToolStripButton()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -308,6 +312,7 @@ Partial Class Main
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
+        Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -317,10 +322,10 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlScrollableSurface.AutoScroll = True
         Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
-        Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 13)
-        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1489, 907)
+        Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 28)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1489, 892)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1489, 907)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1489, 900)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -336,7 +341,7 @@ Partial Class Main
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1489, 907)
+        Me.TabControl1.Size = New System.Drawing.Size(1489, 900)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -354,7 +359,7 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1481, 874)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1481, 867)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
@@ -477,7 +482,7 @@ Partial Class Main
         Me.grbTaskInfo.Enabled = False
         Me.grbTaskInfo.Location = New System.Drawing.Point(8, 57)
         Me.grbTaskInfo.Name = "grbTaskInfo"
-        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 803)
+        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 804)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
@@ -1104,7 +1109,7 @@ Partial Class Main
         Me.txtLongDescription.Multiline = True
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtLongDescription.Size = New System.Drawing.Size(531, 224)
+        Me.txtLongDescription.Size = New System.Drawing.Size(531, 225)
         Me.txtLongDescription.TabIndex = 55
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
@@ -1638,17 +1643,6 @@ Partial Class Main
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task Post ID"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 168)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
         'tabEvent
         '
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
@@ -1657,7 +1651,7 @@ Partial Class Main
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1481, 874)
+        Me.tabEvent.Size = New System.Drawing.Size(1481, 867)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
@@ -2376,7 +2370,7 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
-        Me.tabDiscord.Size = New System.Drawing.Size(1481, 874)
+        Me.tabDiscord.Size = New System.Drawing.Size(1481, 867)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
@@ -3223,7 +3217,7 @@ Partial Class Main
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1481, 874)
+        Me.tabBriefing.Size = New System.Drawing.Size(1481, 867)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
@@ -3235,7 +3229,7 @@ Partial Class Main
         Me.pnlBriefing.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlBriefing.Location = New System.Drawing.Point(0, 0)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1481, 874)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1481, 867)
         Me.pnlBriefing.TabIndex = 0
         '
         'pnlWizardBriefing
@@ -3276,6 +3270,73 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'OpenFileDialog1
+        '
+        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        '
+        'ToolStrip1
+        '
+        Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide})
+        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.TabIndex = 7
+        Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'toolStripOpen
+        '
+        Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
+        Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripOpen.Name = "toolStripOpen"
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Text = "&Open"
+        Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
+        '
+        'toolStripSave
+        '
+        Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
+        Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripSave.Name = "toolStripSave"
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
+        Me.toolStripSave.Text = "&Save"
+        Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
+        '
+        'toolStripResetAll
+        '
+        Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
+        Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripResetAll.Name = "toolStripResetAll"
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
+        Me.toolStripResetAll.Text = "&Reset All"
+        Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        '
+        'toolStripB21Planner
+        '
+        Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
+        Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripB21Planner.Name = "toolStripB21Planner"
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Text = "&B21 Planner"
+        Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(728, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
         'BriefingControl1
         '
         Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
@@ -3285,129 +3346,67 @@ Partial Class Main
         Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
         Me.BriefingControl1.Name = "BriefingControl1"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.BriefingControl1.PrefUnits = PreferredUnits1
-        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 874)
+        PreferredUnits4.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits4.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits4.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits4.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits4.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits4.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits4.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.BriefingControl1.PrefUnits = PreferredUnits4
+        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 867)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
-        'OpenFileDialog1
+        'ToolStripSeparator2
         '
-        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
         '
-        'btnReset
+        'toolStripSharePackage
         '
-        Me.btnReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReset.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReset.Location = New System.Drawing.Point(510, 3)
-        Me.btnReset.Name = "btnReset"
-        Me.btnReset.Size = New System.Drawing.Size(118, 35)
-        Me.btnReset.TabIndex = 0
-        Me.btnReset.Tag = "30"
-        Me.btnReset.Text = "Reset All"
-        Me.ToolTip1.SetToolTip(Me.btnReset, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnReset.UseVisualStyleBackColor = True
+        Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
+        Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripSharePackage.Name = "toolStripSharePackage"
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
+        Me.toolStripSharePackage.Text = "Share &Package"
+        Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
-        'btnLoadConfig
+        'ToolStripSeparator3
         '
-        Me.btnLoadConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnLoadConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadConfig.Location = New System.Drawing.Point(634, 3)
-        Me.btnLoadConfig.Name = "btnLoadConfig"
-        Me.btnLoadConfig.Size = New System.Drawing.Size(118, 35)
-        Me.btnLoadConfig.TabIndex = 1
-        Me.btnLoadConfig.Tag = "31"
-        Me.btnLoadConfig.Text = "Load"
-        Me.ToolTip1.SetToolTip(Me.btnLoadConfig, "Click to select and load a configuration file from your PC.")
-        Me.btnLoadConfig.UseVisualStyleBackColor = True
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
         '
-        'btnSaveConfig
+        'toolStripGuideMe
         '
-        Me.btnSaveConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSaveConfig.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveConfig.Location = New System.Drawing.Point(758, 3)
-        Me.btnSaveConfig.Name = "btnSaveConfig"
-        Me.btnSaveConfig.Size = New System.Drawing.Size(118, 35)
-        Me.btnSaveConfig.TabIndex = 2
-        Me.btnSaveConfig.Tag = "31"
-        Me.btnSaveConfig.Text = "Save"
-        Me.ToolTip1.SetToolTip(Me.btnSaveConfig, "Click to save the current configuration to your PC.")
-        Me.btnSaveConfig.UseVisualStyleBackColor = True
+        Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
+        Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripGuideMe.Name = "toolStripGuideMe"
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
+        Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
+        Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
-        'btnCreateShareablePack
+        'toolStripStopGuide
         '
-        Me.btnCreateShareablePack.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnCreateShareablePack.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCreateShareablePack.Location = New System.Drawing.Point(882, 3)
-        Me.btnCreateShareablePack.Name = "btnCreateShareablePack"
-        Me.btnCreateShareablePack.Size = New System.Drawing.Size(135, 35)
-        Me.btnCreateShareablePack.TabIndex = 3
-        Me.btnCreateShareablePack.Tag = "32"
-        Me.btnCreateShareablePack.Text = "Share package"
-        Me.ToolTip1.SetToolTip(Me.btnCreateShareablePack, "Click to create a shareable package with all files.")
-        Me.btnCreateShareablePack.UseVisualStyleBackColor = True
-        '
-        'btnLoadB21Planner
-        '
-        Me.btnLoadB21Planner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnLoadB21Planner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadB21Planner.Location = New System.Drawing.Point(1023, 3)
-        Me.btnLoadB21Planner.Name = "btnLoadB21Planner"
-        Me.btnLoadB21Planner.Size = New System.Drawing.Size(152, 35)
-        Me.btnLoadB21Planner.TabIndex = 4
-        Me.btnLoadB21Planner.Tag = "33"
-        Me.btnLoadB21Planner.Text = "Open B21 Planner"
-        Me.ToolTip1.SetToolTip(Me.btnLoadB21Planner, "Click to open the B21 Planner in your browser.")
-        Me.btnLoadB21Planner.UseVisualStyleBackColor = True
-        '
-        'btnGuideMe
-        '
-        Me.btnGuideMe.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnGuideMe.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideMe.Location = New System.Drawing.Point(1182, 3)
-        Me.btnGuideMe.Name = "btnGuideMe"
-        Me.btnGuideMe.Size = New System.Drawing.Size(155, 35)
-        Me.btnGuideMe.TabIndex = 5
-        Me.btnGuideMe.Text = "Guide me please!"
-        Me.ToolTip1.SetToolTip(Me.btnGuideMe, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnGuideMe.UseVisualStyleBackColor = True
-        '
-        'btnTurnGuideOff
-        '
-        Me.btnTurnGuideOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTurnGuideOff.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTurnGuideOff.Location = New System.Drawing.Point(1343, 3)
-        Me.btnTurnGuideOff.Name = "btnTurnGuideOff"
-        Me.btnTurnGuideOff.Size = New System.Drawing.Size(139, 35)
-        Me.btnTurnGuideOff.TabIndex = 6
-        Me.btnTurnGuideOff.Text = "Turn guide off"
-        Me.ToolTip1.SetToolTip(Me.btnTurnGuideOff, "Click to reset ALL of the fiels and start from scratch.")
-        Me.btnTurnGuideOff.UseVisualStyleBackColor = True
-        Me.btnTurnGuideOff.Visible = False
+        Me.toolStripStopGuide.Image = CType(resources.GetObject("toolStripStopGuide.Image"), System.Drawing.Image)
+        Me.toolStripStopGuide.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripStopGuide.Name = "toolStripStopGuide"
+        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 26)
+        Me.toolStripStopGuide.Text = "Turn guide off"
+        Me.toolStripStopGuide.ToolTipText = "Click to disable wizard"
+        Me.toolStripStopGuide.Visible = False
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1494, 915)
-        Me.Controls.Add(Me.btnTurnGuideOff)
-        Me.Controls.Add(Me.btnGuideMe)
-        Me.Controls.Add(Me.btnLoadB21Planner)
-        Me.Controls.Add(Me.btnCreateShareablePack)
-        Me.Controls.Add(Me.btnSaveConfig)
-        Me.Controls.Add(Me.btnLoadConfig)
-        Me.Controls.Add(Me.btnReset)
+        Me.ClientSize = New System.Drawing.Size(1494, 923)
+        Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1512, 959)
+        Me.MinimumSize = New System.Drawing.Size(1512, 967)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -3454,7 +3453,10 @@ Partial Class Main
         Me.tabBriefing.ResumeLayout(False)
         Me.pnlBriefing.ResumeLayout(False)
         Me.pnlWizardBriefing.ResumeLayout(False)
+        Me.ToolStrip1.ResumeLayout(False)
+        Me.ToolStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -3520,7 +3522,6 @@ Partial Class Main
     Friend WithEvents txtLongDescription As TextBox
     Friend WithEvents tabEvent As TabPage
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
-    Friend WithEvents btnReset As Button
     Friend WithEvents grpGroupEventPost As GroupBox
     Friend WithEvents dtEventMeetTime As DateTimePicker
     Friend WithEvents Label26 As Label
@@ -3572,19 +3573,13 @@ Partial Class Main
     Friend WithEvents Label6 As Label
     Friend WithEvents txtDiscordEventDescription As TextBox
     Friend WithEvents txtDiscordEventTopic As TextBox
-    Friend WithEvents btnLoadConfig As Button
-    Friend WithEvents btnSaveConfig As Button
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
-    Friend WithEvents btnCreateShareablePack As Button
-    Friend WithEvents btnLoadB21Planner As Button
     Friend WithEvents btnEventFilesAndFilesInfo As Button
-    Friend WithEvents btnGuideMe As Button
     Friend WithEvents pnlGuide As Panel
     Friend WithEvents Panel3 As Panel
     Friend WithEvents lblGuideInstructions As Label
     Friend WithEvents pnlArrow As Panel
     Friend WithEvents btnGuideNext As Button
-    Friend WithEvents btnTurnGuideOff As Button
     Friend WithEvents pnlWizardEvent As Panel
     Friend WithEvents btnEventGuideNext As Button
     Friend WithEvents Panel2 As Panel
@@ -3711,4 +3706,15 @@ Partial Class Main
     Friend WithEvents txtEventTeaserMessage As TextBox
     Friend WithEvents chkEventTeaser As CheckBox
     Friend WithEvents btnEventTaskDetails As Button
+    Friend WithEvents ToolStrip1 As ToolStrip
+    Friend WithEvents toolStripOpen As ToolStripButton
+    Friend WithEvents toolStripSave As ToolStripButton
+    Friend WithEvents toolStripResetAll As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents toolStripB21Planner As ToolStripButton
+    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents toolStripSharePackage As ToolStripButton
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents toolStripGuideMe As ToolStripButton
+    Friend WithEvents toolStripStopGuide As ToolStripButton
 End Class

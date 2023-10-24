@@ -186,9 +186,11 @@ Public Class DPHXUnpackAndLoad
     Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles btnCopyFiles.Click
 
         If warningMSFSRunningToolStrip.Visible Then
-            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be copied but weather preset will not be available in MSFS until it is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                UnpackFiles()
-            End If
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be copied but weather preset will not be available in MSFS until it is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    UnpackFiles()
+                End If
+            End Using
         Else
             UnpackFiles()
         End If
@@ -197,9 +199,11 @@ Public Class DPHXUnpackAndLoad
     Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles btnCleanup.Click
 
         If warningMSFSRunningToolStrip.Visible Then
-            If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                CleanupFiles()
-            End If
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    CleanupFiles()
+                End If
+            End Using
         Else
             CleanupFiles()
         End If
@@ -265,7 +269,9 @@ Public Class DPHXUnpackAndLoad
                         Application.Exit()
                     Else
                         'Show error updating
-                        MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End Using
                     End If
                 End If
             End If
@@ -456,7 +462,10 @@ Public Class DPHXUnpackAndLoad
             End If
         Next
 
-        MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+
         EnableUnpackButton()
 
     End Sub
@@ -480,13 +489,15 @@ Public Class DPHXUnpackAndLoad
                         proceed = False
                         messageToReturn = $"{msgToAsk} ""{filename}"" skipped - already exists"
                     Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                        If MessageBox.Show($"The {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Do you want to overwrite it?", "File already exists!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                            proceed = True
-                            messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
-                        Else
-                            proceed = False
-                            messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user - already exists"
-                        End If
+                        Using New Centered_MessageBox(Me)
+                            If MessageBox.Show($"The {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Do you want to overwrite it?", "File already exists!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                                proceed = True
+                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
+                            Else
+                                proceed = False
+                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user - already exists"
+                            End If
+                        End Using
                 End Select
             Else
                 proceed = True
@@ -558,7 +569,9 @@ Public Class DPHXUnpackAndLoad
             End If
         Next
 
-        MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
         EnableUnpackButton()
 
     End Sub

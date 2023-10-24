@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Windows.Forms
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class Settings
 
@@ -30,29 +31,30 @@ Public Class Settings
         End If
 
         If Not validSettings Then
-            MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         Else
             'Save settings
             SessionSettings.FlightPlansFolder = btnFlightPlanFilesFolder.Text
-            SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
-            SessionSettings.XCSoarTasksFolder = btnXCSoarFilesFolder.Text
-            SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
-            SessionSettings.PackagesFolder = btnPackagesFolder.Text
-            SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
+                SessionSettings.MSFSWeatherPresetsFolder = btnWeatherPresetsFolder.Text
+                SessionSettings.XCSoarTasksFolder = btnXCSoarFilesFolder.Text
+                SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
+                SessionSettings.PackagesFolder = btnPackagesFolder.Text
+                SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
 
-            If optOverwriteAlwaysOverwrite.Checked Then
-                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-            End If
-            If optOverwriteAlwaysSkip.Checked Then
-                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysSkip
-            End If
-            If optOverwriteAlwaysAsk.Checked Then
-                SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysAsk
-            End If
-
-            SessionSettings.Save()
-            Me.DialogResult = DialogResult.OK
-            Me.Close()
+                If optOverwriteAlwaysOverwrite.Checked Then
+                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
+                End If
+                If optOverwriteAlwaysSkip.Checked Then
+                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysSkip
+                End If
+                If optOverwriteAlwaysAsk.Checked Then
+                    SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysAsk
+                End If
+                SessionSettings.Save()
+                Me.DialogResult = DialogResult.OK
+                Me.Close()
         End If
 
     End Sub
@@ -64,10 +66,12 @@ Public Class Settings
             Me.DialogResult = DialogResult.Cancel
             Me.Close()
         Else
-            If MessageBox.Show("You must save valid paths on the first run. Click Cancel to exit app.", "Cannot cancel on first run.", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then
-                Me.DialogResult = DialogResult.Abort
-                Me.Close()
-            End If
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show("You must save valid paths on the first run. Click Cancel to exit app.", "Cannot cancel on first run.", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then
+                    Me.DialogResult = DialogResult.Abort
+                    Me.Close()
+                End If
+            End Using
         End If
 
     End Sub
@@ -167,7 +171,9 @@ Public Class Settings
             ToolTip1.SetToolTip(btnXCSoarFilesFolder, folderPath)
         Else
             ' folderPath is not a valid folder
-            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
     End Sub
 
@@ -180,7 +186,9 @@ Public Class Settings
             ToolTip1.SetToolTip(btnFlightPlanFilesFolder, folderPath)
         Else
             ' folderPath is not a valid folder
-            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
     End Sub
 
@@ -192,7 +200,9 @@ Public Class Settings
             ToolTip1.SetToolTip(btnWeatherPresetsFolder, folderPath)
         Else
             ' folderPath is not a valid folder
-            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
     End Sub
@@ -205,7 +215,9 @@ Public Class Settings
             ToolTip1.SetToolTip(btnUnpackingFolder, folderPath)
         Else
             ' folderPath is not a valid folder
-            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
     End Sub
@@ -218,7 +230,9 @@ Public Class Settings
             ToolTip1.SetToolTip(btnPackagesFolder, folderPath)
         Else
             ' folderPath is not a valid folder
-            MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
     End Sub

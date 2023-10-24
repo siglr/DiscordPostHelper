@@ -309,7 +309,9 @@ Public Class Main
                         Application.Exit()
                     Else
                         'Show error updating
-                        MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show(Me, $"An error occured during the update process at this step:{Environment.NewLine}{message}{Environment.NewLine}{Environment.NewLine}The update did not complete.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End Using
                     End If
                 End If
             End If
@@ -336,7 +338,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
+    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles toolStripResetAll.Click
         If CheckUnsavedAndConfirmAction("reset all") Then
             ResetForm()
             TabControl1.SelectTab(0)
@@ -376,7 +378,9 @@ Public Class Main
     Private Sub SaveSession()
 
         If txtTitle.Text.Trim = String.Empty Then
-            MessageBox.Show(Me, "A title is required before saving!", "Title required", vbOKOnly, vbCritical)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "A title is required before saving!", "Title required", vbOKOnly, vbCritical)
+            End Using
             Return
         End If
 
@@ -447,7 +451,10 @@ Public Class Main
 
         If _sessionModified Then
             ' Display a confirmation dialog to the user
-            Dim result As DialogResult = MessageBox.Show($"There are unsaved changes. Are you sure you want to {action} ?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            Dim result As DialogResult
+            Using New Centered_MessageBox(Me)
+                result = MessageBox.Show($"There are unsaved changes. Are you sure you want to {action} ?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            End Using
 
             ' If the user chooses not to exit, cancel the form closing
             If result = DialogResult.No Then
@@ -526,7 +533,9 @@ Public Class Main
             invalidMessage = "There is no flight plan loaded or dropped to load, so no other files can be specified in an empty session."
         End If
         If invalidMessage <> String.Empty Then
-            MessageBox.Show(Me, invalidMessage, "Invalid file drop", vbOKOnly, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, invalidMessage, "Invalid file drop", vbOKOnly, MessageBoxIcon.Error)
+            End Using
             Return
         End If
 
@@ -547,7 +556,9 @@ Public Class Main
         End If
         For Each otherFile As String In droppedOtherFiles
             If lstAllFiles.Items.Count = 7 Then
-                MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
                 Exit For
             End If
             AddExtraFile(otherFile)
@@ -563,10 +574,14 @@ Public Class Main
                 lstAllFiles.Items.Add(otherFile)
                 SessionModified()
             Else
-                MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End If
         Else
-            MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
     End Sub
 
@@ -619,9 +634,11 @@ Public Class Main
     End Sub
 
     Private Sub btnDeleteDiscordID_Click(sender As Object, e As EventArgs) Handles btnDeleteDiscordID.Click
-        If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-            txtDiscordTaskID.Text = String.Empty
-        End If
+        Using New Centered_MessageBox(Me)
+            If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                txtDiscordTaskID.Text = String.Empty
+            End If
+        End Using
     End Sub
 
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
@@ -973,7 +990,9 @@ Public Class Main
             Catch ex As Exception
             End Try
             If txtDiscordTaskID.Text = String.Empty Then
-                MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's you've just created and use the paste button on the Flight Plan tab.", "Copy URL to Task", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's you've just created and use the paste button on the Flight Plan tab.", "Copy URL to Task", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
                 autoContinue = False
             End If
         End If
@@ -1001,7 +1020,9 @@ Public Class Main
         Dim dlgResult As DialogResult
 
         Do While _sessionModified
-            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+            Using New Centered_MessageBox(Me)
+                dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+            End Using
             Select Case dlgResult
                 Case DialogResult.OK
                     btnSaveConfig_Click(btnFilesCopy, e)
@@ -1028,7 +1049,9 @@ Public Class Main
                 ShowGuide()
             End If
         Else
-            MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "No files to copy!", "Step 3a - Creating the files post in the thread", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
             autoContinue = False
         End If
         If autoContinue AndAlso SessionSettings.ExpertMode Then
@@ -1142,7 +1165,9 @@ Public Class Main
 
         If msg.Trim = String.Empty Then
             If sender Is btnAltRestricCopy Then
-                MessageBox.Show(Me, "No restriction to post!", "Step 4 - Creating post for restrictions in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "No restriction to post!", "Step 4 - Creating post for restrictions in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End If
         Else
             Clipboard.SetText(msg)
@@ -1224,7 +1249,9 @@ Public Class Main
 
         If txtWaypointsDetails.Text.Length = 0 Then
             If sender Is btnWaypointsCopy Then
-                MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "No waypoint to post!", "Step 5 - Creating waypoints post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End If
         Else
             Clipboard.SetText(txtWaypointsDetails.Text)
@@ -1254,7 +1281,9 @@ Public Class Main
 
         If txtAddOnsDetails.Text.Length = 0 Then
             If sender Is btnAddOnsCopy Then
-                MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "No add-ons to post!", "Step 6 - Creating add-ons post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End If
         Else
             Clipboard.SetText(txtAddOnsDetails.Text)
@@ -1292,7 +1321,9 @@ Public Class Main
                           _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text)
 
         If msg.Trim = String.Empty Then
-            MessageBox.Show(Me, "Nothing to post!", "Step 4 - Creating remaining content post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "Nothing to post!", "Step 4 - Creating remaining content post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         Else
             Clipboard.SetText(msg)
 
@@ -1333,7 +1364,9 @@ Public Class Main
                 'Check if one of the files is selected flight plan or weather file to exclude them
                 If OpenFileDialog1.FileNames(i) <> txtFlightPlanFile.Text And OpenFileDialog1.FileNames(i) <> txtWeatherFile.Text Then
                     If lstAllFiles.Items.Count = 7 Then
-                        MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End Using
                         Exit For
                     End If
                     AddExtraFile(OpenFileDialog1.FileNames(i))
@@ -1662,15 +1695,19 @@ Public Class Main
 
         If showMessageBox Then
             If cannotContinue Then
-                MessageBox.Show(Me, $"Some fields are incomplete:{Environment.NewLine}{Environment.NewLine}{requiredText.ToString}", "Field validation prior to posting", vbOKOnly, vbCritical)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Some fields are incomplete:{Environment.NewLine}{Environment.NewLine}{requiredText.ToString}", "Field validation prior to posting", vbOKOnly, vbCritical)
+                End Using
                 Return cannotContinue
             Else
                 If messageText.ToString <> String.Empty Then
-                    If MessageBox.Show(Me, $"Some fields may be incomplete, do you want to continue?{Environment.NewLine}{Environment.NewLine}{messageText.ToString}", "Field validation prior to posting", vbYesNo, vbQuestion) = DialogResult.No Then
-                        Return True
-                    Else
-                        Return False
-                    End If
+                    Using New Centered_MessageBox(Me)
+                        If MessageBox.Show(Me, $"Some fields may be incomplete, do you want to continue?{Environment.NewLine}{Environment.NewLine}{messageText.ToString}", "Field validation prior to posting", vbYesNo, vbQuestion) = DialogResult.No Then
+                            Return True
+                        Else
+                            Return False
+                        End If
+                    End Using
                 End If
             End If
         End If
@@ -1915,7 +1952,9 @@ Public Class Main
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
 
         If _TaskTotalDistanceInKm = 0 Then
-            MessageBox.Show(Me, "The task distance is 0! You should open the task in the B21 Online Task Planer and re-download the flight plan again.", "Possible error in flight plan data", vbOKOnly, MessageBoxIcon.Warning)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The task distance is 0! You should open the task in the B21 Online Task Planer and re-download the flight plan again.", "Possible error in flight plan data", vbOKOnly, MessageBoxIcon.Warning)
+            End Using
         End If
         txtDistanceTrack.Text = FormatNumber(_TaskTotalDistanceInKm, 0)
 
@@ -2307,7 +2346,9 @@ Public Class Main
             Catch ex As Exception
             End Try
             If txtGroupEventPostURL.Text = String.Empty Then
-                MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
                 autoContinue = False
             End If
         End If
@@ -2461,7 +2502,9 @@ Public Class Main
         Dim dlgResult As DialogResult
 
         Do While _sessionModified
-            dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+            Using New Centered_MessageBox(Me)
+                dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+            End Using
             Select Case dlgResult
                 Case DialogResult.OK
                     btnSaveConfig_Click(btnFilesCopy, e)
@@ -2580,7 +2623,9 @@ Public Class Main
     Private Sub btnTaskFeaturedOnGroupFlight_Click(sender As Object, e As EventArgs) Handles btnTaskFeaturedOnGroupFlight.Click
 
         If _ClubPreset Is Nothing Then
-            MessageBox.Show(Me, "No club selected for the event!", "Discord Post Helper tool", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "No club selected for the event!", "Discord Post Helper tool", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
             Exit Sub
         End If
 
@@ -2991,15 +3036,17 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub btnGuideMe_Click(sender As Object, e As EventArgs) Handles btnGuideMe.Click
+    Private Sub btnGuideMe_Click(sender As Object, e As EventArgs) Handles toolStripGuideMe.Click
 
         Dim activateGuide As Boolean = False
 
         Select Case TabControl1.SelectedTab.TabIndex
             Case tabFlightPlan.TabIndex
-                If MessageBox.Show(Me, "Do you want to start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    ResetForm()
-                End If
+                Using New Centered_MessageBox(Me)
+                    If MessageBox.Show(Me, "Do you want to start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        ResetForm()
+                    End If
+                End Using
                 _GuideCurrentStep = 1
                 activateGuide = True
             Case tabEvent.TabIndex
@@ -3014,7 +3061,7 @@ Public Class Main
         End Select
 
         If activateGuide Then
-            btnTurnGuideOff.Visible = True
+            toolStripStopGuide.Visible = True
             ShowGuide()
         End If
 
@@ -3027,10 +3074,10 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnTurnGuideOff_Click(sender As Object, e As EventArgs) Handles btnTurnGuideOff.Click
+    Private Sub btnTurnGuideOff_Click(sender As Object, e As EventArgs) Handles toolStripStopGuide.Click
 
         _GuideCurrentStep = 0
-        btnTurnGuideOff.Visible = False
+        toolStripStopGuide.Visible = False
         ShowGuide()
 
     End Sub
@@ -3064,7 +3111,7 @@ Public Class Main
     Private Sub ShowGuide(Optional fromF1Key As Boolean = False)
 
         If _GuideCurrentStep > 0 Then
-            btnTurnGuideOff.Visible = True
+            toolStripStopGuide.Visible = True
         End If
 
         Select Case _GuideCurrentStep
@@ -3073,7 +3120,7 @@ Public Class Main
                 pnlWizardEvent.Visible = False
                 pnlWizardDiscord.Visible = False
                 pnlWizardBriefing.Visible = False
-                btnTurnGuideOff.Visible = False
+                toolStripStopGuide.Visible = False
             Case 1 'Select flight plan
                 TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
@@ -3197,29 +3244,9 @@ Public Class Main
                 SetFocusOnField(txtDiscordTaskID, fromF1Key)
 
             Case 25 To 29 'End of flight plan data
-                _GuideCurrentStep = 30
+                _GuideCurrentStep = 34
                 ShowGuide()
 
-            Case 30 'Reset All
-                SetGuidePanelToTopArrowLeftSide()
-                pnlGuide.Left = btnReset.Left
-                lblGuideInstructions.Text = "If you want to start from a clean slate, click this button to reset/initialize EVERYTHING."
-                SetFocusOnField(btnReset, fromF1Key)
-            Case 31 'Save & Load
-                SetGuidePanelToTopArrowLeftSide()
-                pnlGuide.Left = btnLoadConfig.Left
-                lblGuideInstructions.Text = "Whenever you like, you can Save your current track's data to your computer and Load it back when you are ready to continue working on it."
-                SetFocusOnField(btnSaveConfig, fromF1Key)
-            Case 32 'Share package
-                SetGuidePanelToTopArrowRightSide()
-                pnlGuide.Left = (btnCreateShareablePack.Left + btnCreateShareablePack.Size.Width) - pnlGuide.Size.Width
-                lblGuideInstructions.Text = "You can also share your task's data and all the files by copying the DPHX package and send it to anybody."
-                SetFocusOnField(btnCreateShareablePack, fromF1Key)
-            Case 33 'Open B21
-                SetGuidePanelToTopArrowRightSide()
-                pnlGuide.Left = (btnLoadB21Planner.Left + btnLoadB21Planner.Size.Width) - pnlGuide.Size.Width
-                lblGuideInstructions.Text = "You can open your current task using the B21 Task Planner by clicking this button."
-                SetFocusOnField(btnLoadB21Planner, fromF1Key)
             Case 34 'Briefing review
                 TabControl1.SelectedIndex = 3
                 SetBriefingGuidePanel()
@@ -3417,11 +3444,13 @@ Public Class Main
                 SetFocusOnField(btnGroupFlightEventTeaser, fromF1Key)
 
             Case 86 'Discord Event
-                If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    _GuideCurrentStep += 1
-                Else
-                    _GuideCurrentStep = AskWhereToGoNext()
-                End If
+                Using New Centered_MessageBox(Me)
+                    If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        _GuideCurrentStep += 1
+                    Else
+                        _GuideCurrentStep = AskWhereToGoNext()
+                    End If
+                End Using
                 ShowGuide()
 
             Case 87 'Create Discord Event
@@ -3494,8 +3523,10 @@ Public Class Main
                 pnlWizardEvent.Visible = False
                 pnlWizardDiscord.Visible = False
                 pnlWizardBriefing.Visible = False
-                btnTurnGuideOff.Visible = False
-                MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                toolStripStopGuide.Visible = False
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
         End Select
     End Sub
 
@@ -3644,7 +3675,7 @@ Public Class Main
 
 #Region "Call to B21 Online Planner"
 
-    Private Sub btnLoadB21Planner_Click(sender As Object, e As EventArgs) Handles btnLoadB21Planner.Click
+    Private Sub btnLoadB21Planner_Click(sender As Object, e As EventArgs) Handles toolStripB21Planner.Click
 
         If txtFlightPlanFile.Text Is String.Empty Then
             _SF.OpenB21Planner()
@@ -3655,10 +3686,12 @@ Public Class Main
                 _SF.OpenB21Planner(txtFlightPlanFile.Text, _XmlDocFlightPlan.InnerXml, txtWeatherFile.Text, _XmlDocWeatherPreset.InnerXml)
             End If
 
-            If MessageBox.Show(Me, "After reviewing or editing the flight plan, did you make any modification and would like to reload the flight plan here?", "Coming back from B21 Planner", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                'Reload the flight plan
-                LoadFlightPlan(txtFlightPlanFile.Text)
-            End If
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "After reviewing or editing the flight plan, did you make any modification and would like to reload the flight plan here?", "Coming back from B21 Planner", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    'Reload the flight plan
+                    LoadFlightPlan(txtFlightPlanFile.Text)
+                End If
+            End Using
 
         End If
 
@@ -3671,7 +3704,7 @@ Public Class Main
 
 #Region "Event Handlers"
 
-    Private Sub btnLoadConfig_Click(sender As Object, e As EventArgs) Handles btnLoadConfig.Click
+    Private Sub btnLoadConfig_Click(sender As Object, e As EventArgs) Handles toolStripOpen.Click
         If CheckUnsavedAndConfirmAction("load a file") Then
             LoadFileDialog()
         End If
@@ -3688,13 +3721,13 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles btnSaveConfig.Click
+    Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles toolStripSave.Click
 
         SaveSession()
 
     End Sub
 
-    Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles btnCreateShareablePack.Click
+    Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles toolStripSharePackage.Click
 
         If _CurrentSessionFile <> String.Empty Then
             Dim DPHXFilename As String = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(_CurrentSessionFile)}.dphx"
@@ -3703,13 +3736,19 @@ Public Class Main
                     Dim allFiles As New Specialized.StringCollection
                     allFiles.Add(DPHXFilename)
                     Clipboard.SetFileDropList(allFiles)
-                    MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, "The package file (dphx) has been copied to your clipboard.", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
                 End If
             Else
-                MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
             End If
         Else
-            MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You need to save your session first!", "Shareable Session Package created", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
     End Sub
@@ -4084,11 +4123,11 @@ Public Class Main
     Public Sub SetSaveButtonFont()
 
         If _sessionModified Then
-            btnSaveConfig.Font = New Font(btnSaveConfig.Font, FontStyle.Bold)
-            btnSaveConfig.ForeColor = Color.Red
+            toolStripSave.Font = New Font(toolStripSave.Font, FontStyle.Bold)
+            toolStripSave.ForeColor = Color.Red
         Else
-            btnSaveConfig.Font = New Font(btnSaveConfig.Font, FontStyle.Regular)
-            btnSaveConfig.ForeColor = DefaultForeColor
+            toolStripSave.Font = New Font(toolStripSave.Font, FontStyle.Regular)
+            toolStripSave.ForeColor = DefaultForeColor
         End If
 
     End Sub

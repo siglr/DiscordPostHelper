@@ -519,7 +519,9 @@ Public Class SupportingFeatures
         Dim overwriteResult As DialogResult
         If Directory.Exists(folderToUnpackDialog.SelectedPath) Then
             'Folder exists - files may be overwritten
-            overwriteResult = MessageBox.Show("Existing files in this folder may get overwritten by the ones in the package, do you want to confirm each individual file?", $"Unpacking to {folderToUnpackDialog.SelectedPath}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            Using New Centered_MessageBox()
+                overwriteResult = MessageBox.Show("Existing files in this folder may get overwritten by the ones in the package, do you want to confirm each individual file?", $"Unpacking to {folderToUnpackDialog.SelectedPath}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            End Using
             If overwriteResult = DialogResult.Cancel Then
                 Return String.Empty
             End If
@@ -538,7 +540,9 @@ Public Class SupportingFeatures
                 End If
                 If File.Exists(fileDestination) Then
                     If overwriteResult = DialogResult.Yes Then
-                        individualFileOverwrite = MessageBox.Show($"File {entry.Name} already exists - do you want to overwrite?", "Confirm file overwrite", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+                        Using New Centered_MessageBox()
+                            individualFileOverwrite = MessageBox.Show($"File {entry.Name} already exists - do you want to overwrite?", "Confirm file overwrite", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+                        End Using
                         Select Case individualFileOverwrite
                             Case DialogResult.Cancel
                                 Return String.Empty
@@ -636,7 +640,9 @@ Public Class SupportingFeatures
             Try
                 responseBytes = client.DownloadData(url)
             Catch ex As WebException
-                MessageBox.Show("It appears it is impossible to retrieve version information right now. You will have to manually check for the latest version.", "Checking latest version", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Using New Centered_MessageBox()
+                    MessageBox.Show("It appears it is impossible to retrieve version information right now. You will have to manually check for the latest version.", "Checking latest version", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
                 Return Nothing
             End Try
 
@@ -1164,7 +1170,9 @@ Public Class SupportingFeatures
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End Try
 
     End Sub
@@ -1179,7 +1187,9 @@ Public Class SupportingFeatures
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("An error occurred trying to write to the registry!", "Writing user settings to registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End Try
 
     End Sub
@@ -1198,7 +1208,9 @@ Public Class SupportingFeatures
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End Try
 
         Return value
@@ -1219,7 +1231,9 @@ Public Class SupportingFeatures
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox()
+                MessageBox.Show("An error occurred trying to read from the registry!", "Reading user settings from registry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End Try
 
         Return value
