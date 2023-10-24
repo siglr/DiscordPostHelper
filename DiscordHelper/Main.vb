@@ -3869,7 +3869,7 @@ Public Class Main
             .BeginnersGuide = cboBeginnersGuide.Text
             .BeginnersGuideCustom = txtOtherBeginnerLink.Text
             .GroupEventTeaserEnabled = chkEventTeaser.Checked
-            .GroupEventTeaserMessage = txtEventTeaserMessage.Text
+            .GroupEventTeaserMessage = txtEventTeaserMessage.Text.Replace(Environment.NewLine, "($*$)")
             .GroupEventTeaserAreaMapImage = txtEventTeaserAreaMapImage.Text
 
         End With
@@ -4027,7 +4027,7 @@ Public Class Main
                 chkLockMapImage.Checked = .LockMapImage
                 chkLockCoverImage.Checked = .LockCoverImage
                 chkEventTeaser.Checked = .GroupEventTeaserEnabled
-                txtEventTeaserMessage.Text = .GroupEventTeaserMessage
+                txtEventTeaserMessage.Text = .GroupEventTeaserMessage.Replace("($*$)", Environment.NewLine)
 
                 If Not File.Exists(.GroupEventTeaserAreaMapImage) Then
                     'Should expect the file to be in the same folder as the .dph file
