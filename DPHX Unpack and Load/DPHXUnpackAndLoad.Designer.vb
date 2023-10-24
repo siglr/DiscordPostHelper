@@ -24,7 +24,7 @@ Partial Class DPHXUnpackAndLoad
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
-        Dim PreferredUnits1 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
+        Dim PreferredUnits5 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Me.pnlToolbar = New System.Windows.Forms.Panel()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
@@ -39,20 +39,26 @@ Partial Class DPHXUnpackAndLoad
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.toolStripSettings = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtPackageName = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
+        Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
+        Me.toolStatusOK = New System.Windows.Forms.ToolStripButton()
+        Me.toolStatusStop = New System.Windows.Forms.ToolStripButton()
+        Me.toolStatusWarning = New System.Windows.Forms.ToolStripButton()
+        Me.lblAllFilesStatus = New System.Windows.Forms.ToolStripTextBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.toolStripSettings = New System.Windows.Forms.ToolStripButton()
-        Me.lblAllFilesStatus = New System.Windows.Forms.Label()
-        Me.txtPackageName = New System.Windows.Forms.TextBox()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
+        Me.ToolStrip2.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -63,17 +69,18 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlToolbar.Location = New System.Drawing.Point(0, 0)
         Me.pnlToolbar.Name = "pnlToolbar"
         Me.pnlToolbar.Padding = New System.Windows.Forms.Padding(5, 5, 5, 10)
-        Me.pnlToolbar.Size = New System.Drawing.Size(1138, 45)
+        Me.pnlToolbar.Size = New System.Drawing.Size(1006, 45)
         Me.pnlToolbar.TabIndex = 0
         '
         'ToolStrip1
         '
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings, Me.ToolStripButton2})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1128, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
         Me.ToolStrip1.TabIndex = 8
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -168,19 +175,111 @@ Partial Class DPHXUnpackAndLoad
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
         '
+        'toolStripSettings
+        '
+        Me.toolStripSettings.Image = CType(resources.GetObject("toolStripSettings.Image"), System.Drawing.Image)
+        Me.toolStripSettings.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripSettings.Name = "toolStripSettings"
+        Me.toolStripSettings.Size = New System.Drawing.Size(88, 25)
+        Me.toolStripSettings.Text = "&Settings"
+        Me.toolStripSettings.ToolTipText = "Click to open the Settings windows"
+        '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(26, 25)
+        Me.ToolStripButton2.Text = "ToolStripButton2"
+        '
+        'txtPackageName
+        '
+        Me.txtPackageName.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtPackageName.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtPackageName.Location = New System.Drawing.Point(793, 157)
+        Me.txtPackageName.Name = "txtPackageName"
+        Me.txtPackageName.ReadOnly = True
+        Me.txtPackageName.Size = New System.Drawing.Size(176, 27)
+        Me.txtPackageName.TabIndex = 5
+        Me.txtPackageName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtPackageName, "The currently loaded DPHX package file")
+        Me.txtPackageName.Visible = False
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
         'pnlDPHFile
         '
-        Me.pnlDPHFile.Controls.Add(Me.lblAllFilesStatus)
+        Me.pnlDPHFile.Controls.Add(Me.ToolStrip2)
         Me.pnlDPHFile.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlDPHFile.Location = New System.Drawing.Point(0, 45)
         Me.pnlDPHFile.Name = "pnlDPHFile"
         Me.pnlDPHFile.Padding = New System.Windows.Forms.Padding(5)
-        Me.pnlDPHFile.Size = New System.Drawing.Size(1138, 32)
+        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 32)
         Me.pnlDPHFile.TabIndex = 2
+        '
+        'ToolStrip2
+        '
+        Me.ToolStrip2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip2.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStatusOK, Me.toolStatusStop, Me.toolStatusWarning, Me.lblAllFilesStatus})
+        Me.ToolStrip2.Location = New System.Drawing.Point(5, 5)
+        Me.ToolStrip2.Name = "ToolStrip2"
+        Me.ToolStrip2.Size = New System.Drawing.Size(996, 29)
+        Me.ToolStrip2.TabIndex = 0
+        Me.ToolStrip2.Text = "ToolStrip2"
+        '
+        'toolStatusOK
+        '
+        Me.toolStatusOK.AutoToolTip = False
+        Me.toolStatusOK.BackgroundImage = CType(resources.GetObject("toolStatusOK.BackgroundImage"), System.Drawing.Image)
+        Me.toolStatusOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.toolStatusOK.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.toolStatusOK.Enabled = False
+        Me.toolStatusOK.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStatusOK.Name = "toolStatusOK"
+        Me.toolStatusOK.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusOK.ToolTipText = "All ready to go!"
+        Me.toolStatusOK.Visible = False
+        '
+        'toolStatusStop
+        '
+        Me.toolStatusStop.AutoToolTip = False
+        Me.toolStatusStop.BackgroundImage = CType(resources.GetObject("toolStatusStop.BackgroundImage"), System.Drawing.Image)
+        Me.toolStatusStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.toolStatusStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.toolStatusStop.Enabled = False
+        Me.toolStatusStop.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStatusStop.Name = "toolStatusStop"
+        Me.toolStatusStop.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusStop.ToolTipText = "Stop right there or you won't get far!"
+        Me.toolStatusStop.Visible = False
+        '
+        'toolStatusWarning
+        '
+        Me.toolStatusWarning.AutoToolTip = False
+        Me.toolStatusWarning.BackgroundImage = CType(resources.GetObject("toolStatusWarning.BackgroundImage"), System.Drawing.Image)
+        Me.toolStatusWarning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.toolStatusWarning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.toolStatusWarning.Enabled = False
+        Me.toolStatusWarning.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStatusWarning.Name = "toolStatusWarning"
+        Me.toolStatusWarning.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusWarning.ToolTipText = "Warning! Check your files!"
+        Me.toolStatusWarning.Visible = False
+        '
+        'lblAllFilesStatus
+        '
+        Me.lblAllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.lblAllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lblAllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.lblAllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
+        Me.lblAllFilesStatus.Name = "lblAllFilesStatus"
+        Me.lblAllFilesStatus.Size = New System.Drawing.Size(800, 29)
         '
         'StatusStrip1
         '
@@ -188,7 +287,7 @@ Partial Class DPHXUnpackAndLoad
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.warningMSFSRunningToolStrip, Me.packageNameToolStrip})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 700)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(1138, 24)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1006, 24)
         Me.StatusStrip1.TabIndex = 4
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -224,55 +323,22 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        PreferredUnits1.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
-        PreferredUnits1.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
-        PreferredUnits1.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
-        PreferredUnits1.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
-        PreferredUnits1.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
-        PreferredUnits1.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
-        PreferredUnits1.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
-        Me.ctrlBriefing.PrefUnits = PreferredUnits1
-        Me.ctrlBriefing.Size = New System.Drawing.Size(1138, 633)
+        PreferredUnits5.Altitude = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.AltitudeUnits.Imperial
+        PreferredUnits5.Barometric = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.BarometricUnits.inHg
+        PreferredUnits5.Distance = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.DistanceUnits.Metric
+        PreferredUnits5.GateDiameter = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateDiameterUnits.Metric
+        PreferredUnits5.GateMeasurement = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.GateMeasurementChoices.Radius
+        PreferredUnits5.Temperature = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.TemperatureUnits.Celsius
+        PreferredUnits5.WindSpeed = SIGLR.SoaringTools.CommonLibrary.PreferredUnits.WindSpeedUnits.Knots
+        Me.ctrlBriefing.PrefUnits = PreferredUnits5
+        Me.ctrlBriefing.Size = New System.Drawing.Size(1006, 633)
         Me.ctrlBriefing.TabIndex = 3
-        '
-        'toolStripSettings
-        '
-        Me.toolStripSettings.Image = CType(resources.GetObject("toolStripSettings.Image"), System.Drawing.Image)
-        Me.toolStripSettings.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.toolStripSettings.Name = "toolStripSettings"
-        Me.toolStripSettings.Size = New System.Drawing.Size(88, 25)
-        Me.toolStripSettings.Text = "&Settings"
-        Me.toolStripSettings.ToolTipText = "Click to open the Settings windows"
-        '
-        'lblAllFilesStatus
-        '
-        Me.lblAllFilesStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblAllFilesStatus.Location = New System.Drawing.Point(5, 5)
-        Me.lblAllFilesStatus.Name = "lblAllFilesStatus"
-        Me.lblAllFilesStatus.Size = New System.Drawing.Size(1128, 22)
-        Me.lblAllFilesStatus.TabIndex = 0
-        Me.lblAllFilesStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'txtPackageName
-        '
-        Me.txtPackageName.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtPackageName.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtPackageName.Location = New System.Drawing.Point(793, 157)
-        Me.txtPackageName.Name = "txtPackageName"
-        Me.txtPackageName.ReadOnly = True
-        Me.txtPackageName.Size = New System.Drawing.Size(308, 27)
-        Me.txtPackageName.TabIndex = 5
-        Me.txtPackageName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.ToolTip1.SetToolTip(Me.txtPackageName, "The currently loaded DPHX package file")
-        Me.txtPackageName.Visible = False
         '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1138, 724)
+        Me.ClientSize = New System.Drawing.Size(1006, 724)
         Me.Controls.Add(Me.txtPackageName)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ctrlBriefing)
@@ -291,6 +357,9 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.pnlDPHFile.ResumeLayout(False)
+        Me.pnlDPHFile.PerformLayout()
+        Me.ToolStrip2.ResumeLayout(False)
+        Me.ToolStrip2.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -320,6 +389,11 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents GoToFeedbackChannelOnDiscordToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DiscordInviteToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents toolStripSettings As ToolStripButton
-    Friend WithEvents lblAllFilesStatus As Label
     Friend WithEvents txtPackageName As TextBox
+    Friend WithEvents ToolStrip2 As ToolStrip
+    Friend WithEvents lblAllFilesStatus As ToolStripTextBox
+    Friend WithEvents toolStatusWarning As ToolStripButton
+    Friend WithEvents ToolStripButton2 As ToolStripButton
+    Friend WithEvents toolStatusOK As ToolStripButton
+    Friend WithEvents toolStatusStop As ToolStripButton
 End Class

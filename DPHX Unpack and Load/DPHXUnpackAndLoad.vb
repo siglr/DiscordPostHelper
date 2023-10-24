@@ -447,18 +447,25 @@ Public Class DPHXUnpackAndLoad
 
         SetFilesToUnpack()
 
+        toolStatusOK.Visible = False
+        toolStatusWarning.Visible = False
+        toolStatusStop.Visible = False
+
         If _filesToUnpack.Count <> _filesCurrentlyUnpacked.Count Then
             toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
             toolStripUnpack.ForeColor = Color.Red
             If _filesCurrentlyUnpacked.Count = 0 Then
                 lblAllFilesStatus.Text = $"All files ({GetListOfFilesMissing()}) are MISSING from their respective folder."
+                toolStatusStop.Visible = True
             Else
                 lblAllFilesStatus.Text = $"{_filesCurrentlyUnpacked.Count} out of {_filesToUnpack.Count} files are present: {GetListOfFilesPresent()}. MISSING files: {GetListOfFilesMissing()}"
+                toolStatusWarning.Visible = True
             End If
         Else
             toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
             toolStripUnpack.ForeColor = DefaultForeColor
             lblAllFilesStatus.Text = $"All the files ({GetListOfFilesPresent()}) are present in their respective folder."
+            toolStatusOK.Visible = True
         End If
     End Sub
 
@@ -676,8 +683,8 @@ Public Class DPHXUnpackAndLoad
             End If
         Next
 
-        Using New Centered_MessageBox(Me)
-            MessageBox.Show(sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Using New Centered_MessageBox()
+            MessageBox.Show(Me, sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
         EnableUnpackButton()
 
