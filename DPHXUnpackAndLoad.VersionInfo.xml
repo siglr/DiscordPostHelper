@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.24.4</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.27.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.27.1</ReleaseVersion>
+      <ReleaseTitle>Fix to toolbar and new file status icons</ReleaseTitle>
+      <ReleaseNotes>
+        Added status icons to indicate files status.
+        Fixed the toolbar buttons not working when window is not the active one.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.24.4</ReleaseVersion>
       <ReleaseTitle>New toolbar, new links, new settings!</ReleaseTitle>
