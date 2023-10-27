@@ -1,4 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿Imports SIGLR.SoaringTools.CommonLibrary
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DPHXUnpackAndLoad
     Inherits System.Windows.Forms.Form
 
@@ -26,7 +28,7 @@ Partial Class DPHXUnpackAndLoad
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Dim PreferredUnits5 As SIGLR.SoaringTools.CommonLibrary.PreferredUnits = New SIGLR.SoaringTools.CommonLibrary.PreferredUnits()
         Me.pnlToolbar = New System.Windows.Forms.Panel()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.ToolStrip1 = New ToolStripExtensions.ToolStripExtended
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripUnpack = New System.Windows.Forms.ToolStripButton()
         Me.toolStripCleanup = New System.Windows.Forms.ToolStripButton()

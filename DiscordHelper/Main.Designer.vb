@@ -1,4 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿Imports SIGLR.SoaringTools.CommonLibrary
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Main
     Inherits System.Windows.Forms.Form
 
@@ -271,7 +273,7 @@ Partial Class Main
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.ToolStrip1 = New ToolStripExtensions.ToolStripExtended
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
         Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
