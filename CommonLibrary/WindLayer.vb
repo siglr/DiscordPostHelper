@@ -3,6 +3,7 @@ Imports System.Web.ModelBinding
 Imports System.Xml
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
+<Serializable()>
 Public Class WindLayer
     Private ReadOnly _GustAngle As Integer
     Private ReadOnly _GustSpeed As Integer

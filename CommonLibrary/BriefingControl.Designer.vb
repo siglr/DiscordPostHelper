@@ -107,6 +107,7 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.WindCloudDisplay1 = New SIGLR.SoaringTools.CommonLibrary.WindCloudDisplay()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -679,6 +680,7 @@ Partial Class BriefingControl
         '
         'tbpgWeather
         '
+        Me.tbpgWeather.Controls.Add(Me.WindCloudDisplay1)
         Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
         Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
         Me.tbpgWeather.Name = "tbpgWeather"
@@ -1176,6 +1178,15 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
+        'WindCloudDisplay1
+        '
+        Me.WindCloudDisplay1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.WindCloudDisplay1.Location = New System.Drawing.Point(0, 0)
+        Me.WindCloudDisplay1.Name = "WindCloudDisplay1"
+        Me.WindCloudDisplay1.Size = New System.Drawing.Size(953, 688)
+        Me.WindCloudDisplay1.TabIndex = 3
+        Me.WindCloudDisplay1.Text = "WindCloudDisplay1"
+        '
         'BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -1337,4 +1348,5 @@ Partial Class BriefingControl
     Friend WithEvents FlowLayoutPanel7 As Windows.Forms.FlowLayoutPanel
     Friend WithEvents radioGateMeasurementDiameter As Windows.Forms.RadioButton
     Friend WithEvents radioGateMeasurementRadius As Windows.Forms.RadioButton
+    Friend WithEvents WindCloudDisplay1 As WindCloudDisplay
 End Class

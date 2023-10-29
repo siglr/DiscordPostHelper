@@ -323,6 +323,8 @@ Public Class BriefingControl
                 Case 3 'Images
                 Case 4 'All Waypoints
                 Case 5 'Weather
+                    WindCloudDisplay1.Visible = True
+                    WindCloudDisplay1.SetWeatherInfo(_WeatherDetails)
                 Case 6 'Add-ons
                 Case 7 'Units
                     _onUnitsTab = True
