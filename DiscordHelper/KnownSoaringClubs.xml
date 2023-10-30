@@ -112,4 +112,32 @@
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
   </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>UKVGA TUE</ClubId>
+    <ClubName>UKVGA Tuesdays</ClubName>
+    <ClubFullName>UKVGA Soaring Tuesdays</ClubFullName>
+    <MSFSServer>Southeast Asia</MSFSServer>
+    <VoiceChannel>General</VoiceChannel>
+    <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
+    <ZuluTime>7:15 AM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>UKVGA THU</ClubId>
+    <ClubName>UKVGA Thursdays</ClubName>
+    <ClubFullName>UKVGA Soaring Thursdays</ClubFullName>
+    <MSFSServer>Southeast Asia</MSFSServer>
+    <VoiceChannel>General</VoiceChannel>
+    <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>
+    <ZuluTime>7:15 AM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
 </KnownSoaringClubs>

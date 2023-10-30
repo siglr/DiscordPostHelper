@@ -21,7 +21,7 @@ Public Class CloudLayer
     Public ReadOnly Property IsValidCloudLayer As Boolean
         Get
             Dim blnAnswer As Boolean = True
-            If _Density = 0 Or _Coverage = 0 Or AltitudeBottom = _AltitudeTop Then
+            If _Coverage = 0 Or AltitudeBottom = _AltitudeTop Then
                 blnAnswer = False
             End If
             Return blnAnswer
