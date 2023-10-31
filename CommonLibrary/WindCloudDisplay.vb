@@ -6,11 +6,108 @@ Public Class WindCloudDisplay
     Inherits Control
 
     Private _WeatherInfo As WeatherDetails = Nothing
+    Private _blueGradientPalette As List(Of Color)
+    Private _greyGradientPalette As List(Of Color)
+
+    Public Sub New()
+        MyBase.New
+
+        ' Define the gradient palette with 26 shades of blue
+        _blueGradientPalette = New List(Of Color) From {
+            Color.FromArgb(0, 0, 255),    ' HSV(238, 100, 100)
+            Color.FromArgb(11, 11, 255),  ' HSV(238, 97, 100)
+            Color.FromArgb(21, 21, 255),  ' HSV(238, 95, 100)
+            Color.FromArgb(32, 32, 255),  ' HSV(238, 92, 100)
+            Color.FromArgb(42, 42, 255),  ' HSV(238, 90, 100)
+            Color.FromArgb(53, 53, 255),  ' HSV(238, 87, 100)
+            Color.FromArgb(63, 63, 255),  ' HSV(238, 84, 100)
+            Color.FromArgb(74, 74, 255),  ' HSV(238, 82, 100)
+            Color.FromArgb(84, 84, 255),  ' HSV(238, 79, 100)
+            Color.FromArgb(95, 95, 255),  ' HSV(238, 77, 100)
+            Color.FromArgb(105, 105, 255), ' HSV(238, 74, 100)
+            Color.FromArgb(116, 116, 255), ' HSV(238, 71, 100)
+            Color.FromArgb(126, 126, 255), ' HSV(238, 69, 100)
+            Color.FromArgb(137, 137, 255), ' HSV(238, 66, 100)
+            Color.FromArgb(147, 147, 255), ' HSV(238, 64, 100)
+            Color.FromArgb(158, 158, 255), ' HSV(238, 61, 100)
+            Color.FromArgb(168, 168, 255), ' HSV(238, 58, 100)
+            Color.FromArgb(179, 179, 255), ' HSV(238, 56, 100)
+            Color.FromArgb(189, 189, 255), ' HSV(238, 53, 100)
+            Color.FromArgb(200, 200, 255), ' HSV(238, 51, 100)
+            Color.FromArgb(210, 210, 255), ' HSV(238, 48, 100)
+            Color.FromArgb(221, 221, 255), ' HSV(238, 45, 100)
+            Color.FromArgb(231, 231, 255), ' HSV(238, 43, 100)
+            Color.FromArgb(242, 242, 255), ' HSV(238, 40, 100)
+            Color.FromArgb(252, 252, 255), ' HSV(238, 38, 100)
+            Color.FromArgb(255, 255, 255)  ' HSV(238, 35, 100)
+        }
+
+        ' Define the gradient palette with 50 shades of grey
+        _greyGradientPalette = New List(Of Color) From {
+            Color.FromArgb(225, 225, 225),
+            Color.FromArgb(222, 222, 222),
+            Color.FromArgb(219, 219, 219),
+            Color.FromArgb(216, 216, 216),
+            Color.FromArgb(213, 213, 213),
+            Color.FromArgb(210, 210, 210),
+            Color.FromArgb(207, 207, 207),
+            Color.FromArgb(204, 204, 204),
+            Color.FromArgb(201, 201, 201),
+            Color.FromArgb(198, 198, 198),
+            Color.FromArgb(195, 195, 195),
+            Color.FromArgb(192, 192, 192),
+            Color.FromArgb(189, 189, 189),
+            Color.FromArgb(186, 186, 186),
+            Color.FromArgb(183, 183, 183),
+            Color.FromArgb(180, 180, 180),
+            Color.FromArgb(177, 177, 177),
+            Color.FromArgb(174, 174, 174),
+            Color.FromArgb(171, 171, 171),
+            Color.FromArgb(168, 168, 168),
+            Color.FromArgb(165, 165, 165),
+            Color.FromArgb(162, 162, 162),
+            Color.FromArgb(159, 159, 159),
+            Color.FromArgb(156, 156, 156),
+            Color.FromArgb(153, 153, 153),
+            Color.FromArgb(150, 150, 150),
+            Color.FromArgb(147, 147, 147),
+            Color.FromArgb(144, 144, 144),
+            Color.FromArgb(141, 141, 141),
+            Color.FromArgb(138, 138, 138),
+            Color.FromArgb(135, 135, 135),
+            Color.FromArgb(132, 132, 132),
+            Color.FromArgb(129, 129, 129),
+            Color.FromArgb(126, 126, 126),
+            Color.FromArgb(123, 123, 123),
+            Color.FromArgb(120, 120, 120),
+            Color.FromArgb(117, 117, 117),
+            Color.FromArgb(114, 114, 114),
+            Color.FromArgb(111, 111, 111),
+            Color.FromArgb(108, 108, 108),
+            Color.FromArgb(105, 105, 105),
+            Color.FromArgb(102, 102, 102),
+            Color.FromArgb(99, 99, 99),
+            Color.FromArgb(96, 96, 96),
+            Color.FromArgb(93, 93, 93),
+            Color.FromArgb(90, 90, 90),
+            Color.FromArgb(87, 87, 87),
+            Color.FromArgb(84, 84, 84),
+            Color.FromArgb(81, 81, 81),
+            Color.FromArgb(78, 78, 78)
+        }
+
+    End Sub
 
     Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails)
         _WeatherInfo = thisWeatherInfo
         Invalidate()
     End Sub
+
+    Public Sub ResetGraph()
+        _WeatherInfo = Nothing
+        Invalidate()
+    End Sub
+
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
         MyBase.OnPaint(e)
 
@@ -32,9 +129,6 @@ Public Class WindCloudDisplay
 
         DrawCloudLayers(e, altitudePositions)
 
-        ' Draw the vertical line in the center
-        e.Graphics.DrawLine(New Pen(Color.Black, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
-
     End Sub
 
     Private Function DrawGridLinesAndLabels(ByVal e As PaintEventArgs) As Dictionary(Of Integer, Single)
@@ -52,7 +146,7 @@ Public Class WindCloudDisplay
         altitudePositions.Add(10000, yPos10k)
 
         ' Draw the 10k line in the middle
-        e.Graphics.DrawLine(New Pen(Color.Black, 1), 0, yPos10k, drawableWidth, yPos10k)
+        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
         e.Graphics.DrawString("10k", New Font("Arial", 10), Brushes.Black, 0, yPos10k)
 
         ' Calculate the decremental step from 10k down to -2k
@@ -61,12 +155,12 @@ Public Class WindCloudDisplay
         ' Draw lines only at 0 and -2k
         Dim yPos0 As Single = yPos10k + 10 * decrementStep
         altitudePositions.Add(0, yPos0)
-        e.Graphics.DrawLine(New Pen(Color.Black, 1), 0, yPos0, drawableWidth, yPos0)
+        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
         e.Graphics.DrawString("0k", New Font("Arial", 10), Brushes.Black, 0, yPos0)
 
         Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
         altitudePositions.Add(-2000, yPosNeg2k)
-        e.Graphics.DrawLine(New Pen(Color.Black, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
+        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
         e.Graphics.DrawString("-2k", New Font("Arial", 10), Brushes.Black, 0, yPosNeg2k)
 
         ' Calculate the incremental step from 10k up to 60k
@@ -76,9 +170,12 @@ Public Class WindCloudDisplay
         For i As Integer = 1 To 5
             Dim yPos As Single = yPos10k - i * incrementStep
             altitudePositions.Add((10 + i * 10) * 1000, yPos)
-            e.Graphics.DrawLine(New Pen(Color.Black, 1), 0, yPos, drawableWidth, yPos)
+            e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
             e.Graphics.DrawString((10 + i * 10).ToString() + "k", New Font("Arial", 10), Brushes.Black, 0, yPos)
         Next
+
+        ' Draw the vertical line in the center
+        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
 
         Return altitudePositions
 
@@ -125,12 +222,25 @@ Public Class WindCloudDisplay
                 End If
             Next
 
-            ' 3. Draw the rectangles
+            ' 3. Draw the rectangles and set their color
             For i = 0 To windRects.Count - 1
-                e.Graphics.FillRectangle(Brushes.Blue, windRects(i))
+                ' Calculate wind rectangle color based on wind speed using the _blueGradientPalette
+                Dim windSpeed As Single = Single.Parse(windInfos(i).Split("@")(1).Replace("kts", ""))
+                Dim windColorIndex As Integer = 25 - CInt(Math.Round((windSpeed / 25) * 25))
+                If windColorIndex < 0 Then windColorIndex = 0
+                If windColorIndex > 25 Then windColorIndex = 25
+                Dim windColor As Color = _blueGradientPalette(windColorIndex)
+
+                ' Set text color based on wind color brightness
+                Dim textColor As Color = If(windColor.GetBrightness() > 0.5, Color.Black, Color.White)
+
+                ' Draw the rectangle with a dark blue border
+                e.Graphics.FillRectangle(New SolidBrush(windColor), windRects(i))
+                e.Graphics.DrawRectangle(New Pen(Color.DarkBlue, 1), windRects(i))
+
                 Dim windSize As SizeF = e.Graphics.MeasureString(windInfos(i), Font)
                 Dim windLocation As New Point(windRects(i).Left + (windRects(i).Width - windSize.Width) / 2, windRects(i).Top + (windRects(i).Height - windSize.Height) / 2)
-                e.Graphics.DrawString(windInfos(i), Font, Brushes.White, windLocation)
+                e.Graphics.DrawString(windInfos(i), Font, New SolidBrush(textColor), windLocation)
             Next
 
         End If
@@ -146,6 +256,7 @@ Public Class WindCloudDisplay
 
             Dim cloudRects As New List(Of Rectangle)
             Dim cloudInfos As New List(Of Tuple(Of String, String))
+            Dim cloudDensities As New List(Of Single)  ' List to store cloud densities
 
             ' 1. Define all rectangles
             For Each cloud In _WeatherInfo.CloudLayers
@@ -168,6 +279,7 @@ Public Class WindCloudDisplay
                     Else
                         cloudInfos.Add(Tuple.Create(line1, line2))
                     End If
+                    cloudDensities.Add(cloud.Density)
                 End If
             Next
 
@@ -190,19 +302,33 @@ Public Class WindCloudDisplay
 
             ' 3. Draw the rectangles
             For i = 0 To cloudRects.Count - 1
-                e.Graphics.FillRectangle(Brushes.Gray, cloudRects(i))
+                ' Calculate cloud rectangle color using the stored cloud density and the _greyGradientPalette
+                Dim cloudDensity As Single = cloudDensities(i)
+                Dim cloudColorIndex As Integer = CInt(Math.Round((cloudDensity / 5) * 49))
+                If cloudColorIndex < 0 Then cloudColorIndex = 0
+                If cloudColorIndex > 49 Then cloudColorIndex = 49
+                Dim cloudColor As Color = _greyGradientPalette(cloudColorIndex)
+
+                ' Set text color based on cloud color brightness
+                Dim textColor As Color = If(cloudColor.GetBrightness() > 0.5, Color.Black, Color.White)
+
+                ' Draw the rectangle with the calculated color
+                e.Graphics.FillRectangle(New SolidBrush(cloudColor), cloudRects(i))
+
+                ' Add dark blue border to cloud rectangle
+                e.Graphics.DrawRectangle(New Pen(Color.Black, 1), cloudRects(i))
 
                 Dim totalHeightForTwoLines As Single = 2 * Font.GetHeight(e.Graphics)
                 Dim startYForTwoLines As Single = cloudRects(i).Top + (cloudRects(i).Height - totalHeightForTwoLines) / 2
 
                 Dim line1Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item1, Font)
                 Dim line1Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line1Size.Width) / 2, If(String.IsNullOrEmpty(cloudInfos(i).Item2), cloudRects(i).Top + (cloudRects(i).Height - line1Size.Height) / 2, startYForTwoLines))
-                e.Graphics.DrawString(cloudInfos(i).Item1, Font, Brushes.White, line1Location)
+                e.Graphics.DrawString(cloudInfos(i).Item1, Font, New SolidBrush(textColor), line1Location)
 
                 If Not String.IsNullOrEmpty(cloudInfos(i).Item2) Then
                     Dim line2Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item2, Font)
                     Dim line2Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line2Size.Width) / 2, startYForTwoLines + Font.GetHeight(e.Graphics))
-                    e.Graphics.DrawString(cloudInfos(i).Item2, Font, Brushes.White, line2Location)
+                    e.Graphics.DrawString(cloudInfos(i).Item2, Font, New SolidBrush(textColor), line2Location)
                 End If
             Next
 

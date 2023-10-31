@@ -238,6 +238,7 @@ Public Class BriefingControl
         ClearCountryFlagPictures()
 
         EventIsEnabled = False
+        WindCloudDisplay1.ResetGraph()
         windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
@@ -285,6 +286,7 @@ Public Class BriefingControl
         BuildTaskData()
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
+        WindCloudDisplay1.SetWeatherInfo(_WeatherDetails)
 
         If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
             _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
