@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.10.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.10.30.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.10.30.2</ReleaseVersion>
+      <ReleaseTitle>Graphical Weather View</ReleaseTitle>
+      <ReleaseNotes>
+        Added graphical display option for wind and cloud layers on the Weather tab under Briefing.
+        Fixed Briefing Units not being saved.
+        Several smaller bug fixes.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.10.27.1</ReleaseVersion>
       <ReleaseTitle>Fix to toolbar and new file status icons</ReleaseTitle>
