@@ -116,6 +116,10 @@ Public Class WindCloudDisplay
         ' Set the background color
         e.Graphics.Clear(Color.White)
 
+        If _prefUnits Is Nothing Then
+            _prefUnits = New PreferredUnits
+        End If
+
         ' Calculate the text height and drawable height
         Dim textHeight As Single = Font.GetHeight()
         Dim drawableHeight As Single = Height - 1.5 * textHeight
@@ -206,6 +210,7 @@ Public Class WindCloudDisplay
 
             Dim windRects As New List(Of Rectangle)
             Dim windInfos As New List(Of String)
+            Dim windSpeeds As New List(Of Integer)
 
             ' 1. Define all rectangles
             For Each wind In _WeatherInfo.WindLayers
@@ -217,11 +222,21 @@ Public Class WindCloudDisplay
                 windRects.Add(windRect)
 
                 Dim windInfo As String
+                Dim altPart As String
+                Dim speedPart As String
                 If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-                    windInfo = $"{altitudeInFeet * 0.3048} m {wind.Angle}°@{wind.Speed}kts"
+                    altPart = $"{Conversions.FeetToMeters(altitudeInFeet):N0} m"
                 Else
-                    windInfo = $"{altitudeInFeet}' {wind.Angle}°@{wind.Speed}kts"
+                    altPart = $"{altitudeInFeet}'"
                 End If
+                If _prefUnits.WindSpeed = PreferredUnits.WindSpeedUnits.MeterPerSecond Then
+                    speedPart = $"{Conversions.KnotsToMps(wind.Speed):N1} m/s"
+                Else
+                    speedPart = $"{wind.Speed} kts"
+                End If
+
+                windInfo = $"{altPart} {wind.Angle}°@{speedPart}"
+                windSpeeds.Add(wind.Speed)
                 windInfos.Add(windInfo)
             Next
 
@@ -246,14 +261,14 @@ Public Class WindCloudDisplay
             ' 3. Draw the rectangles and set their color
             For i = 0 To windRects.Count - 1
                 ' Calculate wind rectangle color based on wind speed using the _blueGradientPalette
-                Dim windSpeed As Single = Single.Parse(windInfos(i).Split("@")(1).Replace("kts", ""))
+                Dim windSpeed As Single = windSpeeds(i)
                 Dim windColorIndex As Integer = 25 - CInt(Math.Round((windSpeed / 25) * 25))
                 If windColorIndex < 0 Then windColorIndex = 0
                 If windColorIndex > 25 Then windColorIndex = 25
                 Dim windColor As Color = _blueGradientPalette(windColorIndex)
 
                 ' Set text color based on wind color brightness
-                Dim textColor As Color = If(windColor.GetBrightness() > 0.5, Color.Black, Color.White)
+                Dim textColor As Color = If(windColor.GetBrightness() > 0.8, Color.Black, Color.White)
 
                 ' Draw the rectangle with a dark blue border
                 e.Graphics.FillRectangle(New SolidBrush(windColor), windRects(i))
@@ -292,7 +307,12 @@ Public Class WindCloudDisplay
                     Dim cloudRect As New Rectangle(CInt(Width / 2) + 10, CInt(cloudTopY), CInt(Width / 2) - 20, CInt(cloudHeight))
                     cloudRects.Add(cloudRect)
 
-                    Dim line1 As String = $"{bottomInFeet}’ to {topInFeet}’"
+                    Dim line1 As String
+                    If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
+                        line1 = $"{Conversions.FeetToMeters(bottomInFeet):N0} m to {Conversions.FeetToMeters(topInFeet):N0} m"
+                    Else
+                        line1 = $"{bottomInFeet}’ to {topInFeet}’"
+                    End If
                     Dim line2 As String = $"Cov. {cloud.Coverage}% Dens. {cloud.Density} Scat. {cloud.Scattering}%"
 
                     If cloudHeight < Font.GetHeight(e.Graphics) * 2 Then
@@ -331,7 +351,7 @@ Public Class WindCloudDisplay
                 Dim cloudColor As Color = _greyGradientPalette(cloudColorIndex)
 
                 ' Set text color based on cloud color brightness
-                Dim textColor As Color = If(cloudColor.GetBrightness() > 0.5, Color.Black, Color.White)
+                Dim textColor As Color = If(cloudColor.GetBrightness() > 0.65, Color.Black, Color.White)
 
                 ' Draw the rectangle with the calculated color
                 e.Graphics.FillRectangle(New SolidBrush(cloudColor), cloudRects(i))

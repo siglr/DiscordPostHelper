@@ -798,6 +798,11 @@ Public Class BriefingControl
 
         _loaded = True
         trackAudioCueVolume.Value = SupportingFeatures.ReadRegistryKey("AudioCues", 80)
+        If SupportingFeatures.ReadRegistryKey("WeatherGraph", 0) = 1 Then
+            chkShowGraph.Checked = True
+        Else
+            chkShowGraph.Checked = False
+        End If
 
         _SF.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
         'txtEventInfo.Rtf = sb.ToString()
@@ -1115,6 +1120,14 @@ Public Class BriefingControl
 
     Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
         WindCloudDisplay1.Visible = chkShowGraph.Checked
+
+        Select Case chkShowGraph.Checked
+            Case True
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 1)
+            Case False
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 0)
+        End Select
+
     End Sub
 
 #End Region
