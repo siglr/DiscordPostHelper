@@ -47,13 +47,9 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
         Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
@@ -107,6 +103,13 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.WindCloudDisplay1 = New SIGLR.SoaringTools.CommonLibrary.WindCloudDisplay()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.chkShowGraph = New System.Windows.Forms.CheckBox()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -161,6 +164,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -491,17 +495,6 @@ Partial Class BriefingControl
         Me.Label5.Text = "Start task in"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'countDownTaskStart
-        '
-        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
-        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownTaskStart.Name = "countDownTaskStart"
-        Me.countDownTaskStart.PlayAudioCues = False
-        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
-        Me.countDownTaskStart.TabIndex = 6
-        Me.countDownTaskStart.ZoomFactor = 2.0!
-        '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(4, 189)
@@ -510,17 +503,6 @@ Partial Class BriefingControl
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Launch in"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'countDownToLaunch
-        '
-        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
-        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToLaunch.Name = "countDownToLaunch"
-        Me.countDownToLaunch.PlayAudioCues = False
-        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToLaunch.TabIndex = 4
-        Me.countDownToLaunch.ZoomFactor = 2.0!
         '
         'Label3
         '
@@ -531,17 +513,6 @@ Partial Class BriefingControl
         Me.Label3.Text = "Sync Fly in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'countDownToSyncFly
-        '
-        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
-        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToSyncFly.Name = "countDownToSyncFly"
-        Me.countDownToSyncFly.PlayAudioCues = False
-        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToSyncFly.TabIndex = 2
-        Me.countDownToSyncFly.ZoomFactor = 2.0!
-        '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 4)
@@ -550,17 +521,6 @@ Partial Class BriefingControl
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Meet in"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'countDownToMeet
-        '
-        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
-        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToMeet.Name = "countDownToMeet"
-        Me.countDownToMeet.PlayAudioCues = False
-        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToMeet.TabIndex = 0
-        Me.countDownToMeet.ZoomFactor = 2.0!
         '
         'tbpgImages
         '
@@ -679,6 +639,8 @@ Partial Class BriefingControl
         '
         'tbpgWeather
         '
+        Me.tbpgWeather.Controls.Add(Me.Panel1)
+        Me.tbpgWeather.Controls.Add(Me.WindCloudDisplay1)
         Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
         Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
         Me.tbpgWeather.Name = "tbpgWeather"
@@ -689,8 +651,10 @@ Partial Class BriefingControl
         '
         'SplitContainer1
         '
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 33)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -701,8 +665,8 @@ Partial Class BriefingControl
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.windLayersDatagrid)
-        Me.SplitContainer1.Size = New System.Drawing.Size(953, 688)
-        Me.SplitContainer1.SplitterDistance = 316
+        Me.SplitContainer1.Size = New System.Drawing.Size(953, 655)
+        Me.SplitContainer1.SplitterDistance = 300
         Me.SplitContainer1.TabIndex = 0
         '
         'cloudLayersDatagrid
@@ -718,7 +682,7 @@ Partial Class BriefingControl
         Me.cloudLayersDatagrid.ReadOnly = True
         Me.cloudLayersDatagrid.RowHeadersWidth = 47
         Me.cloudLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(953, 316)
+        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(953, 300)
         Me.cloudLayersDatagrid.TabIndex = 1
         '
         'windLayersDatagrid
@@ -734,7 +698,7 @@ Partial Class BriefingControl
         Me.windLayersDatagrid.ReadOnly = True
         Me.windLayersDatagrid.RowHeadersWidth = 47
         Me.windLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.windLayersDatagrid.Size = New System.Drawing.Size(953, 368)
+        Me.windLayersDatagrid.Size = New System.Drawing.Size(953, 351)
         Me.windLayersDatagrid.TabIndex = 2
         '
         'tbpgAddOns
@@ -1176,6 +1140,82 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
+        'countDownTaskStart
+        '
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.PlayAudioCues = False
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.PlayAudioCues = False
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
+        '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.PlayAudioCues = False
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.PlayAudioCues = False
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
+        '
+        'WindCloudDisplay1
+        '
+        Me.WindCloudDisplay1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.WindCloudDisplay1.Location = New System.Drawing.Point(0, 33)
+        Me.WindCloudDisplay1.Name = "WindCloudDisplay1"
+        Me.WindCloudDisplay1.Size = New System.Drawing.Size(953, 655)
+        Me.WindCloudDisplay1.TabIndex = 3
+        Me.WindCloudDisplay1.Text = "WindCloudDisplay1"
+        Me.WindCloudDisplay1.Visible = False
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.chkShowGraph)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(953, 31)
+        Me.Panel1.TabIndex = 4
+        '
+        'chkShowGraph
+        '
+        Me.chkShowGraph.AutoSize = True
+        Me.chkShowGraph.Location = New System.Drawing.Point(3, 3)
+        Me.chkShowGraph.Name = "chkShowGraph"
+        Me.chkShowGraph.Size = New System.Drawing.Size(243, 24)
+        Me.chkShowGraph.TabIndex = 0
+        Me.chkShowGraph.Text = "Show graph instead of data table"
+        Me.ToolTip1.SetToolTip(Me.chkShowGraph, "Check to see a visual graph of wind and cloud layers")
+        Me.chkShowGraph.UseVisualStyleBackColor = True
+        '
         'BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -1249,6 +1289,8 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1337,4 +1379,7 @@ Partial Class BriefingControl
     Friend WithEvents FlowLayoutPanel7 As Windows.Forms.FlowLayoutPanel
     Friend WithEvents radioGateMeasurementDiameter As Windows.Forms.RadioButton
     Friend WithEvents radioGateMeasurementRadius As Windows.Forms.RadioButton
+    Friend WithEvents WindCloudDisplay1 As WindCloudDisplay
+    Friend WithEvents Panel1 As Windows.Forms.Panel
+    Friend WithEvents chkShowGraph As Windows.Forms.CheckBox
 End Class

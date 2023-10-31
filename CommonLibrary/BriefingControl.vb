@@ -22,7 +22,7 @@ Public Class BriefingControl
     Private _loaded As Boolean = False
 
     Public Property EventIsEnabled As Boolean
-    Public Property PrefUnits As New PreferredUnits
+    Private ReadOnly Property PrefUnits As New PreferredUnits
 
 #End Region
 
@@ -238,6 +238,7 @@ Public Class BriefingControl
         ClearCountryFlagPictures()
 
         EventIsEnabled = False
+        WindCloudDisplay1.ResetGraph()
         windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
@@ -285,6 +286,7 @@ Public Class BriefingControl
         BuildTaskData()
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
+        WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
 
         If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
             _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
@@ -323,6 +325,8 @@ Public Class BriefingControl
                 Case 3 'Images
                 Case 4 'All Waypoints
                 Case 5 'Weather
+                    WindCloudDisplay1.Visible = chkShowGraph.Checked
+                    WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
                 Case 6 'Add-ons
                 Case 7 'Units
                     _onUnitsTab = True
@@ -794,6 +798,11 @@ Public Class BriefingControl
 
         _loaded = True
         trackAudioCueVolume.Value = SupportingFeatures.ReadRegistryKey("AudioCues", 80)
+        If SupportingFeatures.ReadRegistryKey("WeatherGraph", 0) = 1 Then
+            chkShowGraph.Checked = True
+        Else
+            chkShowGraph.Checked = False
+        End If
 
         _SF.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
         'txtEventInfo.Rtf = sb.ToString()
@@ -1108,6 +1117,19 @@ Public Class BriefingControl
         ' Reset the flag when the mouse button is released
         isRightMousePressed = False
     End Sub
+
+    Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
+        WindCloudDisplay1.Visible = chkShowGraph.Checked
+
+        Select Case chkShowGraph.Checked
+            Case True
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 1)
+            Case False
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 0)
+        End Select
+
+    End Sub
+
 #End Region
 
 #End Region

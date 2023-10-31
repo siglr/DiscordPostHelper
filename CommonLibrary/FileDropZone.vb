@@ -9,6 +9,9 @@ Public Class FileDropZone
     Private borderPen As Pen
 
     Public Sub New()
+
+        MyBase.New
+
         ' Initialize the UserControl
         Me.AutoSize = False
         Me.Size = New Size(200, 100) ' Set an initial size (you can change this)
