@@ -286,7 +286,7 @@ Public Class BriefingControl
         BuildTaskData()
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
-        WindCloudDisplay1.SetWeatherInfo(_WeatherDetails)
+        WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
 
         If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
             _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
@@ -326,7 +326,7 @@ Public Class BriefingControl
                 Case 4 'All Waypoints
                 Case 5 'Weather
                     WindCloudDisplay1.Visible = chkShowGraph.Checked
-                    WindCloudDisplay1.SetWeatherInfo(_WeatherDetails)
+                    WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
                 Case 6 'Add-ons
                 Case 7 'Units
                     _onUnitsTab = True

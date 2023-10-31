@@ -8,6 +8,7 @@ Public Class WindCloudDisplay
     Private _WeatherInfo As WeatherDetails = Nothing
     Private _blueGradientPalette As List(Of Color)
     Private _greyGradientPalette As List(Of Color)
+    Private _prefUnits As PreferredUnits
 
     Public Sub New()
         MyBase.New
@@ -98,8 +99,9 @@ Public Class WindCloudDisplay
 
     End Sub
 
-    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails)
+    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails, prefUnits As PreferredUnits)
         _WeatherInfo = thisWeatherInfo
+        _prefUnits = prefUnits
         Invalidate()
     End Sub
 
@@ -143,11 +145,13 @@ Public Class WindCloudDisplay
 
         ' Position for 10k line at the vertical middle
         Dim yPos10k As Single = textHeight + drawableHeight / 2
+
         altitudePositions.Add(10000, yPos10k)
 
         ' Draw the 10k line in the middle
+        Dim middleAltitudeLabel As String = If(_prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric, "3048", "10k")
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
-        e.Graphics.DrawString("10k", New Font("Arial", 10), Brushes.Black, 0, yPos10k)
+        e.Graphics.DrawString(middleAltitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos10k)
 
         ' Calculate the decremental step from 10k down to -2k
         Dim decrementStep As Single = (yPos10k - textHeight) / 12 ' We have 12 increments from 10k to -2k 
@@ -156,22 +160,34 @@ Public Class WindCloudDisplay
         Dim yPos0 As Single = yPos10k + 10 * decrementStep
         altitudePositions.Add(0, yPos0)
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
-        e.Graphics.DrawString("0k", New Font("Arial", 10), Brushes.Black, 0, yPos0)
+        e.Graphics.DrawString("0", New Font("Arial", 10), Brushes.Black, 0, yPos0)
 
         Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
         altitudePositions.Add(-2000, yPosNeg2k)
+        Dim altitudeLabel As String
+        If PreferredUnits.AltitudeUnits.Metric Then
+            altitudeLabel = "-610"
+        Else
+            altitudeLabel = "-2k"
+        End If
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
-        e.Graphics.DrawString("-2k", New Font("Arial", 10), Brushes.Black, 0, yPosNeg2k)
+        e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPosNeg2k)
 
         ' Calculate the incremental step from 10k up to 60k
         Dim incrementStep As Single = (yPos10k - textHeight) / 5 ' We have 5 increments from 10k to 60k 
 
-        ' Draw lines for 20k, 30k, 40k, 50k, and 60k
+        ' Convert and draw lines for 20k, 30k, 40k, 50k, and 60k
         For i As Integer = 1 To 5
+            Dim altitude As Integer = (10 + i * 10) * 1000
             Dim yPos As Single = yPos10k - i * incrementStep
-            altitudePositions.Add((10 + i * 10) * 1000, yPos)
+            If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
+                altitudeLabel = (altitude * 0.3048).ToString("0000")
+            Else
+                altitudeLabel = (altitude / 1000).ToString() + "k"
+            End If
+            altitudePositions.Add(altitude, yPos)
             e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
-            e.Graphics.DrawString((10 + i * 10).ToString() + "k", New Font("Arial", 10), Brushes.Black, 0, yPos)
+            e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos)
         Next
 
         ' Draw the vertical line in the center
@@ -200,7 +216,12 @@ Public Class WindCloudDisplay
                 Dim windRect As New Rectangle(50, CInt(windYPosition - Font.GetHeight(e.Graphics) / 2), CInt(Width / 2) - 70, CInt(Font.GetHeight(e.Graphics)))
                 windRects.Add(windRect)
 
-                Dim windInfo As String = $"{altitudeInFeet}’ {wind.Angle}°@{wind.Speed}kts"
+                Dim windInfo As String
+                If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
+                    windInfo = $"{altitudeInFeet * 0.3048} m {wind.Angle}°@{wind.Speed}kts"
+                Else
+                    windInfo = $"{altitudeInFeet}' {wind.Angle}°@{wind.Speed}kts"
+                End If
                 windInfos.Add(windInfo)
             Next
 
