@@ -325,7 +325,7 @@ Public Class BriefingControl
                 Case 3 'Images
                 Case 4 'All Waypoints
                 Case 5 'Weather
-                    WindCloudDisplay1.Visible = True
+                    WindCloudDisplay1.Visible = chkShowGraph.Checked
                     WindCloudDisplay1.SetWeatherInfo(_WeatherDetails)
                 Case 6 'Add-ons
                 Case 7 'Units
@@ -1112,6 +1112,11 @@ Public Class BriefingControl
         ' Reset the flag when the mouse button is released
         isRightMousePressed = False
     End Sub
+
+    Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
+        WindCloudDisplay1.Visible = chkShowGraph.Checked
+    End Sub
+
 #End Region
 
 #End Region
