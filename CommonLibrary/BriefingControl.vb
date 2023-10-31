@@ -22,7 +22,7 @@ Public Class BriefingControl
     Private _loaded As Boolean = False
 
     Public Property EventIsEnabled As Boolean
-    Public Property PrefUnits As New PreferredUnits
+    Private ReadOnly Property PrefUnits As New PreferredUnits
 
 #End Region
 

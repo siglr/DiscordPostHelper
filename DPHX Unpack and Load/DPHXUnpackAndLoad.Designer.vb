@@ -27,7 +27,7 @@ Partial Class DPHXUnpackAndLoad
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Me.pnlToolbar = New System.Windows.Forms.Panel()
-        Me.ToolStrip1 = New ToolStripExtensions.ToolStripExtended
+        Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripUnpack = New System.Windows.Forms.ToolStripButton()
         Me.toolStripCleanup = New System.Windows.Forms.ToolStripButton()
@@ -75,6 +75,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.ClickThrough = True
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
@@ -82,6 +83,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
+        Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 8
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -230,7 +232,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStatusOK, Me.toolStatusStop, Me.toolStatusWarning, Me.lblAllFilesStatus})
         Me.ToolStrip2.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip2.Name = "ToolStrip2"
-        Me.ToolStrip2.Size = New System.Drawing.Size(996, 29)
+        Me.ToolStrip2.Size = New System.Drawing.Size(996, 25)
         Me.ToolStrip2.TabIndex = 0
         Me.ToolStrip2.Text = "ToolStrip2"
         '
@@ -243,7 +245,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStatusOK.Enabled = False
         Me.toolStatusOK.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStatusOK.Name = "toolStatusOK"
-        Me.toolStatusOK.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusOK.Size = New System.Drawing.Size(26, 22)
         Me.toolStatusOK.ToolTipText = "All ready to go!"
         Me.toolStatusOK.Visible = False
         '
@@ -256,7 +258,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStatusStop.Enabled = False
         Me.toolStatusStop.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStatusStop.Name = "toolStatusStop"
-        Me.toolStatusStop.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusStop.Size = New System.Drawing.Size(26, 22)
         Me.toolStatusStop.ToolTipText = "Stop right there or you won't get far!"
         Me.toolStatusStop.Visible = False
         '
@@ -269,7 +271,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStatusWarning.Enabled = False
         Me.toolStatusWarning.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStatusWarning.Name = "toolStatusWarning"
-        Me.toolStatusWarning.Size = New System.Drawing.Size(26, 26)
+        Me.toolStatusWarning.Size = New System.Drawing.Size(26, 22)
         Me.toolStatusWarning.ToolTipText = "Warning! Check your files!"
         Me.toolStatusWarning.Visible = False
         '
@@ -280,7 +282,7 @@ Partial Class DPHXUnpackAndLoad
         Me.lblAllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lblAllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lblAllFilesStatus.Name = "lblAllFilesStatus"
-        Me.lblAllFilesStatus.Size = New System.Drawing.Size(800, 29)
+        Me.lblAllFilesStatus.Size = New System.Drawing.Size(800, 25)
         '
         'StatusStrip1
         '
@@ -368,7 +370,6 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents ChkMSFS As Timer
     Friend WithEvents warningMSFSRunningToolStrip As ToolStripStatusLabel
     Friend WithEvents pnlToolbar As Panel
-    Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents toolStripOpen As ToolStripButton
     Friend WithEvents toolStripUnpack As ToolStripButton
     Friend WithEvents toolStripCleanup As ToolStripButton
@@ -389,4 +390,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents ToolStripButton2 As ToolStripButton
     Friend WithEvents toolStatusOK As ToolStripButton
     Friend WithEvents toolStatusStop As ToolStripButton
+    Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
 End Class
