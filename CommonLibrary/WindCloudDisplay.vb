@@ -160,7 +160,18 @@ Public Class WindCloudDisplay
         ' Calculate the decremental step from 10k down to -2k
         Dim decrementStep As Single = (yPos10k - textHeight) / 12 ' We have 12 increments from 10k to -2k 
 
-        ' Draw lines only at 0 and -2k
+        ' Draw lines only at 5k, 0 and -2k
+        Dim yPos5k As Single = yPos10k + 5 * decrementStep
+        altitudePositions.Add(5000, yPos5k)
+        Dim altitudeLabel As String
+        If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
+            altitudeLabel = $"{Conversions.FeetToMeters(5000):N0}"
+        Else
+            altitudeLabel = "5k"
+        End If
+        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos5k, drawableWidth, yPos5k)
+        e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos5k)
+
         Dim yPos0 As Single = yPos10k + 10 * decrementStep
         altitudePositions.Add(0, yPos0)
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
@@ -168,8 +179,7 @@ Public Class WindCloudDisplay
 
         Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
         altitudePositions.Add(-2000, yPosNeg2k)
-        Dim altitudeLabel As String
-        If PreferredUnits.AltitudeUnits.Metric Then
+        If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
             altitudeLabel = "-610"
         Else
             altitudeLabel = "-2k"
