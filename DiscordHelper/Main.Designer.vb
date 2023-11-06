@@ -272,7 +272,7 @@ Partial Class Main
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.ToolStrip1 = New ToolStripExtensions.ToolStripExtended
+        Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
         Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
@@ -338,8 +338,9 @@ Partial Class Main
         '
         'TabControl1
         '
-        Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.tabFlightPlan)
         Me.TabControl1.Controls.Add(Me.tabEvent)
         Me.TabControl1.Controls.Add(Me.tabDiscord)
@@ -3308,6 +3309,7 @@ Partial Class Main
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.ClickThrough = True
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
@@ -3315,6 +3317,7 @@ Partial Class Main
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -3760,7 +3763,6 @@ Partial Class Main
     Friend WithEvents txtEventTeaserMessage As TextBox
     Friend WithEvents chkEventTeaser As CheckBox
     Friend WithEvents btnEventTaskDetails As Button
-    Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents toolStripOpen As ToolStripButton
     Friend WithEvents toolStripSave As ToolStripButton
     Friend WithEvents toolStripResetAll As ToolStripButton
@@ -3778,4 +3780,5 @@ Partial Class Main
     Friend WithEvents toolStripDiscordTaskLibrary As ToolStripButton
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents toolStripReload As ToolStripButton
+    Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
 End Class

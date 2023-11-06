@@ -6,96 +6,44 @@ Public Class WindCloudDisplay
     Inherits Control
 
     Private _WeatherInfo As WeatherDetails = Nothing
-    Private _blueGradientPalette As List(Of Color)
-    Private _greyGradientPalette As List(Of Color)
+    Public ReadOnly Property BlueGradientPalette As List(Of Color)
+    Public ReadOnly Property GreyGradientPalette As List(Of Color)
+
     Private _prefUnits As PreferredUnits
 
     Public Sub New()
         MyBase.New
 
-        ' Define the gradient palette with 26 shades of blue
-        _blueGradientPalette = New List(Of Color) From {
-            Color.FromArgb(0, 0, 255),    ' HSV(238, 100, 100)
-            Color.FromArgb(11, 11, 255),  ' HSV(238, 97, 100)
-            Color.FromArgb(21, 21, 255),  ' HSV(238, 95, 100)
-            Color.FromArgb(32, 32, 255),  ' HSV(238, 92, 100)
-            Color.FromArgb(42, 42, 255),  ' HSV(238, 90, 100)
-            Color.FromArgb(53, 53, 255),  ' HSV(238, 87, 100)
-            Color.FromArgb(63, 63, 255),  ' HSV(238, 84, 100)
-            Color.FromArgb(74, 74, 255),  ' HSV(238, 82, 100)
-            Color.FromArgb(84, 84, 255),  ' HSV(238, 79, 100)
-            Color.FromArgb(95, 95, 255),  ' HSV(238, 77, 100)
-            Color.FromArgb(105, 105, 255), ' HSV(238, 74, 100)
-            Color.FromArgb(116, 116, 255), ' HSV(238, 71, 100)
-            Color.FromArgb(126, 126, 255), ' HSV(238, 69, 100)
-            Color.FromArgb(137, 137, 255), ' HSV(238, 66, 100)
-            Color.FromArgb(147, 147, 255), ' HSV(238, 64, 100)
-            Color.FromArgb(158, 158, 255), ' HSV(238, 61, 100)
-            Color.FromArgb(168, 168, 255), ' HSV(238, 58, 100)
-            Color.FromArgb(179, 179, 255), ' HSV(238, 56, 100)
-            Color.FromArgb(189, 189, 255), ' HSV(238, 53, 100)
-            Color.FromArgb(200, 200, 255), ' HSV(238, 51, 100)
-            Color.FromArgb(210, 210, 255), ' HSV(238, 48, 100)
-            Color.FromArgb(221, 221, 255), ' HSV(238, 45, 100)
-            Color.FromArgb(231, 231, 255), ' HSV(238, 43, 100)
-            Color.FromArgb(242, 242, 255), ' HSV(238, 40, 100)
-            Color.FromArgb(252, 252, 255), ' HSV(238, 38, 100)
-            Color.FromArgb(255, 255, 255)  ' HSV(238, 35, 100)
-        }
+        Dim lowestValue As Integer = 0
+        Dim highestValue As Integer = 225
+        Dim totalShades As Integer = 26
+        Dim stepValue As Integer = (highestValue - lowestValue) \ (totalShades - 1)
 
-        ' Define the gradient palette with 50 shades of grey
-        _greyGradientPalette = New List(Of Color) From {
-            Color.FromArgb(225, 225, 225),
-            Color.FromArgb(222, 222, 222),
-            Color.FromArgb(219, 219, 219),
-            Color.FromArgb(216, 216, 216),
-            Color.FromArgb(213, 213, 213),
-            Color.FromArgb(210, 210, 210),
-            Color.FromArgb(207, 207, 207),
-            Color.FromArgb(204, 204, 204),
-            Color.FromArgb(201, 201, 201),
-            Color.FromArgb(198, 198, 198),
-            Color.FromArgb(195, 195, 195),
-            Color.FromArgb(192, 192, 192),
-            Color.FromArgb(189, 189, 189),
-            Color.FromArgb(186, 186, 186),
-            Color.FromArgb(183, 183, 183),
-            Color.FromArgb(180, 180, 180),
-            Color.FromArgb(177, 177, 177),
-            Color.FromArgb(174, 174, 174),
-            Color.FromArgb(171, 171, 171),
-            Color.FromArgb(168, 168, 168),
-            Color.FromArgb(165, 165, 165),
-            Color.FromArgb(162, 162, 162),
-            Color.FromArgb(159, 159, 159),
-            Color.FromArgb(156, 156, 156),
-            Color.FromArgb(153, 153, 153),
-            Color.FromArgb(150, 150, 150),
-            Color.FromArgb(147, 147, 147),
-            Color.FromArgb(144, 144, 144),
-            Color.FromArgb(141, 141, 141),
-            Color.FromArgb(138, 138, 138),
-            Color.FromArgb(135, 135, 135),
-            Color.FromArgb(132, 132, 132),
-            Color.FromArgb(129, 129, 129),
-            Color.FromArgb(126, 126, 126),
-            Color.FromArgb(123, 123, 123),
-            Color.FromArgb(120, 120, 120),
-            Color.FromArgb(117, 117, 117),
-            Color.FromArgb(114, 114, 114),
-            Color.FromArgb(111, 111, 111),
-            Color.FromArgb(108, 108, 108),
-            Color.FromArgb(105, 105, 105),
-            Color.FromArgb(102, 102, 102),
-            Color.FromArgb(99, 99, 99),
-            Color.FromArgb(96, 96, 96),
-            Color.FromArgb(93, 93, 93),
-            Color.FromArgb(90, 90, 90),
-            Color.FromArgb(87, 87, 87),
-            Color.FromArgb(84, 84, 84),
-            Color.FromArgb(81, 81, 81),
-            Color.FromArgb(78, 78, 78)
-        }
+        BlueGradientPalette = New List(Of Color)
+        For i As Integer = 0 To totalShades - 1
+            Dim blueValue As Integer = lowestValue + (stepValue * i)
+            ' Ensure that the grey value does not exceed the highest value
+            If blueValue > highestValue Then
+                blueValue = highestValue
+            End If
+            BlueGradientPalette.Add(Color.FromArgb(blueValue, blueValue, 255))
+        Next
+
+        ' Define the gradient palette with 50 shades of grey, reversed
+        lowestValue = 78
+        highestValue = 240
+        totalShades = 50
+        stepValue = (highestValue - lowestValue) \ (totalShades - 1)
+
+        GreyGradientPalette = New List(Of Color)
+        For i As Integer = 0 To totalShades - 1
+            Dim greyValue As Integer = highestValue - (stepValue * i)
+            ' Ensure that the grey value does not fall below the lowest value
+            If greyValue < lowestValue Then
+                greyValue = lowestValue
+            End If
+            GreyGradientPalette.Add(Color.FromArgb(greyValue, greyValue, greyValue))
+        Next
 
     End Sub
 
@@ -270,12 +218,12 @@ Public Class WindCloudDisplay
 
             ' 3. Draw the rectangles and set their color
             For i = 0 To windRects.Count - 1
-                ' Calculate wind rectangle color based on wind speed using the _blueGradientPalette
+                ' Calculate wind rectangle color based on wind speed using the BlueGradientPalette
                 Dim windSpeed As Single = windSpeeds(i)
                 Dim windColorIndex As Integer = 25 - CInt(Math.Round((windSpeed / 25) * 25))
                 If windColorIndex < 0 Then windColorIndex = 0
                 If windColorIndex > 25 Then windColorIndex = 25
-                Dim windColor As Color = _blueGradientPalette(windColorIndex)
+                Dim windColor As Color = BlueGradientPalette(windColorIndex)
 
                 ' Set text color based on wind color brightness
                 Dim textColor As Color = If(windColor.GetBrightness() > 0.8, Color.Black, Color.White)
@@ -353,12 +301,12 @@ Public Class WindCloudDisplay
 
             ' 3. Draw the rectangles
             For i = 0 To cloudRects.Count - 1
-                ' Calculate cloud rectangle color using the stored cloud density and the _greyGradientPalette
+                ' Calculate cloud rectangle color using the stored cloud density and the GreyGradientPalette
                 Dim cloudDensity As Single = cloudDensities(i)
                 Dim cloudColorIndex As Integer = CInt(Math.Round((cloudDensity / 5) * 49))
                 If cloudColorIndex < 0 Then cloudColorIndex = 0
                 If cloudColorIndex > 49 Then cloudColorIndex = 49
-                Dim cloudColor As Color = _greyGradientPalette(cloudColorIndex)
+                Dim cloudColor As Color = GreyGradientPalette(cloudColorIndex)
 
                 ' Set text color based on cloud color brightness
                 Dim textColor As Color = If(cloudColor.GetBrightness() > 0.65, Color.Black, Color.White)

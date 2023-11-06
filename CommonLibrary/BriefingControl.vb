@@ -30,6 +30,9 @@ Public Class BriefingControl
 
     Private Sub BriefingControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetPrefUnits()
+
+        BuildGradientsLegend
+
     End Sub
 
     Private Sub tabsBriefing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabsBriefing.SelectedIndexChanged
@@ -138,6 +141,22 @@ Public Class BriefingControl
         countDownToMeet.SetOutputVolume(trackAudioCueVolume.Value)
         countDownToMeet.TestAudioCueVolume("MeetingHasStarted")
 
+    End Sub
+
+    Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
+        WindCloudDisplay1.Visible = chkShowGraph.Checked
+
+        Select Case chkShowGraph.Checked
+            Case True
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 1)
+            Case False
+                SupportingFeatures.WriteRegistryKey("WeatherGraph", 0)
+        End Select
+
+    End Sub
+
+    Private Sub WindCloudDisplay1_VisibleChanged(sender As Object, e As EventArgs) Handles WindCloudDisplay1.VisibleChanged
+        splitWeatherLegend.Visible = WindCloudDisplay1.Visible
     End Sub
 
 #End Region
@@ -396,6 +415,34 @@ Public Class BriefingControl
 #End Region
 
 #Region "Private"
+
+    Private Sub BuildGradientsLegend()
+
+        Dim myWindGradientControl As New GradientLegendControl
+        myWindGradientControl.Dock = DockStyle.Fill
+
+        If _PrefUnits.WindSpeed = PreferredUnits.WindSpeedUnits.MeterPerSecond Then
+            myWindGradientControl.FirstValue = $"{Conversions.KnotsToMps(26):N1} m/s"
+        Else
+            myWindGradientControl.FirstValue = "26 kts"
+        End If
+
+        myWindGradientControl.LastValue = "0"
+        myWindGradientControl.GradientPalette = WindCloudDisplay1.BlueGradientPalette
+
+        ' Add the control to your form or container
+        splitWeatherLegend.Panel1.Controls.Add(myWindGradientControl)
+
+        Dim myCloudGradientControl As New GradientLegendControl
+        myCloudGradientControl.Dock = DockStyle.Fill
+        myCloudGradientControl.FirstValue = "0.0"
+        myCloudGradientControl.LastValue = "5.0"
+        myCloudGradientControl.GradientPalette = WindCloudDisplay1.GreyGradientPalette
+
+        ' Add the control to your form or container
+        splitWeatherLegend.Panel2.Controls.Add(myCloudGradientControl)
+
+    End Sub
 
     Private Sub CountDownReset()
         Timer1.Stop()
@@ -1116,18 +1163,6 @@ Public Class BriefingControl
 
         ' Reset the flag when the mouse button is released
         isRightMousePressed = False
-    End Sub
-
-    Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
-        WindCloudDisplay1.Visible = chkShowGraph.Checked
-
-        Select Case chkShowGraph.Checked
-            Case True
-                SupportingFeatures.WriteRegistryKey("WeatherGraph", 1)
-            Case False
-                SupportingFeatures.WriteRegistryKey("WeatherGraph", 0)
-        End Select
-
     End Sub
 
 #End Region

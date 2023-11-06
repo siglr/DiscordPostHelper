@@ -126,6 +126,9 @@
     <Compile Include="FileDropZone.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="GradientLegendControl.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
