@@ -982,20 +982,17 @@ Public Class Main
         If txtDiscordTaskID.Text = String.Empty Then
             Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As New WaitingForURLForm(message)
-            waitingForm.ShowDialog()
+            Dim answer As DialogResult = waitingForm.ShowDialog()
 
             SupportingFeatures.BringDPHToolToTop(Me.Handle)
 
             'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
-            Dim taskThreadURL As String
-            Try
+            If answer = DialogResult.OK Then
+                Dim taskThreadURL As String
                 taskThreadURL = Clipboard.GetText
-                If (Not taskThreadURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(taskThreadURL) AndAlso taskThreadURL.Contains($"discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/") Then
-                    txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)
-                    SaveSession()
-                End If
-            Catch ex As Exception
-            End Try
+                txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)
+                SaveSession()
+            End If
             If txtDiscordTaskID.Text = String.Empty Then
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "Take a minute to copy the Discord link to the task's you've just created and use the paste button on the Flight Plan tab.", "Copy URL to Task", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -2337,21 +2334,18 @@ Public Class Main
 
         If txtGroupEventPostURL.Text = String.Empty Then
             Dim message As String = "Please get the link to the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
-            Dim waitingForm As New WaitingForURLForm(message)
-            waitingForm.ShowDialog()
+            Dim waitingForm As New WaitingForURLForm(message, False)
+            Dim answer As DialogResult = waitingForm.ShowDialog()
 
             SupportingFeatures.BringDPHToolToTop(Me.Handle)
 
             'Check if the clipboard contains a valid URL, which would mean the group event's URL has been copied
-            Dim groupEventPostURL As String
-            Try
+            If answer = DialogResult.OK Then
+                Dim groupEventPostURL As String
                 groupEventPostURL = Clipboard.GetText
-                If (Not groupEventPostURL = String.Empty) AndAlso SupportingFeatures.IsValidURL(groupEventPostURL) AndAlso groupEventPostURL.Contains($"discord.com/channels/") Then
-                    txtGroupEventPostURL.Text = groupEventPostURL
-                    SaveSession()
-                End If
-            Catch ex As Exception
-            End Try
+                txtGroupEventPostURL.Text = groupEventPostURL
+                SaveSession()
+            End If
             If txtGroupEventPostURL.Text = String.Empty Then
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
