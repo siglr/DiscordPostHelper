@@ -1064,27 +1064,31 @@ Public Class Main
 
     End Sub
 
-    Private Sub GetAllFilesForMessage(allFiles As StringCollection, contentForMessage As StringBuilder)
+    Private Sub GetAllFilesForMessage(allFiles As StringCollection, contentForMessage As StringBuilder, Optional DPHXOnly As Boolean = False)
         contentForMessage.AppendLine("FILES")
         If File.Exists(txtDPHXPackageFilename.Text) Then
             allFiles.Add(txtDPHXPackageFilename.Text)
             contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
         End If
-        If File.Exists(txtFlightPlanFile.Text) Then
-            allFiles.Add(txtFlightPlanFile.Text)
-            contentForMessage.AppendLine(txtFlightPlanFile.Text)
-        End If
-        If File.Exists(txtWeatherFile.Text) Then
-            allFiles.Add(txtWeatherFile.Text)
-            contentForMessage.AppendLine(txtWeatherFile.Text)
+        If Not DPHXOnly Then
+
+            If File.Exists(txtFlightPlanFile.Text) Then
+                allFiles.Add(txtFlightPlanFile.Text)
+                contentForMessage.AppendLine(txtFlightPlanFile.Text)
+            End If
+            If File.Exists(txtWeatherFile.Text) Then
+                allFiles.Add(txtWeatherFile.Text)
+                contentForMessage.AppendLine(txtWeatherFile.Text)
+            End If
+
+            For i = 0 To lstAllFiles.Items.Count() - 1
+                If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
+                    allFiles.Add(lstAllFiles.Items(i))
+                    contentForMessage.AppendLine(lstAllFiles.Items(i))
+                End If
+            Next
         End If
 
-        For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
-                allFiles.Add(lstAllFiles.Items(i))
-                contentForMessage.AppendLine(lstAllFiles.Items(i))
-            End If
-        Next
     End Sub
 
     Private Sub btnFilesTextCopy_Click(sender As Object, e As EventArgs) Handles btnFilesTextCopy.Click
@@ -2533,6 +2537,62 @@ Public Class Main
         If Not autoContinue Then Exit Sub
 
         BuildFileInfoText()
+        Clipboard.SetText(txtFilesText.Text)
+        autoContinue = CopyContent.ShowContent(Me,
+                                txtFilesText.Text,
+                                "Now enter the file info in the second message in the thread and post it. Also pin this message in the thread.",
+                                "Step 3b - Creating the files post in the thread - file info",
+                                New List(Of String) From {"^v"},
+                                SessionSettings.ExpertMode)
+
+        If _GuideCurrentStep <> 0 Then
+            _GuideCurrentStep += 1
+            ShowGuide()
+        End If
+
+        If autoContinue AndAlso SessionSettings.ExpertMode Then
+            btnEventTaskDetails_Click(sender, e)
+        End If
+
+    End Sub
+
+    Private Sub btnEventDPHXAndLinkOnly_Click(sender As Object, e As EventArgs) Handles btnEventDPHXAndLinkOnly.Click
+
+        Dim autoContinue As Boolean = SessionSettings.ExpertMode
+
+        Dim dlgResult As DialogResult
+
+        Do While _sessionModified
+            Using New Centered_MessageBox(Me)
+                dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+            End Using
+            Select Case dlgResult
+                Case DialogResult.OK
+                    btnSaveConfig_Click(btnFilesCopy, e)
+                Case DialogResult.Cancel
+                    Return
+            End Select
+        Loop
+
+        Dim allFiles As New Specialized.StringCollection
+        Dim contentForMessage As New StringBuilder
+
+        GetAllFilesForMessage(allFiles, contentForMessage, True)
+
+        If allFiles.Count > 0 Then
+            Clipboard.SetFileDropList(allFiles)
+            autoContinue = CopyContent.ShowContent(Me,
+                                    contentForMessage.ToString,
+                                    "Now paste the copied files in a new post under the group event's thread and come back for the text info (coming next).",
+                                    "Including the required files in the group flight thread",
+                                    New List(Of String) From {"^v"},
+                                    SessionSettings.ExpertMode,
+                                    False)
+        End If
+
+        If Not autoContinue Then Exit Sub
+
+        txtFilesText.Text = $"**DPHX file** for people using it and [even more details here]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})."
         Clipboard.SetText(txtFilesText.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFilesText.Text,

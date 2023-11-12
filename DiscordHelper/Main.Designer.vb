@@ -239,6 +239,7 @@ Partial Class Main
         Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.btnEventDPHXAndLinkOnly = New System.Windows.Forms.Button()
         Me.btnEventTaskDetails = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventThreadLogistics = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventTeaser = New System.Windows.Forms.Button()
@@ -2940,6 +2941,7 @@ Partial Class Main
         '
         'grpGroupFlightEvent
         '
+        Me.grpGroupFlightEvent.Controls.Add(Me.btnEventDPHXAndLinkOnly)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnEventTaskDetails)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadLogistics)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventTeaser)
@@ -2954,6 +2956,18 @@ Partial Class Main
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
+        '
+        'btnEventDPHXAndLinkOnly
+        '
+        Me.btnEventDPHXAndLinkOnly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEventDPHXAndLinkOnly.Location = New System.Drawing.Point(436, 150)
+        Me.btnEventDPHXAndLinkOnly.Name = "btnEventDPHXAndLinkOnly"
+        Me.btnEventDPHXAndLinkOnly.Size = New System.Drawing.Size(231, 37)
+        Me.btnEventDPHXAndLinkOnly.TabIndex = 8
+        Me.btnEventDPHXAndLinkOnly.Tag = "83"
+        Me.btnEventDPHXAndLinkOnly.Text = "3b. Thread - DPHX and link"
+        Me.ToolTip1.SetToolTip(Me.btnEventDPHXAndLinkOnly, "Click this button to only include the DPHX file and link to task post.")
+        Me.btnEventDPHXAndLinkOnly.UseVisualStyleBackColor = True
         '
         'btnEventTaskDetails
         '
@@ -3028,7 +3042,7 @@ Partial Class Main
         Me.btnEventFilesAndFilesInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnEventFilesAndFilesInfo.Location = New System.Drawing.Point(6, 149)
         Me.btnEventFilesAndFilesInfo.Name = "btnEventFilesAndFilesInfo"
-        Me.btnEventFilesAndFilesInfo.Size = New System.Drawing.Size(661, 37)
+        Me.btnEventFilesAndFilesInfo.Size = New System.Drawing.Size(424, 37)
         Me.btnEventFilesAndFilesInfo.TabIndex = 5
         Me.btnEventFilesAndFilesInfo.Tag = "83"
         Me.btnEventFilesAndFilesInfo.Text = "3. Thread - Files and files info"
@@ -3781,4 +3795,5 @@ Partial Class Main
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents toolStripReload As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
+    Friend WithEvents btnEventDPHXAndLinkOnly As Button
 End Class
