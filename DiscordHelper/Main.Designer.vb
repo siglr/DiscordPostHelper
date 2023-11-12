@@ -291,6 +291,7 @@ Partial Class Main
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.chkPostForHub = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2941,6 +2942,7 @@ Partial Class Main
         '
         'grpGroupFlightEvent
         '
+        Me.grpGroupFlightEvent.Controls.Add(Me.chkPostForHub)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnEventDPHXAndLinkOnly)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnEventTaskDetails)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadLogistics)
@@ -2963,7 +2965,7 @@ Partial Class Main
         Me.btnEventDPHXAndLinkOnly.Location = New System.Drawing.Point(436, 150)
         Me.btnEventDPHXAndLinkOnly.Name = "btnEventDPHXAndLinkOnly"
         Me.btnEventDPHXAndLinkOnly.Size = New System.Drawing.Size(231, 37)
-        Me.btnEventDPHXAndLinkOnly.TabIndex = 8
+        Me.btnEventDPHXAndLinkOnly.TabIndex = 7
         Me.btnEventDPHXAndLinkOnly.Tag = "83"
         Me.btnEventDPHXAndLinkOnly.Text = "3b. Thread - DPHX and link"
         Me.ToolTip1.SetToolTip(Me.btnEventDPHXAndLinkOnly, "Click this button to only include the DPHX file and link to task post.")
@@ -2975,7 +2977,7 @@ Partial Class Main
         Me.btnEventTaskDetails.Location = New System.Drawing.Point(6, 192)
         Me.btnEventTaskDetails.Name = "btnEventTaskDetails"
         Me.btnEventTaskDetails.Size = New System.Drawing.Size(661, 37)
-        Me.btnEventTaskDetails.TabIndex = 6
+        Me.btnEventTaskDetails.TabIndex = 8
         Me.btnEventTaskDetails.Tag = "84"
         Me.btnEventTaskDetails.Text = "4. Thread - Relevant task details"
         Me.ToolTip1.SetToolTip(Me.btnEventTaskDetails, "Click this button to copy the relevant task information to be posted next.")
@@ -2987,7 +2989,7 @@ Partial Class Main
         Me.btnGroupFlightEventThreadLogistics.Location = New System.Drawing.Point(6, 235)
         Me.btnGroupFlightEventThreadLogistics.Name = "btnGroupFlightEventThreadLogistics"
         Me.btnGroupFlightEventThreadLogistics.Size = New System.Drawing.Size(661, 37)
-        Me.btnGroupFlightEventThreadLogistics.TabIndex = 7
+        Me.btnGroupFlightEventThreadLogistics.TabIndex = 9
         Me.btnGroupFlightEventThreadLogistics.Tag = "85"
         Me.btnGroupFlightEventThreadLogistics.Text = "5. Thread - Logistic instructions"
         Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventThreadLogistics, "Click this button to copy the thread logistic instructions to your clipboard.")
@@ -2999,7 +3001,7 @@ Partial Class Main
         Me.btnGroupFlightEventTeaser.Location = New System.Drawing.Point(6, 106)
         Me.btnGroupFlightEventTeaser.Name = "btnGroupFlightEventTeaser"
         Me.btnGroupFlightEventTeaser.Size = New System.Drawing.Size(661, 37)
-        Me.btnGroupFlightEventTeaser.TabIndex = 4
+        Me.btnGroupFlightEventTeaser.TabIndex = 5
         Me.btnGroupFlightEventTeaser.Tag = "82"
         Me.btnGroupFlightEventTeaser.Text = "2. Thread - Group event Teaser section"
         Me.ToolTip1.SetToolTip(Me.btnGroupFlightEventTeaser, "Click this button to post the teaser section.")
@@ -3011,7 +3013,7 @@ Partial Class Main
         Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(587, 69)
         Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
         Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(80, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 3
+        Me.btnDiscordGroupEventURL.TabIndex = 4
         Me.btnDiscordGroupEventURL.Tag = "81"
         Me.btnDiscordGroupEventURL.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
@@ -3023,7 +3025,7 @@ Partial Class Main
         Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 68)
         Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
         Me.txtGroupEventPostURL.Size = New System.Drawing.Size(389, 32)
-        Me.txtGroupEventPostURL.TabIndex = 2
+        Me.txtGroupEventPostURL.TabIndex = 3
         Me.txtGroupEventPostURL.Tag = "81"
         Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
         '
@@ -3034,7 +3036,7 @@ Partial Class Main
         Me.Label38.Location = New System.Drawing.Point(6, 71)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(173, 26)
-        Me.Label38.TabIndex = 1
+        Me.Label38.TabIndex = 2
         Me.Label38.Text = "URL to group event"
         '
         'btnEventFilesAndFilesInfo
@@ -3043,7 +3045,7 @@ Partial Class Main
         Me.btnEventFilesAndFilesInfo.Location = New System.Drawing.Point(6, 149)
         Me.btnEventFilesAndFilesInfo.Name = "btnEventFilesAndFilesInfo"
         Me.btnEventFilesAndFilesInfo.Size = New System.Drawing.Size(424, 37)
-        Me.btnEventFilesAndFilesInfo.TabIndex = 5
+        Me.btnEventFilesAndFilesInfo.TabIndex = 6
         Me.btnEventFilesAndFilesInfo.Tag = "83"
         Me.btnEventFilesAndFilesInfo.Text = "3. Thread - Files and files info"
         Me.ToolTip1.SetToolTip(Me.btnEventFilesAndFilesInfo, "Click this button to first paste the files and then files legend information.")
@@ -3054,7 +3056,7 @@ Partial Class Main
         Me.btnGroupFlightEventInfoToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(6, 25)
         Me.btnGroupFlightEventInfoToClipboard.Name = "btnGroupFlightEventInfoToClipboard"
-        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(661, 37)
+        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(510, 37)
         Me.btnGroupFlightEventInfoToClipboard.TabIndex = 0
         Me.btnGroupFlightEventInfoToClipboard.Tag = "80"
         Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group event post info to clipboard then thread title"
@@ -3467,6 +3469,20 @@ Partial Class Main
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
         '
+        'chkPostForHub
+        '
+        Me.chkPostForHub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkPostForHub.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkPostForHub.Location = New System.Drawing.Point(522, 29)
+        Me.chkPostForHub.Name = "chkPostForHub"
+        Me.chkPostForHub.Size = New System.Drawing.Size(145, 30)
+        Me.chkPostForHub.TabIndex = 1
+        Me.chkPostForHub.Tag = "44"
+        Me.chkPostForHub.Text = "Posting on Hub"
+        Me.ToolTip1.SetToolTip(Me.chkPostForHub, "Check this if you are posting on the group flight events hub")
+        Me.chkPostForHub.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3796,4 +3812,5 @@ Partial Class Main
     Friend WithEvents toolStripReload As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents btnEventDPHXAndLinkOnly As Button
+    Friend WithEvents chkPostForHub As CheckBox
 End Class
