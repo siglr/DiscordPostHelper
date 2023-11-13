@@ -16,6 +16,7 @@ Imports System.Reflection
 Imports System.Threading
 Imports NAudio.Utils
 Imports System.Runtime.InteropServices
+Imports System.Net.WebRequestMethods
 
 Public Class SupportingFeatures
 
@@ -1071,8 +1072,13 @@ Public Class SupportingFeatures
 
     Public Function GetVoiceChannels() As List(Of String)
 
-        Return New List(Of String) From {"Unicom 1", "Unicom 2", "Unicom 3", "Push to talk 1", "Sim Soaring Club (PTT)",
-                                         "Flight 01", "Flight 02", "Thermal Smashing"}
+        Return New List(Of String) From {"[Unicom 1](https//discord.com/channels/793376245915189268/793378730750771210)",
+                                         "[Unicom 2](https://discord.com/channels/793376245915189268/793379061237284874)",
+                                         "[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)",
+                                         "[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)",
+                                         "[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)",
+                                         "[Flight 02](https://discord.com/channels/876123356385149009/876130658513203230)",
+                                         "[General](https: //discord.com/channels/325227457445625856/448551355712274435)"}
 
     End Function
 
