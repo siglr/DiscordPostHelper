@@ -239,6 +239,7 @@ Partial Class Main
         Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
+        Me.chkPostForHub = New System.Windows.Forms.CheckBox()
         Me.btnEventDPHXAndLinkOnly = New System.Windows.Forms.Button()
         Me.btnEventTaskDetails = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventThreadLogistics = New System.Windows.Forms.Button()
@@ -291,7 +292,6 @@ Partial Class Main
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.chkPostForHub = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2063,7 +2063,8 @@ Partial Class Main
         '
         Me.cboVoiceChannel.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboVoiceChannel.FormattingEnabled = True
-        Me.cboVoiceChannel.Items.AddRange(New Object() {"Unicom 1", "Unicom 2", "Unicom 3", "Push to talk 1", "Sim Soaring Club (PTT)", "Flight 01", "Flight 02", "Thermal Smashing"})
+        Me.cboVoiceChannel.Items.AddRange(New Object() {"[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)", "[Unicom 2](https://discord.com/channels/793376245915189268/793379061237284874)", "[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)", "[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/87639782" &
+                "5934626836)", "[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)", "[Flight 02](https://discord.com/channels/876123356385149009/876130658513203230)", "[General](https://discord.com/channels/325227457445625856/448551355712274435)"})
         Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 233)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
         Me.cboVoiceChannel.Size = New System.Drawing.Size(650, 32)
@@ -2959,6 +2960,20 @@ Partial Class Main
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
         '
+        'chkPostForHub
+        '
+        Me.chkPostForHub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkPostForHub.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkPostForHub.Location = New System.Drawing.Point(522, 29)
+        Me.chkPostForHub.Name = "chkPostForHub"
+        Me.chkPostForHub.Size = New System.Drawing.Size(145, 30)
+        Me.chkPostForHub.TabIndex = 1
+        Me.chkPostForHub.Tag = "44"
+        Me.chkPostForHub.Text = "Posting on Hub"
+        Me.ToolTip1.SetToolTip(Me.chkPostForHub, "Check this if you are posting on the group flight events hub")
+        Me.chkPostForHub.UseVisualStyleBackColor = True
+        '
         'btnEventDPHXAndLinkOnly
         '
         Me.btnEventDPHXAndLinkOnly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3468,20 +3483,6 @@ Partial Class Main
         Me.DiscordInviteToolStripMenuItem.Name = "DiscordInviteToolStripMenuItem"
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
-        '
-        'chkPostForHub
-        '
-        Me.chkPostForHub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkPostForHub.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkPostForHub.Location = New System.Drawing.Point(522, 29)
-        Me.chkPostForHub.Name = "chkPostForHub"
-        Me.chkPostForHub.Size = New System.Drawing.Size(145, 30)
-        Me.chkPostForHub.TabIndex = 1
-        Me.chkPostForHub.Tag = "44"
-        Me.chkPostForHub.Text = "Posting on Hub"
-        Me.ToolTip1.SetToolTip(Me.chkPostForHub, "Check this if you are posting on the group flight events hub")
-        Me.chkPostForHub.UseVisualStyleBackColor = True
         '
         'Main
         '
