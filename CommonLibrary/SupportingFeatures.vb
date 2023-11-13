@@ -16,7 +16,6 @@ Imports System.Reflection
 Imports System.Threading
 Imports NAudio.Utils
 Imports System.Runtime.InteropServices
-Imports System.Net.WebRequestMethods
 
 Public Class SupportingFeatures
 
