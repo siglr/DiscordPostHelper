@@ -147,7 +147,7 @@
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
-    <ZuluTime>7:15 AM</ZuluTime>
+    <ZuluTime>7:15 PM</ZuluTime>
     <SyncFlyDelay>15</SyncFlyDelay>
     <LaunchDelay>0</LaunchDelay>
     <StartTaskDelay>15</StartTaskDelay>
@@ -161,7 +161,7 @@
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>
-    <ZuluTime>7:15 AM</ZuluTime>
+    <ZuluTime>7:15 PM</ZuluTime>
     <SyncFlyDelay>15</SyncFlyDelay>
     <LaunchDelay>0</LaunchDelay>
     <StartTaskDelay>15</StartTaskDelay>
