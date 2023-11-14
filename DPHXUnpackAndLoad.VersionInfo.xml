@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.11.5.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.11.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.11.14.1</ReleaseVersion>
+      <ReleaseTitle>Staying in sync with DPH Tool</ReleaseTitle>
+      <ReleaseNotes>
+        Just some adjustments to stay in sync with the changes in the DPH Tool.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.11.5.1</ReleaseVersion>
       <ReleaseTitle>Gradient legends on graphical display</ReleaseTitle>

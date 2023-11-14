@@ -1,6 +1,18 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.11.5.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.11.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.11.14.1</ReleaseVersion>
+      <ReleaseTitle>Group Flight Events Hub</ReleaseTitle>
+      <ReleaseNotes>
+        Changes in this version are mostly all related to the new Group Flight Events Hub.
+        Added button to post group event to the Hub, with link to original club post.
+        Added distinction between CET and CEDT times for SSC events.
+        Added button to publish only DPHX file and link to task post.
+        Replace the current voice channel text by a full link to the Discord voice channel.
+        Fixed a bug when creating the event post where it gets stuck waiting for a link copied from Discord.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.11.5.1</ReleaseVersion>
       <ReleaseTitle>Gradient legends on graphical display</ReleaseTitle>
