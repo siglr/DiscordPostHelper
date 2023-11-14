@@ -1531,6 +1531,23 @@ Public Class SupportingFeatures
         NativeMethods.SetForegroundWindow(handle)
     End Sub
 
+    Public Shared Function GetTextPartFromURLMarkdown(urlMarkdown As String) As String
+        ' Define a regular expression pattern to match text inside brackets
+        Dim pattern As String = "\[([^]]+)\]\(([^)]+)\)"
+
+        ' Match the pattern in the input string
+        Dim match As Match = Regex.Match(urlMarkdown, pattern)
+
+        ' Check if a match was found
+        If match.Success Then
+            ' The first captured group (index 1) contains the text inside brackets
+            Return match.Groups(1).Value
+        Else
+            ' No match found, return blank
+            Return String.Empty
+        End If
+    End Function
+
 End Class
 
 Public Class NativeMethods

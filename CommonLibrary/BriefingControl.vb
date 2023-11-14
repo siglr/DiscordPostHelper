@@ -730,7 +730,7 @@ Public Class BriefingControl
             'Meeting Time and Discord Voice Channel
             If _sessionData.VoiceChannel <> String.Empty Then
                 sb.Append($"We meet at: \b {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
-                sb.Append($"on voice channel: \b {_sessionData.VoiceChannel}\b0\line ")
+                sb.Append($"on voice channel: \b {SupportingFeatures.GetTextPartFromURLMarkdown(_sessionData.VoiceChannel)}\b0\line ")
                 sb.Append("\line ")
             End If
 
