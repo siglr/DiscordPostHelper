@@ -1328,6 +1328,10 @@ Public Class Main
                           _SF.ValueToAppendIfNotEmpty(txtWaypointsDetails.Text,,, 1) &
                           _SF.ValueToAppendIfNotEmpty(txtAddOnsDetails.Text)
 
+        If Not txtDiscordTaskID.Text.Trim = String.Empty Then
+            msg = $"{msg}## 🏁 Results{Environment.NewLine}Feel free to share your task results in this thread, creating a central spot for everyone's achievements."
+        End If
+
         If msg.Trim = String.Empty Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "Nothing to post!", "Step 4 - Creating remaining content post in the thread.", MessageBoxButtons.OK, MessageBoxIcon.Error)
