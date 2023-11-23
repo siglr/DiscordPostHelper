@@ -463,11 +463,11 @@ Public Class BriefingControl
     Private Sub BuildTaskData()
         Dim totalDistance As Integer
         Dim trackDistance As Integer
+        Dim possibleElevationUpdateRequired As Boolean = False
 
         EventIsEnabled = _sessionData.EventEnabled
 
-        _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, False)
-
+        _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, possibleElevationUpdateRequired, False)
 
         Dim dateFormat As String
         If _sessionData.IncludeYear Then

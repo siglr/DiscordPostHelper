@@ -8,6 +8,14 @@ Public Class ATCWaypoint
     Private ReadOnly _Diameter As Integer = 0
 
     Public ReadOnly Property Sequence As Integer = 0
+
+    Private _PossibleElevationUpdateReq As Boolean = False
+    Public ReadOnly Property PossibleElevationUpdateReq
+        Get
+            Return _PossibleElevationUpdateReq
+        End Get
+    End Property
+
     Public ReadOnly Property WaypointName As String = String.Empty
     Public ReadOnly Property ICAO As String = String.Empty
     Public ReadOnly Property Gate As String
@@ -165,6 +173,9 @@ Public Class ATCWaypoint
         pLatitude = Conversions.ConvertToLatitude(strParts(0))
         pLongitude = Conversions.ConvertToLongitude(strParts(1))
         If Not Double.TryParse(strParts(2).Replace("-000-", "-"), NumberStyles.Number, CultureInfo.InvariantCulture, pElevation) Then
+        End If
+        If pElevation = 1500 Then
+            _PossibleElevationUpdateReq = True
         End If
     End Sub
 

@@ -249,6 +249,7 @@ Public Class SupportingFeatures
     Public Function BuildAltitudeRestrictions(ByVal pXmlDocFlightPlan As XmlDocument,
                                               ByRef pFlightTotalDistanceInKm As Single,
                                               ByRef pTaskTotalDistanceInKm As Single,
+                                              ByRef pPossibleElevationUpdateRequired As Boolean,
                                               Optional includeWPName As Boolean = True) As String
 
         'Build altitude restrictions
@@ -280,6 +281,10 @@ Public Class SupportingFeatures
                                                xmlWaypointList.Item(i).SelectNodes("WorldPosition").Item(0).FirstChild.Value,
                                                i,
                                                ICAO)
+
+            If atcWaypoint.PossibleElevationUpdateReq Then
+                pPossibleElevationUpdateRequired = True
+            End If
             AllWaypoints.Add(atcWaypoint)
             If atcWaypoint.ContainsRestriction Then
                 strRestrictions = $"{strRestrictions}{Environment.NewLine}- {atcWaypoint.Restrictions(includeWPName)}"

@@ -40,6 +40,7 @@ Public Class Main
     Private _CurrentSessionFile As String = String.Empty
     Private _loadingFile As Boolean = False
     Private _sessionModified As Boolean = False
+    Private _PossibleElevationUpdateRequired As Boolean = False
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -186,6 +187,8 @@ Public Class Main
         _WeatherDetails = Nothing
         _FlightTotalDistanceInKm = 0
         _TaskTotalDistanceInKm = 0
+        _PossibleElevationUpdateRequired = False
+        lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
 
         cboSpeedUnits.SelectedIndex = 0
         cboDifficulty.SelectedIndex = 0
@@ -1928,6 +1931,8 @@ Public Class Main
 
     Private Sub LoadFlightPlan(filename As String)
 
+        _PossibleElevationUpdateRequired = False
+
         'read file
         txtFlightPlanFile.Text = filename
         _XmlDocFlightPlan.Load(filename)
@@ -1960,7 +1965,8 @@ Public Class Main
             txtArrivalName.Text = _OriginalFlightPlanArrival
         End If
 
-        txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm)
+        txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm, _PossibleElevationUpdateRequired)
+        lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
 
         If _TaskTotalDistanceInKm = 0 Then

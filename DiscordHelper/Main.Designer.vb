@@ -292,6 +292,7 @@ Partial Class Main
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -360,6 +361,7 @@ Partial Class Main
         '
         Me.tabFlightPlan.AutoScroll = True
         Me.tabFlightPlan.BackColor = System.Drawing.Color.Transparent
+        Me.tabFlightPlan.Controls.Add(Me.lblElevationUpdateWarning)
         Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
         Me.tabFlightPlan.Controls.Add(Me.grbTaskInfo)
         Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
@@ -3347,7 +3349,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3357,7 +3359,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -3483,6 +3485,21 @@ Partial Class Main
         Me.DiscordInviteToolStripMenuItem.Name = "DiscordInviteToolStripMenuItem"
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
+        '
+        'lblElevationUpdateWarning
+        '
+        Me.lblElevationUpdateWarning.AutoSize = True
+        Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
+        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(71, 51)
+        Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
+        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
+        Me.lblElevationUpdateWarning.TabIndex = 83
+        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
+    "te required!"
+        Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
+        "therwise, you can dismiss this warning.")
+        Me.lblElevationUpdateWarning.Visible = False
         '
         'Main
         '
@@ -3814,4 +3831,5 @@ Partial Class Main
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents btnEventDPHXAndLinkOnly As Button
     Friend WithEvents chkPostForHub As CheckBox
+    Friend WithEvents lblElevationUpdateWarning As Label
 End Class
