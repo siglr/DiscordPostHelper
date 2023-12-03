@@ -29,6 +29,7 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
+        Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -239,7 +240,6 @@ Partial Class Main
         Me.grpTaskFeatured = New System.Windows.Forms.GroupBox()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
-        Me.chkPostForHub = New System.Windows.Forms.CheckBox()
         Me.btnEventDPHXAndLinkOnly = New System.Windows.Forms.Button()
         Me.btnEventTaskDetails = New System.Windows.Forms.Button()
         Me.btnGroupFlightEventThreadLogistics = New System.Windows.Forms.Button()
@@ -292,7 +292,6 @@ Partial Class Main
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -375,6 +374,21 @@ Partial Class Main
         Me.tabFlightPlan.Size = New System.Drawing.Size(1481, 867)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
+        '
+        'lblElevationUpdateWarning
+        '
+        Me.lblElevationUpdateWarning.AutoSize = True
+        Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
+        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(71, 51)
+        Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
+        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
+        Me.lblElevationUpdateWarning.TabIndex = 83
+        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
+    "te required!"
+        Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
+        "therwise, you can dismiss this warning.")
+        Me.lblElevationUpdateWarning.Visible = False
         '
         'pnlGuide
         '
@@ -2945,7 +2959,6 @@ Partial Class Main
         '
         'grpGroupFlightEvent
         '
-        Me.grpGroupFlightEvent.Controls.Add(Me.chkPostForHub)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnEventDPHXAndLinkOnly)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnEventTaskDetails)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnGroupFlightEventThreadLogistics)
@@ -2961,20 +2974,6 @@ Partial Class Main
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Step 1: Group Event Post"
-        '
-        'chkPostForHub
-        '
-        Me.chkPostForHub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkPostForHub.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkPostForHub.Location = New System.Drawing.Point(522, 29)
-        Me.chkPostForHub.Name = "chkPostForHub"
-        Me.chkPostForHub.Size = New System.Drawing.Size(145, 30)
-        Me.chkPostForHub.TabIndex = 1
-        Me.chkPostForHub.Tag = "44"
-        Me.chkPostForHub.Text = "Posting on Hub"
-        Me.ToolTip1.SetToolTip(Me.chkPostForHub, "Check this if you are posting on the group flight events hub")
-        Me.chkPostForHub.UseVisualStyleBackColor = True
         '
         'btnEventDPHXAndLinkOnly
         '
@@ -3073,7 +3072,7 @@ Partial Class Main
         Me.btnGroupFlightEventInfoToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGroupFlightEventInfoToClipboard.Location = New System.Drawing.Point(6, 25)
         Me.btnGroupFlightEventInfoToClipboard.Name = "btnGroupFlightEventInfoToClipboard"
-        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(510, 37)
+        Me.btnGroupFlightEventInfoToClipboard.Size = New System.Drawing.Size(661, 37)
         Me.btnGroupFlightEventInfoToClipboard.TabIndex = 0
         Me.btnGroupFlightEventInfoToClipboard.Tag = "80"
         Me.btnGroupFlightEventInfoToClipboard.Text = "1. Group event post info to clipboard then thread title"
@@ -3349,7 +3348,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3359,7 +3358,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -3485,21 +3484,6 @@ Partial Class Main
         Me.DiscordInviteToolStripMenuItem.Name = "DiscordInviteToolStripMenuItem"
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
-        '
-        'lblElevationUpdateWarning
-        '
-        Me.lblElevationUpdateWarning.AutoSize = True
-        Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
-        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(71, 51)
-        Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
-        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
-        Me.lblElevationUpdateWarning.TabIndex = 83
-        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
-    "te required!"
-        Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
-        "therwise, you can dismiss this warning.")
-        Me.lblElevationUpdateWarning.Visible = False
         '
         'Main
         '
@@ -3830,6 +3814,5 @@ Partial Class Main
     Friend WithEvents toolStripReload As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents btnEventDPHXAndLinkOnly As Button
-    Friend WithEvents chkPostForHub As CheckBox
     Friend WithEvents lblElevationUpdateWarning As Label
 End Class

@@ -2312,13 +2312,6 @@ Public Class Main
 
     Private Sub btnGroupFlightEventInfoToClipboard_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventInfoToClipboard.Click
 
-        If chkPostForHub.Checked AndAlso txtGroupEventPostURL.Text.Trim = String.Empty Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "When posting on the Hub, the Discord link to original club event need to be pasted the URL field below.", "Creating group flight post on Hub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            End Using
-            Exit Sub
-        End If
-
         Dim autoContinue As Boolean = SessionSettings.ExpertMode
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
@@ -2892,24 +2885,12 @@ Public Class Main
         sb.AppendLine("> ")
         sb.AppendLine($"> 🗣 Voice: **{cboVoiceChannel.Text}**")
 
-        If chkPostForHub.Checked Then
-            If txtDiscordTaskID.Text.Trim = String.Empty Then
-                sb.AppendLine("> ")
-                sb.AppendLine($"> 📁 Files and full task details are not yet available")
-            Else
-                sb.AppendLine("> ")
-                sb.AppendLine($"> 📁 [Files and full task details]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})")
-            End If
-            sb.AppendLine($"> 🔗 [Original Club Post]({txtGroupEventPostURL.Text})")
-
+        If chkEventTeaser.Checked Then
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
         Else
-            If chkEventTeaser.Checked Then
-                sb.AppendLine("> ")
-                sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
-            Else
-                sb.AppendLine("> ")
-                sb.AppendLine($"> 📁 All files are shared inside the thread below")
-            End If
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 📁 All files are shared inside the thread below")
         End If
         sb.AppendLine("> ")
         sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")
@@ -2975,7 +2956,7 @@ Public Class Main
             sb.AppendLine(txtCredits.Text)
         End If
 
-        If chkPostForHub.Checked AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text) Then
+        If SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text) Then
             sb.AppendLine()
             sb.AppendLine(txtDiscordEventShareURL.Text)
         End If
