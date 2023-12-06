@@ -3276,6 +3276,7 @@ Public Class Main
                 pnlWizardDiscord.Visible = False
                 pnlWizardBriefing.Visible = False
                 toolStripStopGuide.Visible = False
+                grpGroupEventPost.Width = tabEvent.Width - 15
             Case 1 'Select flight plan
                 TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
@@ -3679,6 +3680,7 @@ Public Class Main
                 pnlWizardDiscord.Visible = False
                 pnlWizardBriefing.Visible = False
                 toolStripStopGuide.Visible = False
+                grpGroupEventPost.Width = tabEvent.Width - 15
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "The wizard's guidance ends here! You can resume anytime by hitting F1 on any field. Also, if you hover your mouse on any field or button, you will also get a tooltip help displayed!", "Discord Post Helper Wizard", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Using
@@ -3770,7 +3772,11 @@ Public Class Main
         pnlWizardDiscord.Visible = False
         pnlWizardBriefing.Visible = False
         Me.pnlEventArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.left_arrow
-        pnlWizardEvent.Left = 849
+        If tabEvent.Width - grpGroupEventPost.Width < pnlWizardEvent.Width Then
+            'We need to resize to make room
+            grpGroupEventPost.Width = tabEvent.Width - pnlWizardEvent.Width - 20
+        End If
+        pnlWizardEvent.Left = tabEvent.Width - pnlWizardEvent.Width
         pnlWizardEvent.Visible = True
         pnlEventArrow.Left = -6
         pnlEventArrow.Top = 0
