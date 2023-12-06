@@ -29,6 +29,7 @@ Public Class SupportingFeatures
         FullDateTimeWithDayOfWeek = 1
         LongDateTime = 2
         CountDown = 3
+        TimeStampOnly = 4
     End Enum
 
     Public Enum ClientApp As Integer
@@ -400,12 +401,16 @@ Public Class SupportingFeatures
             Case DiscordTimeStampFormat.LongDateTime
                 formatAbbr = "f"
             Case DiscordTimeStampFormat.CountDown
-                formatAbbr = "constEarthRadius"
-
+                formatAbbr = "R"
+            Case DiscordTimeStampFormat.TimeStampOnly
+                formatAbbr = String.Empty
         End Select
 
-        Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}:{formatAbbr}>"
-
+        If Not formatAbbr = String.Empty Then
+            Return $"<t:{Conversions.ConvertDateToUnixTimestamp(dateToUse)}:{formatAbbr}>"
+        Else
+            Return $"{Conversions.ConvertDateToUnixTimestamp(dateToUse)}"
+        End If
 
     End Function
 

@@ -41,6 +41,7 @@ Public Class Main
     Private _loadingFile As Boolean = False
     Private _sessionModified As Boolean = False
     Private _PossibleElevationUpdateRequired As Boolean = False
+    Private _timeStampContextualMenuDateTime As DateTime
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -2179,6 +2180,63 @@ Public Class Main
 
 #Region "Event Handlers"
 
+    Private Sub TimeStampContextualMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TimeStampContextualMenu.Opening
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+        Dim fullSyncFlyDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventSyncFlyDate, dtEventSyncFlyTime, chkDateTimeUTC.Checked)
+        Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventLaunchDate, dtEventLaunchTime, chkDateTimeUTC.Checked)
+        Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventStartTaskDate, dtEventStartTaskTime, chkDateTimeUTC.Checked)
+
+        Select Case DirectCast(TimeStampContextualMenu.SourceControl, Windows.Forms.Label).Name
+            Case lblMeetTimeResult.Name
+                _timeStampContextualMenuDateTime = fullMeetDateTimeLocal
+            Case lblSyncTimeResult.Name
+                _timeStampContextualMenuDateTime = fullSyncFlyDateTimeLocal
+            Case lblLaunchTimeResult.Name
+                _timeStampContextualMenuDateTime = fullLaunchDateTimeLocal
+            Case lblStartTimeResult.Name
+                _timeStampContextualMenuDateTime = fullStartTaskDateTimeLocal
+            Case lblCurrentDateTime.Name
+                _timeStampContextualMenuDateTime = Now()
+        End Select
+
+        GetTimeStampTimeOnlyWithoutSeconds.Text = $"{_timeStampContextualMenuDateTime.ToString("hh:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        GetFullWithDayOfWeek.Text = $"{_timeStampContextualMenuDateTime.ToString("dddd, MMMM d, yyyy h:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}"
+        GetLongDateTime.Text = $"{_timeStampContextualMenuDateTime.ToString("MMMM d, yyyy h:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}"
+        GetCountdown.Text = $"Countdown format - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.CountDown)}"
+        GetTimeStampOnly.Text = $"Timestamp only - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly)}"
+
+    End Sub
+
+    Private Sub TimeStampContextualMenu_Click(sender As Object, e As EventArgs) Handles GetTimeStampTimeOnlyWithoutSeconds.Click,
+                                                                                        GetFullWithDayOfWeek.Click,
+                                                                                        GetLongDateTime.Click,
+                                                                                        GetCountdown.Click,
+                                                                                        GetTimeStampOnly.Click
+
+        SelectProperTimeStampContextMenu(sender)
+
+    End Sub
+
+    Private Sub SelectProperTimeStampContextMenu(sender As ToolStripMenuItem)
+        Dim formatSelected As SupportingFeatures.DiscordTimeStampFormat
+        Select Case sender.Name
+            Case GetTimeStampTimeOnlyWithoutSeconds.Name
+                formatSelected = SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds
+            Case GetFullWithDayOfWeek.Name
+                formatSelected = SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek
+            Case GetLongDateTime.Name
+                formatSelected = SupportingFeatures.DiscordTimeStampFormat.LongDateTime
+            Case GetCountdown.Name
+                formatSelected = SupportingFeatures.DiscordTimeStampFormat.CountDown
+            Case GetTimeStampOnly.Name
+                formatSelected = SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly
+        End Select
+
+        Clipboard.SetText(_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, formatSelected))
+
+    End Sub
+
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
@@ -2322,7 +2380,7 @@ Public Class Main
                 Clipboard.SetFileDropList(allFiles)
                 autoContinue = CopyContent.ShowContent(Me,
                                     cboCoverImage.SelectedItem,
-                                    $"You will start by just pasting the copied cover image for your new group flight event.{Environment.NewLine}Skip (Ok) if already done.",
+                                    $"You will start by just pasting the copied cover image For your New group flight Event.{Environment.NewLine}Skip (Ok) If already done.",
                                     "Creating group flight post",
                                     New List(Of String) From {"^v"},
                                     SessionSettings.ExpertMode,
@@ -2340,7 +2398,7 @@ Public Class Main
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
-                                $"You can now post the group flight event in the proper Discord channel for the club/group.{Environment.NewLine}Then copy the link to that newly created message.{Environment.NewLine}Finally, paste the link in the URL field just below for Discord Event.",
+                                $"You can now post the group flight Event In the proper Discord channel For the club/group.{Environment.NewLine}Then copy the link To that newly created message.{Environment.NewLine}Finally, paste the link In the URL field just below For Discord Event.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
                                 SessionSettings.ExpertMode)
@@ -2348,7 +2406,7 @@ Public Class Main
         If Not autoContinue Then Exit Sub
 
         If txtGroupEventPostURL.Text = String.Empty Then
-            Dim message As String = "Please get the link to the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim message As String = "Please Get the link To the group Event's post in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As New WaitingForURLForm(message, False)
             Dim answer As DialogResult = waitingForm.ShowDialog()
 
@@ -4274,6 +4332,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 

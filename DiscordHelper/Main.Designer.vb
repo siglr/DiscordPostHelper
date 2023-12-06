@@ -137,6 +137,13 @@ Partial Class Main
         Me.Label31 = New System.Windows.Forms.Label()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
+        Me.lblCurrentDateTime = New System.Windows.Forms.Label()
+        Me.TimeStampContextualMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetCountdown = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
         Me.btnEventGuideNext = New System.Windows.Forms.Button()
@@ -303,6 +310,7 @@ Partial Class Main
         Me.GroupBox2.SuspendLayout()
         Me.grbTaskDiscord.SuspendLayout()
         Me.tabEvent.SuspendLayout()
+        Me.TimeStampContextualMenu.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
@@ -1683,6 +1691,7 @@ Partial Class Main
         '
         'tabEvent
         '
+        Me.tabEvent.Controls.Add(Me.lblCurrentDateTime)
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
         Me.tabEvent.Controls.Add(Me.pnlWizardEvent)
         Me.tabEvent.Controls.Add(Me.grpGroupEventPost)
@@ -1693,6 +1702,56 @@ Partial Class Main
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
+        '
+        'lblCurrentDateTime
+        '
+        Me.lblCurrentDateTime.AutoSize = True
+        Me.lblCurrentDateTime.ContextMenuStrip = Me.TimeStampContextualMenu
+        Me.lblCurrentDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCurrentDateTime.Location = New System.Drawing.Point(633, 7)
+        Me.lblCurrentDateTime.Name = "lblCurrentDateTime"
+        Me.lblCurrentDateTime.Size = New System.Drawing.Size(219, 21)
+        Me.lblCurrentDateTime.TabIndex = 84
+        Me.lblCurrentDateTime.Text = "Current date time Unix stamp"
+        Me.lblCurrentDateTime.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'TimeStampContextualMenu
+        '
+        Me.TimeStampContextualMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.TimeStampContextualMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetTimeStampTimeOnlyWithoutSeconds, Me.GetFullWithDayOfWeek, Me.GetLongDateTime, Me.GetCountdown, Me.GetTimeStampOnly})
+        Me.TimeStampContextualMenu.Name = "TimeStampContextualMenu"
+        Me.TimeStampContextualMenu.ShowImageMargin = False
+        Me.TimeStampContextualMenu.Size = New System.Drawing.Size(224, 124)
+        '
+        'GetTimeStampTimeOnlyWithoutSeconds
+        '
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Name = "GetTimeStampTimeOnlyWithoutSeconds"
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(223, 24)
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Text = "Time Only Without Seconds"
+        '
+        'GetFullWithDayOfWeek
+        '
+        Me.GetFullWithDayOfWeek.Name = "GetFullWithDayOfWeek"
+        Me.GetFullWithDayOfWeek.Size = New System.Drawing.Size(223, 24)
+        Me.GetFullWithDayOfWeek.Text = "Full With Day of Week"
+        '
+        'GetLongDateTime
+        '
+        Me.GetLongDateTime.Name = "GetLongDateTime"
+        Me.GetLongDateTime.Size = New System.Drawing.Size(223, 24)
+        Me.GetLongDateTime.Text = "Long Date Time"
+        '
+        'GetCountdown
+        '
+        Me.GetCountdown.Name = "GetCountdown"
+        Me.GetCountdown.Size = New System.Drawing.Size(223, 24)
+        Me.GetCountdown.Text = "Countdown"
+        '
+        'GetTimeStampOnly
+        '
+        Me.GetTimeStampOnly.Name = "GetTimeStampOnly"
+        Me.GetTimeStampOnly.Size = New System.Drawing.Size(223, 24)
+        Me.GetTimeStampOnly.Text = "TimeStampOnly"
         '
         'chkActivateEvent
         '
@@ -2137,6 +2196,7 @@ Partial Class Main
         'lblStartTimeResult
         '
         Me.lblStartTimeResult.AutoSize = True
+        Me.lblStartTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblStartTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStartTimeResult.Location = New System.Drawing.Point(516, 410)
         Me.lblStartTimeResult.Name = "lblStartTimeResult"
@@ -2147,6 +2207,7 @@ Partial Class Main
         'lblLaunchTimeResult
         '
         Me.lblLaunchTimeResult.AutoSize = True
+        Me.lblLaunchTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblLaunchTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblLaunchTimeResult.Location = New System.Drawing.Point(516, 376)
         Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
@@ -2157,6 +2218,7 @@ Partial Class Main
         'lblSyncTimeResult
         '
         Me.lblSyncTimeResult.AutoSize = True
+        Me.lblSyncTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblSyncTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSyncTimeResult.Location = New System.Drawing.Point(516, 342)
         Me.lblSyncTimeResult.Name = "lblSyncTimeResult"
@@ -2167,6 +2229,7 @@ Partial Class Main
         'lblMeetTimeResult
         '
         Me.lblMeetTimeResult.AutoSize = True
+        Me.lblMeetTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblMeetTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblMeetTimeResult.Location = New System.Drawing.Point(516, 308)
         Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
@@ -3517,6 +3580,7 @@ Partial Class Main
         Me.grbTaskDiscord.PerformLayout()
         Me.tabEvent.ResumeLayout(False)
         Me.tabEvent.PerformLayout()
+        Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.pnlWizardEvent.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.grpGroupEventPost.ResumeLayout(False)
@@ -3815,4 +3879,11 @@ Partial Class Main
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents btnEventDPHXAndLinkOnly As Button
     Friend WithEvents lblElevationUpdateWarning As Label
+    Friend WithEvents TimeStampContextualMenu As ContextMenuStrip
+    Friend WithEvents GetTimeStampTimeOnlyWithoutSeconds As ToolStripMenuItem
+    Friend WithEvents GetFullWithDayOfWeek As ToolStripMenuItem
+    Friend WithEvents GetLongDateTime As ToolStripMenuItem
+    Friend WithEvents GetCountdown As ToolStripMenuItem
+    Friend WithEvents GetTimeStampOnly As ToolStripMenuItem
+    Friend WithEvents lblCurrentDateTime As Label
 End Class
