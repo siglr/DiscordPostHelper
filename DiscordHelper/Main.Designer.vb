@@ -351,7 +351,7 @@ Partial Class Main
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 28)
         Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1475, 892)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1494, 892)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
