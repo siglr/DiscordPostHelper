@@ -172,34 +172,35 @@ Partial Class Main
         Me.Label33 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.txtEventDescription = New System.Windows.Forms.TextBox()
-        Me.lblStartTimeResult = New System.Windows.Forms.Label()
+        Me.chkUseStart = New System.Windows.Forms.CheckBox()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.chkUseLaunch = New System.Windows.Forms.CheckBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.chkUseSyncFly = New System.Windows.Forms.CheckBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.chkDateTimeUTC = New System.Windows.Forms.CheckBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.pnlEventDateTimeControls = New System.Windows.Forms.Panel()
+        Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventMeetTime = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventSyncFlyDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventSyncFlyTime = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventLaunchDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventLaunchTime = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventStartTaskDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtEventStartTaskTime = New System.Windows.Forms.DateTimePicker()
+        Me.lblMeetTimeResult = New System.Windows.Forms.Label()
         Me.TimeStampContextualMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblSyncTimeResult = New System.Windows.Forms.Label()
-        Me.lblMeetTimeResult = New System.Windows.Forms.Label()
-        Me.chkUseStart = New System.Windows.Forms.CheckBox()
-        Me.dtEventStartTaskTime = New System.Windows.Forms.DateTimePicker()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.dtEventStartTaskDate = New System.Windows.Forms.DateTimePicker()
-        Me.chkUseLaunch = New System.Windows.Forms.CheckBox()
-        Me.dtEventLaunchTime = New System.Windows.Forms.DateTimePicker()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.dtEventLaunchDate = New System.Windows.Forms.DateTimePicker()
-        Me.chkUseSyncFly = New System.Windows.Forms.CheckBox()
-        Me.dtEventSyncFlyTime = New System.Windows.Forms.DateTimePicker()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.dtEventSyncFlyDate = New System.Windows.Forms.DateTimePicker()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.chkDateTimeUTC = New System.Windows.Forms.CheckBox()
-        Me.dtEventMeetTime = New System.Windows.Forms.DateTimePicker()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.dtEventMeetDate = New System.Windows.Forms.DateTimePicker()
-        Me.Label24 = New System.Windows.Forms.Label()
+        Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
+        Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
         Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
@@ -305,7 +306,6 @@ Partial Class Main
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.pnlEventDateTimeControls = New System.Windows.Forms.Panel()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -321,6 +321,7 @@ Partial Class Main
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
         Me.grpEventTeaser.SuspendLayout()
+        Me.pnlEventDateTimeControls.SuspendLayout()
         Me.TimeStampContextualMenu.SuspendLayout()
         Me.tabDiscord.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
@@ -338,7 +339,6 @@ Partial Class Main
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
-        Me.pnlEventDateTimeControls.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -349,9 +349,9 @@ Partial Class Main
         Me.pnlScrollableSurface.AutoScroll = True
         Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 28)
-        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1489, 892)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1489, 892)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1475, 892)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -366,10 +366,10 @@ Partial Class Main
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.MinimumSize = New System.Drawing.Size(1489, 892)
+        Me.TabControl1.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1489, 892)
+        Me.TabControl1.Size = New System.Drawing.Size(1475, 892)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -388,7 +388,7 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1481, 859)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 859)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
@@ -1207,7 +1207,7 @@ Partial Class Main
         Me.grbTaskPart2.Enabled = False
         Me.grbTaskPart2.Location = New System.Drawing.Point(743, -5)
         Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(729, 613)
+        Me.grbTaskPart2.Size = New System.Drawing.Size(715, 613)
         Me.grbTaskPart2.TabIndex = 3
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
@@ -1232,7 +1232,7 @@ Partial Class Main
         Me.txtBaroPressureExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtBaroPressureExtraInfo.Location = New System.Drawing.Point(359, 172)
         Me.txtBaroPressureExtraInfo.Name = "txtBaroPressureExtraInfo"
-        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(361, 32)
+        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(347, 32)
         Me.txtBaroPressureExtraInfo.TabIndex = 13
         Me.txtBaroPressureExtraInfo.Tag = "19"
         Me.ToolTip1.SetToolTip(Me.txtBaroPressureExtraInfo, "Any extra information to add to a non-standard barometric pressure.")
@@ -1264,7 +1264,7 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
         Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(717, 229)
+        Me.GroupBox3.Size = New System.Drawing.Size(703, 229)
         Me.GroupBox3.TabIndex = 15
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
@@ -1300,7 +1300,7 @@ Partial Class Main
         Me.cboCoverImage.FormattingEnabled = True
         Me.cboCoverImage.Location = New System.Drawing.Point(183, 190)
         Me.cboCoverImage.Name = "cboCoverImage"
-        Me.cboCoverImage.Size = New System.Drawing.Size(531, 28)
+        Me.cboCoverImage.Size = New System.Drawing.Size(517, 28)
         Me.cboCoverImage.TabIndex = 8
         Me.cboCoverImage.Tag = "23"
         Me.ToolTip1.SetToolTip(Me.cboCoverImage, "Select the image to post as cover for the flight/task (any image file named ""Cove" &
@@ -1325,7 +1325,7 @@ Partial Class Main
         Me.cboBriefingMap.FormattingEnabled = True
         Me.cboBriefingMap.Location = New System.Drawing.Point(183, 156)
         Me.cboBriefingMap.Name = "cboBriefingMap"
-        Me.cboBriefingMap.Size = New System.Drawing.Size(531, 28)
+        Me.cboBriefingMap.Size = New System.Drawing.Size(517, 28)
         Me.cboBriefingMap.TabIndex = 6
         Me.cboBriefingMap.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display (any image file named ""Map"" will be selected" &
@@ -1341,7 +1341,7 @@ Partial Class Main
         Me.lstAllFiles.Location = New System.Drawing.Point(183, 26)
         Me.lstAllFiles.Name = "lstAllFiles"
         Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllFiles.Size = New System.Drawing.Size(531, 124)
+        Me.lstAllFiles.Size = New System.Drawing.Size(517, 124)
         Me.lstAllFiles.TabIndex = 1
         Me.lstAllFiles.Tag = "21"
         Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
@@ -1419,7 +1419,7 @@ Partial Class Main
         Me.GroupBox2.Controls.Add(Me.btnEditSelectedAddOn)
         Me.GroupBox2.Location = New System.Drawing.Point(6, 210)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(717, 160)
+        Me.GroupBox2.Size = New System.Drawing.Size(703, 160)
         Me.GroupBox2.TabIndex = 14
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Recommended Add-Ons"
@@ -1447,7 +1447,7 @@ Partial Class Main
         Me.lstAllRecommendedAddOns.Location = New System.Drawing.Point(183, 26)
         Me.lstAllRecommendedAddOns.Name = "lstAllRecommendedAddOns"
         Me.lstAllRecommendedAddOns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(531, 124)
+        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(517, 124)
         Me.lstAllRecommendedAddOns.TabIndex = 5
         Me.lstAllRecommendedAddOns.Tag = "20"
         Me.ToolTip1.SetToolTip(Me.lstAllRecommendedAddOns, "List of the recommended add-ons for this task.")
@@ -1588,7 +1588,7 @@ Partial Class Main
         Me.lstAllCountries.Location = New System.Drawing.Point(364, 62)
         Me.lstAllCountries.Name = "lstAllCountries"
         Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllCountries.Size = New System.Drawing.Size(356, 64)
+        Me.lstAllCountries.Size = New System.Drawing.Size(342, 64)
         Me.lstAllCountries.TabIndex = 5
         Me.lstAllCountries.Tag = "17"
         Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
@@ -1603,7 +1603,7 @@ Partial Class Main
         Me.cboCountryFlag.FormattingEnabled = True
         Me.cboCountryFlag.Location = New System.Drawing.Point(189, 24)
         Me.cboCountryFlag.Name = "cboCountryFlag"
-        Me.cboCountryFlag.Size = New System.Drawing.Size(531, 32)
+        Me.cboCountryFlag.Size = New System.Drawing.Size(517, 32)
         Me.cboCountryFlag.TabIndex = 1
         Me.cboCountryFlag.Tag = "17"
         Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
@@ -1636,7 +1636,7 @@ Partial Class Main
         Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 134)
         Me.txtWeatherSummary.Name = "txtWeatherSummary"
-        Me.txtWeatherSummary.Size = New System.Drawing.Size(531, 32)
+        Me.txtWeatherSummary.Size = New System.Drawing.Size(517, 32)
         Me.txtWeatherSummary.TabIndex = 10
         Me.txtWeatherSummary.Tag = "18"
         Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
@@ -1662,7 +1662,7 @@ Partial Class Main
         Me.grbTaskDiscord.Enabled = False
         Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 614)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(729, 72)
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(715, 72)
         Me.grbTaskDiscord.TabIndex = 4
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord / Task ID"
@@ -1671,7 +1671,7 @@ Partial Class Main
         '
         Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(641, 27)
+        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(627, 27)
         Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
         Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
         Me.btnDeleteDiscordID.TabIndex = 3
@@ -1684,7 +1684,7 @@ Partial Class Main
         '
         Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(556, 27)
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(542, 27)
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
@@ -1701,7 +1701,7 @@ Partial Class Main
         Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
         Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
         Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(361, 32)
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(347, 32)
         Me.txtDiscordTaskID.TabIndex = 1
         Me.txtDiscordTaskID.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
@@ -1723,9 +1723,9 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(728, 161)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
         Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(728, 161)
+        Me.FileDropZone1.Size = New System.Drawing.Size(715, 161)
         Me.FileDropZone1.TabIndex = 5
         Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
@@ -1737,7 +1737,7 @@ Partial Class Main
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1481, 859)
+        Me.tabEvent.Size = New System.Drawing.Size(1467, 859)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
@@ -1851,7 +1851,7 @@ Partial Class Main
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.MinimumSize = New System.Drawing.Size(848, 850)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(1466, 850)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(1452, 850)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         '
@@ -1882,7 +1882,7 @@ Partial Class Main
         Me.grpEventTeaser.Controls.Add(Me.Label1)
         Me.grpEventTeaser.Location = New System.Drawing.Point(7, 698)
         Me.grpEventTeaser.Name = "grpEventTeaser"
-        Me.grpEventTeaser.Size = New System.Drawing.Size(1454, 146)
+        Me.grpEventTeaser.Size = New System.Drawing.Size(1440, 146)
         Me.grpEventTeaser.TabIndex = 50
         Me.grpEventTeaser.TabStop = False
         '
@@ -1906,7 +1906,7 @@ Partial Class Main
         Me.txtEventTeaserMessage.Multiline = True
         Me.txtEventTeaserMessage.Name = "txtEventTeaserMessage"
         Me.txtEventTeaserMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1263, 76)
+        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1249, 76)
         Me.txtEventTeaserMessage.TabIndex = 5
         Me.txtEventTeaserMessage.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserMessage, "Specify any message you want to be posted with the teaser")
@@ -1915,7 +1915,7 @@ Partial Class Main
         '
         Me.btnSelectEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSelectEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(1284, 27)
+        Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(1270, 27)
         Me.btnSelectEventTeaserAreaMap.Name = "btnSelectEventTeaserAreaMap"
         Me.btnSelectEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnSelectEventTeaserAreaMap.TabIndex = 2
@@ -1928,7 +1928,7 @@ Partial Class Main
         '
         Me.btnClearEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClearEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(1369, 26)
+        Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(1355, 26)
         Me.btnClearEventTeaserAreaMap.Name = "btnClearEventTeaserAreaMap"
         Me.btnClearEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnClearEventTeaserAreaMap.TabIndex = 3
@@ -1945,7 +1945,7 @@ Partial Class Main
         Me.txtEventTeaserAreaMapImage.Location = New System.Drawing.Point(185, 26)
         Me.txtEventTeaserAreaMapImage.Name = "txtEventTeaserAreaMapImage"
         Me.txtEventTeaserAreaMapImage.ReadOnly = True
-        Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1093, 32)
+        Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1079, 32)
         Me.txtEventTeaserAreaMapImage.TabIndex = 1
         Me.txtEventTeaserAreaMapImage.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
@@ -1968,14 +1968,14 @@ Partial Class Main
         Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
         Me.lblClubFullName.Name = "lblClubFullName"
-        Me.lblClubFullName.Size = New System.Drawing.Size(1273, 26)
+        Me.lblClubFullName.Size = New System.Drawing.Size(1259, 26)
         Me.lblClubFullName.TabIndex = 45
         '
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1381, 663)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1367, 663)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteBeginnerLink.TabIndex = 44
@@ -1991,7 +1991,7 @@ Partial Class Main
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 660)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
-        Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(1183, 32)
+        Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(1169, 32)
         Me.txtOtherBeginnerLink.TabIndex = 43
         Me.txtOtherBeginnerLink.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.txtOtherBeginnerLink, "Specify the URL (link) to the guide you want to include")
@@ -2006,7 +2006,7 @@ Partial Class Main
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
         Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 622)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
-        Me.cboBeginnersGuide.Size = New System.Drawing.Size(1268, 32)
+        Me.cboBeginnersGuide.Size = New System.Drawing.Size(1254, 32)
         Me.cboBeginnersGuide.TabIndex = 42
         Me.cboBeginnersGuide.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.cboBeginnersGuide, "You can select a link to guide beginners into soaring group flights")
@@ -2062,7 +2062,7 @@ Partial Class Main
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
         Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 95)
         Me.cboGroupOrClubName.Name = "cboGroupOrClubName"
-        Me.cboGroupOrClubName.Size = New System.Drawing.Size(1268, 32)
+        Me.cboGroupOrClubName.Size = New System.Drawing.Size(1254, 32)
         Me.cboGroupOrClubName.TabIndex = 3
         Me.cboGroupOrClubName.Tag = "60"
         Me.ToolTip1.SetToolTip(Me.cboGroupOrClubName, "Select or specify the group or club name related to this event. Leave blank if no" &
@@ -2075,7 +2075,7 @@ Partial Class Main
         Me.txtEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventTitle.Location = New System.Drawing.Point(192, 163)
         Me.txtEventTitle.Name = "txtEventTitle"
-        Me.txtEventTitle.Size = New System.Drawing.Size(1268, 32)
+        Me.txtEventTitle.Size = New System.Drawing.Size(1254, 32)
         Me.txtEventTitle.TabIndex = 5
         Me.txtEventTitle.Tag = "61"
         Me.ToolTip1.SetToolTip(Me.txtEventTitle, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
@@ -2145,7 +2145,7 @@ Partial Class Main
                 "5934626836)", "[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)", "[Flight 02](https://discord.com/channels/876123356385149009/876130658513203230)", "[General](https://discord.com/channels/325227457445625856/448551355712274435)"})
         Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 233)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
-        Me.cboVoiceChannel.Size = New System.Drawing.Size(1268, 32)
+        Me.cboVoiceChannel.Size = New System.Drawing.Size(1254, 32)
         Me.cboVoiceChannel.TabIndex = 9
         Me.cboVoiceChannel.Tag = "63"
         Me.ToolTip1.SetToolTip(Me.cboVoiceChannel, "Select the voice channel to use for the event (from the list or enter your own).")
@@ -2192,23 +2192,265 @@ Partial Class Main
         Me.txtEventDescription.Multiline = True
         Me.txtEventDescription.Name = "txtEventDescription"
         Me.txtEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventDescription.Size = New System.Drawing.Size(1268, 139)
+        Me.txtEventDescription.Size = New System.Drawing.Size(1254, 139)
         Me.txtEventDescription.TabIndex = 33
         Me.txtEventDescription.Tag = "69"
         Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the flight - comes from the flight plan tab if created in th" &
         "e same session.")
         '
-        'lblStartTimeResult
+        'chkUseStart
         '
-        Me.lblStartTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblStartTimeResult.AutoSize = True
-        Me.lblStartTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
-        Me.lblStartTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStartTimeResult.Location = New System.Drawing.Point(338, 111)
-        Me.lblStartTimeResult.Name = "lblStartTimeResult"
-        Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
-        Me.lblStartTimeResult.TabIndex = 31
-        Me.lblStartTimeResult.Text = "start time results"
+        Me.chkUseStart.AutoSize = True
+        Me.chkUseStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkUseStart.Location = New System.Drawing.Point(125, 408)
+        Me.chkUseStart.Name = "chkUseStart"
+        Me.chkUseStart.Size = New System.Drawing.Size(59, 30)
+        Me.chkUseStart.TabIndex = 28
+        Me.chkUseStart.Tag = "68"
+        Me.chkUseStart.Text = "Yes"
+        Me.ToolTip1.SetToolTip(Me.chkUseStart, "When checked, a task start time will be specified.")
+        Me.chkUseStart.UseVisualStyleBackColor = True
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.Location = New System.Drawing.Point(7, 410)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(90, 26)
+        Me.Label29.TabIndex = 27
+        Me.Label29.Text = "Start task"
+        '
+        'chkUseLaunch
+        '
+        Me.chkUseLaunch.AutoSize = True
+        Me.chkUseLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 374)
+        Me.chkUseLaunch.Name = "chkUseLaunch"
+        Me.chkUseLaunch.Size = New System.Drawing.Size(59, 30)
+        Me.chkUseLaunch.TabIndex = 23
+        Me.chkUseLaunch.Tag = "67"
+        Me.chkUseLaunch.Text = "Yes"
+        Me.ToolTip1.SetToolTip(Me.chkUseLaunch, "When checked, a launch time will be specified.")
+        Me.chkUseLaunch.UseVisualStyleBackColor = True
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label28.Location = New System.Drawing.Point(7, 376)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(73, 26)
+        Me.Label28.TabIndex = 22
+        Me.Label28.Text = "Launch"
+        '
+        'chkUseSyncFly
+        '
+        Me.chkUseSyncFly.AutoSize = True
+        Me.chkUseSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 340)
+        Me.chkUseSyncFly.Name = "chkUseSyncFly"
+        Me.chkUseSyncFly.Size = New System.Drawing.Size(59, 30)
+        Me.chkUseSyncFly.TabIndex = 18
+        Me.chkUseSyncFly.Tag = "66"
+        Me.chkUseSyncFly.Text = "Yes"
+        Me.ToolTip1.SetToolTip(Me.chkUseSyncFly, "When checked, a synchronized ""Click Fly"" will be specified.")
+        Me.chkUseSyncFly.UseVisualStyleBackColor = True
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label27.Location = New System.Drawing.Point(7, 342)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(80, 26)
+        Me.Label27.TabIndex = 17
+        Me.Label27.Text = "Sync Fly"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.Location = New System.Drawing.Point(7, 271)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(155, 26)
+        Me.Label25.TabIndex = 10
+        Me.Label25.Text = "UTC/Zulu or local"
+        '
+        'chkDateTimeUTC
+        '
+        Me.chkDateTimeUTC.AutoSize = True
+        Me.chkDateTimeUTC.Checked = True
+        Me.chkDateTimeUTC.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDateTimeUTC.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 269)
+        Me.chkDateTimeUTC.Name = "chkDateTimeUTC"
+        Me.chkDateTimeUTC.Size = New System.Drawing.Size(355, 30)
+        Me.chkDateTimeUTC.TabIndex = 11
+        Me.chkDateTimeUTC.Tag = "64"
+        Me.chkDateTimeUTC.Text = "UTC / Zulu (local time if left unchecked)"
+        Me.ToolTip1.SetToolTip(Me.chkDateTimeUTC, "When checked, the specified date and time are considered as UTC or Zulu.")
+        Me.chkDateTimeUTC.UseVisualStyleBackColor = True
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label26.Location = New System.Drawing.Point(7, 308)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(136, 26)
+        Me.Label26.TabIndex = 13
+        Me.Label26.Text = "Meet / Briefing"
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label24.Location = New System.Drawing.Point(7, 98)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(183, 26)
+        Me.Label24.TabIndex = 2
+        Me.Label24.Text = "Group or Club Name"
+        '
+        'pnlEventDateTimeControls
+        '
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblMeetTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblSyncTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblLaunchTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblStartTimeResult)
+        Me.pnlEventDateTimeControls.Location = New System.Drawing.Point(190, 299)
+        Me.pnlEventDateTimeControls.MaximumSize = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.MinimumSize = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.Name = "pnlEventDateTimeControls"
+        Me.pnlEventDateTimeControls.Size = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.TabIndex = 86
+        '
+        'dtEventMeetDate
+        '
+        Me.dtEventMeetDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventMeetDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventMeetDate.Location = New System.Drawing.Point(3, 4)
+        Me.dtEventMeetDate.Name = "dtEventMeetDate"
+        Me.dtEventMeetDate.Size = New System.Drawing.Size(211, 31)
+        Me.dtEventMeetDate.TabIndex = 14
+        Me.dtEventMeetDate.Tag = "65"
+        Me.ToolTip1.SetToolTip(Me.dtEventMeetDate, "This is the event's meet date in the specified time zone above.")
+        '
+        'dtEventMeetTime
+        '
+        Me.dtEventMeetTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventMeetTime.CustomFormat = "HH:mm tt"
+        Me.dtEventMeetTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventMeetTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtEventMeetTime.Location = New System.Drawing.Point(220, 4)
+        Me.dtEventMeetTime.Name = "dtEventMeetTime"
+        Me.dtEventMeetTime.ShowUpDown = True
+        Me.dtEventMeetTime.Size = New System.Drawing.Size(104, 31)
+        Me.dtEventMeetTime.TabIndex = 15
+        Me.dtEventMeetTime.Tag = "65"
+        Me.ToolTip1.SetToolTip(Me.dtEventMeetTime, "This is the event's meet time in the specified time zone above.")
+        '
+        'dtEventSyncFlyDate
+        '
+        Me.dtEventSyncFlyDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventSyncFlyDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(3, 38)
+        Me.dtEventSyncFlyDate.Name = "dtEventSyncFlyDate"
+        Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(211, 31)
+        Me.dtEventSyncFlyDate.TabIndex = 19
+        Me.dtEventSyncFlyDate.Tag = "66"
+        Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyDate, "This is the event's synchronized ""Click Fly"" date in the specified time zone abov" &
+        "e.")
+        '
+        'dtEventSyncFlyTime
+        '
+        Me.dtEventSyncFlyTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventSyncFlyTime.CustomFormat = "HH:mm tt"
+        Me.dtEventSyncFlyTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventSyncFlyTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(220, 38)
+        Me.dtEventSyncFlyTime.Name = "dtEventSyncFlyTime"
+        Me.dtEventSyncFlyTime.ShowUpDown = True
+        Me.dtEventSyncFlyTime.Size = New System.Drawing.Size(104, 31)
+        Me.dtEventSyncFlyTime.TabIndex = 20
+        Me.dtEventSyncFlyTime.Tag = "66"
+        Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyTime, "This is the event's synchronized ""Click Fly"" time in the specified time zone abov" &
+        "e.")
+        '
+        'dtEventLaunchDate
+        '
+        Me.dtEventLaunchDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventLaunchDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventLaunchDate.Location = New System.Drawing.Point(3, 72)
+        Me.dtEventLaunchDate.Name = "dtEventLaunchDate"
+        Me.dtEventLaunchDate.Size = New System.Drawing.Size(211, 31)
+        Me.dtEventLaunchDate.TabIndex = 24
+        Me.dtEventLaunchDate.Tag = "67"
+        Me.ToolTip1.SetToolTip(Me.dtEventLaunchDate, "This is the event's glider launch date in the specified time zone above.")
+        '
+        'dtEventLaunchTime
+        '
+        Me.dtEventLaunchTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventLaunchTime.Cursor = System.Windows.Forms.Cursors.Default
+        Me.dtEventLaunchTime.CustomFormat = "HH:mm tt"
+        Me.dtEventLaunchTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventLaunchTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtEventLaunchTime.Location = New System.Drawing.Point(220, 72)
+        Me.dtEventLaunchTime.Name = "dtEventLaunchTime"
+        Me.dtEventLaunchTime.ShowUpDown = True
+        Me.dtEventLaunchTime.Size = New System.Drawing.Size(104, 31)
+        Me.dtEventLaunchTime.TabIndex = 25
+        Me.dtEventLaunchTime.Tag = "67"
+        Me.ToolTip1.SetToolTip(Me.dtEventLaunchTime, "This is the event's glider launch time in the specified time zone above.")
+        '
+        'dtEventStartTaskDate
+        '
+        Me.dtEventStartTaskDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventStartTaskDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(3, 106)
+        Me.dtEventStartTaskDate.Name = "dtEventStartTaskDate"
+        Me.dtEventStartTaskDate.Size = New System.Drawing.Size(211, 31)
+        Me.dtEventStartTaskDate.TabIndex = 29
+        Me.dtEventStartTaskDate.Tag = "68"
+        Me.ToolTip1.SetToolTip(Me.dtEventStartTaskDate, "This is the event's task start date in the specified time zone above.")
+        '
+        'dtEventStartTaskTime
+        '
+        Me.dtEventStartTaskTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtEventStartTaskTime.CustomFormat = "HH:mm tt"
+        Me.dtEventStartTaskTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtEventStartTaskTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(220, 106)
+        Me.dtEventStartTaskTime.Name = "dtEventStartTaskTime"
+        Me.dtEventStartTaskTime.ShowUpDown = True
+        Me.dtEventStartTaskTime.Size = New System.Drawing.Size(104, 31)
+        Me.dtEventStartTaskTime.TabIndex = 30
+        Me.dtEventStartTaskTime.Tag = "68"
+        Me.ToolTip1.SetToolTip(Me.dtEventStartTaskTime, "This is the event's task start time in the specified time zone above.")
+        '
+        'lblMeetTimeResult
+        '
+        Me.lblMeetTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblMeetTimeResult.AutoSize = True
+        Me.lblMeetTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
+        Me.lblMeetTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblMeetTimeResult.Location = New System.Drawing.Point(338, 9)
+        Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
+        Me.lblMeetTimeResult.Size = New System.Drawing.Size(157, 26)
+        Me.lblMeetTimeResult.TabIndex = 16
+        Me.lblMeetTimeResult.Text = "meet time results"
         '
         'TimeStampContextualMenu
         '
@@ -2248,18 +2490,6 @@ Partial Class Main
         Me.GetTimeStampOnly.Size = New System.Drawing.Size(223, 24)
         Me.GetTimeStampOnly.Text = "TimeStampOnly"
         '
-        'lblLaunchTimeResult
-        '
-        Me.lblLaunchTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblLaunchTimeResult.AutoSize = True
-        Me.lblLaunchTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
-        Me.lblLaunchTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(338, 77)
-        Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
-        Me.lblLaunchTimeResult.Size = New System.Drawing.Size(170, 26)
-        Me.lblLaunchTimeResult.TabIndex = 26
-        Me.lblLaunchTimeResult.Text = "launch time results"
-        '
         'lblSyncTimeResult
         '
         Me.lblSyncTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -2272,238 +2502,29 @@ Partial Class Main
         Me.lblSyncTimeResult.TabIndex = 21
         Me.lblSyncTimeResult.Text = "sync time results"
         '
-        'lblMeetTimeResult
+        'lblLaunchTimeResult
         '
-        Me.lblMeetTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblMeetTimeResult.AutoSize = True
-        Me.lblMeetTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
-        Me.lblMeetTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMeetTimeResult.Location = New System.Drawing.Point(338, 9)
-        Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
-        Me.lblMeetTimeResult.Size = New System.Drawing.Size(157, 26)
-        Me.lblMeetTimeResult.TabIndex = 16
-        Me.lblMeetTimeResult.Text = "meet time results"
+        Me.lblLaunchTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblLaunchTimeResult.AutoSize = True
+        Me.lblLaunchTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
+        Me.lblLaunchTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(338, 77)
+        Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
+        Me.lblLaunchTimeResult.Size = New System.Drawing.Size(170, 26)
+        Me.lblLaunchTimeResult.TabIndex = 26
+        Me.lblLaunchTimeResult.Text = "launch time results"
         '
-        'chkUseStart
+        'lblStartTimeResult
         '
-        Me.chkUseStart.AutoSize = True
-        Me.chkUseStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseStart.Location = New System.Drawing.Point(125, 408)
-        Me.chkUseStart.Name = "chkUseStart"
-        Me.chkUseStart.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseStart.TabIndex = 28
-        Me.chkUseStart.Tag = "68"
-        Me.chkUseStart.Text = "Yes"
-        Me.ToolTip1.SetToolTip(Me.chkUseStart, "When checked, a task start time will be specified.")
-        Me.chkUseStart.UseVisualStyleBackColor = True
-        '
-        'dtEventStartTaskTime
-        '
-        Me.dtEventStartTaskTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventStartTaskTime.CustomFormat = "HH:mm tt"
-        Me.dtEventStartTaskTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventStartTaskTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(220, 106)
-        Me.dtEventStartTaskTime.Name = "dtEventStartTaskTime"
-        Me.dtEventStartTaskTime.ShowUpDown = True
-        Me.dtEventStartTaskTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventStartTaskTime.TabIndex = 30
-        Me.dtEventStartTaskTime.Tag = "68"
-        Me.ToolTip1.SetToolTip(Me.dtEventStartTaskTime, "This is the event's task start time in the specified time zone above.")
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(7, 410)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(90, 26)
-        Me.Label29.TabIndex = 27
-        Me.Label29.Text = "Start task"
-        '
-        'dtEventStartTaskDate
-        '
-        Me.dtEventStartTaskDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventStartTaskDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(3, 106)
-        Me.dtEventStartTaskDate.Name = "dtEventStartTaskDate"
-        Me.dtEventStartTaskDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventStartTaskDate.TabIndex = 29
-        Me.dtEventStartTaskDate.Tag = "68"
-        Me.ToolTip1.SetToolTip(Me.dtEventStartTaskDate, "This is the event's task start date in the specified time zone above.")
-        '
-        'chkUseLaunch
-        '
-        Me.chkUseLaunch.AutoSize = True
-        Me.chkUseLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 374)
-        Me.chkUseLaunch.Name = "chkUseLaunch"
-        Me.chkUseLaunch.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseLaunch.TabIndex = 23
-        Me.chkUseLaunch.Tag = "67"
-        Me.chkUseLaunch.Text = "Yes"
-        Me.ToolTip1.SetToolTip(Me.chkUseLaunch, "When checked, a launch time will be specified.")
-        Me.chkUseLaunch.UseVisualStyleBackColor = True
-        '
-        'dtEventLaunchTime
-        '
-        Me.dtEventLaunchTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventLaunchTime.Cursor = System.Windows.Forms.Cursors.Default
-        Me.dtEventLaunchTime.CustomFormat = "HH:mm tt"
-        Me.dtEventLaunchTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventLaunchTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventLaunchTime.Location = New System.Drawing.Point(220, 72)
-        Me.dtEventLaunchTime.Name = "dtEventLaunchTime"
-        Me.dtEventLaunchTime.ShowUpDown = True
-        Me.dtEventLaunchTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventLaunchTime.TabIndex = 25
-        Me.dtEventLaunchTime.Tag = "67"
-        Me.ToolTip1.SetToolTip(Me.dtEventLaunchTime, "This is the event's glider launch time in the specified time zone above.")
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label28.Location = New System.Drawing.Point(7, 376)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(73, 26)
-        Me.Label28.TabIndex = 22
-        Me.Label28.Text = "Launch"
-        '
-        'dtEventLaunchDate
-        '
-        Me.dtEventLaunchDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventLaunchDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventLaunchDate.Location = New System.Drawing.Point(3, 72)
-        Me.dtEventLaunchDate.Name = "dtEventLaunchDate"
-        Me.dtEventLaunchDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventLaunchDate.TabIndex = 24
-        Me.dtEventLaunchDate.Tag = "67"
-        Me.ToolTip1.SetToolTip(Me.dtEventLaunchDate, "This is the event's glider launch date in the specified time zone above.")
-        '
-        'chkUseSyncFly
-        '
-        Me.chkUseSyncFly.AutoSize = True
-        Me.chkUseSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 340)
-        Me.chkUseSyncFly.Name = "chkUseSyncFly"
-        Me.chkUseSyncFly.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseSyncFly.TabIndex = 18
-        Me.chkUseSyncFly.Tag = "66"
-        Me.chkUseSyncFly.Text = "Yes"
-        Me.ToolTip1.SetToolTip(Me.chkUseSyncFly, "When checked, a synchronized ""Click Fly"" will be specified.")
-        Me.chkUseSyncFly.UseVisualStyleBackColor = True
-        '
-        'dtEventSyncFlyTime
-        '
-        Me.dtEventSyncFlyTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventSyncFlyTime.CustomFormat = "HH:mm tt"
-        Me.dtEventSyncFlyTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventSyncFlyTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(220, 38)
-        Me.dtEventSyncFlyTime.Name = "dtEventSyncFlyTime"
-        Me.dtEventSyncFlyTime.ShowUpDown = True
-        Me.dtEventSyncFlyTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventSyncFlyTime.TabIndex = 20
-        Me.dtEventSyncFlyTime.Tag = "66"
-        Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyTime, "This is the event's synchronized ""Click Fly"" time in the specified time zone abov" &
-        "e.")
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = True
-        Me.Label27.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label27.Location = New System.Drawing.Point(7, 342)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(80, 26)
-        Me.Label27.TabIndex = 17
-        Me.Label27.Text = "Sync Fly"
-        '
-        'dtEventSyncFlyDate
-        '
-        Me.dtEventSyncFlyDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventSyncFlyDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(3, 38)
-        Me.dtEventSyncFlyDate.Name = "dtEventSyncFlyDate"
-        Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventSyncFlyDate.TabIndex = 19
-        Me.dtEventSyncFlyDate.Tag = "66"
-        Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyDate, "This is the event's synchronized ""Click Fly"" date in the specified time zone abov" &
-        "e.")
-        '
-        'Label25
-        '
-        Me.Label25.AutoSize = True
-        Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label25.Location = New System.Drawing.Point(7, 271)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(155, 26)
-        Me.Label25.TabIndex = 10
-        Me.Label25.Text = "UTC/Zulu or local"
-        '
-        'chkDateTimeUTC
-        '
-        Me.chkDateTimeUTC.AutoSize = True
-        Me.chkDateTimeUTC.Checked = True
-        Me.chkDateTimeUTC.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDateTimeUTC.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 269)
-        Me.chkDateTimeUTC.Name = "chkDateTimeUTC"
-        Me.chkDateTimeUTC.Size = New System.Drawing.Size(355, 30)
-        Me.chkDateTimeUTC.TabIndex = 11
-        Me.chkDateTimeUTC.Tag = "64"
-        Me.chkDateTimeUTC.Text = "UTC / Zulu (local time if left unchecked)"
-        Me.ToolTip1.SetToolTip(Me.chkDateTimeUTC, "When checked, the specified date and time are considered as UTC or Zulu.")
-        Me.chkDateTimeUTC.UseVisualStyleBackColor = True
-        '
-        'dtEventMeetTime
-        '
-        Me.dtEventMeetTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventMeetTime.CustomFormat = "HH:mm tt"
-        Me.dtEventMeetTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventMeetTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventMeetTime.Location = New System.Drawing.Point(220, 4)
-        Me.dtEventMeetTime.Name = "dtEventMeetTime"
-        Me.dtEventMeetTime.ShowUpDown = True
-        Me.dtEventMeetTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventMeetTime.TabIndex = 15
-        Me.dtEventMeetTime.Tag = "65"
-        Me.ToolTip1.SetToolTip(Me.dtEventMeetTime, "This is the event's meet time in the specified time zone above.")
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(7, 308)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(136, 26)
-        Me.Label26.TabIndex = 13
-        Me.Label26.Text = "Meet / Briefing"
-        '
-        'dtEventMeetDate
-        '
-        Me.dtEventMeetDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dtEventMeetDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventMeetDate.Location = New System.Drawing.Point(3, 4)
-        Me.dtEventMeetDate.Name = "dtEventMeetDate"
-        Me.dtEventMeetDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventMeetDate.TabIndex = 14
-        Me.dtEventMeetDate.Tag = "65"
-        Me.ToolTip1.SetToolTip(Me.dtEventMeetDate, "This is the event's meet date in the specified time zone above.")
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = True
-        Me.Label24.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label24.Location = New System.Drawing.Point(7, 98)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(183, 26)
-        Me.Label24.TabIndex = 2
-        Me.Label24.Text = "Group or Club Name"
+        Me.lblStartTimeResult.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStartTimeResult.AutoSize = True
+        Me.lblStartTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
+        Me.lblStartTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStartTimeResult.Location = New System.Drawing.Point(338, 111)
+        Me.lblStartTimeResult.Name = "lblStartTimeResult"
+        Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
+        Me.lblStartTimeResult.TabIndex = 31
+        Me.lblStartTimeResult.Text = "start time results"
         '
         'tabDiscord
         '
@@ -2531,7 +2552,7 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
-        Me.tabDiscord.Size = New System.Drawing.Size(1481, 859)
+        Me.tabDiscord.Size = New System.Drawing.Size(1467, 859)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
@@ -3379,7 +3400,7 @@ Partial Class Main
         Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
         Me.chkExpertMode.Name = "chkExpertMode"
-        Me.chkExpertMode.Size = New System.Drawing.Size(373, 52)
+        Me.chkExpertMode.Size = New System.Drawing.Size(359, 52)
         Me.chkExpertMode.TabIndex = 95
         Me.chkExpertMode.Tag = "44"
         Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
@@ -3391,7 +3412,7 @@ Partial Class Main
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1481, 859)
+        Me.tabBriefing.Size = New System.Drawing.Size(1467, 859)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
@@ -3405,7 +3426,7 @@ Partial Class Main
         Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
         Me.pnlBriefing.Location = New System.Drawing.Point(0, 0)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1481, 867)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1467, 867)
         Me.pnlBriefing.TabIndex = 0
         '
         'pnlWizardBriefing
@@ -3415,7 +3436,7 @@ Partial Class Main
         Me.pnlWizardBriefing.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.pnlWizardBriefing.Controls.Add(Me.lblBriefingGuideInstructions)
         Me.pnlWizardBriefing.Controls.Add(Me.btnBriefingGuideNext)
-        Me.pnlWizardBriefing.Location = New System.Drawing.Point(982, 0)
+        Me.pnlWizardBriefing.Location = New System.Drawing.Point(968, 0)
         Me.pnlWizardBriefing.Name = "pnlWizardBriefing"
         Me.pnlWizardBriefing.Size = New System.Drawing.Size(498, 46)
         Me.pnlWizardBriefing.TabIndex = 95
@@ -3455,7 +3476,7 @@ Partial Class Main
         Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
         Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1481, 867)
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 867)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
@@ -3472,7 +3493,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3482,7 +3503,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -3656,32 +3677,12 @@ Partial Class Main
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
         '
-        'pnlEventDateTimeControls
-        '
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetDate)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetTime)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyDate)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyTime)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchDate)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchTime)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskDate)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskTime)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.lblMeetTimeResult)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.lblSyncTimeResult)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.lblLaunchTimeResult)
-        Me.pnlEventDateTimeControls.Controls.Add(Me.lblStartTimeResult)
-        Me.pnlEventDateTimeControls.Location = New System.Drawing.Point(190, 299)
-        Me.pnlEventDateTimeControls.MaximumSize = New System.Drawing.Size(663, 139)
-        Me.pnlEventDateTimeControls.MinimumSize = New System.Drawing.Size(663, 139)
-        Me.pnlEventDateTimeControls.Name = "pnlEventDateTimeControls"
-        Me.pnlEventDateTimeControls.Size = New System.Drawing.Size(663, 139)
-        Me.pnlEventDateTimeControls.TabIndex = 86
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
+        Me.AutoScrollMinSize = New System.Drawing.Size(1450, 900)
         Me.ClientSize = New System.Drawing.Size(1494, 923)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.pnlScrollableSurface)
@@ -3715,6 +3716,8 @@ Partial Class Main
         Me.grpGroupEventPost.PerformLayout()
         Me.grpEventTeaser.ResumeLayout(False)
         Me.grpEventTeaser.PerformLayout()
+        Me.pnlEventDateTimeControls.ResumeLayout(False)
+        Me.pnlEventDateTimeControls.PerformLayout()
         Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
@@ -3737,8 +3740,6 @@ Partial Class Main
         Me.pnlWizardBriefing.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
-        Me.pnlEventDateTimeControls.ResumeLayout(False)
-        Me.pnlEventDateTimeControls.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
