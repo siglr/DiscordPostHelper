@@ -1665,8 +1665,9 @@ Partial Class Main
         '
         'btnDeleteDiscordID
         '
+        Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(617, 28)
+        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(641, 27)
         Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
         Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
         Me.btnDeleteDiscordID.TabIndex = 3
@@ -1677,8 +1678,9 @@ Partial Class Main
         '
         'btnDiscordTaskThreadURLPaste
         '
+        Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(532, 28)
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(556, 27)
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
@@ -1689,11 +1691,13 @@ Partial Class Main
         '
         'txtDiscordTaskID
         '
+        Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
         Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
         Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(337, 32)
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(361, 32)
         Me.txtDiscordTaskID.TabIndex = 1
         Me.txtDiscordTaskID.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
@@ -3450,7 +3454,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -3469,63 +3473,63 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -3546,7 +3550,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -3576,7 +3580,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
