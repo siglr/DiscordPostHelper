@@ -1553,6 +1553,30 @@ Public Class SupportingFeatures
         End If
     End Function
 
+    Public Shared Function ReturnTextFromURLMarkdown(fullMarkdownText As String) As String
+
+        Dim result As String
+
+        ' Define a regular expression pattern to match text inside square brackets
+        Dim pattern As String = "\[(.*?)\]"
+
+        ' Search for matches in the inputText
+        Dim match As Match = Regex.Match(fullMarkdownText, pattern)
+
+        ' Check if a match was found
+        If match.Success Then
+            ' Extract the text inside the square brackets
+            Dim extractedText As String = match.Groups(1).Value
+            result = extractedText
+        Else
+            ' No match found, handle this case as needed
+            result = fullMarkdownText
+        End If
+
+        Return result
+
+    End Function
+
 End Class
 
 Public Class NativeMethods

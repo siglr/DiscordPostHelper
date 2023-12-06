@@ -371,6 +371,7 @@ Public Class Main
                 BuildWeatherWindLayers()
                 BuildWeatherInfoResults()
                 SetDiscordTaskThreadHeight()
+                BuildGroupFlightPost()
         End Select
     End Sub
 
@@ -2831,6 +2832,7 @@ Public Class Main
         Return sb.ToString.Trim
 
     End Function
+
     Private Sub BuildGroupFlightPost()
 
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
@@ -2864,7 +2866,7 @@ Public Class Main
         Dim sb As New StringBuilder
 
         lblDiscordPostDateTime.Text = $"{fullMeetDateTimeLocal:dddd, MMMM dd}, {fullMeetDateTimeLocal:hh:mm tt}"
-        lblDiscordEventVoice.Text = cboVoiceChannel.Text
+        lblDiscordEventVoice.Text = SupportingFeatures.ReturnTextFromURLMarkdown(cboVoiceChannel.Text)
 
         txtGroupFlightEventPost.Text = String.Empty
 
