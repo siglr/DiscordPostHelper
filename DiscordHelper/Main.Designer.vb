@@ -305,6 +305,7 @@ Partial Class Main
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.pnlEventDateTimeControls = New System.Windows.Forms.Panel()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -337,6 +338,7 @@ Partial Class Main
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.pnlEventDateTimeControls.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -1831,28 +1833,17 @@ Partial Class Main
         Me.grpGroupEventPost.Controls.Add(Me.Label33)
         Me.grpGroupEventPost.Controls.Add(Me.Label32)
         Me.grpGroupEventPost.Controls.Add(Me.txtEventDescription)
-        Me.grpGroupEventPost.Controls.Add(Me.lblStartTimeResult)
-        Me.grpGroupEventPost.Controls.Add(Me.lblLaunchTimeResult)
-        Me.grpGroupEventPost.Controls.Add(Me.lblSyncTimeResult)
-        Me.grpGroupEventPost.Controls.Add(Me.lblMeetTimeResult)
         Me.grpGroupEventPost.Controls.Add(Me.chkUseStart)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventStartTaskTime)
         Me.grpGroupEventPost.Controls.Add(Me.Label29)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventStartTaskDate)
         Me.grpGroupEventPost.Controls.Add(Me.chkUseLaunch)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventLaunchTime)
         Me.grpGroupEventPost.Controls.Add(Me.Label28)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventLaunchDate)
         Me.grpGroupEventPost.Controls.Add(Me.chkUseSyncFly)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventSyncFlyTime)
         Me.grpGroupEventPost.Controls.Add(Me.Label27)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventSyncFlyDate)
         Me.grpGroupEventPost.Controls.Add(Me.Label25)
         Me.grpGroupEventPost.Controls.Add(Me.chkDateTimeUTC)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventMeetTime)
         Me.grpGroupEventPost.Controls.Add(Me.Label26)
-        Me.grpGroupEventPost.Controls.Add(Me.dtEventMeetDate)
         Me.grpGroupEventPost.Controls.Add(Me.Label24)
+        Me.grpGroupEventPost.Controls.Add(Me.pnlEventDateTimeControls)
         Me.grpGroupEventPost.Enabled = False
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.MinimumSize = New System.Drawing.Size(848, 850)
@@ -2029,10 +2020,9 @@ Partial Class Main
         '
         'lblLocalDSTWarning
         '
-        Me.lblLocalDSTWarning.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLocalDSTWarning.AutoSize = True
         Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(1134, 271)
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(553, 271)
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
         Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
         Me.lblLocalDSTWarning.TabIndex = 12
@@ -2053,7 +2043,7 @@ Partial Class Main
         '
         Me.lblEventTaskDistance.AutoSize = True
         Me.lblEventTaskDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTaskDistance.Location = New System.Drawing.Point(523, 587)
+        Me.lblEventTaskDistance.Location = New System.Drawing.Point(481, 587)
         Me.lblEventTaskDistance.Name = "lblEventTaskDistance"
         Me.lblEventTaskDistance.Size = New System.Drawing.Size(53, 26)
         Me.lblEventTaskDistance.TabIndex = 36
@@ -2106,7 +2096,7 @@ Partial Class Main
         Me.cboEligibleAward.Items.AddRange(New Object() {"None", "Bronze", "Silver", "Gold", "Diamond", "Cloud Surfer"})
         Me.cboEligibleAward.Location = New System.Drawing.Point(192, 584)
         Me.cboEligibleAward.Name = "cboEligibleAward"
-        Me.cboEligibleAward.Size = New System.Drawing.Size(325, 32)
+        Me.cboEligibleAward.Size = New System.Drawing.Size(283, 32)
         Me.cboEligibleAward.TabIndex = 35
         Me.cboEligibleAward.Tag = "70"
         Me.ToolTip1.SetToolTip(Me.cboEligibleAward, "Select any eligible award for completing this task succesfully during the event.")
@@ -2159,15 +2149,13 @@ Partial Class Main
         '
         'cboMSFSServer
         '
-        Me.cboMSFSServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboMSFSServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboMSFSServer.FormattingEnabled = True
         Me.cboMSFSServer.Items.AddRange(New Object() {"West Europe", "North Europe", "West USA", "East USA", "Southeast Asia"})
         Me.cboMSFSServer.Location = New System.Drawing.Point(192, 197)
         Me.cboMSFSServer.Name = "cboMSFSServer"
-        Me.cboMSFSServer.Size = New System.Drawing.Size(818, 32)
+        Me.cboMSFSServer.Size = New System.Drawing.Size(234, 32)
         Me.cboMSFSServer.TabIndex = 7
         Me.cboMSFSServer.Tag = "62"
         Me.ToolTip1.SetToolTip(Me.cboMSFSServer, "Select the MSFS Server to use for the event.")
@@ -2213,7 +2201,7 @@ Partial Class Main
         Me.lblStartTimeResult.AutoSize = True
         Me.lblStartTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblStartTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStartTimeResult.Location = New System.Drawing.Point(1134, 410)
+        Me.lblStartTimeResult.Location = New System.Drawing.Point(338, 111)
         Me.lblStartTimeResult.Name = "lblStartTimeResult"
         Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
         Me.lblStartTimeResult.TabIndex = 31
@@ -2263,7 +2251,7 @@ Partial Class Main
         Me.lblLaunchTimeResult.AutoSize = True
         Me.lblLaunchTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblLaunchTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(1134, 376)
+        Me.lblLaunchTimeResult.Location = New System.Drawing.Point(338, 77)
         Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
         Me.lblLaunchTimeResult.Size = New System.Drawing.Size(170, 26)
         Me.lblLaunchTimeResult.TabIndex = 26
@@ -2275,7 +2263,7 @@ Partial Class Main
         Me.lblSyncTimeResult.AutoSize = True
         Me.lblSyncTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblSyncTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSyncTimeResult.Location = New System.Drawing.Point(1134, 342)
+        Me.lblSyncTimeResult.Location = New System.Drawing.Point(338, 43)
         Me.lblSyncTimeResult.Name = "lblSyncTimeResult"
         Me.lblSyncTimeResult.Size = New System.Drawing.Size(154, 26)
         Me.lblSyncTimeResult.TabIndex = 21
@@ -2287,7 +2275,7 @@ Partial Class Main
         Me.lblMeetTimeResult.AutoSize = True
         Me.lblMeetTimeResult.ContextMenuStrip = Me.TimeStampContextualMenu
         Me.lblMeetTimeResult.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMeetTimeResult.Location = New System.Drawing.Point(1134, 308)
+        Me.lblMeetTimeResult.Location = New System.Drawing.Point(338, 9)
         Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
         Me.lblMeetTimeResult.Size = New System.Drawing.Size(157, 26)
         Me.lblMeetTimeResult.TabIndex = 16
@@ -2312,7 +2300,7 @@ Partial Class Main
         Me.dtEventStartTaskTime.CustomFormat = "HH:mm tt"
         Me.dtEventStartTaskTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventStartTaskTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(1016, 405)
+        Me.dtEventStartTaskTime.Location = New System.Drawing.Point(220, 106)
         Me.dtEventStartTaskTime.Name = "dtEventStartTaskTime"
         Me.dtEventStartTaskTime.ShowUpDown = True
         Me.dtEventStartTaskTime.Size = New System.Drawing.Size(104, 31)
@@ -2335,9 +2323,9 @@ Partial Class Main
         Me.dtEventStartTaskDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dtEventStartTaskDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(192, 405)
+        Me.dtEventStartTaskDate.Location = New System.Drawing.Point(3, 106)
         Me.dtEventStartTaskDate.Name = "dtEventStartTaskDate"
-        Me.dtEventStartTaskDate.Size = New System.Drawing.Size(818, 31)
+        Me.dtEventStartTaskDate.Size = New System.Drawing.Size(211, 31)
         Me.dtEventStartTaskDate.TabIndex = 29
         Me.dtEventStartTaskDate.Tag = "68"
         Me.ToolTip1.SetToolTip(Me.dtEventStartTaskDate, "This is the event's task start date in the specified time zone above.")
@@ -2362,7 +2350,7 @@ Partial Class Main
         Me.dtEventLaunchTime.CustomFormat = "HH:mm tt"
         Me.dtEventLaunchTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventLaunchTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventLaunchTime.Location = New System.Drawing.Point(1016, 371)
+        Me.dtEventLaunchTime.Location = New System.Drawing.Point(220, 72)
         Me.dtEventLaunchTime.Name = "dtEventLaunchTime"
         Me.dtEventLaunchTime.ShowUpDown = True
         Me.dtEventLaunchTime.Size = New System.Drawing.Size(104, 31)
@@ -2385,9 +2373,9 @@ Partial Class Main
         Me.dtEventLaunchDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dtEventLaunchDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventLaunchDate.Location = New System.Drawing.Point(192, 371)
+        Me.dtEventLaunchDate.Location = New System.Drawing.Point(3, 72)
         Me.dtEventLaunchDate.Name = "dtEventLaunchDate"
-        Me.dtEventLaunchDate.Size = New System.Drawing.Size(818, 31)
+        Me.dtEventLaunchDate.Size = New System.Drawing.Size(211, 31)
         Me.dtEventLaunchDate.TabIndex = 24
         Me.dtEventLaunchDate.Tag = "67"
         Me.ToolTip1.SetToolTip(Me.dtEventLaunchDate, "This is the event's glider launch date in the specified time zone above.")
@@ -2411,7 +2399,7 @@ Partial Class Main
         Me.dtEventSyncFlyTime.CustomFormat = "HH:mm tt"
         Me.dtEventSyncFlyTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventSyncFlyTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(1016, 337)
+        Me.dtEventSyncFlyTime.Location = New System.Drawing.Point(220, 38)
         Me.dtEventSyncFlyTime.Name = "dtEventSyncFlyTime"
         Me.dtEventSyncFlyTime.ShowUpDown = True
         Me.dtEventSyncFlyTime.Size = New System.Drawing.Size(104, 31)
@@ -2435,9 +2423,9 @@ Partial Class Main
         Me.dtEventSyncFlyDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dtEventSyncFlyDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(192, 337)
+        Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(3, 38)
         Me.dtEventSyncFlyDate.Name = "dtEventSyncFlyDate"
-        Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(818, 31)
+        Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(211, 31)
         Me.dtEventSyncFlyDate.TabIndex = 19
         Me.dtEventSyncFlyDate.Tag = "66"
         Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyDate, "This is the event's synchronized ""Click Fly"" date in the specified time zone abov" &
@@ -2474,7 +2462,7 @@ Partial Class Main
         Me.dtEventMeetTime.CustomFormat = "HH:mm tt"
         Me.dtEventMeetTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtEventMeetTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtEventMeetTime.Location = New System.Drawing.Point(1016, 303)
+        Me.dtEventMeetTime.Location = New System.Drawing.Point(220, 4)
         Me.dtEventMeetTime.Name = "dtEventMeetTime"
         Me.dtEventMeetTime.ShowUpDown = True
         Me.dtEventMeetTime.Size = New System.Drawing.Size(104, 31)
@@ -2497,9 +2485,9 @@ Partial Class Main
         Me.dtEventMeetDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dtEventMeetDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtEventMeetDate.Location = New System.Drawing.Point(192, 303)
+        Me.dtEventMeetDate.Location = New System.Drawing.Point(3, 4)
         Me.dtEventMeetDate.Name = "dtEventMeetDate"
-        Me.dtEventMeetDate.Size = New System.Drawing.Size(818, 31)
+        Me.dtEventMeetDate.Size = New System.Drawing.Size(211, 31)
         Me.dtEventMeetDate.TabIndex = 14
         Me.dtEventMeetDate.Tag = "65"
         Me.ToolTip1.SetToolTip(Me.dtEventMeetDate, "This is the event's meet date in the specified time zone above.")
@@ -3665,6 +3653,27 @@ Partial Class Main
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
         '
+        'pnlEventDateTimeControls
+        '
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventMeetTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventSyncFlyTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventLaunchTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskDate)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.dtEventStartTaskTime)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblMeetTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblSyncTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblLaunchTimeResult)
+        Me.pnlEventDateTimeControls.Controls.Add(Me.lblStartTimeResult)
+        Me.pnlEventDateTimeControls.Location = New System.Drawing.Point(190, 299)
+        Me.pnlEventDateTimeControls.MaximumSize = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.MinimumSize = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.Name = "pnlEventDateTimeControls"
+        Me.pnlEventDateTimeControls.Size = New System.Drawing.Size(663, 139)
+        Me.pnlEventDateTimeControls.TabIndex = 86
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3725,6 +3734,8 @@ Partial Class Main
         Me.pnlWizardBriefing.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.pnlEventDateTimeControls.ResumeLayout(False)
+        Me.pnlEventDateTimeControls.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4009,4 +4020,5 @@ Partial Class Main
     Friend WithEvents GetNowLongDateTime As ToolStripMenuItem
     Friend WithEvents GetNowCountdown As ToolStripMenuItem
     Friend WithEvents GetNowTimeStampOnly As ToolStripMenuItem
+    Friend WithEvents pnlEventDateTimeControls As Panel
 End Class
