@@ -366,6 +366,7 @@ Partial Class Main
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.MinimumSize = New System.Drawing.Size(1489, 892)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(1489, 892)
@@ -524,6 +525,7 @@ Partial Class Main
         Me.grbTaskInfo.Controls.Add(Me.txtLongDescription)
         Me.grbTaskInfo.Enabled = False
         Me.grbTaskInfo.Location = New System.Drawing.Point(8, 57)
+        Me.grbTaskInfo.MinimumSize = New System.Drawing.Size(729, 796)
         Me.grbTaskInfo.Name = "grbTaskInfo"
         Me.grbTaskInfo.Size = New System.Drawing.Size(729, 796)
         Me.grbTaskInfo.TabIndex = 2
@@ -1721,6 +1723,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(728, 161)
         Me.FileDropZone1.Name = "FileDropZone1"
         Me.FileDropZone1.Size = New System.Drawing.Size(728, 161)
         Me.FileDropZone1.TabIndex = 5
@@ -3469,7 +3472,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3479,7 +3482,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
