@@ -191,7 +191,7 @@ Public Class SupportingFeatures
                 Case 2
                     difficulty = $"Student{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 3
-                    difficulty = $"Experimented{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
+                    difficulty = $"Experienced{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 4
                     difficulty = $"Professional{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 5
@@ -211,7 +211,7 @@ Public Class SupportingFeatures
                 Case 2
                     difficulty = $"★★☆☆☆ - Student{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 3
-                    difficulty = $"★★★☆☆ - Experimented{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
+                    difficulty = $"★★★☆☆ - Experienced{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 4
                     difficulty = $"★★★★☆ - Professional{ValueToAppendIfNotEmpty(difficultyExtraInfo, True, True)}"
                 Case 5
