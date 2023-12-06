@@ -1899,6 +1899,9 @@ Partial Class Main
         '
         'txtEventTeaserMessage
         '
+        Me.txtEventTeaserMessage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventTeaserMessage.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventTeaserMessage.Location = New System.Drawing.Point(185, 64)
         Me.txtEventTeaserMessage.Multiline = True
@@ -1911,6 +1914,7 @@ Partial Class Main
         '
         'btnSelectEventTeaserAreaMap
         '
+        Me.btnSelectEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSelectEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(666, 27)
         Me.btnSelectEventTeaserAreaMap.Name = "btnSelectEventTeaserAreaMap"
@@ -1923,6 +1927,7 @@ Partial Class Main
         '
         'btnClearEventTeaserAreaMap
         '
+        Me.btnClearEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClearEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(751, 26)
         Me.btnClearEventTeaserAreaMap.Name = "btnClearEventTeaserAreaMap"
@@ -1935,6 +1940,8 @@ Partial Class Main
         '
         'txtEventTeaserAreaMapImage
         '
+        Me.txtEventTeaserAreaMapImage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventTeaserAreaMapImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventTeaserAreaMapImage.Location = New System.Drawing.Point(185, 26)
         Me.txtEventTeaserAreaMapImage.Name = "txtEventTeaserAreaMapImage"
@@ -1957,6 +1964,8 @@ Partial Class Main
         '
         'lblClubFullName
         '
+        Me.lblClubFullName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
         Me.lblClubFullName.Name = "lblClubFullName"
@@ -1965,6 +1974,7 @@ Partial Class Main
         '
         'btnPasteBeginnerLink
         '
+        Me.btnPasteBeginnerLink.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(763, 663)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
@@ -1977,6 +1987,8 @@ Partial Class Main
         '
         'txtOtherBeginnerLink
         '
+        Me.txtOtherBeginnerLink.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 660)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
@@ -1987,6 +1999,8 @@ Partial Class Main
         '
         'cboBeginnersGuide
         '
+        Me.cboBeginnersGuide.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboBeginnersGuide.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboBeginnersGuide.FormattingEnabled = True
@@ -2031,6 +2045,7 @@ Partial Class Main
         '
         'lblEventTaskDistance
         '
+        Me.lblEventTaskDistance.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEventTaskDistance.AutoSize = True
         Me.lblEventTaskDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblEventTaskDistance.Location = New System.Drawing.Point(364, 587)
@@ -2042,6 +2057,8 @@ Partial Class Main
         '
         'cboGroupOrClubName
         '
+        Me.cboGroupOrClubName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboGroupOrClubName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboGroupOrClubName.FormattingEnabled = True
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
@@ -2055,6 +2072,8 @@ Partial Class Main
         '
         'txtEventTitle
         '
+        Me.txtEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventTitle.Location = New System.Drawing.Point(192, 163)
         Me.txtEventTitle.Name = "txtEventTitle"
@@ -2076,6 +2095,8 @@ Partial Class Main
         '
         'cboEligibleAward
         '
+        Me.cboEligibleAward.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboEligibleAward.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboEligibleAward.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboEligibleAward.FormattingEnabled = True
@@ -2120,6 +2141,8 @@ Partial Class Main
         '
         'cboVoiceChannel
         '
+        Me.cboVoiceChannel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboVoiceChannel.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboVoiceChannel.FormattingEnabled = True
         Me.cboVoiceChannel.Items.AddRange(New Object() {"[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)", "[Unicom 2](https://discord.com/channels/793376245915189268/793379061237284874)", "[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)", "[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/87639782" &
@@ -2133,6 +2156,8 @@ Partial Class Main
         '
         'cboMSFSServer
         '
+        Me.cboMSFSServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboMSFSServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboMSFSServer.FormattingEnabled = True
@@ -2166,6 +2191,8 @@ Partial Class Main
         '
         'txtEventDescription
         '
+        Me.txtEventDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventDescription.Location = New System.Drawing.Point(192, 439)
         Me.txtEventDescription.Multiline = True
