@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.11.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.6.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.6.2</ReleaseVersion>
+      <ReleaseTitle>Fixed difficulty ratings</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the "Experimented" difficulty rating to "Experienced" like in the DPH tool.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.11.14.1</ReleaseVersion>
       <ReleaseTitle>Staying in sync with DPH Tool</ReleaseTitle>

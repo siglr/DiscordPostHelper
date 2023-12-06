@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.11.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.6.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.6.2</ReleaseVersion>
+      <ReleaseTitle>Several unrelated fixes and updates</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check for waypoints with elevation 1500’ and raise a warning about possible need to update elevations.
+        Added contextual menus to date/time labels so you can copy the UNIX timestamp format to the clipboard.
+        Removed option to post group event to hub. Hub doesn't post events anymore, only uses links to original events.
+        Fixed the voice channel not displaying correctly under the Discord Event section (to select Voice Channel).
+        Fixed the meet time results not displaying correctly under the Discord Event section (to specify local start date and time).
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.11.14.1</ReleaseVersion>
       <ReleaseTitle>Group Flight Events Hub</ReleaseTitle>
