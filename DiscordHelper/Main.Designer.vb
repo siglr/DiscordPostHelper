@@ -137,13 +137,6 @@ Partial Class Main
         Me.Label31 = New System.Windows.Forms.Label()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
-        Me.lblCurrentDateTime = New System.Windows.Forms.Label()
-        Me.TimeStampContextualMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GetFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GetLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GetCountdown = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GetTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
         Me.btnEventGuideNext = New System.Windows.Forms.Button()
@@ -180,6 +173,12 @@ Partial Class Main
         Me.Label32 = New System.Windows.Forms.Label()
         Me.txtEventDescription = New System.Windows.Forms.TextBox()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
+        Me.TimeStampContextualMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetCountdown = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblSyncTimeResult = New System.Windows.Forms.Label()
         Me.lblMeetTimeResult = New System.Windows.Forms.Label()
@@ -299,6 +298,13 @@ Partial Class Main
         Me.DiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.toolStripCurrentDateTime = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetNowFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetNowLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -310,11 +316,11 @@ Partial Class Main
         Me.GroupBox2.SuspendLayout()
         Me.grbTaskDiscord.SuspendLayout()
         Me.tabEvent.SuspendLayout()
-        Me.TimeStampContextualMenu.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
         Me.grpEventTeaser.SuspendLayout()
+        Me.TimeStampContextualMenu.SuspendLayout()
         Me.tabDiscord.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -1691,7 +1697,6 @@ Partial Class Main
         '
         'tabEvent
         '
-        Me.tabEvent.Controls.Add(Me.lblCurrentDateTime)
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
         Me.tabEvent.Controls.Add(Me.pnlWizardEvent)
         Me.tabEvent.Controls.Add(Me.grpGroupEventPost)
@@ -1702,56 +1707,6 @@ Partial Class Main
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
-        '
-        'lblCurrentDateTime
-        '
-        Me.lblCurrentDateTime.AutoSize = True
-        Me.lblCurrentDateTime.ContextMenuStrip = Me.TimeStampContextualMenu
-        Me.lblCurrentDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCurrentDateTime.Location = New System.Drawing.Point(633, 7)
-        Me.lblCurrentDateTime.Name = "lblCurrentDateTime"
-        Me.lblCurrentDateTime.Size = New System.Drawing.Size(219, 21)
-        Me.lblCurrentDateTime.TabIndex = 84
-        Me.lblCurrentDateTime.Text = "Current date time Unix stamp"
-        Me.lblCurrentDateTime.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'TimeStampContextualMenu
-        '
-        Me.TimeStampContextualMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.TimeStampContextualMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetTimeStampTimeOnlyWithoutSeconds, Me.GetFullWithDayOfWeek, Me.GetLongDateTime, Me.GetCountdown, Me.GetTimeStampOnly})
-        Me.TimeStampContextualMenu.Name = "TimeStampContextualMenu"
-        Me.TimeStampContextualMenu.ShowImageMargin = False
-        Me.TimeStampContextualMenu.Size = New System.Drawing.Size(224, 124)
-        '
-        'GetTimeStampTimeOnlyWithoutSeconds
-        '
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Name = "GetTimeStampTimeOnlyWithoutSeconds"
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(223, 24)
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Text = "Time Only Without Seconds"
-        '
-        'GetFullWithDayOfWeek
-        '
-        Me.GetFullWithDayOfWeek.Name = "GetFullWithDayOfWeek"
-        Me.GetFullWithDayOfWeek.Size = New System.Drawing.Size(223, 24)
-        Me.GetFullWithDayOfWeek.Text = "Full With Day of Week"
-        '
-        'GetLongDateTime
-        '
-        Me.GetLongDateTime.Name = "GetLongDateTime"
-        Me.GetLongDateTime.Size = New System.Drawing.Size(223, 24)
-        Me.GetLongDateTime.Text = "Long Date Time"
-        '
-        'GetCountdown
-        '
-        Me.GetCountdown.Name = "GetCountdown"
-        Me.GetCountdown.Size = New System.Drawing.Size(223, 24)
-        Me.GetCountdown.Text = "Countdown"
-        '
-        'GetTimeStampOnly
-        '
-        Me.GetTimeStampOnly.Name = "GetTimeStampOnly"
-        Me.GetTimeStampOnly.Size = New System.Drawing.Size(223, 24)
-        Me.GetTimeStampOnly.Text = "TimeStampOnly"
         '
         'chkActivateEvent
         '
@@ -2203,6 +2158,44 @@ Partial Class Main
         Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
         Me.lblStartTimeResult.TabIndex = 31
         Me.lblStartTimeResult.Text = "start time results"
+        '
+        'TimeStampContextualMenu
+        '
+        Me.TimeStampContextualMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.TimeStampContextualMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetTimeStampTimeOnlyWithoutSeconds, Me.GetFullWithDayOfWeek, Me.GetLongDateTime, Me.GetCountdown, Me.GetTimeStampOnly})
+        Me.TimeStampContextualMenu.Name = "TimeStampContextualMenu"
+        Me.TimeStampContextualMenu.ShowImageMargin = False
+        Me.TimeStampContextualMenu.Size = New System.Drawing.Size(224, 124)
+        '
+        'GetTimeStampTimeOnlyWithoutSeconds
+        '
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Name = "GetTimeStampTimeOnlyWithoutSeconds"
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(223, 24)
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Text = "Time Only Without Seconds"
+        '
+        'GetFullWithDayOfWeek
+        '
+        Me.GetFullWithDayOfWeek.Name = "GetFullWithDayOfWeek"
+        Me.GetFullWithDayOfWeek.Size = New System.Drawing.Size(223, 24)
+        Me.GetFullWithDayOfWeek.Text = "Full With Day of Week"
+        '
+        'GetLongDateTime
+        '
+        Me.GetLongDateTime.Name = "GetLongDateTime"
+        Me.GetLongDateTime.Size = New System.Drawing.Size(223, 24)
+        Me.GetLongDateTime.Text = "Long Date Time"
+        '
+        'GetCountdown
+        '
+        Me.GetCountdown.Name = "GetCountdown"
+        Me.GetCountdown.Size = New System.Drawing.Size(223, 24)
+        Me.GetCountdown.Text = "Countdown"
+        '
+        'GetTimeStampOnly
+        '
+        Me.GetTimeStampOnly.Name = "GetTimeStampOnly"
+        Me.GetTimeStampOnly.Size = New System.Drawing.Size(223, 24)
+        Me.GetTimeStampOnly.Text = "TimeStampOnly"
         '
         'lblLaunchTimeResult
         '
@@ -3408,7 +3401,7 @@ Partial Class Main
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
@@ -3548,6 +3541,53 @@ Partial Class Main
         Me.DiscordInviteToolStripMenuItem.Size = New System.Drawing.Size(345, 26)
         Me.DiscordInviteToolStripMenuItem.Text = "&3. Copy Discord invite link"
         '
+        'toolStripCurrentDateTime
+        '
+        Me.toolStripCurrentDateTime.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.toolStripCurrentDateTime.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.toolStripCurrentDateTime.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetNowTimeOnlyWithoutSeconds, Me.GetNowFullWithDayOfWeek, Me.GetNowLongDateTime, Me.GetNowCountdown, Me.GetNowTimeStampOnly})
+        Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
+        Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
+        Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
+        Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
+        '
+        'GetNowTimeOnlyWithoutSeconds
+        '
+        Me.GetNowTimeOnlyWithoutSeconds.Name = "GetNowTimeOnlyWithoutSeconds"
+        Me.GetNowTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowTimeOnlyWithoutSeconds.Text = "TimeOnlyWithoutSeconds"
+        '
+        'GetNowFullWithDayOfWeek
+        '
+        Me.GetNowFullWithDayOfWeek.Name = "GetNowFullWithDayOfWeek"
+        Me.GetNowFullWithDayOfWeek.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowFullWithDayOfWeek.Text = "FullWithDayOfWeek"
+        '
+        'GetNowLongDateTime
+        '
+        Me.GetNowLongDateTime.Name = "GetNowLongDateTime"
+        Me.GetNowLongDateTime.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowLongDateTime.Text = "LongDateTime"
+        '
+        'GetNowCountdown
+        '
+        Me.GetNowCountdown.Name = "GetNowCountdown"
+        Me.GetNowCountdown.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowCountdown.Text = "Countdown"
+        '
+        'GetNowTimeStampOnly
+        '
+        Me.GetNowTimeStampOnly.Name = "GetNowTimeStampOnly"
+        Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowTimeStampOnly.Text = "TimestampOnly"
+        '
+        'OneMinuteTimer
+        '
+        Me.OneMinuteTimer.Enabled = True
+        Me.OneMinuteTimer.Interval = 1000
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3580,13 +3620,13 @@ Partial Class Main
         Me.grbTaskDiscord.PerformLayout()
         Me.tabEvent.ResumeLayout(False)
         Me.tabEvent.PerformLayout()
-        Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.pnlWizardEvent.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
         Me.grpEventTeaser.ResumeLayout(False)
         Me.grpEventTeaser.PerformLayout()
+        Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
         Me.pnlWizardDiscord.ResumeLayout(False)
@@ -3885,5 +3925,11 @@ Partial Class Main
     Friend WithEvents GetLongDateTime As ToolStripMenuItem
     Friend WithEvents GetCountdown As ToolStripMenuItem
     Friend WithEvents GetTimeStampOnly As ToolStripMenuItem
-    Friend WithEvents lblCurrentDateTime As Label
+    Friend WithEvents OneMinuteTimer As Timer
+    Friend WithEvents toolStripCurrentDateTime As ToolStripDropDownButton
+    Friend WithEvents GetNowTimeOnlyWithoutSeconds As ToolStripMenuItem
+    Friend WithEvents GetNowFullWithDayOfWeek As ToolStripMenuItem
+    Friend WithEvents GetNowLongDateTime As ToolStripMenuItem
+    Friend WithEvents GetNowCountdown As ToolStripMenuItem
+    Friend WithEvents GetNowTimeStampOnly As ToolStripMenuItem
 End Class

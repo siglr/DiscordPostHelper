@@ -2180,6 +2180,22 @@ Public Class Main
 
 #Region "Event Handlers"
 
+    Private Sub toolStripCurrentDateTime_Click(sender As Object, e As EventArgs) Handles toolStripCurrentDateTime.Click
+
+        _timeStampContextualMenuDateTime = Now()
+
+        GetNowTimeOnlyWithoutSeconds.Text = $"{_timeStampContextualMenuDateTime.ToString("hh:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        GetNowFullWithDayOfWeek.Text = $"{_timeStampContextualMenuDateTime.ToString("dddd, MMMM d, yyyy h:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}"
+        GetNowLongDateTime.Text = $"{_timeStampContextualMenuDateTime.ToString("MMMM d, yyyy h:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}"
+        GetNowCountdown.Text = $"Countdown format : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.CountDown)}"
+        GetNowTimeStampOnly.Text = $"Timestamp only : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly)}"
+
+    End Sub
+
+    Private Sub OneMinuteTimer_Tick(sender As Object, e As EventArgs) Handles OneMinuteTimer.Tick
+        toolStripCurrentDateTime.Text = Now.ToString("MMMM d, yyyy h:mm tt", _EnglishCulture)
+    End Sub
+
     Private Sub TimeStampContextualMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TimeStampContextualMenu.Opening
 
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
@@ -2196,15 +2212,13 @@ Public Class Main
                 _timeStampContextualMenuDateTime = fullLaunchDateTimeLocal
             Case lblStartTimeResult.Name
                 _timeStampContextualMenuDateTime = fullStartTaskDateTimeLocal
-            Case lblCurrentDateTime.Name
-                _timeStampContextualMenuDateTime = Now()
         End Select
 
-        GetTimeStampTimeOnlyWithoutSeconds.Text = $"{_timeStampContextualMenuDateTime.ToString("hh:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        GetFullWithDayOfWeek.Text = $"{_timeStampContextualMenuDateTime.ToString("dddd, MMMM d, yyyy h:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}"
-        GetLongDateTime.Text = $"{_timeStampContextualMenuDateTime.ToString("MMMM d, yyyy h:mm tt", _EnglishCulture)} - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}"
-        GetCountdown.Text = $"Countdown format - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.CountDown)}"
-        GetTimeStampOnly.Text = $"Timestamp only - {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly)}"
+        GetTimeStampTimeOnlyWithoutSeconds.Text = $"{_timeStampContextualMenuDateTime.ToString("hh:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        GetFullWithDayOfWeek.Text = $"{_timeStampContextualMenuDateTime.ToString("dddd, MMMM d, yyyy h:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}"
+        GetLongDateTime.Text = $"{_timeStampContextualMenuDateTime.ToString("MMMM d, yyyy h:mm tt", _EnglishCulture)} : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}"
+        GetCountdown.Text = $"Countdown format : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.CountDown)}"
+        GetTimeStampOnly.Text = $"Timestamp only : {_SF.GetDiscordTimeStampForDate(_timeStampContextualMenuDateTime, SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly)}"
 
     End Sub
 
@@ -2212,7 +2226,12 @@ Public Class Main
                                                                                         GetFullWithDayOfWeek.Click,
                                                                                         GetLongDateTime.Click,
                                                                                         GetCountdown.Click,
-                                                                                        GetTimeStampOnly.Click
+                                                                                        GetTimeStampOnly.Click,
+                                                                                        GetNowTimeOnlyWithoutSeconds.Click,
+                                                                                        GetNowFullWithDayOfWeek.Click,
+                                                                                        GetNowLongDateTime.Click,
+                                                                                        GetNowCountdown.Click,
+                                                                                        GetNowTimeStampOnly.Click
 
         SelectProperTimeStampContextMenu(sender)
 
@@ -2221,15 +2240,15 @@ Public Class Main
     Private Sub SelectProperTimeStampContextMenu(sender As ToolStripMenuItem)
         Dim formatSelected As SupportingFeatures.DiscordTimeStampFormat
         Select Case sender.Name
-            Case GetTimeStampTimeOnlyWithoutSeconds.Name
+            Case GetTimeStampTimeOnlyWithoutSeconds.Name, GetNowTimeOnlyWithoutSeconds.Name
                 formatSelected = SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds
-            Case GetFullWithDayOfWeek.Name
+            Case GetFullWithDayOfWeek.Name, GetNowFullWithDayOfWeek.Name
                 formatSelected = SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek
-            Case GetLongDateTime.Name
+            Case GetLongDateTime.Name, GetNowLongDateTime.Name
                 formatSelected = SupportingFeatures.DiscordTimeStampFormat.LongDateTime
-            Case GetCountdown.Name
+            Case GetCountdown.Name, GetNowCountdown.Name
                 formatSelected = SupportingFeatures.DiscordTimeStampFormat.CountDown
-            Case GetTimeStampOnly.Name
+            Case GetTimeStampOnly.Name, GetNowTimeStampOnly.Name
                 formatSelected = SupportingFeatures.DiscordTimeStampFormat.TimeStampOnly
         End Select
 
@@ -2834,19 +2853,19 @@ Public Class Main
 
         theDate = New Date(dtEventMeetDate.Value.Year, dtEventMeetDate.Value.Month, dtEventMeetDate.Value.Day, dtEventMeetTime.Value.Hour, dtEventMeetTime.Value.Minute, 0)
         lblMeetTimeResult.Text = _SF.FormatEventDateTime(theDate, eventDay, chkDateTimeUTC.Checked)
-        ToolTip1.SetToolTip(lblMeetTimeResult, eventDay.ToString)
+        ToolTip1.SetToolTip(lblMeetTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
         'Check if local DST applies for this date
         lblLocalDSTWarning.Visible = _SF.DSTAppliesForLocalDate(theDate)
 
         lblSyncTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventSyncFlyDate.Value.Year, dtEventSyncFlyDate.Value.Month, dtEventSyncFlyDate.Value.Day, dtEventSyncFlyTime.Value.Hour, dtEventSyncFlyTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
-        ToolTip1.SetToolTip(lblSyncTimeResult, eventDay.ToString)
+        ToolTip1.SetToolTip(lblSyncTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
         lblLaunchTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventLaunchDate.Value.Year, dtEventLaunchDate.Value.Month, dtEventLaunchDate.Value.Day, dtEventLaunchTime.Value.Hour, dtEventLaunchTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
-        ToolTip1.SetToolTip(lblLaunchTimeResult, eventDay.ToString)
+        ToolTip1.SetToolTip(lblLaunchTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
         lblStartTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventStartTaskDate.Value.Year, dtEventStartTaskDate.Value.Month, dtEventStartTaskDate.Value.Day, dtEventStartTaskTime.Value.Hour, dtEventStartTaskTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
-        ToolTip1.SetToolTip(lblStartTimeResult, eventDay.ToString)
+        ToolTip1.SetToolTip(lblStartTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
         'BuildGroupFlightPost()
 
@@ -4332,7 +4351,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 
