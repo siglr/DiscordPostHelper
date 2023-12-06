@@ -347,11 +347,13 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlScrollableSurface.AutoScroll = True
+        Me.pnlScrollableSurface.AutoScrollMargin = New System.Drawing.Size(0, 15)
+        Me.pnlScrollableSurface.AutoScrollMinSize = New System.Drawing.Size(1490, 878)
         Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 28)
-        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1475, 892)
+        Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1490, 650)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
-        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1494, 892)
+        Me.pnlScrollableSurface.Size = New System.Drawing.Size(1490, 893)
         Me.pnlScrollableSurface.TabIndex = 0
         '
         'TabControl1
@@ -369,7 +371,7 @@ Partial Class Main
         Me.TabControl1.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1475, 892)
+        Me.TabControl1.Size = New System.Drawing.Size(1475, 893)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -388,7 +390,7 @@ Partial Class Main
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 859)
+        Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 860)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
         '
@@ -527,7 +529,7 @@ Partial Class Main
         Me.grbTaskInfo.Location = New System.Drawing.Point(8, 57)
         Me.grbTaskInfo.MinimumSize = New System.Drawing.Size(729, 796)
         Me.grbTaskInfo.Name = "grbTaskInfo"
-        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 796)
+        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 797)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
@@ -1154,7 +1156,7 @@ Partial Class Main
         Me.txtLongDescription.Multiline = True
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtLongDescription.Size = New System.Drawing.Size(531, 217)
+        Me.txtLongDescription.Size = New System.Drawing.Size(531, 218)
         Me.txtLongDescription.TabIndex = 55
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
@@ -1725,7 +1727,7 @@ Partial Class Main
         Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
         Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
         Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(715, 161)
+        Me.FileDropZone1.Size = New System.Drawing.Size(715, 162)
         Me.FileDropZone1.TabIndex = 5
         Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
@@ -3493,7 +3495,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3503,7 +3505,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -3682,13 +3684,12 @@ Partial Class Main
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.AutoScrollMinSize = New System.Drawing.Size(1450, 900)
         Me.ClientSize = New System.Drawing.Size(1494, 923)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.pnlScrollableSurface)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1512, 967)
+        Me.MinimumSize = New System.Drawing.Size(1512, 700)
         Me.Name = "Main"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
