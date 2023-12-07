@@ -29,6 +29,49 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
+        Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
+        Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
+        Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
+        Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
+        Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.chkLockCoverImage = New System.Windows.Forms.CheckBox()
+        Me.chkLockMapImage = New System.Windows.Forms.CheckBox()
+        Me.cboCoverImage = New System.Windows.Forms.ComboBox()
+        Me.lblMap = New System.Windows.Forms.Label()
+        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
+        Me.lstAllFiles = New System.Windows.Forms.ListBox()
+        Me.btnAddExtraFile = New System.Windows.Forms.Button()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
+        Me.btnExtraFileUp = New System.Windows.Forms.Button()
+        Me.btnExtraFileDown = New System.Windows.Forms.Button()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.btnRemoveSelectedAddOns = New System.Windows.Forms.Button()
+        Me.lstAllRecommendedAddOns = New System.Windows.Forms.ListBox()
+        Me.btnAddOnDown = New System.Windows.Forms.Button()
+        Me.btnAddRecAddOn = New System.Windows.Forms.Button()
+        Me.btnAddOnUp = New System.Windows.Forms.Button()
+        Me.btnEditSelectedAddOn = New System.Windows.Forms.Button()
+        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
+        Me.btnMoveCountryDown = New System.Windows.Forms.Button()
+        Me.btnMoveCountryUp = New System.Windows.Forms.Button()
+        Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
+        Me.btnRemoveCountry = New System.Windows.Forms.Button()
+        Me.btnAddCountry = New System.Windows.Forms.Button()
+        Me.lstAllCountries = New System.Windows.Forms.ListBox()
+        Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
+        Me.lblCountries = New System.Windows.Forms.Label()
+        Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
+        Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
+        Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
+        Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
+        Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
+        Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -96,49 +139,6 @@ Partial Class Main
         Me.txtLongDescription = New System.Windows.Forms.TextBox()
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
         Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
-        Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
-        Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
-        Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
-        Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
-        Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
-        Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.chkLockCoverImage = New System.Windows.Forms.CheckBox()
-        Me.chkLockMapImage = New System.Windows.Forms.CheckBox()
-        Me.cboCoverImage = New System.Windows.Forms.ComboBox()
-        Me.lblMap = New System.Windows.Forms.Label()
-        Me.cboBriefingMap = New System.Windows.Forms.ComboBox()
-        Me.lstAllFiles = New System.Windows.Forms.ListBox()
-        Me.btnAddExtraFile = New System.Windows.Forms.Button()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.btnRemoveExtraFile = New System.Windows.Forms.Button()
-        Me.btnExtraFileUp = New System.Windows.Forms.Button()
-        Me.btnExtraFileDown = New System.Windows.Forms.Button()
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.btnRemoveSelectedAddOns = New System.Windows.Forms.Button()
-        Me.lstAllRecommendedAddOns = New System.Windows.Forms.ListBox()
-        Me.btnAddOnDown = New System.Windows.Forms.Button()
-        Me.btnAddRecAddOn = New System.Windows.Forms.Button()
-        Me.btnAddOnUp = New System.Windows.Forms.Button()
-        Me.btnEditSelectedAddOn = New System.Windows.Forms.Button()
-        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
-        Me.btnMoveCountryDown = New System.Windows.Forms.Button()
-        Me.btnMoveCountryUp = New System.Windows.Forms.Button()
-        Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
-        Me.btnRemoveCountry = New System.Windows.Forms.Button()
-        Me.btnAddCountry = New System.Windows.Forms.Button()
-        Me.lstAllCountries = New System.Windows.Forms.ListBox()
-        Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
-        Me.lblCountries = New System.Windows.Forms.Label()
-        Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
-        Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
-        Me.lblWeatherSummary = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
-        Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
-        Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
-        Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
-        Me.Label31 = New System.Windows.Forms.Label()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -312,15 +312,15 @@ Partial Class Main
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
-        Me.pnlGuide.SuspendLayout()
-        Me.Panel3.SuspendLayout()
-        Me.pnlFlightPlanLeftSide.SuspendLayout()
-        Me.grbTaskInfo.SuspendLayout()
         Me.pnlFlightPlanRightSide.SuspendLayout()
         Me.grbTaskPart2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.grbTaskDiscord.SuspendLayout()
+        Me.pnlGuide.SuspendLayout()
+        Me.Panel3.SuspendLayout()
+        Me.pnlFlightPlanLeftSide.SuspendLayout()
+        Me.grbTaskInfo.SuspendLayout()
         Me.tabEvent.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -394,6 +394,575 @@ Partial Class Main
         Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 860)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
+        '
+        'pnlFlightPlanRightSide
+        '
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskPart2)
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.FileDropZone1)
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskDiscord)
+        Me.pnlFlightPlanRightSide.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlFlightPlanRightSide.Location = New System.Drawing.Point(753, 3)
+        Me.pnlFlightPlanRightSide.MinimumSize = New System.Drawing.Size(715, 854)
+        Me.pnlFlightPlanRightSide.Name = "pnlFlightPlanRightSide"
+        Me.pnlFlightPlanRightSide.Size = New System.Drawing.Size(715, 854)
+        Me.pnlFlightPlanRightSide.TabIndex = 16
+        '
+        'grbTaskPart2
+        '
+        Me.grbTaskPart2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskPart2.Controls.Add(Me.chkSuppressWarningForBaroPressure)
+        Me.grbTaskPart2.Controls.Add(Me.txtBaroPressureExtraInfo)
+        Me.grbTaskPart2.Controls.Add(Me.lblNonStdBaroPressure)
+        Me.grbTaskPart2.Controls.Add(Me.GroupBox3)
+        Me.grbTaskPart2.Controls.Add(Me.GroupBox2)
+        Me.grbTaskPart2.Controls.Add(Me.chkLockCountries)
+        Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryDown)
+        Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryUp)
+        Me.grbTaskPart2.Controls.Add(Me.txtDPHXPackageFilename)
+        Me.grbTaskPart2.Controls.Add(Me.btnRemoveCountry)
+        Me.grbTaskPart2.Controls.Add(Me.btnAddCountry)
+        Me.grbTaskPart2.Controls.Add(Me.lstAllCountries)
+        Me.grbTaskPart2.Controls.Add(Me.cboCountryFlag)
+        Me.grbTaskPart2.Controls.Add(Me.lblCountries)
+        Me.grbTaskPart2.Controls.Add(Me.chkUseOnlyWeatherSummary)
+        Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
+        Me.grbTaskPart2.Controls.Add(Me.lblWeatherSummary)
+        Me.grbTaskPart2.Enabled = False
+        Me.grbTaskPart2.Location = New System.Drawing.Point(4, -5)
+        Me.grbTaskPart2.Name = "grbTaskPart2"
+        Me.grbTaskPart2.Size = New System.Drawing.Size(711, 613)
+        Me.grbTaskPart2.TabIndex = 3
+        Me.grbTaskPart2.TabStop = False
+        Me.grbTaskPart2.Tag = "17"
+        '
+        'chkSuppressWarningForBaroPressure
+        '
+        Me.chkSuppressWarningForBaroPressure.AutoSize = True
+        Me.chkSuppressWarningForBaroPressure.Location = New System.Drawing.Point(189, 177)
+        Me.chkSuppressWarningForBaroPressure.Name = "chkSuppressWarningForBaroPressure"
+        Me.chkSuppressWarningForBaroPressure.Size = New System.Drawing.Size(164, 24)
+        Me.chkSuppressWarningForBaroPressure.TabIndex = 12
+        Me.chkSuppressWarningForBaroPressure.Tag = "19"
+        Me.chkSuppressWarningForBaroPressure.Text = "Suppress ⚠️Symbol"
+        Me.ToolTip1.SetToolTip(Me.chkSuppressWarningForBaroPressure, "When checked, the warning symbol will not be added next to a non-standard baromet" &
+        "ric pressure.")
+        Me.chkSuppressWarningForBaroPressure.UseVisualStyleBackColor = True
+        '
+        'txtBaroPressureExtraInfo
+        '
+        Me.txtBaroPressureExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtBaroPressureExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBaroPressureExtraInfo.Location = New System.Drawing.Point(359, 172)
+        Me.txtBaroPressureExtraInfo.Name = "txtBaroPressureExtraInfo"
+        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(340, 32)
+        Me.txtBaroPressureExtraInfo.TabIndex = 13
+        Me.txtBaroPressureExtraInfo.Tag = "19"
+        Me.ToolTip1.SetToolTip(Me.txtBaroPressureExtraInfo, "Any extra information to add to a non-standard barometric pressure.")
+        '
+        'lblNonStdBaroPressure
+        '
+        Me.lblNonStdBaroPressure.AutoSize = True
+        Me.lblNonStdBaroPressure.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNonStdBaroPressure.Location = New System.Drawing.Point(6, 175)
+        Me.lblNonStdBaroPressure.Name = "lblNonStdBaroPressure"
+        Me.lblNonStdBaroPressure.Size = New System.Drawing.Size(148, 26)
+        Me.lblNonStdBaroPressure.TabIndex = 11
+        Me.lblNonStdBaroPressure.Text = "Barom. pressure"
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox3.Controls.Add(Me.chkLockCoverImage)
+        Me.GroupBox3.Controls.Add(Me.chkLockMapImage)
+        Me.GroupBox3.Controls.Add(Me.cboCoverImage)
+        Me.GroupBox3.Controls.Add(Me.lblMap)
+        Me.GroupBox3.Controls.Add(Me.cboBriefingMap)
+        Me.GroupBox3.Controls.Add(Me.lstAllFiles)
+        Me.GroupBox3.Controls.Add(Me.btnAddExtraFile)
+        Me.GroupBox3.Controls.Add(Me.Label10)
+        Me.GroupBox3.Controls.Add(Me.btnRemoveExtraFile)
+        Me.GroupBox3.Controls.Add(Me.btnExtraFileUp)
+        Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(699, 229)
+        Me.GroupBox3.TabIndex = 15
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Extra files"
+        '
+        'chkLockCoverImage
+        '
+        Me.chkLockCoverImage.AutoSize = True
+        Me.chkLockCoverImage.Location = New System.Drawing.Point(162, 197)
+        Me.chkLockCoverImage.Name = "chkLockCoverImage"
+        Me.chkLockCoverImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCoverImage.TabIndex = 11
+        Me.chkLockCoverImage.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.chkLockCoverImage, "When checked, cover image will not be auto selected")
+        Me.chkLockCoverImage.UseVisualStyleBackColor = True
+        '
+        'chkLockMapImage
+        '
+        Me.chkLockMapImage.AutoSize = True
+        Me.chkLockMapImage.Location = New System.Drawing.Point(162, 166)
+        Me.chkLockMapImage.Name = "chkLockMapImage"
+        Me.chkLockMapImage.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockMapImage.TabIndex = 10
+        Me.chkLockMapImage.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.chkLockMapImage, "When checked, map will not be auto selected")
+        Me.chkLockMapImage.UseVisualStyleBackColor = True
+        '
+        'cboCoverImage
+        '
+        Me.cboCoverImage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboCoverImage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCoverImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.cboCoverImage.FormattingEnabled = True
+        Me.cboCoverImage.Location = New System.Drawing.Point(183, 190)
+        Me.cboCoverImage.Name = "cboCoverImage"
+        Me.cboCoverImage.Size = New System.Drawing.Size(510, 28)
+        Me.cboCoverImage.TabIndex = 8
+        Me.cboCoverImage.Tag = "23"
+        Me.ToolTip1.SetToolTip(Me.cboCoverImage, "Select the image to post as cover for the flight/task (any image file named ""Cove" &
+        "r"" will be selected automatically)")
+        '
+        'lblMap
+        '
+        Me.lblMap.AutoSize = True
+        Me.lblMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblMap.Location = New System.Drawing.Point(0, 156)
+        Me.lblMap.Name = "lblMap"
+        Me.lblMap.Size = New System.Drawing.Size(104, 26)
+        Me.lblMap.TabIndex = 5
+        Me.lblMap.Text = "Map Image"
+        '
+        'cboBriefingMap
+        '
+        Me.cboBriefingMap.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboBriefingMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboBriefingMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.cboBriefingMap.FormattingEnabled = True
+        Me.cboBriefingMap.Location = New System.Drawing.Point(183, 156)
+        Me.cboBriefingMap.Name = "cboBriefingMap"
+        Me.cboBriefingMap.Size = New System.Drawing.Size(510, 28)
+        Me.cboBriefingMap.TabIndex = 6
+        Me.cboBriefingMap.Tag = "22"
+        Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display (any image file named ""Map"" will be selected" &
+        " automatically)")
+        '
+        'lstAllFiles
+        '
+        Me.lstAllFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstAllFiles.FormattingEnabled = True
+        Me.lstAllFiles.HorizontalScrollbar = True
+        Me.lstAllFiles.ItemHeight = 20
+        Me.lstAllFiles.Location = New System.Drawing.Point(183, 26)
+        Me.lstAllFiles.Name = "lstAllFiles"
+        Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllFiles.Size = New System.Drawing.Size(510, 124)
+        Me.lstAllFiles.TabIndex = 1
+        Me.lstAllFiles.Tag = "21"
+        Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
+        '
+        'btnAddExtraFile
+        '
+        Me.btnAddExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddExtraFile.Location = New System.Drawing.Point(2, 26)
+        Me.btnAddExtraFile.Name = "btnAddExtraFile"
+        Me.btnAddExtraFile.Size = New System.Drawing.Size(175, 35)
+        Me.btnAddExtraFile.TabIndex = 0
+        Me.btnAddExtraFile.Tag = "21"
+        Me.btnAddExtraFile.Text = "Add extra file"
+        Me.ToolTip1.SetToolTip(Me.btnAddExtraFile, "Click to add an extra file to include with the flight plan.")
+        Me.btnAddExtraFile.UseVisualStyleBackColor = True
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(0, 190)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(117, 26)
+        Me.Label10.TabIndex = 7
+        Me.Label10.Text = "Cover Image"
+        '
+        'btnRemoveExtraFile
+        '
+        Me.btnRemoveExtraFile.Enabled = False
+        Me.btnRemoveExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveExtraFile.Location = New System.Drawing.Point(2, 67)
+        Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
+        Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
+        Me.btnRemoveExtraFile.TabIndex = 2
+        Me.btnRemoveExtraFile.Tag = "21"
+        Me.btnRemoveExtraFile.Text = "Remove selected file"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the selected extra file from the flight plan.")
+        Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
+        '
+        'btnExtraFileUp
+        '
+        Me.btnExtraFileUp.Enabled = False
+        Me.btnExtraFileUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.btnExtraFileUp.Location = New System.Drawing.Point(2, 108)
+        Me.btnExtraFileUp.Name = "btnExtraFileUp"
+        Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
+        Me.btnExtraFileUp.TabIndex = 3
+        Me.btnExtraFileUp.Tag = "21"
+        Me.btnExtraFileUp.Text = "▲"
+        Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
+        Me.btnExtraFileUp.UseVisualStyleBackColor = True
+        '
+        'btnExtraFileDown
+        '
+        Me.btnExtraFileDown.Enabled = False
+        Me.btnExtraFileDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.btnExtraFileDown.Location = New System.Drawing.Point(93, 108)
+        Me.btnExtraFileDown.Name = "btnExtraFileDown"
+        Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
+        Me.btnExtraFileDown.TabIndex = 4
+        Me.btnExtraFileDown.Tag = "21"
+        Me.btnExtraFileDown.Text = "▼"
+        Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
+        Me.btnExtraFileDown.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox2.Controls.Add(Me.btnRemoveSelectedAddOns)
+        Me.GroupBox2.Controls.Add(Me.lstAllRecommendedAddOns)
+        Me.GroupBox2.Controls.Add(Me.btnAddOnDown)
+        Me.GroupBox2.Controls.Add(Me.btnAddRecAddOn)
+        Me.GroupBox2.Controls.Add(Me.btnAddOnUp)
+        Me.GroupBox2.Controls.Add(Me.btnEditSelectedAddOn)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 210)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(699, 160)
+        Me.GroupBox2.TabIndex = 14
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "Recommended Add-Ons"
+        '
+        'btnRemoveSelectedAddOns
+        '
+        Me.btnRemoveSelectedAddOns.Enabled = False
+        Me.btnRemoveSelectedAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveSelectedAddOns.Location = New System.Drawing.Point(93, 67)
+        Me.btnRemoveSelectedAddOns.Name = "btnRemoveSelectedAddOns"
+        Me.btnRemoveSelectedAddOns.Size = New System.Drawing.Size(84, 35)
+        Me.btnRemoveSelectedAddOns.TabIndex = 2
+        Me.btnRemoveSelectedAddOns.Tag = "20"
+        Me.btnRemoveSelectedAddOns.Text = "Remove"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveSelectedAddOns, "Click to remove any selected add-on(s).")
+        Me.btnRemoveSelectedAddOns.UseVisualStyleBackColor = True
+        '
+        'lstAllRecommendedAddOns
+        '
+        Me.lstAllRecommendedAddOns.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstAllRecommendedAddOns.FormattingEnabled = True
+        Me.lstAllRecommendedAddOns.HorizontalScrollbar = True
+        Me.lstAllRecommendedAddOns.ItemHeight = 20
+        Me.lstAllRecommendedAddOns.Location = New System.Drawing.Point(183, 26)
+        Me.lstAllRecommendedAddOns.Name = "lstAllRecommendedAddOns"
+        Me.lstAllRecommendedAddOns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(510, 124)
+        Me.lstAllRecommendedAddOns.TabIndex = 5
+        Me.lstAllRecommendedAddOns.Tag = "20"
+        Me.ToolTip1.SetToolTip(Me.lstAllRecommendedAddOns, "List of the recommended add-ons for this task.")
+        '
+        'btnAddOnDown
+        '
+        Me.btnAddOnDown.Enabled = False
+        Me.btnAddOnDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.btnAddOnDown.Location = New System.Drawing.Point(93, 108)
+        Me.btnAddOnDown.Name = "btnAddOnDown"
+        Me.btnAddOnDown.Size = New System.Drawing.Size(84, 35)
+        Me.btnAddOnDown.TabIndex = 4
+        Me.btnAddOnDown.Tag = "20"
+        Me.btnAddOnDown.Text = "▼"
+        Me.ToolTip1.SetToolTip(Me.btnAddOnDown, "Click to move the selected add-on down in the list.")
+        Me.btnAddOnDown.UseVisualStyleBackColor = True
+        '
+        'btnAddRecAddOn
+        '
+        Me.btnAddRecAddOn.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddRecAddOn.Location = New System.Drawing.Point(2, 26)
+        Me.btnAddRecAddOn.Name = "btnAddRecAddOn"
+        Me.btnAddRecAddOn.Size = New System.Drawing.Size(175, 35)
+        Me.btnAddRecAddOn.TabIndex = 0
+        Me.btnAddRecAddOn.Tag = "20"
+        Me.btnAddRecAddOn.Text = "Add new add-on"
+        Me.ToolTip1.SetToolTip(Me.btnAddRecAddOn, "Click to add a recommended add-on to the list")
+        Me.btnAddRecAddOn.UseVisualStyleBackColor = True
+        '
+        'btnAddOnUp
+        '
+        Me.btnAddOnUp.Enabled = False
+        Me.btnAddOnUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.btnAddOnUp.Location = New System.Drawing.Point(2, 108)
+        Me.btnAddOnUp.Name = "btnAddOnUp"
+        Me.btnAddOnUp.Size = New System.Drawing.Size(84, 35)
+        Me.btnAddOnUp.TabIndex = 3
+        Me.btnAddOnUp.Tag = "20"
+        Me.btnAddOnUp.Text = "▲"
+        Me.ToolTip1.SetToolTip(Me.btnAddOnUp, "Click to move the selected add-on up in the list.")
+        Me.btnAddOnUp.UseVisualStyleBackColor = True
+        '
+        'btnEditSelectedAddOn
+        '
+        Me.btnEditSelectedAddOn.Enabled = False
+        Me.btnEditSelectedAddOn.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEditSelectedAddOn.Location = New System.Drawing.Point(2, 67)
+        Me.btnEditSelectedAddOn.Name = "btnEditSelectedAddOn"
+        Me.btnEditSelectedAddOn.Size = New System.Drawing.Size(84, 35)
+        Me.btnEditSelectedAddOn.TabIndex = 1
+        Me.btnEditSelectedAddOn.Tag = "20"
+        Me.btnEditSelectedAddOn.Text = "Edit"
+        Me.ToolTip1.SetToolTip(Me.btnEditSelectedAddOn, "Click to edit the selected add-on.")
+        Me.btnEditSelectedAddOn.UseVisualStyleBackColor = True
+        '
+        'chkLockCountries
+        '
+        Me.chkLockCountries.AutoSize = True
+        Me.chkLockCountries.Location = New System.Drawing.Point(168, 70)
+        Me.chkLockCountries.Name = "chkLockCountries"
+        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
+        Me.chkLockCountries.TabIndex = 2
+        Me.chkLockCountries.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
+        Me.chkLockCountries.UseVisualStyleBackColor = True
+        '
+        'btnMoveCountryDown
+        '
+        Me.btnMoveCountryDown.Enabled = False
+        Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 97)
+        Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
+        Me.btnMoveCountryDown.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryDown.TabIndex = 7
+        Me.btnMoveCountryDown.Tag = "17"
+        Me.btnMoveCountryDown.Text = "▼"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryDown, "Click to move the selected countries down in the list.")
+        Me.btnMoveCountryDown.UseVisualStyleBackColor = True
+        '
+        'btnMoveCountryUp
+        '
+        Me.btnMoveCountryUp.Enabled = False
+        Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 61)
+        Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
+        Me.btnMoveCountryUp.Size = New System.Drawing.Size(38, 29)
+        Me.btnMoveCountryUp.TabIndex = 4
+        Me.btnMoveCountryUp.Tag = "17"
+        Me.btnMoveCountryUp.Text = "▲"
+        Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
+        Me.btnMoveCountryUp.UseVisualStyleBackColor = True
+        '
+        'txtDPHXPackageFilename
+        '
+        Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(11, 83)
+        Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
+        Me.txtDPHXPackageFilename.ReadOnly = True
+        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(43, 32)
+        Me.txtDPHXPackageFilename.TabIndex = 9
+        Me.txtDPHXPackageFilename.TabStop = False
+        Me.txtDPHXPackageFilename.Tag = ""
+        Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
+        Me.txtDPHXPackageFilename.Visible = False
+        '
+        'btnRemoveCountry
+        '
+        Me.btnRemoveCountry.Enabled = False
+        Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 97)
+        Me.btnRemoveCountry.Name = "btnRemoveCountry"
+        Me.btnRemoveCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnRemoveCountry.TabIndex = 6
+        Me.btnRemoveCountry.Tag = "17"
+        Me.btnRemoveCountry.Text = "Remove Country"
+        Me.ToolTip1.SetToolTip(Me.btnRemoveCountry, "Remove the selected countries from the list")
+        Me.btnRemoveCountry.UseVisualStyleBackColor = True
+        '
+        'btnAddCountry
+        '
+        Me.btnAddCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddCountry.Location = New System.Drawing.Point(189, 62)
+        Me.btnAddCountry.Name = "btnAddCountry"
+        Me.btnAddCountry.Size = New System.Drawing.Size(125, 29)
+        Me.btnAddCountry.TabIndex = 3
+        Me.btnAddCountry.Tag = "17"
+        Me.btnAddCountry.Text = "Add Country"
+        Me.ToolTip1.SetToolTip(Me.btnAddCountry, "Click to add the selected country to the list")
+        Me.btnAddCountry.UseVisualStyleBackColor = True
+        '
+        'lstAllCountries
+        '
+        Me.lstAllCountries.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstAllCountries.FormattingEnabled = True
+        Me.lstAllCountries.HorizontalScrollbar = True
+        Me.lstAllCountries.ItemHeight = 20
+        Me.lstAllCountries.Location = New System.Drawing.Point(360, 62)
+        Me.lstAllCountries.Name = "lstAllCountries"
+        Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstAllCountries.Size = New System.Drawing.Size(339, 64)
+        Me.lstAllCountries.TabIndex = 5
+        Me.lstAllCountries.Tag = "17"
+        Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
+        '
+        'cboCountryFlag
+        '
+        Me.cboCountryFlag.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboCountryFlag.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cboCountryFlag.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboCountryFlag.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cboCountryFlag.FormattingEnabled = True
+        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 24)
+        Me.cboCountryFlag.Name = "cboCountryFlag"
+        Me.cboCountryFlag.Size = New System.Drawing.Size(510, 32)
+        Me.cboCountryFlag.TabIndex = 1
+        Me.cboCountryFlag.Tag = "17"
+        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
+        '
+        'lblCountries
+        '
+        Me.lblCountries.AutoSize = True
+        Me.lblCountries.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCountries.Location = New System.Drawing.Point(6, 27)
+        Me.lblCountries.Name = "lblCountries"
+        Me.lblCountries.Size = New System.Drawing.Size(145, 26)
+        Me.lblCountries.TabIndex = 0
+        Me.lblCountries.Text = "Countries/Flags"
+        '
+        'chkUseOnlyWeatherSummary
+        '
+        Me.chkUseOnlyWeatherSummary.AutoSize = True
+        Me.chkUseOnlyWeatherSummary.Location = New System.Drawing.Point(168, 147)
+        Me.chkUseOnlyWeatherSummary.Name = "chkUseOnlyWeatherSummary"
+        Me.chkUseOnlyWeatherSummary.Size = New System.Drawing.Size(15, 14)
+        Me.chkUseOnlyWeatherSummary.TabIndex = 9
+        Me.chkUseOnlyWeatherSummary.Tag = "18"
+        Me.ToolTip1.SetToolTip(Me.chkUseOnlyWeatherSummary, "When checked, only summary will be used for weather information.")
+        Me.chkUseOnlyWeatherSummary.UseVisualStyleBackColor = True
+        '
+        'txtWeatherSummary
+        '
+        Me.txtWeatherSummary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 134)
+        Me.txtWeatherSummary.Name = "txtWeatherSummary"
+        Me.txtWeatherSummary.Size = New System.Drawing.Size(510, 32)
+        Me.txtWeatherSummary.TabIndex = 10
+        Me.txtWeatherSummary.Tag = "18"
+        Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
+        '
+        'lblWeatherSummary
+        '
+        Me.lblWeatherSummary.AutoSize = True
+        Me.lblWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWeatherSummary.Location = New System.Drawing.Point(6, 137)
+        Me.lblWeatherSummary.Name = "lblWeatherSummary"
+        Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
+        Me.lblWeatherSummary.TabIndex = 8
+        Me.lblWeatherSummary.Text = "Weather Summary"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
+        'grbTaskDiscord
+        '
+        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskDiscord.Controls.Add(Me.btnDeleteDiscordID)
+        Me.grbTaskDiscord.Controls.Add(Me.btnDiscordTaskThreadURLPaste)
+        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
+        Me.grbTaskDiscord.Controls.Add(Me.Label31)
+        Me.grbTaskDiscord.Enabled = False
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(4, 614)
+        Me.grbTaskDiscord.Name = "grbTaskDiscord"
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(711, 72)
+        Me.grbTaskDiscord.TabIndex = 4
+        Me.grbTaskDiscord.TabStop = False
+        Me.grbTaskDiscord.Text = "Discord / Task ID"
+        '
+        'btnDeleteDiscordID
+        '
+        Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(629, 27)
+        Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
+        Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
+        Me.btnDeleteDiscordID.TabIndex = 3
+        Me.btnDeleteDiscordID.Tag = "24"
+        Me.btnDeleteDiscordID.Text = "Clear"
+        Me.ToolTip1.SetToolTip(Me.btnDeleteDiscordID, "Click this button to clear the Discord ID linked with this task")
+        Me.btnDeleteDiscordID.UseVisualStyleBackColor = True
+        '
+        'btnDiscordTaskThreadURLPaste
+        '
+        Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(544, 27)
+        Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
+        Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
+        Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
+        Me.btnDiscordTaskThreadURLPaste.Tag = "24"
+        Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task ID from your clipboard")
+        Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
+        '
+        'txtDiscordTaskID
+        '
+        Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
+        Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
+        Me.txtDiscordTaskID.ReadOnly = True
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(349, 32)
+        Me.txtDiscordTaskID.TabIndex = 1
+        Me.txtDiscordTaskID.Tag = "24"
+        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.Location = New System.Drawing.Point(6, 30)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(109, 26)
+        Me.Label31.TabIndex = 0
+        Me.Label31.Text = "Task Post ID"
+        '
+        'FlightPlanTabSplitter
+        '
+        Me.FlightPlanTabSplitter.BackColor = System.Drawing.SystemColors.ActiveBorder
+        Me.FlightPlanTabSplitter.Location = New System.Drawing.Point(743, 3)
+        Me.FlightPlanTabSplitter.MinExtra = 715
+        Me.FlightPlanTabSplitter.MinSize = 740
+        Me.FlightPlanTabSplitter.Name = "FlightPlanTabSplitter"
+        Me.FlightPlanTabSplitter.Size = New System.Drawing.Size(10, 854)
+        Me.FlightPlanTabSplitter.TabIndex = 84
+        Me.FlightPlanTabSplitter.TabStop = False
         '
         'pnlGuide
         '
@@ -1228,575 +1797,6 @@ Partial Class Main
         Me.txtFlightPlanFile.TabStop = False
         Me.txtFlightPlanFile.Tag = "1"
         Me.ToolTip1.SetToolTip(Me.txtFlightPlanFile, "Current flight plan file selected.")
-        '
-        'FlightPlanTabSplitter
-        '
-        Me.FlightPlanTabSplitter.BackColor = System.Drawing.SystemColors.ActiveBorder
-        Me.FlightPlanTabSplitter.Location = New System.Drawing.Point(743, 3)
-        Me.FlightPlanTabSplitter.MinExtra = 715
-        Me.FlightPlanTabSplitter.MinSize = 740
-        Me.FlightPlanTabSplitter.Name = "FlightPlanTabSplitter"
-        Me.FlightPlanTabSplitter.Size = New System.Drawing.Size(10, 854)
-        Me.FlightPlanTabSplitter.TabIndex = 84
-        Me.FlightPlanTabSplitter.TabStop = False
-        '
-        'pnlFlightPlanRightSide
-        '
-        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskPart2)
-        Me.pnlFlightPlanRightSide.Controls.Add(Me.FileDropZone1)
-        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskDiscord)
-        Me.pnlFlightPlanRightSide.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlFlightPlanRightSide.Location = New System.Drawing.Point(753, 3)
-        Me.pnlFlightPlanRightSide.MinimumSize = New System.Drawing.Size(715, 854)
-        Me.pnlFlightPlanRightSide.Name = "pnlFlightPlanRightSide"
-        Me.pnlFlightPlanRightSide.Size = New System.Drawing.Size(715, 854)
-        Me.pnlFlightPlanRightSide.TabIndex = 16
-        '
-        'grbTaskPart2
-        '
-        Me.grbTaskPart2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grbTaskPart2.Controls.Add(Me.chkSuppressWarningForBaroPressure)
-        Me.grbTaskPart2.Controls.Add(Me.txtBaroPressureExtraInfo)
-        Me.grbTaskPart2.Controls.Add(Me.lblNonStdBaroPressure)
-        Me.grbTaskPart2.Controls.Add(Me.GroupBox3)
-        Me.grbTaskPart2.Controls.Add(Me.GroupBox2)
-        Me.grbTaskPart2.Controls.Add(Me.chkLockCountries)
-        Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryDown)
-        Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryUp)
-        Me.grbTaskPart2.Controls.Add(Me.txtDPHXPackageFilename)
-        Me.grbTaskPart2.Controls.Add(Me.btnRemoveCountry)
-        Me.grbTaskPart2.Controls.Add(Me.btnAddCountry)
-        Me.grbTaskPart2.Controls.Add(Me.lstAllCountries)
-        Me.grbTaskPart2.Controls.Add(Me.cboCountryFlag)
-        Me.grbTaskPart2.Controls.Add(Me.lblCountries)
-        Me.grbTaskPart2.Controls.Add(Me.chkUseOnlyWeatherSummary)
-        Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
-        Me.grbTaskPart2.Controls.Add(Me.lblWeatherSummary)
-        Me.grbTaskPart2.Enabled = False
-        Me.grbTaskPart2.Location = New System.Drawing.Point(4, -5)
-        Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(711, 613)
-        Me.grbTaskPart2.TabIndex = 3
-        Me.grbTaskPart2.TabStop = False
-        Me.grbTaskPart2.Tag = "17"
-        '
-        'chkSuppressWarningForBaroPressure
-        '
-        Me.chkSuppressWarningForBaroPressure.AutoSize = True
-        Me.chkSuppressWarningForBaroPressure.Location = New System.Drawing.Point(189, 177)
-        Me.chkSuppressWarningForBaroPressure.Name = "chkSuppressWarningForBaroPressure"
-        Me.chkSuppressWarningForBaroPressure.Size = New System.Drawing.Size(164, 24)
-        Me.chkSuppressWarningForBaroPressure.TabIndex = 12
-        Me.chkSuppressWarningForBaroPressure.Tag = "19"
-        Me.chkSuppressWarningForBaroPressure.Text = "Suppress ⚠️Symbol"
-        Me.ToolTip1.SetToolTip(Me.chkSuppressWarningForBaroPressure, "When checked, the warning symbol will not be added next to a non-standard baromet" &
-        "ric pressure.")
-        Me.chkSuppressWarningForBaroPressure.UseVisualStyleBackColor = True
-        '
-        'txtBaroPressureExtraInfo
-        '
-        Me.txtBaroPressureExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtBaroPressureExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBaroPressureExtraInfo.Location = New System.Drawing.Point(359, 172)
-        Me.txtBaroPressureExtraInfo.Name = "txtBaroPressureExtraInfo"
-        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(340, 32)
-        Me.txtBaroPressureExtraInfo.TabIndex = 13
-        Me.txtBaroPressureExtraInfo.Tag = "19"
-        Me.ToolTip1.SetToolTip(Me.txtBaroPressureExtraInfo, "Any extra information to add to a non-standard barometric pressure.")
-        '
-        'lblNonStdBaroPressure
-        '
-        Me.lblNonStdBaroPressure.AutoSize = True
-        Me.lblNonStdBaroPressure.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNonStdBaroPressure.Location = New System.Drawing.Point(6, 175)
-        Me.lblNonStdBaroPressure.Name = "lblNonStdBaroPressure"
-        Me.lblNonStdBaroPressure.Size = New System.Drawing.Size(148, 26)
-        Me.lblNonStdBaroPressure.TabIndex = 11
-        Me.lblNonStdBaroPressure.Text = "Barom. pressure"
-        '
-        'GroupBox3
-        '
-        Me.GroupBox3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox3.Controls.Add(Me.chkLockCoverImage)
-        Me.GroupBox3.Controls.Add(Me.chkLockMapImage)
-        Me.GroupBox3.Controls.Add(Me.cboCoverImage)
-        Me.GroupBox3.Controls.Add(Me.lblMap)
-        Me.GroupBox3.Controls.Add(Me.cboBriefingMap)
-        Me.GroupBox3.Controls.Add(Me.lstAllFiles)
-        Me.GroupBox3.Controls.Add(Me.btnAddExtraFile)
-        Me.GroupBox3.Controls.Add(Me.Label10)
-        Me.GroupBox3.Controls.Add(Me.btnRemoveExtraFile)
-        Me.GroupBox3.Controls.Add(Me.btnExtraFileUp)
-        Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
-        Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(699, 229)
-        Me.GroupBox3.TabIndex = 15
-        Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Extra files"
-        '
-        'chkLockCoverImage
-        '
-        Me.chkLockCoverImage.AutoSize = True
-        Me.chkLockCoverImage.Location = New System.Drawing.Point(162, 197)
-        Me.chkLockCoverImage.Name = "chkLockCoverImage"
-        Me.chkLockCoverImage.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockCoverImage.TabIndex = 11
-        Me.chkLockCoverImage.Tag = "23"
-        Me.ToolTip1.SetToolTip(Me.chkLockCoverImage, "When checked, cover image will not be auto selected")
-        Me.chkLockCoverImage.UseVisualStyleBackColor = True
-        '
-        'chkLockMapImage
-        '
-        Me.chkLockMapImage.AutoSize = True
-        Me.chkLockMapImage.Location = New System.Drawing.Point(162, 166)
-        Me.chkLockMapImage.Name = "chkLockMapImage"
-        Me.chkLockMapImage.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockMapImage.TabIndex = 10
-        Me.chkLockMapImage.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.chkLockMapImage, "When checked, map will not be auto selected")
-        Me.chkLockMapImage.UseVisualStyleBackColor = True
-        '
-        'cboCoverImage
-        '
-        Me.cboCoverImage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cboCoverImage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboCoverImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.cboCoverImage.FormattingEnabled = True
-        Me.cboCoverImage.Location = New System.Drawing.Point(183, 190)
-        Me.cboCoverImage.Name = "cboCoverImage"
-        Me.cboCoverImage.Size = New System.Drawing.Size(510, 28)
-        Me.cboCoverImage.TabIndex = 8
-        Me.cboCoverImage.Tag = "23"
-        Me.ToolTip1.SetToolTip(Me.cboCoverImage, "Select the image to post as cover for the flight/task (any image file named ""Cove" &
-        "r"" will be selected automatically)")
-        '
-        'lblMap
-        '
-        Me.lblMap.AutoSize = True
-        Me.lblMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMap.Location = New System.Drawing.Point(0, 156)
-        Me.lblMap.Name = "lblMap"
-        Me.lblMap.Size = New System.Drawing.Size(104, 26)
-        Me.lblMap.TabIndex = 5
-        Me.lblMap.Text = "Map Image"
-        '
-        'cboBriefingMap
-        '
-        Me.cboBriefingMap.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cboBriefingMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboBriefingMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.cboBriefingMap.FormattingEnabled = True
-        Me.cboBriefingMap.Location = New System.Drawing.Point(183, 156)
-        Me.cboBriefingMap.Name = "cboBriefingMap"
-        Me.cboBriefingMap.Size = New System.Drawing.Size(510, 28)
-        Me.cboBriefingMap.TabIndex = 6
-        Me.cboBriefingMap.Tag = "22"
-        Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display (any image file named ""Map"" will be selected" &
-        " automatically)")
-        '
-        'lstAllFiles
-        '
-        Me.lstAllFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstAllFiles.FormattingEnabled = True
-        Me.lstAllFiles.HorizontalScrollbar = True
-        Me.lstAllFiles.ItemHeight = 20
-        Me.lstAllFiles.Location = New System.Drawing.Point(183, 26)
-        Me.lstAllFiles.Name = "lstAllFiles"
-        Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllFiles.Size = New System.Drawing.Size(510, 124)
-        Me.lstAllFiles.TabIndex = 1
-        Me.lstAllFiles.Tag = "21"
-        Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
-        '
-        'btnAddExtraFile
-        '
-        Me.btnAddExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddExtraFile.Location = New System.Drawing.Point(2, 26)
-        Me.btnAddExtraFile.Name = "btnAddExtraFile"
-        Me.btnAddExtraFile.Size = New System.Drawing.Size(175, 35)
-        Me.btnAddExtraFile.TabIndex = 0
-        Me.btnAddExtraFile.Tag = "21"
-        Me.btnAddExtraFile.Text = "Add extra file"
-        Me.ToolTip1.SetToolTip(Me.btnAddExtraFile, "Click to add an extra file to include with the flight plan.")
-        Me.btnAddExtraFile.UseVisualStyleBackColor = True
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(0, 190)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(117, 26)
-        Me.Label10.TabIndex = 7
-        Me.Label10.Text = "Cover Image"
-        '
-        'btnRemoveExtraFile
-        '
-        Me.btnRemoveExtraFile.Enabled = False
-        Me.btnRemoveExtraFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRemoveExtraFile.Location = New System.Drawing.Point(2, 67)
-        Me.btnRemoveExtraFile.Name = "btnRemoveExtraFile"
-        Me.btnRemoveExtraFile.Size = New System.Drawing.Size(175, 35)
-        Me.btnRemoveExtraFile.TabIndex = 2
-        Me.btnRemoveExtraFile.Tag = "21"
-        Me.btnRemoveExtraFile.Text = "Remove selected file"
-        Me.ToolTip1.SetToolTip(Me.btnRemoveExtraFile, "Click to remove the selected extra file from the flight plan.")
-        Me.btnRemoveExtraFile.UseVisualStyleBackColor = True
-        '
-        'btnExtraFileUp
-        '
-        Me.btnExtraFileUp.Enabled = False
-        Me.btnExtraFileUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnExtraFileUp.Location = New System.Drawing.Point(2, 108)
-        Me.btnExtraFileUp.Name = "btnExtraFileUp"
-        Me.btnExtraFileUp.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileUp.TabIndex = 3
-        Me.btnExtraFileUp.Tag = "21"
-        Me.btnExtraFileUp.Text = "▲"
-        Me.ToolTip1.SetToolTip(Me.btnExtraFileUp, "Click to move the selected file up in the list.")
-        Me.btnExtraFileUp.UseVisualStyleBackColor = True
-        '
-        'btnExtraFileDown
-        '
-        Me.btnExtraFileDown.Enabled = False
-        Me.btnExtraFileDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnExtraFileDown.Location = New System.Drawing.Point(93, 108)
-        Me.btnExtraFileDown.Name = "btnExtraFileDown"
-        Me.btnExtraFileDown.Size = New System.Drawing.Size(84, 35)
-        Me.btnExtraFileDown.TabIndex = 4
-        Me.btnExtraFileDown.Tag = "21"
-        Me.btnExtraFileDown.Text = "▼"
-        Me.ToolTip1.SetToolTip(Me.btnExtraFileDown, "Click to move the selected file down in the list.")
-        Me.btnExtraFileDown.UseVisualStyleBackColor = True
-        '
-        'GroupBox2
-        '
-        Me.GroupBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox2.Controls.Add(Me.btnRemoveSelectedAddOns)
-        Me.GroupBox2.Controls.Add(Me.lstAllRecommendedAddOns)
-        Me.GroupBox2.Controls.Add(Me.btnAddOnDown)
-        Me.GroupBox2.Controls.Add(Me.btnAddRecAddOn)
-        Me.GroupBox2.Controls.Add(Me.btnAddOnUp)
-        Me.GroupBox2.Controls.Add(Me.btnEditSelectedAddOn)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 210)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(699, 160)
-        Me.GroupBox2.TabIndex = 14
-        Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "Recommended Add-Ons"
-        '
-        'btnRemoveSelectedAddOns
-        '
-        Me.btnRemoveSelectedAddOns.Enabled = False
-        Me.btnRemoveSelectedAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRemoveSelectedAddOns.Location = New System.Drawing.Point(93, 67)
-        Me.btnRemoveSelectedAddOns.Name = "btnRemoveSelectedAddOns"
-        Me.btnRemoveSelectedAddOns.Size = New System.Drawing.Size(84, 35)
-        Me.btnRemoveSelectedAddOns.TabIndex = 2
-        Me.btnRemoveSelectedAddOns.Tag = "20"
-        Me.btnRemoveSelectedAddOns.Text = "Remove"
-        Me.ToolTip1.SetToolTip(Me.btnRemoveSelectedAddOns, "Click to remove any selected add-on(s).")
-        Me.btnRemoveSelectedAddOns.UseVisualStyleBackColor = True
-        '
-        'lstAllRecommendedAddOns
-        '
-        Me.lstAllRecommendedAddOns.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstAllRecommendedAddOns.FormattingEnabled = True
-        Me.lstAllRecommendedAddOns.HorizontalScrollbar = True
-        Me.lstAllRecommendedAddOns.ItemHeight = 20
-        Me.lstAllRecommendedAddOns.Location = New System.Drawing.Point(183, 26)
-        Me.lstAllRecommendedAddOns.Name = "lstAllRecommendedAddOns"
-        Me.lstAllRecommendedAddOns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(510, 124)
-        Me.lstAllRecommendedAddOns.TabIndex = 5
-        Me.lstAllRecommendedAddOns.Tag = "20"
-        Me.ToolTip1.SetToolTip(Me.lstAllRecommendedAddOns, "List of the recommended add-ons for this task.")
-        '
-        'btnAddOnDown
-        '
-        Me.btnAddOnDown.Enabled = False
-        Me.btnAddOnDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnAddOnDown.Location = New System.Drawing.Point(93, 108)
-        Me.btnAddOnDown.Name = "btnAddOnDown"
-        Me.btnAddOnDown.Size = New System.Drawing.Size(84, 35)
-        Me.btnAddOnDown.TabIndex = 4
-        Me.btnAddOnDown.Tag = "20"
-        Me.btnAddOnDown.Text = "▼"
-        Me.ToolTip1.SetToolTip(Me.btnAddOnDown, "Click to move the selected add-on down in the list.")
-        Me.btnAddOnDown.UseVisualStyleBackColor = True
-        '
-        'btnAddRecAddOn
-        '
-        Me.btnAddRecAddOn.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddRecAddOn.Location = New System.Drawing.Point(2, 26)
-        Me.btnAddRecAddOn.Name = "btnAddRecAddOn"
-        Me.btnAddRecAddOn.Size = New System.Drawing.Size(175, 35)
-        Me.btnAddRecAddOn.TabIndex = 0
-        Me.btnAddRecAddOn.Tag = "20"
-        Me.btnAddRecAddOn.Text = "Add new add-on"
-        Me.ToolTip1.SetToolTip(Me.btnAddRecAddOn, "Click to add a recommended add-on to the list")
-        Me.btnAddRecAddOn.UseVisualStyleBackColor = True
-        '
-        'btnAddOnUp
-        '
-        Me.btnAddOnUp.Enabled = False
-        Me.btnAddOnUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnAddOnUp.Location = New System.Drawing.Point(2, 108)
-        Me.btnAddOnUp.Name = "btnAddOnUp"
-        Me.btnAddOnUp.Size = New System.Drawing.Size(84, 35)
-        Me.btnAddOnUp.TabIndex = 3
-        Me.btnAddOnUp.Tag = "20"
-        Me.btnAddOnUp.Text = "▲"
-        Me.ToolTip1.SetToolTip(Me.btnAddOnUp, "Click to move the selected add-on up in the list.")
-        Me.btnAddOnUp.UseVisualStyleBackColor = True
-        '
-        'btnEditSelectedAddOn
-        '
-        Me.btnEditSelectedAddOn.Enabled = False
-        Me.btnEditSelectedAddOn.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEditSelectedAddOn.Location = New System.Drawing.Point(2, 67)
-        Me.btnEditSelectedAddOn.Name = "btnEditSelectedAddOn"
-        Me.btnEditSelectedAddOn.Size = New System.Drawing.Size(84, 35)
-        Me.btnEditSelectedAddOn.TabIndex = 1
-        Me.btnEditSelectedAddOn.Tag = "20"
-        Me.btnEditSelectedAddOn.Text = "Edit"
-        Me.ToolTip1.SetToolTip(Me.btnEditSelectedAddOn, "Click to edit the selected add-on.")
-        Me.btnEditSelectedAddOn.UseVisualStyleBackColor = True
-        '
-        'chkLockCountries
-        '
-        Me.chkLockCountries.AutoSize = True
-        Me.chkLockCountries.Location = New System.Drawing.Point(168, 70)
-        Me.chkLockCountries.Name = "chkLockCountries"
-        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockCountries.TabIndex = 2
-        Me.chkLockCountries.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
-        Me.chkLockCountries.UseVisualStyleBackColor = True
-        '
-        'btnMoveCountryDown
-        '
-        Me.btnMoveCountryDown.Enabled = False
-        Me.btnMoveCountryDown.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMoveCountryDown.Location = New System.Drawing.Point(320, 97)
-        Me.btnMoveCountryDown.Name = "btnMoveCountryDown"
-        Me.btnMoveCountryDown.Size = New System.Drawing.Size(38, 29)
-        Me.btnMoveCountryDown.TabIndex = 7
-        Me.btnMoveCountryDown.Tag = "17"
-        Me.btnMoveCountryDown.Text = "▼"
-        Me.ToolTip1.SetToolTip(Me.btnMoveCountryDown, "Click to move the selected countries down in the list.")
-        Me.btnMoveCountryDown.UseVisualStyleBackColor = True
-        '
-        'btnMoveCountryUp
-        '
-        Me.btnMoveCountryUp.Enabled = False
-        Me.btnMoveCountryUp.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMoveCountryUp.Location = New System.Drawing.Point(320, 61)
-        Me.btnMoveCountryUp.Name = "btnMoveCountryUp"
-        Me.btnMoveCountryUp.Size = New System.Drawing.Size(38, 29)
-        Me.btnMoveCountryUp.TabIndex = 4
-        Me.btnMoveCountryUp.Tag = "17"
-        Me.btnMoveCountryUp.Text = "▲"
-        Me.ToolTip1.SetToolTip(Me.btnMoveCountryUp, "Click to move the selected countries up in the list.")
-        Me.btnMoveCountryUp.UseVisualStyleBackColor = True
-        '
-        'txtDPHXPackageFilename
-        '
-        Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(11, 83)
-        Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
-        Me.txtDPHXPackageFilename.ReadOnly = True
-        Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(43, 32)
-        Me.txtDPHXPackageFilename.TabIndex = 9
-        Me.txtDPHXPackageFilename.TabStop = False
-        Me.txtDPHXPackageFilename.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.txtDPHXPackageFilename, "Current DPHX package file selected.")
-        Me.txtDPHXPackageFilename.Visible = False
-        '
-        'btnRemoveCountry
-        '
-        Me.btnRemoveCountry.Enabled = False
-        Me.btnRemoveCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRemoveCountry.Location = New System.Drawing.Point(189, 97)
-        Me.btnRemoveCountry.Name = "btnRemoveCountry"
-        Me.btnRemoveCountry.Size = New System.Drawing.Size(125, 29)
-        Me.btnRemoveCountry.TabIndex = 6
-        Me.btnRemoveCountry.Tag = "17"
-        Me.btnRemoveCountry.Text = "Remove Country"
-        Me.ToolTip1.SetToolTip(Me.btnRemoveCountry, "Remove the selected countries from the list")
-        Me.btnRemoveCountry.UseVisualStyleBackColor = True
-        '
-        'btnAddCountry
-        '
-        Me.btnAddCountry.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddCountry.Location = New System.Drawing.Point(189, 62)
-        Me.btnAddCountry.Name = "btnAddCountry"
-        Me.btnAddCountry.Size = New System.Drawing.Size(125, 29)
-        Me.btnAddCountry.TabIndex = 3
-        Me.btnAddCountry.Tag = "17"
-        Me.btnAddCountry.Text = "Add Country"
-        Me.ToolTip1.SetToolTip(Me.btnAddCountry, "Click to add the selected country to the list")
-        Me.btnAddCountry.UseVisualStyleBackColor = True
-        '
-        'lstAllCountries
-        '
-        Me.lstAllCountries.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstAllCountries.FormattingEnabled = True
-        Me.lstAllCountries.HorizontalScrollbar = True
-        Me.lstAllCountries.ItemHeight = 20
-        Me.lstAllCountries.Location = New System.Drawing.Point(360, 62)
-        Me.lstAllCountries.Name = "lstAllCountries"
-        Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllCountries.Size = New System.Drawing.Size(339, 64)
-        Me.lstAllCountries.TabIndex = 5
-        Me.lstAllCountries.Tag = "17"
-        Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
-        '
-        'cboCountryFlag
-        '
-        Me.cboCountryFlag.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cboCountryFlag.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cboCountryFlag.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboCountryFlag.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cboCountryFlag.FormattingEnabled = True
-        Me.cboCountryFlag.Location = New System.Drawing.Point(189, 24)
-        Me.cboCountryFlag.Name = "cboCountryFlag"
-        Me.cboCountryFlag.Size = New System.Drawing.Size(510, 32)
-        Me.cboCountryFlag.TabIndex = 1
-        Me.cboCountryFlag.Tag = "17"
-        Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
-        '
-        'lblCountries
-        '
-        Me.lblCountries.AutoSize = True
-        Me.lblCountries.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCountries.Location = New System.Drawing.Point(6, 27)
-        Me.lblCountries.Name = "lblCountries"
-        Me.lblCountries.Size = New System.Drawing.Size(145, 26)
-        Me.lblCountries.TabIndex = 0
-        Me.lblCountries.Text = "Countries/Flags"
-        '
-        'chkUseOnlyWeatherSummary
-        '
-        Me.chkUseOnlyWeatherSummary.AutoSize = True
-        Me.chkUseOnlyWeatherSummary.Location = New System.Drawing.Point(168, 147)
-        Me.chkUseOnlyWeatherSummary.Name = "chkUseOnlyWeatherSummary"
-        Me.chkUseOnlyWeatherSummary.Size = New System.Drawing.Size(15, 14)
-        Me.chkUseOnlyWeatherSummary.TabIndex = 9
-        Me.chkUseOnlyWeatherSummary.Tag = "18"
-        Me.ToolTip1.SetToolTip(Me.chkUseOnlyWeatherSummary, "When checked, only summary will be used for weather information.")
-        Me.chkUseOnlyWeatherSummary.UseVisualStyleBackColor = True
-        '
-        'txtWeatherSummary
-        '
-        Me.txtWeatherSummary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 134)
-        Me.txtWeatherSummary.Name = "txtWeatherSummary"
-        Me.txtWeatherSummary.Size = New System.Drawing.Size(510, 32)
-        Me.txtWeatherSummary.TabIndex = 10
-        Me.txtWeatherSummary.Tag = "18"
-        Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
-        '
-        'lblWeatherSummary
-        '
-        Me.lblWeatherSummary.AutoSize = True
-        Me.lblWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWeatherSummary.Location = New System.Drawing.Point(6, 137)
-        Me.lblWeatherSummary.Name = "lblWeatherSummary"
-        Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
-        Me.lblWeatherSummary.TabIndex = 8
-        Me.lblWeatherSummary.Text = "Weather Summary"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'grbTaskDiscord
-        '
-        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grbTaskDiscord.Controls.Add(Me.btnDeleteDiscordID)
-        Me.grbTaskDiscord.Controls.Add(Me.btnDiscordTaskThreadURLPaste)
-        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
-        Me.grbTaskDiscord.Controls.Add(Me.Label31)
-        Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(4, 614)
-        Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(711, 72)
-        Me.grbTaskDiscord.TabIndex = 4
-        Me.grbTaskDiscord.TabStop = False
-        Me.grbTaskDiscord.Text = "Discord / Task ID"
-        '
-        'btnDeleteDiscordID
-        '
-        Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(629, 27)
-        Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
-        Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
-        Me.btnDeleteDiscordID.TabIndex = 3
-        Me.btnDeleteDiscordID.Tag = "24"
-        Me.btnDeleteDiscordID.Text = "Clear"
-        Me.ToolTip1.SetToolTip(Me.btnDeleteDiscordID, "Click this button to clear the Discord ID linked with this task")
-        Me.btnDeleteDiscordID.UseVisualStyleBackColor = True
-        '
-        'btnDiscordTaskThreadURLPaste
-        '
-        Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(544, 27)
-        Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
-        Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
-        Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
-        Me.btnDiscordTaskThreadURLPaste.Tag = "24"
-        Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task ID from your clipboard")
-        Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
-        '
-        'txtDiscordTaskID
-        '
-        Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
-        Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
-        Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(349, 32)
-        Me.txtDiscordTaskID.TabIndex = 1
-        Me.txtDiscordTaskID.Tag = "24"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.Location = New System.Drawing.Point(6, 30)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(109, 26)
-        Me.Label31.TabIndex = 0
-        Me.Label31.Text = "Task Post ID"
         '
         'tabEvent
         '
@@ -3762,12 +3762,6 @@ Partial Class Main
         Me.pnlScrollableSurface.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tabFlightPlan.ResumeLayout(False)
-        Me.pnlGuide.ResumeLayout(False)
-        Me.Panel3.ResumeLayout(False)
-        Me.pnlFlightPlanLeftSide.ResumeLayout(False)
-        Me.pnlFlightPlanLeftSide.PerformLayout()
-        Me.grbTaskInfo.ResumeLayout(False)
-        Me.grbTaskInfo.PerformLayout()
         Me.pnlFlightPlanRightSide.ResumeLayout(False)
         Me.grbTaskPart2.ResumeLayout(False)
         Me.grbTaskPart2.PerformLayout()
@@ -3776,6 +3770,12 @@ Partial Class Main
         Me.GroupBox2.ResumeLayout(False)
         Me.grbTaskDiscord.ResumeLayout(False)
         Me.grbTaskDiscord.PerformLayout()
+        Me.pnlGuide.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
+        Me.pnlFlightPlanLeftSide.ResumeLayout(False)
+        Me.pnlFlightPlanLeftSide.PerformLayout()
+        Me.grbTaskInfo.ResumeLayout(False)
+        Me.grbTaskInfo.PerformLayout()
         Me.tabEvent.ResumeLayout(False)
         Me.tabEvent.PerformLayout()
         Me.pnlWizardEvent.ResumeLayout(False)

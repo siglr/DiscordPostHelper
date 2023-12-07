@@ -154,6 +154,9 @@ Public Class Main
             Dim y As Integer = CInt(locationArray(1).Split("=")(1))
             Me.Location = New Point(x, y)
         End If
+
+        FlightPlanTabSplitter.SplitPosition = SessionSettings.FlightPlanTabSplitterLocation
+
     End Sub
 
     Private Sub SetTimePickerFormat()
@@ -337,6 +340,7 @@ Public Class Main
             SessionSettings.MainFormSize = Me.Size.ToString()
             SessionSettings.MainFormLocation = Me.Location.ToString()
             SessionSettings.LastFileLoaded = _CurrentSessionFile
+            SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
             SessionSettings.Save()
         End If
 

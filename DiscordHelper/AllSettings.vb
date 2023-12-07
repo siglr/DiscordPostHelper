@@ -20,6 +20,9 @@ Public Class AllSettings
         End Set
     End Property
 
+    <XmlElement("FlightPlanTabSplitterLocation")>
+    Public Property FlightPlanTabSplitterLocation As Integer
+
     <XmlElement("MainFormSize")>
     Public Property MainFormSize As String
 
@@ -62,6 +65,7 @@ Public Class AllSettings
             MainFormSize = settingsInFile.MainFormSize
             ExpertMode = settingsInFile.ExpertMode
             MergeSecondaryPosts = settingsInFile.MergeSecondaryPosts
+            FlightPlanTabSplitterLocation = settingsInFile.FlightPlanTabSplitterLocation
 
         Else
             settingsFound = False
