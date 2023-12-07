@@ -29,12 +29,13 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
-        Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lblGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlArrow = New System.Windows.Forms.Panel()
+        Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
+        Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
         Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeWave = New System.Windows.Forms.CheckBox()
@@ -93,8 +94,10 @@ Partial Class Main
         Me.txtShortDescription = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtLongDescription = New System.Windows.Forms.TextBox()
-        Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
+        Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
+        Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
+        Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
         Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
         Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
@@ -130,12 +133,12 @@ Partial Class Main
         Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
         Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
         Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -311,7 +314,9 @@ Partial Class Main
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
         Me.Panel3.SuspendLayout()
+        Me.pnlFlightPlanLeftSide.SuspendLayout()
         Me.grbTaskInfo.SuspendLayout()
+        Me.pnlFlightPlanRightSide.SuspendLayout()
         Me.grbTaskPart2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -379,35 +384,16 @@ Partial Class Main
         '
         Me.tabFlightPlan.AutoScroll = True
         Me.tabFlightPlan.BackColor = System.Drawing.Color.Transparent
-        Me.tabFlightPlan.Controls.Add(Me.lblElevationUpdateWarning)
+        Me.tabFlightPlan.Controls.Add(Me.pnlFlightPlanRightSide)
+        Me.tabFlightPlan.Controls.Add(Me.FlightPlanTabSplitter)
         Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
-        Me.tabFlightPlan.Controls.Add(Me.grbTaskInfo)
-        Me.tabFlightPlan.Controls.Add(Me.txtFlightPlanFile)
-        Me.tabFlightPlan.Controls.Add(Me.btnSelectFlightPlan)
-        Me.tabFlightPlan.Controls.Add(Me.grbTaskPart2)
-        Me.tabFlightPlan.Controls.Add(Me.grbTaskDiscord)
-        Me.tabFlightPlan.Controls.Add(Me.FileDropZone1)
+        Me.tabFlightPlan.Controls.Add(Me.pnlFlightPlanLeftSide)
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
         Me.tabFlightPlan.Padding = New System.Windows.Forms.Padding(3)
         Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 860)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
-        '
-        'lblElevationUpdateWarning
-        '
-        Me.lblElevationUpdateWarning.AutoSize = True
-        Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
-        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(71, 51)
-        Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
-        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
-        Me.lblElevationUpdateWarning.TabIndex = 83
-        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
-    "te required!"
-        Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
-        "therwise, you can dismiss this warning.")
-        Me.lblElevationUpdateWarning.Visible = False
         '
         'pnlGuide
         '
@@ -464,10 +450,40 @@ Partial Class Main
         Me.pnlArrow.Size = New System.Drawing.Size(91, 89)
         Me.pnlArrow.TabIndex = 80
         '
+        'pnlFlightPlanLeftSide
+        '
+        Me.pnlFlightPlanLeftSide.Controls.Add(Me.lblElevationUpdateWarning)
+        Me.pnlFlightPlanLeftSide.Controls.Add(Me.grbTaskInfo)
+        Me.pnlFlightPlanLeftSide.Controls.Add(Me.btnSelectFlightPlan)
+        Me.pnlFlightPlanLeftSide.Controls.Add(Me.txtFlightPlanFile)
+        Me.pnlFlightPlanLeftSide.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlFlightPlanLeftSide.Location = New System.Drawing.Point(3, 3)
+        Me.pnlFlightPlanLeftSide.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlFlightPlanLeftSide.MinimumSize = New System.Drawing.Size(740, 854)
+        Me.pnlFlightPlanLeftSide.Name = "pnlFlightPlanLeftSide"
+        Me.pnlFlightPlanLeftSide.Size = New System.Drawing.Size(740, 854)
+        Me.pnlFlightPlanLeftSide.TabIndex = 84
+        '
+        'lblElevationUpdateWarning
+        '
+        Me.lblElevationUpdateWarning.AutoSize = True
+        Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
+        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(69, 50)
+        Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
+        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
+        Me.lblElevationUpdateWarning.TabIndex = 83
+        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
+    "te required!"
+        Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
+        "therwise, you can dismiss this warning.")
+        Me.lblElevationUpdateWarning.Visible = False
+        '
         'grbTaskInfo
         '
-        Me.grbTaskInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskInfo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeDynamic)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
         Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
@@ -526,10 +542,10 @@ Partial Class Main
         Me.grbTaskInfo.Controls.Add(Me.Label17)
         Me.grbTaskInfo.Controls.Add(Me.txtLongDescription)
         Me.grbTaskInfo.Enabled = False
-        Me.grbTaskInfo.Location = New System.Drawing.Point(8, 57)
-        Me.grbTaskInfo.MinimumSize = New System.Drawing.Size(729, 796)
+        Me.grbTaskInfo.Location = New System.Drawing.Point(6, 56)
+        Me.grbTaskInfo.MinimumSize = New System.Drawing.Size(700, 796)
         Me.grbTaskInfo.Name = "grbTaskInfo"
-        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 797)
+        Me.grbTaskInfo.Size = New System.Drawing.Size(729, 796)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
@@ -561,8 +577,9 @@ Partial Class Main
         '
         'btnPasteUsernameCredits
         '
+        Me.btnPasteUsernameCredits.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPasteUsernameCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(641, 536)
+        Me.btnPasteUsernameCredits.Location = New System.Drawing.Point(644, 538)
         Me.btnPasteUsernameCredits.Name = "btnPasteUsernameCredits"
         Me.btnPasteUsernameCredits.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteUsernameCredits.TabIndex = 53
@@ -643,10 +660,12 @@ Partial Class Main
         '
         'txtSoaringTypeExtraInfo
         '
+        Me.txtSoaringTypeExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSoaringTypeExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtSoaringTypeExtraInfo.Location = New System.Drawing.Point(388, 270)
         Me.txtSoaringTypeExtraInfo.Name = "txtSoaringTypeExtraInfo"
-        Me.txtSoaringTypeExtraInfo.Size = New System.Drawing.Size(332, 32)
+        Me.txtSoaringTypeExtraInfo.Size = New System.Drawing.Size(335, 32)
         Me.txtSoaringTypeExtraInfo.TabIndex = 27
         Me.txtSoaringTypeExtraInfo.Tag = "8"
         Me.ToolTip1.SetToolTip(Me.txtSoaringTypeExtraInfo, "Any extra information to add to the soaring type line.")
@@ -663,10 +682,12 @@ Partial Class Main
         '
         'txtArrivalExtraInfo
         '
+        Me.txtArrivalExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtArrivalExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtArrivalExtraInfo.Location = New System.Drawing.Point(467, 236)
         Me.txtArrivalExtraInfo.Name = "txtArrivalExtraInfo"
-        Me.txtArrivalExtraInfo.Size = New System.Drawing.Size(253, 32)
+        Me.txtArrivalExtraInfo.Size = New System.Drawing.Size(256, 32)
         Me.txtArrivalExtraInfo.TabIndex = 22
         Me.txtArrivalExtraInfo.Tag = "7"
         Me.ToolTip1.SetToolTip(Me.txtArrivalExtraInfo, "Any extra information to add to the arrival line.")
@@ -705,10 +726,12 @@ Partial Class Main
         '
         'txtDepExtraInfo
         '
+        Me.txtDepExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDepExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDepExtraInfo.Location = New System.Drawing.Point(467, 202)
         Me.txtDepExtraInfo.Name = "txtDepExtraInfo"
-        Me.txtDepExtraInfo.Size = New System.Drawing.Size(253, 32)
+        Me.txtDepExtraInfo.Size = New System.Drawing.Size(256, 32)
         Me.txtDepExtraInfo.TabIndex = 17
         Me.txtDepExtraInfo.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.txtDepExtraInfo, "Any extra information to add to the departure line.")
@@ -725,10 +748,12 @@ Partial Class Main
         '
         'txtSimDateTimeExtraInfo
         '
+        Me.txtSimDateTimeExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSimDateTimeExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtSimDateTimeExtraInfo.Location = New System.Drawing.Point(299, 134)
         Me.txtSimDateTimeExtraInfo.Name = "txtSimDateTimeExtraInfo"
-        Me.txtSimDateTimeExtraInfo.Size = New System.Drawing.Size(421, 32)
+        Me.txtSimDateTimeExtraInfo.Size = New System.Drawing.Size(424, 32)
         Me.txtSimDateTimeExtraInfo.TabIndex = 10
         Me.txtSimDateTimeExtraInfo.Tag = "4"
         Me.ToolTip1.SetToolTip(Me.txtSimDateTimeExtraInfo, "Any extra information to add to the date/time line.")
@@ -813,10 +838,12 @@ Partial Class Main
         '
         'txtMainArea
         '
+        Me.txtMainArea.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtMainArea.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtMainArea.Location = New System.Drawing.Point(189, 168)
         Me.txtMainArea.Name = "txtMainArea"
-        Me.txtMainArea.Size = New System.Drawing.Size(531, 32)
+        Me.txtMainArea.Size = New System.Drawing.Size(534, 32)
         Me.txtMainArea.TabIndex = 12
         Me.txtMainArea.Tag = "5"
         Me.ToolTip1.SetToolTip(Me.txtMainArea, "The main area and/or point of interest of the flight")
@@ -833,10 +860,12 @@ Partial Class Main
         '
         'txtTitle
         '
+        Me.txtTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTitle.Location = New System.Drawing.Point(189, 66)
         Me.txtTitle.Name = "txtTitle"
-        Me.txtTitle.Size = New System.Drawing.Size(400, 32)
+        Me.txtTitle.Size = New System.Drawing.Size(534, 32)
         Me.txtTitle.TabIndex = 4
         Me.txtTitle.Tag = "3"
         Me.ToolTip1.SetToolTip(Me.txtTitle, "Track title - can come from the flight plan's title.")
@@ -920,11 +949,13 @@ Partial Class Main
         '
         'txtWeatherFile
         '
+        Me.txtWeatherFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtWeatherFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtWeatherFile.Location = New System.Drawing.Point(189, 24)
         Me.txtWeatherFile.Name = "txtWeatherFile"
         Me.txtWeatherFile.ReadOnly = True
-        Me.txtWeatherFile.Size = New System.Drawing.Size(531, 32)
+        Me.txtWeatherFile.Size = New System.Drawing.Size(534, 32)
         Me.txtWeatherFile.TabIndex = 1
         Me.txtWeatherFile.TabStop = False
         Me.txtWeatherFile.Tag = "2"
@@ -974,10 +1005,12 @@ Partial Class Main
         '
         'txtDurationExtraInfo
         '
+        Me.txtDurationExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDurationExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDurationExtraInfo.Location = New System.Drawing.Point(337, 372)
         Me.txtDurationExtraInfo.Name = "txtDurationExtraInfo"
-        Me.txtDurationExtraInfo.Size = New System.Drawing.Size(383, 32)
+        Me.txtDurationExtraInfo.Size = New System.Drawing.Size(386, 32)
         Me.txtDurationExtraInfo.TabIndex = 42
         Me.txtDurationExtraInfo.Tag = "11"
         Me.ToolTip1.SetToolTip(Me.txtDurationExtraInfo, "Any extra information to add on the duration line.")
@@ -994,10 +1027,12 @@ Partial Class Main
         '
         'txtCredits
         '
+        Me.txtCredits.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtCredits.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtCredits.Location = New System.Drawing.Point(189, 535)
         Me.txtCredits.Name = "txtCredits"
-        Me.txtCredits.Size = New System.Drawing.Size(446, 32)
+        Me.txtCredits.Size = New System.Drawing.Size(449, 32)
         Me.txtCredits.TabIndex = 52
         Me.txtCredits.Tag = "15"
         Me.txtCredits.Text = "All credits to @UserName for this task."
@@ -1084,22 +1119,26 @@ Partial Class Main
         '
         'cboRecommendedGliders
         '
+        Me.cboRecommendedGliders.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboRecommendedGliders.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboRecommendedGliders.FormattingEnabled = True
         Me.cboRecommendedGliders.Items.AddRange(New Object() {"Any", "Flapped"})
         Me.cboRecommendedGliders.Location = New System.Drawing.Point(189, 406)
         Me.cboRecommendedGliders.Name = "cboRecommendedGliders"
-        Me.cboRecommendedGliders.Size = New System.Drawing.Size(531, 32)
+        Me.cboRecommendedGliders.Size = New System.Drawing.Size(534, 32)
         Me.cboRecommendedGliders.TabIndex = 44
         Me.cboRecommendedGliders.Tag = "12"
         Me.ToolTip1.SetToolTip(Me.cboRecommendedGliders, "Recommended gliders (suggestions in the list or enter your own)")
         '
         'txtDifficultyExtraInfo
         '
+        Me.txtDifficultyExtraInfo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDifficultyExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDifficultyExtraInfo.Location = New System.Drawing.Point(446, 440)
         Me.txtDifficultyExtraInfo.Name = "txtDifficultyExtraInfo"
-        Me.txtDifficultyExtraInfo.Size = New System.Drawing.Size(274, 32)
+        Me.txtDifficultyExtraInfo.Size = New System.Drawing.Size(277, 32)
         Me.txtDifficultyExtraInfo.TabIndex = 47
         Me.txtDifficultyExtraInfo.Tag = "13"
         Me.ToolTip1.SetToolTip(Me.txtDifficultyExtraInfo, "Any extra information or custom rating to use on the difficulty line.")
@@ -1127,12 +1166,14 @@ Partial Class Main
         '
         'txtShortDescription
         '
+        Me.txtShortDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtShortDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtShortDescription.Location = New System.Drawing.Point(189, 476)
         Me.txtShortDescription.Multiline = True
         Me.txtShortDescription.Name = "txtShortDescription"
         Me.txtShortDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtShortDescription.Size = New System.Drawing.Size(531, 53)
+        Me.txtShortDescription.Size = New System.Drawing.Size(534, 53)
         Me.txtShortDescription.TabIndex = 50
         Me.txtShortDescription.Tag = "14"
         Me.ToolTip1.SetToolTip(Me.txtShortDescription, "Short description of the flight, can come from the flight plan file.")
@@ -1149,34 +1190,23 @@ Partial Class Main
         '
         'txtLongDescription
         '
-        Me.txtLongDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtLongDescription.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLongDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtLongDescription.Location = New System.Drawing.Point(189, 569)
         Me.txtLongDescription.Multiline = True
         Me.txtLongDescription.Name = "txtLongDescription"
         Me.txtLongDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtLongDescription.Size = New System.Drawing.Size(531, 218)
+        Me.txtLongDescription.Size = New System.Drawing.Size(534, 217)
         Me.txtLongDescription.TabIndex = 55
         Me.txtLongDescription.Tag = "16"
         Me.ToolTip1.SetToolTip(Me.txtLongDescription, "Full (long) description of the flight.")
         '
-        'txtFlightPlanFile
-        '
-        Me.txtFlightPlanFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFlightPlanFile.Location = New System.Drawing.Point(197, 19)
-        Me.txtFlightPlanFile.Name = "txtFlightPlanFile"
-        Me.txtFlightPlanFile.ReadOnly = True
-        Me.txtFlightPlanFile.Size = New System.Drawing.Size(531, 32)
-        Me.txtFlightPlanFile.TabIndex = 1
-        Me.txtFlightPlanFile.TabStop = False
-        Me.txtFlightPlanFile.Tag = "1"
-        Me.ToolTip1.SetToolTip(Me.txtFlightPlanFile, "Current flight plan file selected.")
-        '
         'btnSelectFlightPlan
         '
         Me.btnSelectFlightPlan.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectFlightPlan.Location = New System.Drawing.Point(16, 16)
+        Me.btnSelectFlightPlan.Location = New System.Drawing.Point(14, 15)
         Me.btnSelectFlightPlan.Name = "btnSelectFlightPlan"
         Me.btnSelectFlightPlan.Size = New System.Drawing.Size(175, 35)
         Me.btnSelectFlightPlan.TabIndex = 0
@@ -1184,6 +1214,43 @@ Partial Class Main
         Me.btnSelectFlightPlan.Text = "Flight Plan"
         Me.ToolTip1.SetToolTip(Me.btnSelectFlightPlan, "Click to select the flight plan file to use and extract information from.")
         Me.btnSelectFlightPlan.UseVisualStyleBackColor = True
+        '
+        'txtFlightPlanFile
+        '
+        Me.txtFlightPlanFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFlightPlanFile.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFlightPlanFile.Location = New System.Drawing.Point(195, 18)
+        Me.txtFlightPlanFile.Name = "txtFlightPlanFile"
+        Me.txtFlightPlanFile.ReadOnly = True
+        Me.txtFlightPlanFile.Size = New System.Drawing.Size(534, 32)
+        Me.txtFlightPlanFile.TabIndex = 1
+        Me.txtFlightPlanFile.TabStop = False
+        Me.txtFlightPlanFile.Tag = "1"
+        Me.ToolTip1.SetToolTip(Me.txtFlightPlanFile, "Current flight plan file selected.")
+        '
+        'FlightPlanTabSplitter
+        '
+        Me.FlightPlanTabSplitter.BackColor = System.Drawing.SystemColors.ActiveBorder
+        Me.FlightPlanTabSplitter.Location = New System.Drawing.Point(743, 3)
+        Me.FlightPlanTabSplitter.MinExtra = 715
+        Me.FlightPlanTabSplitter.MinSize = 740
+        Me.FlightPlanTabSplitter.Name = "FlightPlanTabSplitter"
+        Me.FlightPlanTabSplitter.Size = New System.Drawing.Size(10, 854)
+        Me.FlightPlanTabSplitter.TabIndex = 84
+        Me.FlightPlanTabSplitter.TabStop = False
+        '
+        'pnlFlightPlanRightSide
+        '
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskPart2)
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.FileDropZone1)
+        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskDiscord)
+        Me.pnlFlightPlanRightSide.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlFlightPlanRightSide.Location = New System.Drawing.Point(753, 3)
+        Me.pnlFlightPlanRightSide.MinimumSize = New System.Drawing.Size(715, 854)
+        Me.pnlFlightPlanRightSide.Name = "pnlFlightPlanRightSide"
+        Me.pnlFlightPlanRightSide.Size = New System.Drawing.Size(715, 854)
+        Me.pnlFlightPlanRightSide.TabIndex = 16
         '
         'grbTaskPart2
         '
@@ -1207,9 +1274,9 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
         Me.grbTaskPart2.Controls.Add(Me.lblWeatherSummary)
         Me.grbTaskPart2.Enabled = False
-        Me.grbTaskPart2.Location = New System.Drawing.Point(743, -5)
+        Me.grbTaskPart2.Location = New System.Drawing.Point(4, -5)
         Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(715, 613)
+        Me.grbTaskPart2.Size = New System.Drawing.Size(711, 613)
         Me.grbTaskPart2.TabIndex = 3
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
@@ -1234,7 +1301,7 @@ Partial Class Main
         Me.txtBaroPressureExtraInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtBaroPressureExtraInfo.Location = New System.Drawing.Point(359, 172)
         Me.txtBaroPressureExtraInfo.Name = "txtBaroPressureExtraInfo"
-        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(347, 32)
+        Me.txtBaroPressureExtraInfo.Size = New System.Drawing.Size(340, 32)
         Me.txtBaroPressureExtraInfo.TabIndex = 13
         Me.txtBaroPressureExtraInfo.Tag = "19"
         Me.ToolTip1.SetToolTip(Me.txtBaroPressureExtraInfo, "Any extra information to add to a non-standard barometric pressure.")
@@ -1266,7 +1333,7 @@ Partial Class Main
         Me.GroupBox3.Controls.Add(Me.btnExtraFileDown)
         Me.GroupBox3.Location = New System.Drawing.Point(6, 376)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(703, 229)
+        Me.GroupBox3.Size = New System.Drawing.Size(699, 229)
         Me.GroupBox3.TabIndex = 15
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Extra files"
@@ -1302,7 +1369,7 @@ Partial Class Main
         Me.cboCoverImage.FormattingEnabled = True
         Me.cboCoverImage.Location = New System.Drawing.Point(183, 190)
         Me.cboCoverImage.Name = "cboCoverImage"
-        Me.cboCoverImage.Size = New System.Drawing.Size(517, 28)
+        Me.cboCoverImage.Size = New System.Drawing.Size(510, 28)
         Me.cboCoverImage.TabIndex = 8
         Me.cboCoverImage.Tag = "23"
         Me.ToolTip1.SetToolTip(Me.cboCoverImage, "Select the image to post as cover for the flight/task (any image file named ""Cove" &
@@ -1327,7 +1394,7 @@ Partial Class Main
         Me.cboBriefingMap.FormattingEnabled = True
         Me.cboBriefingMap.Location = New System.Drawing.Point(183, 156)
         Me.cboBriefingMap.Name = "cboBriefingMap"
-        Me.cboBriefingMap.Size = New System.Drawing.Size(517, 28)
+        Me.cboBriefingMap.Size = New System.Drawing.Size(510, 28)
         Me.cboBriefingMap.TabIndex = 6
         Me.cboBriefingMap.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.cboBriefingMap, "Select the image for the map display (any image file named ""Map"" will be selected" &
@@ -1343,7 +1410,7 @@ Partial Class Main
         Me.lstAllFiles.Location = New System.Drawing.Point(183, 26)
         Me.lstAllFiles.Name = "lstAllFiles"
         Me.lstAllFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllFiles.Size = New System.Drawing.Size(517, 124)
+        Me.lstAllFiles.Size = New System.Drawing.Size(510, 124)
         Me.lstAllFiles.TabIndex = 1
         Me.lstAllFiles.Tag = "21"
         Me.ToolTip1.SetToolTip(Me.lstAllFiles, "List of the extra files to include with the flight plan.")
@@ -1421,7 +1488,7 @@ Partial Class Main
         Me.GroupBox2.Controls.Add(Me.btnEditSelectedAddOn)
         Me.GroupBox2.Location = New System.Drawing.Point(6, 210)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(703, 160)
+        Me.GroupBox2.Size = New System.Drawing.Size(699, 160)
         Me.GroupBox2.TabIndex = 14
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Recommended Add-Ons"
@@ -1449,7 +1516,7 @@ Partial Class Main
         Me.lstAllRecommendedAddOns.Location = New System.Drawing.Point(183, 26)
         Me.lstAllRecommendedAddOns.Name = "lstAllRecommendedAddOns"
         Me.lstAllRecommendedAddOns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(517, 124)
+        Me.lstAllRecommendedAddOns.Size = New System.Drawing.Size(510, 124)
         Me.lstAllRecommendedAddOns.TabIndex = 5
         Me.lstAllRecommendedAddOns.Tag = "20"
         Me.ToolTip1.SetToolTip(Me.lstAllRecommendedAddOns, "List of the recommended add-ons for this task.")
@@ -1587,10 +1654,10 @@ Partial Class Main
         Me.lstAllCountries.FormattingEnabled = True
         Me.lstAllCountries.HorizontalScrollbar = True
         Me.lstAllCountries.ItemHeight = 20
-        Me.lstAllCountries.Location = New System.Drawing.Point(364, 62)
+        Me.lstAllCountries.Location = New System.Drawing.Point(360, 62)
         Me.lstAllCountries.Name = "lstAllCountries"
         Me.lstAllCountries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstAllCountries.Size = New System.Drawing.Size(342, 64)
+        Me.lstAllCountries.Size = New System.Drawing.Size(339, 64)
         Me.lstAllCountries.TabIndex = 5
         Me.lstAllCountries.Tag = "17"
         Me.ToolTip1.SetToolTip(Me.lstAllCountries, "List of the countries which flags are added to the title")
@@ -1605,7 +1672,7 @@ Partial Class Main
         Me.cboCountryFlag.FormattingEnabled = True
         Me.cboCountryFlag.Location = New System.Drawing.Point(189, 24)
         Me.cboCountryFlag.Name = "cboCountryFlag"
-        Me.cboCountryFlag.Size = New System.Drawing.Size(517, 32)
+        Me.cboCountryFlag.Size = New System.Drawing.Size(510, 32)
         Me.cboCountryFlag.TabIndex = 1
         Me.cboCountryFlag.Tag = "17"
         Me.ToolTip1.SetToolTip(Me.cboCountryFlag, "Select a country to add to the selection (for its flag to be added in the title)")
@@ -1638,7 +1705,7 @@ Partial Class Main
         Me.txtWeatherSummary.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtWeatherSummary.Location = New System.Drawing.Point(189, 134)
         Me.txtWeatherSummary.Name = "txtWeatherSummary"
-        Me.txtWeatherSummary.Size = New System.Drawing.Size(517, 32)
+        Me.txtWeatherSummary.Size = New System.Drawing.Size(510, 32)
         Me.txtWeatherSummary.TabIndex = 10
         Me.txtWeatherSummary.Tag = "18"
         Me.ToolTip1.SetToolTip(Me.txtWeatherSummary, "Summary of the weather profile.")
@@ -1653,6 +1720,19 @@ Partial Class Main
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
         '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
         'grbTaskDiscord
         '
         Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1662,9 +1742,9 @@ Partial Class Main
         Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
         Me.grbTaskDiscord.Controls.Add(Me.Label31)
         Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(743, 614)
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(4, 614)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(715, 72)
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(711, 72)
         Me.grbTaskDiscord.TabIndex = 4
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord / Task ID"
@@ -1673,7 +1753,7 @@ Partial Class Main
         '
         Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(627, 27)
+        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(629, 27)
         Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
         Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
         Me.btnDeleteDiscordID.TabIndex = 3
@@ -1686,7 +1766,7 @@ Partial Class Main
         '
         Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(542, 27)
+        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(544, 27)
         Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
         Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
         Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
@@ -1703,7 +1783,7 @@ Partial Class Main
         Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
         Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
         Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(347, 32)
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(349, 32)
         Me.txtDiscordTaskID.TabIndex = 1
         Me.txtDiscordTaskID.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
@@ -1718,19 +1798,6 @@ Partial Class Main
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task Post ID"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(743, 692)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(715, 162)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
         'tabEvent
         '
         Me.tabEvent.Controls.Add(Me.chkActivateEvent)
@@ -1739,7 +1806,7 @@ Partial Class Main
         Me.tabEvent.Location = New System.Drawing.Point(4, 29)
         Me.tabEvent.Name = "tabEvent"
         Me.tabEvent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabEvent.Size = New System.Drawing.Size(1467, 859)
+        Me.tabEvent.Size = New System.Drawing.Size(1467, 860)
         Me.tabEvent.TabIndex = 1
         Me.tabEvent.Text = "Event"
         Me.tabEvent.UseVisualStyleBackColor = True
@@ -1853,7 +1920,7 @@ Partial Class Main
         Me.grpGroupEventPost.Location = New System.Drawing.Point(6, 6)
         Me.grpGroupEventPost.MinimumSize = New System.Drawing.Size(848, 850)
         Me.grpGroupEventPost.Name = "grpGroupEventPost"
-        Me.grpGroupEventPost.Size = New System.Drawing.Size(1452, 850)
+        Me.grpGroupEventPost.Size = New System.Drawing.Size(1455, 850)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         '
@@ -1884,7 +1951,7 @@ Partial Class Main
         Me.grpEventTeaser.Controls.Add(Me.Label1)
         Me.grpEventTeaser.Location = New System.Drawing.Point(7, 698)
         Me.grpEventTeaser.Name = "grpEventTeaser"
-        Me.grpEventTeaser.Size = New System.Drawing.Size(1440, 146)
+        Me.grpEventTeaser.Size = New System.Drawing.Size(1443, 146)
         Me.grpEventTeaser.TabIndex = 50
         Me.grpEventTeaser.TabStop = False
         '
@@ -1908,7 +1975,7 @@ Partial Class Main
         Me.txtEventTeaserMessage.Multiline = True
         Me.txtEventTeaserMessage.Name = "txtEventTeaserMessage"
         Me.txtEventTeaserMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1249, 76)
+        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1252, 76)
         Me.txtEventTeaserMessage.TabIndex = 5
         Me.txtEventTeaserMessage.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserMessage, "Specify any message you want to be posted with the teaser")
@@ -1917,7 +1984,7 @@ Partial Class Main
         '
         Me.btnSelectEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSelectEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(1270, 27)
+        Me.btnSelectEventTeaserAreaMap.Location = New System.Drawing.Point(1273, 27)
         Me.btnSelectEventTeaserAreaMap.Name = "btnSelectEventTeaserAreaMap"
         Me.btnSelectEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnSelectEventTeaserAreaMap.TabIndex = 2
@@ -1930,7 +1997,7 @@ Partial Class Main
         '
         Me.btnClearEventTeaserAreaMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClearEventTeaserAreaMap.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(1355, 26)
+        Me.btnClearEventTeaserAreaMap.Location = New System.Drawing.Point(1358, 26)
         Me.btnClearEventTeaserAreaMap.Name = "btnClearEventTeaserAreaMap"
         Me.btnClearEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnClearEventTeaserAreaMap.TabIndex = 3
@@ -1947,7 +2014,7 @@ Partial Class Main
         Me.txtEventTeaserAreaMapImage.Location = New System.Drawing.Point(185, 26)
         Me.txtEventTeaserAreaMapImage.Name = "txtEventTeaserAreaMapImage"
         Me.txtEventTeaserAreaMapImage.ReadOnly = True
-        Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1079, 32)
+        Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1082, 32)
         Me.txtEventTeaserAreaMapImage.TabIndex = 1
         Me.txtEventTeaserAreaMapImage.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
@@ -1970,14 +2037,14 @@ Partial Class Main
         Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
         Me.lblClubFullName.Name = "lblClubFullName"
-        Me.lblClubFullName.Size = New System.Drawing.Size(1259, 26)
+        Me.lblClubFullName.Size = New System.Drawing.Size(1262, 26)
         Me.lblClubFullName.TabIndex = 45
         '
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1367, 663)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1370, 663)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
         Me.btnPasteBeginnerLink.TabIndex = 44
@@ -1993,7 +2060,7 @@ Partial Class Main
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 660)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
-        Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(1169, 32)
+        Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(1172, 32)
         Me.txtOtherBeginnerLink.TabIndex = 43
         Me.txtOtherBeginnerLink.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.txtOtherBeginnerLink, "Specify the URL (link) to the guide you want to include")
@@ -2008,7 +2075,7 @@ Partial Class Main
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
         Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 622)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
-        Me.cboBeginnersGuide.Size = New System.Drawing.Size(1254, 32)
+        Me.cboBeginnersGuide.Size = New System.Drawing.Size(1257, 32)
         Me.cboBeginnersGuide.TabIndex = 42
         Me.cboBeginnersGuide.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.cboBeginnersGuide, "You can select a link to guide beginners into soaring group flights")
@@ -2064,7 +2131,7 @@ Partial Class Main
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
         Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 95)
         Me.cboGroupOrClubName.Name = "cboGroupOrClubName"
-        Me.cboGroupOrClubName.Size = New System.Drawing.Size(1254, 32)
+        Me.cboGroupOrClubName.Size = New System.Drawing.Size(1257, 32)
         Me.cboGroupOrClubName.TabIndex = 3
         Me.cboGroupOrClubName.Tag = "60"
         Me.ToolTip1.SetToolTip(Me.cboGroupOrClubName, "Select or specify the group or club name related to this event. Leave blank if no" &
@@ -2077,7 +2144,7 @@ Partial Class Main
         Me.txtEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtEventTitle.Location = New System.Drawing.Point(192, 163)
         Me.txtEventTitle.Name = "txtEventTitle"
-        Me.txtEventTitle.Size = New System.Drawing.Size(1254, 32)
+        Me.txtEventTitle.Size = New System.Drawing.Size(1257, 32)
         Me.txtEventTitle.TabIndex = 5
         Me.txtEventTitle.Tag = "61"
         Me.ToolTip1.SetToolTip(Me.txtEventTitle, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
@@ -2147,7 +2214,7 @@ Partial Class Main
                 "5934626836)", "[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)", "[Flight 02](https://discord.com/channels/876123356385149009/876130658513203230)", "[General](https://discord.com/channels/325227457445625856/448551355712274435)"})
         Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 233)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
-        Me.cboVoiceChannel.Size = New System.Drawing.Size(1254, 32)
+        Me.cboVoiceChannel.Size = New System.Drawing.Size(1257, 32)
         Me.cboVoiceChannel.TabIndex = 9
         Me.cboVoiceChannel.Tag = "63"
         Me.ToolTip1.SetToolTip(Me.cboVoiceChannel, "Select the voice channel to use for the event (from the list or enter your own).")
@@ -2194,7 +2261,7 @@ Partial Class Main
         Me.txtEventDescription.Multiline = True
         Me.txtEventDescription.Name = "txtEventDescription"
         Me.txtEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventDescription.Size = New System.Drawing.Size(1254, 139)
+        Me.txtEventDescription.Size = New System.Drawing.Size(1257, 139)
         Me.txtEventDescription.TabIndex = 33
         Me.txtEventDescription.Tag = "69"
         Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the flight - comes from the flight plan tab if created in th" &
@@ -2554,7 +2621,7 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
-        Me.tabDiscord.Size = New System.Drawing.Size(1467, 859)
+        Me.tabDiscord.Size = New System.Drawing.Size(1467, 860)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
@@ -3414,21 +3481,19 @@ Partial Class Main
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
         Me.tabBriefing.Location = New System.Drawing.Point(4, 29)
         Me.tabBriefing.Name = "tabBriefing"
-        Me.tabBriefing.Size = New System.Drawing.Size(1467, 859)
+        Me.tabBriefing.Size = New System.Drawing.Size(1467, 860)
         Me.tabBriefing.TabIndex = 2
         Me.tabBriefing.Text = "Briefing"
         Me.tabBriefing.UseVisualStyleBackColor = True
         '
         'pnlBriefing
         '
-        Me.pnlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlBriefing.Controls.Add(Me.pnlWizardBriefing)
         Me.pnlBriefing.Controls.Add(Me.BriefingControl1)
+        Me.pnlBriefing.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlBriefing.Location = New System.Drawing.Point(0, 0)
         Me.pnlBriefing.Name = "pnlBriefing"
-        Me.pnlBriefing.Size = New System.Drawing.Size(1467, 867)
+        Me.pnlBriefing.Size = New System.Drawing.Size(1467, 860)
         Me.pnlBriefing.TabIndex = 0
         '
         'pnlWizardBriefing
@@ -3478,7 +3543,7 @@ Partial Class Main
         Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
         Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 867)
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
@@ -3495,7 +3560,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -3505,7 +3570,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -3697,11 +3762,13 @@ Partial Class Main
         Me.pnlScrollableSurface.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tabFlightPlan.ResumeLayout(False)
-        Me.tabFlightPlan.PerformLayout()
         Me.pnlGuide.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
+        Me.pnlFlightPlanLeftSide.ResumeLayout(False)
+        Me.pnlFlightPlanLeftSide.PerformLayout()
         Me.grbTaskInfo.ResumeLayout(False)
         Me.grbTaskInfo.PerformLayout()
+        Me.pnlFlightPlanRightSide.ResumeLayout(False)
         Me.grbTaskPart2.ResumeLayout(False)
         Me.grbTaskPart2.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
@@ -4026,4 +4093,7 @@ Partial Class Main
     Friend WithEvents GetNowCountdown As ToolStripMenuItem
     Friend WithEvents GetNowTimeStampOnly As ToolStripMenuItem
     Friend WithEvents pnlEventDateTimeControls As Panel
+    Friend WithEvents pnlFlightPlanLeftSide As Panel
+    Friend WithEvents pnlFlightPlanRightSide As Panel
+    Friend WithEvents FlightPlanTabSplitter As Splitter
 End Class
