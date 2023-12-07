@@ -2524,7 +2524,7 @@ Partial Class Main
         'TimeStampContextualMenu
         '
         Me.TimeStampContextualMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.TimeStampContextualMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetTimeStampTimeOnlyWithoutSeconds, Me.GetFullWithDayOfWeek, Me.GetLongDateTime, Me.GetCountdown, Me.GetTimeStampOnly})
+        Me.TimeStampContextualMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetFullWithDayOfWeek, Me.GetLongDateTime, Me.GetTimeStampTimeOnlyWithoutSeconds, Me.GetCountdown, Me.GetTimeStampOnly})
         Me.TimeStampContextualMenu.Name = "TimeStampContextualMenu"
         Me.TimeStampContextualMenu.ShowImageMargin = False
         Me.TimeStampContextualMenu.Size = New System.Drawing.Size(224, 124)
@@ -3701,7 +3701,7 @@ Partial Class Main
         '
         Me.toolStripCurrentDateTime.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.toolStripCurrentDateTime.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.toolStripCurrentDateTime.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetNowTimeOnlyWithoutSeconds, Me.GetNowFullWithDayOfWeek, Me.GetNowLongDateTime, Me.GetNowCountdown, Me.GetNowTimeStampOnly})
+        Me.toolStripCurrentDateTime.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GetNowFullWithDayOfWeek, Me.GetNowLongDateTime, Me.GetNowTimeOnlyWithoutSeconds, Me.GetNowCountdown, Me.GetNowTimeStampOnly})
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
