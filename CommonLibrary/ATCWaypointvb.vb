@@ -234,7 +234,7 @@ Public Class ATCWaypoint
                                                 Math.Round(Conversions.FeetToMeters(_MaxAlt), 0)
                                                 )
                         Case AltitudeUnits.Imperial
-                            strRestrictions = String.Format("{0}Between {1}' and {2}')",
+                            strRestrictions = String.Format("{0}Between {1}' and {2}'",
                                                 prefix,
                                                 _MinAlt,
                                                 _MaxAlt
