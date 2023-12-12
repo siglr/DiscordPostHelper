@@ -2954,6 +2954,9 @@ Public Class Main
         sb.AppendLine($"## {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time")
         sb.AppendLine()
 
+        If txtEventTitle.Text = String.Empty Then
+            txtEventTitle.Text = txtTitle.Text
+        End If
         If txtEventTitle.Text <> String.Empty Then
             If cboGroupOrClubName.SelectedIndex > -1 Then
                 sb.Append($"# {_ClubPreset.ClubName} - ")

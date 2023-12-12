@@ -94,7 +94,9 @@
     <Compile Include="UpdaterForm.Designer.vb">
       <DependentUpon>UpdaterForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="UpdaterForm.vb" />
+    <Compile Include="UpdaterForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WaitingToCloseApp.Designer.vb">
       <DependentUpon>WaitingToCloseApp.vb</DependentUpon>
     </Compile>
