@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.6.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.12.1</ReleaseVersion>
+      <ReleaseTitle>Small bug fixes</ReleaseTitle>
+      <ReleaseNotes>
+        A few small bug (annoyances) fixes
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.6.2</ReleaseVersion>
       <ReleaseTitle>Fixed difficulty ratings</ReleaseTitle>

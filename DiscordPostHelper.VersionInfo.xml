@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.6.2</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.12.1</ReleaseVersion>
+      <ReleaseTitle>Scaling and resizing</ReleaseTitle>
+      <ReleaseNotes>
+        Fix rendering size with 125% scale on 1080 resolution.
+        Added splitter on the Flight Plan tab for easy resizing of left and right parts.
+        Reordered the timestamps menu items from the longest to the shortest format.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.6.2</ReleaseVersion>
       <ReleaseTitle>Several unrelated fixes and updates</ReleaseTitle>
