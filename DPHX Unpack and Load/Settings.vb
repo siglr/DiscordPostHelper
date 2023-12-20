@@ -29,6 +29,10 @@ Public Class Settings
             validSettings = False
             sbMsg.AppendLine("Invalid folder path for DPHX files")
         End If
+        If Not Directory.Exists(btnNB21IGCFolder.Text) Then
+            validSettings = False
+            sbMsg.AppendLine("Invalid folder path for NB21 IGC files")
+        End If
 
         If Not validSettings Then
             Using New Centered_MessageBox(Me)
@@ -42,6 +46,7 @@ Public Class Settings
             SessionSettings.XCSoarMapsFolder = btnXCSoarMapsFolder.Text
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
             SessionSettings.PackagesFolder = btnPackagesFolder.Text
+            SessionSettings.NB21IGCFolder = btnNB21IGCFolder.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
             SessionSettings.ExcludeFlightPlanFromCleanup = chkExcludeFlightPlanFromCleanup.Checked
             SessionSettings.ExcludeWeatherFileFromCleanup = chkExcludeWeatherFileFromCleanup.Checked
@@ -134,7 +139,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnPackagesFolder_Click(sender As Object, e As EventArgs) Handles btnPackagesFolder.Click
-        FolderBrowserDialog1.Description = "Please select the folder where to your DPHX packages are stored"
+        FolderBrowserDialog1.Description = "Please select the folder where your DPHX packages are stored"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnPackagesFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnPackagesFolder.Text
@@ -146,6 +151,23 @@ Public Class Settings
             ' User selected a folder and clicked OK
             btnPackagesFolder.Text = FolderBrowserDialog1.SelectedPath
             ToolTip1.SetToolTip(btnPackagesFolder, FolderBrowserDialog1.SelectedPath)
+        End If
+
+    End Sub
+
+    Private Sub btnNB21IGCFolder_Click(sender As Object, e As EventArgs) Handles btnNB21IGCFolder.Click
+        FolderBrowserDialog1.Description = "Please select the folder where your NB21 Logger puts the IGC log files"
+        FolderBrowserDialog1.ShowNewFolderButton = True
+        If Directory.Exists(btnNB21IGCFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnNB21IGCFolder.Text
+        Else
+            FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        End If
+
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+            ' User selected a folder and clicked OK
+            btnNB21IGCFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnNB21IGCFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
     End Sub
@@ -274,6 +296,21 @@ Public Class Settings
 
     End Sub
 
+    Private Sub btnNB21IGCFolderPaste_Click(sender As Object, e As EventArgs) Handles btnNB21IGCFolderPaste.Click
+        Dim folderPath As String = Clipboard.GetText()
+        If Directory.Exists(folderPath) Then
+            ' folderPath is a valid folder
+            btnNB21IGCFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnNB21IGCFolder, folderPath)
+        Else
+            ' folderPath is not a valid folder
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         okCancelPanel.Top = Me.Height - 103
@@ -293,6 +330,10 @@ Public Class Settings
         If Directory.Exists(SessionSettings.PackagesFolder) Then
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
+        End If
+        If Directory.Exists(SessionSettings.NB21IGCFolder) Then
+            btnNB21IGCFolder.Text = SessionSettings.NB21IGCFolder
+            ToolTip1.SetToolTip(btnNB21IGCFolder, SessionSettings.NB21IGCFolder)
         End If
         If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
             btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
@@ -320,7 +361,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnFlightPlanFilesFolder.MouseUp, btnWeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnFlightPlanFilesFolder.MouseUp, btnWeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)

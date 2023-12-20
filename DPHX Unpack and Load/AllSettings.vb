@@ -91,6 +91,19 @@ Public Class AllSettings
         End Set
     End Property
 
+    Private _NB21IGCFolder As String
+    <XmlElement("NB21IGCFolder")>
+    Public Property NB21IGCFolder As String
+        Get
+            Return _NB21IGCFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _NB21IGCFolder = value
+            End If
+        End Set
+    End Property
+
     <XmlElement("AutoOverwriteFiles")>
     Public Property AutoOverwriteFiles As AutoOverwriteOptions
 
@@ -149,6 +162,7 @@ Public Class AllSettings
             _XCSoarMapsFolder = settingsInFile.XCSoarMapsFolder
             _UnpackingFolder = settingsInFile.UnpackingFolder
             _PackagesFolder = settingsInFile.PackagesFolder
+            _NB21IGCFolder = settingsInFile.NB21IGCFolder
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles

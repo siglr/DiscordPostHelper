@@ -82,7 +82,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings, Me.ToolStripButton2})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(996, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 8
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -92,7 +92,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPHX pacage from your PC."
         '
@@ -232,7 +232,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStatusOK, Me.toolStatusStop, Me.toolStatusWarning, Me.lblAllFilesStatus})
         Me.ToolStrip2.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip2.Name = "ToolStrip2"
-        Me.ToolStrip2.Size = New System.Drawing.Size(996, 25)
+        Me.ToolStrip2.Size = New System.Drawing.Size(996, 29)
         Me.ToolStrip2.TabIndex = 0
         Me.ToolStrip2.Text = "ToolStrip2"
         '

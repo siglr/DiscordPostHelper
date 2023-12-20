@@ -440,6 +440,89 @@ Public Class SupportingFeatures
 
     End Sub
 
+    Public Sub UploadTextFile(folderName As String, fileName As String, textContent As String)
+
+        Dim request As WebRequest = WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveTextFileUnderTempFolder.php")
+        request.Method = "POST"
+        Dim postData As String = $"textContent={HttpUtility.UrlEncode(textContent)}&folderName={HttpUtility.UrlEncode(folderName)}&fileName={HttpUtility.UrlEncode(fileName)}"
+        Dim byteArray As Byte() = Encoding.UTF8.GetBytes(postData)
+        request.ContentType = "application/x-www-form-urlencoded"
+        request.ContentLength = byteArray.Length
+        Using dataStream As Stream = request.GetRequestStream()
+            dataStream.Write(byteArray, 0, byteArray.Length)
+        End Using
+
+        Using response As WebResponse = request.GetResponse()
+            Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)
+            Using reader As New StreamReader(response.GetResponseStream())
+                Dim responseFromServer As String = reader.ReadToEnd()
+                Console.WriteLine(responseFromServer)
+            End Using
+        End Using
+    End Sub
+
+
+    Public Sub UploadDirectFile(folderName As String, filePath As String)
+
+        Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveDirectFileUnderTempFolder.php"), HttpWebRequest)
+        request.Method = "POST"
+
+        ' Boundary string and content type for multipart/form-data
+        Dim boundary As String = "---------------------------" + DateTime.Now.Ticks.ToString("x")
+        request.ContentType = "multipart/form-data; boundary=" + boundary
+
+        ' Start preparing the request body
+        Dim requestBody As New StringBuilder()
+
+        ' Add folderName part
+        requestBody.AppendLine("--" + boundary)
+        requestBody.AppendLine("Content-Disposition: form-data; name=""folderName""")
+        requestBody.AppendLine()
+        requestBody.AppendLine(HttpUtility.UrlEncode(folderName))
+
+        ' Add fileName part
+        Dim fileName As String = Path.GetFileName(filePath)
+        requestBody.AppendLine("--" + boundary)
+        requestBody.AppendLine($"Content-Disposition: form-data; name=""fileName""")
+        requestBody.AppendLine()
+        requestBody.AppendLine(HttpUtility.UrlEncode(fileName))
+
+        ' Add file content part
+        requestBody.AppendLine("--" + boundary)
+        requestBody.AppendLine($"Content-Disposition: form-data; name=""file""; filename=""{fileName}""")
+        requestBody.AppendLine("Content-Type: application/octet-stream")
+        requestBody.AppendLine()
+
+        Dim postHeader As String = requestBody.ToString()
+        Dim postHeaderBytes As Byte() = Encoding.UTF8.GetBytes(postHeader)
+
+        ' Get the file content
+        Dim fileContent As Byte() = File.ReadAllBytes(filePath)
+        Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" + boundary + "--" + vbCrLf)
+
+        ' Calculate the total length of the request body
+        Dim contentLength As Long = postHeaderBytes.Length + fileContent.Length + boundaryBytes.Length
+
+        ' Set the content length of the request
+        request.ContentLength = contentLength
+
+        ' Write data to the request stream
+        Using requestStream As Stream = request.GetRequestStream()
+            requestStream.Write(postHeaderBytes, 0, postHeaderBytes.Length)
+            requestStream.Write(fileContent, 0, fileContent.Length)
+            requestStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+        End Using
+
+        ' Get the response from the server
+        Using response As WebResponse = request.GetResponse()
+            Using reader As New StreamReader(response.GetResponseStream())
+                Dim responseFromServer As String = reader.ReadToEnd()
+                Console.WriteLine(responseFromServer)
+            End Using
+        End Using
+
+    End Sub
+
     Public Sub DeleteTempFile(ByVal fileName As String)
 
         Dim request As HttpWebRequest = CType(WebRequest.Create($"https://siglr.com/DiscordPostHelper/DeleteTempFolder.php?folder={fileName}"), HttpWebRequest)
@@ -1348,9 +1431,12 @@ Public Class SupportingFeatures
     End Function
 
     Public Sub OpenB21Planner(Optional pFlightplanFilename As String = "",
-                              Optional pFlightplanXML As String = "",
-                              Optional pWeatherFilename As String = "",
-                              Optional pWeatherXML As String = "")
+                          Optional pFlightplanXML As String = "",
+                          Optional pWeatherFilename As String = "",
+                          Optional pWeatherXML As String = "",
+                          Optional pNB21IGCFolder As String = "")
+
+        Dim firstPartURL As String = "https://siglr.com/DiscordPostHelper/FlightPlans/"
 
         If pFlightplanFilename = String.Empty Then
             Process.Start(B21PlannerURL)
@@ -1358,21 +1444,46 @@ Public Class SupportingFeatures
         End If
 
         Dim tempFolderName As String = GenerateRandomFileName()
+        Dim urlsList As New StringBuilder()
 
-        Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
-        UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
-
-        If pWeatherFilename = String.Empty Then
-            Process.Start($"{B21PlannerURL}?pln=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{flightPlanFilename}")
-        Else
-            Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
-            UploadFile(tempFolderName, weatherFilename, pWeatherXML)
-            Process.Start($"{B21PlannerURL}?pln=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{flightPlanFilename}&wpr=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/{weatherFilename}")
+        ' Upload flight plan and append URL
+        If pFlightplanFilename <> String.Empty Then
+            Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
+            UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
+            urlsList.AppendLine($"{firstPartURL}{tempFolderName}/{flightPlanFilename}")
         End If
 
-        'Wait 5 seconds
-        Thread.Sleep(5000)
-        DeleteTempFile(tempFolderName)
+        ' Upload weather file and append URL
+        If pWeatherFilename <> String.Empty Then
+            Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
+            UploadFile(tempFolderName, weatherFilename, pWeatherXML)
+            urlsList.AppendLine($"{firstPartURL}{tempFolderName}/{weatherFilename}")
+        End If
+
+        ' Upload IGC files and append URLs
+        If pNB21IGCFolder <> String.Empty AndAlso Directory.Exists(pNB21IGCFolder) Then
+            Dim searchPattern As String = $"*_{Path.GetFileNameWithoutExtension(pFlightplanFilename)}.igc"
+            Dim files As String() = Directory.GetFiles(pNB21IGCFolder, searchPattern)
+            For i As Integer = 0 To files.Length - 1
+                Dim file As String = files(i)
+                UploadDirectFile(tempFolderName, file)
+
+                ' Append the URL
+                urlsList.Append($"{firstPartURL}{tempFolderName}/{Path.GetFileName(file)}")
+
+                ' Add a Unix-style newline (LF) except for the last URL
+                If i < files.Length - 1 Then
+                    urlsList.Append(vbLf) ' Unix-style line break
+                End If
+            Next
+        End If
+
+        ' Write the URLs to a text file
+        UploadTextFile(tempFolderName, "listoffiles.comp", urlsList.ToString())
+
+        ' Launch B21PlannerURL with the text file URL
+        Dim processStartString As String = $"{B21PlannerURL}?comp=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/listoffiles.comp"
+        Process.Start(processStartString)
 
     End Sub
 

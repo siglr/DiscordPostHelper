@@ -27,6 +27,7 @@ Partial Class Settings
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.pnlFlightPlanFilesFolder = New System.Windows.Forms.Panel()
+        Me.chkExcludeFlightPlanFromCleanup = New System.Windows.Forms.CheckBox()
         Me.btnFlightPlansFolderPaste = New System.Windows.Forms.Button()
         Me.btnFlightPlanFilesFolder = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -45,6 +46,9 @@ Partial Class Settings
         Me.btnXCSoarTasksFolder = New System.Windows.Forms.Button()
         Me.btnXCSoarMapsFolderPaste = New System.Windows.Forms.Button()
         Me.btnXCSoarMapsFolder = New System.Windows.Forms.Button()
+        Me.chkExcludeWeatherFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.chkExcludeXCSoarTaskFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.chkExcludeXCSoarMapFileFromCleanup = New System.Windows.Forms.CheckBox()
         Me.pblWeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -54,6 +58,9 @@ Partial Class Settings
         Me.Label3 = New System.Windows.Forms.Label()
         Me.pnlPackagesFolder = New System.Windows.Forms.Panel()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.pnlNB21LoggerFlightsFolder = New System.Windows.Forms.Panel()
+        Me.btnNB21IGCFolderPaste = New System.Windows.Forms.Button()
+        Me.btnNB21IGCFolder = New System.Windows.Forms.Button()
         Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.pnlAutoUnpack = New System.Windows.Forms.Panel()
@@ -61,16 +68,14 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlXCSoarMapsFolder = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.chkExcludeFlightPlanFromCleanup = New System.Windows.Forms.CheckBox()
-        Me.chkExcludeWeatherFileFromCleanup = New System.Windows.Forms.CheckBox()
-        Me.chkExcludeXCSoarTaskFileFromCleanup = New System.Windows.Forms.CheckBox()
-        Me.chkExcludeXCSoarMapFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
         Me.pnlXCSoarTasksFolder.SuspendLayout()
         Me.pnlUnpackingFolder.SuspendLayout()
         Me.pnlPackagesFolder.SuspendLayout()
+        Me.pnlNB21LoggerFlightsFolder.SuspendLayout()
         Me.pnlAutoOverwrite.SuspendLayout()
         Me.pnlAutoUnpack.SuspendLayout()
         Me.pnlXCSoarMapsFolder.SuspendLayout()
@@ -84,7 +89,7 @@ Partial Class Settings
         Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.okCancelPanel.Controls.Add(Me.OK_Button, 0, 0)
         Me.okCancelPanel.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.okCancelPanel.Location = New System.Drawing.Point(587, 411)
+        Me.okCancelPanel.Location = New System.Drawing.Point(587, 425)
         Me.okCancelPanel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.okCancelPanel.Name = "okCancelPanel"
         Me.okCancelPanel.RowCount = 1
@@ -125,6 +130,16 @@ Partial Class Settings
         Me.pnlFlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlFlightPlanFilesFolder.Size = New System.Drawing.Size(782, 45)
         Me.pnlFlightPlanFilesFolder.TabIndex = 0
+        '
+        'chkExcludeFlightPlanFromCleanup
+        '
+        Me.chkExcludeFlightPlanFromCleanup.AutoSize = True
+        Me.chkExcludeFlightPlanFromCleanup.Location = New System.Drawing.Point(683, 18)
+        Me.chkExcludeFlightPlanFromCleanup.Name = "chkExcludeFlightPlanFromCleanup"
+        Me.chkExcludeFlightPlanFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeFlightPlanFromCleanup.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.chkExcludeFlightPlanFromCleanup, "Check this to exclude flight plan files from cleanup")
+        Me.chkExcludeFlightPlanFromCleanup.UseVisualStyleBackColor = True
         '
         'btnFlightPlansFolderPaste
         '
@@ -346,6 +361,36 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolder, "Select the folder containing XCSoar maps (.xcm) (optional)")
         Me.btnXCSoarMapsFolder.UseVisualStyleBackColor = True
         '
+        'chkExcludeWeatherFileFromCleanup
+        '
+        Me.chkExcludeWeatherFileFromCleanup.AutoSize = True
+        Me.chkExcludeWeatherFileFromCleanup.Location = New System.Drawing.Point(683, 16)
+        Me.chkExcludeWeatherFileFromCleanup.Name = "chkExcludeWeatherFileFromCleanup"
+        Me.chkExcludeWeatherFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeWeatherFileFromCleanup.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.chkExcludeWeatherFileFromCleanup, "Check this to exclude weather files from cleanup")
+        Me.chkExcludeWeatherFileFromCleanup.UseVisualStyleBackColor = True
+        '
+        'chkExcludeXCSoarTaskFileFromCleanup
+        '
+        Me.chkExcludeXCSoarTaskFileFromCleanup.AutoSize = True
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(683, 18)
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarTaskFileFromCleanup, "Check this to exclude XCSoar task files from cleanup")
+        Me.chkExcludeXCSoarTaskFileFromCleanup.UseVisualStyleBackColor = True
+        '
+        'chkExcludeXCSoarMapFileFromCleanup
+        '
+        Me.chkExcludeXCSoarMapFileFromCleanup.AutoSize = True
+        Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(683, 16)
+        Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
+        Me.chkExcludeXCSoarMapFileFromCleanup.Size = New System.Drawing.Size(15, 14)
+        Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarMapFileFromCleanup, "Check this to exclude XCSoar map files from cleanup")
+        Me.chkExcludeXCSoarMapFileFromCleanup.UseVisualStyleBackColor = True
+        '
         'pblWeatherPresetsFolder
         '
         Me.pblWeatherPresetsFolder.Controls.Add(Me.chkExcludeWeatherFileFromCleanup)
@@ -478,7 +523,7 @@ Partial Class Settings
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 401)
+        Me.Label7.Location = New System.Drawing.Point(12, 415)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(269, 60)
         Me.Label7.TabIndex = 8
@@ -507,45 +552,53 @@ Partial Class Settings
         Me.Label9.TabIndex = 3
         Me.Label9.Text = "XCSoar Maps Folder:"
         '
-        'chkExcludeFlightPlanFromCleanup
+        'pnlNB21LoggerFlightsFolder
         '
-        Me.chkExcludeFlightPlanFromCleanup.AutoSize = True
-        Me.chkExcludeFlightPlanFromCleanup.Location = New System.Drawing.Point(683, 18)
-        Me.chkExcludeFlightPlanFromCleanup.Name = "chkExcludeFlightPlanFromCleanup"
-        Me.chkExcludeFlightPlanFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeFlightPlanFromCleanup.TabIndex = 3
-        Me.ToolTip1.SetToolTip(Me.chkExcludeFlightPlanFromCleanup, "Check this to exclude flight plan files from cleanup")
-        Me.chkExcludeFlightPlanFromCleanup.UseVisualStyleBackColor = True
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolderPaste)
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolder)
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.Label10)
+        Me.pnlNB21LoggerFlightsFolder.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlNB21LoggerFlightsFolder.Location = New System.Drawing.Point(0, 360)
+        Me.pnlNB21LoggerFlightsFolder.Name = "pnlNB21LoggerFlightsFolder"
+        Me.pnlNB21LoggerFlightsFolder.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(782, 45)
+        Me.pnlNB21LoggerFlightsFolder.TabIndex = 10
         '
-        'chkExcludeWeatherFileFromCleanup
+        'btnNB21IGCFolderPaste
         '
-        Me.chkExcludeWeatherFileFromCleanup.AutoSize = True
-        Me.chkExcludeWeatherFileFromCleanup.Location = New System.Drawing.Point(683, 16)
-        Me.chkExcludeWeatherFileFromCleanup.Name = "chkExcludeWeatherFileFromCleanup"
-        Me.chkExcludeWeatherFileFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeWeatherFileFromCleanup.TabIndex = 4
-        Me.ToolTip1.SetToolTip(Me.chkExcludeWeatherFileFromCleanup, "Check this to exclude weather files from cleanup")
-        Me.chkExcludeWeatherFileFromCleanup.UseVisualStyleBackColor = True
+        Me.btnNB21IGCFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(704, 4)
+        Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
+        Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnNB21IGCFolderPaste.TabIndex = 2
+        Me.btnNB21IGCFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btnNB21IGCFolderPaste.UseVisualStyleBackColor = True
         '
-        'chkExcludeXCSoarTaskFileFromCleanup
+        'btnNB21IGCFolder
         '
-        Me.chkExcludeXCSoarTaskFileFromCleanup.AutoSize = True
-        Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(683, 18)
-        Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
-        Me.chkExcludeXCSoarTaskFileFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarTaskFileFromCleanup, "Check this to exclude XCSoar task files from cleanup")
-        Me.chkExcludeXCSoarTaskFileFromCleanup.UseVisualStyleBackColor = True
+        Me.btnNB21IGCFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolder.AutoEllipsis = True
+        Me.btnNB21IGCFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnNB21IGCFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
+        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnNB21IGCFolder.TabIndex = 1
+        Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files"
+        Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolder, "Select the folder containing the logger flights IGC files")
+        Me.btnNB21IGCFolder.UseVisualStyleBackColor = True
         '
-        'chkExcludeXCSoarMapFileFromCleanup
+        'Label10
         '
-        Me.chkExcludeXCSoarMapFileFromCleanup.AutoSize = True
-        Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(683, 16)
-        Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
-        Me.chkExcludeXCSoarMapFileFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarMapFileFromCleanup, "Check this to exclude XCSoar map files from cleanup")
-        Me.chkExcludeXCSoarMapFileFromCleanup.UseVisualStyleBackColor = True
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(5, 12)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(165, 20)
+        Me.Label10.TabIndex = 0
+        Me.Label10.Text = "NB21 Log Flights Folder:"
         '
         'Settings
         '
@@ -553,11 +606,12 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(782, 470)
+        Me.ClientSize = New System.Drawing.Size(782, 484)
         Me.ControlBox = False
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
+        Me.Controls.Add(Me.pnlNB21LoggerFlightsFolder)
         Me.Controls.Add(Me.pnlPackagesFolder)
         Me.Controls.Add(Me.pnlUnpackingFolder)
         Me.Controls.Add(Me.pnlXCSoarMapsFolder)
@@ -569,7 +623,7 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 514)
+        Me.MaximumSize = New System.Drawing.Size(5000, 528)
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(700, 408)
         Me.Name = "Settings"
@@ -594,6 +648,8 @@ Partial Class Settings
         Me.pnlAutoUnpack.PerformLayout()
         Me.pnlXCSoarMapsFolder.ResumeLayout(False)
         Me.pnlXCSoarMapsFolder.PerformLayout()
+        Me.pnlNB21LoggerFlightsFolder.ResumeLayout(False)
+        Me.pnlNB21LoggerFlightsFolder.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -640,4 +696,8 @@ Partial Class Settings
     Friend WithEvents chkExcludeWeatherFileFromCleanup As CheckBox
     Friend WithEvents chkExcludeXCSoarTaskFileFromCleanup As CheckBox
     Friend WithEvents chkExcludeXCSoarMapFileFromCleanup As CheckBox
+    Friend WithEvents pnlNB21LoggerFlightsFolder As Panel
+    Friend WithEvents btnNB21IGCFolderPaste As Button
+    Friend WithEvents btnNB21IGCFolder As Button
+    Friend WithEvents Label10 As Label
 End Class

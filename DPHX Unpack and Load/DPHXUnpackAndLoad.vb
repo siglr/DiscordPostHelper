@@ -214,6 +214,10 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles toolStripB21Planner.Click
 
+        If _allDPHData Is Nothing Then
+            Exit Sub
+        End If
+
         Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
         Dim weatherFilename As String = String.Empty
 
@@ -224,9 +228,9 @@ Public Class DPHXUnpackAndLoad
         If flightplanFilename Is String.Empty Then
         Else
             If weatherFilename = String.Empty OrElse ctrlBriefing.WeatherProfileInnerXML = String.Empty Then
-                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML)
+                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML, String.Empty, String.Empty, Settings.SessionSettings.NB21IGCFolder)
             Else
-                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML, weatherFilename, ctrlBriefing.WeatherProfileInnerXML)
+                _SF.OpenB21Planner(flightplanFilename, ctrlBriefing.FlightPlanInnerXML, weatherFilename, ctrlBriefing.WeatherProfileInnerXML, Settings.SessionSettings.NB21IGCFolder)
             End If
 
         End If
