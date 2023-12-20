@@ -1436,7 +1436,7 @@ Public Class SupportingFeatures
                           Optional pWeatherXML As String = "",
                           Optional pNB21IGCFolder As String = "")
 
-        Dim firstPartURL As String = "https://siglr.com/DiscordPostHelper/FlightPlans/"
+        Dim firstPartURL As String = "siglr.com/DiscordPostHelper/FlightPlans/"
 
         If pFlightplanFilename = String.Empty Then
             Process.Start(B21PlannerURL)
@@ -1450,14 +1450,14 @@ Public Class SupportingFeatures
         If pFlightplanFilename <> String.Empty Then
             Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
             UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
-            urlsList.AppendLine($"{firstPartURL}{tempFolderName}/{flightPlanFilename}")
+            urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{flightPlanFilename}")
         End If
 
         ' Upload weather file and append URL
         If pWeatherFilename <> String.Empty Then
             Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
             UploadFile(tempFolderName, weatherFilename, pWeatherXML)
-            urlsList.AppendLine($"{firstPartURL}{tempFolderName}/{weatherFilename}")
+            urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{weatherFilename}")
         End If
 
         ' Upload IGC files and append URLs
@@ -1469,7 +1469,7 @@ Public Class SupportingFeatures
                 UploadDirectFile(tempFolderName, file)
 
                 ' Append the URL
-                urlsList.Append($"{firstPartURL}{tempFolderName}/{Path.GetFileName(file)}")
+                urlsList.Append($"https://{firstPartURL}{tempFolderName}/{Path.GetFileName(file)}")
 
                 ' Add a Unix-style newline (LF) except for the last URL
                 If i < files.Length - 1 Then
@@ -1482,7 +1482,12 @@ Public Class SupportingFeatures
         UploadTextFile(tempFolderName, "listoffiles.comp", urlsList.ToString())
 
         ' Launch B21PlannerURL with the text file URL
-        Dim processStartString As String = $"{B21PlannerURL}?comp=siglr.com/DiscordPostHelper/FlightPlans/{tempFolderName}/listoffiles.comp"
+        Dim processStartString As String
+        If pWeatherFilename <> String.Empty Then
+            processStartString = $"{B21PlannerURL}?wpr={firstPartURL}{tempFolderName}/{Path.GetFileName(pWeatherFilename)}&comp={firstPartURL}{tempFolderName}/listoffiles.comp"
+        Else
+            processStartString = $"{B21PlannerURL}?comp={firstPartURL}{tempFolderName}/listoffiles.comp"
+        End If
         Process.Start(processStartString)
 
     End Sub
