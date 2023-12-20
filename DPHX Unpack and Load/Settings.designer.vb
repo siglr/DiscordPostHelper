@@ -49,6 +49,8 @@ Partial Class Settings
         Me.chkExcludeWeatherFileFromCleanup = New System.Windows.Forms.CheckBox()
         Me.chkExcludeXCSoarTaskFileFromCleanup = New System.Windows.Forms.CheckBox()
         Me.chkExcludeXCSoarMapFileFromCleanup = New System.Windows.Forms.CheckBox()
+        Me.btnNB21IGCFolderPaste = New System.Windows.Forms.Button()
+        Me.btnNB21IGCFolder = New System.Windows.Forms.Button()
         Me.pblWeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -59,8 +61,7 @@ Partial Class Settings
         Me.pnlPackagesFolder = New System.Windows.Forms.Panel()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnlNB21LoggerFlightsFolder = New System.Windows.Forms.Panel()
-        Me.btnNB21IGCFolderPaste = New System.Windows.Forms.Button()
-        Me.btnNB21IGCFolder = New System.Windows.Forms.Button()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.pnlAutoUnpack = New System.Windows.Forms.Panel()
@@ -68,7 +69,6 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlXCSoarMapsFolder = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
@@ -391,6 +391,33 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarMapFileFromCleanup, "Check this to exclude XCSoar map files from cleanup")
         Me.chkExcludeXCSoarMapFileFromCleanup.UseVisualStyleBackColor = True
         '
+        'btnNB21IGCFolderPaste
+        '
+        Me.btnNB21IGCFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(704, 4)
+        Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
+        Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnNB21IGCFolderPaste.TabIndex = 2
+        Me.btnNB21IGCFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btnNB21IGCFolderPaste.UseVisualStyleBackColor = True
+        '
+        'btnNB21IGCFolder
+        '
+        Me.btnNB21IGCFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolder.AutoEllipsis = True
+        Me.btnNB21IGCFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnNB21IGCFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
+        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnNB21IGCFolder.TabIndex = 1
+        Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files"
+        Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolder, "Select the folder containing the logger flights IGC files")
+        Me.btnNB21IGCFolder.UseVisualStyleBackColor = True
+        '
         'pblWeatherPresetsFolder
         '
         Me.pblWeatherPresetsFolder.Controls.Add(Me.chkExcludeWeatherFileFromCleanup)
@@ -477,6 +504,27 @@ Partial Class Settings
         Me.Label5.TabIndex = 0
         Me.Label5.Text = "DPHX Packages Folder:"
         '
+        'pnlNB21LoggerFlightsFolder
+        '
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolderPaste)
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolder)
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.Label10)
+        Me.pnlNB21LoggerFlightsFolder.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlNB21LoggerFlightsFolder.Location = New System.Drawing.Point(0, 270)
+        Me.pnlNB21LoggerFlightsFolder.Name = "pnlNB21LoggerFlightsFolder"
+        Me.pnlNB21LoggerFlightsFolder.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(782, 45)
+        Me.pnlNB21LoggerFlightsFolder.TabIndex = 10
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(5, 12)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(165, 20)
+        Me.Label10.TabIndex = 0
+        Me.Label10.Text = "NB21 Log Flights Folder:"
+        '
         'pnlAutoOverwrite
         '
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysAsk)
@@ -484,7 +532,7 @@ Partial Class Settings
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
         Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
         Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 270)
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 315)
         Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
         Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoOverwrite.Size = New System.Drawing.Size(782, 45)
@@ -504,7 +552,7 @@ Partial Class Settings
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 315)
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 360)
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoUnpack.Size = New System.Drawing.Size(782, 45)
@@ -552,54 +600,6 @@ Partial Class Settings
         Me.Label9.TabIndex = 3
         Me.Label9.Text = "XCSoar Maps Folder:"
         '
-        'pnlNB21LoggerFlightsFolder
-        '
-        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolderPaste)
-        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolder)
-        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.Label10)
-        Me.pnlNB21LoggerFlightsFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNB21LoggerFlightsFolder.Location = New System.Drawing.Point(0, 360)
-        Me.pnlNB21LoggerFlightsFolder.Name = "pnlNB21LoggerFlightsFolder"
-        Me.pnlNB21LoggerFlightsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(782, 45)
-        Me.pnlNB21LoggerFlightsFolder.TabIndex = 10
-        '
-        'btnNB21IGCFolderPaste
-        '
-        Me.btnNB21IGCFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(704, 4)
-        Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
-        Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 37)
-        Me.btnNB21IGCFolderPaste.TabIndex = 2
-        Me.btnNB21IGCFolderPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
-        Me.btnNB21IGCFolderPaste.UseVisualStyleBackColor = True
-        '
-        'btnNB21IGCFolder
-        '
-        Me.btnNB21IGCFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21IGCFolder.AutoEllipsis = True
-        Me.btnNB21IGCFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnNB21IGCFolder.Location = New System.Drawing.Point(176, 4)
-        Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
-        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(522, 37)
-        Me.btnNB21IGCFolder.TabIndex = 1
-        Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files"
-        Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolder, "Select the folder containing the logger flights IGC files")
-        Me.btnNB21IGCFolder.UseVisualStyleBackColor = True
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(5, 12)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(165, 20)
-        Me.Label10.TabIndex = 0
-        Me.Label10.Text = "NB21 Log Flights Folder:"
-        '
         'Settings
         '
         Me.AcceptButton = Me.OK_Button
@@ -625,7 +625,7 @@ Partial Class Settings
         Me.MaximizeBox = False
         Me.MaximumSize = New System.Drawing.Size(5000, 528)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(700, 408)
+        Me.MinimumSize = New System.Drawing.Size(700, 528)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
@@ -642,14 +642,14 @@ Partial Class Settings
         Me.pnlUnpackingFolder.PerformLayout()
         Me.pnlPackagesFolder.ResumeLayout(False)
         Me.pnlPackagesFolder.PerformLayout()
+        Me.pnlNB21LoggerFlightsFolder.ResumeLayout(False)
+        Me.pnlNB21LoggerFlightsFolder.PerformLayout()
         Me.pnlAutoOverwrite.ResumeLayout(False)
         Me.pnlAutoOverwrite.PerformLayout()
         Me.pnlAutoUnpack.ResumeLayout(False)
         Me.pnlAutoUnpack.PerformLayout()
         Me.pnlXCSoarMapsFolder.ResumeLayout(False)
         Me.pnlXCSoarMapsFolder.PerformLayout()
-        Me.pnlNB21LoggerFlightsFolder.ResumeLayout(False)
-        Me.pnlNB21LoggerFlightsFolder.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
