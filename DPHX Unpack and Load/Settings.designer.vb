@@ -89,7 +89,7 @@ Partial Class Settings
         Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.okCancelPanel.Controls.Add(Me.OK_Button, 0, 0)
         Me.okCancelPanel.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.okCancelPanel.Location = New System.Drawing.Point(587, 425)
+        Me.okCancelPanel.Location = New System.Drawing.Point(587, 399)
         Me.okCancelPanel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.okCancelPanel.Name = "okCancelPanel"
         Me.okCancelPanel.RowCount = 1
@@ -133,6 +133,7 @@ Partial Class Settings
         '
         'chkExcludeFlightPlanFromCleanup
         '
+        Me.chkExcludeFlightPlanFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeFlightPlanFromCleanup.AutoSize = True
         Me.chkExcludeFlightPlanFromCleanup.Location = New System.Drawing.Point(683, 18)
         Me.chkExcludeFlightPlanFromCleanup.Name = "chkExcludeFlightPlanFromCleanup"
@@ -363,6 +364,7 @@ Partial Class Settings
         '
         'chkExcludeWeatherFileFromCleanup
         '
+        Me.chkExcludeWeatherFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeWeatherFileFromCleanup.AutoSize = True
         Me.chkExcludeWeatherFileFromCleanup.Location = New System.Drawing.Point(683, 16)
         Me.chkExcludeWeatherFileFromCleanup.Name = "chkExcludeWeatherFileFromCleanup"
@@ -373,6 +375,7 @@ Partial Class Settings
         '
         'chkExcludeXCSoarTaskFileFromCleanup
         '
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeXCSoarTaskFileFromCleanup.AutoSize = True
         Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(683, 18)
         Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
@@ -383,6 +386,7 @@ Partial Class Settings
         '
         'chkExcludeXCSoarMapFileFromCleanup
         '
+        Me.chkExcludeXCSoarMapFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeXCSoarMapFileFromCleanup.AutoSize = True
         Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(683, 16)
         Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
@@ -571,7 +575,7 @@ Partial Class Settings
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 415)
+        Me.Label7.Location = New System.Drawing.Point(12, 389)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(269, 60)
         Me.Label7.TabIndex = 8

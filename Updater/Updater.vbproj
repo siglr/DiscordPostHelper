@@ -100,7 +100,9 @@
     <Compile Include="WaitingToCloseApp.Designer.vb">
       <DependentUpon>WaitingToCloseApp.vb</DependentUpon>
     </Compile>
-    <Compile Include="WaitingToCloseApp.vb" />
+    <Compile Include="WaitingToCloseApp.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
