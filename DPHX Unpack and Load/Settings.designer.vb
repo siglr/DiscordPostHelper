@@ -83,13 +83,13 @@ Partial Class Settings
         '
         'okCancelPanel
         '
-        Me.okCancelPanel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.okCancelPanel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.okCancelPanel.ColumnCount = 2
         Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.okCancelPanel.Controls.Add(Me.OK_Button, 0, 0)
         Me.okCancelPanel.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.okCancelPanel.Location = New System.Drawing.Point(587, 399)
+        Me.okCancelPanel.Location = New System.Drawing.Point(584, 459)
         Me.okCancelPanel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.okCancelPanel.Name = "okCancelPanel"
         Me.okCancelPanel.RowCount = 1
@@ -160,9 +160,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFlightPlanFilesFolder.AutoEllipsis = True
         Me.btnFlightPlanFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnFlightPlanFilesFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnFlightPlanFilesFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnFlightPlanFilesFolder.Name = "btnFlightPlanFilesFolder"
-        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(501, 37)
+        Me.btnFlightPlanFilesFolder.Size = New System.Drawing.Size(483, 37)
         Me.btnFlightPlanFilesFolder.TabIndex = 1
         Me.btnFlightPlanFilesFolder.Text = "Select the folder for the flight plan files (.pln)"
         Me.btnFlightPlanFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -185,9 +185,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWeatherPresetsFolder.AutoEllipsis = True
         Me.btnWeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnWeatherPresetsFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnWeatherPresetsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnWeatherPresetsFolder.Name = "btnWeatherPresetsFolder"
-        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(501, 37)
+        Me.btnWeatherPresetsFolder.Size = New System.Drawing.Size(483, 37)
         Me.btnWeatherPresetsFolder.TabIndex = 1
         Me.btnWeatherPresetsFolder.Text = "Select the MSFS folder containing weather presets (.wpr)"
         Me.btnWeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -201,9 +201,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnUnpackingFolder.AutoEllipsis = True
         Me.btnUnpackingFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnUnpackingFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnUnpackingFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnUnpackingFolder.Name = "btnUnpackingFolder"
-        Me.btnUnpackingFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnUnpackingFolder.Size = New System.Drawing.Size(504, 37)
         Me.btnUnpackingFolder.TabIndex = 1
         Me.btnUnpackingFolder.Text = "Select the folder where to temporary unpack DPHX packages"
         Me.btnUnpackingFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -213,7 +213,7 @@ Partial Class Settings
         'optOverwriteAlwaysOverwrite
         '
         Me.optOverwriteAlwaysOverwrite.AutoSize = True
-        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(176, 10)
+        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 10)
         Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
         Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
         Me.optOverwriteAlwaysOverwrite.TabIndex = 1
@@ -224,7 +224,7 @@ Partial Class Settings
         'optOverwriteAlwaysSkip
         '
         Me.optOverwriteAlwaysSkip.AutoSize = True
-        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(320, 10)
+        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 10)
         Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
         Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
         Me.optOverwriteAlwaysSkip.TabIndex = 2
@@ -236,7 +236,7 @@ Partial Class Settings
         '
         Me.optOverwriteAlwaysAsk.AutoSize = True
         Me.optOverwriteAlwaysAsk.Checked = True
-        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(429, 10)
+        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 10)
         Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
         Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
         Me.optOverwriteAlwaysAsk.TabIndex = 3
@@ -285,9 +285,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPackagesFolder.AutoEllipsis = True
         Me.btnPackagesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnPackagesFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnPackagesFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnPackagesFolder.Name = "btnPackagesFolder"
-        Me.btnPackagesFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnPackagesFolder.Size = New System.Drawing.Size(504, 37)
         Me.btnPackagesFolder.TabIndex = 1
         Me.btnPackagesFolder.Text = "Select the folder where your DPHX packages are stored"
         Me.btnPackagesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -299,7 +299,7 @@ Partial Class Settings
         Me.chkEnableAutoUnpack.AutoSize = True
         Me.chkEnableAutoUnpack.Checked = True
         Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(176, 11)
+        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(194, 8)
         Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
         Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
         Me.chkEnableAutoUnpack.TabIndex = 1
@@ -326,9 +326,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarTasksFolder.AutoEllipsis = True
         Me.btnXCSoarTasksFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnXCSoarTasksFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnXCSoarTasksFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnXCSoarTasksFolder.Name = "btnXCSoarTasksFolder"
-        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(501, 37)
+        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(483, 37)
         Me.btnXCSoarTasksFolder.TabIndex = 1
         Me.btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
         Me.btnXCSoarTasksFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -353,9 +353,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarMapsFolder.AutoEllipsis = True
         Me.btnXCSoarMapsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnXCSoarMapsFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnXCSoarMapsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnXCSoarMapsFolder.Name = "btnXCSoarMapsFolder"
-        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(501, 37)
+        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(483, 37)
         Me.btnXCSoarMapsFolder.TabIndex = 4
         Me.btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
         Me.btnXCSoarMapsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -413,9 +413,9 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21IGCFolder.AutoEllipsis = True
         Me.btnNB21IGCFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnNB21IGCFolder.Location = New System.Drawing.Point(176, 4)
+        Me.btnNB21IGCFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
-        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(522, 37)
+        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(504, 37)
         Me.btnNB21IGCFolder.TabIndex = 1
         Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files"
         Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -575,7 +575,7 @@ Partial Class Settings
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 389)
+        Me.Label7.Location = New System.Drawing.Point(9, 449)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(269, 60)
         Me.Label7.TabIndex = 8
@@ -610,7 +610,7 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(782, 484)
+        Me.ClientSize = New System.Drawing.Size(782, 518)
         Me.ControlBox = False
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.pnlAutoUnpack)
@@ -627,7 +627,7 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 528)
+        Me.MaximumSize = New System.Drawing.Size(5000, 700)
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(700, 528)
         Me.Name = "Settings"
