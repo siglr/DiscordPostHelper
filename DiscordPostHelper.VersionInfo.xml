@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.21.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.21.1</ReleaseVersion>
+      <ReleaseTitle>Optimization for B21 Online Task Planner</ReleaseTitle>
+      <ReleaseNotes>
+        Improvement in the way the B21 Online Task Planner is launched.
+        Staying in sync with the DPHX Unpack and Load tool (Briefing Tab).
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.12.1</ReleaseVersion>
       <ReleaseTitle>Scaling and resizing</ReleaseTitle>

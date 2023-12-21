@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.21.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.21.1</ReleaseVersion>
+      <ReleaseTitle>Support for IGC files</ReleaseTitle>
+      <ReleaseNotes>
+        New NB21 Logger folder in Settings.
+        Launching the B21 Online Task Planner now also loads any IGC files for the currently opened flight plan.
+        A few fixes for the Settings form.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.12.1</ReleaseVersion>
       <ReleaseTitle>Small bug fixes</ReleaseTitle>
