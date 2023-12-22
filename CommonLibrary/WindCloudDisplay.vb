@@ -337,6 +337,9 @@ Public Class WindCloudDisplay
 
     Private Function InterpolateAltitudePosition(altitudeInFeet As Single, altitudePositions As Dictionary(Of Integer, Single)) As Single
         ' Find the nearest upper and lower reference altitudes
+        If altitudeInFeet = 60000 Then
+            altitudeInFeet = 59999
+        End If
         Dim lowerAltitude As Integer = altitudePositions.Keys.Where(Function(alt) alt <= altitudeInFeet).Max()
         Dim upperAltitude As Integer = altitudePositions.Keys.Where(Function(alt) alt > altitudeInFeet).Min()
 
