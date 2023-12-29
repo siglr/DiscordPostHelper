@@ -542,7 +542,13 @@ Public Class BriefingControl
             sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature(PrefUnits)}\b0\line ")
             sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
             If _WeatherDetails.HasPrecipitations Then
-                sb.Append($"Precipitations: \b {_WeatherDetails.Precipitations}\b0\line ")
+                sb.Append($"The precipitations are: \b {_WeatherDetails.Precipitations}\b0\line ")
+            End If
+            If _WeatherDetails.HasSnowCover Then
+                sb.Append($"The snow cover is: \b {_WeatherDetails.SnowCover}\b0\line ")
+            End If
+            If _WeatherDetails.ThunderstormIntensity > 0 Then
+                sb.Append($"The lightning intensity is: \b {_WeatherDetails.ThunderstormIntensity}%\b0\line ")
             End If
 
             sb.Append("\line ")

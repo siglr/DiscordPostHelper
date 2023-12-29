@@ -9,6 +9,7 @@ Public Class WeatherDetails
     Private ReadOnly _Precipitations As Single
     Private ReadOnly _PrecipitationType As String
     Private ReadOnly _SnowCover As Single
+    Private ReadOnly _ThunderstormIntensity As Single
 
     Public ReadOnly CloudLayers As New List(Of CloudLayer)
     Public ReadOnly WindLayers As New List(Of WindLayer)
@@ -23,6 +24,7 @@ Public Class WeatherDetails
         _AerosolDensity = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/AerosolDensity").Item(0).Attributes("Value").Value)
         _Precipitations = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/Precipitations").Item(0).Attributes("Value").Value)
         _SnowCover = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/SnowCover").Item(0).Attributes("Value").Value)
+        _ThunderstormIntensity = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/ThunderstormIntensity").Item(0).Attributes("Value").Value)
 
         If xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
             AltitudeMeasurement = "AGL"
@@ -114,6 +116,12 @@ Public Class WeatherDetails
     Public ReadOnly Property Humidity As String
         Get
             Return FormatNumber(_AerosolDensity, 2)
+        End Get
+    End Property
+
+    Public ReadOnly Property ThunderstormIntensity As Integer
+        Get
+            Return FormatNumber(_ThunderstormIntensity * 100, 0)
         End Get
     End Property
 

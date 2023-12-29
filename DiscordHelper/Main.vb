@@ -2154,6 +2154,9 @@ Public Class Main
             If _WeatherDetails.HasSnowCover Then
                 sb.Append($"{Environment.NewLine}- Snow Cover: {_WeatherDetails.SnowCover}")
             End If
+            If _WeatherDetails.ThunderstormIntensity > 0 Then
+                sb.Append($"{Environment.NewLine}- Lightning Intensity: {_WeatherDetails.ThunderstormIntensity}%")
+            End If
         End If
 
         txtWeatherFirstPart.Text = sb.ToString.TrimEnd
