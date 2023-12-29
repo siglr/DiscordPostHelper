@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.21.1</CurrentLatestVersion>
+  <CurrentLatestVersion>23.12.29.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>23.12.29.1</ReleaseVersion>
+      <ReleaseTitle>Weather details improvement</ReleaseTitle>
+      <ReleaseNotes>
+        Added lightning indicator to the weather details on the briefing tab as 0 to 100%.
+        Added snow cover to the weather details on the briefing tab.
+        Fixed error on weather graph when wind or cloud altitude exactly at 60k feet.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.21.1</ReleaseVersion>
       <ReleaseTitle>Support for IGC files</ReleaseTitle>
