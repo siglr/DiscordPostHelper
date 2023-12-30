@@ -330,6 +330,7 @@ Public Class BriefingControl
             BuildEventInfoTab()
             BuildCloudAndWindLayersDatagrids()
             AddCountryFlagPictures()
+            BuildGradientsLegend()
             _onUnitsTab = False
         End If
 
@@ -418,6 +419,8 @@ Public Class BriefingControl
 
     Private Sub BuildGradientsLegend()
 
+        splitWeatherLegend.Panel1.Controls.Clear()
+
         Dim myWindGradientControl As New GradientLegendControl
         myWindGradientControl.Dock = DockStyle.Fill
 
@@ -432,6 +435,8 @@ Public Class BriefingControl
 
         ' Add the control to your form or container
         splitWeatherLegend.Panel1.Controls.Add(myWindGradientControl)
+
+        splitWeatherLegend.Panel2.Controls.Clear()
 
         Dim myCloudGradientControl As New GradientLegendControl
         myCloudGradientControl.Dock = DockStyle.Fill
