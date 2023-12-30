@@ -22,11 +22,25 @@ Partial Class FullWeatherGraphPanel
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.WindCloudDisplay1 = New SIGLR.SoaringTools.CommonLibrary.WindCloudDisplay()
         Me.splitWeatherLegend = New System.Windows.Forms.SplitContainer()
+        Me.WindCloudDisplay1 = New SIGLR.SoaringTools.CommonLibrary.WindCloudDisplay()
         CType(Me.splitWeatherLegend, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.splitWeatherLegend.SuspendLayout()
         Me.SuspendLayout()
+        '
+        'splitWeatherLegend
+        '
+        Me.splitWeatherLegend.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.splitWeatherLegend.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.splitWeatherLegend.IsSplitterFixed = True
+        Me.splitWeatherLegend.Location = New System.Drawing.Point(0, 0)
+        Me.splitWeatherLegend.Margin = New System.Windows.Forms.Padding(0)
+        Me.splitWeatherLegend.Name = "splitWeatherLegend"
+        Me.splitWeatherLegend.Size = New System.Drawing.Size(1056, 46)
+        Me.splitWeatherLegend.SplitterDistance = 527
+        Me.splitWeatherLegend.SplitterWidth = 3
+        Me.splitWeatherLegend.TabIndex = 4
         '
         'WindCloudDisplay1
         '
@@ -36,24 +50,9 @@ Partial Class FullWeatherGraphPanel
         Me.WindCloudDisplay1.Location = New System.Drawing.Point(0, 47)
         Me.WindCloudDisplay1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.WindCloudDisplay1.Name = "WindCloudDisplay1"
-        Me.WindCloudDisplay1.Size = New System.Drawing.Size(1024, 721)
+        Me.WindCloudDisplay1.Size = New System.Drawing.Size(1054, 680)
         Me.WindCloudDisplay1.TabIndex = 5
         Me.WindCloudDisplay1.Text = "WindCloudDisplay1"
-        Me.WindCloudDisplay1.Visible = False
-        '
-        'splitWeatherLegend
-        '
-        Me.splitWeatherLegend.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.splitWeatherLegend.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.splitWeatherLegend.IsSplitterFixed = True
-        Me.splitWeatherLegend.Location = New System.Drawing.Point(0, 0)
-        Me.splitWeatherLegend.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.splitWeatherLegend.Name = "splitWeatherLegend"
-        Me.splitWeatherLegend.Size = New System.Drawing.Size(1024, 46)
-        Me.splitWeatherLegend.SplitterDistance = 512
-        Me.splitWeatherLegend.SplitterWidth = 5
-        Me.splitWeatherLegend.TabIndex = 4
         '
         'FullWeatherGraphPanel
         '
@@ -64,7 +63,7 @@ Partial Class FullWeatherGraphPanel
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "FullWeatherGraphPanel"
-        Me.Size = New System.Drawing.Size(1024, 768)
+        Me.Size = New System.Drawing.Size(1056, 727)
         CType(Me.splitWeatherLegend, System.ComponentModel.ISupportInitialize).EndInit()
         Me.splitWeatherLegend.ResumeLayout(False)
         Me.ResumeLayout(False)

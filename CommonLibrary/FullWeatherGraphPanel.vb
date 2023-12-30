@@ -8,9 +8,6 @@ Public Class FullWeatherGraphPanel
 
 #Region "Events"
 
-    Private Sub WindCloudDisplay1_VisibleChanged(sender As Object, e As EventArgs) Handles WindCloudDisplay1.VisibleChanged
-        splitWeatherLegend.Visible = WindCloudDisplay1.Visible
-    End Sub
 
 #End Region
 

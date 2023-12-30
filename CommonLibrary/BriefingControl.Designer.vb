@@ -109,8 +109,7 @@ Partial Class BriefingControl
         Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.WindCloudDisplay1 = New SIGLR.SoaringTools.CommonLibrary.WindCloudDisplay()
-        Me.splitWeatherLegend = New System.Windows.Forms.SplitContainer()
+        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -166,8 +165,6 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
-        CType(Me.splitWeatherLegend, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.splitWeatherLegend.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -642,8 +639,8 @@ Partial Class BriefingControl
         '
         'tbpgWeather
         '
+        Me.tbpgWeather.Controls.Add(Me.FullWeatherGraphPanel1)
         Me.tbpgWeather.Controls.Add(Me.Panel1)
-        Me.tbpgWeather.Controls.Add(Me.WindCloudDisplay1)
         Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
         Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
         Me.tbpgWeather.Margin = New System.Windows.Forms.Padding(0)
@@ -685,7 +682,6 @@ Partial Class BriefingControl
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.splitWeatherLegend)
         Me.SplitContainer1.Panel1.Controls.Add(Me.cloudLayersDatagrid)
         '
         'SplitContainer1.Panel2
@@ -1210,29 +1206,17 @@ Partial Class BriefingControl
         Me.countDownToMeet.TabIndex = 0
         Me.countDownToMeet.ZoomFactor = 2.0!
         '
-        'WindCloudDisplay1
+        'FullWeatherGraphPanel1
         '
-        Me.WindCloudDisplay1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.WindCloudDisplay1.Location = New System.Drawing.Point(0, 63)
-        Me.WindCloudDisplay1.Name = "WindCloudDisplay1"
-        Me.WindCloudDisplay1.Size = New System.Drawing.Size(963, 625)
-        Me.WindCloudDisplay1.TabIndex = 3
-        Me.WindCloudDisplay1.Text = "WindCloudDisplay1"
-        Me.WindCloudDisplay1.Visible = False
-        '
-        'splitWeatherLegend
-        '
-        Me.splitWeatherLegend.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.splitWeatherLegend.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.splitWeatherLegend.IsSplitterFixed = True
-        Me.splitWeatherLegend.Location = New System.Drawing.Point(0, 0)
-        Me.splitWeatherLegend.Name = "splitWeatherLegend"
-        Me.splitWeatherLegend.Size = New System.Drawing.Size(962, 30)
-        Me.splitWeatherLegend.SplitterDistance = 481
-        Me.splitWeatherLegend.TabIndex = 1
+        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
+        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
+        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(963, 656)
+        Me.FullWeatherGraphPanel1.TabIndex = 6
         '
         'BriefingControl
         '
@@ -1309,8 +1293,6 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
-        CType(Me.splitWeatherLegend, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.splitWeatherLegend.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1399,8 +1381,7 @@ Partial Class BriefingControl
     Friend WithEvents FlowLayoutPanel7 As Windows.Forms.FlowLayoutPanel
     Friend WithEvents radioGateMeasurementDiameter As Windows.Forms.RadioButton
     Friend WithEvents radioGateMeasurementRadius As Windows.Forms.RadioButton
-    Friend WithEvents WindCloudDisplay1 As WindCloudDisplay
     Friend WithEvents chkShowGraph As Windows.Forms.CheckBox
     Friend WithEvents Panel1 As Windows.Forms.Panel
-    Friend WithEvents splitWeatherLegend As Windows.Forms.SplitContainer
+    Friend WithEvents FullWeatherGraphPanel1 As FullWeatherGraphPanel
 End Class

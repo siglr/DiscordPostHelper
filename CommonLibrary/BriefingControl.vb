@@ -30,9 +30,6 @@ Public Class BriefingControl
 
     Private Sub BriefingControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetPrefUnits()
-
-        BuildGradientsLegend
-
     End Sub
 
     Private Sub tabsBriefing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabsBriefing.SelectedIndexChanged
@@ -144,7 +141,7 @@ Public Class BriefingControl
     End Sub
 
     Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
-        WindCloudDisplay1.Visible = chkShowGraph.Checked
+        FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
 
         Select Case chkShowGraph.Checked
             Case True
@@ -153,10 +150,6 @@ Public Class BriefingControl
                 SupportingFeatures.WriteRegistryKey("WeatherGraph", 0)
         End Select
 
-    End Sub
-
-    Private Sub WindCloudDisplay1_VisibleChanged(sender As Object, e As EventArgs) Handles WindCloudDisplay1.VisibleChanged
-        splitWeatherLegend.Visible = WindCloudDisplay1.Visible
     End Sub
 
 #End Region
@@ -257,7 +250,7 @@ Public Class BriefingControl
         ClearCountryFlagPictures()
 
         EventIsEnabled = False
-        WindCloudDisplay1.ResetGraph()
+        FullWeatherGraphPanel1.ResetGraph()
         windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
@@ -305,7 +298,7 @@ Public Class BriefingControl
         BuildTaskData()
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
-        WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
+        FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits)
 
         If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
             _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
@@ -330,7 +323,6 @@ Public Class BriefingControl
             BuildEventInfoTab()
             BuildCloudAndWindLayersDatagrids()
             AddCountryFlagPictures()
-            BuildGradientsLegend()
             _onUnitsTab = False
         End If
 
@@ -345,8 +337,8 @@ Public Class BriefingControl
                 Case 3 'Images
                 Case 4 'All Waypoints
                 Case 5 'Weather
-                    WindCloudDisplay1.Visible = chkShowGraph.Checked
-                    WindCloudDisplay1.SetWeatherInfo(_WeatherDetails, PrefUnits)
+                    FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
+                    FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits)
                 Case 6 'Add-ons
                 Case 7 'Units
                     _onUnitsTab = True
@@ -416,38 +408,6 @@ Public Class BriefingControl
 #End Region
 
 #Region "Private"
-
-    Private Sub BuildGradientsLegend()
-
-        splitWeatherLegend.Panel1.Controls.Clear()
-
-        Dim myWindGradientControl As New GradientLegendControl
-        myWindGradientControl.Dock = DockStyle.Fill
-
-        If _PrefUnits.WindSpeed = PreferredUnits.WindSpeedUnits.MeterPerSecond Then
-            myWindGradientControl.FirstValue = $"{Conversions.KnotsToMps(26):N1} m/s"
-        Else
-            myWindGradientControl.FirstValue = "26 kts"
-        End If
-
-        myWindGradientControl.LastValue = "0"
-        myWindGradientControl.GradientPalette = WindCloudDisplay1.BlueGradientPalette
-
-        ' Add the control to your form or container
-        splitWeatherLegend.Panel1.Controls.Add(myWindGradientControl)
-
-        splitWeatherLegend.Panel2.Controls.Clear()
-
-        Dim myCloudGradientControl As New GradientLegendControl
-        myCloudGradientControl.Dock = DockStyle.Fill
-        myCloudGradientControl.FirstValue = "0.0"
-        myCloudGradientControl.LastValue = "5.0"
-        myCloudGradientControl.GradientPalette = WindCloudDisplay1.GreyGradientPalette
-
-        ' Add the control to your form or container
-        splitWeatherLegend.Panel2.Controls.Add(myCloudGradientControl)
-
-    End Sub
 
     Private Sub CountDownReset()
         Timer1.Stop()
