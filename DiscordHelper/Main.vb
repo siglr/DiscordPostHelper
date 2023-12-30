@@ -380,6 +380,69 @@ Public Class Main
         End Select
     End Sub
 
+    Private Sub txtBaroPressureExtraInfo_DoubleClick(sender As Object, e As EventArgs) Handles txtBaroPressureExtraInfo.DoubleClick
+
+        If txtBaroPressureExtraInfo.Text = String.Empty Then
+            txtBaroPressureExtraInfo.Text = "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
+        End If
+
+    End Sub
+
+    Private Sub txtCredits_DoubleClick(sender As Object, e As EventArgs) Handles txtCredits.DoubleClick
+
+        If txtCredits.Text = String.Empty Then
+            txtCredits.Text = "All credits to @UserName for this task."
+        End If
+
+    End Sub
+
+    Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
+
+        Dim inviteURL As String = "https://discord.gg/aW8YYe3HJF"
+        Clipboard.SetText(inviteURL)
+        Using New Centered_MessageBox()
+            MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+
+    End Sub
+
+    Private Sub DiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordChannelToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587750862893117")
+
+    End Sub
+
+    Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587681531035781")
+
+    End Sub
+
+    Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
+
+        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
+
+    End Sub
+
+    Private Sub toolStripReload_Click(sender As Object, e As EventArgs) Handles toolStripReload.Click
+
+        If CheckUnsavedAndConfirmAction("discard changes and reload current file") Then
+            Dim currentFile As String = _CurrentSessionFile
+            ResetForm()
+            LoadFile(currentFile)
+            TabControl1.SelectTab(0)
+            Select Case TabControl1.SelectedTab.Name
+                Case "tabDiscord"
+                    BuildFPResults()
+                    BuildWeatherCloudLayers()
+                    BuildWeatherWindLayers()
+                    BuildWeatherInfoResults()
+                    SetDiscordTaskThreadHeight()
+            End Select
+        End If
+
+    End Sub
+
 #End Region
 
 #Region "Global form subs & functions"
@@ -491,6 +554,39 @@ Public Class Main
     Private Sub LeavingTextBox(txtbox As Windows.Forms.TextBox)
         txtbox.SelectionLength = 0
         txtbox.SelectionStart = 0
+    End Sub
+
+    Private Sub CopyWeatherGraphToClipboard()
+
+        Dim control = New FullWeatherGraphPanel
+        Dim imageWidth As Integer = 1333
+        Dim imageHeight As Integer = 1000
+        Dim oldUnits As New PreferredUnits
+        Dim tempUnits As New PreferredUnits
+        tempUnits.Altitude = PreferredUnits.AltitudeUnits.Both
+        tempUnits.WindSpeed = PreferredUnits.WindSpeedUnits.Both
+        control.SetWeatherInfo(_WeatherDetails, tempUnits)
+
+        ' Create a bitmap with the specified size
+        Dim bmp As New Bitmap(imageWidth, imageHeight)
+
+        ' Scale the drawing to the specified size
+        control.Width = imageWidth
+        control.Height = imageHeight
+
+        ' Create a graphics object to draw the control's image
+        Using g As Graphics = Graphics.FromImage(bmp)
+            ' Draw the control onto the graphics object
+            control.DrawToBitmap(bmp, New Rectangle(0, 0, imageWidth, imageHeight))
+        End Using
+
+        ' Set the bitmap to the clipboard
+        Clipboard.SetImage(bmp)
+
+        'Reset the preferred units
+        tempUnits.Altitude = oldUnits.Altitude
+        tempUnits.WindSpeed = oldUnits.WindSpeed
+
     End Sub
 
 #End Region
@@ -4301,69 +4397,6 @@ Public Class Main
             toolStripSave.Font = New Font(toolStripSave.Font, FontStyle.Regular)
             toolStripSave.ForeColor = DefaultForeColor
             toolStripReload.Visible = False
-        End If
-
-    End Sub
-
-    Private Sub txtBaroPressureExtraInfo_DoubleClick(sender As Object, e As EventArgs) Handles txtBaroPressureExtraInfo.DoubleClick
-
-        If txtBaroPressureExtraInfo.Text = String.Empty Then
-            txtBaroPressureExtraInfo.Text = "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
-        End If
-
-    End Sub
-
-    Private Sub txtCredits_DoubleClick(sender As Object, e As EventArgs) Handles txtCredits.DoubleClick
-
-        If txtCredits.Text = String.Empty Then
-            txtCredits.Text = "All credits to @UserName for this task."
-        End If
-
-    End Sub
-
-    Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
-
-        Dim inviteURL As String = "https://discord.gg/aW8YYe3HJF"
-        Clipboard.SetText(inviteURL)
-        Using New Centered_MessageBox()
-            MessageBox.Show("The invite link has been copied to your clipboard. Paste it in the Join Discord Server invite field on Discord.", "Invite link copied", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End Using
-
-    End Sub
-
-    Private Sub DiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordChannelToolStripMenuItem.Click
-
-        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587750862893117")
-
-    End Sub
-
-    Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
-
-        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1068587681531035781")
-
-    End Sub
-
-    Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
-
-        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
-
-    End Sub
-
-    Private Sub toolStripReload_Click(sender As Object, e As EventArgs) Handles toolStripReload.Click
-
-        If CheckUnsavedAndConfirmAction("discard changes and reload current file") Then
-            Dim currentFile As String = _CurrentSessionFile
-            ResetForm()
-            LoadFile(currentFile)
-            TabControl1.SelectTab(0)
-            Select Case TabControl1.SelectedTab.Name
-                Case "tabDiscord"
-                    BuildFPResults()
-                    BuildWeatherCloudLayers()
-                    BuildWeatherWindLayers()
-                    BuildWeatherInfoResults()
-                    SetDiscordTaskThreadHeight()
-            End Select
         End If
 
     End Sub

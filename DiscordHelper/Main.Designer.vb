@@ -196,9 +196,9 @@ Partial Class Main
         Me.dtEventStartTaskTime = New System.Windows.Forms.DateTimePicker()
         Me.lblMeetTimeResult = New System.Windows.Forms.Label()
         Me.TimeStampContextualMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetTimeStampTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblSyncTimeResult = New System.Windows.Forms.Label()
@@ -303,9 +303,9 @@ Partial Class Main
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripCurrentDateTime = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowFullWithDayOfWeek = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowLongDateTime = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
@@ -2529,12 +2529,6 @@ Partial Class Main
         Me.TimeStampContextualMenu.ShowImageMargin = False
         Me.TimeStampContextualMenu.Size = New System.Drawing.Size(224, 124)
         '
-        'GetTimeStampTimeOnlyWithoutSeconds
-        '
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Name = "GetTimeStampTimeOnlyWithoutSeconds"
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(223, 24)
-        Me.GetTimeStampTimeOnlyWithoutSeconds.Text = "Time Only Without Seconds"
-        '
         'GetFullWithDayOfWeek
         '
         Me.GetFullWithDayOfWeek.Name = "GetFullWithDayOfWeek"
@@ -2546,6 +2540,12 @@ Partial Class Main
         Me.GetLongDateTime.Name = "GetLongDateTime"
         Me.GetLongDateTime.Size = New System.Drawing.Size(223, 24)
         Me.GetLongDateTime.Text = "Long Date Time"
+        '
+        'GetTimeStampTimeOnlyWithoutSeconds
+        '
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Name = "GetTimeStampTimeOnlyWithoutSeconds"
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(223, 24)
+        Me.GetTimeStampTimeOnlyWithoutSeconds.Text = "Time Only Without Seconds"
         '
         'GetCountdown
         '
@@ -3709,12 +3709,6 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
-        'GetNowTimeOnlyWithoutSeconds
-        '
-        Me.GetNowTimeOnlyWithoutSeconds.Name = "GetNowTimeOnlyWithoutSeconds"
-        Me.GetNowTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(269, 26)
-        Me.GetNowTimeOnlyWithoutSeconds.Text = "TimeOnlyWithoutSeconds"
-        '
         'GetNowFullWithDayOfWeek
         '
         Me.GetNowFullWithDayOfWeek.Name = "GetNowFullWithDayOfWeek"
@@ -3726,6 +3720,12 @@ Partial Class Main
         Me.GetNowLongDateTime.Name = "GetNowLongDateTime"
         Me.GetNowLongDateTime.Size = New System.Drawing.Size(269, 26)
         Me.GetNowLongDateTime.Text = "LongDateTime"
+        '
+        'GetNowTimeOnlyWithoutSeconds
+        '
+        Me.GetNowTimeOnlyWithoutSeconds.Name = "GetNowTimeOnlyWithoutSeconds"
+        Me.GetNowTimeOnlyWithoutSeconds.Size = New System.Drawing.Size(269, 26)
+        Me.GetNowTimeOnlyWithoutSeconds.Text = "TimeOnlyWithoutSeconds"
         '
         'GetNowCountdown
         '
