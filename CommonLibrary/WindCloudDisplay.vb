@@ -5,6 +5,7 @@ Imports System.Windows.Forms
 Public Class WindCloudDisplay
     Inherits Control
 
+    Private theFont As New Font("Arial", 9)
     Private _WeatherInfo As WeatherDetails = Nothing
     Public ReadOnly Property BlueGradientPalette As List(Of Color)
     Public ReadOnly Property GreyGradientPalette As List(Of Color)
@@ -69,7 +70,7 @@ Public Class WindCloudDisplay
         End If
 
         ' Calculate the text height and drawable height
-        Dim textHeight As Single = Font.GetHeight()
+        Dim textHeight As Single = theFont.GetHeight()
         Dim drawableHeight As Single = Height - 1.5 * textHeight
 
         ' List of altitudes where lines and labels should be drawn
@@ -91,9 +92,10 @@ Public Class WindCloudDisplay
         Dim altitudePositions As New Dictionary(Of Integer, Single)
 
         ' Calculate the true available space
-        Dim textHeight As Single = Font.GetHeight(e.Graphics)
+        Dim textHeight As Single = theFont.GetHeight(e.Graphics)
         Dim drawableHeight As Single = Height - 2 * textHeight
         Dim drawableWidth As Single = e.ClipRectangle.Width
+        Dim rightEdge As Single = drawableWidth
 
         ' Position for 10k line at the vertical middle
         Dim yPos10k As Single = textHeight + drawableHeight / 2
@@ -103,7 +105,7 @@ Public Class WindCloudDisplay
         ' Draw the 10k line in the middle
         Dim middleAltitudeLabel As String = If(_prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric, "3048", "10k")
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
-        e.Graphics.DrawString(middleAltitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos10k)
+        WriteAltitudeLabel(e, rightEdge, 10000, yPos10k)
 
         ' Calculate the decremental step from 10k down to -2k
         Dim decrementStep As Single = (yPos10k - textHeight) / 12 ' We have 12 increments from 10k to -2k 
@@ -111,29 +113,18 @@ Public Class WindCloudDisplay
         ' Draw lines only at 5k, 0 and -2k
         Dim yPos5k As Single = yPos10k + 5 * decrementStep
         altitudePositions.Add(5000, yPos5k)
-        Dim altitudeLabel As String
-        If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-            altitudeLabel = $"{Conversions.FeetToMeters(5000):N0}"
-        Else
-            altitudeLabel = "5k"
-        End If
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos5k, drawableWidth, yPos5k)
-        e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos5k)
+        WriteAltitudeLabel(e, rightEdge, 5000, yPos5k)
 
         Dim yPos0 As Single = yPos10k + 10 * decrementStep
         altitudePositions.Add(0, yPos0)
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
-        e.Graphics.DrawString("0", New Font("Arial", 10), Brushes.Black, 0, yPos0)
+        WriteAltitudeLabel(e, rightEdge, 0, yPos0)
 
         Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
         altitudePositions.Add(-2000, yPosNeg2k)
-        If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-            altitudeLabel = "-610"
-        Else
-            altitudeLabel = "-2k"
-        End If
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
-        e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPosNeg2k)
+        WriteAltitudeLabel(e, rightEdge, -2000, yPosNeg2k)
 
         ' Calculate the incremental step from 10k up to 60k
         Dim incrementStep As Single = (yPos10k - textHeight) / 5 ' We have 5 increments from 10k to 60k 
@@ -142,15 +133,20 @@ Public Class WindCloudDisplay
         For i As Integer = 1 To 5
             Dim altitude As Integer = (10 + i * 10) * 1000
             Dim yPos As Single = yPos10k - i * incrementStep
-            If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-                altitudeLabel = (altitude * 0.3048).ToString("0000")
-            Else
-                altitudeLabel = (altitude / 1000).ToString() + "k"
-            End If
             altitudePositions.Add(altitude, yPos)
             e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
-            e.Graphics.DrawString(altitudeLabel, New Font("Arial", 10), Brushes.Black, 0, yPos)
+            WriteAltitudeLabel(e, rightEdge, altitude, yPos)
         Next
+
+        'Write Feet and Meters at the top of the graph
+        WriteAltitudeLabel(e, rightEdge, 0, 0, True)
+
+        'Write the legend for C D S on top
+        Dim legend As String = "C:Coverage D:Density S:Scattered"
+        Dim textSize As SizeF = e.Graphics.MeasureString(legend, theFont)
+        Dim textXPosition As Single = CInt(Width * 0.75) - CInt(textSize.Width / 2)
+        e.Graphics.DrawString(legend, theFont, Brushes.Black, textXPosition, 0)
+
 
         ' Draw the vertical line in the center
         e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
@@ -158,6 +154,52 @@ Public Class WindCloudDisplay
         Return altitudePositions
 
     End Function
+
+    Private Sub WriteAltitudeLabel(e As PaintEventArgs, rightEdge As Single, altitude As Integer, yPos As Single, Optional unitLabel As Boolean = False)
+        Dim altitudeLabel As String
+        Select Case _prefUnits.Altitude
+            Case PreferredUnits.AltitudeUnits.Metric
+                If Not unitLabel Then
+                    altitudeLabel = (altitude * 0.3048).ToString("0")
+                Else
+                    altitudeLabel = "Meters"
+                End If
+                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+            Case PreferredUnits.AltitudeUnits.Imperial
+                If Not unitLabel Then
+                    If altitude <> 0 Then
+                        altitudeLabel = (altitude / 1000).ToString() + "k"
+                    Else
+                        altitudeLabel = (altitude / 1000).ToString()
+                    End If
+                Else
+                    altitudeLabel = "Feet"
+                End If
+                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+            Case PreferredUnits.AltitudeUnits.Both
+                'Feet on the left
+                If Not unitLabel Then
+                    If altitude <> 0 Then
+                        altitudeLabel = (altitude / 1000).ToString() + "k"
+                    Else
+                        altitudeLabel = (altitude / 1000).ToString()
+                    End If
+                Else
+                    altitudeLabel = "Feet"
+                End If
+                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+
+                'Meters on the right
+                If Not unitLabel Then
+                    altitudeLabel = (altitude * 0.3048).ToString("0")
+                Else
+                    altitudeLabel = "Meters"
+                End If
+                Dim textSize As SizeF = e.Graphics.MeasureString(altitudeLabel, theFont)
+                Dim textXPosition As Single = rightEdge - textSize.Width ' Align to the right
+                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, textXPosition, yPos)
+        End Select
+    End Sub
 
     Private Sub DrawWindLayers(ByVal e As PaintEventArgs, ByVal altitudePositions As Dictionary(Of Integer, Single))
 
@@ -170,28 +212,44 @@ Public Class WindCloudDisplay
             Dim windInfos As New List(Of String)
             Dim windSpeeds As New List(Of Integer)
 
+            Dim spaceForLeftLabel As Integer = 20
+            Select Case _prefUnits.Altitude
+                Case PreferredUnits.AltitudeUnits.Imperial, PreferredUnits.AltitudeUnits.Both
+                    spaceForLeftLabel = 30
+                Case PreferredUnits.AltitudeUnits.Metric
+                    spaceForLeftLabel = 50
+            End Select
+
             ' 1. Define all rectangles
             For Each wind In _WeatherInfo.WindLayers
                 Dim altitudeInFeet As Integer = CInt(Math.Round(wind.Altitude * meterToFeet))
 
                 ' Check if the altitude exists in the dictionary
                 Dim windYPosition As Single = InterpolateAltitudePosition(altitudeInFeet, altitudePositions)
-                Dim windRect As New Rectangle(50, CInt(windYPosition - Font.GetHeight(e.Graphics) / 2), CInt(Width / 2) - 70, CInt(Font.GetHeight(e.Graphics)))
+                Dim windRect As New Rectangle(spaceForLeftLabel, CInt(windYPosition - theFont.GetHeight(e.Graphics) / 2), CInt(Width / 2) - 40, CInt(theFont.GetHeight(e.Graphics)))
                 windRects.Add(windRect)
 
                 Dim windInfo As String
-                Dim altPart As String
-                Dim speedPart As String
-                If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-                    altPart = $"{Conversions.FeetToMeters(altitudeInFeet):N0} m"
-                Else
-                    altPart = $"{altitudeInFeet}'"
-                End If
-                If _prefUnits.WindSpeed = PreferredUnits.WindSpeedUnits.MeterPerSecond Then
-                    speedPart = $"{Conversions.KnotsToMps(wind.Speed):N1} m/s"
-                Else
-                    speedPart = $"{wind.Speed} kts"
-                End If
+                Dim altPart As String = String.Empty
+                Dim speedPart As String = String.Empty
+
+                Select Case _prefUnits.Altitude
+                    Case PreferredUnits.AltitudeUnits.Imperial
+                        altPart = $"{altitudeInFeet}'"
+                    Case PreferredUnits.AltitudeUnits.Metric
+                        altPart = $"{Conversions.FeetToMeters(altitudeInFeet):N0} m"
+                    Case PreferredUnits.AltitudeUnits.Both
+                        altPart = $"{altitudeInFeet}' ({Conversions.FeetToMeters(altitudeInFeet):N0} m)"
+                End Select
+
+                Select Case _prefUnits.WindSpeed
+                    Case PreferredUnits.WindSpeedUnits.Knots
+                        speedPart = $"{wind.Speed} kts"
+                    Case PreferredUnits.WindSpeedUnits.MeterPerSecond
+                        speedPart = $"{Conversions.KnotsToMps(wind.Speed):N1} m/s"
+                    Case PreferredUnits.WindSpeedUnits.Both
+                        speedPart = $"{wind.Speed} kts ({Conversions.KnotsToMps(wind.Speed):N1} m/s)"
+                End Select
 
                 windInfo = $"{altPart} {wind.Angle}°@{speedPart}"
                 windSpeeds.Add(wind.Speed)
@@ -232,9 +290,9 @@ Public Class WindCloudDisplay
                 e.Graphics.FillRectangle(New SolidBrush(windColor), windRects(i))
                 e.Graphics.DrawRectangle(New Pen(Color.DarkBlue, 1), windRects(i))
 
-                Dim windSize As SizeF = e.Graphics.MeasureString(windInfos(i), Font)
+                Dim windSize As SizeF = e.Graphics.MeasureString(windInfos(i), theFont)
                 Dim windLocation As New Point(windRects(i).Left + (windRects(i).Width - windSize.Width) / 2, windRects(i).Top + (windRects(i).Height - windSize.Height) / 2)
-                e.Graphics.DrawString(windInfos(i), Font, New SolidBrush(textColor), windLocation)
+                e.Graphics.DrawString(windInfos(i), theFont, New SolidBrush(textColor), windLocation)
             Next
 
         End If
@@ -252,6 +310,11 @@ Public Class WindCloudDisplay
             Dim cloudInfos As New List(Of Tuple(Of String, String))
             Dim cloudDensities As New List(Of Single)  ' List to store cloud densities
 
+            Dim spaceForRightLabel As Integer = 20
+            If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Both Then
+                spaceForRightLabel = 60
+            End If
+
             ' 1. Define all rectangles
             For Each cloud In _WeatherInfo.CloudLayers
                 If cloud.IsValidCloudLayer Then
@@ -261,19 +324,22 @@ Public Class WindCloudDisplay
                     Dim cloudTopY As Single = If(altitudePositions.ContainsKey(topInFeet), altitudePositions(topInFeet), InterpolateAltitudePosition(topInFeet, altitudePositions))
                     Dim cloudBottomY As Single = If(altitudePositions.ContainsKey(bottomInFeet), altitudePositions(bottomInFeet), InterpolateAltitudePosition(bottomInFeet, altitudePositions))
 
-                    Dim cloudHeight As Single = Math.Max(cloudBottomY - cloudTopY, Font.GetHeight(e.Graphics) + 2) ' Ensure minimum height based on text size + padding
-                    Dim cloudRect As New Rectangle(CInt(Width / 2) + 10, CInt(cloudTopY), CInt(Width / 2) - 20, CInt(cloudHeight))
+                    Dim cloudHeight As Single = Math.Max(cloudBottomY - cloudTopY, theFont.GetHeight(e.Graphics) + 2) ' Ensure minimum height based on text size + padding
+                    Dim cloudRect As New Rectangle(CInt(Width / 2) + 10, CInt(cloudTopY), CInt(Width / 2) - spaceForRightLabel, CInt(cloudHeight))
                     cloudRects.Add(cloudRect)
 
                     Dim line1 As String
-                    If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric Then
-                        line1 = $"{Conversions.FeetToMeters(bottomInFeet):N0} m to {Conversions.FeetToMeters(topInFeet):N0} m"
-                    Else
-                        line1 = $"{bottomInFeet}’ to {topInFeet}’"
-                    End If
-                    Dim line2 As String = $"Cov. {cloud.Coverage}% Dens. {cloud.Density} Scat. {cloud.Scattering}%"
+                    Select Case _prefUnits.Altitude
+                        Case PreferredUnits.AltitudeUnits.Imperial
+                            line1 = $"{bottomInFeet} to {topInFeet}’"
+                        Case PreferredUnits.AltitudeUnits.Metric
+                            line1 = $"{Conversions.FeetToMeters(bottomInFeet):0} to {Conversions.FeetToMeters(topInFeet):0} m"
+                        Case PreferredUnits.AltitudeUnits.Both
+                            line1 = $"{bottomInFeet} to {topInFeet}’ ({Conversions.FeetToMeters(bottomInFeet):0} to {Conversions.FeetToMeters(topInFeet):0} m)"
+                    End Select
+                    Dim line2 As String = $"C: {cloud.Coverage}% D: {cloud.Density} S: {cloud.Scattering}%"
 
-                    If cloudHeight < Font.GetHeight(e.Graphics) * 2 Then
+                    If cloudHeight < theFont.GetHeight(e.Graphics) * 2 Then
                         cloudInfos.Add(Tuple.Create(line1 + " " + line2, ""))
                     Else
                         cloudInfos.Add(Tuple.Create(line1, line2))
@@ -317,17 +383,17 @@ Public Class WindCloudDisplay
                 ' Add dark blue border to cloud rectangle
                 e.Graphics.DrawRectangle(New Pen(Color.Black, 1), cloudRects(i))
 
-                Dim totalHeightForTwoLines As Single = 2 * Font.GetHeight(e.Graphics)
+                Dim totalHeightForTwoLines As Single = 2 * theFont.GetHeight(e.Graphics)
                 Dim startYForTwoLines As Single = cloudRects(i).Top + (cloudRects(i).Height - totalHeightForTwoLines) / 2
 
-                Dim line1Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item1, Font)
+                Dim line1Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item1, theFont)
                 Dim line1Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line1Size.Width) / 2, If(String.IsNullOrEmpty(cloudInfos(i).Item2), cloudRects(i).Top + (cloudRects(i).Height - line1Size.Height) / 2, startYForTwoLines))
-                e.Graphics.DrawString(cloudInfos(i).Item1, Font, New SolidBrush(textColor), line1Location)
+                e.Graphics.DrawString(cloudInfos(i).Item1, theFont, New SolidBrush(textColor), line1Location)
 
                 If Not String.IsNullOrEmpty(cloudInfos(i).Item2) Then
-                    Dim line2Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item2, Font)
-                    Dim line2Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line2Size.Width) / 2, startYForTwoLines + Font.GetHeight(e.Graphics))
-                    e.Graphics.DrawString(cloudInfos(i).Item2, Font, New SolidBrush(textColor), line2Location)
+                    Dim line2Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item2, theFont)
+                    Dim line2Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line2Size.Width) / 2, startYForTwoLines + theFont.GetHeight(e.Graphics))
+                    e.Graphics.DrawString(cloudInfos(i).Item2, theFont, New SolidBrush(textColor), line2Location)
                 End If
             Next
 

@@ -4,6 +4,8 @@ Imports System.Windows.Forms
 Public Class GradientLegendControl
     Inherits Control
 
+    Private theFont As New Font("Arial", 9)
+
     Public Property GradientPalette As List(Of Color) = New List(Of Color)()
     Public Property FirstValue As String = String.Empty
     Public Property LastValue As String = String.Empty
@@ -61,12 +63,12 @@ Public Class GradientLegendControl
 
         ' Draw the first value
         If Not String.IsNullOrEmpty(FirstValue) Then
-            e.Graphics.DrawString(FirstValue, Me.Font, New SolidBrush(firstColorContrast), New PointF(0, Me.Height / 2), leftFormat)
+            e.Graphics.DrawString(FirstValue, theFont, New SolidBrush(firstColorContrast), New PointF(0, Me.Height / 2), leftFormat)
         End If
 
         ' Draw the last value
         If Not String.IsNullOrEmpty(LastValue) Then
-            e.Graphics.DrawString(LastValue, Me.Font, New SolidBrush(lastColorContrast), New PointF(Me.Width, Me.Height / 2), rightFormat)
+            e.Graphics.DrawString(LastValue, theFont, New SolidBrush(lastColorContrast), New PointF(Me.Width, Me.Height / 2), rightFormat)
         End If
 
     End Sub

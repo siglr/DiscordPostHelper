@@ -34,11 +34,14 @@ Public Class FullWeatherGraphPanel
         Dim myWindGradientControl As New GradientLegendControl
         myWindGradientControl.Dock = DockStyle.Fill
 
-        If _PrefUnits.WindSpeed = PreferredUnits.WindSpeedUnits.MeterPerSecond Then
-            myWindGradientControl.FirstValue = $"{Conversions.KnotsToMps(26):N1} m/s"
-        Else
-            myWindGradientControl.FirstValue = "26 kts"
-        End If
+        Select Case _prefUnits.WindSpeed
+            Case PreferredUnits.WindSpeedUnits.Knots
+                myWindGradientControl.FirstValue = "26 kts"
+            Case PreferredUnits.WindSpeedUnits.MeterPerSecond
+                myWindGradientControl.FirstValue = $"{Conversions.KnotsToMps(26):N1} m/s"
+            Case PreferredUnits.WindSpeedUnits.Both
+                myWindGradientControl.FirstValue = $"26 kts ({Conversions.KnotsToMps(26):N1} m/s)"
+        End Select
 
         myWindGradientControl.LastValue = "0"
         myWindGradientControl.GradientPalette = WindCloudDisplay1.BlueGradientPalette
