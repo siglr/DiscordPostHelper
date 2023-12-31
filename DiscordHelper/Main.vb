@@ -805,6 +805,7 @@ Public Class Main
             chkDepartureLock.Checked = True
         End If
 
+        CheckWhichOptionsCanBeEnabled()
         SessionModified()
 
         'Some fields have an impact on the events tab
@@ -931,7 +932,7 @@ Public Class Main
     End Sub
 
     Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
-        lblNbrCarsRestrictions.Text = txtAltRestrictions.Text.Length
+        lblNbrCarsRestrictions.Text = $"{txtAltRestrictions.Text.Length} chars"
     End Sub
 
     Private Sub txtMaxAvgSpeed_Leave(sender As Object, e As EventArgs) Handles txtMinAvgSpeed.Leave, txtMaxAvgSpeed.Leave
@@ -943,9 +944,26 @@ Public Class Main
         CalculateDuration()
     End Sub
 
-    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsFullDescResults.TextChanged
+    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsWeather.TextChanged, lblNbrCarsRestrictions.TextChanged, lblNbrCarsWaypoints.TextChanged
 
         NbrCarsCheckDiscordLimit(DirectCast(sender, Windows.Forms.Label))
+
+    End Sub
+
+    Private Sub NbrCarsChangedOnWeatherDetails(sender As Object, e As EventArgs) Handles lblNbrCarsWeatherInfo.TextChanged,
+                                                                                         lblNbrCarsWeatherWinds.TextChanged,
+                                                                                         lblNbrCarsWeatherClouds.TextChanged
+
+        Dim totalCars As Integer = 0
+        Try
+            totalCars += CInt(lblNbrCarsWeatherInfo.Text)
+            totalCars += CInt(lblNbrCarsWeatherWinds.Text)
+            totalCars += CInt(lblNbrCarsWeatherClouds.Text)
+
+        Catch ex As Exception
+        End Try
+
+        lblNbrCarsWeather.Text = $"{totalCars.ToString} chars"
 
     End Sub
 
@@ -986,6 +1004,13 @@ Public Class Main
 
     Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
         lblNbrCarsFullDescResults.Text = $"{txtFullDescriptionResults.Text.Length} chars"
+    End Sub
+
+    Private Sub txtWaypointsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtWaypointsDetails.TextChanged
+        lblNbrCarsWaypoints.Text = $"{txtWaypointsDetails.Text.Length} chars"
+    End Sub
+    Private Sub txtAddOnsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtAddOnsDetails.TextChanged
+        lblNbrCarsAddOns.Text = $"{txtAddOnsDetails.Text.Length} chars"
     End Sub
 
     Private Sub CopyToEventFields(sender As Object, e As EventArgs)
@@ -1064,6 +1089,13 @@ Public Class Main
         chkDPOFullDescription.Checked = True
         chkDPOFilesWithDescription.Checked = True
         chkDPOFilesAlone.Checked = False
+        chkDPOAltRestrictions.Checked = True
+        chkDPOWeatherInfo.Checked = True
+        chkDPOWeatherChart.Checked = True
+        chkDPOWaypoints.Checked = True
+        chkDPOAddOns.Checked = True
+        chkDPOResultsInvitation.Checked = True
+        chkDPOFeaturedOnGroupFlight.Checked = True
 
     End Sub
 
@@ -1153,6 +1185,7 @@ Public Class Main
         Else
             Exit Sub
         End If
+
 
     End Sub
 
@@ -1437,6 +1470,7 @@ Public Class Main
         chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
         chkDPOFilesAlone.Enabled = grbTaskInfo.Enabled
         chkDPOFilesWithDescription.Enabled = grbTaskInfo.Enabled
+        chkDPOWaypoints.Enabled = grbTaskInfo.Enabled
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             chkDPOIncludeCoverImage.Enabled = True
@@ -1449,6 +1483,44 @@ Public Class Main
         Else
             chkDPOFullDescription.Enabled = True
         End If
+
+        If txtAltRestrictions.Text.Trim.Length = 0 Then
+            chkDPOAltRestrictions.Enabled = False
+        Else
+            chkDPOAltRestrictions.Enabled = True
+        End If
+
+        If txtWeatherFile.Text.Trim.Length + txtWeatherSummary.Text.Trim.Length = 0 Then
+            chkDPOWeatherInfo.Enabled = False
+        Else
+            chkDPOWeatherInfo.Enabled = True
+        End If
+
+        If txtWeatherFile.Text.Trim.Length = 0 Then
+            chkDPOWeatherChart.Enabled = False
+        Else
+            chkDPOWeatherChart.Enabled = True
+        End If
+
+        If txtAddOnsDetails.Text.Trim.Length = 0 Then
+            chkDPOAddOns.Enabled = False
+        Else
+            chkDPOAddOns.Enabled = True
+        End If
+
+        If txtDiscordTaskID.Text.Trim = String.Empty Then
+            chkDPOResultsInvitation.Enabled = False
+        Else
+            chkDPOResultsInvitation.Enabled = True
+        End If
+
+        If _ClubPreset IsNot Nothing AndAlso
+            txtDiscordEventShareURL.Text.Trim.Length + txtGroupEventPostURL.Text.Trim.Length > 0 Then
+            chkDPOFeaturedOnGroupFlight.Enabled = True
+        Else
+            chkDPOFeaturedOnGroupFlight.Enabled = False
+        End If
+
 
     End Sub
 
@@ -1689,12 +1761,27 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
 
-        BuildFPResults()
-        BuildWeatherCloudLayers()
-        BuildWeatherWindLayers()
-        BuildWeatherInfoResults()
+        Dim msg As String = txtAltRestrictions.Text
 
-        Dim msg As String = txtAltRestrictions.Text & vbCrLf & vbCrLf & txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
+        If msg.Trim = String.Empty Then
+        Else
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                "Now paste the restrictions and weather content as the next message in the thread!",
+                                "Step 4 - Creating post for restrictions in the thread.",
+                                New List(Of String) From {"^v"})
+        End If
+
+        Return autoContinue
+
+    End Function
+
+    Private Function WeatherCopy() As Boolean
+
+        Dim autoContinue As Boolean = True
+
+        Dim msg As String = txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
 
         If msg.Trim = String.Empty Then
         Else
@@ -1714,11 +1801,6 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
 
-        BuildFPResults()
-        BuildWeatherCloudLayers()
-        BuildWeatherWindLayers()
-        BuildWeatherInfoResults()
-
         If txtWaypointsDetails.Text.Length = 0 Then
         Else
             Clipboard.SetText(txtWaypointsDetails.Text)
@@ -1736,11 +1818,6 @@ Public Class Main
     Private Function AddOnsCopy() As Boolean
 
         Dim autoContinue As Boolean = True
-
-        BuildFPResults()
-        BuildWeatherCloudLayers()
-        BuildWeatherWindLayers()
-        BuildWeatherInfoResults()
 
         If txtAddOnsDetails.Text.Length = 0 Then
         Else
