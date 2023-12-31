@@ -50,7 +50,7 @@ Public Class CopyContent
                                 message As String,
                                 title As String,
                                 Optional keySequences As List(Of String) = Nothing,
-                                Optional expertMode As Boolean = False,
+                                Optional expertMode As Boolean = True,
                                 Optional autoPastePost As Boolean = True) As Boolean
 
         _Continue = True

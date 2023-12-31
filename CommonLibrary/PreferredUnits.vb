@@ -68,6 +68,8 @@
                     Return "Gate diameter"
                 Case GateMeasurementChoices.Radius
                     Return "Gate radius"
+                Case Else
+                    Return String.Empty
             End Select
         End Get
     End Property

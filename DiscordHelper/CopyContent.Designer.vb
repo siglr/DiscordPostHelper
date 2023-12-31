@@ -78,17 +78,17 @@ Partial Class CopyContent
         Me.btnStopExpert.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnStopExpert.Location = New System.Drawing.Point(397, 612)
         Me.btnStopExpert.Name = "btnStopExpert"
-        Me.btnStopExpert.Size = New System.Drawing.Size(104, 34)
+        Me.btnStopExpert.Size = New System.Drawing.Size(133, 34)
         Me.btnStopExpert.TabIndex = 4
-        Me.btnStopExpert.Text = "Stop Expert"
+        Me.btnStopExpert.Text = "Stop Workflow"
         Me.btnStopExpert.UseVisualStyleBackColor = True
         Me.btnStopExpert.Visible = False
         '
         'btnAutoPaste
         '
-        Me.btnAutoPaste.Location = New System.Drawing.Point(177, 612)
+        Me.btnAutoPaste.Location = New System.Drawing.Point(148, 612)
         Me.btnAutoPaste.Name = "btnAutoPaste"
-        Me.btnAutoPaste.Size = New System.Drawing.Size(104, 34)
+        Me.btnAutoPaste.Size = New System.Drawing.Size(133, 34)
         Me.btnAutoPaste.TabIndex = 5
         Me.btnAutoPaste.Text = "Auto paste"
         Me.btnAutoPaste.UseVisualStyleBackColor = True

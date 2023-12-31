@@ -205,7 +205,6 @@ Partial Class Main
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
-        Me.lblAllSecPostsTotalCars = New System.Windows.Forms.Label()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -216,23 +215,26 @@ Partial Class Main
         Me.lblNbrCarsRestrictions = New System.Windows.Forms.Label()
         Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
+        Me.btnStartTaskPost = New System.Windows.Forms.Button()
         Me.grpRepost = New System.Windows.Forms.GroupBox()
         Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
         Me.chkRepost = New System.Windows.Forms.CheckBox()
-        Me.grpDiscordTaskThread = New System.Windows.Forms.GroupBox()
-        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.btnFullDescriptionCopy = New System.Windows.Forms.Button()
-        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
-        Me.btnFilesCopy = New System.Windows.Forms.Button()
-        Me.btnFilesTextCopy = New System.Windows.Forms.Button()
-        Me.chkGroupSecondaryPosts = New System.Windows.Forms.CheckBox()
-        Me.btnCopyAllSecPosts = New System.Windows.Forms.Button()
-        Me.btnAltRestricCopy = New System.Windows.Forms.Button()
-        Me.btnWaypointsCopy = New System.Windows.Forms.Button()
-        Me.btnAddOnsCopy = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.btnFPMainInfoCopy = New System.Windows.Forms.Button()
+        Me.flpDiscordPostOptions = New System.Windows.Forms.FlowLayoutPanel()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOMainPost = New System.Windows.Forms.CheckBox()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOThreadCreation = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel4 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOIncludeCoverImage = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOFullDescription = New System.Windows.Forms.CheckBox()
+        Me.lblNbrCarsFullDescResults = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel5 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOFilesWithDescription = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel6 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOFilesAlone = New System.Windows.Forms.CheckBox()
         Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
         Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
         Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
@@ -274,7 +276,6 @@ Partial Class Main
         Me.Label42 = New System.Windows.Forms.Label()
         Me.lblDiscordEventVoice = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.chkExpertMode = New System.Windows.Forms.CheckBox()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
@@ -309,6 +310,7 @@ Partial Class Main
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.btnDPOResetToDefault = New System.Windows.Forms.Button()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -333,9 +335,14 @@ Partial Class Main
         Me.Panel4.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
         Me.grpRepost.SuspendLayout()
-        Me.grpDiscordTaskThread.SuspendLayout()
-        Me.FlowLayoutPanel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.flpDiscordPostOptions.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
+        Me.FlowLayoutPanel2.SuspendLayout()
+        Me.FlowLayoutPanel4.SuspendLayout()
+        Me.FlowLayoutPanel3.SuspendLayout()
+        Me.FlowLayoutPanel5.SuspendLayout()
+        Me.FlowLayoutPanel6.SuspendLayout()
         Me.grpDiscordGroupFlight.SuspendLayout()
         Me.grpTaskFeatured.SuspendLayout()
         Me.grpGroupFlightEvent.SuspendLayout()
@@ -2597,7 +2604,6 @@ Partial Class Main
         '
         'tabDiscord
         '
-        Me.tabDiscord.Controls.Add(Me.lblAllSecPostsTotalCars)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
         Me.tabDiscord.Controls.Add(Me.txtWaypointsDetails)
@@ -2618,24 +2624,12 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherWinds)
         Me.tabDiscord.Controls.Add(Me.lblNbrCarsFilesText)
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
-        Me.tabDiscord.Controls.Add(Me.chkExpertMode)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
         Me.tabDiscord.Size = New System.Drawing.Size(1467, 860)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
-        '
-        'lblAllSecPostsTotalCars
-        '
-        Me.lblAllSecPostsTotalCars.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblAllSecPostsTotalCars.ForeColor = System.Drawing.Color.Red
-        Me.lblAllSecPostsTotalCars.Location = New System.Drawing.Point(311, 434)
-        Me.lblAllSecPostsTotalCars.Name = "lblAllSecPostsTotalCars"
-        Me.lblAllSecPostsTotalCars.Size = New System.Drawing.Size(90, 26)
-        Me.lblAllSecPostsTotalCars.TabIndex = 4
-        Me.lblAllSecPostsTotalCars.Text = "0"
-        Me.lblAllSecPostsTotalCars.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'pnlWizardDiscord
         '
@@ -2744,8 +2738,8 @@ Partial Class Main
         '
         'grpDiscordTask
         '
+        Me.grpDiscordTask.Controls.Add(Me.btnStartTaskPost)
         Me.grpDiscordTask.Controls.Add(Me.grpRepost)
-        Me.grpDiscordTask.Controls.Add(Me.grpDiscordTaskThread)
         Me.grpDiscordTask.Controls.Add(Me.GroupBox1)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
@@ -2753,6 +2747,18 @@ Partial Class Main
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
+        '
+        'btnStartTaskPost
+        '
+        Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(6, 684)
+        Me.btnStartTaskPost.Name = "btnStartTaskPost"
+        Me.btnStartTaskPost.Size = New System.Drawing.Size(393, 37)
+        Me.btnStartTaskPost.TabIndex = 2
+        Me.btnStartTaskPost.Tag = "80"
+        Me.btnStartTaskPost.Text = "Start Discord Post Workflow"
+        Me.ToolTip1.SetToolTip(Me.btnStartTaskPost, "Click this button to begin posting the task's details.")
+        Me.btnStartTaskPost.UseVisualStyleBackColor = True
         '
         'grpRepost
         '
@@ -2790,191 +2796,207 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
         Me.chkRepost.UseVisualStyleBackColor = False
         '
-        'grpDiscordTaskThread
-        '
-        Me.grpDiscordTaskThread.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpDiscordTaskThread.Controls.Add(Me.FlowLayoutPanel1)
-        Me.grpDiscordTaskThread.Location = New System.Drawing.Point(6, 210)
-        Me.grpDiscordTaskThread.Name = "grpDiscordTaskThread"
-        Me.grpDiscordTaskThread.Size = New System.Drawing.Size(393, 489)
-        Me.grpDiscordTaskThread.TabIndex = 2
-        Me.grpDiscordTaskThread.TabStop = False
-        Me.grpDiscordTaskThread.Text = "Thread"
-        '
-        'FlowLayoutPanel1
-        '
-        Me.FlowLayoutPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnFullDescriptionCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsFullDescResults)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnFilesTextCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.chkGroupSecondaryPosts)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnCopyAllSecPosts)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnAltRestricCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnWaypointsCopy)
-        Me.FlowLayoutPanel1.Controls.Add(Me.btnAddOnsCopy)
-        Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 26)
-        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(393, 463)
-        Me.FlowLayoutPanel1.TabIndex = 82
-        '
-        'btnFullDescriptionCopy
-        '
-        Me.btnFullDescriptionCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFullDescriptionCopy.Location = New System.Drawing.Point(3, 3)
-        Me.btnFullDescriptionCopy.Name = "btnFullDescriptionCopy"
-        Me.btnFullDescriptionCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFullDescriptionCopy.TabIndex = 0
-        Me.btnFullDescriptionCopy.Tag = "42"
-        Me.btnFullDescriptionCopy.Text = "2. Thread - Full Description to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFullDescriptionCopy, "Click this button to put the task's full description post content into the clipbo" &
-        "ard.")
-        Me.btnFullDescriptionCopy.UseVisualStyleBackColor = True
-        '
-        'lblNbrCarsFullDescResults
-        '
-        Me.lblNbrCarsFullDescResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNbrCarsFullDescResults.ForeColor = System.Drawing.Color.Red
-        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(3, 57)
-        Me.lblNbrCarsFullDescResults.Name = "lblNbrCarsFullDescResults"
-        Me.lblNbrCarsFullDescResults.Size = New System.Drawing.Size(384, 26)
-        Me.lblNbrCarsFullDescResults.TabIndex = 8
-        Me.lblNbrCarsFullDescResults.Text = "0"
-        Me.lblNbrCarsFullDescResults.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnFilesCopy
-        '
-        Me.btnFilesCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesCopy.Location = New System.Drawing.Point(3, 86)
-        Me.btnFilesCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesCopy.Name = "btnFilesCopy"
-        Me.btnFilesCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFilesCopy.TabIndex = 1
-        Me.btnFilesCopy.Tag = "43"
-        Me.btnFilesCopy.Text = "3a. Thread - Files to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesCopy, "Click this button to put the included files into the clipboard.")
-        Me.btnFilesCopy.UseVisualStyleBackColor = True
-        '
-        'btnFilesTextCopy
-        '
-        Me.btnFilesTextCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFilesTextCopy.Location = New System.Drawing.Point(3, 140)
-        Me.btnFilesTextCopy.Margin = New System.Windows.Forms.Padding(3, 3, 0, 0)
-        Me.btnFilesTextCopy.Name = "btnFilesTextCopy"
-        Me.btnFilesTextCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnFilesTextCopy.TabIndex = 2
-        Me.btnFilesTextCopy.Tag = "44"
-        Me.btnFilesTextCopy.Text = "3b. Thread - Files info to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnFilesTextCopy, "Click this button to put the second post content into the clipboard.")
-        Me.btnFilesTextCopy.UseVisualStyleBackColor = True
-        '
-        'chkGroupSecondaryPosts
-        '
-        Me.chkGroupSecondaryPosts.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkGroupSecondaryPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkGroupSecondaryPosts.Location = New System.Drawing.Point(3, 194)
-        Me.chkGroupSecondaryPosts.Name = "chkGroupSecondaryPosts"
-        Me.chkGroupSecondaryPosts.Size = New System.Drawing.Size(384, 28)
-        Me.chkGroupSecondaryPosts.TabIndex = 3
-        Me.chkGroupSecondaryPosts.Tag = "45"
-        Me.chkGroupSecondaryPosts.Text = "Merge remaining posts"
-        Me.ToolTip1.SetToolTip(Me.chkGroupSecondaryPosts, "Check this to merge all secondary posts into only one.")
-        Me.chkGroupSecondaryPosts.UseVisualStyleBackColor = True
-        '
-        'btnCopyAllSecPosts
-        '
-        Me.btnCopyAllSecPosts.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCopyAllSecPosts.Location = New System.Drawing.Point(3, 228)
-        Me.btnCopyAllSecPosts.Name = "btnCopyAllSecPosts"
-        Me.btnCopyAllSecPosts.Size = New System.Drawing.Size(384, 51)
-        Me.btnCopyAllSecPosts.TabIndex = 4
-        Me.btnCopyAllSecPosts.Tag = "46"
-        Me.btnCopyAllSecPosts.Text = "4. Thread - All secondary post's content to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnCopyAllSecPosts, "Click this button to put all remaining content into the clipboard.")
-        Me.btnCopyAllSecPosts.UseVisualStyleBackColor = True
-        Me.btnCopyAllSecPosts.Visible = False
-        '
-        'btnAltRestricCopy
-        '
-        Me.btnAltRestricCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAltRestricCopy.Location = New System.Drawing.Point(3, 285)
-        Me.btnAltRestricCopy.Name = "btnAltRestricCopy"
-        Me.btnAltRestricCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnAltRestricCopy.TabIndex = 5
-        Me.btnAltRestricCopy.Tag = "46"
-        Me.btnAltRestricCopy.Text = "4. Thread - Restrictions and Weather to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnAltRestricCopy, "Click this button to put the restrictions and weather post content into the clipb" &
-        "oard.")
-        Me.btnAltRestricCopy.UseVisualStyleBackColor = True
-        '
-        'btnWaypointsCopy
-        '
-        Me.btnWaypointsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnWaypointsCopy.Location = New System.Drawing.Point(3, 342)
-        Me.btnWaypointsCopy.Name = "btnWaypointsCopy"
-        Me.btnWaypointsCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnWaypointsCopy.TabIndex = 6
-        Me.btnWaypointsCopy.Tag = "47"
-        Me.btnWaypointsCopy.Text = "5. Thread - Waypoint details to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnWaypointsCopy, "Click this button to put the waypoints post content into the clipboard.")
-        Me.btnWaypointsCopy.UseVisualStyleBackColor = True
-        '
-        'btnAddOnsCopy
-        '
-        Me.btnAddOnsCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddOnsCopy.Location = New System.Drawing.Point(3, 399)
-        Me.btnAddOnsCopy.Name = "btnAddOnsCopy"
-        Me.btnAddOnsCopy.Size = New System.Drawing.Size(384, 51)
-        Me.btnAddOnsCopy.TabIndex = 7
-        Me.btnAddOnsCopy.Tag = "48"
-        Me.btnAddOnsCopy.Text = "6. Thread - Add-ons details to clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnAddOnsCopy, "Click this button to put the add-ons post content into the clipboard.")
-        Me.btnAddOnsCopy.UseVisualStyleBackColor = True
-        '
         'GroupBox1
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox1.Controls.Add(Me.btnFPMainInfoCopy)
-        Me.GroupBox1.Controls.Add(Me.lblNbrCarsMainFP)
+        Me.GroupBox1.Controls.Add(Me.flpDiscordPostOptions)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 100)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 104)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 584)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Main Post"
+        Me.GroupBox1.Text = "Discord Post Options"
         '
-        'btnFPMainInfoCopy
+        'flpDiscordPostOptions
         '
-        Me.btnFPMainInfoCopy.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.flpDiscordPostOptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFPMainInfoCopy.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFPMainInfoCopy.Location = New System.Drawing.Point(6, 26)
-        Me.btnFPMainInfoCopy.Name = "btnFPMainInfoCopy"
-        Me.btnFPMainInfoCopy.Size = New System.Drawing.Size(381, 51)
-        Me.btnFPMainInfoCopy.TabIndex = 0
-        Me.btnFPMainInfoCopy.Tag = "41"
-        Me.btnFPMainInfoCopy.Text = "1. Main FP post to clipboard then thread title"
-        Me.ToolTip1.SetToolTip(Me.btnFPMainInfoCopy, "Click this button to put the first post content into the clipboard.")
-        Me.btnFPMainInfoCopy.UseVisualStyleBackColor = True
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel1)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel2)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel4)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel3)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel5)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel6)
+        Me.flpDiscordPostOptions.Controls.Add(Me.btnDPOResetToDefault)
+        Me.flpDiscordPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.flpDiscordPostOptions.Location = New System.Drawing.Point(0, 26)
+        Me.flpDiscordPostOptions.Name = "flpDiscordPostOptions"
+        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 552)
+        Me.flpDiscordPostOptions.TabIndex = 82
+        '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel1.Controls.Add(Me.chkDPOMainPost)
+        Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsMainFP)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 0)
+        Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel1.TabIndex = 9
+        '
+        'chkDPOMainPost
+        '
+        Me.chkDPOMainPost.AutoSize = True
+        Me.chkDPOMainPost.Checked = True
+        Me.chkDPOMainPost.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOMainPost.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOMainPost.Name = "chkDPOMainPost"
+        Me.chkDPOMainPost.Size = New System.Drawing.Size(93, 24)
+        Me.chkDPOMainPost.TabIndex = 0
+        Me.chkDPOMainPost.Text = "Main post"
+        Me.ToolTip1.SetToolTip(Me.chkDPOMainPost, "Select if you want to include the task's main information.")
+        Me.chkDPOMainPost.UseVisualStyleBackColor = True
         '
         'lblNbrCarsMainFP
         '
         Me.lblNbrCarsMainFP.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNbrCarsMainFP.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNbrCarsMainFP.AutoSize = True
+        Me.lblNbrCarsMainFP.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.lblNbrCarsMainFP.ForeColor = System.Drawing.Color.Red
-        Me.lblNbrCarsMainFP.Location = New System.Drawing.Point(0, 77)
+        Me.lblNbrCarsMainFP.Location = New System.Drawing.Point(102, 4)
+        Me.lblNbrCarsMainFP.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
         Me.lblNbrCarsMainFP.Name = "lblNbrCarsMainFP"
-        Me.lblNbrCarsMainFP.Size = New System.Drawing.Size(393, 26)
+        Me.lblNbrCarsMainFP.Size = New System.Drawing.Size(17, 20)
         Me.lblNbrCarsMainFP.TabIndex = 1
         Me.lblNbrCarsMainFP.Text = "0"
-        Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Number of characters for the task's main information post.")
+        '
+        'FlowLayoutPanel2
+        '
+        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel2.Controls.Add(Me.chkDPOThreadCreation)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 26)
+        Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel2.TabIndex = 10
+        '
+        'chkDPOThreadCreation
+        '
+        Me.chkDPOThreadCreation.AutoSize = True
+        Me.chkDPOThreadCreation.Checked = True
+        Me.chkDPOThreadCreation.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOThreadCreation.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOThreadCreation.Name = "chkDPOThreadCreation"
+        Me.chkDPOThreadCreation.Size = New System.Drawing.Size(130, 24)
+        Me.chkDPOThreadCreation.TabIndex = 0
+        Me.chkDPOThreadCreation.Text = "Thread creation"
+        Me.ToolTip1.SetToolTip(Me.chkDPOThreadCreation, "Select if you want to include the creation of the task's thread.")
+        Me.chkDPOThreadCreation.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel4
+        '
+        Me.FlowLayoutPanel4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel4.Controls.Add(Me.chkDPOIncludeCoverImage)
+        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 52)
+        Me.FlowLayoutPanel4.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
+        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel4.TabIndex = 12
+        '
+        'chkDPOIncludeCoverImage
+        '
+        Me.chkDPOIncludeCoverImage.AutoSize = True
+        Me.chkDPOIncludeCoverImage.Checked = True
+        Me.chkDPOIncludeCoverImage.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOIncludeCoverImage.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOIncludeCoverImage.Name = "chkDPOIncludeCoverImage"
+        Me.chkDPOIncludeCoverImage.Size = New System.Drawing.Size(112, 24)
+        Me.chkDPOIncludeCoverImage.TabIndex = 0
+        Me.chkDPOIncludeCoverImage.Text = "Cover image"
+        Me.ToolTip1.SetToolTip(Me.chkDPOIncludeCoverImage, "Select if you want to include the cover image.")
+        Me.chkDPOIncludeCoverImage.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel3
+        '
+        Me.FlowLayoutPanel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel3.Controls.Add(Me.chkDPOFullDescription)
+        Me.FlowLayoutPanel3.Controls.Add(Me.lblNbrCarsFullDescResults)
+        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 78)
+        Me.FlowLayoutPanel3.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
+        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel3.TabIndex = 11
+        '
+        'chkDPOFullDescription
+        '
+        Me.chkDPOFullDescription.AutoSize = True
+        Me.chkDPOFullDescription.Checked = True
+        Me.chkDPOFullDescription.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOFullDescription.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOFullDescription.Name = "chkDPOFullDescription"
+        Me.chkDPOFullDescription.Size = New System.Drawing.Size(127, 24)
+        Me.chkDPOFullDescription.TabIndex = 0
+        Me.chkDPOFullDescription.Text = "Full description"
+        Me.ToolTip1.SetToolTip(Me.chkDPOFullDescription, "Select if you want to include the full description.")
+        Me.chkDPOFullDescription.UseVisualStyleBackColor = True
+        '
+        'lblNbrCarsFullDescResults
+        '
+        Me.lblNbrCarsFullDescResults.AutoSize = True
+        Me.lblNbrCarsFullDescResults.ForeColor = System.Drawing.Color.Red
+        Me.lblNbrCarsFullDescResults.Location = New System.Drawing.Point(136, 4)
+        Me.lblNbrCarsFullDescResults.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
+        Me.lblNbrCarsFullDescResults.Name = "lblNbrCarsFullDescResults"
+        Me.lblNbrCarsFullDescResults.Size = New System.Drawing.Size(17, 20)
+        Me.lblNbrCarsFullDescResults.TabIndex = 1
+        Me.lblNbrCarsFullDescResults.Text = "0"
+        Me.lblNbrCarsFullDescResults.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'FlowLayoutPanel5
+        '
+        Me.FlowLayoutPanel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel5.Controls.Add(Me.chkDPOFilesWithDescription)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 104)
+        Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
+        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel5.TabIndex = 13
+        '
+        'chkDPOFilesWithDescription
+        '
+        Me.chkDPOFilesWithDescription.AutoSize = True
+        Me.chkDPOFilesWithDescription.Checked = True
+        Me.chkDPOFilesWithDescription.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOFilesWithDescription.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOFilesWithDescription.Name = "chkDPOFilesWithDescription"
+        Me.chkDPOFilesWithDescription.Size = New System.Drawing.Size(224, 24)
+        Me.chkDPOFilesWithDescription.TabIndex = 0
+        Me.chkDPOFilesWithDescription.Text = "Files with description / legend"
+        Me.ToolTip1.SetToolTip(Me.chkDPOFilesWithDescription, "Select if you want to include the file description along with the files.")
+        Me.chkDPOFilesWithDescription.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel6
+        '
+        Me.FlowLayoutPanel6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel6.Controls.Add(Me.chkDPOFilesAlone)
+        Me.FlowLayoutPanel6.Location = New System.Drawing.Point(3, 130)
+        Me.FlowLayoutPanel6.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel6.Name = "FlowLayoutPanel6"
+        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel6.TabIndex = 14
+        '
+        'chkDPOFilesAlone
+        '
+        Me.chkDPOFilesAlone.AutoSize = True
+        Me.chkDPOFilesAlone.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOFilesAlone.Name = "chkDPOFilesAlone"
+        Me.chkDPOFilesAlone.Size = New System.Drawing.Size(246, 24)
+        Me.chkDPOFilesAlone.TabIndex = 0
+        Me.chkDPOFilesAlone.Text = "Files without description / legend"
+        Me.ToolTip1.SetToolTip(Me.chkDPOFilesAlone, "Select if you want to include the file description along with the files.")
+        Me.chkDPOFilesAlone.UseVisualStyleBackColor = True
         '
         'txtDiscordEventDescription
         '
@@ -3462,20 +3484,6 @@ Partial Class Main
         Me.Label39.TabIndex = 4
         Me.Label39.Text = "2. Select Voice Channel and click next:"
         '
-        'chkExpertMode
-        '
-        Me.chkExpertMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkExpertMode.Location = New System.Drawing.Point(1110, 3)
-        Me.chkExpertMode.Name = "chkExpertMode"
-        Me.chkExpertMode.Size = New System.Drawing.Size(359, 52)
-        Me.chkExpertMode.TabIndex = 95
-        Me.chkExpertMode.Tag = "44"
-        Me.chkExpertMode.Text = "Expert Mode (auto click next step)"
-        Me.ToolTip1.SetToolTip(Me.chkExpertMode, "Check this if you want the app to auto click on the next step (faster)")
-        Me.chkExpertMode.UseVisualStyleBackColor = True
-        '
         'tabBriefing
         '
         Me.tabBriefing.Controls.Add(Me.pnlBriefing)
@@ -3744,6 +3752,16 @@ Partial Class Main
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
         '
+        'btnDPOResetToDefault
+        '
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(3, 159)
+        Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
+        Me.btnDPOResetToDefault.Size = New System.Drawing.Size(387, 35)
+        Me.btnDPOResetToDefault.TabIndex = 15
+        Me.btnDPOResetToDefault.Text = "Reset all to default options"
+        Me.ToolTip1.SetToolTip(Me.btnDPOResetToDefault, "Click to reset all options to the default values.")
+        Me.btnDPOResetToDefault.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3794,9 +3812,20 @@ Partial Class Main
         Me.grpDiscordTask.ResumeLayout(False)
         Me.grpRepost.ResumeLayout(False)
         Me.grpRepost.PerformLayout()
-        Me.grpDiscordTaskThread.ResumeLayout(False)
-        Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
+        Me.flpDiscordPostOptions.ResumeLayout(False)
+        Me.FlowLayoutPanel1.ResumeLayout(False)
+        Me.FlowLayoutPanel1.PerformLayout()
+        Me.FlowLayoutPanel2.ResumeLayout(False)
+        Me.FlowLayoutPanel2.PerformLayout()
+        Me.FlowLayoutPanel4.ResumeLayout(False)
+        Me.FlowLayoutPanel4.PerformLayout()
+        Me.FlowLayoutPanel3.ResumeLayout(False)
+        Me.FlowLayoutPanel3.PerformLayout()
+        Me.FlowLayoutPanel5.ResumeLayout(False)
+        Me.FlowLayoutPanel5.PerformLayout()
+        Me.FlowLayoutPanel6.ResumeLayout(False)
+        Me.FlowLayoutPanel6.PerformLayout()
         Me.grpDiscordGroupFlight.ResumeLayout(False)
         Me.grpTaskFeatured.ResumeLayout(False)
         Me.grpGroupFlightEvent.ResumeLayout(False)
@@ -3947,17 +3976,11 @@ Partial Class Main
     Friend WithEvents pnlScrollableSurface As Panel
     Friend WithEvents chkActivateEvent As CheckBox
     Friend WithEvents tabDiscord As TabPage
-    Friend WithEvents chkGroupSecondaryPosts As CheckBox
-    Friend WithEvents btnFilesCopy As Button
-    Friend WithEvents btnFullDescriptionCopy As Button
-    Friend WithEvents btnFilesTextCopy As Button
-    Friend WithEvents lblNbrCarsFullDescResults As Label
     Friend WithEvents txtFullDescriptionResults As TextBox
     Friend WithEvents txtFilesText As TextBox
     Friend WithEvents lblNbrCarsMainFP As Label
     Friend WithEvents txtFPResults As TextBox
     Friend WithEvents lblNbrCarsRestrictions As Label
-    Friend WithEvents btnCopyAllSecPosts As Button
     Friend WithEvents lblNbrCarsWeatherClouds As Label
     Friend WithEvents txtWeatherFirstPart As TextBox
     Friend WithEvents txtWeatherWinds As TextBox
@@ -3966,7 +3989,6 @@ Partial Class Main
     Friend WithEvents lblNbrCarsWeatherWinds As Label
     Friend WithEvents txtAltRestrictions As TextBox
     Friend WithEvents lblNbrCarsFilesText As Label
-    Friend WithEvents btnAltRestricCopy As Button
     Friend WithEvents grbTaskPart2 As GroupBox
     Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents btnMoveCountryDown As Button
@@ -3985,13 +4007,8 @@ Partial Class Main
     Friend WithEvents txtWeatherSummary As TextBox
     Friend WithEvents lblWeatherSummary As Label
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents btnFPMainInfoCopy As Button
     Friend WithEvents grpDiscordTask As GroupBox
-    Friend WithEvents grpDiscordTaskThread As GroupBox
-    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
-    Friend WithEvents btnWaypointsCopy As Button
-    Friend WithEvents btnAddOnsCopy As Button
-    Friend WithEvents lblAllSecPostsTotalCars As Label
+    Friend WithEvents flpDiscordPostOptions As FlowLayoutPanel
     Friend WithEvents grpDiscordGroupFlight As GroupBox
     Friend WithEvents grpGroupFlightEvent As GroupBox
     Friend WithEvents txtWaypointsDetails As TextBox
@@ -4034,7 +4051,6 @@ Partial Class Main
     Friend WithEvents Label31 As Label
     Friend WithEvents btnDiscordTaskThreadURLPaste As Button
     Friend WithEvents btnPasteUsernameCredits As Button
-    Friend WithEvents chkExpertMode As CheckBox
     Friend WithEvents FileDropZone1 As CommonLibrary.FileDropZone
     Friend WithEvents chkSoaringTypeWave As CheckBox
     Friend WithEvents chkSuppressWarningForBaroPressure As CheckBox
@@ -4096,4 +4112,19 @@ Partial Class Main
     Friend WithEvents pnlFlightPlanLeftSide As Panel
     Friend WithEvents pnlFlightPlanRightSide As Panel
     Friend WithEvents FlightPlanTabSplitter As Splitter
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents chkDPOMainPost As CheckBox
+    Friend WithEvents btnStartTaskPost As Button
+    Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
+    Friend WithEvents chkDPOThreadCreation As CheckBox
+    Friend WithEvents FlowLayoutPanel3 As FlowLayoutPanel
+    Friend WithEvents chkDPOFullDescription As CheckBox
+    Friend WithEvents lblNbrCarsFullDescResults As Label
+    Friend WithEvents FlowLayoutPanel4 As FlowLayoutPanel
+    Friend WithEvents chkDPOIncludeCoverImage As CheckBox
+    Friend WithEvents FlowLayoutPanel5 As FlowLayoutPanel
+    Friend WithEvents chkDPOFilesWithDescription As CheckBox
+    Friend WithEvents FlowLayoutPanel6 As FlowLayoutPanel
+    Friend WithEvents chkDPOFilesAlone As CheckBox
+    Friend WithEvents btnDPOResetToDefault As Button
 End Class

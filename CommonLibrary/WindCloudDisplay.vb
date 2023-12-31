@@ -328,7 +328,7 @@ Public Class WindCloudDisplay
                     Dim cloudRect As New Rectangle(CInt(Width / 2) + 10, CInt(cloudTopY), CInt(Width / 2) - spaceForRightLabel, CInt(cloudHeight))
                     cloudRects.Add(cloudRect)
 
-                    Dim line1 As String
+                    Dim line1 As String = String.Empty
                     Select Case _prefUnits.Altitude
                         Case PreferredUnits.AltitudeUnits.Imperial
                             line1 = $"{bottomInFeet} to {topInFeet}’"
