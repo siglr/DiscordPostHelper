@@ -746,6 +746,26 @@ Public Class Main
         End Using
     End Sub
 
+    Private Sub chkUseOnlyWeatherSummary_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseOnlyWeatherSummary.CheckedChanged
+
+        If _loadingFile Then
+            Exit Sub
+        End If
+        If chkUseOnlyWeatherSummary.Checked AndAlso txtWeatherFile.Text.Trim.Length > 0 Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to exclude basic weather information and replace it only with this summary?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    _loadingFile = True
+                    chkUseOnlyWeatherSummary.Checked = False
+                    _loadingFile = False
+                Else
+                    AllFieldChanges(sender, e)
+                End If
+            End Using
+        Else
+            AllFieldChanges(sender, e)
+        End If
+
+    End Sub
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
                                                                           chkDepartureLock.CheckedChanged,
                                                                           chkArrivalLock.CheckedChanged,
@@ -753,7 +773,6 @@ Public Class Main
                                                                           chkLockCountries.CheckedChanged,
                                                                           chkIncludeYear.CheckedChanged,
                                                                           chkSoaringTypeRidge.CheckedChanged,
-                                                                          chkUseOnlyWeatherSummary.CheckedChanged,
                                                                           chkSuppressWarningForBaroPressure.CheckedChanged,
                                                                           chkLockMapImage.CheckedChanged,
                                                                           chkLockCoverImage.CheckedChanged,
