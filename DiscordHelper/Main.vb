@@ -197,8 +197,6 @@ Public Class Main
         cboVoiceChannel.Items.AddRange(_SF.GetVoiceChannels.ToArray)
         cboMSFSServer.Items.Clear()
         cboMSFSServer.Items.AddRange(_SF.GetMSFSServers.ToArray)
-        'cboRecommendedGliders.Text = String.Empty
-        cboRecommendedGliders.Text = cboRecommendedGliders.Items(0)
         cboRecommendedGliders.SelectedIndex = 0
         lstAllFiles.Items.Clear()
         lstAllCountries.Items.Clear()
@@ -291,6 +289,7 @@ Public Class Main
         'BuildFPResults()
         'BuildGroupFlightPost()
         SetFormCaption(String.Empty)
+        FixForDropDownCombos()
 
         _loadingFile = False
 
@@ -356,6 +355,13 @@ Public Class Main
                     CheckWhichOptionsCanBeEnabled()
             End Select
         End If
+
+    End Sub
+
+    Private Sub grbTaskInfo_EnabledChanged(sender As Object, e As EventArgs) Handles grbTaskInfo.EnabledChanged,
+                                                                                     grpGroupEventPost.EnabledChanged
+
+        FixForDropDownCombos()
 
     End Sub
 
@@ -4479,10 +4485,18 @@ Public Class Main
             'BuildGroupFlightPost()
             'BuildDiscordEventDescription()
 
+            FixForDropDownCombos()
+
             _sessionModified = False
 
         End If
 
+    End Sub
+
+    Private Sub FixForDropDownCombos()
+        cboRecommendedGliders.SelectionStart = cboRecommendedGliders.Text.Length
+        cboGroupOrClubName.SelectionStart = cboGroupOrClubName.Text.Length
+        cboVoiceChannel.SelectionStart = cboVoiceChannel.Text.Length
     End Sub
 
     Public Sub SessionModified()
@@ -4514,8 +4528,6 @@ Public Class Main
         End If
 
     End Sub
-
-
 
 #End Region
 

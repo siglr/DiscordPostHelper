@@ -29,6 +29,11 @@ Partial Class Main
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
+        Me.pnlGuide = New System.Windows.Forms.Panel()
+        Me.btnGuideNext = New System.Windows.Forms.Button()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.lblGuideInstructions = New System.Windows.Forms.Label()
+        Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
         Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
@@ -72,11 +77,6 @@ Partial Class Main
         Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
-        Me.pnlGuide = New System.Windows.Forms.Panel()
-        Me.btnGuideNext = New System.Windows.Forms.Button()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.lblGuideInstructions = New System.Windows.Forms.Label()
-        Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
@@ -340,13 +340,13 @@ Partial Class Main
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
+        Me.pnlGuide.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         Me.pnlFlightPlanRightSide.SuspendLayout()
         Me.grbTaskPart2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.grbTaskDiscord.SuspendLayout()
-        Me.pnlGuide.SuspendLayout()
-        Me.Panel3.SuspendLayout()
         Me.pnlFlightPlanLeftSide.SuspendLayout()
         Me.grbTaskInfo.SuspendLayout()
         Me.tabEvent.SuspendLayout()
@@ -427,9 +427,9 @@ Partial Class Main
         '
         Me.tabFlightPlan.AutoScroll = True
         Me.tabFlightPlan.BackColor = System.Drawing.Color.Transparent
+        Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
         Me.tabFlightPlan.Controls.Add(Me.pnlFlightPlanRightSide)
         Me.tabFlightPlan.Controls.Add(Me.FlightPlanTabSplitter)
-        Me.tabFlightPlan.Controls.Add(Me.pnlGuide)
         Me.tabFlightPlan.Controls.Add(Me.pnlFlightPlanLeftSide)
         Me.tabFlightPlan.Location = New System.Drawing.Point(4, 29)
         Me.tabFlightPlan.Name = "tabFlightPlan"
@@ -437,6 +437,61 @@ Partial Class Main
         Me.tabFlightPlan.Size = New System.Drawing.Size(1467, 860)
         Me.tabFlightPlan.TabIndex = 0
         Me.tabFlightPlan.Text = "Flight Plan"
+        '
+        'pnlGuide
+        '
+        Me.pnlGuide.BackColor = System.Drawing.Color.Gray
+        Me.pnlGuide.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pnlGuide.Controls.Add(Me.btnGuideNext)
+        Me.pnlGuide.Controls.Add(Me.Panel3)
+        Me.pnlGuide.Controls.Add(Me.pnlArrow)
+        Me.pnlGuide.Location = New System.Drawing.Point(19, 705)
+        Me.pnlGuide.Name = "pnlGuide"
+        Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
+        Me.pnlGuide.TabIndex = 82
+        Me.pnlGuide.Visible = False
+        '
+        'btnGuideNext
+        '
+        Me.btnGuideNext.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnGuideNext.Location = New System.Drawing.Point(3, 3)
+        Me.btnGuideNext.Name = "btnGuideNext"
+        Me.btnGuideNext.Size = New System.Drawing.Size(73, 83)
+        Me.btnGuideNext.TabIndex = 0
+        Me.btnGuideNext.Text = "Next"
+        Me.ToolTip1.SetToolTip(Me.btnGuideNext, "Click here to go to the next step in the guide.")
+        Me.btnGuideNext.UseVisualStyleBackColor = True
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.Gray
+        Me.Panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.Panel3.Controls.Add(Me.lblGuideInstructions)
+        Me.Panel3.Location = New System.Drawing.Point(84, 0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(586, 89)
+        Me.Panel3.TabIndex = 81
+        '
+        'lblGuideInstructions
+        '
+        Me.lblGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 13.74545!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblGuideInstructions.ForeColor = System.Drawing.Color.White
+        Me.lblGuideInstructions.Location = New System.Drawing.Point(-1, 0)
+        Me.lblGuideInstructions.Name = "lblGuideInstructions"
+        Me.lblGuideInstructions.Size = New System.Drawing.Size(584, 89)
+        Me.lblGuideInstructions.TabIndex = 0
+        Me.lblGuideInstructions.Text = "Click the ""Flight Plan"" button and select the flight plan to use for this task."
+        Me.lblGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'pnlArrow
+        '
+        Me.pnlArrow.BackColor = System.Drawing.Color.Gray
+        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
+        Me.pnlArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pnlArrow.Location = New System.Drawing.Point(667, 0)
+        Me.pnlArrow.Name = "pnlArrow"
+        Me.pnlArrow.Size = New System.Drawing.Size(91, 89)
+        Me.pnlArrow.TabIndex = 80
         '
         'pnlFlightPlanRightSide
         '
@@ -1006,61 +1061,6 @@ Partial Class Main
         Me.FlightPlanTabSplitter.Size = New System.Drawing.Size(10, 854)
         Me.FlightPlanTabSplitter.TabIndex = 84
         Me.FlightPlanTabSplitter.TabStop = False
-        '
-        'pnlGuide
-        '
-        Me.pnlGuide.BackColor = System.Drawing.Color.Gray
-        Me.pnlGuide.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.pnlGuide.Controls.Add(Me.btnGuideNext)
-        Me.pnlGuide.Controls.Add(Me.Panel3)
-        Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(0, 705)
-        Me.pnlGuide.Name = "pnlGuide"
-        Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
-        Me.pnlGuide.TabIndex = 82
-        Me.pnlGuide.Visible = False
-        '
-        'btnGuideNext
-        '
-        Me.btnGuideNext.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGuideNext.Location = New System.Drawing.Point(3, 3)
-        Me.btnGuideNext.Name = "btnGuideNext"
-        Me.btnGuideNext.Size = New System.Drawing.Size(73, 83)
-        Me.btnGuideNext.TabIndex = 0
-        Me.btnGuideNext.Text = "Next"
-        Me.ToolTip1.SetToolTip(Me.btnGuideNext, "Click here to go to the next step in the guide.")
-        Me.btnGuideNext.UseVisualStyleBackColor = True
-        '
-        'Panel3
-        '
-        Me.Panel3.BackColor = System.Drawing.Color.Gray
-        Me.Panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Panel3.Controls.Add(Me.lblGuideInstructions)
-        Me.Panel3.Location = New System.Drawing.Point(84, 0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(586, 89)
-        Me.Panel3.TabIndex = 81
-        '
-        'lblGuideInstructions
-        '
-        Me.lblGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 13.74545!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGuideInstructions.ForeColor = System.Drawing.Color.White
-        Me.lblGuideInstructions.Location = New System.Drawing.Point(-1, 0)
-        Me.lblGuideInstructions.Name = "lblGuideInstructions"
-        Me.lblGuideInstructions.Size = New System.Drawing.Size(584, 89)
-        Me.lblGuideInstructions.TabIndex = 0
-        Me.lblGuideInstructions.Text = "Click the ""Flight Plan"" button and select the flight plan to use for this task."
-        Me.lblGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'pnlArrow
-        '
-        Me.pnlArrow.BackColor = System.Drawing.Color.Gray
-        Me.pnlArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
-        Me.pnlArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.pnlArrow.Location = New System.Drawing.Point(667, 0)
-        Me.pnlArrow.Name = "pnlArrow"
-        Me.pnlArrow.Size = New System.Drawing.Size(91, 89)
-        Me.pnlArrow.TabIndex = 80
         '
         'pnlFlightPlanLeftSide
         '
@@ -4163,6 +4163,8 @@ Partial Class Main
         Me.pnlScrollableSurface.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.tabFlightPlan.ResumeLayout(False)
+        Me.pnlGuide.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
         Me.pnlFlightPlanRightSide.ResumeLayout(False)
         Me.grbTaskPart2.ResumeLayout(False)
         Me.grbTaskPart2.PerformLayout()
@@ -4171,8 +4173,6 @@ Partial Class Main
         Me.GroupBox2.ResumeLayout(False)
         Me.grbTaskDiscord.ResumeLayout(False)
         Me.grbTaskDiscord.PerformLayout()
-        Me.pnlGuide.ResumeLayout(False)
-        Me.Panel3.ResumeLayout(False)
         Me.pnlFlightPlanLeftSide.ResumeLayout(False)
         Me.pnlFlightPlanLeftSide.PerformLayout()
         Me.grbTaskInfo.ResumeLayout(False)
