@@ -370,6 +370,7 @@ Public Class Main
     End Sub
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        FixForDropDownCombos()
         Select Case TabControl1.SelectedTab.Name
             Case "tabBriefing"
                 GenerateBriefing()
@@ -3524,6 +3525,8 @@ Public Class Main
                 pnlWizardBriefing.Visible = False
                 toolStripStopGuide.Visible = False
                 grpGroupEventPost.Width = tabEvent.Width - 15
+                FixForDropDownCombos()
+
             Case 1 'Select flight plan
                 TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
@@ -4008,6 +4011,7 @@ Public Class Main
         pnlEventArrow.Top = 0
         btnEventGuideNext.Left = 552
         btnEventGuideNext.Top = 3
+        FixForDropDownCombos()
     End Sub
 
     Private Sub SetEventGuidePanelToRight()
