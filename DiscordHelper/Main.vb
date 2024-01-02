@@ -102,6 +102,9 @@ Public Class Main
         SessionSettings.Load()
 
         RestoreMainFormLocationAndSize()
+        If SessionSettings.WaitSecondsForFiles >= 1 AndAlso SessionSettings.WaitSecondsForFiles <= 10 Then
+            numWaitSecondsForFiles.Value = SessionSettings.WaitSecondsForFiles
+        End If
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -332,6 +335,7 @@ Public Class Main
         Else
             SessionSettings.MainFormSize = Me.Size.ToString()
             SessionSettings.MainFormLocation = Me.Location.ToString()
+            SessionSettings.WaitSecondsForFiles = numWaitSecondsForFiles.Value
             SessionSettings.LastFileLoaded = _CurrentSessionFile
             SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
             SessionSettings.Save()
@@ -1078,6 +1082,10 @@ Public Class Main
 
 #Region "Discord post buttons on the Flight Plan Tab"
 
+    Private Sub chkDPOExpertMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOExpertMode.CheckedChanged
+
+    End Sub
+
     Private Sub chkDPOFilesWithDescription_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOFilesWithDescription.CheckedChanged
 
         If chkDPOFilesWithDescription.Checked Then
@@ -1205,6 +1213,124 @@ Public Class Main
             Exit Sub
         End If
 
+        Dim altRestrictions As String = String.Empty
+        If chkDPOAltRestrictions.Enabled AndAlso chkDPOAltRestrictions.Checked Then
+            altRestrictions = txtAltRestrictions.Text.Trim
+        End If
+        If altRestrictions.Length > 0 Then
+            altRestrictions = $"{altRestrictions}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim completeWeather As String = String.Empty
+        If chkDPOWeatherInfo.Enabled AndAlso chkDPOWeatherInfo.Checked Then
+            completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
+        End If
+        If completeWeather.Length > 0 Then
+            completeWeather = $"{completeWeather}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim waypoints As String = String.Empty
+        If chkDPOWaypoints.Enabled AndAlso chkDPOWaypoints.Checked Then
+            waypoints = txtWaypointsDetails.Text.Trim
+        End If
+        If waypoints.Length > 0 Then
+            waypoints = $"{waypoints}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim addOns As String = String.Empty
+        If chkDPOAddOns.Enabled AndAlso chkDPOAddOns.Checked Then
+            addOns = txtAddOnsDetails.Text.Trim
+        End If
+        If addOns.Length > 0 Then
+            addOns = $"{addOns}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim invitation As String = String.Empty
+        If chkDPOResultsInvitation.Enabled AndAlso chkDPOResultsInvitation.Checked Then
+            invitation = ResultsCopy()
+        End If
+        If invitation.Length > 0 Then
+            invitation = $"{invitation}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim taskFeatured As String = String.Empty
+        If chkDPOFeaturedOnGroupFlight.Enabled AndAlso chkDPOFeaturedOnGroupFlight.Checked Then
+            taskFeatured = TaskFeatureOnGroupFlight()
+        End If
+        If taskFeatured.Length > 0 Then
+            taskFeatured = $"{taskFeatured}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim msg As String = String.Empty
+        'If the weather chart is included, do Restrictions and Weather together then chart, then rest of details together.
+        'If weather chart is not included, do everything together.
+        If chkDPOWeatherChart.Enabled AndAlso chkDPOWeatherChart.Checked Then
+            msg = $"{altRestrictions}{completeWeather}"
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
+                                "Creating altitude restrictions and weather details post in the thread.",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+            If Not autoContinue Then
+                Exit Sub
+            End If
+            'Weather Chart
+            CopyWeatherGraphToClipboard()
+            autoContinue = CopyContent.ShowContent(Me,
+                                "Weather chart",
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the task's thread.",
+                                "Creating weather chart post in the thread.",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked,
+                                True,
+                                numWaitSecondsForFiles.Value / 2 * 1000)
+            If Not autoContinue Then
+                Exit Sub
+            End If
+        End If
+
+        If addOns.Trim.Length > 0 Then
+            'There are add-ons, we must post them without the rest so the embeds are created right under
+            If msg.Trim.Length = 0 Then
+                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
+            Else
+                msg = $"{waypoints}{addOns}"
+            End If
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
+                            "Creating remaining details up to add-ons to post in the thread.",
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
+            If Not autoContinue Then
+                Exit Sub
+            End If
+            msg = $"{invitation}{taskFeatured}"
+        Else
+            'No add-ons, we can post everything remaining all at once
+            If msg.Trim.Length = 0 Then
+                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}{invitation}{taskFeatured}"
+            Else
+                msg = $"{waypoints}{addOns}{invitation}{taskFeatured}"
+            End If
+        End If
+
+        'Remaining details
+        If msg.Trim.Length > 0 Then
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
+                            "Creating all remaining details post in the thread.",
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
+        End If
+        If Not autoContinue Then
+            Exit Sub
+        End If
 
     End Sub
 
@@ -1547,13 +1673,24 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
 
+        autoContinue = MsgBoxWithPicture.ShowContent(Me,
+                                                     "StartTaskWorkflow.gif",
+                                                     "Please open the Discord app and position your cursor as shown below",
+                                                     "Once your cursor is in the right field, you can click OK and start posting.",
+                                                     "Instructions to read before starting the post!")
+
+        If Not autoContinue Then
+            Return autoContinue
+        End If
+
         Clipboard.SetText(txtFPResults.Text)
 
         autoContinue = CopyContent.ShowContent(Me,
                             txtFPResults.Text,
-                            $"You can now post the main flight plan message directly in the tasks/plans channel. Then get the link to that newly created post in Discord.{Environment.NewLine}Skip (Ok) if already done.",
+                            $"You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY.{Environment.NewLine}Skip (Ok) if already done.",
                             "Creating main FP post",
-                            New List(Of String) From {"^v"})
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
 
         If Not autoContinue Then
             Return autoContinue
@@ -1590,13 +1727,12 @@ Public Class Main
 
         Dim fpTitle As String = $"{txtTitle.Text}{AddFlagsToTitle()}"
         Clipboard.SetText(fpTitle)
-        autoContinue = CopyContent.ShowContent(Me,
-                            fpTitle,
-                            "Now create a thread and position the cursor on the thread name field. Then paste the thread's title OR click Auto Paste (not both!).",
-                            "Creating FP thread",
-                            New List(Of String) From {"^v"},
-                            True,
-                            False)
+
+        autoContinue = MsgBoxWithPicture.ShowContent(Me,
+                                                     "CreateTaskThread.gif",
+                                                     "Follow the instructions as shown below to create the task's thread.",
+                                                     "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
+                                                     "Instructions for the creation of the task's thread!")
 
         Return autoContinue
 
@@ -1615,7 +1751,10 @@ Public Class Main
                                     cboCoverImage.SelectedItem,
                                     $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the copied cover image as the very first message in the task's thread.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Posting the cover image for the task in the thread.",
-                                    New List(Of String) From {"^v"})
+                                    New List(Of String) From {"^v"},
+                                    chkDPOExpertMode.Checked,
+                                    True,
+                                    numWaitSecondsForFiles.Value / 2 * 1000)
             Else
                 autoContinue = True
             End If
@@ -1636,7 +1775,8 @@ Public Class Main
                                 txtFullDescriptionResults.Text.Trim,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the full description as the next message in the task's thread.",
                                 "Creating full description post in the thread.",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
 
         Return autoContinue
 
@@ -1671,7 +1811,7 @@ Public Class Main
                                     $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the copied files as the next message in the thread WITHOUT posting it and come back for the text for this message.",
                                     "Creating the files post in the thread - actual files first",
                                     New List(Of String) From {"^v"},
-                                    True,
+                                    chkDPOExpertMode.Checked,
                                     False)
         Else
             Using New Centered_MessageBox(Me)
@@ -1721,7 +1861,10 @@ Public Class Main
                                 txtFilesText.Text,
                                 "Now enter the file info in the current message in the thread and post it.",
                                 "Creating the files post in the thread - file info",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked,
+                                True,
+                                numWaitSecondsForFiles.Value * 1000)
 
         Return autoContinue
 
@@ -1776,86 +1919,7 @@ Public Class Main
         sb.Clear()
     End Sub
 
-    Private Function AltRestricCopy() As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        Dim msg As String = txtAltRestrictions.Text
-
-        If msg.Trim = String.Empty Then
-        Else
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Now paste the restrictions and weather content as the next message in the thread!",
-                                "Step 4 - Creating post for restrictions in the thread.",
-                                New List(Of String) From {"^v"})
-        End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function WeatherCopy() As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        Dim msg As String = txtWeatherFirstPart.Text & vbCrLf & vbCrLf & txtWeatherWinds.Text & vbCrLf & vbCrLf & txtWeatherClouds.Text & vbCrLf
-
-        If msg.Trim = String.Empty Then
-        Else
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Now paste the restrictions and weather content as the next message in the thread!",
-                                "Step 4 - Creating post for restrictions in the thread.",
-                                New List(Of String) From {"^v"})
-        End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function WaypointsCopy() As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        If txtWaypointsDetails.Text.Length = 0 Then
-        Else
-            Clipboard.SetText(txtWaypointsDetails.Text)
-            autoContinue = CopyContent.ShowContent(Me,
-                                txtWaypointsDetails.Text,
-                                "Now post the waypoints details as the next message in the thread.",
-                                "Step 5 - Creating waypoints post in the thread.",
-                                New List(Of String) From {"^v"})
-        End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function AddOnsCopy() As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        If txtAddOnsDetails.Text.Length = 0 Then
-        Else
-            Clipboard.SetText(txtAddOnsDetails.Text)
-            autoContinue = CopyContent.ShowContent(Me,
-                                txtAddOnsDetails.Text,
-                                "Now post the add-ons details as the last message in the thread.",
-                                "Step 6 - Creating add-ons post in the thread.",
-                                New List(Of String) From {"^v"})
-
-        End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function ResultsCopy() As Boolean
-
-        Dim autoContinue As Boolean = True
+    Private Function ResultsCopy() As String
 
         Dim msg As String = String.Empty
 
@@ -1864,17 +1928,27 @@ Public Class Main
             msg = $"{msg}## 🏁 Results{Environment.NewLine}Feel free to share your task results in this thread, creating a central spot for everyone's achievements."
         End If
 
-        If msg.Trim = String.Empty Then
-        Else
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Now paste the invitation to post results as the next message in the thread!",
-                                "Creating post for results invitation in the thread.",
-                                New List(Of String) From {"^v"})
+        Return msg
+
+    End Function
+
+    Private Function TaskFeatureOnGroupFlight() As String
+
+        Dim sb As New StringBuilder
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+
+        sb.AppendLine("## :calendar: Group Flight")
+        sb.AppendLine($"This flight will be featured on the {_ClubPreset.ClubFullName} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
+
+        'check which shared link is available
+        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
+            sb.AppendLine($"{txtDiscordEventShareURL.Text}")
+        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
+            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Group Event Link]({txtGroupEventPostURL.Text})")
         End If
 
-        Return autoContinue
+        Return sb.ToString
 
     End Function
 
@@ -2604,8 +2678,7 @@ Public Class Main
                                 txtGroupFlightEventPost.Text,
                                 $"You can now post the group flight Event In the proper Discord channel For the club/group.{Environment.NewLine}Then copy the link To that newly created message.{Environment.NewLine}Finally, paste the link In the URL field just below For Discord Event.",
                                 "Creating group flight post",
-                                New List(Of String) From {"^v"},
-                                True)
+                                New List(Of String) From {"^v"})
 
         If Not autoContinue Then Exit Sub
 
@@ -2645,7 +2718,8 @@ Public Class Main
                             fpTitle.ToString,
                             "Now create a thread and position the cursor on the thread name field.", "Creating group flight thread",
                             New List(Of String) From {"^v"},
-                            True, False)
+                            True,
+                            False)
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -2736,8 +2810,7 @@ Public Class Main
                                 txtDiscordEventTopic.Text,
                                 "Paste the topic into the Event Topic field on Discord.",
                                 "Creating Discord Event",
-                                New List(Of String) From {"^v"},
-                                True)
+                                New List(Of String) From {"^v"})
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2755,8 +2828,7 @@ Public Class Main
                                 txtDiscordEventDescription.Text,
                                 "Paste the description into the Event Description field on Discord.",
                                 "Creating Discord Event",
-                                New List(Of String) From {"^v"},
-                                True)
+                                New List(Of String) From {"^v"})
 
         End If
         If _GuideCurrentStep <> 0 Then
@@ -2958,27 +3030,13 @@ Public Class Main
             Exit Sub
         End If
 
-        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
-
-        Dim sb As New StringBuilder
-
-        sb.AppendLine("## :calendar: Group Flight")
-        sb.AppendLine($"This flight will be featured on the {_ClubPreset.ClubFullName} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
-
-        'check which shared link is available
-        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
-            sb.AppendLine($"{txtDiscordEventShareURL.Text}")
-        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
-            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Group Event Link]({txtGroupEventPostURL.Text})")
-        End If
-
-        Clipboard.SetText(sb.ToString)
+        Dim msg As String = TaskFeatureOnGroupFlight()
+        Clipboard.SetText(msg)
         CopyContent.ShowContent(Me,
-                                sb.ToString,
+                                msg,
                                 "On the task's thread, paste the content of the message to share the event for this task.",
                                 "Sharing Discord Event to Task",
-                                New List(Of String) From {"^v"},
-                                True)
+                                New List(Of String) From {"^v"})
 
         If _GuideCurrentStep <> 0 Then
             _GuideCurrentStep += 1
@@ -3601,50 +3659,34 @@ Public Class Main
                 pnlWizardDiscord.Top = 26
                 lblDiscordGuideInstructions.Text = "If this is a repost on an existing task, enable this to set the original date the task was published."
                 SetFocusOnField(chkRepost, fromF1Key)
-            Case 41 'Create FP post
+            Case 41 'Discord Post Options for task
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 110
-                lblDiscordGuideInstructions.Text = "You are now ready to create the task's primary post in Discord. Click this button to copy the content to your clipboard and receive instructions."
-                'SetFocusOnField(btnFPMainInfoCopy, fromF1Key)
-            Case 42 'Copy Description
+                pnlWizardDiscord.Top = 220
+                lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
+                SetFocusOnField(chkDPOMainPost, fromF1Key)
+            Case 42 'Seconds to wait for files
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 223
-                lblDiscordGuideInstructions.Text = "Click this button to copy the full description to your clipboard and receive instructions."
-                'SetFocusOnField(btnFullDescriptionCopy, fromF1Key)
-            Case 43 'Copy Files
+                pnlWizardDiscord.Top = 299
+                lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
+                SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
+            Case 43 'Reset all options to default
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 307
-                lblDiscordGuideInstructions.Text = "Once you've created the primary post and thread on Discord, click this button to put the files into your clipboard and receive instructions."
-                'SetFocusOnField(btnFilesCopy, fromF1Key)
-            Case 44 'Copy Files Legend
+                pnlWizardDiscord.Top = 557
+                lblDiscordGuideInstructions.Text = "Click this button to reset all the options above to their default values."
+                SetFocusOnField(btnDPOResetToDefault, fromF1Key)
+            Case 44 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 360
-                lblDiscordGuideInstructions.Text = "Once you've pasted the files in Discord, click this button to put the standard legend into your clipboard and receive instructions."
-                'SetFocusOnField(btnFilesTextCopy, fromF1Key)
-            Case 45 'Merge remaining content
+                pnlWizardDiscord.Top = 600
+                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
+                SetFocusOnField(btnStartTaskPost, fromF1Key)
+            Case 45 'Automatic workflow progression
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 405
-                lblDiscordGuideInstructions.Text = "You can select to merge all remaining content in a single post, depending also on the size. Or, you can do individual posts in the thread."
-                'SetFocusOnField(chkGroupSecondaryPosts, fromF1Key)
-            Case 46 'Remaining content OR Restrictions & Weather
-                SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 449
-                lblDiscordGuideInstructions.Text = "Altitude Restrictions and Weather info - You can click this button and receive instructions for this next post."
-                'SetFocusOnField(btnAltRestricCopy, fromF1Key)
+                pnlWizardDiscord.Top = 635
+                lblDiscordGuideInstructions.Text = "When you enable this, the workflow will try to progress automatically step after step when possible."
+                SetFocusOnField(chkDPOExpertMode, fromF1Key)
 
-            Case 47 'Waypoints
-                SetDiscordGuidePanelToLeft()
-                'pnlWizardDiscord.Top = btnWaypointsCopy.Top + 150
-                lblDiscordGuideInstructions.Text = "Click this button to copy the waypoints details (very useful for xBox users) to your clipboard and receive instructions."
-                'SetFocusOnField(btnWaypointsCopy, fromF1Key)
-            Case 48 'Recommended add-ons
-                SetDiscordGuidePanelToLeft()
-                'pnlWizardDiscord.Top = btnAddOnsCopy.Top + 150
-                lblDiscordGuideInstructions.Text = "Finally, click this button to copy the recommended add-ons to your clipboard and receive instructions."
-                'SetFocusOnField(btnAddOnsCopy, fromF1Key)
-
-            Case 49 To 59 'Next section
+            Case 46 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -4472,6 +4514,8 @@ Public Class Main
         End If
 
     End Sub
+
+
 
 #End Region
 

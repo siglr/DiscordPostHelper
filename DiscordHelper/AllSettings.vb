@@ -29,6 +29,9 @@ Public Class AllSettings
     <XmlElement("MainFormLocation")>
     Public Property MainFormLocation As String
 
+    <XmlElement("WaitSecondsForFiles")>
+    Public Property WaitSecondsForFiles As Integer
+
     Public Sub New()
 
     End Sub
@@ -58,6 +61,7 @@ Public Class AllSettings
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
             FlightPlanTabSplitterLocation = settingsInFile.FlightPlanTabSplitterLocation
+            WaitSecondsForFiles = settingsInFile.WaitSecondsForFiles
 
         Else
             settingsFound = False

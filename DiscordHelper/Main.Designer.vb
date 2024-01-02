@@ -235,7 +235,9 @@ Partial Class Main
         Me.chkDPOFilesWithDescription = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel6 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOFilesAlone = New System.Windows.Forms.CheckBox()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel15 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.numWaitSecondsForFiles = New System.Windows.Forms.NumericUpDown()
         Me.FlowLayoutPanel7 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOAltRestrictions = New System.Windows.Forms.CheckBox()
         Me.lblNbrCarsRestrictions = New System.Windows.Forms.Label()
@@ -244,12 +246,22 @@ Partial Class Main
         Me.lblNbrCarsWeather = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel9 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOWeatherChart = New System.Windows.Forms.CheckBox()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel10 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOWaypoints = New System.Windows.Forms.CheckBox()
         Me.lblNbrCarsWaypoints = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel11 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOAddOns = New System.Windows.Forms.CheckBox()
+        Me.lblNbrCarsAddOns = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel12 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOResultsInvitation = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel13 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOFeaturedOnGroupFlight = New System.Windows.Forms.CheckBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.btnDPOResetToDefault = New System.Windows.Forms.Button()
         Me.btnStartTaskPost = New System.Windows.Forms.Button()
+        Me.FlowLayoutPanel14 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOExpertMode = New System.Windows.Forms.CheckBox()
         Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
         Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
         Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
@@ -325,14 +337,6 @@ Partial Class Main
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.FlowLayoutPanel11 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDPOAddOns = New System.Windows.Forms.CheckBox()
-        Me.lblNbrCarsAddOns = New System.Windows.Forms.Label()
-        Me.FlowLayoutPanel12 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDPOResultsInvitation = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel13 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDPOFeaturedOnGroupFlight = New System.Windows.Forms.CheckBox()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -365,10 +369,16 @@ Partial Class Main
         Me.FlowLayoutPanel3.SuspendLayout()
         Me.FlowLayoutPanel5.SuspendLayout()
         Me.FlowLayoutPanel6.SuspendLayout()
+        Me.FlowLayoutPanel15.SuspendLayout()
+        CType(Me.numWaitSecondsForFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.FlowLayoutPanel7.SuspendLayout()
         Me.FlowLayoutPanel8.SuspendLayout()
         Me.FlowLayoutPanel9.SuspendLayout()
         Me.FlowLayoutPanel10.SuspendLayout()
+        Me.FlowLayoutPanel11.SuspendLayout()
+        Me.FlowLayoutPanel12.SuspendLayout()
+        Me.FlowLayoutPanel13.SuspendLayout()
+        Me.FlowLayoutPanel14.SuspendLayout()
         Me.grpDiscordGroupFlight.SuspendLayout()
         Me.grpTaskFeatured.SuspendLayout()
         Me.grpGroupFlightEvent.SuspendLayout()
@@ -377,9 +387,6 @@ Partial Class Main
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
-        Me.FlowLayoutPanel11.SuspendLayout()
-        Me.FlowLayoutPanel12.SuspendLayout()
-        Me.FlowLayoutPanel13.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -2666,7 +2673,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 750)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(411, 635)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2784,7 +2791,7 @@ Partial Class Main
         Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
         Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
         Me.dtRepostOriginalDate.TabIndex = 1
-        Me.dtRepostOriginalDate.Tag = "4"
+        Me.dtRepostOriginalDate.Tag = "40"
         Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date to set in MSFS for the flight")
         '
         'chkRepost
@@ -2796,6 +2803,7 @@ Partial Class Main
         Me.chkRepost.Name = "chkRepost"
         Me.chkRepost.Size = New System.Drawing.Size(126, 24)
         Me.chkRepost.TabIndex = 0
+        Me.chkRepost.Tag = "40"
         Me.chkRepost.Text = "This is a repost"
         Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
         Me.chkRepost.UseVisualStyleBackColor = False
@@ -2807,7 +2815,7 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.flpDiscordPostOptions)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 100)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 584)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 628)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Discord Post Options"
@@ -2825,7 +2833,7 @@ Partial Class Main
         Me.flpDiscordPostOptions.Controls.Add(Me.Label8)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel5)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel6)
-        Me.flpDiscordPostOptions.Controls.Add(Me.Label11)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel15)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel7)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel8)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel9)
@@ -2837,10 +2845,11 @@ Partial Class Main
         Me.flpDiscordPostOptions.Controls.Add(Me.Label12)
         Me.flpDiscordPostOptions.Controls.Add(Me.btnDPOResetToDefault)
         Me.flpDiscordPostOptions.Controls.Add(Me.btnStartTaskPost)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel14)
         Me.flpDiscordPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordPostOptions.Location = New System.Drawing.Point(0, 26)
         Me.flpDiscordPostOptions.Name = "flpDiscordPostOptions"
-        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 552)
+        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 596)
         Me.flpDiscordPostOptions.TabIndex = 82
         '
         'FlowLayoutPanel1
@@ -2865,6 +2874,7 @@ Partial Class Main
         Me.chkDPOMainPost.Name = "chkDPOMainPost"
         Me.chkDPOMainPost.Size = New System.Drawing.Size(103, 26)
         Me.chkDPOMainPost.TabIndex = 0
+        Me.chkDPOMainPost.Tag = "41"
         Me.chkDPOMainPost.Text = "Main post"
         Me.ToolTip1.SetToolTip(Me.chkDPOMainPost, "Select if you want to include the task's main information.")
         Me.chkDPOMainPost.UseVisualStyleBackColor = True
@@ -2906,6 +2916,7 @@ Partial Class Main
         Me.chkDPOThreadCreation.Name = "chkDPOThreadCreation"
         Me.chkDPOThreadCreation.Size = New System.Drawing.Size(145, 26)
         Me.chkDPOThreadCreation.TabIndex = 0
+        Me.chkDPOThreadCreation.Tag = "41"
         Me.chkDPOThreadCreation.Text = "Thread creation"
         Me.ToolTip1.SetToolTip(Me.chkDPOThreadCreation, "Select if you want to include the creation of the task's thread.")
         Me.chkDPOThreadCreation.UseVisualStyleBackColor = True
@@ -2916,7 +2927,7 @@ Partial Class Main
         Me.Label3.Location = New System.Drawing.Point(3, 52)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(227, 20)
-        Me.Label3.TabIndex = 16
+        Me.Label3.TabIndex = 0
         Me.Label3.Text = " "
         '
         'FlowLayoutPanel4
@@ -2940,6 +2951,7 @@ Partial Class Main
         Me.chkDPOIncludeCoverImage.Name = "chkDPOIncludeCoverImage"
         Me.chkDPOIncludeCoverImage.Size = New System.Drawing.Size(123, 26)
         Me.chkDPOIncludeCoverImage.TabIndex = 0
+        Me.chkDPOIncludeCoverImage.Tag = "41"
         Me.chkDPOIncludeCoverImage.Text = "Cover image"
         Me.ToolTip1.SetToolTip(Me.chkDPOIncludeCoverImage, "Select if you want to include the cover image.")
         Me.chkDPOIncludeCoverImage.UseVisualStyleBackColor = True
@@ -2966,6 +2978,7 @@ Partial Class Main
         Me.chkDPOFullDescription.Name = "chkDPOFullDescription"
         Me.chkDPOFullDescription.Size = New System.Drawing.Size(143, 26)
         Me.chkDPOFullDescription.TabIndex = 0
+        Me.chkDPOFullDescription.Tag = "41"
         Me.chkDPOFullDescription.Text = "Full description"
         Me.ToolTip1.SetToolTip(Me.chkDPOFullDescription, "Select if you want to include the full description.")
         Me.chkDPOFullDescription.UseVisualStyleBackColor = True
@@ -2989,7 +3002,7 @@ Partial Class Main
         Me.Label8.Location = New System.Drawing.Point(3, 124)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(227, 20)
-        Me.Label8.TabIndex = 17
+        Me.Label8.TabIndex = 1
         Me.Label8.Text = " "
         '
         'FlowLayoutPanel5
@@ -3013,6 +3026,7 @@ Partial Class Main
         Me.chkDPOFilesWithDescription.Name = "chkDPOFilesWithDescription"
         Me.chkDPOFilesWithDescription.Size = New System.Drawing.Size(252, 26)
         Me.chkDPOFilesWithDescription.TabIndex = 0
+        Me.chkDPOFilesWithDescription.Tag = "41"
         Me.chkDPOFilesWithDescription.Text = "Files with description / legend"
         Me.ToolTip1.SetToolTip(Me.chkDPOFilesWithDescription, "Select if you want to include the file description along with the files.")
         Me.chkDPOFilesWithDescription.UseVisualStyleBackColor = True
@@ -3036,18 +3050,46 @@ Partial Class Main
         Me.chkDPOFilesAlone.Name = "chkDPOFilesAlone"
         Me.chkDPOFilesAlone.Size = New System.Drawing.Size(277, 26)
         Me.chkDPOFilesAlone.TabIndex = 0
+        Me.chkDPOFilesAlone.Tag = "41"
         Me.chkDPOFilesAlone.Text = "Files without description / legend"
         Me.ToolTip1.SetToolTip(Me.chkDPOFilesAlone, "Select if you want to post only the files without their description.")
         Me.chkDPOFilesAlone.UseVisualStyleBackColor = True
         '
-        'Label11
+        'FlowLayoutPanel15
         '
-        Me.Label11.Enabled = False
-        Me.Label11.Location = New System.Drawing.Point(3, 196)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(227, 20)
-        Me.Label11.TabIndex = 18
-        Me.Label11.Text = " "
+        Me.FlowLayoutPanel15.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel15.Controls.Add(Me.Label15)
+        Me.FlowLayoutPanel15.Controls.Add(Me.numWaitSecondsForFiles)
+        Me.FlowLayoutPanel15.Location = New System.Drawing.Point(3, 196)
+        Me.FlowLayoutPanel15.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel15.Name = "FlowLayoutPanel15"
+        Me.FlowLayoutPanel15.Size = New System.Drawing.Size(390, 34)
+        Me.FlowLayoutPanel15.TabIndex = 28
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.Label15.Location = New System.Drawing.Point(3, 5)
+        Me.Label15.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(191, 22)
+        Me.Label15.TabIndex = 0
+        Me.Label15.Text = "Seconds to wait for files:"
+        '
+        'numWaitSecondsForFiles
+        '
+        Me.numWaitSecondsForFiles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.numWaitSecondsForFiles.Location = New System.Drawing.Point(200, 3)
+        Me.numWaitSecondsForFiles.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.numWaitSecondsForFiles.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.numWaitSecondsForFiles.Name = "numWaitSecondsForFiles"
+        Me.numWaitSecondsForFiles.Size = New System.Drawing.Size(55, 30)
+        Me.numWaitSecondsForFiles.TabIndex = 1
+        Me.numWaitSecondsForFiles.Tag = "42"
+        Me.numWaitSecondsForFiles.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.numWaitSecondsForFiles.Value = New Decimal(New Integer() {5, 0, 0, 0})
         '
         'FlowLayoutPanel7
         '
@@ -3055,7 +3097,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel7.Controls.Add(Me.chkDPOAltRestrictions)
         Me.FlowLayoutPanel7.Controls.Add(Me.lblNbrCarsRestrictions)
-        Me.FlowLayoutPanel7.Location = New System.Drawing.Point(3, 216)
+        Me.FlowLayoutPanel7.Location = New System.Drawing.Point(3, 230)
         Me.FlowLayoutPanel7.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel7.Name = "FlowLayoutPanel7"
         Me.FlowLayoutPanel7.Size = New System.Drawing.Size(390, 26)
@@ -3071,6 +3113,7 @@ Partial Class Main
         Me.chkDPOAltRestrictions.Name = "chkDPOAltRestrictions"
         Me.chkDPOAltRestrictions.Size = New System.Drawing.Size(177, 26)
         Me.chkDPOAltRestrictions.TabIndex = 0
+        Me.chkDPOAltRestrictions.Tag = "41"
         Me.chkDPOAltRestrictions.Text = "Altitude restrictions"
         Me.ToolTip1.SetToolTip(Me.chkDPOAltRestrictions, "Select if you want to include the altitude restrictions.")
         Me.chkDPOAltRestrictions.UseVisualStyleBackColor = True
@@ -3092,7 +3135,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel8.Controls.Add(Me.chkDPOWeatherInfo)
         Me.FlowLayoutPanel8.Controls.Add(Me.lblNbrCarsWeather)
-        Me.FlowLayoutPanel8.Location = New System.Drawing.Point(3, 242)
+        Me.FlowLayoutPanel8.Location = New System.Drawing.Point(3, 256)
         Me.FlowLayoutPanel8.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel8.Name = "FlowLayoutPanel8"
         Me.FlowLayoutPanel8.Size = New System.Drawing.Size(390, 26)
@@ -3108,6 +3151,7 @@ Partial Class Main
         Me.chkDPOWeatherInfo.Name = "chkDPOWeatherInfo"
         Me.chkDPOWeatherInfo.Size = New System.Drawing.Size(143, 26)
         Me.chkDPOWeatherInfo.TabIndex = 0
+        Me.chkDPOWeatherInfo.Tag = "41"
         Me.chkDPOWeatherInfo.Text = "Weather details"
         Me.ToolTip1.SetToolTip(Me.chkDPOWeatherInfo, "Select if you want to include the weather details.")
         Me.chkDPOWeatherInfo.UseVisualStyleBackColor = True
@@ -3128,7 +3172,7 @@ Partial Class Main
         Me.FlowLayoutPanel9.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel9.Controls.Add(Me.chkDPOWeatherChart)
-        Me.FlowLayoutPanel9.Location = New System.Drawing.Point(3, 268)
+        Me.FlowLayoutPanel9.Location = New System.Drawing.Point(3, 282)
         Me.FlowLayoutPanel9.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel9.Name = "FlowLayoutPanel9"
         Me.FlowLayoutPanel9.Size = New System.Drawing.Size(390, 26)
@@ -3144,9 +3188,19 @@ Partial Class Main
         Me.chkDPOWeatherChart.Name = "chkDPOWeatherChart"
         Me.chkDPOWeatherChart.Size = New System.Drawing.Size(132, 26)
         Me.chkDPOWeatherChart.TabIndex = 0
+        Me.chkDPOWeatherChart.Tag = "41"
         Me.chkDPOWeatherChart.Text = "Weather chart"
         Me.ToolTip1.SetToolTip(Me.chkDPOWeatherChart, "Select if you want to include the weather chart.")
         Me.chkDPOWeatherChart.UseVisualStyleBackColor = True
+        '
+        'Label14
+        '
+        Me.Label14.Enabled = False
+        Me.Label14.Location = New System.Drawing.Point(3, 308)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(227, 20)
+        Me.Label14.TabIndex = 3
+        Me.Label14.Text = " "
         '
         'FlowLayoutPanel10
         '
@@ -3154,7 +3208,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel10.Controls.Add(Me.chkDPOWaypoints)
         Me.FlowLayoutPanel10.Controls.Add(Me.lblNbrCarsWaypoints)
-        Me.FlowLayoutPanel10.Location = New System.Drawing.Point(3, 314)
+        Me.FlowLayoutPanel10.Location = New System.Drawing.Point(3, 328)
         Me.FlowLayoutPanel10.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel10.Name = "FlowLayoutPanel10"
         Me.FlowLayoutPanel10.Size = New System.Drawing.Size(390, 26)
@@ -3170,6 +3224,7 @@ Partial Class Main
         Me.chkDPOWaypoints.Name = "chkDPOWaypoints"
         Me.chkDPOWaypoints.Size = New System.Drawing.Size(107, 26)
         Me.chkDPOWaypoints.TabIndex = 0
+        Me.chkDPOWaypoints.Tag = "41"
         Me.chkDPOWaypoints.Text = "Waypoints"
         Me.ToolTip1.SetToolTip(Me.chkDPOWaypoints, "Select if you want to include the waypoints details.")
         Me.chkDPOWaypoints.UseVisualStyleBackColor = True
@@ -3185,22 +3240,113 @@ Partial Class Main
         Me.lblNbrCarsWaypoints.TabIndex = 72
         Me.lblNbrCarsWaypoints.Text = "0"
         '
+        'FlowLayoutPanel11
+        '
+        Me.FlowLayoutPanel11.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel11.Controls.Add(Me.chkDPOAddOns)
+        Me.FlowLayoutPanel11.Controls.Add(Me.lblNbrCarsAddOns)
+        Me.FlowLayoutPanel11.Location = New System.Drawing.Point(3, 354)
+        Me.FlowLayoutPanel11.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel11.Name = "FlowLayoutPanel11"
+        Me.FlowLayoutPanel11.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel11.TabIndex = 24
+        '
+        'chkDPOAddOns
+        '
+        Me.chkDPOAddOns.AutoSize = True
+        Me.chkDPOAddOns.Checked = True
+        Me.chkDPOAddOns.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOAddOns.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOAddOns.Name = "chkDPOAddOns"
+        Me.chkDPOAddOns.Size = New System.Drawing.Size(208, 26)
+        Me.chkDPOAddOns.TabIndex = 0
+        Me.chkDPOAddOns.Tag = "41"
+        Me.chkDPOAddOns.Text = "Recommended add-ons"
+        Me.ToolTip1.SetToolTip(Me.chkDPOAddOns, "Select if you want to include the recommended add-ons.")
+        Me.chkDPOAddOns.UseVisualStyleBackColor = True
+        '
+        'lblNbrCarsAddOns
+        '
+        Me.lblNbrCarsAddOns.AutoSize = True
+        Me.lblNbrCarsAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.lblNbrCarsAddOns.Location = New System.Drawing.Point(217, 4)
+        Me.lblNbrCarsAddOns.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
+        Me.lblNbrCarsAddOns.Name = "lblNbrCarsAddOns"
+        Me.lblNbrCarsAddOns.Size = New System.Drawing.Size(19, 22)
+        Me.lblNbrCarsAddOns.TabIndex = 72
+        Me.lblNbrCarsAddOns.Text = "0"
+        '
+        'FlowLayoutPanel12
+        '
+        Me.FlowLayoutPanel12.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel12.Controls.Add(Me.chkDPOResultsInvitation)
+        Me.FlowLayoutPanel12.Location = New System.Drawing.Point(3, 380)
+        Me.FlowLayoutPanel12.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel12.Name = "FlowLayoutPanel12"
+        Me.FlowLayoutPanel12.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel12.TabIndex = 25
+        '
+        'chkDPOResultsInvitation
+        '
+        Me.chkDPOResultsInvitation.AutoSize = True
+        Me.chkDPOResultsInvitation.Checked = True
+        Me.chkDPOResultsInvitation.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOResultsInvitation.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOResultsInvitation.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOResultsInvitation.Name = "chkDPOResultsInvitation"
+        Me.chkDPOResultsInvitation.Size = New System.Drawing.Size(209, 26)
+        Me.chkDPOResultsInvitation.TabIndex = 0
+        Me.chkDPOResultsInvitation.Tag = "41"
+        Me.chkDPOResultsInvitation.Text = "Invitation to post results"
+        Me.ToolTip1.SetToolTip(Me.chkDPOResultsInvitation, "Select if you want to include an invitation to post results in the thread.")
+        Me.chkDPOResultsInvitation.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel13
+        '
+        Me.FlowLayoutPanel13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel13.Controls.Add(Me.chkDPOFeaturedOnGroupFlight)
+        Me.FlowLayoutPanel13.Location = New System.Drawing.Point(3, 406)
+        Me.FlowLayoutPanel13.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel13.Name = "FlowLayoutPanel13"
+        Me.FlowLayoutPanel13.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel13.TabIndex = 26
+        '
+        'chkDPOFeaturedOnGroupFlight
+        '
+        Me.chkDPOFeaturedOnGroupFlight.AutoSize = True
+        Me.chkDPOFeaturedOnGroupFlight.Checked = True
+        Me.chkDPOFeaturedOnGroupFlight.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOFeaturedOnGroupFlight.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOFeaturedOnGroupFlight.Name = "chkDPOFeaturedOnGroupFlight"
+        Me.chkDPOFeaturedOnGroupFlight.Size = New System.Drawing.Size(285, 26)
+        Me.chkDPOFeaturedOnGroupFlight.TabIndex = 0
+        Me.chkDPOFeaturedOnGroupFlight.Tag = "41"
+        Me.chkDPOFeaturedOnGroupFlight.Text = "Task featured on group flight event"
+        Me.ToolTip1.SetToolTip(Me.chkDPOFeaturedOnGroupFlight, "Select if you want to include the task featured on group flight notice.")
+        Me.chkDPOFeaturedOnGroupFlight.UseVisualStyleBackColor = True
+        '
         'Label12
         '
         Me.Label12.Enabled = False
-        Me.Label12.Location = New System.Drawing.Point(3, 418)
+        Me.Label12.Location = New System.Drawing.Point(3, 432)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(227, 20)
-        Me.Label12.TabIndex = 20
+        Me.Label12.TabIndex = 4
         Me.Label12.Text = " "
         '
         'btnDPOResetToDefault
         '
         Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(3, 441)
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(3, 455)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(387, 35)
-        Me.btnDPOResetToDefault.TabIndex = 15
+        Me.btnDPOResetToDefault.TabIndex = 5
+        Me.btnDPOResetToDefault.Tag = "43"
         Me.btnDPOResetToDefault.Text = "Reset all to default options"
         Me.ToolTip1.SetToolTip(Me.btnDPOResetToDefault, "Click to reset all options to the default values.")
         Me.btnDPOResetToDefault.UseVisualStyleBackColor = True
@@ -3208,14 +3354,38 @@ Partial Class Main
         'btnStartTaskPost
         '
         Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartTaskPost.Location = New System.Drawing.Point(3, 482)
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(3, 496)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(387, 37)
-        Me.btnStartTaskPost.TabIndex = 2
-        Me.btnStartTaskPost.Tag = "80"
+        Me.btnStartTaskPost.TabIndex = 6
+        Me.btnStartTaskPost.Tag = "44"
         Me.btnStartTaskPost.Text = "Start Discord Post Workflow"
         Me.ToolTip1.SetToolTip(Me.btnStartTaskPost, "Click this button to begin posting the task's details.")
         Me.btnStartTaskPost.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel14
+        '
+        Me.FlowLayoutPanel14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel14.Controls.Add(Me.chkDPOExpertMode)
+        Me.FlowLayoutPanel14.Location = New System.Drawing.Point(3, 536)
+        Me.FlowLayoutPanel14.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel14.Name = "FlowLayoutPanel14"
+        Me.FlowLayoutPanel14.Size = New System.Drawing.Size(390, 26)
+        Me.FlowLayoutPanel14.TabIndex = 27
+        '
+        'chkDPOExpertMode
+        '
+        Me.chkDPOExpertMode.AutoSize = True
+        Me.chkDPOExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOExpertMode.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOExpertMode.Name = "chkDPOExpertMode"
+        Me.chkDPOExpertMode.Size = New System.Drawing.Size(310, 26)
+        Me.chkDPOExpertMode.TabIndex = 0
+        Me.chkDPOExpertMode.Tag = "45"
+        Me.chkDPOExpertMode.Text = "Automatic progression (experimental)"
+        Me.ToolTip1.SetToolTip(Me.chkDPOExpertMode, "Select if you want the workflow to progress automatically whenever possible.")
+        Me.chkDPOExpertMode.UseVisualStyleBackColor = True
         '
         'txtDiscordEventDescription
         '
@@ -3975,102 +4145,6 @@ Partial Class Main
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
         '
-        'FlowLayoutPanel11
-        '
-        Me.FlowLayoutPanel11.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel11.Controls.Add(Me.chkDPOAddOns)
-        Me.FlowLayoutPanel11.Controls.Add(Me.lblNbrCarsAddOns)
-        Me.FlowLayoutPanel11.Location = New System.Drawing.Point(3, 340)
-        Me.FlowLayoutPanel11.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel11.Name = "FlowLayoutPanel11"
-        Me.FlowLayoutPanel11.Size = New System.Drawing.Size(390, 26)
-        Me.FlowLayoutPanel11.TabIndex = 24
-        '
-        'chkDPOAddOns
-        '
-        Me.chkDPOAddOns.AutoSize = True
-        Me.chkDPOAddOns.Checked = True
-        Me.chkDPOAddOns.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDPOAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDPOAddOns.Location = New System.Drawing.Point(3, 3)
-        Me.chkDPOAddOns.Name = "chkDPOAddOns"
-        Me.chkDPOAddOns.Size = New System.Drawing.Size(208, 26)
-        Me.chkDPOAddOns.TabIndex = 0
-        Me.chkDPOAddOns.Text = "Recommended add-ons"
-        Me.ToolTip1.SetToolTip(Me.chkDPOAddOns, "Select if you want to include the recommended add-ons.")
-        Me.chkDPOAddOns.UseVisualStyleBackColor = True
-        '
-        'lblNbrCarsAddOns
-        '
-        Me.lblNbrCarsAddOns.AutoSize = True
-        Me.lblNbrCarsAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.lblNbrCarsAddOns.Location = New System.Drawing.Point(217, 4)
-        Me.lblNbrCarsAddOns.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
-        Me.lblNbrCarsAddOns.Name = "lblNbrCarsAddOns"
-        Me.lblNbrCarsAddOns.Size = New System.Drawing.Size(19, 22)
-        Me.lblNbrCarsAddOns.TabIndex = 72
-        Me.lblNbrCarsAddOns.Text = "0"
-        '
-        'FlowLayoutPanel12
-        '
-        Me.FlowLayoutPanel12.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel12.Controls.Add(Me.chkDPOResultsInvitation)
-        Me.FlowLayoutPanel12.Location = New System.Drawing.Point(3, 366)
-        Me.FlowLayoutPanel12.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel12.Name = "FlowLayoutPanel12"
-        Me.FlowLayoutPanel12.Size = New System.Drawing.Size(390, 26)
-        Me.FlowLayoutPanel12.TabIndex = 25
-        '
-        'chkDPOResultsInvitation
-        '
-        Me.chkDPOResultsInvitation.AutoSize = True
-        Me.chkDPOResultsInvitation.Checked = True
-        Me.chkDPOResultsInvitation.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDPOResultsInvitation.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDPOResultsInvitation.Location = New System.Drawing.Point(3, 3)
-        Me.chkDPOResultsInvitation.Name = "chkDPOResultsInvitation"
-        Me.chkDPOResultsInvitation.Size = New System.Drawing.Size(209, 26)
-        Me.chkDPOResultsInvitation.TabIndex = 0
-        Me.chkDPOResultsInvitation.Text = "Invitation to post results"
-        Me.ToolTip1.SetToolTip(Me.chkDPOResultsInvitation, "Select if you want to include an invitation to post results in the thread.")
-        Me.chkDPOResultsInvitation.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel13
-        '
-        Me.FlowLayoutPanel13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel13.Controls.Add(Me.chkDPOFeaturedOnGroupFlight)
-        Me.FlowLayoutPanel13.Location = New System.Drawing.Point(3, 392)
-        Me.FlowLayoutPanel13.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel13.Name = "FlowLayoutPanel13"
-        Me.FlowLayoutPanel13.Size = New System.Drawing.Size(390, 26)
-        Me.FlowLayoutPanel13.TabIndex = 26
-        '
-        'chkDPOFeaturedOnGroupFlight
-        '
-        Me.chkDPOFeaturedOnGroupFlight.AutoSize = True
-        Me.chkDPOFeaturedOnGroupFlight.Checked = True
-        Me.chkDPOFeaturedOnGroupFlight.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDPOFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDPOFeaturedOnGroupFlight.Location = New System.Drawing.Point(3, 3)
-        Me.chkDPOFeaturedOnGroupFlight.Name = "chkDPOFeaturedOnGroupFlight"
-        Me.chkDPOFeaturedOnGroupFlight.Size = New System.Drawing.Size(285, 26)
-        Me.chkDPOFeaturedOnGroupFlight.TabIndex = 0
-        Me.chkDPOFeaturedOnGroupFlight.Text = "Task featured on group flight event"
-        Me.ToolTip1.SetToolTip(Me.chkDPOFeaturedOnGroupFlight, "Select if you want to include the task featured on group flight notice.")
-        Me.chkDPOFeaturedOnGroupFlight.UseVisualStyleBackColor = True
-        '
-        'Label14
-        '
-        Me.Label14.Enabled = False
-        Me.Label14.Location = New System.Drawing.Point(3, 294)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(227, 20)
-        Me.Label14.TabIndex = 27
-        Me.Label14.Text = " "
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4135,6 +4209,9 @@ Partial Class Main
         Me.FlowLayoutPanel5.PerformLayout()
         Me.FlowLayoutPanel6.ResumeLayout(False)
         Me.FlowLayoutPanel6.PerformLayout()
+        Me.FlowLayoutPanel15.ResumeLayout(False)
+        Me.FlowLayoutPanel15.PerformLayout()
+        CType(Me.numWaitSecondsForFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.FlowLayoutPanel7.ResumeLayout(False)
         Me.FlowLayoutPanel7.PerformLayout()
         Me.FlowLayoutPanel8.ResumeLayout(False)
@@ -4143,6 +4220,14 @@ Partial Class Main
         Me.FlowLayoutPanel9.PerformLayout()
         Me.FlowLayoutPanel10.ResumeLayout(False)
         Me.FlowLayoutPanel10.PerformLayout()
+        Me.FlowLayoutPanel11.ResumeLayout(False)
+        Me.FlowLayoutPanel11.PerformLayout()
+        Me.FlowLayoutPanel12.ResumeLayout(False)
+        Me.FlowLayoutPanel12.PerformLayout()
+        Me.FlowLayoutPanel13.ResumeLayout(False)
+        Me.FlowLayoutPanel13.PerformLayout()
+        Me.FlowLayoutPanel14.ResumeLayout(False)
+        Me.FlowLayoutPanel14.PerformLayout()
         Me.grpDiscordGroupFlight.ResumeLayout(False)
         Me.grpTaskFeatured.ResumeLayout(False)
         Me.grpGroupFlightEvent.ResumeLayout(False)
@@ -4154,12 +4239,6 @@ Partial Class Main
         Me.pnlWizardBriefing.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
-        Me.FlowLayoutPanel11.ResumeLayout(False)
-        Me.FlowLayoutPanel11.PerformLayout()
-        Me.FlowLayoutPanel12.ResumeLayout(False)
-        Me.FlowLayoutPanel12.PerformLayout()
-        Me.FlowLayoutPanel13.ResumeLayout(False)
-        Me.FlowLayoutPanel13.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4452,7 +4531,6 @@ Partial Class Main
     Friend WithEvents btnDPOResetToDefault As Button
     Friend WithEvents Label3 As Label
     Friend WithEvents Label8 As Label
-    Friend WithEvents Label11 As Label
     Friend WithEvents FlowLayoutPanel7 As FlowLayoutPanel
     Friend WithEvents chkDPOAltRestrictions As CheckBox
     Friend WithEvents Label12 As Label
@@ -4472,4 +4550,9 @@ Partial Class Main
     Friend WithEvents FlowLayoutPanel13 As FlowLayoutPanel
     Friend WithEvents chkDPOFeaturedOnGroupFlight As CheckBox
     Friend WithEvents Label14 As Label
+    Friend WithEvents FlowLayoutPanel14 As FlowLayoutPanel
+    Friend WithEvents chkDPOExpertMode As CheckBox
+    Friend WithEvents FlowLayoutPanel15 As FlowLayoutPanel
+    Friend WithEvents Label15 As Label
+    Friend WithEvents numWaitSecondsForFiles As NumericUpDown
 End Class

@@ -10,6 +10,8 @@ Public Class CopyContent
     Private _Continue As Boolean = True
     Private _AutoPost As Boolean = True
     Private _keySequences As List(Of String) = Nothing
+    Private _msToWaitAfterPost As Integer
+    Private _expertMode As Boolean
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         Me.Close()
@@ -36,12 +38,19 @@ Public Class CopyContent
             If _AutoPost Then
                 My.Computer.Keyboard.SendKeys("{ENTER}", True)
             End If
+            Me.Cursor = Cursors.WaitCursor
+            lblMessage.Text = "Waiting a bit for Discord to complete posting."
+            Application.DoEvents()
+            Threading.Thread.Sleep(500)
+            Threading.Thread.Sleep(_msToWaitAfterPost)
+            Me.Cursor = Cursors.Default
+            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+            Me.Close()
+        Else
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"The Discord app can't be found / is not running.{Environment.NewLine}{Environment.NewLine}If you use Discord on a browser, you will have to paste and post manually.", "Discord app not running", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
-        Application.DoEvents()
-        Threading.Thread.Sleep(250)
-        SupportingFeatures.BringDPHToolToTop(Me.Handle)
-
-        Me.Close()
 
     End Sub
 
@@ -50,30 +59,26 @@ Public Class CopyContent
                                 message As String,
                                 title As String,
                                 Optional keySequences As List(Of String) = Nothing,
-                                Optional expertMode As Boolean = True,
-                                Optional autoPastePost As Boolean = True) As Boolean
+                                Optional expertMode As Boolean = False,
+                                Optional autoPastePost As Boolean = True,
+                                Optional msToWaitAfterPost As Integer = 500) As Boolean
 
         _Continue = True
         _AutoPost = autoPastePost
         _keySequences = keySequences
+        _msToWaitAfterPost = msToWaitAfterPost
+        _expertMode = expertMode
 
         Me.Text = title
         lblMessage.Text = message
         txtCopiedContent.Text = contentCopied
 
-        btnStopExpert.Visible = expertMode
+        btnStopExpert.Visible = True
 
-        If expertMode Then
-            Me.CancelButton = btnStopExpert
-            Me.AcceptButton = btnAutoPaste
-            btnAutoPaste.Focus()
-            Me.ActiveControl = btnAutoPaste
-        Else
-            Me.CancelButton = btnOk
-            Me.AcceptButton = btnOk
-            btnOk.Focus()
-            Me.ActiveControl = btnOk
-        End If
+        Me.CancelButton = btnStopExpert
+        Me.AcceptButton = btnAutoPaste
+        btnAutoPaste.Focus()
+        Me.ActiveControl = btnAutoPaste
 
         Me.ShowDialog(parent)
 
@@ -81,4 +86,11 @@ Public Class CopyContent
 
     End Function
 
+    Private Sub CopyContent_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+
+        If _expertMode Then
+            btnAutoPaste_Click(sender, e)
+        End If
+
+    End Sub
 End Class
