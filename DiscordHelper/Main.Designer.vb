@@ -2060,8 +2060,7 @@ Partial Class Main
         Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1082, 32)
         Me.txtEventTeaserAreaMapImage.TabIndex = 1
         Me.txtEventTeaserAreaMapImage.Tag = "72"
-        Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
-        ") tab if created in the same session.")
+        Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Select an image to use in the Teaser post for the group event.")
         '
         'Label1
         '
@@ -2069,9 +2068,9 @@ Partial Class Main
         Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(6, 29)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(146, 26)
+        Me.Label1.Size = New System.Drawing.Size(120, 26)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Area Map Image"
+        Me.Label1.Text = "Teaser Image"
         '
         'lblClubFullName
         '
@@ -2724,7 +2723,7 @@ Partial Class Main
         'txtAddOnsDetails
         '
         Me.txtAddOnsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAddOnsDetails.Location = New System.Drawing.Point(1124, 545)
+        Me.txtAddOnsDetails.Location = New System.Drawing.Point(1138, 768)
         Me.txtAddOnsDetails.Multiline = True
         Me.txtAddOnsDetails.Name = "txtAddOnsDetails"
         Me.txtAddOnsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2737,7 +2736,7 @@ Partial Class Main
         'txtWaypointsDetails
         '
         Me.txtWaypointsDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWaypointsDetails.Location = New System.Drawing.Point(1124, 516)
+        Me.txtWaypointsDetails.Location = New System.Drawing.Point(1138, 739)
         Me.txtWaypointsDetails.Multiline = True
         Me.txtWaypointsDetails.Name = "txtWaypointsDetails"
         Me.txtWaypointsDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2750,7 +2749,7 @@ Partial Class Main
         'txtGroupFlightEventPost
         '
         Me.txtGroupFlightEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(1124, 594)
+        Me.txtGroupFlightEventPost.Location = New System.Drawing.Point(1138, 817)
         Me.txtGroupFlightEventPost.Multiline = True
         Me.txtGroupFlightEventPost.Name = "txtGroupFlightEventPost"
         Me.txtGroupFlightEventPost.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3390,7 +3389,7 @@ Partial Class Main
         'txtDiscordEventDescription
         '
         Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1254, 594)
+        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1268, 817)
         Me.txtDiscordEventDescription.Multiline = True
         Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
         Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3402,7 +3401,7 @@ Partial Class Main
         'txtDiscordEventTopic
         '
         Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1189, 590)
+        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1203, 813)
         Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
         Me.txtDiscordEventTopic.Size = New System.Drawing.Size(59, 32)
         Me.txtDiscordEventTopic.TabIndex = 6
@@ -3414,7 +3413,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherClouds.AutoSize = True
         Me.lblNbrCarsWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(1202, 426)
+        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(1216, 649)
         Me.lblNbrCarsWeatherClouds.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
         Me.lblNbrCarsWeatherClouds.Name = "lblNbrCarsWeatherClouds"
         Me.lblNbrCarsWeatherClouds.Size = New System.Drawing.Size(17, 20)
@@ -3425,7 +3424,7 @@ Partial Class Main
         'txtFullDescriptionResults
         '
         Me.txtFullDescriptionResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(1124, 487)
+        Me.txtFullDescriptionResults.Location = New System.Drawing.Point(1138, 710)
         Me.txtFullDescriptionResults.Multiline = True
         Me.txtFullDescriptionResults.Name = "txtFullDescriptionResults"
         Me.txtFullDescriptionResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3438,7 +3437,7 @@ Partial Class Main
         'txtWeatherFirstPart
         '
         Me.txtWeatherFirstPart.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(1124, 374)
+        Me.txtWeatherFirstPart.Location = New System.Drawing.Point(1138, 597)
         Me.txtWeatherFirstPart.Multiline = True
         Me.txtWeatherFirstPart.Name = "txtWeatherFirstPart"
         Me.txtWeatherFirstPart.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3451,7 +3450,7 @@ Partial Class Main
         'txtFilesText
         '
         Me.txtFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFilesText.Location = New System.Drawing.Point(1124, 461)
+        Me.txtFilesText.Location = New System.Drawing.Point(1138, 684)
         Me.txtFilesText.Multiline = True
         Me.txtFilesText.Name = "txtFilesText"
         Me.txtFilesText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3464,7 +3463,7 @@ Partial Class Main
         'txtWeatherWinds
         '
         Me.txtWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherWinds.Location = New System.Drawing.Point(1124, 403)
+        Me.txtWeatherWinds.Location = New System.Drawing.Point(1138, 626)
         Me.txtWeatherWinds.Multiline = True
         Me.txtWeatherWinds.Name = "txtWeatherWinds"
         Me.txtWeatherWinds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3477,7 +3476,7 @@ Partial Class Main
         'txtFPResults
         '
         Me.txtFPResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFPResults.Location = New System.Drawing.Point(1124, 315)
+        Me.txtFPResults.Location = New System.Drawing.Point(1138, 538)
         Me.txtFPResults.Multiline = True
         Me.txtFPResults.Name = "txtFPResults"
         Me.txtFPResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3490,7 +3489,7 @@ Partial Class Main
         'txtWeatherClouds
         '
         Me.txtWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWeatherClouds.Location = New System.Drawing.Point(1124, 432)
+        Me.txtWeatherClouds.Location = New System.Drawing.Point(1138, 655)
         Me.txtWeatherClouds.Multiline = True
         Me.txtWeatherClouds.Name = "txtWeatherClouds"
         Me.txtWeatherClouds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3504,7 +3503,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherInfo.AutoSize = True
         Me.lblNbrCarsWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(1202, 371)
+        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(1216, 594)
         Me.lblNbrCarsWeatherInfo.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
         Me.lblNbrCarsWeatherInfo.Name = "lblNbrCarsWeatherInfo"
         Me.lblNbrCarsWeatherInfo.Size = New System.Drawing.Size(17, 20)
@@ -3515,7 +3514,7 @@ Partial Class Main
         'txtAltRestrictions
         '
         Me.txtAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAltRestrictions.Location = New System.Drawing.Point(1124, 345)
+        Me.txtAltRestrictions.Location = New System.Drawing.Point(1138, 568)
         Me.txtAltRestrictions.Multiline = True
         Me.txtAltRestrictions.Name = "txtAltRestrictions"
         Me.txtAltRestrictions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -3529,7 +3528,7 @@ Partial Class Main
         '
         Me.lblNbrCarsWeatherWinds.AutoSize = True
         Me.lblNbrCarsWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(1202, 400)
+        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(1216, 623)
         Me.lblNbrCarsWeatherWinds.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
         Me.lblNbrCarsWeatherWinds.Name = "lblNbrCarsWeatherWinds"
         Me.lblNbrCarsWeatherWinds.Size = New System.Drawing.Size(17, 20)
@@ -3541,7 +3540,7 @@ Partial Class Main
         '
         Me.lblNbrCarsFilesText.AutoSize = True
         Me.lblNbrCarsFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1202, 455)
+        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(1216, 678)
         Me.lblNbrCarsFilesText.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
         Me.lblNbrCarsFilesText.Name = "lblNbrCarsFilesText"
         Me.lblNbrCarsFilesText.Size = New System.Drawing.Size(17, 20)
