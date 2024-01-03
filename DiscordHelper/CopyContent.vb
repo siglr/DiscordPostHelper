@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.IO
+Imports System.Runtime.InteropServices
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class CopyContent
@@ -61,7 +62,8 @@ Public Class CopyContent
                                 Optional keySequences As List(Of String) = Nothing,
                                 Optional expertMode As Boolean = False,
                                 Optional autoPastePost As Boolean = True,
-                                Optional msToWaitAfterPost As Integer = 500) As Boolean
+                                Optional msToWaitAfterPost As Integer = 500,
+                                Optional imageToDisplay As Image = Nothing) As Boolean
 
         _Continue = True
         _AutoPost = autoPastePost
@@ -71,7 +73,13 @@ Public Class CopyContent
 
         Me.Text = title
         lblMessage.Text = message
+
         txtCopiedContent.Text = contentCopied
+        imgImageInClipboard.Visible = False
+        If imageToDisplay IsNot Nothing Then
+            imgImageInClipboard.Visible = True
+            imgImageInClipboard.Image = imageToDisplay
+        End If
 
         btnStopExpert.Visible = True
 

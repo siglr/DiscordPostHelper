@@ -561,7 +561,7 @@ Public Class Main
         txtbox.SelectionStart = 0
     End Sub
 
-    Private Sub CopyWeatherGraphToClipboard()
+    Private Function CopyWeatherGraphToClipboard() As Drawing.Image
 
         Dim control = New FullWeatherGraphPanel
         Dim imageWidth As Integer = 1333
@@ -592,7 +592,9 @@ Public Class Main
         tempUnits.Altitude = oldUnits.Altitude
         tempUnits.WindSpeed = oldUnits.WindSpeed
 
-    End Sub
+        Return bmp
+
+    End Function
 
 #End Region
 
@@ -2335,7 +2337,7 @@ Public Class Main
                 Exit Sub
             End If
             'Weather Chart
-            CopyWeatherGraphToClipboard()
+            Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
             autoContinue = CopyContent.ShowContent(Me,
                                 "Weather chart",
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the task's thread.",
@@ -2343,7 +2345,8 @@ Public Class Main
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked,
                                 True,
-                                numWaitSecondsForFiles.Value / 2 * 1000)
+                                numWaitSecondsForFiles.Value / 2 * 1000,
+                                chartImage)
             If Not autoContinue Then
                 Exit Sub
             End If
@@ -2560,7 +2563,8 @@ Public Class Main
                                     New List(Of String) From {"^v"},
                                     chkDPOExpertMode.Checked,
                                     True,
-                                    numWaitSecondsForFiles.Value / 2 * 1000)
+                                    numWaitSecondsForFiles.Value / 2 * 1000,
+                                    Drawing.Image.FromFile(allFiles(0)))
             Else
                 autoContinue = True
             End If

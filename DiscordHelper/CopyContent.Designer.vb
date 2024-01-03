@@ -28,6 +28,8 @@ Partial Class CopyContent
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnStopExpert = New System.Windows.Forms.Button()
         Me.btnAutoPaste = New System.Windows.Forms.Button()
+        Me.imgImageInClipboard = New System.Windows.Forms.PictureBox()
+        CType(Me.imgImageInClipboard, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'txtCopiedContent
@@ -93,6 +95,16 @@ Partial Class CopyContent
         Me.btnAutoPaste.Text = "Auto paste"
         Me.btnAutoPaste.UseVisualStyleBackColor = True
         '
+        'imgImageInClipboard
+        '
+        Me.imgImageInClipboard.Location = New System.Drawing.Point(12, 32)
+        Me.imgImageInClipboard.Name = "imgImageInClipboard"
+        Me.imgImageInClipboard.Size = New System.Drawing.Size(663, 463)
+        Me.imgImageInClipboard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.imgImageInClipboard.TabIndex = 6
+        Me.imgImageInClipboard.TabStop = False
+        Me.imgImageInClipboard.Visible = False
+        '
         'CopyContent
         '
         Me.AcceptButton = Me.btnOk
@@ -101,6 +113,7 @@ Partial Class CopyContent
         Me.CancelButton = Me.btnOk
         Me.ClientSize = New System.Drawing.Size(687, 658)
         Me.ControlBox = False
+        Me.Controls.Add(Me.imgImageInClipboard)
         Me.Controls.Add(Me.btnAutoPaste)
         Me.Controls.Add(Me.btnStopExpert)
         Me.Controls.Add(Me.btnOk)
@@ -116,6 +129,7 @@ Partial Class CopyContent
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "CopyContent"
+        CType(Me.imgImageInClipboard, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -127,4 +141,5 @@ Partial Class CopyContent
     Friend WithEvents btnOk As Button
     Friend WithEvents btnStopExpert As Button
     Friend WithEvents btnAutoPaste As Button
+    Friend WithEvents imgImageInClipboard As PictureBox
 End Class
