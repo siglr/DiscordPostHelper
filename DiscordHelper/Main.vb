@@ -1705,23 +1705,42 @@ Public Class Main
 
         If txtDiscordTaskID.Text = String.Empty Then
             Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
-            Dim waitingForm As New WaitingForURLForm(message)
-            Dim answer As DialogResult = waitingForm.ShowDialog()
+            Dim waitingForm As WaitingForURLForm
+            Dim answer As DialogResult
+            Dim validTaskIDOrCancel As Boolean = False
 
-            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+            Do Until validTaskIDOrCancel
+                Clipboard.Clear()
+                waitingForm = New WaitingForURLForm(message)
+                answer = waitingForm.ShowDialog()
 
-            'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
-            If answer = DialogResult.OK Then
-                Dim taskThreadURL As String
-                taskThreadURL = Clipboard.GetText
-                txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)
-                SaveSession()
-            Else
-                autoContinue = False
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, $"Task ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}{Environment.NewLine}If you still want to post elsewhere, you can deselect ""Main post"" and resume the workflow.", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End Using
-            End If
+                SupportingFeatures.BringDPHToolToTop(Me.Handle)
+                'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
+                If answer = DialogResult.OK Then
+                    Dim taskThreadURL As String
+                    taskThreadURL = Clipboard.GetText
+                    txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)
+                    If txtDiscordTaskID.Text.Trim.Length = 0 Then
+                        Using New Centered_MessageBox(Me)
+                            If MessageBox.Show(Me, $"Invalid task ID - If you posted under the Task Library, try again. If not, click Cancel.", "Task ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
+                                validTaskIDOrCancel = True
+                                autoContinue = False
+                            End If
+                        End Using
+                    Else
+                        validTaskIDOrCancel = True
+                        SaveSession()
+                    End If
+                Else
+                    validTaskIDOrCancel = True
+                    autoContinue = False
+                End If
+                If Not autoContinue Then
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, $"Task ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}{Environment.NewLine}If you still want to post elsewhere, you can deselect ""Main post"" and resume the workflow.", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                End If
+            Loop
         End If
 
         Return autoContinue
