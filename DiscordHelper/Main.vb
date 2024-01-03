@@ -3628,7 +3628,7 @@ Public Class Main
             Case 18 'Weather summary
                 SetGuidePanelToRight()
                 pnlGuide.Top = 102
-                lblGuideInstructions.Text = "Optional weather summary. If you don't want the full weather details to be included, tick the checkbox to the left. Only the summary will then be shown."
+                lblGuideInstructions.Text = "Optional weather summary to be added along with the weather basic information."
                 SetFocusOnField(txtWeatherSummary, fromF1Key)
             Case 19 'Non standard Barometric Pressure
                 SetGuidePanelToRight()
