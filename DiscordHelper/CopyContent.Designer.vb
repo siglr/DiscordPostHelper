@@ -72,7 +72,7 @@ Partial Class CopyContent
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(104, 34)
         Me.btnOk.TabIndex = 0
-        Me.btnOk.Text = "Ok"
+        Me.btnOk.Text = "Ok / Next"
         Me.btnOk.UseVisualStyleBackColor = True
         '
         'btnStopExpert
