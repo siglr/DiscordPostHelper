@@ -67,7 +67,6 @@ Partial Class Main
         Me.lstAllCountries = New System.Windows.Forms.ListBox()
         Me.cboCountryFlag = New System.Windows.Forms.ComboBox()
         Me.lblCountries = New System.Windows.Forms.Label()
-        Me.chkUseOnlyWeatherSummary = New System.Windows.Forms.CheckBox()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
@@ -523,7 +522,6 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.lstAllCountries)
         Me.grbTaskPart2.Controls.Add(Me.cboCountryFlag)
         Me.grbTaskPart2.Controls.Add(Me.lblCountries)
-        Me.grbTaskPart2.Controls.Add(Me.chkUseOnlyWeatherSummary)
         Me.grbTaskPart2.Controls.Add(Me.txtWeatherSummary)
         Me.grbTaskPart2.Controls.Add(Me.lblWeatherSummary)
         Me.grbTaskPart2.Enabled = False
@@ -939,17 +937,6 @@ Partial Class Main
         Me.lblCountries.Size = New System.Drawing.Size(145, 26)
         Me.lblCountries.TabIndex = 0
         Me.lblCountries.Text = "Countries/Flags"
-        '
-        'chkUseOnlyWeatherSummary
-        '
-        Me.chkUseOnlyWeatherSummary.AutoSize = True
-        Me.chkUseOnlyWeatherSummary.Location = New System.Drawing.Point(168, 147)
-        Me.chkUseOnlyWeatherSummary.Name = "chkUseOnlyWeatherSummary"
-        Me.chkUseOnlyWeatherSummary.Size = New System.Drawing.Size(15, 14)
-        Me.chkUseOnlyWeatherSummary.TabIndex = 9
-        Me.chkUseOnlyWeatherSummary.Tag = "18"
-        Me.ToolTip1.SetToolTip(Me.chkUseOnlyWeatherSummary, "When checked, only summary will be used for weather information.")
-        Me.chkUseOnlyWeatherSummary.UseVisualStyleBackColor = True
         '
         'txtWeatherSummary
         '
@@ -4404,7 +4391,6 @@ Partial Class Main
     Friend WithEvents btnRemoveExtraFile As Button
     Friend WithEvents btnAddExtraFile As Button
     Friend WithEvents lstAllFiles As ListBox
-    Friend WithEvents chkUseOnlyWeatherSummary As CheckBox
     Friend WithEvents txtWeatherSummary As TextBox
     Friend WithEvents lblWeatherSummary As Label
     Friend WithEvents GroupBox1 As GroupBox

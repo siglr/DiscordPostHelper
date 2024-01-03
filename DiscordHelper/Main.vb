@@ -241,7 +241,6 @@ Public Class Main
         txtCredits.Text = "All credits to @UserName for this task."
         txtLongDescription.Text = String.Empty
         chkLockCountries.Checked = False
-        chkUseOnlyWeatherSummary.Checked = False
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
         txtWeatherFirstPart.Text = String.Empty
@@ -758,27 +757,6 @@ Public Class Main
         End Using
     End Sub
 
-    Private Sub chkUseOnlyWeatherSummary_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseOnlyWeatherSummary.CheckedChanged
-
-        If _loadingFile Then
-            Exit Sub
-        End If
-        If chkUseOnlyWeatherSummary.Checked AndAlso txtWeatherFile.Text.Trim.Length > 0 Then
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, "Are you sure you want to exclude basic weather information and replace it only with this summary?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
-                    _loadingFile = True
-                    chkUseOnlyWeatherSummary.Checked = False
-                    _loadingFile = False
-                Else
-                    AllFieldChanges(sender, e)
-                End If
-            End Using
-        Else
-            AllFieldChanges(sender, e)
-        End If
-
-    End Sub
-
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
                                                                           chkDepartureLock.CheckedChanged,
                                                                           chkArrivalLock.CheckedChanged,
@@ -845,10 +823,6 @@ Public Class Main
            sender Is dtSimLocalTime OrElse
            sender Is chkIncludeYear Then
             CopyToEventFields(sender, e)
-        End If
-
-        If sender Is chkUseOnlyWeatherSummary Then
-            WeatherFieldChangeDetection()
         End If
 
         If TypeOf sender IsNot Windows.Forms.TextBox Then
@@ -1493,7 +1467,7 @@ Public Class Main
 
     Private Sub WeatherFieldChangeDetection()
         BuildWeatherInfoResults()
-        If Not (chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing) Then
+        If Not (_WeatherDetails Is Nothing) Then
             BuildWeatherCloudLayers()
             BuildWeatherWindLayers()
         Else
@@ -1737,7 +1711,7 @@ Public Class Main
         BuildWeatherInfoResults()
         'BuildGroupFlightPost()
 
-        If Not (chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing) Then
+        If Not (_WeatherDetails Is Nothing) Then
             BuildWeatherCloudLayers()
             BuildWeatherWindLayers()
         End If
@@ -1798,7 +1772,7 @@ Public Class Main
 
         sb.AppendLine("## 🌡 Weather Basic Information")
 
-        If chkUseOnlyWeatherSummary.Checked Or _WeatherDetails Is Nothing Then
+        If _WeatherDetails Is Nothing Then
             sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
         Else
             sb.Append($"- Weather file & profile name: ""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName}){Environment.NewLine}")
@@ -4286,7 +4260,6 @@ Public Class Main
             .ShortDescription = txtShortDescription.Text.Replace(Environment.NewLine, "($*$)")
             .Credits = txtCredits.Text
             .LongDescription = txtLongDescription.Text.Replace(Environment.NewLine, "($*$)")
-            .WeatherSummaryOnly = chkUseOnlyWeatherSummary.Checked
             .WeatherSummary = txtWeatherSummary.Text
             .SuppressBaroPressureWarningSymbol = chkSuppressWarningForBaroPressure.Checked
             .BaroPressureExtraInfo = txtBaroPressureExtraInfo.Text
@@ -4421,7 +4394,6 @@ Public Class Main
                 txtShortDescription.Text = .ShortDescription.Replace("($*$)", Environment.NewLine)
                 txtCredits.Text = .Credits
                 txtLongDescription.Text = .LongDescription.Replace("($*$)", Environment.NewLine)
-                chkUseOnlyWeatherSummary.Checked = .WeatherSummaryOnly
                 txtWeatherSummary.Text = .WeatherSummary
                 chkSuppressWarningForBaroPressure.Checked = .SuppressBaroPressureWarningSymbol
                 txtBaroPressureExtraInfo.Text = .BaroPressureExtraInfo
