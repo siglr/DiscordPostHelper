@@ -1087,7 +1087,7 @@ Public Class Main
 
 #End Region
 
-#Region "Discord post buttons on the Flight Plan Tab"
+#Region "Discord post buttons on the Flight Plan tab"
 
     Private Sub chkDPOExpertMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOExpertMode.CheckedChanged
 
