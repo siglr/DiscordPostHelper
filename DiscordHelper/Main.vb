@@ -81,6 +81,7 @@ Public Class Main
         MessageBox.Show($"An unhandled exception occurred and all details have been added to your clipboard.{vbCrLf}Please paste the content in the 'questions-support' channel on Discord.{vbCrLf}{vbCrLf}{Clipboard.GetText}", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Application.Exit()
     End Sub
+
 #End Region
 
 #Region "Startup"
@@ -176,6 +177,7 @@ Public Class Main
         dtEventStartTaskTime.CustomFormat = timeFormatToUse
 
     End Sub
+
     Private Sub ResetForm()
 
         _loadingFile = True
@@ -777,6 +779,7 @@ Public Class Main
         End If
 
     End Sub
+
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
                                                                           chkDepartureLock.CheckedChanged,
                                                                           chkArrivalLock.CheckedChanged,
@@ -1039,6 +1042,7 @@ Public Class Main
     Private Sub txtWaypointsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtWaypointsDetails.TextChanged
         lblNbrCarsWaypoints.Text = $"{txtWaypointsDetails.Text.Length} chars"
     End Sub
+
     Private Sub txtAddOnsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtAddOnsDetails.TextChanged
         lblNbrCarsAddOns.Text = $"{txtAddOnsDetails.Text.Length} chars"
     End Sub
@@ -1982,7 +1986,6 @@ Public Class Main
 
 #Region "Flight Plan tab Subs & Functions"
 
-
     Private Function HighlightExpectedFields(Optional showMessageBox As Boolean = False) As Boolean
 
         Dim messageText As New StringBuilder
@@ -2193,6 +2196,7 @@ Public Class Main
         Return answer.ToString
 
     End Function
+
     Private Sub CalculateDuration()
 
         Dim minAvgspeedInKmh As Single
@@ -2409,6 +2413,7 @@ Public Class Main
 
 
 #Region "Weather sections"
+
     Private Sub BuildWeatherInfoResults()
 
         Dim sb As New StringBuilder()
@@ -2760,6 +2765,7 @@ Public Class Main
             End If
         End If
     End Sub
+
     Private Sub btnGroupFlightEventTeaser_Click(sender As Object, e As EventArgs) Handles btnGroupFlightEventTeaser.Click
 
         Dim autoContinue As Boolean = True
@@ -4212,6 +4218,7 @@ Public Class Main
         End If
 
     End Sub
+
     Private Sub SaveSessionData(filename As String)
 
         Dim allCurrentData As AllData = SetAndRetrieveSessionData()
@@ -4538,6 +4545,7 @@ Public Class Main
             SetSaveButtonFont()
         End If
     End Sub
+
     Public Sub SetSaveButtonFont()
 
         If _sessionModified Then
