@@ -2497,13 +2497,6 @@ Public Class Main
         chkDGPOFilesWithoutLegend.Enabled = grbTaskInfo.Enabled
         chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
         chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
-        If txtDiscordTaskID.Text.Trim.Length > 0 Then
-            chkDGPORelevantTaskDetails.Enabled = True
-            chkDGPOEventLogistics.Enabled = True
-        Else
-            chkDGPORelevantTaskDetails.Enabled = False
-            chkDGPOEventLogistics.Enabled = False
-        End If
 
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOFilesWithFullLegend.Checked AndAlso
@@ -3236,9 +3229,10 @@ Public Class Main
         logisticInstructions.AppendLine("> Focus on:")
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
         logisticInstructions.AppendLine("> - Providing feedback on the event's organization and coordination")
-        logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
-        logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
-
+        If Not txtDiscordTaskID.Text = String.Empty Then
+            logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
+            logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
+        End If
 
         Return logisticInstructions.ToString()
 
@@ -3257,6 +3251,13 @@ Public Class Main
 
         If Not txtDiscordTaskID.Text = String.Empty Then
             sb.AppendLine("## ❗ Final task details and reminders")
+            If txtAltRestrictions.Text.Trim.Length > 33 Then
+                sb.AppendLine("> ⚠️ There are altitude restrictions on this task")
+
+            End If
+            If lstAllRecommendedAddOns.Items.Count > 0 Then
+                sb.AppendLine("> 📀 There are recommended add-ons with this task")
+            End If
             sb.AppendLine($"> 🔗 [Link to complete task details, including full briefing, restrictions, weather and more]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})")
             sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
             sb.AppendLine("> ")
@@ -3266,7 +3267,7 @@ Public Class Main
             sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
         End If
         If txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
-            sb.AppendLine("> 🌤 Weather file & profile name: **""" & Path.GetFileName(txtWeatherFile.Text) & """ (" & _WeatherDetails.PresetName & ")**")
+            sb.AppendLine($"> 🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
         End If
         sb.AppendLine("> ")
 
