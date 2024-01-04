@@ -237,9 +237,9 @@ Public Class WindCloudDisplay
                     Case PreferredUnits.AltitudeUnits.Imperial
                         altPart = $"{altitudeInFeet}'"
                     Case PreferredUnits.AltitudeUnits.Metric
-                        altPart = $"{Conversions.FeetToMeters(altitudeInFeet):N0} m"
+                        altPart = $"{Conversions.FeetToMeters(altitudeInFeet):0} m"
                     Case PreferredUnits.AltitudeUnits.Both
-                        altPart = $"{altitudeInFeet}' ({Conversions.FeetToMeters(altitudeInFeet):N0} m)"
+                        altPart = $"{altitudeInFeet}' ({Conversions.FeetToMeters(altitudeInFeet):0} m)"
                 End Select
 
                 Select Case _prefUnits.WindSpeed
