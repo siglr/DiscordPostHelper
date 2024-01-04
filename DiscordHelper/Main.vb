@@ -107,6 +107,7 @@ Public Class Main
         If SessionSettings.WaitSecondsForFiles >= 1 AndAlso SessionSettings.WaitSecondsForFiles <= 10 Then
             numWaitSecondsForFiles.Value = SessionSettings.WaitSecondsForFiles
         End If
+        chkDPOExpertMode.Checked = SessionSettings.AutomaticPostingProgression
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -339,6 +340,7 @@ Public Class Main
             SessionSettings.WaitSecondsForFiles = numWaitSecondsForFiles.Value
             SessionSettings.LastFileLoaded = _CurrentSessionFile
             SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
+            SessionSettings.AutomaticPostingProgression = chkDPOExpertMode.Checked
             SessionSettings.Save()
         End If
 
@@ -2197,8 +2199,8 @@ Public Class Main
 
         Dim enforceTaskLibrary As Boolean = False
         Dim autoContinue As Boolean = True
-
         Dim dlgResult As DialogResult
+
         Do While _sessionModified
             Using New Centered_MessageBox(Me)
                 dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
@@ -2210,6 +2212,20 @@ Public Class Main
                     Exit Sub
             End Select
         Loop
+
+        If chkDPOExpertMode.Checked Then
+            Using New Centered_MessageBox(Me)
+                dlgResult = MessageBox.Show(Me, $"Automatic progression is enabled!{Environment.NewLine}{Environment.NewLine}This is still an experimental feature, several post actions will happen in succession without the possibility to stop them.{Environment.NewLine}{Environment.NewLine}Do you want to keep it enabled?", "Automatic progression confirmation request", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            End Using
+            Select Case dlgResult
+                Case DialogResult.Yes
+                    'Nothing to do
+                Case DialogResult.No
+                    chkDPOExpertMode.Checked = False
+                Case DialogResult.Cancel
+                    Exit Sub
+            End Select
+        End If
 
         BuildFPResults()
 
@@ -2482,8 +2498,10 @@ Public Class Main
         chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
         chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
         If txtDiscordTaskID.Text.Trim.Length > 0 Then
+            chkDGPORelevantTaskDetails.Enabled = True
             chkDGPOEventLogistics.Enabled = True
         Else
+            chkDGPORelevantTaskDetails.Enabled = False
             chkDGPOEventLogistics.Enabled = False
         End If
 
@@ -2598,7 +2616,7 @@ Public Class Main
                 Clipboard.SetFileDropList(allFiles)
                 autoContinue = CopyContent.ShowContent(Me,
                                     cboCoverImage.SelectedItem,
-                                    $"Make sure you are on the proper message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
+                                    $"On the Discord app, make sure you are on the proper channel and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Posting the cover image for the task.",
                                     New List(Of String) From {"^v"},
                                     chkDPOExpertMode.Checked,
@@ -2845,6 +2863,21 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
         Dim msg As String = String.Empty
+        Dim dlgResult As DialogResult
+
+        If chkDPOExpertMode.Checked Then
+            Using New Centered_MessageBox(Me)
+                dlgResult = MessageBox.Show(Me, $"Automatic progression is enabled!{Environment.NewLine}{Environment.NewLine}This is still an experimental feature, several post actions will happen in succession without the possibility to stop them.{Environment.NewLine}{Environment.NewLine}Do you want to keep it enabled?", "Automatic progression confirmation request", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+            End Using
+            Select Case dlgResult
+                Case DialogResult.Yes
+                    'Nothing to do
+                Case DialogResult.No
+                    chkDPOExpertMode.Checked = False
+                Case DialogResult.Cancel
+                    Exit Sub
+            End Select
+        End If
 
         'Cover
         If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
@@ -3083,7 +3116,7 @@ Public Class Main
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
-                                $"You can now post the group flight Event In the proper Discord channel For the club/group.{Environment.NewLine}Next, you will also be asked to copy the link To that newly created message.",
+                                $"In the Discord app and on the proper channel for the club/group, make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link To that newly created message.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked,
@@ -3093,7 +3126,7 @@ Public Class Main
         If Not autoContinue Then Return autoContinue
 
         If txtGroupEventPostURL.Text = String.Empty Then
-            Dim message As String = "Please Get the link To the group Event's post in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim message As String = "Please Get the link To the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As New WaitingForURLForm(message, False)
             Dim answer As DialogResult = waitingForm.ShowDialog()
 
@@ -3307,12 +3340,12 @@ Public Class Main
         sb.AppendLine("> ")
         sb.AppendLine($"> 🗣 Voice: **{cboVoiceChannel.Text}**")
 
-        If chkEventTeaser.Checked Then
-            sb.AppendLine("> ")
-            sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
-        Else
+        If chkDGPOFilesWithFullLegend.Checked OrElse chkDGPOFilesWithoutLegend.Checked Then
             sb.AppendLine("> ")
             sb.AppendLine($"> 📁 All files are shared inside the thread below")
+        Else
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
         End If
         sb.AppendLine("> ")
         sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")

@@ -32,6 +32,9 @@ Public Class AllSettings
     <XmlElement("WaitSecondsForFiles")>
     Public Property WaitSecondsForFiles As Integer
 
+    <XmlElement("AutomaticPostingProgression")>
+    Public Property AutomaticPostingProgression As Boolean
+
     Public Sub New()
 
     End Sub
@@ -62,6 +65,7 @@ Public Class AllSettings
             MainFormSize = settingsInFile.MainFormSize
             FlightPlanTabSplitterLocation = settingsInFile.FlightPlanTabSplitterLocation
             WaitSecondsForFiles = settingsInFile.WaitSecondsForFiles
+            AutomaticPostingProgression = settingsInFile.AutomaticPostingProgression
 
         Else
             settingsFound = False
