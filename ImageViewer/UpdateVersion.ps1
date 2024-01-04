@@ -11,7 +11,7 @@ function Get-FormattedDate {
 $currentDate = Get-FormattedDate
 
 # Specify the path to the AssemblyInfo.cs file for the Release configuration
-$assemblyInfoPath = "..\..\Properties\AssemblyInfo.cs"
+$assemblyInfoPath = "H:\DiscordHelper - 4.8.1\DiscordHelper\ImageViewer\Properties\AssemblyInfo.cs"
 
 # Read the existing AssemblyVersion and AssemblyFileVersion from AssemblyInfo.cs
 $assemblyInfo = Get-Content $assemblyInfoPath

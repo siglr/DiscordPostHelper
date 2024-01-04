@@ -12,7 +12,7 @@ $currentDate = Get-FormattedDate
 Write-Output "Current Formatted Date: $currentDate"
 
 # Specify the path to the AssemblyInfo.vb file for the Release configuration
-$assemblyInfoPath = "..\..\My Project\AssemblyInfo.vb"
+$assemblyInfoPath = "H:\DiscordHelper - 4.8.1\DiscordHelper\Updater\My Project\AssemblyInfo.vb"
 Write-Output "AssemblyInfo.vb Path: $assemblyInfoPath"
 
 # Read the existing AssemblyVersion and AssemblyFileVersion from AssemblyInfo.vb
