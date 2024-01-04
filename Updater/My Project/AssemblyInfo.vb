@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Updater for the files associated with the Discord Post Helper tools")>
 <Assembly: AssemblyCompany("Services Informatiques GLR Inc.")>
 <Assembly: AssemblyProduct("SIGLR Soaring Tools - Discord Post Helper")>
-<Assembly: AssemblyCopyright("Copyright ©  2023")>
+<Assembly: AssemblyCopyright("Copyright �  2023")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("24.1.3.1")>
-<Assembly: AssemblyFileVersion("24.1.3.1")>
+<Assembly: AssemblyVersion("24.1.4.1")>
+<Assembly: AssemblyFileVersion("24.1.4.1")>
