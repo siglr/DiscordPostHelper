@@ -33,7 +33,7 @@ Public Class CloudLayer
         Get
             Dim strResults As String = String.Empty
             If prefUnits Is Nothing OrElse prefUnits.Altitude = AltitudeUnits.Both Then
-                strResults = String.Format("From {2}' to {3}' / {0} m to {1} m, {4}% coverage, {5} density, {6}% scattering",
+                strResults = String.Format("From {0}' to {1}' / {2} m to {3} m, {4}% coverage, {5} density, {6}% scattering",
                                                   FormatNumber(Conversions.MeterToFeet(AltitudeBottom), 0,,, TriState.False),
                                                   FormatNumber(Conversions.MeterToFeet(AltitudeTop), 0,,, TriState.False),
                                                   FormatNumber(AltitudeBottom, 0,,, TriState.False),
