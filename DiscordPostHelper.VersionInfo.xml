@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.29.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.1.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.1.8.1</ReleaseVersion>
+      <ReleaseTitle>Brand new Discord posting workflow</ReleaseTitle>
+      <ReleaseNotes>
+        Further improved workflow of posting task to reduce number of clicks, include weather graph and automatically add group event when already available.
+        Removed the "Weather Summary" only checkbox.
+        Fixed the wizard guide showing under the right pane on the Flight Plan tab since the addition of the splitter.
+        Fixed the cloud layers altitude indication on the Discord post, which were reversed (feet - meters).
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.29.1</ReleaseVersion>
       <ReleaseTitle>Weather details improvement</ReleaseTitle>

@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>23.12.29.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.1.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.1.8.1</ReleaseVersion>
+      <ReleaseTitle>Unicode symbols fix and better weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's labeling to allow for both units to be displayed together.
+        Fixed a problem with special unicode characters not displaying correctly on some Windows configuration.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>23.12.29.1</ReleaseVersion>
       <ReleaseTitle>Weather details improvement</ReleaseTitle>
