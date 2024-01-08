@@ -426,17 +426,23 @@ Public Class SupportingFeatures
         dataStream.Write(byteArray, 0, byteArray.Length)
         dataStream.Close()
         Dim response As WebResponse = request.GetResponse()
+#If DEBUG Then
         Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)
+#End If
         dataStream = response.GetResponseStream()
         Dim reader As New StreamReader(dataStream)
         Dim responseFromServer As String = reader.ReadToEnd()
+#If DEBUG Then
         Console.WriteLine(responseFromServer)
+#End If
         reader.Close()
         dataStream.Close()
         response.Close()
 
         ' Output the response to the console
+#If DEBUG Then
         Console.WriteLine(responseFromServer)
+#End If
 
     End Sub
 
@@ -1123,7 +1129,16 @@ Public Class SupportingFeatures
         ' Check if the local time zone is currently observing daylight saving time
         Return localTimeZone.IsDaylightSavingTime(localDateTime)
     End Function
-    Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox)
+    Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
+
+#If DEBUG Then
+        If debugMode Then
+            Clipboard.SetText(input)
+            MsgBox("DEBUG - Paste the content of your clipboard - this is the source text")
+        End If
+#End If
+
+        input = ReplaceSpecialCharactersWithUnicodeEscapes(input)
 
         ' Regex patterns to match bold, italic, and underlined texts
         Dim newlinePattern As String = "\(\$\*\$\)"
@@ -1137,10 +1152,48 @@ Public Class SupportingFeatures
         rtfFormatted = Regex.Replace(rtfFormatted, italicPattern, "{\i $1\i0 }")
         rtfFormatted = Regex.Replace(rtfFormatted, underlinePattern, "{\ul $1\ul0 }")
 
+        ' Replace the degree symbol with its RTF escape sequence
+        Dim degreeSymbol As Char = ChrW(&HB0)
+        rtfFormatted = rtfFormatted.Replace(degreeSymbol.ToString(), "\u176'")
+
+#If DEBUG Then
+        If debugMode Then
+            Clipboard.SetText(rtfFormatted)
+            MsgBox("DEBUG - Paste the content of your clipboard - this is the transformed RTF code")
+        End If
+#End If
+
         ' Set the RTF-formatted text to the RichTextBox control
         richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
     End Sub
 
+    Private Function ReplaceSpecialCharactersWithUnicodeEscapes(ByVal input As String) As String
+        Dim sb As New StringBuilder(input)
+
+        ' Replace common special characters with RTF Unicode escape sequences
+        Dim specialCharacters As New Dictionary(Of Char, Integer) From {
+            {"ä"c, 228}, {"ö"c, 246}, {"ü"c, 252},
+            {"Ä"c, 196}, {"Ö"c, 214}, {"Ü"c, 220},
+            {"ß"c, 223}, {"é"c, 233}, {"ç"c, 231},
+            {"à"c, 224}, {"è"c, 232}, {"ì"c, 236},
+            {"ò"c, 242}, {"ù"c, 249}, {"â"c, 226},
+            {"ê"c, 234}, {"î"c, 238}, {"ô"c, 244},
+            {"û"c, 251}, {"å"c, 229}, {"Å"c, 197},
+            {"æ"c, 230}, {"Æ"c, 198}, {"œ"c, 339},
+            {"Œ"c, 338}, {"ñ"c, 241}, {"Ñ"c, 209},
+            {"ý"c, 253}, {"Ý"c, 221}, {"í"c, 237},
+            {"Í"c, 205}, {"Á"c, 193}, {"É"c, 201},
+            {"Ú"c, 218}, {"Ó"c, 211}, {"ø"c, 248},
+            {"Ø"c, 216}, {"€"c, 8364}, {"£"c, 163},
+            {"¿"c, 191}, {"¡"c, 161}, {"«"c, 171},
+            {"»"c, 187}, {"°"c, 176}}
+
+        For Each kvp As KeyValuePair(Of Char, Integer) In specialCharacters
+            sb.Replace(kvp.Key.ToString(), "\u" & kvp.Value & "\'3f")
+        Next
+
+        Return sb.ToString()
+    End Function
 
     Public Function CheckRequiredNetFrameworkVersion() As Boolean
 
