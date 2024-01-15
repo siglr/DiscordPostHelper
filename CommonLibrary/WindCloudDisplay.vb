@@ -162,7 +162,7 @@ Public Class WindCloudDisplay
                 If Not unitLabel Then
                     altitudeLabel = (altitude * 0.3048).ToString("0")
                 Else
-                    altitudeLabel = "Meters"
+                    altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
                 End If
                 e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
             Case PreferredUnits.AltitudeUnits.Imperial
@@ -173,7 +173,7 @@ Public Class WindCloudDisplay
                         altitudeLabel = (altitude / 1000).ToString()
                     End If
                 Else
-                    altitudeLabel = "Feet"
+                    altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
                 End If
                 e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
             Case PreferredUnits.AltitudeUnits.Both
@@ -185,7 +185,7 @@ Public Class WindCloudDisplay
                         altitudeLabel = (altitude / 1000).ToString()
                     End If
                 Else
-                    altitudeLabel = "Feet"
+                    altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
                 End If
                 e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
 
@@ -193,7 +193,7 @@ Public Class WindCloudDisplay
                 If Not unitLabel Then
                     altitudeLabel = (altitude * 0.3048).ToString("0")
                 Else
-                    altitudeLabel = "Meters"
+                    altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
                 End If
                 Dim textSize As SizeF = e.Graphics.MeasureString(altitudeLabel, theFont)
                 Dim textXPosition As Single = rightEdge - textSize.Width ' Align to the right

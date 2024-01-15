@@ -27,7 +27,7 @@ Public Class WeatherDetails
         _ThunderstormIntensity = XmlConvert.ToSingle(xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/ThunderstormIntensity").Item(0).Attributes("Value").Value)
 
         If xmlWeatherXMLDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/IsAltitudeAMGL").Item(0).FirstChild.Value = "True" Then
-            AltitudeMeasurement = "AGL"
+            AltitudeMeasurement = "AMGL"
         Else
             AltitudeMeasurement = "AMSL"
         End If

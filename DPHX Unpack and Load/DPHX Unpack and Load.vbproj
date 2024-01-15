@@ -130,6 +130,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DPHXUnpackAndLoad.resx">
       <DependentUpon>DPHXUnpackAndLoad.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

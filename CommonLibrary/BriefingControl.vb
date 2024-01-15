@@ -498,8 +498,8 @@ Public Class BriefingControl
             If _sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}\b0\line ")
             End If
-            If _WeatherDetails.AltitudeMeasurement = "AGL" Then
-                sb.Append($"The elevation measurement used is \b AGL (Above Ground Level)\b0\line ")
+            If _WeatherDetails.AltitudeMeasurement = "AMGL" Then
+                sb.Append($"The elevation measurement used is \b AMGL (Above Mean Ground Level)\b0\line ")
             Else
                 sb.Append($"The elevation measurement used is \b AMSL (Above Mean Sea Level)\b0\line ")
             End If
