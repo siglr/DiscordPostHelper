@@ -1070,6 +1070,119 @@ Public Class Main
 
     End Sub
 
+    Private Sub btnSyncTitles_Click(sender As Object, e As EventArgs) Handles btnSyncTitles.Click
+
+        If Not CheckUnsavedAndConfirmAction("Sync titles") Then
+            Exit Sub
+        End If
+
+        txtTitle.Text = txtTitle.Text.Trim
+
+        'Check if title is valid as a filename
+        Dim resultFilenameValidation As String = SupportingFeatures.ValidateFileName(txtTitle.Text)
+        If resultFilenameValidation <> String.Empty Then
+            'Title not valid as a filename
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"The title cannot be a filename:{Environment.NewLine}{resultFilenameValidation}", "Invalid filename", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
+        'Sync flight plan title inside .pln file
+        If _OriginalFlightPlanTitle.Trim <> txtTitle.Text Then
+            _XmlDocFlightPlan.DocumentElement.SelectNodes("FlightPlan.FlightPlan/Title").Item(0).FirstChild.Value = txtTitle.Text
+            Try
+                _XmlDocFlightPlan.Save(txtFlightPlanFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to save the flight plan file:{Environment.NewLine}{ex.Message}", "Error trying to save flight plan", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+        End If
+
+        'Sync flight plan .pln filename
+        If Path.GetFileNameWithoutExtension(txtFlightPlanFile.Text) <> txtTitle.Text Then
+            'Delete the original flightplan file
+            Try
+                File.Delete(txtFlightPlanFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to delete the original flight plan file:{Environment.NewLine}{ex.Message}", "Error trying to delete flight plan", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+
+            Try
+                txtFlightPlanFile.Text = $"{Path.GetDirectoryName(txtFlightPlanFile.Text)}\{txtTitle.Text}.pln"
+                _XmlDocFlightPlan.Save(txtFlightPlanFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to save new flight plan file:{Environment.NewLine}{ex.Message}", "Error trying to save new flight plan", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+
+        End If
+
+        'Change flight plan selection and reload flight plan
+        _loadingFile = True
+        LoadFlightPlan(txtFlightPlanFile.Text)
+        chkTitleLock.Checked = False
+        _loadingFile = False
+        SaveSession()
+
+        'Sync weather profile name inside .wpr
+        If _WeatherDetails.PresetName <> txtTitle.Text Then
+            _XmlDocWeatherPreset.DocumentElement.SelectNodes("WeatherPreset.Preset/Name").Item(0).FirstChild.Value = txtTitle.Text
+            Try
+                _XmlDocWeatherPreset.Save(txtWeatherFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to save the weather file:{Environment.NewLine}{ex.Message}", "Error trying to save weather file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+        End If
+
+        'Sync weather .wpr filename
+        If Path.GetFileNameWithoutExtension(txtWeatherFile.Text) <> txtTitle.Text Then
+            'Delete the original weather file
+            Try
+                File.Delete(txtWeatherFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to delete the original weather file:{Environment.NewLine}{ex.Message}", "Error trying to delete the weather file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+
+            Try
+                txtWeatherFile.Text = $"{Path.GetDirectoryName(txtWeatherFile.Text)}\{txtTitle.Text}.wpr"
+                _XmlDocWeatherPreset.Save(txtWeatherFile.Text)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to save new weather file:{Environment.NewLine}{ex.Message}", "Error trying to save new weather file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+
+        End If
+
+        'Change weather file selection and reload weather
+        _loadingFile = True
+        LoadWeatherfile(txtWeatherFile.Text)
+        _loadingFile = False
+        SaveSession()
+
+    End Sub
+
 #End Region
 
 #Region "Extra files Controls events"
@@ -4674,6 +4787,7 @@ Public Class Main
         End If
 
     End Sub
+
 
 #End Region
 

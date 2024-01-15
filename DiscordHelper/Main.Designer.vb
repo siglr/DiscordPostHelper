@@ -352,6 +352,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnSyncTitles = New System.Windows.Forms.Button()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1086,7 +1087,7 @@ Partial Class Main
         Me.pnlFlightPlanLeftSide.MinimumSize = New System.Drawing.Size(740, 854)
         Me.pnlFlightPlanLeftSide.Name = "pnlFlightPlanLeftSide"
         Me.pnlFlightPlanLeftSide.Size = New System.Drawing.Size(740, 854)
-        Me.pnlFlightPlanLeftSide.TabIndex = 84
+        Me.pnlFlightPlanLeftSide.TabIndex = 0
         '
         'lblElevationUpdateWarning
         '
@@ -1108,6 +1109,7 @@ Partial Class Main
         Me.grbTaskInfo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskInfo.Controls.Add(Me.btnSyncTitles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeDynamic)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
         Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
@@ -1180,7 +1182,7 @@ Partial Class Main
         Me.chkSoaringTypeDynamic.Location = New System.Drawing.Point(338, 271)
         Me.chkSoaringTypeDynamic.Name = "chkSoaringTypeDynamic"
         Me.chkSoaringTypeDynamic.Size = New System.Drawing.Size(44, 30)
-        Me.chkSoaringTypeDynamic.TabIndex = 56
+        Me.chkSoaringTypeDynamic.TabIndex = 28
         Me.chkSoaringTypeDynamic.Tag = "8"
         Me.chkSoaringTypeDynamic.Text = "D"
         Me.ToolTip1.SetToolTip(Me.chkSoaringTypeDynamic, "Check if track involves dynamic soaring.")
@@ -1193,7 +1195,7 @@ Partial Class Main
         Me.chkSoaringTypeWave.Location = New System.Drawing.Point(284, 271)
         Me.chkSoaringTypeWave.Name = "chkSoaringTypeWave"
         Me.chkSoaringTypeWave.Size = New System.Drawing.Size(48, 30)
-        Me.chkSoaringTypeWave.TabIndex = 26
+        Me.chkSoaringTypeWave.TabIndex = 27
         Me.chkSoaringTypeWave.Tag = "8"
         Me.chkSoaringTypeWave.Text = "W"
         Me.ToolTip1.SetToolTip(Me.chkSoaringTypeWave, "Check if track involves wave soaring.")
@@ -1220,7 +1222,7 @@ Partial Class Main
         Me.Label9.Location = New System.Drawing.Point(4, 307)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(85, 26)
-        Me.Label9.TabIndex = 28
+        Me.Label9.TabIndex = 30
         Me.Label9.Text = "Distance"
         '
         'chkTitleLock
@@ -1240,7 +1242,7 @@ Partial Class Main
         Me.chkArrivalLock.Location = New System.Drawing.Point(446, 246)
         Me.chkArrivalLock.Name = "chkArrivalLock"
         Me.chkArrivalLock.Size = New System.Drawing.Size(15, 14)
-        Me.chkArrivalLock.TabIndex = 21
+        Me.chkArrivalLock.TabIndex = 22
         Me.chkArrivalLock.Tag = "7"
         Me.ToolTip1.SetToolTip(Me.chkArrivalLock, "When checked, airport name will not be read from flight plan.")
         Me.chkArrivalLock.UseVisualStyleBackColor = True
@@ -1251,7 +1253,7 @@ Partial Class Main
         Me.chkDepartureLock.Location = New System.Drawing.Point(446, 212)
         Me.chkDepartureLock.Name = "chkDepartureLock"
         Me.chkDepartureLock.Size = New System.Drawing.Size(15, 14)
-        Me.chkDepartureLock.TabIndex = 16
+        Me.chkDepartureLock.TabIndex = 17
         Me.chkDepartureLock.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.chkDepartureLock, "When checked, airport name will not be read from flight plan.")
         Me.chkDepartureLock.UseVisualStyleBackColor = True
@@ -1263,7 +1265,7 @@ Partial Class Main
         Me.chkSoaringTypeThermal.Location = New System.Drawing.Point(237, 271)
         Me.chkSoaringTypeThermal.Name = "chkSoaringTypeThermal"
         Me.chkSoaringTypeThermal.Size = New System.Drawing.Size(41, 30)
-        Me.chkSoaringTypeThermal.TabIndex = 25
+        Me.chkSoaringTypeThermal.TabIndex = 26
         Me.chkSoaringTypeThermal.Tag = "8"
         Me.chkSoaringTypeThermal.Text = "T"
         Me.ToolTip1.SetToolTip(Me.chkSoaringTypeThermal, "Check if track involves thermal soaring.")
@@ -1276,7 +1278,7 @@ Partial Class Main
         Me.chkSoaringTypeRidge.Location = New System.Drawing.Point(189, 271)
         Me.chkSoaringTypeRidge.Name = "chkSoaringTypeRidge"
         Me.chkSoaringTypeRidge.Size = New System.Drawing.Size(42, 30)
-        Me.chkSoaringTypeRidge.TabIndex = 24
+        Me.chkSoaringTypeRidge.TabIndex = 25
         Me.chkSoaringTypeRidge.Tag = "8"
         Me.chkSoaringTypeRidge.Text = "R"
         Me.ToolTip1.SetToolTip(Me.chkSoaringTypeRidge, "Check if track involves ridge soaring.")
@@ -1290,7 +1292,7 @@ Partial Class Main
         Me.txtSoaringTypeExtraInfo.Location = New System.Drawing.Point(388, 270)
         Me.txtSoaringTypeExtraInfo.Name = "txtSoaringTypeExtraInfo"
         Me.txtSoaringTypeExtraInfo.Size = New System.Drawing.Size(335, 32)
-        Me.txtSoaringTypeExtraInfo.TabIndex = 27
+        Me.txtSoaringTypeExtraInfo.TabIndex = 29
         Me.txtSoaringTypeExtraInfo.Tag = "8"
         Me.ToolTip1.SetToolTip(Me.txtSoaringTypeExtraInfo, "Any extra information to add to the soaring type line.")
         '
@@ -1301,7 +1303,7 @@ Partial Class Main
         Me.lblSoaringType.Location = New System.Drawing.Point(4, 273)
         Me.lblSoaringType.Name = "lblSoaringType"
         Me.lblSoaringType.Size = New System.Drawing.Size(120, 26)
-        Me.lblSoaringType.TabIndex = 23
+        Me.lblSoaringType.TabIndex = 24
         Me.lblSoaringType.Text = "Soaring Type"
         '
         'txtArrivalExtraInfo
@@ -1312,7 +1314,7 @@ Partial Class Main
         Me.txtArrivalExtraInfo.Location = New System.Drawing.Point(467, 236)
         Me.txtArrivalExtraInfo.Name = "txtArrivalExtraInfo"
         Me.txtArrivalExtraInfo.Size = New System.Drawing.Size(256, 32)
-        Me.txtArrivalExtraInfo.TabIndex = 22
+        Me.txtArrivalExtraInfo.TabIndex = 23
         Me.txtArrivalExtraInfo.Tag = "7"
         Me.ToolTip1.SetToolTip(Me.txtArrivalExtraInfo, "Any extra information to add to the arrival line.")
         '
@@ -1322,7 +1324,7 @@ Partial Class Main
         Me.txtArrivalName.Location = New System.Drawing.Point(276, 236)
         Me.txtArrivalName.Name = "txtArrivalName"
         Me.txtArrivalName.Size = New System.Drawing.Size(164, 32)
-        Me.txtArrivalName.TabIndex = 20
+        Me.txtArrivalName.TabIndex = 21
         Me.txtArrivalName.Tag = "7"
         Me.ToolTip1.SetToolTip(Me.txtArrivalName, "Arrival airport name, can be automatic based on ICAO.")
         '
@@ -1334,7 +1336,7 @@ Partial Class Main
         Me.txtArrivalICAO.Name = "txtArrivalICAO"
         Me.txtArrivalICAO.ReadOnly = True
         Me.txtArrivalICAO.Size = New System.Drawing.Size(81, 32)
-        Me.txtArrivalICAO.TabIndex = 19
+        Me.txtArrivalICAO.TabIndex = 20
         Me.txtArrivalICAO.Tag = "7"
         Me.ToolTip1.SetToolTip(Me.txtArrivalICAO, "Arrival airport ICAO, can come from the flight plan file.")
         '
@@ -1345,7 +1347,7 @@ Partial Class Main
         Me.Label7.Location = New System.Drawing.Point(4, 239)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(64, 26)
-        Me.Label7.TabIndex = 18
+        Me.Label7.TabIndex = 19
         Me.Label7.Text = "Arrival"
         '
         'txtDepExtraInfo
@@ -1356,7 +1358,7 @@ Partial Class Main
         Me.txtDepExtraInfo.Location = New System.Drawing.Point(467, 202)
         Me.txtDepExtraInfo.Name = "txtDepExtraInfo"
         Me.txtDepExtraInfo.Size = New System.Drawing.Size(256, 32)
-        Me.txtDepExtraInfo.TabIndex = 17
+        Me.txtDepExtraInfo.TabIndex = 18
         Me.txtDepExtraInfo.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.txtDepExtraInfo, "Any extra information to add to the departure line.")
         '
@@ -1366,7 +1368,7 @@ Partial Class Main
         Me.txtDepName.Location = New System.Drawing.Point(276, 202)
         Me.txtDepName.Name = "txtDepName"
         Me.txtDepName.Size = New System.Drawing.Size(164, 32)
-        Me.txtDepName.TabIndex = 15
+        Me.txtDepName.TabIndex = 16
         Me.txtDepName.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.txtDepName, "Departure airport name, can be automatic based on ICAO.")
         '
@@ -1378,7 +1380,7 @@ Partial Class Main
         Me.txtSimDateTimeExtraInfo.Location = New System.Drawing.Point(299, 134)
         Me.txtSimDateTimeExtraInfo.Name = "txtSimDateTimeExtraInfo"
         Me.txtSimDateTimeExtraInfo.Size = New System.Drawing.Size(424, 32)
-        Me.txtSimDateTimeExtraInfo.TabIndex = 10
+        Me.txtSimDateTimeExtraInfo.TabIndex = 11
         Me.txtSimDateTimeExtraInfo.Tag = "4"
         Me.ToolTip1.SetToolTip(Me.txtSimDateTimeExtraInfo, "Any extra information to add to the date/time line.")
         '
@@ -1389,7 +1391,7 @@ Partial Class Main
         Me.Label5.Location = New System.Drawing.Point(4, 140)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(134, 26)
-        Me.Label5.TabIndex = 8
+        Me.Label5.TabIndex = 9
         Me.Label5.Text = "Sim Local Time"
         '
         'dtSimLocalTime
@@ -1401,7 +1403,7 @@ Partial Class Main
         Me.dtSimLocalTime.Name = "dtSimLocalTime"
         Me.dtSimLocalTime.ShowUpDown = True
         Me.dtSimLocalTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtSimLocalTime.TabIndex = 9
+        Me.dtSimLocalTime.TabIndex = 10
         Me.dtSimLocalTime.Tag = "4"
         Me.ToolTip1.SetToolTip(Me.dtSimLocalTime, "Local time to set in MSFS for the flight")
         '
@@ -1412,7 +1414,7 @@ Partial Class Main
         Me.chkIncludeYear.Location = New System.Drawing.Point(395, 100)
         Me.chkIncludeYear.Name = "chkIncludeYear"
         Me.chkIncludeYear.Size = New System.Drawing.Size(132, 30)
-        Me.chkIncludeYear.TabIndex = 7
+        Me.chkIncludeYear.TabIndex = 8
         Me.chkIncludeYear.Tag = "4"
         Me.chkIncludeYear.Text = "Include Year"
         Me.ToolTip1.SetToolTip(Me.chkIncludeYear, "When checked, the year will be included (if important)")
@@ -1425,7 +1427,7 @@ Partial Class Main
         Me.Label4.Location = New System.Drawing.Point(4, 106)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(86, 26)
-        Me.Label4.TabIndex = 5
+        Me.Label4.TabIndex = 6
         Me.Label4.Text = "Sim Date"
         '
         'dtSimDate
@@ -1434,7 +1436,7 @@ Partial Class Main
         Me.dtSimDate.Location = New System.Drawing.Point(189, 100)
         Me.dtSimDate.Name = "dtSimDate"
         Me.dtSimDate.Size = New System.Drawing.Size(200, 31)
-        Me.dtSimDate.TabIndex = 6
+        Me.dtSimDate.TabIndex = 7
         Me.dtSimDate.Tag = "4"
         Me.ToolTip1.SetToolTip(Me.dtSimDate, "Date to set in MSFS for the flight")
         '
@@ -1446,7 +1448,7 @@ Partial Class Main
         Me.txtDepartureICAO.Name = "txtDepartureICAO"
         Me.txtDepartureICAO.ReadOnly = True
         Me.txtDepartureICAO.Size = New System.Drawing.Size(81, 32)
-        Me.txtDepartureICAO.TabIndex = 14
+        Me.txtDepartureICAO.TabIndex = 15
         Me.txtDepartureICAO.Tag = "6"
         Me.ToolTip1.SetToolTip(Me.txtDepartureICAO, "Departure airport ICAO, can come from the flight plan file.")
         '
@@ -1457,7 +1459,7 @@ Partial Class Main
         Me.lblDeparture.Location = New System.Drawing.Point(4, 205)
         Me.lblDeparture.Name = "lblDeparture"
         Me.lblDeparture.Size = New System.Drawing.Size(97, 26)
-        Me.lblDeparture.TabIndex = 13
+        Me.lblDeparture.TabIndex = 14
         Me.lblDeparture.Text = "Departure"
         '
         'txtMainArea
@@ -1468,7 +1470,7 @@ Partial Class Main
         Me.txtMainArea.Location = New System.Drawing.Point(189, 168)
         Me.txtMainArea.Name = "txtMainArea"
         Me.txtMainArea.Size = New System.Drawing.Size(534, 32)
-        Me.txtMainArea.TabIndex = 12
+        Me.txtMainArea.TabIndex = 13
         Me.txtMainArea.Tag = "5"
         Me.ToolTip1.SetToolTip(Me.txtMainArea, "The main area and/or point of interest of the flight")
         '
@@ -1479,7 +1481,7 @@ Partial Class Main
         Me.lblMainAreaPOI.Location = New System.Drawing.Point(4, 171)
         Me.lblMainAreaPOI.Name = "lblMainAreaPOI"
         Me.lblMainAreaPOI.Size = New System.Drawing.Size(137, 26)
-        Me.lblMainAreaPOI.TabIndex = 11
+        Me.lblMainAreaPOI.TabIndex = 12
         Me.lblMainAreaPOI.Text = "Main area / POI"
         '
         'txtTitle
@@ -1489,7 +1491,7 @@ Partial Class Main
         Me.txtTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTitle.Location = New System.Drawing.Point(189, 66)
         Me.txtTitle.Name = "txtTitle"
-        Me.txtTitle.Size = New System.Drawing.Size(534, 32)
+        Me.txtTitle.Size = New System.Drawing.Size(461, 32)
         Me.txtTitle.TabIndex = 4
         Me.txtTitle.Tag = "3"
         Me.ToolTip1.SetToolTip(Me.txtTitle, "Track title - can come from the flight plan's title.")
@@ -1513,7 +1515,7 @@ Partial Class Main
         Me.cboSpeedUnits.Location = New System.Drawing.Point(337, 338)
         Me.cboSpeedUnits.Name = "cboSpeedUnits"
         Me.cboSpeedUnits.Size = New System.Drawing.Size(93, 32)
-        Me.cboSpeedUnits.TabIndex = 37
+        Me.cboSpeedUnits.TabIndex = 38
         Me.cboSpeedUnits.Tag = "10"
         Me.ToolTip1.SetToolTip(Me.cboSpeedUnits, "Select units to use for average speed input.")
         '
@@ -1523,7 +1525,7 @@ Partial Class Main
         Me.txtMinAvgSpeed.Location = New System.Drawing.Point(189, 338)
         Me.txtMinAvgSpeed.Name = "txtMinAvgSpeed"
         Me.txtMinAvgSpeed.Size = New System.Drawing.Size(50, 32)
-        Me.txtMinAvgSpeed.TabIndex = 34
+        Me.txtMinAvgSpeed.TabIndex = 36
         Me.txtMinAvgSpeed.Tag = "10"
         Me.txtMinAvgSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMinAvgSpeed, "Minimum average speed - used to calculate maximum duration.")
@@ -1535,7 +1537,7 @@ Partial Class Main
         Me.Label21.Location = New System.Drawing.Point(245, 341)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(30, 26)
-        Me.Label21.TabIndex = 35
+        Me.Label21.TabIndex = 37
         Me.Label21.Text = "to"
         '
         'txtMaxAvgSpeed
@@ -1556,7 +1558,7 @@ Partial Class Main
         Me.Label22.Location = New System.Drawing.Point(4, 341)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(112, 26)
-        Me.Label22.TabIndex = 33
+        Me.Label22.TabIndex = 35
         Me.Label22.Text = "Avg. speeds"
         '
         'btnSelectWeatherFile
@@ -1591,7 +1593,7 @@ Partial Class Main
         Me.txtDurationMin.Location = New System.Drawing.Point(189, 372)
         Me.txtDurationMin.Name = "txtDurationMin"
         Me.txtDurationMin.Size = New System.Drawing.Size(50, 32)
-        Me.txtDurationMin.TabIndex = 39
+        Me.txtDurationMin.TabIndex = 40
         Me.txtDurationMin.Tag = "11"
         Me.txtDurationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDurationMin, "Approximate minimum duration in minutes")
@@ -1603,7 +1605,7 @@ Partial Class Main
         Me.lblDuration.Location = New System.Drawing.Point(4, 375)
         Me.lblDuration.Name = "lblDuration"
         Me.lblDuration.Size = New System.Drawing.Size(132, 26)
-        Me.lblDuration.TabIndex = 38
+        Me.lblDuration.TabIndex = 39
         Me.lblDuration.Text = "Duration (min)"
         '
         'txtDurationMax
@@ -1689,7 +1691,7 @@ Partial Class Main
         Me.lblTotalDistanceAndMiles.Location = New System.Drawing.Point(245, 306)
         Me.lblTotalDistanceAndMiles.Name = "lblTotalDistanceAndMiles"
         Me.lblTotalDistanceAndMiles.Size = New System.Drawing.Size(160, 26)
-        Me.lblTotalDistanceAndMiles.TabIndex = 30
+        Me.lblTotalDistanceAndMiles.TabIndex = 32
         Me.lblTotalDistanceAndMiles.Text = "km / 9999 mi Total"
         '
         'lblTrackDistanceAndMiles
@@ -1699,7 +1701,7 @@ Partial Class Main
         Me.lblTrackDistanceAndMiles.Location = New System.Drawing.Point(468, 306)
         Me.lblTrackDistanceAndMiles.Name = "lblTrackDistanceAndMiles"
         Me.lblTrackDistanceAndMiles.Size = New System.Drawing.Size(156, 26)
-        Me.lblTrackDistanceAndMiles.TabIndex = 32
+        Me.lblTrackDistanceAndMiles.TabIndex = 34
         Me.lblTrackDistanceAndMiles.Text = "km / 9999 mi Task"
         '
         'cboDifficulty
@@ -1722,7 +1724,7 @@ Partial Class Main
         Me.txtDistanceTotal.Name = "txtDistanceTotal"
         Me.txtDistanceTotal.ReadOnly = True
         Me.txtDistanceTotal.Size = New System.Drawing.Size(50, 32)
-        Me.txtDistanceTotal.TabIndex = 29
+        Me.txtDistanceTotal.TabIndex = 31
         Me.txtDistanceTotal.Tag = "9"
         Me.txtDistanceTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDistanceTotal, "Total flight distance (including distance outside the task) read from flight plan" &
@@ -1735,7 +1737,7 @@ Partial Class Main
         Me.txtDistanceTrack.Name = "txtDistanceTrack"
         Me.txtDistanceTrack.ReadOnly = True
         Me.txtDistanceTrack.Size = New System.Drawing.Size(50, 32)
-        Me.txtDistanceTrack.TabIndex = 31
+        Me.txtDistanceTrack.TabIndex = 33
         Me.txtDistanceTrack.Tag = "9"
         Me.txtDistanceTrack.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtDistanceTrack, "Task distance (this is the distance shown by B21 Planner) read from flight plan f" &
@@ -4346,6 +4348,20 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'btnSyncTitles
+        '
+        Me.btnSyncTitles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSyncTitles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSyncTitles.Location = New System.Drawing.Point(656, 66)
+        Me.btnSyncTitles.Name = "btnSyncTitles"
+        Me.btnSyncTitles.Size = New System.Drawing.Size(66, 32)
+        Me.btnSyncTitles.TabIndex = 5
+        Me.btnSyncTitles.Tag = "22"
+        Me.btnSyncTitles.Text = "Sync"
+        Me.ToolTip1.SetToolTip(Me.btnSyncTitles, "Click this button to harmonize all titles and filenames for flight plan and weath" &
+        "er file.")
+        Me.btnSyncTitles.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4788,4 +4804,5 @@ Partial Class Main
     Friend WithEvents chkDGPOEventLogistics As CheckBox
     Friend WithEvents Label18 As Label
     Friend WithEvents grpDiscordOthers As GroupBox
+    Friend WithEvents btnSyncTitles As Button
 End Class

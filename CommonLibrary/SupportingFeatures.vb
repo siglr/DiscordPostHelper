@@ -1751,6 +1751,50 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Function ValidateFileName(filename As String) As String
+
+        Dim reasons As New List(Of String)
+
+        ' Check for empty string
+        If String.IsNullOrWhiteSpace(filename) Then
+            reasons.Add("Filename is empty or only whitespace.")
+        End If
+
+        ' Check for invalid characters
+        Dim invalidChars As String = New String(Path.GetInvalidFileNameChars())
+
+        For Each invalidChar In invalidChars
+            If filename.Contains(invalidChar) Then
+                reasons.Add($"Filename contains invalid character: '{invalidChar}'")
+            End If
+        Next
+
+        ' Check for reserved names
+        Dim reservedNames As String() = {"CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"}
+        Dim fileNameWithoutExtension As String = Path.GetFileNameWithoutExtension(filename).ToUpperInvariant()
+        If reservedNames.Contains(fileNameWithoutExtension) Then
+            reasons.Add($"Filename is a reserved name: '{filename}'")
+        End If
+
+        ' Check for trailing spaces or periods
+        If filename.EndsWith(" ") OrElse filename.EndsWith(".") Then
+            reasons.Add("Filename ends with a space or period.")
+        End If
+
+        ' Additional checks for filenames like "COM1.txt" which are also reserved
+        If Regex.IsMatch(filename.ToUpperInvariant(), "^(COM[1-9]|LPT[1-9]|CON|PRN|AUX|NUL)(\..+)?$", RegexOptions.IgnoreCase) Then
+            reasons.Add($"Filename is a reserved system name: '{filename}'")
+        End If
+
+        ' Return the reasons or an empty string if valid
+        If reasons.Count > 0 Then
+            Return String.Join(Environment.NewLine, reasons)
+        Else
+            Return String.Empty
+        End If
+
+    End Function
+
 End Class
 
 Public Class NativeMethods
