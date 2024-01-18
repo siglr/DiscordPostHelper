@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
+Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
 
 Public Class WindCloudDisplay
@@ -63,7 +64,42 @@ Public Class WindCloudDisplay
         MyBase.OnPaint(e)
 
         ' Set the background color
-        e.Graphics.Clear(Color.White)
+        'e.Graphics.Clear(Color.FromArgb(135, 206, 235))
+
+        ' Create a rectangle to fill the entire background
+        Dim rect As New Rectangle(0, 0, Me.Width, Me.Height)
+
+        ' Define the gradient's start and end colors
+        Dim gradientTop As Color = Color.FromArgb(0, 191, 255) ' Deep sky blue
+        Dim gradientBottom As Color = Color.FromArgb(200, 240, 255) ' Lighter blue
+
+        ' Create the LinearGradientBrush
+        Using brush As New LinearGradientBrush(rect, gradientTop, gradientBottom, LinearGradientMode.Vertical)
+            ' Apply the gradient to the background
+            e.Graphics.FillRectangle(brush, rect)
+        End Using
+
+        ' Define offsets for the sun effect
+        Dim offsetX As Integer = 100 ' Move the effect 100 pixels to the right
+        Dim offsetY As Integer = 100 ' Move the effect 100 pixels down
+
+        ' Define the radial gradient for the sunlight effect
+        Dim sunGradientDiameter As Integer = Me.Width ' Use the width of the control for the diameter
+        Dim sunGradientRect As New Rectangle(-sunGradientDiameter / 2 + offsetX, -sunGradientDiameter / 2 + offsetY, sunGradientDiameter, sunGradientDiameter)
+        Dim sunGradientCenter As New PointF(sunGradientRect.X + sunGradientRect.Width / 2, sunGradientRect.Y + sunGradientRect.Height / 2)
+
+        ' Create the radial gradient
+        Using path As New Drawing2D.GraphicsPath()
+            path.AddEllipse(sunGradientRect)
+            Using brush As New PathGradientBrush(path)
+                brush.CenterColor = Color.FromArgb(200, 255, 255, 255) ' Fully opaque white for a strong light effect
+                brush.SurroundColors = New Color() {Color.Transparent}
+                brush.CenterPoint = sunGradientCenter
+
+                ' Apply the radial gradient over the sky gradient
+                e.Graphics.FillEllipse(brush, sunGradientRect)
+            End Using
+        End Using
 
         If _prefUnits Is Nothing Then
             _prefUnits = New PreferredUnits
@@ -104,7 +140,9 @@ Public Class WindCloudDisplay
 
         ' Draw the 10k line in the middle
         Dim middleAltitudeLabel As String = If(_prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric, "3048", "10k")
-        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
+        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
+        DrawHorizontal3DLine(e, New PointF(0, yPos10k), New PointF(drawableWidth, yPos10k), Color.DarkGray, 2)
+
         WriteAltitudeLabel(e, rightEdge, 10000, yPos10k)
 
         ' Calculate the decremental step from 10k down to -2k
@@ -113,17 +151,20 @@ Public Class WindCloudDisplay
         ' Draw lines only at 5k, 0 and -2k
         Dim yPos5k As Single = yPos10k + 5 * decrementStep
         altitudePositions.Add(5000, yPos5k)
-        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos5k, drawableWidth, yPos5k)
+        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos5k, drawableWidth, yPos5k)
+        DrawHorizontal3DLine(e, New PointF(0, yPos5k), New PointF(drawableWidth, yPos5k), Color.DarkGray, 2)
         WriteAltitudeLabel(e, rightEdge, 5000, yPos5k)
 
         Dim yPos0 As Single = yPos10k + 10 * decrementStep
         altitudePositions.Add(0, yPos0)
-        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
+        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
+        DrawHorizontal3DLine(e, New PointF(0, yPos0), New PointF(drawableWidth, yPos0), Color.DarkGray, 2)
         WriteAltitudeLabel(e, rightEdge, 0, yPos0)
 
         Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
         altitudePositions.Add(-2000, yPosNeg2k)
-        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
+        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
+        DrawHorizontal3DLine(e, New PointF(0, yPosNeg2k), New PointF(drawableWidth, yPosNeg2k), Color.DarkGray, 2)
         WriteAltitudeLabel(e, rightEdge, -2000, yPosNeg2k)
 
         ' Calculate the incremental step from 10k up to 60k
@@ -134,7 +175,8 @@ Public Class WindCloudDisplay
             Dim altitude As Integer = (10 + i * 10) * 1000
             Dim yPos As Single = yPos10k - i * incrementStep
             altitudePositions.Add(altitude, yPos)
-            e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
+            'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
+            DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
             WriteAltitudeLabel(e, rightEdge, altitude, yPos)
         Next
 
@@ -149,56 +191,106 @@ Public Class WindCloudDisplay
 
 
         ' Draw the vertical line in the center
-        e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
+        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
+        DrawVertical3DLine(e, CInt(Width / 2), 0, Height, Color.DarkGray, 2)
 
         Return altitudePositions
 
     End Function
 
+    Private Sub DrawVertical3DLine(e As PaintEventArgs, lineX As Single, topY As Single, bottomY As Single, lineColor As Color, shadowOffset As Integer)
+        ' Shadow color, semi-transparent black
+        Dim shadowColor As Color = Color.FromArgb(50, 0, 0, 0)
+
+        ' Draw shadow first
+        e.Graphics.DrawLine(New Pen(shadowColor, 1), lineX + shadowOffset, topY, lineX + shadowOffset, bottomY)
+
+        ' Create gradient brush for line
+        Dim startPoint As New PointF(lineX, topY)
+        Dim endPoint As New PointF(lineX, bottomY)
+        Using gradientBrush As LinearGradientBrush = New LinearGradientBrush(startPoint, endPoint, Color.White, lineColor)
+            ' Blend the colors for a more pronounced 3D effect
+            Dim blend As New Blend()
+            blend.Positions = New Single() {0.0F, 0.5F, 1.0F}
+            blend.Factors = New Single() {0.0F, 1.0F, 0.0F}
+            gradientBrush.Blend = blend
+
+            ' Draw the line with the gradient brush
+            e.Graphics.DrawLine(New Pen(gradientBrush, 1), startPoint, endPoint)
+        End Using
+    End Sub
+
+    Private Function DrawHorizontal3DLine(e As PaintEventArgs, startPoint As PointF, endPoint As PointF, lineColor As Color, shadowOffset As Integer)
+        ' Shadow color, semi-transparent black
+        Dim shadowColor As Color = Color.FromArgb(50, 0, 0, 0)
+
+        ' Draw shadow first
+        Dim shadowStart As New PointF(startPoint.X + shadowOffset, startPoint.Y + shadowOffset)
+        Dim shadowEnd As New PointF(endPoint.X + shadowOffset, endPoint.Y + shadowOffset)
+        e.Graphics.DrawLine(New Pen(shadowColor, 1), shadowStart, shadowEnd)
+
+        ' Create gradient brush for line
+        Using gradientBrush As LinearGradientBrush = New LinearGradientBrush(startPoint, endPoint, Color.White, lineColor)
+            ' Blend the colors for a more pronounced 3D effect
+            Dim blend As New Blend()
+            blend.Positions = New Single() {0.0F, 0.5F, 1.0F}
+            blend.Factors = New Single() {0.0F, 1.0F, 0.0F}
+            gradientBrush.Blend = blend
+
+            ' Draw the line with the gradient brush
+            e.Graphics.DrawLine(New Pen(gradientBrush, 1), startPoint, endPoint)
+        End Using
+    End Function
+
     Private Sub WriteAltitudeLabel(e As PaintEventArgs, rightEdge As Single, altitude As Integer, yPos As Single, Optional unitLabel As Boolean = False)
         Dim altitudeLabel As String
-        Select Case _prefUnits.Altitude
-            Case PreferredUnits.AltitudeUnits.Metric
-                If Not unitLabel Then
-                    altitudeLabel = (altitude * 0.3048).ToString("0")
-                Else
-                    altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
-                End If
-                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
-            Case PreferredUnits.AltitudeUnits.Imperial
-                If Not unitLabel Then
-                    If altitude <> 0 Then
-                        altitudeLabel = (altitude / 1000).ToString() + "k"
-                    Else
-                        altitudeLabel = (altitude / 1000).ToString()
-                    End If
-                Else
-                    altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
-                End If
-                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
-            Case PreferredUnits.AltitudeUnits.Both
-                'Feet on the left
-                If Not unitLabel Then
-                    If altitude <> 0 Then
-                        altitudeLabel = (altitude / 1000).ToString() + "k"
-                    Else
-                        altitudeLabel = (altitude / 1000).ToString()
-                    End If
-                Else
-                    altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
-                End If
-                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+        If _WeatherInfo IsNot Nothing Then
 
-                'Meters on the right
-                If Not unitLabel Then
-                    altitudeLabel = (altitude * 0.3048).ToString("0")
-                Else
-                    altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
-                End If
-                Dim textSize As SizeF = e.Graphics.MeasureString(altitudeLabel, theFont)
-                Dim textXPosition As Single = rightEdge - textSize.Width ' Align to the right
-                e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, textXPosition, yPos)
-        End Select
+            Select Case _prefUnits.Altitude
+                Case PreferredUnits.AltitudeUnits.Metric
+                    If Not unitLabel Then
+                        altitudeLabel = (altitude * 0.3048).ToString("0")
+                    Else
+                        altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
+                    End If
+                    e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+                Case PreferredUnits.AltitudeUnits.Imperial
+                    If Not unitLabel Then
+                        If altitude <> 0 Then
+                            altitudeLabel = (altitude / 1000).ToString() + "k"
+                        Else
+                            altitudeLabel = (altitude / 1000).ToString()
+                        End If
+                    Else
+                        altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
+                    End If
+                    e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+                Case PreferredUnits.AltitudeUnits.Both
+                    'Feet on the left
+                    If Not unitLabel Then
+                        If altitude <> 0 Then
+                            altitudeLabel = (altitude / 1000).ToString() + "k"
+                        Else
+                            altitudeLabel = (altitude / 1000).ToString()
+                        End If
+                    Else
+                        altitudeLabel = $"Feet {_WeatherInfo.AltitudeMeasurement}"
+                    End If
+                    e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, 0, yPos)
+
+                    'Meters on the right
+                    If Not unitLabel Then
+                        altitudeLabel = (altitude * 0.3048).ToString("0")
+                    Else
+                        altitudeLabel = $"Meters {_WeatherInfo.AltitudeMeasurement}"
+                    End If
+                    Dim textSize As SizeF = e.Graphics.MeasureString(altitudeLabel, theFont)
+                    Dim textXPosition As Single = rightEdge - textSize.Width ' Align to the right
+                    e.Graphics.DrawString(altitudeLabel, theFont, Brushes.Black, textXPosition, yPos)
+            End Select
+
+        End If
+
     End Sub
 
     Private Sub DrawWindLayers(ByVal e As PaintEventArgs, ByVal altitudePositions As Dictionary(Of Integer, Single))
@@ -274,7 +366,7 @@ Public Class WindCloudDisplay
                 End If
             Next
 
-            ' 3. Draw the rectangles and set their color
+            ' 3. Draw the rectangles with rounded corners and shadows
             For i = 0 To windRects.Count - 1
                 ' Calculate wind rectangle color based on wind speed using the BlueGradientPalette
                 Dim windSpeed As Single = windSpeeds(i)
@@ -286,10 +378,10 @@ Public Class WindCloudDisplay
                 ' Set text color based on wind color brightness
                 Dim textColor As Color = If(windColor.GetBrightness() > 0.8, Color.Black, Color.White)
 
-                ' Draw the rectangle with a dark blue border
-                e.Graphics.FillRectangle(New SolidBrush(windColor), windRects(i))
-                e.Graphics.DrawRectangle(New Pen(Color.DarkBlue, 1), windRects(i))
+                ' Draw the rectangle with shadow and rounded corners using the new helper method
+                DrawRoundedRectangleWithShadow(e.Graphics, windRects(i), New Pen(Color.DarkBlue, 1), windColor)
 
+                ' Measure and draw the text
                 Dim windSize As SizeF = e.Graphics.MeasureString(windInfos(i), theFont)
                 Dim windLocation As New Point(windRects(i).Left + (windRects(i).Width - windSize.Width) / 2, windRects(i).Top + (windRects(i).Height - windSize.Height) / 2)
                 e.Graphics.DrawString(windInfos(i), theFont, New SolidBrush(textColor), windLocation)
@@ -301,6 +393,8 @@ Public Class WindCloudDisplay
 
     Private Sub DrawCloudLayers(ByVal e As PaintEventArgs, ByVal altitudePositions As Dictionary(Of Integer, Single))
 
+        Dim backgroundColor As Color = Color.FromArgb(159, 213, 235)
+
         If _WeatherInfo IsNot Nothing Then
 
             ' Convert altitude in meters to feet for easier positioning
@@ -309,6 +403,8 @@ Public Class WindCloudDisplay
             Dim cloudRects As New List(Of Rectangle)
             Dim cloudInfos As New List(Of Tuple(Of String, String))
             Dim cloudDensities As New List(Of Single)  ' List to store cloud densities
+            Dim cloudCoverages As New List(Of Single)  ' List to store cloud coverages
+            Dim cloudScattereds As New List(Of Single)  ' List to store cloud scattereds
 
             Dim spaceForRightLabel As Integer = 20
             If _prefUnits.Altitude = PreferredUnits.AltitudeUnits.Both Then
@@ -345,6 +441,8 @@ Public Class WindCloudDisplay
                         cloudInfos.Add(Tuple.Create(line1, line2))
                     End If
                     cloudDensities.Add(cloud.Density)
+                    cloudCoverages.Add(cloud.Coverage)
+                    cloudScattereds.Add(cloud.Scattering)
                 End If
             Next
 
@@ -376,24 +474,42 @@ Public Class WindCloudDisplay
 
                 ' Set text color based on cloud color brightness
                 Dim textColor As Color = If(cloudColor.GetBrightness() > 0.65, Color.Black, Color.White)
+                textColor = Color.Black
 
-                ' Draw the rectangle with the calculated color
-                e.Graphics.FillRectangle(New SolidBrush(cloudColor), cloudRects(i))
+                ' Draw the cloud rectangle with shadow and rounded corners using the new helper method
+                DrawRoundedRectangleWithShadow(e.Graphics, cloudRects(i), New Pen(Color.Black, 1), backgroundColor)
 
-                ' Add dark blue border to cloud rectangle
-                e.Graphics.DrawRectangle(New Pen(Color.Black, 1), cloudRects(i))
+                Dim cloudCoverageColor As Color = Color.FromArgb(
+                                                    Math.Min(cloudColor.R - 35, 255),
+                                                    Math.Min(cloudColor.G - 35, 255),
+                                                    Math.Min(cloudColor.B - 35, 255))
+                Dim cloudCoverage As Single = cloudCoverages(i) ' Assuming this is a value between 0 and 1
+                DrawDynamicCoverageBars(e, cloudRects(i), cloudCoverage, cloudScattereds(i), cloudCoverageColor, 1, 4)
 
-                Dim totalHeightForTwoLines As Single = 2 * theFont.GetHeight(e.Graphics)
+                Dim paddingBetweenLines As Single = 2 ' Adjust this value for more space between lines
+
+                Dim totalHeightForTwoLines As Single = 2 * theFont.GetHeight(e.Graphics) + paddingBetweenLines
                 Dim startYForTwoLines As Single = cloudRects(i).Top + (cloudRects(i).Height - totalHeightForTwoLines) / 2
 
                 Dim line1Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item1, theFont)
-                Dim line1Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line1Size.Width) / 2, If(String.IsNullOrEmpty(cloudInfos(i).Item2), cloudRects(i).Top + (cloudRects(i).Height - line1Size.Height) / 2, startYForTwoLines))
-                e.Graphics.DrawString(cloudInfos(i).Item1, theFont, New SolidBrush(textColor), line1Location)
+
+                ' Calculate the Y-position differently based on whether there's a second line of text
+                Dim line1YPosition As Single
+                If String.IsNullOrEmpty(cloudInfos(i).Item2) Then
+                    ' Center the single line of text vertically in the cloud rectangle
+                    line1YPosition = cloudRects(i).Top + (cloudRects(i).Height - line1Size.Height) / 2
+                Else
+                    ' Position the first of two lines of text
+                    line1YPosition = startYForTwoLines
+                End If
+
+                Dim line1Location As New PointF(cloudRects(i).Left + (cloudRects(i).Width - line1Size.Width) / 2, line1YPosition)
+                DrawTextWithBackground(e, cloudInfos(i).Item1, theFont, textColor, backgroundColor, line1Location)
 
                 If Not String.IsNullOrEmpty(cloudInfos(i).Item2) Then
                     Dim line2Size As SizeF = e.Graphics.MeasureString(cloudInfos(i).Item2, theFont)
-                    Dim line2Location As New Point(cloudRects(i).Left + (cloudRects(i).Width - line2Size.Width) / 2, startYForTwoLines + theFont.GetHeight(e.Graphics))
-                    e.Graphics.DrawString(cloudInfos(i).Item2, theFont, New SolidBrush(textColor), line2Location)
+                    Dim line2Location As New PointF(cloudRects(i).Left + (cloudRects(i).Width - line2Size.Width) / 2, line1YPosition + theFont.GetHeight(e.Graphics) + paddingBetweenLines)
+                    DrawTextWithBackground(e, cloudInfos(i).Item2, theFont, textColor, backgroundColor, line2Location)
                 End If
             Next
 
@@ -428,6 +544,88 @@ Public Class WindCloudDisplay
         Next
         Return overlapCount
     End Function
+
+    Private Sub DrawRoundedRectangleWithShadow(graphics As Graphics, rectangle As Rectangle, pen As Pen, fillColor As Color, Optional cornerRadius As Integer = 5, Optional shadowOffset As Integer = 4)
+
+        Dim shadowColor As Color = Color.FromArgb(60, 0, 0, 0) ' Semi-transparent black for shadow
+
+        ' Draw the shadow rectangle first with a slightly larger radius
+        Dim shadowRect As New Rectangle(rectangle.X + shadowOffset, rectangle.Y + shadowOffset, rectangle.Width, rectangle.Height)
+        DrawRoundedRectangle(graphics, shadowRect, cornerRadius + 2, Pens.Transparent, shadowColor)
+
+        ' Now draw the main rectangle
+        DrawRoundedRectangle(graphics, rectangle, cornerRadius, pen, Color.FromArgb(200, fillColor))
+    End Sub
+
+    Private Sub DrawRoundedRectangle(graphics As Graphics, rectangle As Rectangle, radius As Integer, pen As Pen, fillColor As Color)
+        Dim path As New Drawing2D.GraphicsPath()
+        With path
+            .AddArc(rectangle.X, rectangle.Y, radius, radius, 180, 90)
+            .AddArc(rectangle.X + rectangle.Width - radius, rectangle.Y, radius, radius, 270, 90)
+            .AddArc(rectangle.X + rectangle.Width - radius, rectangle.Y + rectangle.Height - radius, radius, radius, 0, 90)
+            .AddArc(rectangle.X, rectangle.Y + rectangle.Height - radius, radius, radius, 90, 90)
+            .CloseFigure()
+        End With
+
+        graphics.FillPath(New SolidBrush(fillColor), path)
+        If pen IsNot Pens.Transparent Then
+            graphics.DrawPath(pen, path)
+        End If
+    End Sub
+
+    Private Sub DrawDynamicCoverageBars(e As PaintEventArgs, cloudRect As Rectangle, coverage As Single, scattered As Single, barColor As Color, borderWidth As Integer, barsCount As Integer)
+        ' Adjust the rectangle to account for the border
+        Dim innerRect As New Rectangle(cloudRect.X + borderWidth, cloudRect.Y + borderWidth,
+                                   cloudRect.Width - 2 * borderWidth, cloudRect.Height - 2 * borderWidth)
+
+        ' Randomness generator
+        Dim rnd As New Random()
+
+        ' The total width of all the bars combined represents the coverage
+        Dim totalBarsWidth As Single = innerRect.Width * coverage / 100
+        Dim barWidth As Single = totalBarsWidth / barsCount
+        Dim spaceBetweenBars As Single = (innerRect.Width - totalBarsWidth) / (barsCount + 1)
+
+        ' Draw the bars
+        Dim currentX As Single = innerRect.X + spaceBetweenBars
+        For i As Integer = 0 To barsCount - 1
+            ' Draw individual 1 pixel lines to make up the width of the bar
+            For lineX As Single = currentX To currentX + barWidth - 1
+                ' Introduce randomness into the line height
+                ' The minimum height is the full height of the rectangle when scattered is 0
+                ' As scattered increases, the maximum height of the lines decreases
+                Dim randomFactor As Single = rnd.NextDouble() * scattered / 100
+                Dim dynamicLineHeight As Single = innerRect.Height - (innerRect.Height * randomFactor)
+
+                ' Calculate Y position based on dynamic line height
+                Dim lineYPosition As Single = innerRect.Y + (innerRect.Height - dynamicLineHeight) / 2
+
+                ' Draw a single vertical line
+                e.Graphics.FillRectangle(New SolidBrush(barColor), lineX, lineYPosition, 1, dynamicLineHeight)
+            Next
+
+            ' Increment X position by the width of a bar plus the space between bars
+            currentX += barWidth + spaceBetweenBars
+        Next
+    End Sub
+
+    Private Sub DrawTextWithBackground(e As PaintEventArgs, text As String, font As Font, textColor As Color, backColor As Color, location As PointF)
+        ' Measure the size of the text
+        Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
+
+        ' Define the rectangle area for the semi-transparent background
+        Dim padding As Integer = 0 ' You can adjust the padding around the text
+        Dim backgroundRect As New RectangleF(location.X - padding, location.Y - padding, textSize.Width + (2 * padding), textSize.Height + (2 * padding))
+
+        ' Set up the semi-transparent background color
+        Dim semiTransparentBrush As New SolidBrush(Color.FromArgb(175, backColor))
+
+        ' Draw the semi-transparent background
+        e.Graphics.FillRectangle(semiTransparentBrush, backgroundRect)
+
+        ' Draw the text on top of the background
+        e.Graphics.DrawString(text, font, New SolidBrush(textColor), location)
+    End Sub
 
 End Class
 
