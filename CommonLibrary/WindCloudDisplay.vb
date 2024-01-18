@@ -92,7 +92,7 @@ Public Class WindCloudDisplay
         Using path As New Drawing2D.GraphicsPath()
             path.AddEllipse(sunGradientRect)
             Using brush As New PathGradientBrush(path)
-                brush.CenterColor = Color.FromArgb(200, 255, 255, 255) ' Fully opaque white for a strong light effect
+                brush.CenterColor = Color.FromArgb(220, 255, 255, 255) ' Fully opaque white for a strong light effect
                 brush.SurroundColors = New Color() {Color.Transparent}
                 brush.CenterPoint = sunGradientCenter
 
