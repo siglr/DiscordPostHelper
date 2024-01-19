@@ -590,9 +590,13 @@ Public Class WindCloudDisplay
         ' Randomness generator
         Dim rnd As New Random()
 
+        ' Declare and initialize the min and max bars variables
+        Dim minBars As Integer = 1 ' Minimum number of bars at scatter = 0
+        Dim maxBars As Integer = 10 ' Maximum number of bars at scatter = 100
+
         ' Dynamically determine the number of bars based on scattered value
-        ' 2 bars for scatter = 0 and up to 12 bars for scatter = 100
-        Dim barsCount As Integer = 2 + CInt((scattered / 100) * 10)
+        ' Linearly interpolates between minBars and maxBars based on the scattered percentage
+        Dim barsCount As Integer = minBars + CInt((scattered / 100) * (maxBars - minBars))
 
         ' The total width of all the bars combined represents the coverage
         Dim totalBarsWidth As Single = innerRect.Width * coverage / 100
