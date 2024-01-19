@@ -16,6 +16,8 @@ Public Class WindCloudDisplay
     Public Sub New()
         MyBase.New
 
+        Me.DoubleBuffered = True
+
         Dim lowestValue As Integer = 0
         Dim highestValue As Integer = 225
         Dim totalShades As Integer = 26

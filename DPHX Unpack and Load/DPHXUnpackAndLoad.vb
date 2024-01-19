@@ -131,6 +131,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
         If Not _abortingFirstRun Then
+            ctrlBriefing.Closing()
             Dim nbrTries As Integer = 0
             Do Until nbrTries = 10
                 nbrTries += 1

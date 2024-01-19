@@ -10,6 +10,11 @@ Public Class GradientLegendControl
     Public Property FirstValue As String = String.Empty
     Public Property LastValue As String = String.Empty
 
+    Public Sub New()
+        MyBase.New
+        Me.DoubleBuffered = True
+    End Sub
+
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
         MyBase.OnPaint(e)
 

@@ -158,6 +158,10 @@ Public Class BriefingControl
 
 #Region "Public"
 
+    Public Sub Closing()
+        Me.SuspendLayout()
+    End Sub
+
     Public Sub SetPrefUnits()
 
         _initPrefUnits = True

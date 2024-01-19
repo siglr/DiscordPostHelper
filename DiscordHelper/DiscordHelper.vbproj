@@ -131,7 +131,9 @@
     <Compile Include="RecommendedAddOnsScreen.Designer.vb">
       <DependentUpon>RecommendedAddOnsScreen.vb</DependentUpon>
     </Compile>
-    <Compile Include="RecommendedAddOnsScreen.vb" />
+    <Compile Include="RecommendedAddOnsScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CopyContent.resx">

@@ -342,6 +342,7 @@ Public Class Main
             SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
             SessionSettings.AutomaticPostingProgression = chkDPOExpertMode.Checked
             SessionSettings.Save()
+            BriefingControl1.Closing()
         End If
 
     End Sub
