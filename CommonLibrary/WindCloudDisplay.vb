@@ -65,9 +65,6 @@ Public Class WindCloudDisplay
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
         MyBase.OnPaint(e)
 
-        ' Set the background color
-        'e.Graphics.Clear(Color.FromArgb(135, 206, 235))
-
         ' Create a rectangle to fill the entire background
         Dim rect As New Rectangle(0, 0, Me.Width, Me.Height)
 
@@ -115,7 +112,29 @@ Public Class WindCloudDisplay
         Dim specifiedAltitudes As New List(Of Integer)({-2, 0, 10, 20, 30, 40, 50, 60})
 
         ' Call the new method to draw the grid lines and labels
-        Dim altitudePositions As Dictionary(Of Integer, Single) = DrawGridLinesAndLabels(e)
+        Dim altitudePositions As Dictionary(Of Integer, Single) = CalculateAltitudePositions(e)
+
+        ' Background for below zero
+        Dim groundGradientTop As Color = Color.FromArgb(34, 139, 34) ' Forest green
+        Dim groundGradientBottom As Color = Color.FromArgb(139, 69, 19) ' Saddle brown
+        Dim seaGradientTop As Color = Color.FromArgb(0, 105, 148) ' Deep sea blue
+        Dim seaGradientBottom As Color = Color.FromArgb(0, 191, 255) ' Light sky blue
+
+        If _WeatherInfo IsNot Nothing Then
+            ' Choose the correct gradient based on the AltitudeMeasurement setting
+            gradientTop = If(_WeatherInfo.AltitudeMeasurement = "AMGL", groundGradientTop, seaGradientTop)
+            gradientBottom = If(_WeatherInfo.AltitudeMeasurement = "AMGL", groundGradientBottom, seaGradientBottom)
+            ' Define the rectangle for below zero
+            Dim belowZeroRect As New Rectangle(0, altitudePositions(0), Me.Width, Me.Height - altitudePositions(0))
+
+            ' Create and apply the gradient for below zero
+            Using brush As New LinearGradientBrush(belowZeroRect, gradientTop, gradientBottom, LinearGradientMode.Vertical)
+                e.Graphics.FillRectangle(brush, belowZeroRect)
+            End Using
+        End If
+
+
+        DrawGridLinesAndLabels(e, altitudePositions)
 
         ' Call the new method to draw wind layers
         DrawWindLayers(e, altitudePositions)
@@ -124,10 +143,32 @@ Public Class WindCloudDisplay
 
     End Sub
 
-    Private Function DrawGridLinesAndLabels(ByVal e As PaintEventArgs) As Dictionary(Of Integer, Single)
-
+    Private Function CalculateAltitudePositions(ByVal e As PaintEventArgs) As Dictionary(Of Integer, Single)
         ' Dictionary to store altitude vs. vertical position
         Dim altitudePositions As New Dictionary(Of Integer, Single)
+
+        ' Calculate the true available space
+        Dim textHeight As Single = theFont.GetHeight(e.Graphics)
+        Dim drawableHeight As Single = Height - 2 * textHeight
+        Dim yPos10k As Single = textHeight + drawableHeight / 2
+
+        ' Define positions
+        altitudePositions.Add(10000, yPos10k)
+        altitudePositions.Add(5000, yPos10k + 5 * (yPos10k - textHeight) / 12)
+        altitudePositions.Add(0, yPos10k + 10 * (yPos10k - textHeight) / 12)
+        altitudePositions.Add(-2000, yPos10k + 12 * (yPos10k - textHeight) / 12)
+
+        ' Incremental step from 10k up to 60k
+        For i As Integer = 1 To 5
+            Dim altitude As Integer = (10 + i * 10) * 1000
+            altitudePositions.Add(altitude, yPos10k - i * (yPos10k - textHeight) / 5)
+        Next
+
+        Return altitudePositions
+    End Function
+
+
+    Private Sub DrawGridLinesAndLabels(ByVal e As PaintEventArgs, altitudePositions As Dictionary(Of Integer, Single))
 
         ' Calculate the true available space
         Dim textHeight As Single = theFont.GetHeight(e.Graphics)
@@ -135,51 +176,20 @@ Public Class WindCloudDisplay
         Dim drawableWidth As Single = e.ClipRectangle.Width
         Dim rightEdge As Single = drawableWidth
 
-        ' Position for 10k line at the vertical middle
-        Dim yPos10k As Single = textHeight + drawableHeight / 2
+        For Each kvp As KeyValuePair(Of Integer, Single) In altitudePositions
+            Dim altitude = kvp.Key
+            Dim yPos = kvp.Value
 
-        altitudePositions.Add(10000, yPos10k)
+            ' Determine if this is the zero line or not
+            If altitude = 0 Then
+                DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
+                DrawHorizontal3DLine(e, New PointF(0, yPos - 1), New PointF(drawableWidth + 1, yPos - 1), Color.Black, 2)
+                WriteAltitudeLabel(e, rightEdge, altitude, yPos)
+            Else
+                DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
+                WriteAltitudeLabel(e, rightEdge, altitude, yPos)
+            End If
 
-        ' Draw the 10k line in the middle
-        Dim middleAltitudeLabel As String = If(_prefUnits.Altitude = PreferredUnits.AltitudeUnits.Metric, "3048", "10k")
-        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos10k, drawableWidth, yPos10k)
-        DrawHorizontal3DLine(e, New PointF(0, yPos10k), New PointF(drawableWidth, yPos10k), Color.DarkGray, 2)
-
-        WriteAltitudeLabel(e, rightEdge, 10000, yPos10k)
-
-        ' Calculate the decremental step from 10k down to -2k
-        Dim decrementStep As Single = (yPos10k - textHeight) / 12 ' We have 12 increments from 10k to -2k 
-
-        ' Draw lines only at 5k, 0 and -2k
-        Dim yPos5k As Single = yPos10k + 5 * decrementStep
-        altitudePositions.Add(5000, yPos5k)
-        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos5k, drawableWidth, yPos5k)
-        DrawHorizontal3DLine(e, New PointF(0, yPos5k), New PointF(drawableWidth, yPos5k), Color.DarkGray, 2)
-        WriteAltitudeLabel(e, rightEdge, 5000, yPos5k)
-
-        Dim yPos0 As Single = yPos10k + 10 * decrementStep
-        altitudePositions.Add(0, yPos0)
-        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos0, drawableWidth, yPos0)
-        DrawHorizontal3DLine(e, New PointF(0, yPos0), New PointF(drawableWidth, yPos0), Color.DarkGray, 2)
-        WriteAltitudeLabel(e, rightEdge, 0, yPos0)
-
-        Dim yPosNeg2k As Single = yPos10k + 12 * decrementStep
-        altitudePositions.Add(-2000, yPosNeg2k)
-        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPosNeg2k, drawableWidth, yPosNeg2k)
-        DrawHorizontal3DLine(e, New PointF(0, yPosNeg2k), New PointF(drawableWidth, yPosNeg2k), Color.DarkGray, 2)
-        WriteAltitudeLabel(e, rightEdge, -2000, yPosNeg2k)
-
-        ' Calculate the incremental step from 10k up to 60k
-        Dim incrementStep As Single = (yPos10k - textHeight) / 5 ' We have 5 increments from 10k to 60k 
-
-        ' Convert and draw lines for 20k, 30k, 40k, 50k, and 60k
-        For i As Integer = 1 To 5
-            Dim altitude As Integer = (10 + i * 10) * 1000
-            Dim yPos As Single = yPos10k - i * incrementStep
-            altitudePositions.Add(altitude, yPos)
-            'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), 0, yPos, drawableWidth, yPos)
-            DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
-            WriteAltitudeLabel(e, rightEdge, altitude, yPos)
         Next
 
         'Write Feet and Meters at the top of the graph
@@ -193,12 +203,9 @@ Public Class WindCloudDisplay
 
 
         ' Draw the vertical line in the center
-        'e.Graphics.DrawLine(New Pen(Color.DarkGray, 1), CInt(Width / 2), 0, CInt(Width / 2), Height)
         DrawVertical3DLine(e, CInt(Width / 2), 0, Height, Color.DarkGray, 2)
 
-        Return altitudePositions
-
-    End Function
+    End Sub
 
     Private Sub DrawVertical3DLine(e As PaintEventArgs, lineX As Single, topY As Single, bottomY As Single, lineColor As Color, shadowOffset As Integer)
         ' Shadow color, semi-transparent black
@@ -486,7 +493,7 @@ Public Class WindCloudDisplay
                                                     Math.Min(cloudColor.G - 35, 255),
                                                     Math.Min(cloudColor.B - 35, 255))
                 Dim cloudCoverage As Single = cloudCoverages(i) ' Assuming this is a value between 0 and 1
-                DrawDynamicCoverageBars(e, cloudRects(i), cloudCoverage, cloudScattereds(i), cloudCoverageColor, 1, 4)
+                DrawDynamicCoverageBars(e, cloudRects(i), cloudCoverage, cloudScattereds(i), cloudCoverageColor, 1)
 
                 Dim paddingBetweenLines As Single = 2 ' Adjust this value for more space between lines
 
@@ -575,17 +582,24 @@ Public Class WindCloudDisplay
         End If
     End Sub
 
-    Private Sub DrawDynamicCoverageBars(e As PaintEventArgs, cloudRect As Rectangle, coverage As Single, scattered As Single, barColor As Color, borderWidth As Integer, barsCount As Integer)
+    Private Sub DrawDynamicCoverageBars(e As PaintEventArgs, cloudRect As Rectangle, coverage As Single, scattered As Single, barColor As Color, borderWidth As Integer)
         ' Adjust the rectangle to account for the border
         Dim innerRect As New Rectangle(cloudRect.X + borderWidth, cloudRect.Y + borderWidth,
-                                   cloudRect.Width - 2 * borderWidth, cloudRect.Height - 2 * borderWidth)
+                           cloudRect.Width - 2 * borderWidth, cloudRect.Height - 2 * borderWidth)
 
         ' Randomness generator
         Dim rnd As New Random()
 
+        ' Dynamically determine the number of bars based on scattered value
+        ' 2 bars for scatter = 0 and up to 12 bars for scatter = 100
+        Dim barsCount As Integer = 2 + CInt((scattered / 100) * 10)
+
         ' The total width of all the bars combined represents the coverage
         Dim totalBarsWidth As Single = innerRect.Width * coverage / 100
-        Dim barWidth As Single = totalBarsWidth / barsCount
+        ' Ensure a minimum bar width of 1 pixel
+        Dim barWidth As Single = Math.Max(1, totalBarsWidth / barsCount)
+        ' Adjust totalBarsWidth if necessary due to the 1 pixel minimum
+        totalBarsWidth = barWidth * barsCount
         Dim spaceBetweenBars As Single = (innerRect.Width - totalBarsWidth) / (barsCount + 1)
 
         ' Draw the bars
@@ -594,16 +608,15 @@ Public Class WindCloudDisplay
             ' Draw individual 1 pixel lines to make up the width of the bar
             For lineX As Single = currentX To currentX + barWidth - 1
                 ' Introduce randomness into the line height
-                ' The minimum height is the full height of the rectangle when scattered is 0
-                ' As scattered increases, the maximum height of the lines decreases
                 Dim randomFactor As Single = rnd.NextDouble() * scattered / 100
-                Dim dynamicLineHeight As Single = innerRect.Height - (innerRect.Height * randomFactor)
+                Dim dynamicLineHeight As Single = innerRect.Height * (1 - randomFactor)
+                Dim bottomRandomness As Single = innerRect.Height * randomFactor * 0.1
 
-                ' Calculate Y position based on dynamic line height
-                Dim lineYPosition As Single = innerRect.Y + (innerRect.Height - dynamicLineHeight) / 2
+                ' Ensure that the bottom randomness doesn't make the line go outside the rectangle
+                Dim bottomPosition As Single = innerRect.Bottom - bottomRandomness
 
-                ' Draw a single vertical line
-                e.Graphics.FillRectangle(New SolidBrush(barColor), lineX, lineYPosition, 1, dynamicLineHeight)
+                ' Draw a single vertical line starting from the bottomPosition going up the dynamicLineHeight
+                e.Graphics.FillRectangle(New SolidBrush(barColor), lineX, bottomPosition - dynamicLineHeight, 1, dynamicLineHeight)
             Next
 
             ' Increment X position by the width of a bar plus the space between bars
