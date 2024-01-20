@@ -254,6 +254,9 @@ Public Class AllData
     <XmlElement("DiscordTaskID")>
     Public Property DiscordTaskID As String
 
+    <XmlElement("TaskThreadFirstPostID")>
+    Public Property TaskThreadFirstPostID As String
+
     <XmlElement("DiscordEventThreadURL")>
     Public Property DiscordEventThreadURL As String
 

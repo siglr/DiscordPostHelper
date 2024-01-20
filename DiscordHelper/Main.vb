@@ -50,6 +50,8 @@ Public Class Main
     Private _OriginalFlightPlanArrival As String = String.Empty
     Private _OriginalFlightPlanShortDesc As String = String.Empty
 
+    Private _taskThreadFirstPostID As String = String.Empty
+
 #End Region
 
 #Region "Global exception handler"
@@ -274,6 +276,7 @@ Public Class Main
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
         txtDiscordTaskID.Text = String.Empty
+        _taskThreadFirstPostID = String.Empty
         txtEventTeaserAreaMapImage.Text = String.Empty
         txtEventTeaserMessage.Text = String.Empty
         chkEventTeaser.Checked = False
@@ -747,6 +750,7 @@ Public Class Main
             Dim extractedID As String = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
             If extractedID <> String.Empty Then
                 txtDiscordTaskID.Text = extractedID
+                _taskThreadFirstPostID = String.Empty
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "The URL you copied does not contain a valid ID for the task. The URL must come from a task published in the Task Library on Discord.", "Error extracting task ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -759,6 +763,7 @@ Public Class Main
         Using New Centered_MessageBox(Me)
             If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 txtDiscordTaskID.Text = String.Empty
+                _taskThreadFirstPostID = String.Empty
             End If
         End Using
     End Sub
@@ -2402,7 +2407,9 @@ Public Class Main
             If autoContinue Then
                 'Files text (description or simple Files heading)
                 autoContinue = FilesTextCopy(chkDPOFilesWithDescription.Checked)
-                If Not autoContinue Then
+                If autoContinue Then
+                    GetTaskThreadFirstPostID()
+                Else
                     Exit Sub
                 End If
             Else
@@ -2676,6 +2683,7 @@ Public Class Main
                             End If
                         End Using
                     Else
+                        _taskThreadFirstPostID = String.Empty
                         validTaskIDOrCancel = True
                         SaveSession()
                     End If
@@ -2694,6 +2702,53 @@ Public Class Main
         Return autoContinue
 
     End Function
+
+    Private Sub GetTaskThreadFirstPostID()
+
+        If txtDiscordTaskID.Text = String.Empty Then
+            Exit Sub
+        End If
+
+        If _taskThreadFirstPostID = String.Empty Then
+            Dim message As String = "Please get the link to the first message from the task thread in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim waitingForm As WaitingForURLForm
+            Dim answer As DialogResult
+            Dim validTaskThreadFirstPostIDOrCancel As Boolean = False
+
+            Do Until validTaskThreadFirstPostIDOrCancel
+                Clipboard.Clear()
+                waitingForm = New WaitingForURLForm(message)
+                answer = waitingForm.ShowDialog()
+
+                SupportingFeatures.BringDPHToolToTop(Me.Handle)
+                'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
+                If answer = DialogResult.OK Then
+                    Dim threadFirstPostID As String
+                    threadFirstPostID = Clipboard.GetText
+                    'TODO: The extraction must be to the message in the thread
+                    _taskThreadFirstPostID = SupportingFeatures.ExtractMessageIDFromDiscordURL(threadFirstPostID, False, txtDiscordTaskID.Text)
+                    If _taskThreadFirstPostID.Trim.Length = 0 Then
+                        Using New Centered_MessageBox(Me)
+                            If MessageBox.Show(Me, $"Invalid message ID - You must get the ID to a message inside the task's thread! To skip and link to the thread instead, click Cancel.", "Message ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
+                                _taskThreadFirstPostID = txtDiscordTaskID.Text
+                                validTaskThreadFirstPostIDOrCancel = True
+                            End If
+                        End Using
+                    Else
+                        validTaskThreadFirstPostIDOrCancel = True
+                        SaveSession()
+                    End If
+                Else
+                    validTaskThreadFirstPostIDOrCancel = True
+                    Using New Centered_MessageBox(Me)
+                        _taskThreadFirstPostID = txtDiscordTaskID.Text
+                        MessageBox.Show(Me, $"First thread message ID is missing - Redirection will be done directly to the thread instead!", "First thread message ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                End If
+            Loop
+        End If
+
+    End Sub
 
     Private Function CreateTaskThread() As Boolean
 
@@ -2730,6 +2785,9 @@ Public Class Main
                                     postAfterPasting,
                                     If(postAfterPasting, numWaitSecondsForFiles.Value / 2 * 1000, 0),
                                     Drawing.Image.FromFile(allFiles(0)))
+                If autoContinue Then
+                    GetTaskThreadFirstPostID()
+                End If
             Else
                 autoContinue = True
             End If
@@ -2752,7 +2810,9 @@ Public Class Main
                                 "Creating full description post in the thread.",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked)
-
+        If autoContinue Then
+            GetTaskThreadFirstPostID()
+        End If
         Return autoContinue
 
     End Function
@@ -2797,6 +2857,16 @@ Public Class Main
 
         Return autoContinue
 
+    End Function
+
+    Private Function GetDiscordLinkToTaskThread() As String
+        Dim urlToTaskThread As String = String.Empty
+        If _taskThreadFirstPostID = String.Empty OrElse _taskThreadFirstPostID = txtDiscordTaskID.Text Then
+            urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}"
+        Else
+            urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}/{_taskThreadFirstPostID}"
+        End If
+        Return urlToTaskThread
     End Function
 
     Private Sub GetAllFilesForMessage(allFiles As StringCollection, contentForMessage As StringBuilder, Optional DPHXOnly As Boolean = False)
@@ -3093,6 +3163,10 @@ Public Class Main
 
     Private Sub btnEventDPHXAndLinkOnly_Click(sender As Object, e As EventArgs) Handles btnEventDPHXAndLinkOnly.Click
 
+        If txtDiscordTaskID.Text.Trim.Length = 0 Then
+            Exit Sub
+        End If
+
         Dim autoContinue As Boolean = True
 
         Dim dlgResult As DialogResult
@@ -3127,11 +3201,11 @@ Public Class Main
 
         If Not autoContinue Then Exit Sub
 
-        txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})."
+        txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})"
         Clipboard.SetText(txtFilesText.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFilesText.Text,
-                                "Now enter the file info in the second message in the thread and post it.",
+                                "Now enter the file info In the second message In the thread And post it.",
                                 "Posting the DPHX file only",
                                 New List(Of String) From {"^v"})
 
@@ -3141,7 +3215,7 @@ Public Class Main
 
         If _ClubPreset Is Nothing Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "No club selected for the event!", "Discord Post Helper tool", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show(Me, "No club selected For the event!", "Discord Post Helper tool", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Using
             Exit Sub
         End If
@@ -3372,7 +3446,7 @@ Public Class Main
             If lstAllRecommendedAddOns.Items.Count > 0 Then
                 sb.AppendLine("> 📀 There are recommended add-ons with this task")
             End If
-            sb.AppendLine($"> 🔗 [Link to complete task details, including full briefing, restrictions, weather and more]({$"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{SupportingFeatures.GetMSFSSoaringToolsLibraryID}/{txtDiscordTaskID.Text}"})")
+            sb.AppendLine($"> 🔗 [Link to complete task details, including full briefing, restrictions, weather and more]({GetDiscordLinkToTaskThread()})")
             sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
             sb.AppendLine("> ")
         End If
@@ -4529,6 +4603,7 @@ Public Class Main
                 .GroupClubName = String.Empty
             End If
             .DiscordTaskID = txtDiscordTaskID.Text
+            .TaskThreadFirstPostID = _taskThreadFirstPostID
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
             .VoiceChannel = cboVoiceChannel.Text
@@ -4683,6 +4758,7 @@ Public Class Main
                     .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
                 txtDiscordTaskID.Text = .DiscordTaskID
+                _taskThreadFirstPostID = .TaskThreadFirstPostID
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtEventTitle.Text = .EventTopic

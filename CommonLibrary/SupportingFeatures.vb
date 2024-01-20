@@ -1584,7 +1584,7 @@ Public Class SupportingFeatures
         Return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase)
     End Function
 
-    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False) As String
+    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False, Optional taskID As String = "") As String
 
         ' Check if the inputURL starts with the expected base URL
         Dim baseURL As String = $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/"
@@ -1598,6 +1598,8 @@ Public Class SupportingFeatures
             ' Check if there are 1 or 2 parts
             If parts.Length = 2 AndAlso parts(0) = MSFSSoaringToolsLibraryID Then
                 ' Two parts, the first is the library ID and the second is the message ID
+                Return parts(1)
+            ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then
                 Return parts(1)
             ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
                 Return parts(0)
