@@ -165,12 +165,12 @@ Public Class WindCloudDisplay
             End Select
             Select Case _prefUnits.Barometric
                 Case PreferredUnits.BarometricUnits.Both
-                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, True)
-                    b1l2right = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, , True)
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, False, True)
+                    b1l2right = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, False, , True)
                 Case PreferredUnits.BarometricUnits.inHg
-                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, True)
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, False, True)
                 Case PreferredUnits.BarometricUnits.hPa
-                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, , True)
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, False, , True)
             End Select
             If _WeatherInfo.HasPrecipitations AndAlso _WeatherInfo.ThunderstormIntensity > 0 Then
                 'We have to make a choice!
