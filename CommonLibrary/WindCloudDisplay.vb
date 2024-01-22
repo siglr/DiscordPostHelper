@@ -1,17 +1,36 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
+Imports System.Globalization
 Imports System.Windows.Forms
 
 Public Class WindCloudDisplay
     Inherits Control
 
     Private theFont As New Font("Arial", 9)
+    Private theBoldFont As New Font("Arial", 9, FontStyle.Bold)
     Private _WeatherInfo As WeatherDetails = Nothing
+    Private _simDateTime As String = String.Empty
+    Private drawableHeight As Single
+    Private infoBoxSpaceHeight As Single
+
     Public ReadOnly Property BlueGradientPalette As List(Of Color)
     Public ReadOnly Property GreyGradientPalette As List(Of Color)
 
     Private _prefUnits As PreferredUnits
+
+    Protected Overrides Sub Dispose(disposing As Boolean)
+        If disposing Then
+            If theFont IsNot Nothing Then
+                theFont.Dispose()
+            End If
+            If theBoldFont IsNot Nothing Then
+                theBoldFont.Dispose()
+            End If
+            ' Dispose other managed resources
+        End If
+        MyBase.Dispose(disposing)
+    End Sub
 
     Public Sub New()
         MyBase.New
@@ -51,9 +70,10 @@ Public Class WindCloudDisplay
 
     End Sub
 
-    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails, prefUnits As PreferredUnits)
+    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails, prefUnits As PreferredUnits, simDateTime As String)
         _WeatherInfo = thisWeatherInfo
         _prefUnits = prefUnits
+        _simDateTime = simDateTime
         Invalidate()
     End Sub
 
@@ -65,8 +85,15 @@ Public Class WindCloudDisplay
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
         MyBase.OnPaint(e)
 
+        ' Define the space needed for the information boxes
+        infoBoxSpaceHeight = (4 * theFont.GetHeight(e.Graphics)) + 5
+
+        ' Calculate the text height and drawable height
+        Dim textHeight As Single = theFont.GetHeight()
+        drawableHeight = (Height - 1.5 * textHeight) - infoBoxSpaceHeight
+
         ' Create a rectangle to fill the entire background
-        Dim rect As New Rectangle(0, 0, Me.Width, Me.Height)
+        Dim rect = New Rectangle(0, 0, Me.Width, drawableHeight)
 
         ' Define the gradient's start and end colors
         Dim gradientTop As Color = Color.FromArgb(0, 191, 255) ' Deep sky blue
@@ -104,10 +131,6 @@ Public Class WindCloudDisplay
             _prefUnits = New PreferredUnits
         End If
 
-        ' Calculate the text height and drawable height
-        Dim textHeight As Single = theFont.GetHeight()
-        Dim drawableHeight As Single = Height - 1.5 * textHeight
-
         ' List of altitudes where lines and labels should be drawn
         Dim specifiedAltitudes As New List(Of Integer)({-2, 0, 10, 20, 30, 40, 50, 60})
 
@@ -121,18 +144,72 @@ Public Class WindCloudDisplay
         Dim seaGradientBottom As Color = Color.FromArgb(0, 191, 255) ' Light sky blue
 
         If _WeatherInfo IsNot Nothing Then
+            Dim b1l1left As String = String.Empty
+            Dim b1l2left As String = String.Empty
+            Dim b1l1center As String = String.Empty
+            Dim b1l2center As String = String.Empty
+            Dim b1l1right As String = String.Empty
+            Dim b1l2right As String = String.Empty
+            Dim b2left As String = $"Aerosol index: {_WeatherInfo.Humidity}"
+            Dim b2center As String = _WeatherInfo.PresetName
+            Dim b2right As String = _simDateTime
+            'Set the temperature boxes
+            Select Case _prefUnits.Temperature
+                Case PreferredUnits.TemperatureUnits.Both
+                    b1l1left = _WeatherInfo.MSLTemperature(Nothing, True)
+                    b1l1right = _WeatherInfo.MSLTemperature(Nothing, , True)
+                Case PreferredUnits.TemperatureUnits.Celsius
+                    b1l1left = _WeatherInfo.MSLTemperature(Nothing, , True)
+                Case PreferredUnits.TemperatureUnits.Fahrenheit
+                    b1l1left = _WeatherInfo.MSLTemperature(Nothing, , True)
+            End Select
+            Select Case _prefUnits.Barometric
+                Case PreferredUnits.BarometricUnits.Both
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, True)
+                    b1l2right = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, , True)
+                Case PreferredUnits.BarometricUnits.inHg
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, True)
+                Case PreferredUnits.BarometricUnits.hPa
+                    b1l2left = _WeatherInfo.MSLPressure(String.Empty, False, Nothing, True, , True)
+            End Select
+            If _WeatherInfo.HasPrecipitations AndAlso _WeatherInfo.ThunderstormIntensity > 0 Then
+                'We have to make a choice!
+                b1l1center = $"Precipitations: {_WeatherInfo.Precipitations}"
+                b1l2center = $"Lightning Intensity: {_WeatherInfo.ThunderstormIntensity}%"
+            ElseIf _WeatherInfo.HasPrecipitations AndAlso _WeatherInfo.HasSnowCover Then
+                b1l1center = $"Precipitations: {_WeatherInfo.Precipitations}"
+                b1l2center = $"Snow Cover: {_WeatherInfo.SnowCover}"
+            ElseIf _WeatherInfo.ThunderstormIntensity > 0 AndAlso _WeatherInfo.HasSnowCover Then
+                b1l1center = $"Lightning Intensity: {_WeatherInfo.ThunderstormIntensity}%"
+                b1l2center = $"Snow Cover: {_WeatherInfo.SnowCover}"
+            ElseIf _WeatherInfo.HasPrecipitations Then
+                b1l1center = $"Precipitations: {_WeatherInfo.Precipitations}"
+            ElseIf _WeatherInfo.ThunderstormIntensity > 0 Then
+                b1l1center = $"Lightning Intensity: {_WeatherInfo.ThunderstormIntensity}%"
+            ElseIf _WeatherInfo.HasSnowCover Then
+                b1l1center = $"Snow Cover: {_WeatherInfo.SnowCover}"
+            Else
+                'Nothing
+            End If
+
+            Dim textStrings As String() = {b1l1left, b1l1center, b1l1right, b1l2left, b1l2center, b1l2right, b2left, b2center, b2right}
+
+            DrawInformationBoxes(e, textStrings)
+
             ' Choose the correct gradient based on the AltitudeMeasurement setting
             gradientTop = If(_WeatherInfo.AltitudeMeasurement = "AMGL", groundGradientTop, seaGradientTop)
             gradientBottom = If(_WeatherInfo.AltitudeMeasurement = "AMGL", groundGradientBottom, seaGradientBottom)
+
+            Dim yPosZero As Single = altitudePositions(0)
+            Dim yPosBelow As Single = altitudePositions(-2000)
             ' Define the rectangle for below zero
-            Dim belowZeroRect As New Rectangle(0, altitudePositions(0), Me.Width, Me.Height - altitudePositions(0))
+            Dim belowZeroRect As New Rectangle(0, CInt(yPosZero), Me.Width, CInt(yPosBelow - yPosZero))
 
             ' Create and apply the gradient for below zero
             Using brush As New LinearGradientBrush(belowZeroRect, gradientTop, gradientBottom, LinearGradientMode.Vertical)
                 e.Graphics.FillRectangle(brush, belowZeroRect)
             End Using
         End If
-
 
         DrawGridLinesAndLabels(e, altitudePositions)
 
@@ -149,7 +226,6 @@ Public Class WindCloudDisplay
 
         ' Calculate the true available space
         Dim textHeight As Single = theFont.GetHeight(e.Graphics)
-        Dim drawableHeight As Single = Height - 2 * textHeight
         Dim yPos10k As Single = textHeight + drawableHeight / 2
 
         ' Define positions
@@ -185,6 +261,9 @@ Public Class WindCloudDisplay
                 DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
                 DrawHorizontal3DLine(e, New PointF(0, yPos - 1), New PointF(drawableWidth + 1, yPos - 1), Color.Black, 2)
                 WriteAltitudeLabel(e, rightEdge, altitude, yPos)
+            ElseIf altitude = -2000 Then
+                DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
+                WriteAltitudeLabel(e, rightEdge, altitude, yPos - textHeight)
             Else
                 DrawHorizontal3DLine(e, New PointF(0, yPos), New PointF(drawableWidth, yPos), Color.DarkGray, 2)
                 WriteAltitudeLabel(e, rightEdge, altitude, yPos)
@@ -203,7 +282,7 @@ Public Class WindCloudDisplay
 
 
         ' Draw the vertical line in the center
-        DrawVertical3DLine(e, CInt(Width / 2), 0, Height, Color.DarkGray, 2)
+        DrawVertical3DLine(e, CInt(Width / 2), 0, CInt(altitudePositions(-2000)), Color.DarkGray, 2)
 
     End Sub
 
@@ -644,6 +723,61 @@ Public Class WindCloudDisplay
 
         ' Draw the text on top of the background
         e.Graphics.DrawString(text, font, New SolidBrush(textColor), location)
+    End Sub
+
+    Private Sub DrawInformationBoxes(e As PaintEventArgs, ByVal texts As String())
+
+        Dim spaceReservedForLastAltitudeLabel As Single = theFont.GetHeight(e.Graphics) + 2
+
+        ' Calculate the space needed for the text boxes at the bottom
+        Dim textSpaceHeight As Single = 4 * theFont.GetHeight(e.Graphics) + 10
+        Dim boxHeight As Single = textSpaceHeight / 2 ' Each box takes half the space
+
+        Dim drawableHeight As Single = Me.Height - boxHeight * 2 - spaceReservedForLastAltitudeLabel
+
+        ' Define the two horizontal boxes
+        Dim upperBox As New Rectangle(0, drawableHeight + spaceReservedForLastAltitudeLabel, Me.Width, boxHeight)
+        Dim lowerBox As New Rectangle(0, drawableHeight + spaceReservedForLastAltitudeLabel + boxHeight, Me.Width, boxHeight)
+
+        ' Define the gradients for the boxes
+        Dim gradientTop As Color = Color.FromArgb(64, 64, 64) ' Dark grey
+        Dim gradientBottom As Color = Color.FromArgb(192, 192, 192) ' Light grey
+
+        ' Draw the upper box with a vertical gradient
+        Using brush As New LinearGradientBrush(upperBox, gradientTop, gradientBottom, LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, upperBox)
+        End Using
+
+        ' Draw the lower box with a vertical gradient
+        Using brush As New LinearGradientBrush(lowerBox, gradientTop, gradientBottom, LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, lowerBox)
+        End Using
+
+        ' Text format for drawing
+        Dim format As New StringFormat()
+        format.LineAlignment = StringAlignment.Center
+
+        ' Draw the text in the upper box (two lines of text, each with left, center, and right alignment)
+        upperBox.Y -= (theFont.GetHeight(e.Graphics) / 2) ' Move to the second line
+        DrawTextInZone(e, upperBox, texts(0), StringAlignment.Near)
+        DrawTextInZone(e, upperBox, texts(1), StringAlignment.Center)
+        DrawTextInZone(e, upperBox, texts(2), StringAlignment.Far)
+        upperBox.Y += theFont.GetHeight(e.Graphics) ' Move to the second line
+        DrawTextInZone(e, upperBox, texts(3), StringAlignment.Near)
+        DrawTextInZone(e, upperBox, texts(4), StringAlignment.Center)
+        DrawTextInZone(e, upperBox, texts(5), StringAlignment.Far)
+
+        ' Draw the text in the lower box (one line of text, with left, center, and right alignment)
+        DrawTextInZone(e, lowerBox, texts(6), StringAlignment.Near)
+        DrawTextInZone(e, lowerBox, texts(7), StringAlignment.Center)
+        DrawTextInZone(e, lowerBox, texts(8), StringAlignment.Far)
+    End Sub
+
+    Private Sub DrawTextInZone(e As PaintEventArgs, rect As Rectangle, text As String, alignment As StringAlignment)
+        Dim format As New StringFormat()
+        format.Alignment = alignment
+        format.LineAlignment = StringAlignment.Center
+        e.Graphics.DrawString(text, theBoldFont, Brushes.White, rect, format)
     End Sub
 
 End Class

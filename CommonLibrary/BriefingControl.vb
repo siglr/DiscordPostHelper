@@ -302,7 +302,7 @@ Public Class BriefingControl
         BuildTaskData()
         BuildCloudAndWindLayersDatagrids()
         AddCountryFlagPictures()
-        FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits)
+        FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
 
         If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
             _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
@@ -342,7 +342,7 @@ Public Class BriefingControl
                 Case 4 'All Waypoints
                 Case 5 'Weather
                     FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
-                    FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits)
+                    FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
                 Case 6 'Add-ons
                 Case 7 'Units
                     _onUnitsTab = True
@@ -509,7 +509,7 @@ Public Class BriefingControl
             End If
             sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)}\b0\line ")
             sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature(PrefUnits)}\b0\line ")
-            sb.Append($"The humidity index is \b {_WeatherDetails.Humidity}\b0\line ")
+            sb.Append($"The aerosol index is \b {_WeatherDetails.Humidity}\b0\line ")
             If _WeatherDetails.HasPrecipitations Then
                 sb.Append($"The precipitations are: \b {_WeatherDetails.Precipitations}\b0\line ")
             End If

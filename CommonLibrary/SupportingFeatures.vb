@@ -1797,6 +1797,21 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Function GetEnUSFormattedDate(theDate As Date, theTime As Date, includeYear As Boolean) As String
+
+        Dim _EnglishCulture As New CultureInfo("en-US")
+
+        Dim dateFormat As String
+        If includeYear Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+
+        Return $"{theDate.ToString(dateFormat, _EnglishCulture)}, {theTime.ToString("hh:mm tt", _EnglishCulture)}"
+
+    End Function
+
 End Class
 
 Public Class NativeMethods

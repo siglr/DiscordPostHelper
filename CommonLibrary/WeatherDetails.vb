@@ -62,8 +62,14 @@ Public Class WeatherDetails
 
     Public ReadOnly Property PresetName() As String
 
-    Public ReadOnly Property MSLTemperature(Optional prefUnits As PreferredUnits = Nothing) As String
+    Public ReadOnly Property MSLTemperature(Optional prefUnits As PreferredUnits = Nothing, Optional forceF As Boolean = False, Optional forceC As Boolean = False) As String
         Get
+            If forceF Then
+                Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
+            End If
+            If forceC Then
+                Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(_MSLTempKelvin))
+            End If
             If prefUnits Is Nothing OrElse prefUnits.Temperature = TemperatureUnits.Both Then
                 Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(_MSLTempKelvin), Conversions.KelvinToFarenheit(_MSLTempKelvin))
             Else
@@ -90,7 +96,7 @@ Public Class WeatherDetails
         End Get
     End Property
 
-    Public ReadOnly Property MSLPressure(textForNonStandard As String, suppressNonStandardWarning As Boolean, Optional prefUnits As PreferredUnits = Nothing, Optional useEmoji As Boolean = True) As String
+    Public ReadOnly Property MSLPressure(textForNonStandard As String, suppressNonStandardWarning As Boolean, Optional prefUnits As PreferredUnits = Nothing, Optional useEmoji As Boolean = True, Optional forceinHg As Boolean = False, Optional forcehPa As Boolean = False) As String
         Get
 
             Dim notStdBaro As String = String.Empty
@@ -99,6 +105,12 @@ Public Class WeatherDetails
                 notStdBaro = If(suppressNonStandardWarning, " ", If(useEmoji, " ⚠️ ", " * ")) & textForNonStandard
             End If
 
+            If forcehPa Then
+                Return String.Format("{0:N0} hPa{1}", _MSLPressureInPa / 100, notStdBaro)
+            End If
+            If forceinHg Then
+                Return String.Format("{0:F2} inHg{1}", Conversions.PaToInHg(_MSLPressureInPa), notStdBaro)
+            End If
             If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
                 Return String.Format("{0:F2} inHg / {1:N0} hPa{2}", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100, notStdBaro)
             Else

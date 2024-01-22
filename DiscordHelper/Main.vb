@@ -577,7 +577,7 @@ Public Class Main
         Dim tempUnits As New PreferredUnits
         tempUnits.Altitude = PreferredUnits.AltitudeUnits.Both
         tempUnits.WindSpeed = PreferredUnits.WindSpeedUnits.Both
-        control.SetWeatherInfo(_WeatherDetails, tempUnits)
+        control.SetWeatherInfo(_WeatherDetails, tempUnits, SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked))
 
         ' Create a bitmap with the specified size
         Dim bmp As New Bitmap(imageWidth, imageHeight)
@@ -1624,13 +1624,6 @@ Public Class Main
 
         Dim sb As New StringBuilder()
 
-        Dim dateFormat As String
-        If chkIncludeYear.Checked Then
-            dateFormat = "MMMM dd, yyyy"
-        Else
-            dateFormat = "MMMM dd"
-        End If
-
         sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
         If chkRepost.Checked Then
             sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
@@ -1642,7 +1635,7 @@ Public Class Main
         End If
         sb.AppendLine($"> 🛫 {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
         sb.AppendLine($"> 🛬 {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> ⌚ {dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local in MSFS{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
+        sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
         sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
         sb.AppendLine($"> 📏 {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
         sb.AppendLine($"> ⏳ {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
@@ -1909,7 +1902,7 @@ Public Class Main
             sb.Append($"- Elevation measurement: {_WeatherDetails.AltitudeMeasurement}{Environment.NewLine}")
             sb.Append($"- MSLPressure: {_WeatherDetails.MSLPressure(txtBaroPressureExtraInfo.Text, chkSuppressWarningForBaroPressure.Checked)}{Environment.NewLine}")
             sb.Append($"- MSLTemperature: {_WeatherDetails.MSLTemperature}{Environment.NewLine}")
-            sb.Append($"- Humidity: {_WeatherDetails.Humidity}")
+            sb.Append($"- Aerosol index: {_WeatherDetails.Humidity}")
             If _WeatherDetails.HasPrecipitations Then
                 sb.Append($"{Environment.NewLine}- Precipitations: {_WeatherDetails.Precipitations}")
             End If

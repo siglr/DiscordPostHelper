@@ -17,10 +17,10 @@ Public Class FullWeatherGraphPanel
         WindCloudDisplay1.ResetGraph()
     End Sub
 
-    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails, prefUnits As PreferredUnits)
+    Public Sub SetWeatherInfo(thisWeatherInfo As WeatherDetails, prefUnits As PreferredUnits, simDateTime As String)
         _WeatherInfo = thisWeatherInfo
         _prefUnits = prefUnits
-        WindCloudDisplay1.SetWeatherInfo(_WeatherInfo, _prefUnits)
+        WindCloudDisplay1.SetWeatherInfo(_WeatherInfo, _prefUnits, simDateTime)
         BuildGradientsLegend()
     End Sub
 
