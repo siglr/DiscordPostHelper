@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.1.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.1.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Improved weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's look, while providing more information visually.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.1.8.1</ReleaseVersion>
       <ReleaseTitle>Unicode symbols fix and better weather chart</ReleaseTitle>

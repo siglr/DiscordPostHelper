@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.1.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.1.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Improved weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's look, while providing more information visually.
+        Added "Sync" button to harmonize flight plan title, filename, weather profile and filename with the task title.
+        Added retrieval of the link to the first post in the task's thread to use when redirecting people to the task.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.1.8.1</ReleaseVersion>
       <ReleaseTitle>Brand new Discord posting workflow</ReleaseTitle>
