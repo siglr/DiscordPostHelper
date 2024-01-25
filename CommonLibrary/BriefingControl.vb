@@ -657,7 +657,7 @@ Public Class BriefingControl
             CountDownReset()
         Else
             'Group/Club Name
-            sb.Append($"Group or Club: \b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)}\b0\line ")
+            sb.Append($"\b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}\b0\line ")
 
             Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
             Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
@@ -812,6 +812,12 @@ Public Class BriefingControl
             sb.Append($"The expected duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
             sb.Append("\line ")
 
+            If _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then
+                sb.Append($"{_sessionData.EventDescription}")
+                sb.Append("\line ")
+                sb.Append("\line ")
+            End If
+
             sb.Append($"See Main Task Info and Map tabs for other important task information. \line ")
 
             sb.Append("}")
@@ -827,7 +833,6 @@ Public Class BriefingControl
         End If
 
         _SF.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
-        'txtEventInfo.Rtf = sb.ToString()
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
 
     End Sub
