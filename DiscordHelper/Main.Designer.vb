@@ -1763,7 +1763,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboRecommendedGliders.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboRecommendedGliders.FormattingEnabled = True
-        Me.cboRecommendedGliders.Items.AddRange(New Object() {"Any", "Flapped", "AS 33 / JS3 18m Class", "Discus 2c / JS3 15m Class", "AS 33 Me (Schleicher)", "DG-1001e Neo (DG-Flugzeugbau)", "DG808s (DG-Flugzeugbau)", "JS3 Rapture 18m (Jonker)", "JS3 Rapture 15m (Jonker)", "Discus 2c (Schempp-Hirth)", "LS4 (Rolladen-Schneider)", "LS8-18 (Rolladen-Schneider)", "K7 (Schleicher)", "DFS SG 38 (Schulgleiter)"})
+        Me.cboRecommendedGliders.Items.AddRange(New Object() {"Any", "Flapped", "AS 33 / JS3 18m Class", "Discus 2c / JS3 15m Class", "AS 33 Me (Schleicher)", "DG-1001e Neo (DG-Flugzeugbau)", "DG808s (DG-Flugzeugbau)", "Discus 2c (Schempp-Hirth)", "JS3 Rapture 15m (Jonker)", "JS3 Rapture 18m (Jonker)", "K7 (Schleicher)", "LS4 (Rolladen-Schneider)", "LS8-18 (Rolladen-Schneider)", "SG 38 (DFS Schulgleiter)"})
         Me.cboRecommendedGliders.Location = New System.Drawing.Point(189, 406)
         Me.cboRecommendedGliders.Name = "cboRecommendedGliders"
         Me.cboRecommendedGliders.Size = New System.Drawing.Size(534, 32)
