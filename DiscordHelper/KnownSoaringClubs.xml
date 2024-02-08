@@ -144,7 +144,7 @@
     <ClubId>UKVGA TUE</ClubId>
     <ClubName>UKVGA Tuesdays</ClubName>
     <ClubFullName>UKVGA Soaring Tuesdays</ClubFullName>
-    <MSFSServer>Southeast Asia</MSFSServer>
+    <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
     <ZuluTime>7:15 PM</ZuluTime>
@@ -158,7 +158,7 @@
     <ClubId>UKVGA THU</ClubId>
     <ClubName>UKVGA Thursdays</ClubName>
     <ClubFullName>UKVGA Soaring Thursdays</ClubFullName>
-    <MSFSServer>Southeast Asia</MSFSServer>
+    <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>
     <ZuluTime>7:15 PM</ZuluTime>
