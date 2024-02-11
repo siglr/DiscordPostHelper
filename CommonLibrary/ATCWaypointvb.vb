@@ -17,6 +17,7 @@ Public Class ATCWaypoint
     End Property
 
     Public ReadOnly Property WaypointName As String = String.Empty
+
     Public ReadOnly Property ICAO As String = String.Empty
     Public ReadOnly Property Gate As String
         Get
@@ -75,6 +76,8 @@ Public Class ATCWaypoint
 
     Private Shared _TaskStartFound As Boolean = False
 
+    Public ReadOnly Property IsAAT As Boolean = False
+
     Public Sub New(strFullATCId As String,
                    strWorldPosition As String,
                    intSeq As Integer,
@@ -95,6 +98,12 @@ Public Class ATCWaypoint
 
         If SupportingFeatures.ClientRunning = SupportingFeatures.ClientApp.DiscordPostHelper Then
             Country = CountryGeo.GetCountryFromCoordinates(Latitude, Longitude)
+        End If
+
+        'Check if AAT waypoint and remove that bit if so
+        If strFullATCId.ToUpper.Contains(";AAT") Then
+            IsAAT = True
+            strFullATCId = strFullATCId.Substring(0, strFullATCId.Length - 4)
         End If
 
         'Set name of waypoint

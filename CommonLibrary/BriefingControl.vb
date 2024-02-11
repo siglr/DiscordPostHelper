@@ -623,8 +623,10 @@ Public Class BriefingControl
         waypointCoordinatesDataGrid.AllowUserToResizeColumns = True
         waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
         waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
+        waypointCoordinatesDataGrid.Columns("PossibleElevationUpdateReq").Visible = False
 
         waypointCoordinatesDataGrid.Columns("Gate").HeaderText = PrefUnits.GateLabel
+        waypointCoordinatesDataGrid.Columns("IsAAT").HeaderText = "AAT"
         waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").DefaultCellStyle.Format = "N1"
         waypointCoordinatesDataGrid.Columns("DistanceFromPreviousKM").HeaderText = "Previous (km)"
         waypointCoordinatesDataGrid.Columns("DistanceFromDepartureKM").DefaultCellStyle.Format = "N1"
