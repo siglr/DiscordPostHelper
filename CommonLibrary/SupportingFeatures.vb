@@ -586,7 +586,11 @@ Public Class SupportingFeatures
                     'Airports - add ICAO
                     sb.AppendLine($"- {wp.WaypointName}: {wp.ICAO}")
                 Else
-                    sb.AppendLine($"- {wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
+                    If wp.IsAAT Then
+                        sb.AppendLine($"- {wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000} (AAT)")
+                    Else
+                        sb.AppendLine($"- {wp.WaypointName}: {wp.Latitude:0.000000} {wp.Longitude:0.000000}")
+                    End If
                 End If
             Next
         End If
