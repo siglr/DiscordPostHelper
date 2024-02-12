@@ -155,7 +155,6 @@ Partial Class Main
         Me.btnClearEventTeaserAreaMap = New System.Windows.Forms.Button()
         Me.txtEventTeaserAreaMapImage = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.lblClubFullName = New System.Windows.Forms.Label()
         Me.btnPasteBeginnerLink = New System.Windows.Forms.Button()
         Me.txtOtherBeginnerLink = New System.Windows.Forms.TextBox()
         Me.cboBeginnersGuide = New System.Windows.Forms.ComboBox()
@@ -353,6 +352,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtClubFullName = New System.Windows.Forms.TextBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1954,9 +1954,9 @@ Partial Class Main
         Me.grpGroupEventPost.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupEventPost.Controls.Add(Me.txtClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.chkEventTeaser)
         Me.grpGroupEventPost.Controls.Add(Me.grpEventTeaser)
-        Me.grpGroupEventPost.Controls.Add(Me.lblClubFullName)
         Me.grpGroupEventPost.Controls.Add(Me.btnPasteBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.txtOtherBeginnerLink)
         Me.grpGroupEventPost.Controls.Add(Me.cboBeginnersGuide)
@@ -2100,16 +2100,6 @@ Partial Class Main
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Teaser Image"
         '
-        'lblClubFullName
-        '
-        Me.lblClubFullName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblClubFullName.Location = New System.Drawing.Point(187, 130)
-        Me.lblClubFullName.Name = "lblClubFullName"
-        Me.lblClubFullName.Size = New System.Drawing.Size(1262, 26)
-        Me.lblClubFullName.TabIndex = 45
-        '
         'btnPasteBeginnerLink
         '
         Me.btnPasteBeginnerLink.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -2199,7 +2189,7 @@ Partial Class Main
         Me.cboGroupOrClubName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboGroupOrClubName.FormattingEnabled = True
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
-        Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 95)
+        Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 89)
         Me.cboGroupOrClubName.Name = "cboGroupOrClubName"
         Me.cboGroupOrClubName.Size = New System.Drawing.Size(1257, 32)
         Me.cboGroupOrClubName.TabIndex = 3
@@ -2445,7 +2435,7 @@ Partial Class Main
         '
         Me.Label24.AutoSize = True
         Me.Label24.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label24.Location = New System.Drawing.Point(7, 98)
+        Me.Label24.Location = New System.Drawing.Point(7, 92)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(183, 26)
         Me.Label24.TabIndex = 2
@@ -4362,6 +4352,19 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'txtClubFullName
+        '
+        Me.txtClubFullName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtClubFullName.Location = New System.Drawing.Point(192, 125)
+        Me.txtClubFullName.Name = "txtClubFullName"
+        Me.txtClubFullName.ReadOnly = True
+        Me.txtClubFullName.Size = New System.Drawing.Size(1257, 32)
+        Me.txtClubFullName.TabIndex = 45
+        Me.txtClubFullName.Tag = "61"
+        Me.ToolTip1.SetToolTip(Me.txtClubFullName, "The soaring club event's full ""official"" name.")
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4677,7 +4680,6 @@ Partial Class Main
     Friend WithEvents txtOtherBeginnerLink As TextBox
     Friend WithEvents cboBeginnersGuide As ComboBox
     Friend WithEvents btnPasteBeginnerLink As Button
-    Friend WithEvents lblClubFullName As Label
     Friend WithEvents grbTaskDiscord As GroupBox
     Friend WithEvents txtDiscordTaskID As TextBox
     Friend WithEvents Label31 As Label
@@ -4805,4 +4807,5 @@ Partial Class Main
     Friend WithEvents Label18 As Label
     Friend WithEvents grpDiscordOthers As GroupBox
     Friend WithEvents btnSyncTitles As Button
+    Friend WithEvents txtClubFullName As TextBox
 End Class

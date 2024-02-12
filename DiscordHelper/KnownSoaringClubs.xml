@@ -2,7 +2,7 @@
 <KnownSoaringClubs>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EDT)</ClubId>
-    <ClubName>💎 Tuesday</ClubName>
+    <ClubName>Tuesday</ClubName>
     <ClubFullName>Soaring Diamonds Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
@@ -16,7 +16,7 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EST)</ClubId>
-    <ClubName>💎 Tuesday</ClubName>
+    <ClubName>Tuesday</ClubName>
     <ClubFullName>Soaring Diamonds Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
@@ -29,36 +29,8 @@
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>💎 SUNDAY (EDT)</ClubId>
-    <ClubName>💎 Sunday</ClubName>
-    <ClubFullName>Soaring Diamonds Club</ClubFullName>
-    <MSFSServer>Southeast Asia</MSFSServer>
-    <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
-    <ZuluDayOfWeek>Sunday</ZuluDayOfWeek>
-    <ZuluTime>11:30 PM</ZuluTime>
-    <SyncFlyDelay>10</SyncFlyDelay>
-    <LaunchDelay>0</LaunchDelay>
-    <StartTaskDelay>10</StartTaskDelay>
-    <EligibleAward>False</EligibleAward>
-    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
-  </KnownSoaringClub>
-  <KnownSoaringClub>
-    <ClubId>💎 SUNDAY (EST)</ClubId>
-    <ClubName>💎 Sunday</ClubName>
-    <ClubFullName>Soaring Diamonds Club</ClubFullName>
-    <MSFSServer>Southeast Asia</MSFSServer>
-    <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
-    <ZuluDayOfWeek>Monday</ZuluDayOfWeek>
-    <ZuluTime>00:30 AM</ZuluTime>
-    <SyncFlyDelay>10</SyncFlyDelay>
-    <LaunchDelay>0</LaunchDelay>
-    <StartTaskDelay>10</StartTaskDelay>
-    <EligibleAward>False</EligibleAward>
-    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
-  </KnownSoaringClub>
-  <KnownSoaringClub>
     <ClubId>GG-SFC</ClubId>
-    <ClubName>GG-Soaring Friday</ClubName>
+    <ClubName>Friday</ClubName>
     <ClubFullName>GotGravel's Soaring Friday Club</ClubFullName>
     <MSFSServer>West USA</MSFSServer>
     <VoiceChannel>[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)</VoiceChannel>
@@ -72,8 +44,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CEDT)</ClubId>
-    <ClubName>SSC Saturday</ClubName>
-    <ClubFullName>Sim Soaring Club Saturday</ClubFullName>
+    <ClubName>Saturday</ClubName>
+    <ClubFullName>Sim Soaring Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
     <ZuluDayOfWeek>Saturday</ZuluDayOfWeek>
@@ -86,8 +58,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CEDT)</ClubId>
-    <ClubName>SSC Wednesday</ClubName>
-    <ClubFullName>Sim Soaring Club Wednesday</ClubFullName>
+    <ClubName>Wednesday</ClubName>
+    <ClubFullName>Sim Soaring Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
     <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>
@@ -100,8 +72,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CET)</ClubId>
-    <ClubName>SSC Saturday</ClubName>
-    <ClubFullName>Sim Soaring Club Saturday</ClubFullName>
+    <ClubName>Saturday</ClubName>
+    <ClubFullName>Sim Soaring Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
     <ZuluDayOfWeek>Saturday</ZuluDayOfWeek>
@@ -114,8 +86,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CET)</ClubId>
-    <ClubName>SSC Wednesday</ClubName>
-    <ClubFullName>Sim Soaring Club Wednesday</ClubFullName>
+    <ClubName>Wednesday</ClubName>
+    <ClubFullName>Sim Soaring Club</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
     <ZuluDayOfWeek>Wednesday</ZuluDayOfWeek>
@@ -128,8 +100,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>AUSGLIDE TUE</ClubId>
-    <ClubName>AusGlide Tuesdays</ClubName>
-    <ClubFullName>AusGlide Soaring Tuesday</ClubFullName>
+    <ClubName>Tuesdays</ClubName>
+    <ClubFullName>AusGlide Soaring</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
@@ -142,8 +114,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA TUE</ClubId>
-    <ClubName>UKVGA Tuesdays</ClubName>
-    <ClubFullName>UKVGA Soaring Tuesdays</ClubFullName>
+    <ClubName>Soaring Tuesdays</ClubName>
+    <ClubFullName>UKVGA</ClubFullName>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
@@ -156,8 +128,8 @@
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA THU</ClubId>
-    <ClubName>UKVGA Thursdays</ClubName>
-    <ClubFullName>UKVGA Soaring Thursdays</ClubFullName>
+    <ClubName>Soaring Thursdays</ClubName>
+    <ClubFullName>UKVGA</ClubFullName>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>

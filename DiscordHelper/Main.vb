@@ -252,7 +252,7 @@ Public Class Main
         txtWeatherClouds.Text = String.Empty
         txtFullDescriptionResults.Text = String.Empty
         cboGroupOrClubName.SelectedIndex = -1
-        lblClubFullName.Text = String.Empty
+        txtClubFullName.Text = String.Empty
         cboMSFSServer.SelectedIndex = -1
         cboVoiceChannel.SelectedIndex = -1
         chkDateTimeUTC.Checked = True
@@ -2021,12 +2021,16 @@ Public Class Main
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
-        lblClubFullName.Text = String.Empty
+        txtClubFullName.Text = String.Empty
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
             cboGroupOrClubName.Text = _ClubPreset.ClubId
-            lblClubFullName.Text = _ClubPreset.ClubFullName
+            If _ClubPreset.ClubFullName.Trim.ToUpper.Contains(_ClubPreset.ClubName.Trim.ToUpper) Then
+                txtClubFullName.Text = _ClubPreset.ClubFullName
+            Else
+                txtClubFullName.Text = $"{_ClubPreset.ClubFullName} {_ClubPreset.ClubName}"
+            End If
             cboMSFSServer.Text = _ClubPreset.MSFSServer
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
@@ -2977,7 +2981,7 @@ Public Class Main
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
 
         sb.AppendLine("## :calendar: Group Flight")
-        sb.AppendLine($"This flight will be featured on the {_ClubPreset.ClubFullName} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
+        sb.AppendLine($"This flight will be featured on the {txtClubFullName.Text} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
 
         'check which shared link is available
         If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
@@ -4591,7 +4595,7 @@ Public Class Main
             Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
             If clubExists Then
                 _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
-                .GroupClubName = _ClubPreset.ClubName
+                .GroupClubName = txtClubFullName.Text
             Else
                 .GroupClubName = String.Empty
             End If
