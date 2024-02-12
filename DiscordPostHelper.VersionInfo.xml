@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.1.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.2.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.2.12.1</ReleaseVersion>
+      <ReleaseTitle>Support for AAT and custom clubs</ReleaseTitle>
+      <ReleaseNotes>
+        Read AAT information from waypoints in flight plan.
+        Added more predefined options in the recommended gliders.
+        Assigned UKVGA club back on to West Europe server.
+        Added "CUSTOM" soaring club to allow customized event club name.
+        Updated the way the club name is built for Discord and DPHX format.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.1.22.1</ReleaseVersion>
       <ReleaseTitle>Improved weather chart</ReleaseTitle>

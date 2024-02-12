@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.1.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.2.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.2.12.1</ReleaseVersion>
+      <ReleaseTitle>Support for AAT</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for displaying AAT waypoints.
+        Added event title and description on the Event Info tab if different than the task.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.1.22.1</ReleaseVersion>
       <ReleaseTitle>Improved weather chart</ReleaseTitle>
