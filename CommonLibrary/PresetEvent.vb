@@ -42,6 +42,12 @@
 
     End Sub
 
+    Public ReadOnly Property IsCustom As Boolean
+        Get
+            Return ClubId = "CUSTOM"
+        End Get
+    End Property
+
     Public Function GetZuluTimeForDate(selectedDate As Date) As DateTime
 
         'Going back to always returning ZuluTime without checking daylight savings

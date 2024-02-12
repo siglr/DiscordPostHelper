@@ -253,6 +253,7 @@ Public Class Main
         txtFullDescriptionResults.Text = String.Empty
         cboGroupOrClubName.SelectedIndex = -1
         txtClubFullName.Text = String.Empty
+        txtClubFullName.ReadOnly = True
         cboMSFSServer.SelectedIndex = -1
         cboVoiceChannel.SelectedIndex = -1
         chkDateTimeUTC.Checked = True
@@ -373,7 +374,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -807,7 +808,7 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged, txtEventTeaserMessage.TextChanged
+                                                                          cboDifficulty.SelectedIndexChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged, txtEventTeaserMessage.TextChanged, txtClubFullName.TextChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -2025,12 +2026,20 @@ Public Class Main
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
-            cboGroupOrClubName.Text = _ClubPreset.ClubId
-            If _ClubPreset.ClubFullName.Trim.ToUpper.Contains(_ClubPreset.ClubName.Trim.ToUpper) Then
-                txtClubFullName.Text = _ClubPreset.ClubFullName
+
+            If _ClubPreset.IsCustom Then
+                txtClubFullName.ReadOnly = False
+                txtClubFullName.Text = "Specify your own club name"
             Else
-                txtClubFullName.Text = $"{_ClubPreset.ClubFullName} {_ClubPreset.ClubName}"
+                txtClubFullName.ReadOnly = True
+                cboGroupOrClubName.Text = _ClubPreset.ClubId
+                If _ClubPreset.ClubFullName.Trim.ToUpper.Contains(_ClubPreset.ClubName.Trim.ToUpper) Then
+                    txtClubFullName.Text = _ClubPreset.ClubFullName
+                Else
+                    txtClubFullName.Text = $"{_ClubPreset.ClubFullName} {_ClubPreset.ClubName}"
+                End If
             End If
+
             cboMSFSServer.Text = _ClubPreset.MSFSServer
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
@@ -2146,7 +2155,7 @@ Public Class Main
         SessionModified()
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave
 
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
@@ -4758,6 +4767,7 @@ Public Class Main
                 _taskThreadFirstPostID = .TaskThreadFirstPostID
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
+                txtClubFullName.Text = .GroupClubName
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
                 cboVoiceChannel.Text = .VoiceChannel

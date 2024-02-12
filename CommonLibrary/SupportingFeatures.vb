@@ -16,6 +16,8 @@ Imports System.Reflection
 Imports System.Threading
 Imports NAudio.Utils
 Imports System.Runtime.InteropServices
+Imports System.Security.AccessControl
+Imports System.Reflection.Emit
 
 Public Class SupportingFeatures
 

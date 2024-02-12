@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <KnownSoaringClubs>
   <KnownSoaringClub>
+    <ClubId>CUSTOM</ClubId>
+    <ClubName>Custom Event</ClubName>
+    <ClubFullName>Custom Club</ClubFullName>
+    <MSFSServer></MSFSServer>
+    <VoiceChannel></VoiceChannel>
+    <ZuluDayOfWeek>Sunday</ZuluDayOfWeek>
+    <ZuluTime>12:00 PM</ZuluTime>
+    <SyncFlyDelay>0</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>0</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EDT)</ClubId>
     <ClubName>Tuesday</ClubName>
     <ClubFullName>Soaring Diamonds Club</ClubFullName>
