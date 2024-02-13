@@ -2996,7 +2996,7 @@ Public Class Main
         If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
             sb.AppendLine($"{txtDiscordEventShareURL.Text}")
         ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
-            sb.AppendLine($"[{_ClubPreset.ClubFullName} - Group Event Link]({txtGroupEventPostURL.Text})")
+            sb.AppendLine($"[{txtClubFullName.Text} - {txtEventTitle.Text} - Group Event Link]({txtGroupEventPostURL.Text})")
         End If
 
         Return sb.ToString
