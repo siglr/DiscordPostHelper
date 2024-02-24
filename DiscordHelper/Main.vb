@@ -2625,6 +2625,8 @@ Public Class Main
         chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
         chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
 
+        chkDGPODPHXOnly.Enabled = chkDGPOFilesWithoutLegend.Checked Or chkDGPOFilesWithFullLegend.Checked
+
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOFilesWithFullLegend.Checked AndAlso
            Not chkDGPOFilesWithoutLegend.Checked AndAlso
@@ -2823,7 +2825,7 @@ Public Class Main
 
     End Function
 
-    Private Function FilesCopy() As Boolean
+    Private Function FilesCopy(Optional postingGroupEvent As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
         Dim dlgResult As DialogResult
@@ -2843,7 +2845,11 @@ Public Class Main
 
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
-        GetAllFilesForMessage(allFiles, contentForMessage)
+        If postingGroupEvent Then
+            GetAllFilesForMessage(allFiles, contentForMessage, chkDGPODPHXOnly.Checked)
+        Else
+            GetAllFilesForMessage(allFiles, contentForMessage)
+        End If
 
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
@@ -2902,11 +2908,15 @@ Public Class Main
 
     End Sub
 
-    Private Function FilesTextCopy(fullLegend As Boolean) As Boolean
+    Private Function FilesTextCopy(fullLegend As Boolean, Optional postingGroupEvent As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
 
-        BuildFileInfoText(fullLegend)
+        If postingGroupEvent Then
+            BuildFileInfoText(fullLegend, chkDGPODPHXOnly.Checked)
+        Else
+            BuildFileInfoText(fullLegend)
+        End If
         Clipboard.SetText(txtFilesText.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFilesText.Text,
@@ -2921,7 +2931,7 @@ Public Class Main
 
     End Function
 
-    Private Sub BuildFileInfoText(fullLegend As Boolean)
+    Private Sub BuildFileInfoText(fullLegend As Boolean, Optional DPHXOnly As Boolean = False)
         Dim sb As New StringBuilder
         sb.AppendLine("## 📁 **Files**")
 
@@ -2937,34 +2947,41 @@ Public Class Main
             sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
             sb.AppendLine("> *To get and install the tool [click this link](https://flightsim.to/file/62573/msfs-soaring-task-tools-dphx-unpack-load)*")
             sb.AppendLine("> ")
-            sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
+            If DPHXOnly Then
+                sb.AppendLine("> Otherwise, visit the task's thread and download the required files and put them in the proper folders.")
+            Else
+                sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
+            End If
         Else
             sb.AppendLine("You must download the required files and put them in the proper folders.")
         End If
 
-        sb.AppendLine("### Required")
-        sb.AppendLine("> Flight plan (.pln)")
-        sb.AppendLine("> Weather preset (.wpr)")
+        If Not DPHXOnly Then
 
-        'Check if there is a tsk file in the files
-        Dim optionalAdded As Boolean = False
-        For i = 0 To lstAllFiles.Items.Count() - 1
-            If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
-                If Not optionalAdded Then
-                    sb.AppendLine("### XCSoar Files - Optional")
-                    sb.AppendLine("> *Only if you use the XCSoar program.*")
-                    optionalAdded = True
+            sb.AppendLine("### Required")
+            sb.AppendLine("> Flight plan (.pln)")
+            sb.AppendLine("> Weather preset (.wpr)")
+
+            'Check if there is a tsk file in the files
+            Dim optionalAdded As Boolean = False
+            For i = 0 To lstAllFiles.Items.Count() - 1
+                If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
+                    If Not optionalAdded Then
+                        sb.AppendLine("### XCSoar Files - Optional")
+                        sb.AppendLine("> *Only if you use the XCSoar program.*")
+                        optionalAdded = True
+                    End If
+                    sb.AppendLine("> XCSoar Task (.tsk)")
+                ElseIf File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".xcm" Then
+                    If Not optionalAdded Then
+                        sb.AppendLine("### XCSoar Files - Optional")
+                        sb.AppendLine("> *Only if you use the XCSoar program.*")
+                        optionalAdded = True
+                    End If
+                    sb.AppendLine("> XCSoar Map (.xcm)")
                 End If
-                sb.AppendLine("> XCSoar Task (.tsk)")
-            ElseIf File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".xcm" Then
-                If Not optionalAdded Then
-                    sb.AppendLine("### XCSoar Files - Optional")
-                    sb.AppendLine("> *Only if you use the XCSoar program.*")
-                    optionalAdded = True
-                End If
-                sb.AppendLine("> XCSoar Map (.xcm)")
-            End If
-        Next
+            Next
+        End If
 
         txtFilesText.Text = sb.ToString.Trim
         sb.Clear()
@@ -3088,10 +3105,10 @@ Public Class Main
 
         'Files
         If (chkDGPOFilesWithFullLegend.Enabled AndAlso chkDGPOFilesWithFullLegend.Checked) OrElse (chkDGPOFilesWithoutLegend.Enabled AndAlso chkDGPOFilesWithoutLegend.Checked) Then
-            autoContinue = FilesCopy()
+            autoContinue = FilesCopy(True)
             If autoContinue Then
                 'Files text (description or simple Files heading)
-                autoContinue = FilesTextCopy(chkDGPOFilesWithFullLegend.Checked)
+                autoContinue = FilesTextCopy(chkDGPOFilesWithFullLegend.Checked, True)
                 If Not autoContinue Then
                     Exit Sub
                 End If

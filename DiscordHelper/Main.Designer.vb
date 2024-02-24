@@ -353,6 +353,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.chkDGPODPHXOnly = New System.Windows.Forms.CheckBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -3792,6 +3793,7 @@ Partial Class Main
         'FlowLayoutPanel20
         '
         Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPOFilesWithFullLegend)
+        Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPODPHXOnly)
         Me.FlowLayoutPanel20.Location = New System.Drawing.Point(3, 124)
         Me.FlowLayoutPanel20.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel20.Name = "FlowLayoutPanel20"
@@ -3806,10 +3808,10 @@ Partial Class Main
         Me.chkDGPOFilesWithFullLegend.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkDGPOFilesWithFullLegend.Location = New System.Drawing.Point(3, 3)
         Me.chkDGPOFilesWithFullLegend.Name = "chkDGPOFilesWithFullLegend"
-        Me.chkDGPOFilesWithFullLegend.Size = New System.Drawing.Size(252, 26)
+        Me.chkDGPOFilesWithFullLegend.Size = New System.Drawing.Size(148, 26)
         Me.chkDGPOFilesWithFullLegend.TabIndex = 0
         Me.chkDGPOFilesWithFullLegend.Tag = "80"
-        Me.chkDGPOFilesWithFullLegend.Text = "Files with description / legend"
+        Me.chkDGPOFilesWithFullLegend.Text = "Files and legend"
         Me.ToolTip1.SetToolTip(Me.chkDGPOFilesWithFullLegend, "Select if you want to include the file description along with the files.")
         Me.chkDGPOFilesWithFullLegend.UseVisualStyleBackColor = True
         '
@@ -3828,10 +3830,10 @@ Partial Class Main
         Me.chkDGPOFilesWithoutLegend.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkDGPOFilesWithoutLegend.Location = New System.Drawing.Point(3, 3)
         Me.chkDGPOFilesWithoutLegend.Name = "chkDGPOFilesWithoutLegend"
-        Me.chkDGPOFilesWithoutLegend.Size = New System.Drawing.Size(277, 26)
+        Me.chkDGPOFilesWithoutLegend.Size = New System.Drawing.Size(177, 26)
         Me.chkDGPOFilesWithoutLegend.TabIndex = 0
         Me.chkDGPOFilesWithoutLegend.Tag = "80"
-        Me.chkDGPOFilesWithoutLegend.Text = "Files without description / legend"
+        Me.chkDGPOFilesWithoutLegend.Text = "Files without legend"
         Me.ToolTip1.SetToolTip(Me.chkDGPOFilesWithoutLegend, "Select if you want to post only the files without their description.")
         Me.chkDGPOFilesWithoutLegend.UseVisualStyleBackColor = True
         '
@@ -4365,6 +4367,21 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'chkDGPODPHXOnly
+        '
+        Me.chkDGPODPHXOnly.AutoSize = True
+        Me.chkDGPODPHXOnly.Checked = True
+        Me.chkDGPODPHXOnly.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDGPODPHXOnly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDGPODPHXOnly.Location = New System.Drawing.Point(157, 3)
+        Me.chkDGPODPHXOnly.Name = "chkDGPODPHXOnly"
+        Me.chkDGPODPHXOnly.Size = New System.Drawing.Size(111, 26)
+        Me.chkDGPODPHXOnly.TabIndex = 1
+        Me.chkDGPODPHXOnly.Tag = "80"
+        Me.chkDGPODPHXOnly.Text = "DPHX Only"
+        Me.ToolTip1.SetToolTip(Me.chkDGPODPHXOnly, "Select if you want to include the file description along with the files.")
+        Me.chkDGPODPHXOnly.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4808,4 +4825,5 @@ Partial Class Main
     Friend WithEvents grpDiscordOthers As GroupBox
     Friend WithEvents btnSyncTitles As Button
     Friend WithEvents txtClubFullName As TextBox
+    Friend WithEvents chkDGPODPHXOnly As CheckBox
 End Class
