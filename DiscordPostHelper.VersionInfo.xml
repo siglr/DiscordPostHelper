@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.2.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.2.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.2.24.1</ReleaseVersion>
+      <ReleaseTitle>Various small fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added an indicator for AAT waypoint on the Discord post for All Waypoints.
+        Adjusted the text for the group event link to include the club name and event title.
+        Added the possibility of including only the DPHX file when posting the event details.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.2.12.1</ReleaseVersion>
       <ReleaseTitle>Support for AAT and custom clubs</ReleaseTitle>
