@@ -172,8 +172,23 @@ Public Class AllSettings
             ExcludeWeatherFileFromCleanup = settingsInFile.ExcludeWeatherFileFromCleanup
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
+
+            'Check if valid folder
+            If Not Directory.Exists(_FlightPlansFolder) Then
+                settingsFound = False
+            End If
+            If Not Directory.Exists(_MSFSWeatherPresetsFolder) Then
+                settingsFound = False
+            End If
+            If Not Directory.Exists(_UnpackingFolder) Then
+                settingsFound = False
+            End If
+            If Not Directory.Exists(_PackagesFolder) Then
+                settingsFound = False
+            End If
+
         Else
-            settingsFound = False
+                settingsFound = False
 
             'No settings found - try to auto locate the MSFS default folders
             Dim folderPathToCheck As String
