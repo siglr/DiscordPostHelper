@@ -31,6 +31,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripUnpack = New System.Windows.Forms.ToolStripButton()
         Me.toolStripCleanup = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripFileBrowser = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripDiscordTaskLibrary = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
@@ -41,7 +42,6 @@ Partial Class DPHXUnpackAndLoad
         Me.GoToFeedbackChannelOnDiscordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripSettings = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.txtPackageName = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -79,7 +79,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings, Me.ToolStripButton2})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.toolStripFileBrowser, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
@@ -115,6 +115,14 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripCleanup.Size = New System.Drawing.Size(89, 25)
         Me.toolStripCleanup.Text = "&Cleanup"
         Me.toolStripCleanup.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
+        '
+        'toolStripFileBrowser
+        '
+        Me.toolStripFileBrowser.Image = CType(resources.GetObject("toolStripFileBrowser.Image"), System.Drawing.Image)
+        Me.toolStripFileBrowser.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripFileBrowser.Name = "toolStripFileBrowser"
+        Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 25)
+        Me.toolStripFileBrowser.Text = "File Browser"
         '
         'ToolStripSeparator1
         '
@@ -186,14 +194,6 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripSettings.Size = New System.Drawing.Size(88, 25)
         Me.toolStripSettings.Text = "&Settings"
         Me.toolStripSettings.ToolTipText = "Click to open the Settings windows"
-        '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(26, 25)
-        Me.ToolStripButton2.Text = "ToolStripButton2"
         '
         'txtPackageName
         '
@@ -387,8 +387,8 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents ToolStrip2 As ToolStrip
     Friend WithEvents lblAllFilesStatus As ToolStripTextBox
     Friend WithEvents toolStatusWarning As ToolStripButton
-    Friend WithEvents ToolStripButton2 As ToolStripButton
     Friend WithEvents toolStatusOK As ToolStripButton
     Friend WithEvents toolStatusStop As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
+    Friend WithEvents toolStripFileBrowser As ToolStripButton
 End Class
