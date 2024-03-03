@@ -22,6 +22,7 @@ Partial Class CleaningTool
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.tabCtrlCleaningTool = New System.Windows.Forms.TabControl()
         Me.tabFlights = New System.Windows.Forms.TabPage()
         Me.btnFlightsSelectAll = New System.Windows.Forms.Button()
@@ -54,14 +55,15 @@ Partial Class CleaningTool
         Me.lblXCSoarTasksFolderPath = New System.Windows.Forms.Label()
         Me.btnXCSoarTasksRefresh = New System.Windows.Forms.Button()
         Me.tabXCSoarMaps = New System.Windows.Forms.TabPage()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.OK_Button = New System.Windows.Forms.Button()
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.btnXCSoarMapsSelectAll = New System.Windows.Forms.Button()
         Me.btnXCSoarMapsDelete = New System.Windows.Forms.Button()
         Me.lstXCSoarMaps = New System.Windows.Forms.ListBox()
         Me.lblXCSoarMapsFolderPath = New System.Windows.Forms.Label()
         Me.btnXCSoarMapsRefresh = New System.Windows.Forms.Button()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.OK_Button = New System.Windows.Forms.Button()
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.tabCtrlCleaningTool.SuspendLayout()
         Me.tabFlights.SuspendLayout()
         Me.tabWeather.SuspendLayout()
@@ -88,6 +90,7 @@ Partial Class CleaningTool
         Me.tabCtrlCleaningTool.SelectedIndex = 0
         Me.tabCtrlCleaningTool.Size = New System.Drawing.Size(685, 518)
         Me.tabCtrlCleaningTool.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.tabCtrlCleaningTool, "Select the category of files to browse")
         '
         'tabFlights
         '
@@ -111,8 +114,9 @@ Partial Class CleaningTool
         Me.btnFlightsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnFlightsSelectAll.Name = "btnFlightsSelectAll"
         Me.btnFlightsSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnFlightsSelectAll.TabIndex = 6
+        Me.btnFlightsSelectAll.TabIndex = 3
         Me.btnFlightsSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnFlightsSelectAll, "Click to toggle selection of all items in the list.")
         '
         'btnFlightsDelete
         '
@@ -121,8 +125,9 @@ Partial Class CleaningTool
         Me.btnFlightsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnFlightsDelete.Name = "btnFlightsDelete"
         Me.btnFlightsDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnFlightsDelete.TabIndex = 5
+        Me.btnFlightsDelete.TabIndex = 4
         Me.btnFlightsDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnFlightsDelete, "Click to delete all selected files.")
         '
         'lstFlights
         '
@@ -135,7 +140,8 @@ Partial Class CleaningTool
         Me.lstFlights.Name = "lstFlights"
         Me.lstFlights.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstFlights.Size = New System.Drawing.Size(548, 444)
-        Me.lstFlights.TabIndex = 4
+        Me.lstFlights.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstFlights, "List of flight plan files currently in your folder.")
         '
         'lblFlightsFolderPath
         '
@@ -144,8 +150,9 @@ Partial Class CleaningTool
         Me.lblFlightsFolderPath.Location = New System.Drawing.Point(6, 7)
         Me.lblFlightsFolderPath.Name = "lblFlightsFolderPath"
         Me.lblFlightsFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblFlightsFolderPath.TabIndex = 3
+        Me.lblFlightsFolderPath.TabIndex = 0
         Me.lblFlightsFolderPath.Text = "The flights folder path"
+        Me.ToolTip1.SetToolTip(Me.lblFlightsFolderPath, "This is the folder that you've set for your flight files (.pln).")
         '
         'btnFlightsRefresh
         '
@@ -156,6 +163,7 @@ Partial Class CleaningTool
         Me.btnFlightsRefresh.Size = New System.Drawing.Size(109, 35)
         Me.btnFlightsRefresh.TabIndex = 2
         Me.btnFlightsRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnFlightsRefresh, "Click to refresh the list.")
         '
         'tabWeather
         '
@@ -179,8 +187,9 @@ Partial Class CleaningTool
         Me.btnWeatherSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnWeatherSelectAll.Name = "btnWeatherSelectAll"
         Me.btnWeatherSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeatherSelectAll.TabIndex = 11
+        Me.btnWeatherSelectAll.TabIndex = 3
         Me.btnWeatherSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnWeatherSelectAll, "Click to toggle selection of all items in the list.")
         '
         'btnWeatherDelete
         '
@@ -189,8 +198,9 @@ Partial Class CleaningTool
         Me.btnWeatherDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnWeatherDelete.Name = "btnWeatherDelete"
         Me.btnWeatherDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeatherDelete.TabIndex = 10
+        Me.btnWeatherDelete.TabIndex = 4
         Me.btnWeatherDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnWeatherDelete, "Click to delete all selected files.")
         '
         'lstWeather
         '
@@ -203,7 +213,8 @@ Partial Class CleaningTool
         Me.lstWeather.Name = "lstWeather"
         Me.lstWeather.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstWeather.Size = New System.Drawing.Size(548, 444)
-        Me.lstWeather.TabIndex = 9
+        Me.lstWeather.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstWeather, "List of weather files currently in your folder.")
         '
         'lblWeatherFolderPath
         '
@@ -212,8 +223,9 @@ Partial Class CleaningTool
         Me.lblWeatherFolderPath.Location = New System.Drawing.Point(6, 7)
         Me.lblWeatherFolderPath.Name = "lblWeatherFolderPath"
         Me.lblWeatherFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblWeatherFolderPath.TabIndex = 8
+        Me.lblWeatherFolderPath.TabIndex = 0
         Me.lblWeatherFolderPath.Text = "The weather files folder path"
+        Me.ToolTip1.SetToolTip(Me.lblWeatherFolderPath, "This is the folder that you've set for your weather files (.wpr).")
         '
         'btnWeatherRefresh
         '
@@ -222,8 +234,9 @@ Partial Class CleaningTool
         Me.btnWeatherRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnWeatherRefresh.Name = "btnWeatherRefresh"
         Me.btnWeatherRefresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeatherRefresh.TabIndex = 7
+        Me.btnWeatherRefresh.TabIndex = 2
         Me.btnWeatherRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnWeatherRefresh, "Click to refresh the list.")
         '
         'tabPackages
         '
@@ -246,8 +259,9 @@ Partial Class CleaningTool
         Me.btnPackagesSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesSelectAll.Name = "btnPackagesSelectAll"
         Me.btnPackagesSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnPackagesSelectAll.TabIndex = 16
+        Me.btnPackagesSelectAll.TabIndex = 3
         Me.btnPackagesSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnPackagesSelectAll, "Click to toggle selection of all items in the list.")
         '
         'btnPackagesDelete
         '
@@ -256,8 +270,9 @@ Partial Class CleaningTool
         Me.btnPackagesDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesDelete.Name = "btnPackagesDelete"
         Me.btnPackagesDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnPackagesDelete.TabIndex = 15
+        Me.btnPackagesDelete.TabIndex = 4
         Me.btnPackagesDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnPackagesDelete, "Click to delete all selected files.")
         '
         'lstPackages
         '
@@ -270,7 +285,8 @@ Partial Class CleaningTool
         Me.lstPackages.Name = "lstPackages"
         Me.lstPackages.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstPackages.Size = New System.Drawing.Size(548, 444)
-        Me.lstPackages.TabIndex = 14
+        Me.lstPackages.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstPackages, "List of package files currently in your folder.")
         '
         'lblPackagesFolderPath
         '
@@ -279,8 +295,9 @@ Partial Class CleaningTool
         Me.lblPackagesFolderPath.Location = New System.Drawing.Point(6, 7)
         Me.lblPackagesFolderPath.Name = "lblPackagesFolderPath"
         Me.lblPackagesFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblPackagesFolderPath.TabIndex = 13
+        Me.lblPackagesFolderPath.TabIndex = 0
         Me.lblPackagesFolderPath.Text = "The DPHX packages folder path"
+        Me.ToolTip1.SetToolTip(Me.lblPackagesFolderPath, "This is the folder that you've set for your package files (.dphx).")
         '
         'btnPackagesRefresh
         '
@@ -289,8 +306,9 @@ Partial Class CleaningTool
         Me.btnPackagesRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesRefresh.Name = "btnPackagesRefresh"
         Me.btnPackagesRefresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnPackagesRefresh.TabIndex = 12
+        Me.btnPackagesRefresh.TabIndex = 2
         Me.btnPackagesRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnPackagesRefresh, "Click to refresh the list.")
         '
         'tabNB21Logs
         '
@@ -313,8 +331,9 @@ Partial Class CleaningTool
         Me.btnNB21LogsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsSelectAll.Name = "btnNB21LogsSelectAll"
         Me.btnNB21LogsSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnNB21LogsSelectAll.TabIndex = 11
+        Me.btnNB21LogsSelectAll.TabIndex = 3
         Me.btnNB21LogsSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnNB21LogsSelectAll, "Click to toggle selection of all items in the list.")
         '
         'btnNB21LogsDelete
         '
@@ -323,8 +342,9 @@ Partial Class CleaningTool
         Me.btnNB21LogsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsDelete.Name = "btnNB21LogsDelete"
         Me.btnNB21LogsDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnNB21LogsDelete.TabIndex = 10
+        Me.btnNB21LogsDelete.TabIndex = 4
         Me.btnNB21LogsDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnNB21LogsDelete, "Click to delete all selected files.")
         '
         'lstNB21Logs
         '
@@ -337,7 +357,8 @@ Partial Class CleaningTool
         Me.lstNB21Logs.Name = "lstNB21Logs"
         Me.lstNB21Logs.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstNB21Logs.Size = New System.Drawing.Size(548, 444)
-        Me.lstNB21Logs.TabIndex = 9
+        Me.lstNB21Logs.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstNB21Logs, "List of log files currently in your folder.")
         '
         'lblNB21LogsFolderPath
         '
@@ -346,8 +367,9 @@ Partial Class CleaningTool
         Me.lblNB21LogsFolderPath.Location = New System.Drawing.Point(6, 7)
         Me.lblNB21LogsFolderPath.Name = "lblNB21LogsFolderPath"
         Me.lblNB21LogsFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblNB21LogsFolderPath.TabIndex = 8
+        Me.lblNB21LogsFolderPath.TabIndex = 0
         Me.lblNB21LogsFolderPath.Text = "The NB21 Logs folder path"
+        Me.ToolTip1.SetToolTip(Me.lblNB21LogsFolderPath, "This is the folder that you've set for your NB21 log files (.igc).")
         '
         'btnNB21LogsRefresh
         '
@@ -356,8 +378,9 @@ Partial Class CleaningTool
         Me.btnNB21LogsRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsRefresh.Name = "btnNB21LogsRefresh"
         Me.btnNB21LogsRefresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnNB21LogsRefresh.TabIndex = 7
+        Me.btnNB21LogsRefresh.TabIndex = 2
         Me.btnNB21LogsRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnNB21LogsRefresh, "Click to refresh the list.")
         '
         'tabXCSoarTasks
         '
@@ -380,8 +403,9 @@ Partial Class CleaningTool
         Me.btnXCSoarTasksSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksSelectAll.Name = "btnXCSoarTasksSelectAll"
         Me.btnXCSoarTasksSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarTasksSelectAll.TabIndex = 16
+        Me.btnXCSoarTasksSelectAll.TabIndex = 3
         Me.btnXCSoarTasksSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksSelectAll, "Click to toggle selection of all items in the list.")
         '
         'btnXCSoarTasksDelete
         '
@@ -390,8 +414,9 @@ Partial Class CleaningTool
         Me.btnXCSoarTasksDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksDelete.Name = "btnXCSoarTasksDelete"
         Me.btnXCSoarTasksDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarTasksDelete.TabIndex = 15
+        Me.btnXCSoarTasksDelete.TabIndex = 4
         Me.btnXCSoarTasksDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksDelete, "Click to delete all selected files.")
         '
         'lstXCSoarTasks
         '
@@ -404,7 +429,8 @@ Partial Class CleaningTool
         Me.lstXCSoarTasks.Name = "lstXCSoarTasks"
         Me.lstXCSoarTasks.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.lstXCSoarTasks.Size = New System.Drawing.Size(548, 444)
-        Me.lstXCSoarTasks.TabIndex = 14
+        Me.lstXCSoarTasks.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstXCSoarTasks, "List of XC Soar task files currently in your folder.")
         '
         'lblXCSoarTasksFolderPath
         '
@@ -413,8 +439,9 @@ Partial Class CleaningTool
         Me.lblXCSoarTasksFolderPath.Location = New System.Drawing.Point(6, 7)
         Me.lblXCSoarTasksFolderPath.Name = "lblXCSoarTasksFolderPath"
         Me.lblXCSoarTasksFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblXCSoarTasksFolderPath.TabIndex = 13
+        Me.lblXCSoarTasksFolderPath.TabIndex = 0
         Me.lblXCSoarTasksFolderPath.Text = "The XCSoar Tasks folder path"
+        Me.ToolTip1.SetToolTip(Me.lblXCSoarTasksFolderPath, "This is the folder that you've set for your XC Soar Task files (.tsk).")
         '
         'btnXCSoarTasksRefresh
         '
@@ -423,8 +450,9 @@ Partial Class CleaningTool
         Me.btnXCSoarTasksRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksRefresh.Name = "btnXCSoarTasksRefresh"
         Me.btnXCSoarTasksRefresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarTasksRefresh.TabIndex = 12
+        Me.btnXCSoarTasksRefresh.TabIndex = 2
         Me.btnXCSoarTasksRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksRefresh, "Click to refresh the list.")
         '
         'tabXCSoarMaps
         '
@@ -439,6 +467,64 @@ Partial Class CleaningTool
         Me.tabXCSoarMaps.TabIndex = 3
         Me.tabXCSoarMaps.Text = "XC Soar Maps"
         Me.tabXCSoarMaps.UseVisualStyleBackColor = True
+        '
+        'btnXCSoarMapsSelectAll
+        '
+        Me.btnXCSoarMapsSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsSelectAll.Location = New System.Drawing.Point(561, 77)
+        Me.btnXCSoarMapsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnXCSoarMapsSelectAll.Name = "btnXCSoarMapsSelectAll"
+        Me.btnXCSoarMapsSelectAll.Size = New System.Drawing.Size(109, 35)
+        Me.btnXCSoarMapsSelectAll.TabIndex = 3
+        Me.btnXCSoarMapsSelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsSelectAll, "Click to toggle selection of all items in the list.")
+        '
+        'btnXCSoarMapsDelete
+        '
+        Me.btnXCSoarMapsDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsDelete.Location = New System.Drawing.Point(561, 122)
+        Me.btnXCSoarMapsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnXCSoarMapsDelete.Name = "btnXCSoarMapsDelete"
+        Me.btnXCSoarMapsDelete.Size = New System.Drawing.Size(109, 35)
+        Me.btnXCSoarMapsDelete.TabIndex = 4
+        Me.btnXCSoarMapsDelete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsDelete, "Click to delete all selected files.")
+        '
+        'lstXCSoarMaps
+        '
+        Me.lstXCSoarMaps.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstXCSoarMaps.FormattingEnabled = True
+        Me.lstXCSoarMaps.ItemHeight = 20
+        Me.lstXCSoarMaps.Location = New System.Drawing.Point(6, 33)
+        Me.lstXCSoarMaps.Name = "lstXCSoarMaps"
+        Me.lstXCSoarMaps.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstXCSoarMaps.Size = New System.Drawing.Size(548, 444)
+        Me.lstXCSoarMaps.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.lstXCSoarMaps, "List of XC Soar map files currently in your folder.")
+        '
+        'lblXCSoarMapsFolderPath
+        '
+        Me.lblXCSoarMapsFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblXCSoarMapsFolderPath.Location = New System.Drawing.Point(6, 7)
+        Me.lblXCSoarMapsFolderPath.Name = "lblXCSoarMapsFolderPath"
+        Me.lblXCSoarMapsFolderPath.Size = New System.Drawing.Size(665, 23)
+        Me.lblXCSoarMapsFolderPath.TabIndex = 0
+        Me.lblXCSoarMapsFolderPath.Text = "The XCSoar Maps folder path"
+        Me.ToolTip1.SetToolTip(Me.lblXCSoarMapsFolderPath, "This is the folder that you've set for your XC Soar Map files (.xcm).")
+        '
+        'btnXCSoarMapsRefresh
+        '
+        Me.btnXCSoarMapsRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsRefresh.Location = New System.Drawing.Point(561, 32)
+        Me.btnXCSoarMapsRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnXCSoarMapsRefresh.Name = "btnXCSoarMapsRefresh"
+        Me.btnXCSoarMapsRefresh.Size = New System.Drawing.Size(109, 35)
+        Me.btnXCSoarMapsRefresh.TabIndex = 2
+        Me.btnXCSoarMapsRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsRefresh, "Click to refresh the list.")
         '
         'Panel1
         '
@@ -457,61 +543,9 @@ Partial Class CleaningTool
         Me.OK_Button.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New System.Drawing.Size(109, 35)
-        Me.OK_Button.TabIndex = 1
+        Me.OK_Button.TabIndex = 0
         Me.OK_Button.Text = "OK"
-        '
-        'btnXCSoarMapsSelectAll
-        '
-        Me.btnXCSoarMapsSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsSelectAll.Location = New System.Drawing.Point(561, 77)
-        Me.btnXCSoarMapsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnXCSoarMapsSelectAll.Name = "btnXCSoarMapsSelectAll"
-        Me.btnXCSoarMapsSelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarMapsSelectAll.TabIndex = 21
-        Me.btnXCSoarMapsSelectAll.Text = "Select All"
-        '
-        'btnXCSoarMapsDelete
-        '
-        Me.btnXCSoarMapsDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsDelete.Location = New System.Drawing.Point(561, 122)
-        Me.btnXCSoarMapsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnXCSoarMapsDelete.Name = "btnXCSoarMapsDelete"
-        Me.btnXCSoarMapsDelete.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarMapsDelete.TabIndex = 20
-        Me.btnXCSoarMapsDelete.Text = "Delete"
-        '
-        'lstXCSoarMaps
-        '
-        Me.lstXCSoarMaps.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstXCSoarMaps.FormattingEnabled = True
-        Me.lstXCSoarMaps.ItemHeight = 20
-        Me.lstXCSoarMaps.Location = New System.Drawing.Point(6, 33)
-        Me.lstXCSoarMaps.Name = "lstXCSoarMaps"
-        Me.lstXCSoarMaps.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstXCSoarMaps.Size = New System.Drawing.Size(548, 444)
-        Me.lstXCSoarMaps.TabIndex = 19
-        '
-        'lblXCSoarMapsFolderPath
-        '
-        Me.lblXCSoarMapsFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblXCSoarMapsFolderPath.Location = New System.Drawing.Point(6, 7)
-        Me.lblXCSoarMapsFolderPath.Name = "lblXCSoarMapsFolderPath"
-        Me.lblXCSoarMapsFolderPath.Size = New System.Drawing.Size(665, 23)
-        Me.lblXCSoarMapsFolderPath.TabIndex = 18
-        Me.lblXCSoarMapsFolderPath.Text = "The XCSoar Maps folder path"
-        '
-        'btnXCSoarMapsRefresh
-        '
-        Me.btnXCSoarMapsRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsRefresh.Location = New System.Drawing.Point(561, 32)
-        Me.btnXCSoarMapsRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnXCSoarMapsRefresh.Name = "btnXCSoarMapsRefresh"
-        Me.btnXCSoarMapsRefresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnXCSoarMapsRefresh.TabIndex = 17
-        Me.btnXCSoarMapsRefresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.OK_Button, "Click to close window.")
         '
         'CleaningTool
         '
@@ -583,4 +617,5 @@ Partial Class CleaningTool
     Friend WithEvents lstXCSoarMaps As ListBox
     Friend WithEvents lblXCSoarMapsFolderPath As Label
     Friend WithEvents btnXCSoarMapsRefresh As Button
+    Friend WithEvents ToolTip1 As ToolTip
 End Class

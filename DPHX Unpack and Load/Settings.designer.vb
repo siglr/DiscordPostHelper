@@ -51,6 +51,9 @@ Partial Class Settings
         Me.chkExcludeXCSoarMapFileFromCleanup = New System.Windows.Forms.CheckBox()
         Me.btnNB21IGCFolderPaste = New System.Windows.Forms.Button()
         Me.btnNB21IGCFolder = New System.Windows.Forms.Button()
+        Me.btnXCSoarTasksFolderClear = New System.Windows.Forms.Button()
+        Me.btnXCSoarMapsFolderClear = New System.Windows.Forms.Button()
+        Me.btnNB21IGCFolderClear = New System.Windows.Forms.Button()
         Me.pblWeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -69,9 +72,6 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlXCSoarMapsFolder = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.btnXCSoarTasksFolderClear = New System.Windows.Forms.Button()
-        Me.btnXCSoarMapsFolderClear = New System.Windows.Forms.Button()
-        Me.btnNB21IGCFolderClear = New System.Windows.Forms.Button()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlFlightPlanFilesFolder.SuspendLayout()
         Me.pblWeatherPresetsFolder.SuspendLayout()
@@ -92,7 +92,7 @@ Partial Class Settings
         Me.okCancelPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.okCancelPanel.Controls.Add(Me.OK_Button, 0, 0)
         Me.okCancelPanel.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.okCancelPanel.Location = New System.Drawing.Point(553, 446)
+        Me.okCancelPanel.Location = New System.Drawing.Point(553, 420)
         Me.okCancelPanel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.okCancelPanel.Name = "okCancelPanel"
         Me.okCancelPanel.RowCount = 1
@@ -317,7 +317,7 @@ Partial Class Settings
         Me.btnXCSoarTasksFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnXCSoarTasksFolderPaste.Name = "btnXCSoarTasksFolderPaste"
         Me.btnXCSoarTasksFolderPaste.Size = New System.Drawing.Size(75, 37)
-        Me.btnXCSoarTasksFolderPaste.TabIndex = 2
+        Me.btnXCSoarTasksFolderPaste.TabIndex = 4
         Me.btnXCSoarTasksFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnXCSoarTasksFolderPaste.UseVisualStyleBackColor = True
@@ -344,7 +344,7 @@ Partial Class Settings
         Me.btnXCSoarMapsFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnXCSoarMapsFolderPaste.Name = "btnXCSoarMapsFolderPaste"
         Me.btnXCSoarMapsFolderPaste.Size = New System.Drawing.Size(75, 37)
-        Me.btnXCSoarMapsFolderPaste.TabIndex = 5
+        Me.btnXCSoarMapsFolderPaste.TabIndex = 4
         Me.btnXCSoarMapsFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnXCSoarMapsFolderPaste.UseVisualStyleBackColor = True
@@ -359,7 +359,7 @@ Partial Class Settings
         Me.btnXCSoarMapsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnXCSoarMapsFolder.Name = "btnXCSoarMapsFolder"
         Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(426, 37)
-        Me.btnXCSoarMapsFolder.TabIndex = 4
+        Me.btnXCSoarMapsFolder.TabIndex = 1
         Me.btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
         Me.btnXCSoarMapsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolder, "Select the folder containing XCSoar maps (.xcm) (optional)")
@@ -383,7 +383,7 @@ Partial Class Settings
         Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(670, 18)
         Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
         Me.chkExcludeXCSoarTaskFileFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 5
+        Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 3
         Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarTaskFileFromCleanup, "Check this to exclude XCSoar task files from cleanup")
         Me.chkExcludeXCSoarTaskFileFromCleanup.UseVisualStyleBackColor = True
         '
@@ -394,7 +394,7 @@ Partial Class Settings
         Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(670, 16)
         Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
         Me.chkExcludeXCSoarMapFileFromCleanup.Size = New System.Drawing.Size(15, 14)
-        Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 6
+        Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 3
         Me.ToolTip1.SetToolTip(Me.chkExcludeXCSoarMapFileFromCleanup, "Check this to exclude XCSoar map files from cleanup")
         Me.chkExcludeXCSoarMapFileFromCleanup.UseVisualStyleBackColor = True
         '
@@ -404,7 +404,7 @@ Partial Class Settings
         Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
         Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 37)
-        Me.btnNB21IGCFolderPaste.TabIndex = 2
+        Me.btnNB21IGCFolderPaste.TabIndex = 3
         Me.btnNB21IGCFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnNB21IGCFolderPaste.UseVisualStyleBackColor = True
@@ -424,6 +424,39 @@ Partial Class Settings
         Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolder, "Select the folder containing the logger flights IGC files")
         Me.btnNB21IGCFolder.UseVisualStyleBackColor = True
+        '
+        'btnXCSoarTasksFolderClear
+        '
+        Me.btnXCSoarTasksFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarTasksFolderClear.Location = New System.Drawing.Point(626, 4)
+        Me.btnXCSoarTasksFolderClear.Name = "btnXCSoarTasksFolderClear"
+        Me.btnXCSoarTasksFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnXCSoarTasksFolderClear.TabIndex = 2
+        Me.btnXCSoarTasksFolderClear.Text = "🗑️"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksFolderClear, "Click this button to delete the optional XC Soar Tasks folder")
+        Me.btnXCSoarTasksFolderClear.UseVisualStyleBackColor = True
+        '
+        'btnXCSoarMapsFolderClear
+        '
+        Me.btnXCSoarMapsFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsFolderClear.Location = New System.Drawing.Point(626, 4)
+        Me.btnXCSoarMapsFolderClear.Name = "btnXCSoarMapsFolderClear"
+        Me.btnXCSoarMapsFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnXCSoarMapsFolderClear.TabIndex = 2
+        Me.btnXCSoarMapsFolderClear.Text = "🗑️"
+        Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolderClear, "Click this button to delete the optional XC Soar Maps folder")
+        Me.btnXCSoarMapsFolderClear.UseVisualStyleBackColor = True
+        '
+        'btnNB21IGCFolderClear
+        '
+        Me.btnNB21IGCFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolderClear.Location = New System.Drawing.Point(647, 4)
+        Me.btnNB21IGCFolderClear.Name = "btnNB21IGCFolderClear"
+        Me.btnNB21IGCFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnNB21IGCFolderClear.TabIndex = 2
+        Me.btnNB21IGCFolderClear.Text = "🗑️"
+        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderClear, "Click this button to delete the optional NB21 Log Flights folder")
+        Me.btnNB21IGCFolderClear.UseVisualStyleBackColor = True
         '
         'pblWeatherPresetsFolder
         '
@@ -580,7 +613,7 @@ Partial Class Settings
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(9, 436)
+        Me.Label7.Location = New System.Drawing.Point(9, 410)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(269, 60)
         Me.Label7.TabIndex = 8
@@ -607,41 +640,8 @@ Partial Class Settings
         Me.Label9.Location = New System.Drawing.Point(5, 12)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(146, 20)
-        Me.Label9.TabIndex = 3
+        Me.Label9.TabIndex = 0
         Me.Label9.Text = "XCSoar Maps Folder:"
-        '
-        'btnXCSoarTasksFolderClear
-        '
-        Me.btnXCSoarTasksFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarTasksFolderClear.Location = New System.Drawing.Point(626, 4)
-        Me.btnXCSoarTasksFolderClear.Name = "btnXCSoarTasksFolderClear"
-        Me.btnXCSoarTasksFolderClear.Size = New System.Drawing.Size(38, 37)
-        Me.btnXCSoarTasksFolderClear.TabIndex = 6
-        Me.btnXCSoarTasksFolderClear.Text = "🗑️"
-        Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksFolderClear, "Click this button to paste a folder from your clipboard")
-        Me.btnXCSoarTasksFolderClear.UseVisualStyleBackColor = True
-        '
-        'btnXCSoarMapsFolderClear
-        '
-        Me.btnXCSoarMapsFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsFolderClear.Location = New System.Drawing.Point(626, 4)
-        Me.btnXCSoarMapsFolderClear.Name = "btnXCSoarMapsFolderClear"
-        Me.btnXCSoarMapsFolderClear.Size = New System.Drawing.Size(38, 37)
-        Me.btnXCSoarMapsFolderClear.TabIndex = 7
-        Me.btnXCSoarMapsFolderClear.Text = "🗑️"
-        Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolderClear, "Click this button to paste a folder from your clipboard")
-        Me.btnXCSoarMapsFolderClear.UseVisualStyleBackColor = True
-        '
-        'btnNB21IGCFolderClear
-        '
-        Me.btnNB21IGCFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21IGCFolderClear.Location = New System.Drawing.Point(647, 4)
-        Me.btnNB21IGCFolderClear.Name = "btnNB21IGCFolderClear"
-        Me.btnNB21IGCFolderClear.Size = New System.Drawing.Size(38, 37)
-        Me.btnNB21IGCFolderClear.TabIndex = 8
-        Me.btnNB21IGCFolderClear.Text = "🗑️"
-        Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderClear, "Click this button to paste a folder from your clipboard")
-        Me.btnNB21IGCFolderClear.UseVisualStyleBackColor = True
         '
         'Settings
         '
