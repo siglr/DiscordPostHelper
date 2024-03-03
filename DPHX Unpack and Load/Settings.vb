@@ -29,10 +29,6 @@ Public Class Settings
             validSettings = False
             sbMsg.AppendLine("Invalid folder path for DPHX files")
         End If
-        If Not Directory.Exists(btnNB21IGCFolder.Text) Then
-            validSettings = False
-            sbMsg.AppendLine("Invalid folder path for NB21 IGC files")
-        End If
 
         If Not validSettings Then
             Using New Centered_MessageBox(Me)
@@ -376,4 +372,19 @@ Public Class Settings
 
     End Sub
 
+    Private Sub btnXCSoarTasksFolderClear_Click(sender As Object, e As EventArgs) Handles btnXCSoarTasksFolderClear.Click
+        Settings.SessionSettings.ClearXCSoarTasks()
+        btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
+    End Sub
+
+    Private Sub btnXCSoarMapsFolderClear_Click(sender As Object, e As EventArgs) Handles btnXCSoarMapsFolderClear.Click
+        Settings.SessionSettings.ClearXCSoarMaps()
+        btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
+    End Sub
+
+    Private Sub btnNB21IGCFolderClear_Click(sender As Object, e As EventArgs) Handles btnNB21IGCFolderClear.Click
+        Settings.SessionSettings.ClearNB21IGCFolder()
+        btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files (optional)"
+
+    End Sub
 End Class

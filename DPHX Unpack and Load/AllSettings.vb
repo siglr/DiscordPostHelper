@@ -210,4 +210,16 @@ Public Class AllSettings
 
     End Function
 
+    Public Sub ClearXCSoarTasks()
+        _XCSoarTasksFolder = Nothing
+    End Sub
+
+    Public Sub ClearXCSoarMaps()
+        _XCSoarMapsFolder = Nothing
+    End Sub
+
+    Public Sub ClearNB21IGCFolder()
+        _NB21IGCFolder = Nothing
+    End Sub
+
 End Class

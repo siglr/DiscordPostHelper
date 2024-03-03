@@ -30,16 +30,36 @@ Public Class CleaningTool
 
             Case tabNB21Logs.Name
                 lblNB21LogsFolderPath.Text = Settings.SessionSettings.NB21IGCFolder
+                If lblNB21LogsFolderPath.Text.Trim = String.Empty Then
+                    lblNB21LogsFolderPath.Text = "No path selected"
+                    tabNB21Logs.Enabled = False
+                Else
+                    tabNB21Logs.Enabled = True
+                End If
 
             Case tabXCSoarTasks.Name
                 lblXCSoarTasksFolderPath.Text = Settings.SessionSettings.XCSoarTasksFolder
+                If lblXCSoarTasksFolderPath.Text.Trim = String.Empty Then
+                    lblXCSoarTasksFolderPath.Text = "No path selected"
+                    tabXCSoarTasks.Enabled = False
+                Else
+                    tabXCSoarTasks.Enabled = True
+                End If
 
             Case tabXCSoarMaps.Name
                 lblXCSoarMapsFolderPath.Text = Settings.SessionSettings.XCSoarMapsFolder
+                If lblXCSoarMapsFolderPath.Text.Trim = String.Empty Then
+                    lblXCSoarMapsFolderPath.Text = "No path selected"
+                    tabXCSoarMaps.Enabled = False
+                Else
+                    tabXCSoarMaps.Enabled = True
+                End If
 
         End Select
 
-        LoadListBox(tabPageSelected)
+        If tabPageSelected.Enabled Then
+            LoadListBox(tabPageSelected)
+        End If
 
     End Sub
 

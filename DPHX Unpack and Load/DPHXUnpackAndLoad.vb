@@ -156,6 +156,10 @@ Public Class DPHXUnpackAndLoad
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
 
         OpenSettingsWindow()
+        'Recheck files
+        If toolStripUnpack.Enabled Then
+            EnableUnpackButton()
+        End If
 
     End Sub
 
