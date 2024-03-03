@@ -129,7 +129,9 @@
     <Compile Include="FullWeatherGraphPanel.Designer.vb">
       <DependentUpon>FullWeatherGraphPanel.vb</DependentUpon>
     </Compile>
-    <Compile Include="FullWeatherGraphPanel.vb" />
+    <Compile Include="FullWeatherGraphPanel.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="GradientLegendControl.vb">
       <SubType>Component</SubType>
     </Compile>

@@ -7,6 +7,7 @@ Public Class CleaningTool
     Private Sub CleaningTool_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
         tabCtrlCleaningTool.SelectTab(tabFlights)
+        TabSelected(tabFlights)
 
     End Sub
 
