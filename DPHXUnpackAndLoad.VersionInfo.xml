@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.2.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.3.3.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.3.3.3</ReleaseVersion>
+      <ReleaseTitle>New cleaner tool</ReleaseTitle>
+      <ReleaseNotes>
+        Added cleaner tool screen to browse the various files by category and be able to delete them.
+        Added possibility to clear out optional setting.
+        Fixed possible error when a path in the settings does not exist anymore.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.2.12.1</ReleaseVersion>
       <ReleaseTitle>Support for AAT</ReleaseTitle>
