@@ -113,7 +113,21 @@
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>AUSGLIDE TUE</ClubId>
+    <ClubId>AUSGLIDE</ClubId>
+    <ClubName>Tuesdays</ClubName>
+    <ClubFullName>AusGlide Soaring</ClubFullName>
+    <MSFSServer>Southeast Asia</MSFSServer>
+    <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>
+    <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
+    <ZuluTime>9:30 AM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>AUSGLIDE SUMMER TIME</ClubId>
     <ClubName>Tuesdays</ClubName>
     <ClubFullName>AusGlide Soaring</ClubFullName>
     <MSFSServer>Southeast Asia</MSFSServer>
