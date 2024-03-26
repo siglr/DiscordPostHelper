@@ -106,10 +106,14 @@ Public Class Main
         SessionSettings.Load()
 
         RestoreMainFormLocationAndSize()
+
         If SessionSettings.WaitSecondsForFiles >= 1 AndAlso SessionSettings.WaitSecondsForFiles <= 10 Then
             numWaitSecondsForFiles.Value = SessionSettings.WaitSecondsForFiles
         End If
         chkDPOExpertMode.Checked = SessionSettings.AutomaticPostingProgression
+
+        LoadDPOptions()
+        LoadDGPOptions()
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -136,6 +140,48 @@ Public Class Main
         LoadSessionData(_CurrentSessionFile)
         _loadingFile = False
         CheckForNewVersion()
+
+    End Sub
+
+    Private Sub LoadDPOptions()
+
+        If SessionSettings.DPO_DPOUseCustomSettings Then
+            chkDPOMainPost.Checked = SessionSettings.DPO_chkDPOMainPost
+            chkDPOThreadCreation.Checked = SessionSettings.DPO_chkDPOThreadCreation
+            chkDPOIncludeCoverImage.Checked = SessionSettings.DPO_chkDPOIncludeCoverImage
+            chkDPOFullDescription.Checked = SessionSettings.DPO_chkDPOFullDescription
+            chkDPOFilesWithDescription.Checked = SessionSettings.DPO_chkDPOFilesWithDescription
+            chkDPOFilesAlone.Checked = SessionSettings.DPO_chkDPOFilesAlone
+            chkDPOAltRestrictions.Checked = SessionSettings.DPO_chkDPOAltRestrictions
+            chkDPOWeatherInfo.Checked = SessionSettings.DPO_chkDPOWeatherInfo
+            chkDPOWeatherChart.Checked = SessionSettings.DPO_chkDPOWeatherChart
+            chkDPOWaypoints.Checked = SessionSettings.DPO_chkDPOWaypoints
+            chkDPOAddOns.Checked = SessionSettings.DPO_chkDPOAddOns
+            chkDPOResultsInvitation.Checked = SessionSettings.DPO_chkDPOResultsInvitation
+            chkDPOFeaturedOnGroupFlight.Checked = SessionSettings.DPO_chkDPOFeaturedOnGroupFlight
+        End If
+
+    End Sub
+    Private Sub LoadDGPOptions()
+
+        If SessionSettings.DPO_DGPOUseCustomSettings Then
+            chkDGPOCoverImage.Checked = SessionSettings.DPO_chkDGPOCoverImage
+            chkDGPOMainGroupPost.Checked = SessionSettings.DPO_chkDGPOMainGroupPost
+            chkDGPOThreadCreation.Checked = SessionSettings.DPO_chkDGPOThreadCreation
+            chkDGPOTeaser.Checked = SessionSettings.DPO_chkDGPOTeaser
+            chkDGPOFilesWithFullLegend.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
+            chkDGPOFilesWithoutLegend.Checked = SessionSettings.DPO_chkDGPOFilesWithoutLegend
+            chkDGPODPHXOnly.Checked = SessionSettings.DPO_chkDGPODPHXOnly
+            chkDGPOMainPost.Checked = SessionSettings.DPO_chkDGPOMainPost
+            chkDGPOFullDescription.Checked = SessionSettings.DPO_chkDGPOFullDescription
+            chkDGPOAltRestrictions.Checked = SessionSettings.DPO_chkDGPOAltRestrictions
+            chkDGPOWeatherInfo.Checked = SessionSettings.DPO_chkDGPOWeatherInfo
+            chkDGPOWeatherChart.Checked = SessionSettings.DPO_chkDGPOWeatherChart
+            chkDGPOWaypoints.Checked = SessionSettings.DPO_chkDGPOWaypoints
+            chkDGPOAddOns.Checked = SessionSettings.DPO_chkDGPOAddOns
+            chkDGPORelevantTaskDetails.Checked = SessionSettings.DPO_chkDGPORelevantTaskDetails
+            chkDGPOEventLogistics.Checked = SessionSettings.DPO_chkDGPOEventLogistics
+        End If
 
     End Sub
 
@@ -765,8 +811,21 @@ Public Class Main
             If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 txtDiscordTaskID.Text = String.Empty
                 _taskThreadFirstPostID = String.Empty
+                lblThread1stMsgIDNotAcquired.Visible = True
+                lblThread1stMsgIDAcquired.Visible = False
             End If
         End Using
+    End Sub
+
+    Private Sub txtDiscordTaskID_TextChanged(sender As Object, e As EventArgs) Handles txtDiscordTaskID.TextChanged
+        If txtDiscordTaskID.Text.Trim = String.Empty Then
+            lblTaskLibraryIDNotAcquired.Visible = True
+            lblTaskLibraryIDAcquired.Visible = False
+        Else
+            lblTaskLibraryIDAcquired.Visible = True
+            lblTaskLibraryIDNotAcquired.Visible = False
+        End If
+        AllFieldChanges(sender, e)
     End Sub
 
     Private Sub AllFieldChanges(sender As Object, e As EventArgs) Handles chkTitleLock.CheckedChanged,
@@ -801,7 +860,6 @@ Public Class Main
                                                                           txtDifficultyExtraInfo.TextChanged,
                                                                           txtGroupEventPostURL.TextChanged,
                                                                           txtDiscordEventShareURL.TextChanged,
-                                                                          txtDiscordTaskID.TextChanged,
                                                                           txtBaroPressureExtraInfo.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
@@ -2276,8 +2334,48 @@ Public Class Main
 
 #Region "Discord - Flight Plan event handlers"
 
-    Private Sub chkDPOExpertMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOExpertMode.CheckedChanged
+    Private Sub btnStartFullPostingWorkflow_Click(sender As Object, e As EventArgs) Handles btnStartFullPostingWorkflow.Click
 
+        Dim enforceTaskLibrary As Boolean = True
+        Dim autoContinue As Boolean = True
+
+        If Not ValidPostingRequirements() Then
+            Exit Sub
+        End If
+
+        'First part of Group Flight Event
+        If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
+
+        'Task in Task Library
+        If Not PostTaskInLibrary(autoContinue) Then
+            Exit Sub
+        End If
+
+        If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
+
+    End Sub
+
+    Private Sub btnDPORecallSettings_Click(sender As Object, e As EventArgs) Handles btnDPORecallSettings.Click
+
+        LoadDPOptions()
+
+    End Sub
+
+    Private Sub btnDPORememberSettings_Click(sender As Object, e As EventArgs) Handles btnDPORememberSettings.Click
+        SessionSettings.DPO_DPOUseCustomSettings = True
+        SessionSettings.DPO_chkDPOMainPost = chkDPOMainPost.Checked
+        SessionSettings.DPO_chkDPOThreadCreation = chkDPOThreadCreation.Checked
+        SessionSettings.DPO_chkDPOIncludeCoverImage = chkDPOIncludeCoverImage.Checked
+        SessionSettings.DPO_chkDPOFullDescription = chkDPOFullDescription.Checked
+        SessionSettings.DPO_chkDPOFilesWithDescription = chkDPOFilesWithDescription.Checked
+        SessionSettings.DPO_chkDPOFilesAlone = chkDPOFilesAlone.Checked
+        SessionSettings.DPO_chkDPOAltRestrictions = chkDPOAltRestrictions.Checked
+        SessionSettings.DPO_chkDPOWeatherInfo = chkDPOWeatherInfo.Checked
+        SessionSettings.DPO_chkDPOWeatherChart = chkDPOWeatherChart.Checked
+        SessionSettings.DPO_chkDPOWaypoints = chkDPOWaypoints.Checked
+        SessionSettings.DPO_chkDPOAddOns = chkDPOAddOns.Checked
+        SessionSettings.DPO_chkDPOResultsInvitation = chkDPOResultsInvitation.Checked
+        SessionSettings.DPO_chkDPOFeaturedOnGroupFlight = chkDPOFeaturedOnGroupFlight.Checked
     End Sub
 
     Private Sub chkDPOFilesWithDescription_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOFilesWithDescription.CheckedChanged
@@ -2318,12 +2416,31 @@ Public Class Main
         chkDPOResultsInvitation.Checked = True
         chkDPOFeaturedOnGroupFlight.Checked = True
 
+        CheckWhichOptionsCanBeEnabled()
+
     End Sub
 
     Private Sub btnStartTaskPost_Click(sender As Object, e As EventArgs) Handles btnStartTaskPost.Click
 
-        Dim enforceTaskLibrary As Boolean = False
+        Dim enforceTaskLibrary As Boolean = True
         Dim autoContinue As Boolean = True
+
+        If Not ValidPostingRequirements() Then
+            Exit Sub
+        End If
+
+        If Not PostTaskInLibrary(autoContinue) Then
+            Exit Sub
+        End If
+
+    End Sub
+
+#End Region
+
+#Region "Discord - Flight Plan Subs & Functions"
+
+    Private Function ValidPostingRequirements(Optional fromGroupOnly As Boolean = False) As Boolean
+
         Dim dlgResult As DialogResult
 
         Do While _sessionModified
@@ -2332,9 +2449,9 @@ Public Class Main
             End Using
             Select Case dlgResult
                 Case DialogResult.OK
-                    btnSaveConfig_Click(Nothing, e)
+                    btnSaveConfig_Click(Nothing, New EventArgs)
                 Case DialogResult.Cancel
-                    Exit Sub
+                    Return False
             End Select
         Loop
 
@@ -2348,36 +2465,199 @@ Public Class Main
                 Case DialogResult.No
                     chkDPOExpertMode.Checked = False
                 Case DialogResult.Cancel
-                    Exit Sub
+                    Return False
             End Select
         End If
 
-        BuildFPResults()
-
-        If HighlightExpectedFields(True) Then
-            Return
+        If Not fromGroupOnly Then
+            BuildFPResults()
+            If HighlightExpectedFields(True) Then
+                Return False
+            End If
         End If
+
+        Return True
+
+    End Function
+
+    Private Function PostTaskInGroupEventPartOne(autoContinue As Boolean) As Boolean
+
+        'Main post
+        If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
+            autoContinue = FlightPlanMainInfoCopy(True)
+        End If
+        If Not autoContinue Then Return False
+
+        'Full Description
+        autoContinue = PostTaskFullDescription(autoContinue, chkDGPOFullDescription, True)
+        If Not autoContinue Then Return False
+
+        Return True
+
+    End Function
+
+    Private Function PostTaskInGroupEventPartTwo(autoContinue As Boolean) As Boolean
+
+        'Other task options after files
+        Dim altRestrictions As String = String.Empty
+        If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked Then
+            altRestrictions = txtAltRestrictions.Text.Trim
+        End If
+        If altRestrictions.Length > 0 Then
+            altRestrictions = $"{altRestrictions}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim completeWeather As String = String.Empty
+        If chkDGPOWeatherInfo.Enabled AndAlso chkDGPOWeatherInfo.Checked Then
+            completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
+        End If
+        If completeWeather.Length > 0 Then
+            completeWeather = $"{completeWeather}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim waypoints As String = String.Empty
+        If chkDGPOWaypoints.Enabled AndAlso chkDGPOWaypoints.Checked Then
+            waypoints = txtWaypointsDetails.Text.Trim
+        End If
+        If waypoints.Length > 0 Then
+            waypoints = $"{waypoints}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim addOns As String = String.Empty
+        If chkDGPOAddOns.Enabled AndAlso chkDGPOAddOns.Checked Then
+            addOns = txtAddOnsDetails.Text.Trim
+        End If
+        If addOns.Length > 0 Then
+            addOns = $"{addOns}{Environment.NewLine}{Environment.NewLine}"
+        End If
+
+        Dim msg As String = String.Empty
+        'If the weather chart is included, do Restrictions and Weather together then chart, then rest of details together.
+        'If weather chart is not included, do everything together.
+        If chkDGPOWeatherChart.Enabled AndAlso chkDGPOWeatherChart.Checked Then
+            msg = $"{altRestrictions}{completeWeather}"
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
+                                "Creating altitude restrictions and weather details post in the thread.",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+            If Not autoContinue Then
+                Return False
+            End If
+            'Weather Chart
+            Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
+            autoContinue = CopyContent.ShowContent(Me,
+                                "Weather chart",
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the group event's thread.",
+                                "Creating weather chart post in the thread.",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked,
+                                True,
+                                numWaitSecondsForFiles.Value / 2 * 1000,
+                                chartImage)
+            If Not autoContinue Then
+                Return False
+            End If
+        End If
+
+        If addOns.Trim.Length > 0 Then
+            'There are add-ons, we must post them without the rest so the embeds are created right under
+            If msg.Trim.Length = 0 Then
+                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
+            Else
+                msg = $"{waypoints}{addOns}"
+            End If
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
+                            "Creating remaining details up to add-ons to post in the thread.",
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
+            If Not autoContinue Then
+                Return False
+            End If
+            msg = String.Empty
+        Else
+            'No add-ons, we can post everything remaining all at once
+            If msg.Trim.Length = 0 Then
+                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
+            Else
+                msg = $"{waypoints}{addOns}"
+            End If
+        End If
+
+        'Remaining details
+        If msg.Trim.Length > 0 Then
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
+                            "Creating all remaining details post in the thread.",
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
+        End If
+        If Not autoContinue Then
+            Return False
+        End If
+
+        'Event relevant task details
+        If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
+            msg = BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
+                                                    addOns.Length = 0,
+                                                    completeWeather.Length = 0,
+                                                    Not (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked))
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                "Paste the relevant task details for the group flight event.",
+                                "Pasting relevant task details",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+        End If
+
+        If Not autoContinue Then Return False
+
+        'Event Logistics
+        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
+            msg = GroupFlightEventThreadLogistics()
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                "Paste the message relative to event logistics into the thread and post it.",
+                                "Pasting event logistics",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+        End If
+
+        Return True
+
+    End Function
+
+    Private Function PostTaskInLibrary(autoContinue As Boolean, Optional enforceTaskLibrary As Boolean = True) As Boolean
 
         'Task Main Post
         If chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
             autoContinue = FlightPlanMainInfoCopy()
         End If
         If Not autoContinue Then
-            Exit Sub
+            Return False
         End If
 
         'Are we enforcing the posting on the Task Library only?
         If txtDiscordTaskID.Text = String.Empty Then
             If enforceTaskLibrary Then
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, "Task ID is missing - You must post the task to the Task Library!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show(Me, "Task ID is missing - You must post the task to the Task Library!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Using
-                Exit Sub
+                Return False
             Else
                 Using New Centered_MessageBox(Me)
                     If MessageBox.Show(Me, "Task ID is missing - Are you sure you want to proceed?", "Task ID missing", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     Else
-                        Exit Sub
+                        Return False
                     End If
                 End Using
             End If
@@ -2388,7 +2668,15 @@ Public Class Main
             autoContinue = CreateTaskThread()
         End If
         If Not autoContinue Then
-            Exit Sub
+            Return False
+        End If
+
+        'Do we have both IDs before we can continue?
+        If lblThread1stMsgIDNotAcquired.Visible Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "ID of the task thread or first message in the thread is missing - You must post the task to the Task Library!", "Thread ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
         End If
 
         'Cover Image
@@ -2396,15 +2684,12 @@ Public Class Main
             autoContinue = CoverImage()
         End If
         If Not autoContinue Then
-            Exit Sub
+            Return False
         End If
 
         'Full Description
-        If chkDPOFullDescription.Enabled AndAlso chkDPOFullDescription.Checked Then
-            autoContinue = FullDescriptionCopy()
-        End If
-        If Not autoContinue Then
-            Exit Sub
+        If Not PostTaskFullDescription(autoContinue, chkDPOFullDescription, False) Then
+            Return False
         End If
 
         'Files
@@ -2413,13 +2698,8 @@ Public Class Main
             If autoContinue Then
                 'Files text (description or simple Files heading)
                 autoContinue = FilesTextCopy(chkDPOFilesWithDescription.Checked)
-                If autoContinue Then
-                    GetTaskThreadFirstPostID()
-                Else
-                    Exit Sub
-                End If
             Else
-                Exit Sub
+                Return False
             End If
         End If
 
@@ -2484,7 +2764,7 @@ Public Class Main
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked)
             If Not autoContinue Then
-                Exit Sub
+                Return False
             End If
             'Weather Chart
             Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
@@ -2498,7 +2778,7 @@ Public Class Main
                                 numWaitSecondsForFiles.Value / 2 * 1000,
                                 chartImage)
             If Not autoContinue Then
-                Exit Sub
+                Return False
             End If
         End If
 
@@ -2517,7 +2797,7 @@ Public Class Main
                             New List(Of String) From {"^v"},
                             chkDPOExpertMode.Checked)
             If Not autoContinue Then
-                Exit Sub
+                Return False
             End If
             msg = $"{invitation}{taskFeatured}"
         Else
@@ -2540,14 +2820,143 @@ Public Class Main
                             chkDPOExpertMode.Checked)
         End If
         If Not autoContinue Then
-            Exit Sub
+            Return False
         End If
+
+        Return True
+
+    End Function
+
+    Private Function PostTaskFullDescription(autoContinue As Boolean, checkOptionFullDescription As Windows.Forms.CheckBox, fromGroup As Boolean) As Boolean
+
+        If checkOptionFullDescription.Enabled AndAlso checkOptionFullDescription.Checked Then
+            autoContinue = FullDescriptionCopy(fromGroup)
+        End If
+        If Not autoContinue Then
+            Return False
+        End If
+
+        Return True
+
+    End Function
+
+    Private Sub SetWarningIconOnPostOptions()
+
+        Dim listOfControlsRemove As New List(Of Windows.Forms.CheckBox)
+        Dim listOfControlsAdd As New List(Of Windows.Forms.CheckBox)
+
+        If lblTaskLibraryIDAcquired.Visible Then
+            listOfControlsRemove.Add(chkDPOThreadCreation)
+            listOfControlsRemove.Add(chkDPOIncludeCoverImage)
+            listOfControlsRemove.Add(chkDPOFullDescription)
+            If lblThread1stMsgIDAcquired.Visible Then
+                'Task
+                listOfControlsRemove.Add(chkDPOFilesWithDescription)
+                listOfControlsRemove.Add(chkDPOFilesAlone)
+                listOfControlsRemove.Add(chkDPOAltRestrictions)
+                listOfControlsRemove.Add(chkDPOWeatherInfo)
+                listOfControlsRemove.Add(chkDPOWeatherChart)
+                listOfControlsRemove.Add(chkDPOWaypoints)
+                listOfControlsRemove.Add(chkDPOAddOns)
+                listOfControlsRemove.Add(chkDPOResultsInvitation)
+                listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
+                'Group
+                listOfControlsRemove.Add(chkDGPOMainPost)
+                listOfControlsRemove.Add(chkDGPOFullDescription)
+                listOfControlsRemove.Add(chkDGPOFilesWithFullLegend)
+                listOfControlsRemove.Add(chkDGPODPHXOnly)
+                listOfControlsRemove.Add(chkDGPOFilesWithoutLegend)
+                listOfControlsRemove.Add(chkDGPOAltRestrictions)
+                listOfControlsRemove.Add(chkDGPOWeatherInfo)
+                listOfControlsRemove.Add(chkDGPOWeatherChart)
+                listOfControlsRemove.Add(chkDGPOWaypoints)
+                listOfControlsRemove.Add(chkDGPOAddOns)
+                listOfControlsRemove.Add(chkDGPORelevantTaskDetails)
+                listOfControlsRemove.Add(chkDGPOEventLogistics)
+            Else
+                'Task
+                listOfControlsAdd.Add(chkDPOFilesWithDescription)
+                listOfControlsAdd.Add(chkDPOFilesAlone)
+                listOfControlsAdd.Add(chkDPOAltRestrictions)
+                listOfControlsAdd.Add(chkDPOWeatherInfo)
+                listOfControlsAdd.Add(chkDPOWeatherChart)
+                listOfControlsAdd.Add(chkDPOWaypoints)
+                listOfControlsAdd.Add(chkDPOAddOns)
+                listOfControlsAdd.Add(chkDPOResultsInvitation)
+                listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
+                'Group
+                listOfControlsAdd.Add(chkDGPOMainPost)
+                listOfControlsAdd.Add(chkDGPOFullDescription)
+                listOfControlsAdd.Add(chkDGPOFilesWithFullLegend)
+                listOfControlsAdd.Add(chkDGPODPHXOnly)
+                listOfControlsAdd.Add(chkDGPOFilesWithoutLegend)
+                listOfControlsAdd.Add(chkDGPOAltRestrictions)
+                listOfControlsAdd.Add(chkDGPOWeatherInfo)
+                listOfControlsAdd.Add(chkDGPOWeatherChart)
+                listOfControlsAdd.Add(chkDGPOWaypoints)
+                listOfControlsAdd.Add(chkDGPOAddOns)
+                listOfControlsAdd.Add(chkDGPORelevantTaskDetails)
+                listOfControlsAdd.Add(chkDGPOEventLogistics)
+            End If
+        Else
+            'Task
+            listOfControlsAdd.Add(chkDPOThreadCreation)
+            listOfControlsAdd.Add(chkDPOIncludeCoverImage)
+            listOfControlsAdd.Add(chkDPOFullDescription)
+            listOfControlsAdd.Add(chkDPOFilesWithDescription)
+            listOfControlsAdd.Add(chkDPOFilesAlone)
+            listOfControlsAdd.Add(chkDPOAltRestrictions)
+            listOfControlsAdd.Add(chkDPOWeatherInfo)
+            listOfControlsAdd.Add(chkDPOWeatherChart)
+            listOfControlsAdd.Add(chkDPOWaypoints)
+            listOfControlsAdd.Add(chkDPOAddOns)
+            listOfControlsAdd.Add(chkDPOResultsInvitation)
+            listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
+            'Group
+            listOfControlsAdd.Add(chkDGPOMainPost)
+            listOfControlsAdd.Add(chkDGPOFullDescription)
+            listOfControlsAdd.Add(chkDGPOFilesWithFullLegend)
+            listOfControlsAdd.Add(chkDGPODPHXOnly)
+            listOfControlsAdd.Add(chkDGPOFilesWithoutLegend)
+            listOfControlsAdd.Add(chkDGPOAltRestrictions)
+            listOfControlsAdd.Add(chkDGPOWeatherInfo)
+            listOfControlsAdd.Add(chkDGPOWeatherChart)
+            listOfControlsAdd.Add(chkDGPOWaypoints)
+            listOfControlsAdd.Add(chkDGPOAddOns)
+            listOfControlsAdd.Add(chkDGPORelevantTaskDetails)
+            listOfControlsAdd.Add(chkDGPOEventLogistics)
+        End If
+
+        RemoveWarningFromCheckBox(listOfControlsRemove)
+        AddWarningFromCheckBox(listOfControlsAdd)
 
     End Sub
 
-#End Region
+    Private Sub RemoveWarningFromCheckBox(optionCheckBoxes As List(Of Windows.Forms.CheckBox))
 
-#Region "Discord - Flight Plan Subs & Functions"
+        Dim warningIcon As String = "⚠️"
+
+        For Each optionCheckBox As Windows.Forms.CheckBox In optionCheckBoxes
+            If optionCheckBox.Text.StartsWith(warningIcon) Then
+                optionCheckBox.Text = optionCheckBox.Text.Substring(2, optionCheckBox.Text.Length - 2).Trim
+                optionCheckBox.ForeColor = Me.ForeColor
+            End If
+        Next
+
+    End Sub
+
+    Private Sub AddWarningFromCheckBox(optionCheckBoxes As List(Of Windows.Forms.CheckBox))
+
+        Dim warningIcon As String = "⚠️"
+
+        For Each optionCheckBox As Windows.Forms.CheckBox In optionCheckBoxes
+            If Not optionCheckBox.Text.StartsWith(warningIcon) Then
+                optionCheckBox.Text = $"{warningIcon} {optionCheckBox.Text}"
+                optionCheckBox.ForeColor = lblTaskLibraryIDNotAcquired.ForeColor
+            End If
+        Next
+
+    End Sub
 
     Private Sub CheckWhichOptionsCanBeEnabled()
 
@@ -2580,36 +2989,36 @@ Public Class Main
         If txtAltRestrictions.Text.Trim.Length = 0 Then
             chkDPOAltRestrictions.Enabled = False
         Else
-            chkDPOAltRestrictions.Enabled = True
+            chkDPOAltRestrictions.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtWeatherFile.Text.Trim.Length + txtWeatherSummary.Text.Trim.Length = 0 Then
             chkDPOWeatherInfo.Enabled = False
         Else
-            chkDPOWeatherInfo.Enabled = True
+            chkDPOWeatherInfo.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtWeatherFile.Text.Trim.Length = 0 Then
             chkDPOWeatherChart.Enabled = False
         Else
-            chkDPOWeatherChart.Enabled = True
+            chkDPOWeatherChart.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtAddOnsDetails.Text.Trim.Length = 0 Then
             chkDPOAddOns.Enabled = False
         Else
-            chkDPOAddOns.Enabled = True
+            chkDPOAddOns.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtDiscordTaskID.Text.Trim = String.Empty Then
             chkDPOResultsInvitation.Enabled = False
         Else
-            chkDPOResultsInvitation.Enabled = True
+            chkDPOResultsInvitation.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If _ClubPreset IsNot Nothing AndAlso
             txtDiscordEventShareURL.Text.Trim.Length + txtGroupEventPostURL.Text.Trim.Length > 0 Then
-            chkDPOFeaturedOnGroupFlight.Enabled = True
+            chkDPOFeaturedOnGroupFlight.Enabled = True AndAlso grbTaskInfo.Enabled
         Else
             chkDPOFeaturedOnGroupFlight.Enabled = False
         End If
@@ -2621,13 +3030,28 @@ Public Class Main
             chkDGPOTeaser.Checked = False
             chkDGPOTeaser.Enabled = False
         End If
-        chkDGPOFilesWithoutLegend.Enabled = grbTaskInfo.Enabled
-        chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
+        chkDGPOFilesWithoutLegend.Enabled = chkDPOFilesAlone.Enabled
+        chkDGPOFilesWithFullLegend.Enabled = chkDPOFilesWithDescription.Enabled
+        chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
+        chkDGPOFullDescription.Enabled = chkDPOFullDescription.Enabled
+        chkDGPOAltRestrictions.Enabled = chkDPOAltRestrictions.Enabled
+        chkDGPOWeatherInfo.Enabled = chkDPOWeatherInfo.Enabled
+        chkDGPOWeatherChart.Enabled = chkDPOWeatherChart.Enabled
+        chkDGPOAddOns.Enabled = chkDPOAddOns.Enabled
+        chkDGPOWaypoints.Enabled = chkDPOWaypoints.Enabled
+
         chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
 
-        chkDGPODPHXOnly.Enabled = chkDGPOFilesWithoutLegend.Checked Or chkDGPOFilesWithFullLegend.Checked
+        chkDGPODPHXOnly.Enabled = (chkDGPOFilesWithoutLegend.Checked Or chkDGPOFilesWithFullLegend.Checked)
 
         If Not chkDGPOTeaser.Checked AndAlso
+           Not chkDGPOMainPost.Checked AndAlso
+           Not chkDGPOFullDescription.Checked AndAlso
+           Not chkDGPOAltRestrictions.Checked AndAlso
+           Not chkDGPOWeatherInfo.Checked AndAlso
+           Not chkDGPOWeatherChart.Checked AndAlso
+           Not chkDGPOAddOns.Checked AndAlso
+           Not chkDGPOWaypoints.Checked AndAlso
            Not chkDGPOFilesWithFullLegend.Checked AndAlso
            Not chkDGPOFilesWithoutLegend.Checked AndAlso
            Not chkDGPORelevantTaskDetails.Checked AndAlso
@@ -2637,32 +3061,43 @@ Public Class Main
             chkDGPOThreadCreation.Enabled = True
         End If
 
+        SetWarningIconOnPostOptions()
+
     End Sub
 
-    Private Function FlightPlanMainInfoCopy() As Boolean
+    Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
+        Dim origin As String = String.Empty
+        Dim titleMsg As String = String.Empty
 
-        autoContinue = MsgBoxWithPicture.ShowContent(Me,
+        If Not fromGroup Then
+            autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "StartTaskWorkflow.gif",
                                                      "Please open the Discord app and position your cursor as shown below",
                                                      "Once your cursor is in the right field, you can click OK and start posting.",
                                                      "Instructions to read before starting the post!")
 
-        If Not autoContinue Then
-            Return autoContinue
+            If Not autoContinue Then
+                Return autoContinue
+            End If
+            origin = "You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY."
+            titleMsg = "Creating main FP post"
+        Else
+            origin = "You can now post the main flight plan message under the group event's thread."
+            titleMsg = "Creating FP post for group"
         End If
 
         Clipboard.SetText(txtFPResults.Text)
 
         autoContinue = CopyContent.ShowContent(Me,
                             txtFPResults.Text,
-                            $"You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY.{Environment.NewLine}Skip (Ok) if already done.",
-                            "Creating main FP post",
+                            $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
+                            titleMsg,
                             New List(Of String) From {"^v"},
                             chkDPOExpertMode.Checked)
 
-        If Not autoContinue Then
+        If Not autoContinue OrElse fromGroup Then
             Return autoContinue
         End If
 
@@ -2701,7 +3136,7 @@ Public Class Main
                 End If
                 If Not autoContinue Then
                     Using New Centered_MessageBox(Me)
-                        MessageBox.Show(Me, $"Task ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}{Environment.NewLine}If you still want to post elsewhere, you can deselect ""Main post"" and resume the workflow.", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show(Me, $"Task ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
                 End If
             Loop
@@ -2718,7 +3153,7 @@ Public Class Main
         End If
 
         If _taskThreadFirstPostID = String.Empty Then
-            Dim message As String = "Please get the link to the first message from the task thread in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim message As String = "Please get the link to the anchor message from the task thread in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As WaitingForURLForm
             Dim answer As DialogResult
             Dim validTaskThreadFirstPostIDOrCancel As Boolean = False
@@ -2733,7 +3168,6 @@ Public Class Main
                 If answer = DialogResult.OK Then
                     Dim threadFirstPostID As String
                     threadFirstPostID = Clipboard.GetText
-                    'TODO: The extraction must be to the message in the thread
                     _taskThreadFirstPostID = SupportingFeatures.ExtractMessageIDFromDiscordURL(threadFirstPostID, False, txtDiscordTaskID.Text)
                     If _taskThreadFirstPostID.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
@@ -2750,11 +3184,20 @@ Public Class Main
                     validTaskThreadFirstPostIDOrCancel = True
                     Using New Centered_MessageBox(Me)
                         _taskThreadFirstPostID = txtDiscordTaskID.Text
-                        MessageBox.Show(Me, $"First thread message ID is missing - Redirection will be done directly to the thread instead!", "First thread message ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show(Me, $"Thread anchor message ID is missing - Redirection will be done directly to the thread instead!", "Thread anchor message ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
                 End If
             Loop
         End If
+
+        If _taskThreadFirstPostID = String.Empty Then
+            lblThread1stMsgIDNotAcquired.Visible = True
+            lblThread1stMsgIDAcquired.Visible = False
+        Else
+            lblThread1stMsgIDAcquired.Visible = True
+            lblThread1stMsgIDNotAcquired.Visible = False
+        End If
+        CheckWhichOptionsCanBeEnabled()
 
     End Sub
 
@@ -2771,6 +3214,25 @@ Public Class Main
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
                                                      "Instructions for the creation of the task's thread!")
 
+        If autoContinue Then
+            Dim msg As String = $"# 🧵 Task Details Thread{Environment.NewLine}Refer to this thread for comprehensive information, resources, and updates related to this task. This first message serves as your anchor point for all details in this thread."
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread anchor as the very first message in the thread.",
+                                "Creating thread anchor post.",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+
+            If autoContinue Then
+                _taskThreadFirstPostID = String.Empty
+                lblThread1stMsgIDNotAcquired.Visible = True
+                lblThread1stMsgIDAcquired.Visible = False
+                GetTaskThreadFirstPostID()
+            End If
+
+        End If
+
         Return autoContinue
 
     End Function
@@ -2780,7 +3242,7 @@ Public Class Main
         Dim autoContinue As Boolean = True
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
-            Dim allFiles As New Specialized.StringCollection
+            Dim allFiles As New StringCollection
             If File.Exists(cboCoverImage.SelectedItem) Then
                 allFiles.Add(cboCoverImage.SelectedItem)
                 Clipboard.SetFileDropList(allFiles)
@@ -2793,9 +3255,6 @@ Public Class Main
                                     postAfterPasting,
                                     If(postAfterPasting, numWaitSecondsForFiles.Value / 2 * 1000, 0),
                                     Drawing.Image.FromFile(allFiles(0)))
-                If autoContinue Then
-                    GetTaskThreadFirstPostID()
-                End If
             Else
                 autoContinue = True
             End If
@@ -2807,20 +3266,28 @@ Public Class Main
 
     End Function
 
-    Private Function FullDescriptionCopy() As Boolean
+    Private Function FullDescriptionCopy(fromGroup As Boolean) As Boolean
 
         Dim autoContinue As Boolean = True
+
+        Dim origin As String
+        If fromGroup Then
+            origin = "group event"
+        Else
+            origin = "task"
+        End If
 
         Clipboard.SetText(txtFullDescriptionResults.Text.Trim)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFullDescriptionResults.Text.Trim,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the full description as the next message in the task's thread.",
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the full description as the next message in the {origin}'s thread.",
                                 "Creating full description post in the thread.",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked)
-        If autoContinue Then
-            GetTaskThreadFirstPostID()
+        If fromGroup Then
+            Return autoContinue
         End If
+
         Return autoContinue
 
     End Function
@@ -3024,6 +3491,35 @@ Public Class Main
 
 #Region "Discord - Group Event event handlers"
 
+    Private Sub btnDGPORecallSettings_Click(sender As Object, e As EventArgs) Handles btnDGPORecallSettings.Click
+
+        LoadDGPOptions()
+
+    End Sub
+
+    Private Sub btnDGPORememberSettings_Click(sender As Object, e As EventArgs) Handles btnDGPORememberSettings.Click
+
+        SessionSettings.DPO_DGPOUseCustomSettings = True
+        SessionSettings.DPO_chkDGPOCoverImage = chkDGPOCoverImage.Checked
+        SessionSettings.DPO_chkDGPOMainGroupPost = chkDGPOMainGroupPost.Checked
+        SessionSettings.DPO_chkDGPOThreadCreation = chkDGPOThreadCreation.Checked
+        SessionSettings.DPO_chkDGPOTeaser = chkDGPOTeaser.Checked
+        SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOFilesWithFullLegend.Checked
+        SessionSettings.DPO_chkDGPOFilesWithoutLegend = chkDGPOFilesWithoutLegend.Checked
+        SessionSettings.DPO_chkDGPODPHXOnly = chkDGPODPHXOnly.Checked
+        SessionSettings.DPO_chkDGPOMainPost = chkDGPOMainPost.Checked
+        SessionSettings.DPO_chkDGPOFullDescription = chkDGPOFullDescription.Checked
+        SessionSettings.DPO_chkDGPOAltRestrictions = chkDGPOAltRestrictions.Checked
+        SessionSettings.DPO_chkDGPOWeatherInfo = chkDGPOWeatherInfo.Checked
+        SessionSettings.DPO_chkDGPOWeatherChart = chkDGPOWeatherChart.Checked
+        SessionSettings.DPO_chkDGPOWaypoints = chkDGPOWaypoints.Checked
+        SessionSettings.DPO_chkDGPOAddOns = chkDGPOAddOns.Checked
+        SessionSettings.DPO_chkDGPORelevantTaskDetails = chkDGPORelevantTaskDetails.Checked
+        SessionSettings.DPO_chkDGPOEventLogistics = chkDGPOEventLogistics.Checked
+
+    End Sub
+
+
     Private Sub grpDiscordGroupFlight_EnabledChanged(sender As Object, e As EventArgs) Handles grpDiscordGroupFlight.EnabledChanged
         btnTaskFeaturedOnGroupFlight.Enabled = grpDiscordGroupFlight.Enabled
     End Sub
@@ -3036,8 +3532,18 @@ Public Class Main
         chkDGPOTeaser.Checked = False
         chkDGPOFilesWithFullLegend.Checked = True
         chkDGPOFilesWithoutLegend.Checked = False
+
+        chkDGPOMainPost.Checked = False
+        chkDGPOFullDescription.Checked = False
+        chkDGPOAltRestrictions.Checked = False
+        chkDGPOWeatherInfo.Checked = False
+        chkDGPOWeatherChart.Checked = False
+        chkDGPOWaypoints.Checked = False
+        chkDGPOAddOns.Checked = False
+
         chkDGPORelevantTaskDetails.Checked = True
         chkDGPOEventLogistics.Checked = True
+
         CheckWhichOptionsCanBeEnabled()
 
     End Sub
@@ -3062,88 +3568,14 @@ Public Class Main
     Private Sub btnStartGroupEventPost_Click(sender As Object, e As EventArgs) Handles btnStartGroupEventPost.Click
 
         Dim autoContinue As Boolean = True
-        Dim msg As String = String.Empty
-        Dim dlgResult As DialogResult
 
-        If chkDPOExpertMode.Checked Then
-            Using New Centered_MessageBox(Me)
-                dlgResult = MessageBox.Show(Me, $"Automatic progression is enabled!{Environment.NewLine}{Environment.NewLine}This is still an experimental feature, several post actions will happen in succession without the possibility to stop them.{Environment.NewLine}{Environment.NewLine}Do you want to keep it enabled?", "Automatic progression confirmation request", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-            End Using
-            Select Case dlgResult
-                Case DialogResult.Yes
-                    'Nothing to do
-                Case DialogResult.No
-                    chkDPOExpertMode.Checked = False
-                Case DialogResult.Cancel
-                    Exit Sub
-            End Select
+        If Not ValidPostingRequirements(True) Then
+            Exit Sub
         End If
 
-        'Cover
-        If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
-            autoContinue = CoverImage(False)
-        End If
-        If Not autoContinue Then Exit Sub
+        If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
 
-        'Group main post
-        If chkDGPOMainGroupPost.Enabled AndAlso chkDGPOMainGroupPost.Checked Then
-            autoContinue = GroupFlightEventInfoToClipboard(chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked)
-        End If
-        If Not autoContinue Then Exit Sub
-
-        'Thread
-        If chkDGPOThreadCreation.Enabled AndAlso chkDGPOThreadCreation.Checked Then
-            autoContinue = CreateGroupEventThread()
-        End If
-        If Not autoContinue Then Exit Sub
-
-        'Teaser
-        If chkDGPOTeaser.Enabled AndAlso chkDGPOTeaser.Checked Then
-            autoContinue = GroupFlightEventTeaser()
-        End If
-        If Not autoContinue Then Exit Sub
-
-        'Files
-        If (chkDGPOFilesWithFullLegend.Enabled AndAlso chkDGPOFilesWithFullLegend.Checked) OrElse (chkDGPOFilesWithoutLegend.Enabled AndAlso chkDGPOFilesWithoutLegend.Checked) Then
-            autoContinue = FilesCopy(True)
-            If autoContinue Then
-                'Files text (description or simple Files heading)
-                autoContinue = FilesTextCopy(chkDGPOFilesWithFullLegend.Checked, True)
-                If Not autoContinue Then
-                    Exit Sub
-                End If
-            Else
-                Exit Sub
-            End If
-        End If
-
-        If Not autoContinue Then Exit Sub
-
-        'Event relevant task details
-        If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
-            msg = BuildLightTaskDetailsForEventPost()
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the relevant task details for the group flight event.",
-                                "Pasting relevant task details",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
-        End If
-
-        If Not autoContinue Then Exit Sub
-
-        'Event Logistics
-        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
-            msg = GroupFlightEventThreadLogistics()
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the message relative to event logistics into the thread and post it.",
-                                "Pasting event logistics",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
-        End If
+        If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
 
     End Sub
 
@@ -3181,6 +3613,46 @@ Public Class Main
             _GuideCurrentStep += 1
             ShowGuide()
         End If
+
+    End Sub
+
+    Private Sub btnTaskAndGroupEventLinks_Click(sender As Object, e As EventArgs) Handles btnTaskAndGroupEventLinks.Click
+
+        Dim clubName As String = String.Empty
+
+        If Not _ClubPreset Is Nothing Then
+            clubName = $" {txtClubFullName.Text} "
+        End If
+
+        Dim sb As New StringBuilder
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+
+        sb.AppendLine("## :calendar: Group Flight")
+        sb.AppendLine($"Links and details are up for the{clubName}group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
+
+        'Task
+        sb.AppendLine()
+        sb.AppendLine($"Task thread link: [{txtTitle.Text}]({GetDiscordLinkToTaskThread()})")
+
+        'Group Event link
+        If txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
+            sb.AppendLine($"Group event link: [{txtClubFullName.Text} - {txtEventTitle.Text}]({txtGroupEventPostURL.Text})")
+        End If
+
+        'Discord Event link
+        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
+            sb.AppendLine()
+            sb.AppendLine($"Discord event link: {txtDiscordEventShareURL.Text}")
+        End If
+
+        Dim msg As String = sb.ToString
+        Clipboard.SetText(msg)
+        CopyContent.ShowContent(Me,
+                                msg,
+                                "You can now paste the content of the message to share links to the task and the group event.",
+                                "Sharing Discord Task and Group Event links",
+                                New List(Of String) From {"^v"})
 
     End Sub
 
@@ -3256,8 +3728,15 @@ Public Class Main
     Private Sub chkDGPOTeaser_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOTeaser.CheckedChanged
 
         If chkDGPOTeaser.Checked Then
+            chkDGPOMainPost.Checked = False
+            chkDGPOFullDescription.Checked = False
             chkDGPOFilesWithoutLegend.Checked = False
             chkDGPOFilesWithFullLegend.Checked = False
+            chkDGPOAltRestrictions.Checked = False
+            chkDGPOWeatherInfo.Checked = False
+            chkDGPOWeatherChart.Checked = False
+            chkDGPOWaypoints.Checked = False
+            chkDGPOAddOns.Checked = False
             chkDGPORelevantTaskDetails.Checked = False
             chkDGPOEventLogistics.Checked = False
         End If
@@ -3266,41 +3745,14 @@ Public Class Main
 
     End Sub
 
-    Private Sub chkDGPOFilesWithoutLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithoutLegend.CheckedChanged
+    Private Sub chkDGPOAll_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOEventLogistics.CheckedChanged,
+                                                                                    chkDGPORelevantTaskDetails.CheckedChanged,
+                                                                                    chkDGPOFilesWithFullLegend.CheckedChanged,
+                                                                                    chkDGPOFilesWithoutLegend.CheckedChanged,
+                                                                                    chkDGPOFullDescription.CheckedChanged,
+                                                                                    chkDGPOMainPost.CheckedChanged, chkDGPOWeatherInfo.CheckedChanged, chkDGPOWeatherChart.CheckedChanged, chkDGPOWaypoints.CheckedChanged, chkDGPOAltRestrictions.CheckedChanged, chkDGPOAddOns.CheckedChanged
 
-        If chkDGPOFilesWithoutLegend.Checked Then
-            chkDGPOTeaser.Checked = False
-            chkDGPOFilesWithFullLegend.Checked = False
-        End If
-
-        CheckWhichOptionsCanBeEnabled()
-
-    End Sub
-
-    Private Sub chkDGPOFilesWithFullLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithFullLegend.CheckedChanged
-
-        If chkDGPOFilesWithFullLegend.Checked Then
-            chkDGPOTeaser.Checked = False
-            chkDGPOFilesWithoutLegend.Checked = False
-        End If
-
-        CheckWhichOptionsCanBeEnabled()
-
-    End Sub
-
-    Private Sub chkDGPORelevantTaskDetails_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPORelevantTaskDetails.CheckedChanged
-
-        If chkDGPORelevantTaskDetails.Checked Then
-            chkDGPOTeaser.Checked = False
-        End If
-
-        CheckWhichOptionsCanBeEnabled()
-
-    End Sub
-
-    Private Sub chkDGPOEventLogistics_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOEventLogistics.CheckedChanged
-
-        If chkDGPOEventLogistics.Checked Then
+        If CType(sender, Windows.Forms.CheckBox).Checked Then
             chkDGPOTeaser.Checked = False
         End If
 
@@ -3311,6 +3763,81 @@ Public Class Main
 #End Region
 
 #Region "Discord - Group Event Subs & Functions"
+
+    Private Function FirstPartOfGroupPost(autoContinue As Boolean) As Boolean
+
+        'Cover
+        If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
+            autoContinue = CoverImage(False)
+        End If
+        If Not autoContinue Then Return False
+
+        'Group main post
+        If chkDGPOMainGroupPost.Enabled AndAlso chkDGPOMainGroupPost.Checked Then
+            autoContinue = GroupFlightEventInfoToClipboard(chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked)
+        End If
+        If Not autoContinue Then Return False
+
+        Return True
+
+    End Function
+
+    Private Function SecondPartOfGroupPost(autoContinue As Boolean) As Boolean
+
+        Dim msg As String = String.Empty
+
+        'Teaser
+        If chkDGPOTeaser.Enabled AndAlso chkDGPOTeaser.Checked Then
+            If chkDGPOThreadCreation.Enabled AndAlso chkDGPOThreadCreation.Checked Then
+                autoContinue = CreateGroupEventThread()
+                If Not autoContinue Then Return False
+            End If
+            autoContinue = GroupFlightEventTeaser()
+            Return autoContinue
+        End If
+
+        'We must have both Discord IDs for the task to continue
+        If lblThread1stMsgIDNotAcquired.Visible Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The task must be fully posted to the Task Library first before continuing.", "Task not fully posted to library", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            End Using
+            Return False
+        End If
+
+        'Thread
+        If chkDGPOThreadCreation.Enabled AndAlso chkDGPOThreadCreation.Checked Then
+            autoContinue = CreateGroupEventThread()
+            If Not autoContinue Then Return False
+        End If
+
+        'Second part of Group Flight Event - task part one
+        autoContinue = PostTaskInGroupEventPartOne(autoContinue)
+        If Not autoContinue Then Return False
+
+        'Files
+        If (chkDGPOFilesWithFullLegend.Enabled AndAlso chkDGPOFilesWithFullLegend.Checked) OrElse (chkDGPOFilesWithoutLegend.Enabled AndAlso chkDGPOFilesWithoutLegend.Checked) Then
+            autoContinue = FilesCopy(True)
+            If autoContinue Then
+                'Files text (description or simple Files heading)
+                autoContinue = FilesTextCopy(chkDGPOFilesWithFullLegend.Checked, True)
+                If Not autoContinue Then
+                    Return False
+                End If
+            Else
+                Return False
+            End If
+        End If
+
+        If Not autoContinue Then Return False
+
+        'Second part of Group Flight Event - task part two
+        autoContinue = PostTaskInGroupEventPartTwo(autoContinue)
+        If Not autoContinue Then Return False
+
+
+        Return True
+
+    End Function
 
     Private Function GroupFlightEventInfoToClipboard(Optional withCover As Boolean = False) As Boolean
 
@@ -3439,17 +3966,17 @@ Public Class Main
         logisticInstructions.AppendLine("**Use this thread only to discuss logistics for this event!**")
         logisticInstructions.AppendLine("> Focus on:")
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
-        logisticInstructions.AppendLine("> - Providing feedback on the event's organization and coordination")
+        logisticInstructions.AppendLine("> - Providing feedback on the **event's** organization and coordination")
         If Not txtDiscordTaskID.Text = String.Empty Then
-            logisticInstructions.AppendLine("## :octagonal_sign: Reports, screenshots, and feedback on the task itself should go in the task's thread please!")
-            logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim}](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
+            logisticInstructions.AppendLine("## 🏁 For posting results, screenshots, and **task** feedback, head over to the task's thread, please!")
+            logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
         End If
 
         Return logisticInstructions.ToString()
 
     End Function
 
-    Private Function BuildLightTaskDetailsForEventPost() As String
+    Private Function BuildLightTaskDetailsForEventPost(altRestrictionsMsg As Boolean, addOnsMsg As Boolean, weatherMsg As Boolean, fltPlanMsg As Boolean) As String
 
         Dim dateFormat As String
         If chkIncludeYear.Checked Then
@@ -3462,27 +3989,29 @@ Public Class Main
 
         If Not txtDiscordTaskID.Text = String.Empty Then
             sb.AppendLine("## ❗ Final task details and reminders")
-            If txtAltRestrictions.Text.Trim.Length > 33 Then
+            If altRestrictionsMsg AndAlso txtAltRestrictions.Text.Trim.Length > 33 Then
                 sb.AppendLine("> ⚠️ There are altitude restrictions on this task")
 
             End If
-            If lstAllRecommendedAddOns.Items.Count > 0 Then
+            If addOnsMsg AndAlso lstAllRecommendedAddOns.Items.Count > 0 Then
                 sb.AppendLine("> 📀 There are recommended add-ons with this task")
             End If
-            sb.AppendLine($"> 🔗 [Link to complete task details, including full briefing, restrictions, weather and more]({GetDiscordLinkToTaskThread()})")
+            sb.AppendLine($"> 🔗 [Click here for the official task details in the Task Library]({GetDiscordLinkToTaskThread()})")
             sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
             sb.AppendLine("> ")
         End If
 
-        If Not txtFlightPlanFile.Text = String.Empty Then
+        If fltPlanMsg AndAlso Not txtFlightPlanFile.Text = String.Empty Then
             sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
         End If
-        If txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
+        If weatherMsg AndAlso txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
             sb.AppendLine($"> 🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
         End If
-        sb.AppendLine("> ")
 
-        sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        If fltPlanMsg Then
+            sb.AppendLine("> ")
+            sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        End If
 
         If chkUseSyncFly.Checked Then
             sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
@@ -4014,28 +4543,18 @@ Public Class Main
                 pnlWizardDiscord.Top = 220
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDPOMainPost, fromF1Key)
-            Case 42 'Seconds to wait for files
+            Case 42 'Reset all options to default
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 299
-                lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
-                SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
-            Case 43 'Reset all options to default
-                SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 557
-                lblDiscordGuideInstructions.Text = "Click this button to reset all the options above to their default values."
+                pnlWizardDiscord.Top = 601
+                lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDPOResetToDefault, fromF1Key)
-            Case 44 'Start Task Posting Workflow
+            Case 43 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 600
+                pnlWizardDiscord.Top = 644
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
                 SetFocusOnField(btnStartTaskPost, fromF1Key)
-            Case 45 'Automatic workflow progression
-                SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 635
-                lblDiscordGuideInstructions.Text = "When you enable this, the workflow will try to progress automatically step after step when possible."
-                SetFocusOnField(chkDPOExpertMode, fromF1Key)
 
-            Case 46 To 59 'Next section
+            Case 44 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -4132,46 +4651,69 @@ Public Class Main
             Case 80 'Discord Post Options
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 407
-                pnlWizardDiscord.Top = 307
+                pnlWizardDiscord.Left = 591
+                pnlWizardDiscord.Top = 557
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDGPOCoverImage, fromF1Key)
 
-            Case 81 'Reset all options
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Left = 79
-                pnlWizardDiscord.Top = 25
-                lblDiscordGuideInstructions.Text = "Click this button to reset all the options to their default values."
-                SetFocusOnField(btnDGPOResetToDefault, fromF1Key)
-
-            Case 82 'Start workflow
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Left = 79
-                pnlWizardDiscord.Top = 66
-                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
-                SetFocusOnField(btnStartGroupEventPost, fromF1Key)
-
-            Case 83 'Group flight URL
+            Case 81 'Group flight URL
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 352
+                pnlWizardDiscord.Left = 591
+                pnlWizardDiscord.Top = 624
                 lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
                 SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
 
-            Case 84 'Share the Discord Event on the task
+            Case 82 'Reset all options
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Left = 591
+                pnlWizardDiscord.Top = 664
+                lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
+                SetFocusOnField(btnDGPOResetToDefault, fromF1Key)
+
+            Case 83 'Start workflow
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Left = 591
+                pnlWizardDiscord.Top = 707
+                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
+                SetFocusOnField(btnStartGroupEventPost, fromF1Key)
+
+            Case 84 'Seconds to wait for files
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Left = 365
-                pnlWizardDiscord.Top = 5
+                pnlWizardDiscord.Top = 0
+                lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
+                SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
+
+            Case 85 'Automatic workflow progression
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 27
+                lblDiscordGuideInstructions.Text = "When you enable this, the workflow will try to progress automatically step after step when possible."
+                SetFocusOnField(chkDPOExpertMode, fromF1Key)
+
+            Case 86 'Start full workflow
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 105
+                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post both the task and group flight event full details."
+                SetFocusOnField(btnStartFullPostingWorkflow, fromF1Key)
+
+            Case 87 'Share the Discord Event on the task
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 183
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to share the group event for the task."
                 SetFocusOnField(btnTaskFeaturedOnGroupFlight, fromF1Key)
 
-            Case 85 'DPHX only
+            Case 88 'DPHX only
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Left = 365
-                pnlWizardDiscord.Top = 47
+                pnlWizardDiscord.Top = 225
                 lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with only the DPHX file and link to task post."
                 SetFocusOnField(btnEventDPHXAndLinkOnly, fromF1Key)
 
-            Case 86 'Discord Event
+            Case 89 'Task and Group Event Links
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 269
+                lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with both links to task and group event."
+                SetFocusOnField(btnTaskAndGroupEventLinks, fromF1Key)
+
+            Case 90 'Discord Event
                 Using New Centered_MessageBox(Me)
                     If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                         _GuideCurrentStep += 1
@@ -4181,55 +4723,55 @@ Public Class Main
                 End Using
                 ShowGuide()
 
-            Case 87 'Create Discord Event
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 432
+            Case 91 'Create Discord Event
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 345
                 lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 88 'Select voice channel for event
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 470
+            Case 92 'Select voice channel for event
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 377
                 lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 89 'Topic name
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 508
+            Case 93 'Topic name
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 410
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventTopicClipboard, fromF1Key)
 
-            Case 90 'Event date & time
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 540
+            Case 94 'Event date & time
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 445
                 lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 91 'Event description
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 579
+            Case 95 'Event description
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 476
                 lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
                 SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
-            Case 92 'Cover image
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 616
+            Case 96 'Cover image
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 509
                 lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 93 'Preview and publish
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 653
+            Case 97 'Preview and publish
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 541
                 lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 94 'Paste link to Discord Event
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Top = 699
+            Case 98 'Paste link to Discord Event
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 604
                 lblDiscordGuideInstructions.Text = "From the Discord Event published window, copy the URL to share to and invite participants and click ""Paste"" here."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 95 To 99
+            Case 99 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -4384,7 +4926,7 @@ Public Class Main
         pnlWizardEvent.Visible = False
         pnlWizardBriefing.Visible = False
         Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
-        pnlWizardDiscord.Left = 405
+        pnlWizardDiscord.Left = 90
         pnlWizardDiscord.Visible = True
         pnlDiscordArrow.Left = 667
         pnlDiscordArrow.Top = 0
@@ -4846,6 +5388,14 @@ Public Class Main
 
             FixForDropDownCombos()
 
+            If _taskThreadFirstPostID = String.Empty Then
+                lblThread1stMsgIDNotAcquired.Visible = True
+                lblThread1stMsgIDAcquired.Visible = False
+            Else
+                lblThread1stMsgIDAcquired.Visible = True
+                lblThread1stMsgIDNotAcquired.Visible = False
+            End If
+
             _sessionModified = False
 
         End If
@@ -4888,7 +5438,6 @@ Public Class Main
         End If
 
     End Sub
-
 
 #End Region
 

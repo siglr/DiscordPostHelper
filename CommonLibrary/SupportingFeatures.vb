@@ -25,6 +25,7 @@ Public Class SupportingFeatures
     Private Const SW_RESTORE As Integer = 9
     Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
+    Private Const MSFSSoaringToolsPrivateTestingID As String = "1067288937527246868"
 
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
@@ -1594,6 +1595,7 @@ Public Class SupportingFeatures
 
         ' Check if the inputURL starts with the expected base URL
         Dim baseURL As String = $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/"
+
         If inputURL.StartsWith(baseURL) Then
             ' Remove the base URL
             Dim remainingURL As String = inputURL.Substring(baseURL.Length)
@@ -1602,7 +1604,7 @@ Public Class SupportingFeatures
             Dim parts As String() = remainingURL.Split("/"c)
 
             ' Check if there are 1 or 2 parts
-            If parts.Length = 2 AndAlso parts(0) = MSFSSoaringToolsLibraryID Then
+            If parts.Length = 2 AndAlso (parts(0) = MSFSSoaringToolsLibraryID OrElse (Debugger.IsAttached AndAlso parts(0) = MSFSSoaringToolsPrivateTestingID)) Then
                 ' Two parts, the first is the library ID and the second is the message ID
                 Return parts(1)
             ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then

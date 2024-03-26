@@ -106,7 +106,9 @@
     <Compile Include="Settings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DPHXUnpackAndLoad.vb" />
+    <Compile Include="DPHXUnpackAndLoad.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DPHXUnpackAndLoad.Designer.vb">
       <DependentUpon>DPHXUnpackAndLoad.vb</DependentUpon>
       <SubType>Form</SubType>
