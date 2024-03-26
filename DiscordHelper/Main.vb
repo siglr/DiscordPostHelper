@@ -3557,11 +3557,10 @@ Public Class Main
 
     Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
 
-        'TODO: Possibly monitor the clipboard with a timer for the presence of a valid Discord Event URL
-
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
             txtDiscordEventShareURL.Text = Clipboard.GetText
         End If
+
     End Sub
 
 
