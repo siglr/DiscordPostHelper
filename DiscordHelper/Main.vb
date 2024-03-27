@@ -3215,7 +3215,7 @@ Public Class Main
                                                      "Instructions for the creation of the task's thread!")
 
         If autoContinue Then
-            Dim msg As String = $"# 🧵 Task Details Thread{Environment.NewLine}Refer to this thread for comprehensive information, resources, and updates related to this task. This first message serves as your anchor point for all details in this thread."
+            Dim msg As String = $"## 🧵 Task Details Thread{Environment.NewLine}Refer to this thread for comprehensive information, resources, and updates related to this task. This first message serves as your anchor point for all details in this thread."
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                                 msg,

@@ -205,13 +205,13 @@ Partial Class Main
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
-        Me.btnStartFullPostingWorkflow = New System.Windows.Forms.Button()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblDiscordGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlDiscordArrow = New System.Windows.Forms.Panel()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.btnStartFullPostingWorkflow = New System.Windows.Forms.Button()
         Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.btnDiscordSharedEventURL = New System.Windows.Forms.Button()
@@ -402,9 +402,9 @@ Partial Class Main
         Me.pnlEventDateTimeControls.SuspendLayout()
         Me.TimeStampContextualMenu.SuspendLayout()
         Me.tabDiscord.SuspendLayout()
-        Me.GroupBox5.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
         Me.grpDiscordEvent.SuspendLayout()
         Me.grpDiscordOthers.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
@@ -2736,29 +2736,6 @@ Partial Class Main
         Me.tabDiscord.Text = "Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
         '
-        'GroupBox5
-        '
-        Me.GroupBox5.Controls.Add(Me.btnStartFullPostingWorkflow)
-        Me.GroupBox5.Location = New System.Drawing.Point(841, 104)
-        Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(393, 72)
-        Me.GroupBox5.TabIndex = 3
-        Me.GroupBox5.TabStop = False
-        Me.GroupBox5.Text = "Full Task and Group Flight Event"
-        '
-        'btnStartFullPostingWorkflow
-        '
-        Me.btnStartFullPostingWorkflow.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartFullPostingWorkflow.Location = New System.Drawing.Point(6, 26)
-        Me.btnStartFullPostingWorkflow.Name = "btnStartFullPostingWorkflow"
-        Me.btnStartFullPostingWorkflow.Size = New System.Drawing.Size(381, 37)
-        Me.btnStartFullPostingWorkflow.TabIndex = 0
-        Me.btnStartFullPostingWorkflow.Tag = "86"
-        Me.btnStartFullPostingWorkflow.Text = "Start Full Workflow for Group Flight and Task"
-        Me.ToolTip1.SetToolTip(Me.btnStartFullPostingWorkflow, "Click this button to begin posting the entire details for the group flight and ta" &
-        "sk.")
-        Me.btnStartFullPostingWorkflow.UseVisualStyleBackColor = True
-        '
         'pnlWizardDiscord
         '
         Me.pnlWizardDiscord.BackColor = System.Drawing.Color.Gray
@@ -2813,6 +2790,29 @@ Partial Class Main
         Me.pnlDiscordArrow.Name = "pnlDiscordArrow"
         Me.pnlDiscordArrow.Size = New System.Drawing.Size(91, 89)
         Me.pnlDiscordArrow.TabIndex = 80
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.btnStartFullPostingWorkflow)
+        Me.GroupBox5.Location = New System.Drawing.Point(841, 104)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(393, 72)
+        Me.GroupBox5.TabIndex = 3
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "Full Task and Group Flight Event"
+        '
+        'btnStartFullPostingWorkflow
+        '
+        Me.btnStartFullPostingWorkflow.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnStartFullPostingWorkflow.Location = New System.Drawing.Point(6, 26)
+        Me.btnStartFullPostingWorkflow.Name = "btnStartFullPostingWorkflow"
+        Me.btnStartFullPostingWorkflow.Size = New System.Drawing.Size(381, 37)
+        Me.btnStartFullPostingWorkflow.TabIndex = 0
+        Me.btnStartFullPostingWorkflow.Tag = "86"
+        Me.btnStartFullPostingWorkflow.Text = "Start Full Workflow for Group Flight and Task"
+        Me.ToolTip1.SetToolTip(Me.btnStartFullPostingWorkflow, "Click this button to begin posting the entire details for the group flight and ta" &
+        "sk.")
+        Me.btnStartFullPostingWorkflow.UseVisualStyleBackColor = True
         '
         'grpDiscordEvent
         '
@@ -4821,9 +4821,9 @@ Partial Class Main
         Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
-        Me.GroupBox5.ResumeLayout(False)
         Me.pnlWizardDiscord.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
+        Me.GroupBox5.ResumeLayout(False)
         Me.grpDiscordEvent.ResumeLayout(False)
         Me.grpDiscordEvent.PerformLayout()
         Me.grpDiscordOthers.ResumeLayout(False)
