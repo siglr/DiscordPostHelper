@@ -3,16 +3,20 @@ Imports System.Xml
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class WeatherDetails
-    Private ReadOnly _MSLPressureInPa As Single
-    Private ReadOnly _MSLTempKelvin As Single
+    Public ReadOnly _MSLPressureInPa As Single
+    Public ReadOnly _MSLTempKelvin As Single
     Private ReadOnly _AerosolDensity As Single
-    Private ReadOnly _Precipitations As Single
+    Public ReadOnly _Precipitations As Single
     Private ReadOnly _PrecipitationType As String
-    Private ReadOnly _SnowCover As Single
+    Public ReadOnly _SnowCover As Single
     Private ReadOnly _ThunderstormIntensity As Single
+    Private ReadOnly _LastWindDirection As Single = 0
 
     Public ReadOnly CloudLayers As New List(Of CloudLayer)
     Public ReadOnly WindLayers As New List(Of WindLayer)
+    Public ReadOnly LowestWindLayerAlt As Integer
+    Public ReadOnly HighestWindLayerAlt As Integer
+    Public ReadOnly MultiDirections As Boolean = False
 
     Public Sub New(xmlWeatherXMLDoc As XmlDocument)
 
@@ -49,6 +53,14 @@ Public Class WeatherDetails
             If Me.WindLayers.Last.IsGround Then
                 blnHasGround = True
             End If
+            LowestWindLayerAlt = Math.Min(LowestWindLayerAlt, Me.WindLayers.Last.Altitude)
+            HighestWindLayerAlt = Math.Max(HighestWindLayerAlt, Me.WindLayers.Last.Altitude)
+            If Not MultiDirections Then
+                MultiDirections = (_LastWindDirection <> Me.WindLayers.Last.Angle)
+                If Not MultiDirections Then
+                    _LastWindDirection = Me.WindLayers.Last.Angle
+                End If
+            End If
         Next
 
         Me.WindLayers = Me.WindLayers.OrderBy(Function(x) x.Altitude).ToList()
@@ -64,23 +76,7 @@ Public Class WeatherDetails
 
     Public ReadOnly Property MSLTemperature(Optional prefUnits As PreferredUnits = Nothing, Optional forceF As Boolean = False, Optional forceC As Boolean = False) As String
         Get
-            If forceF Then
-                Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
-            End If
-            If forceC Then
-                Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(_MSLTempKelvin))
-            End If
-            If prefUnits Is Nothing OrElse prefUnits.Temperature = TemperatureUnits.Both Then
-                Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(_MSLTempKelvin), Conversions.KelvinToFarenheit(_MSLTempKelvin))
-            Else
-                Select Case prefUnits.Temperature
-                    Case TemperatureUnits.Celsius
-                        Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(_MSLTempKelvin))
-                    Case TemperatureUnits.Fahrenheit
-                        Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(_MSLTempKelvin))
-                End Select
-            End If
-            Return String.Empty
+            Return SupportingFeatures.MSLTemperature(_MSLTempKelvin, prefUnits, forceF, forceC)
         End Get
     End Property
 
@@ -105,23 +101,8 @@ Public Class WeatherDetails
                 notStdBaro = If(suppressNonStandardWarning, " ", If(useEmoji, " ⚠️ ", " * ")) & textForNonStandard
             End If
 
-            If forcehPa Then
-                Return String.Format("{0:N0} hPa{1}", _MSLPressureInPa / 100, notStdBaro)
-            End If
-            If forceinHg Then
-                Return String.Format("{0:F2} inHg{1}", Conversions.PaToInHg(_MSLPressureInPa), notStdBaro)
-            End If
-            If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
-                Return String.Format("{0:F2} inHg / {1:N0} hPa{2}", Conversions.PaToInHg(_MSLPressureInPa), _MSLPressureInPa / 100, notStdBaro)
-            Else
-                Select Case prefUnits.Barometric
-                    Case BarometricUnits.hPa
-                        Return String.Format("{0:N0} hPa{1}", _MSLPressureInPa / 100, notStdBaro)
-                    Case BarometricUnits.inHg
-                        Return String.Format("{0:F2} inHg{1}", Conversions.PaToInHg(_MSLPressureInPa), notStdBaro)
-                End Select
-            End If
-            Return String.Empty
+            Return $"{SupportingFeatures.GetMSLPressure(_MSLPressureInPa, prefUnits, forceinHg, forcehPa)}{notStdBaro}"
+
         End Get
     End Property
 
@@ -139,14 +120,7 @@ Public Class WeatherDetails
 
     Public ReadOnly Property SnowCover As String
         Get
-            Dim cover As String
-            If _SnowCover = 0 Then
-                cover = "0"
-            Else
-                cover = String.Format("{0:N0} inches / {1:N2} m", Conversions.MeterToInches(_SnowCover), _SnowCover)
-            End If
-
-            Return cover
+            Return SupportingFeatures.GetSnowCover(_SnowCover)
         End Get
     End Property
 

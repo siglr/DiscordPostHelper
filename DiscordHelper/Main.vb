@@ -235,6 +235,9 @@ Public Class Main
 
         BriefingControl1.FullReset()
 
+        lblThread1stMsgIDNotAcquired.Visible = True
+        lblThread1stMsgIDAcquired.Visible = False
+
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
         _WeatherDetails = Nothing
@@ -1099,9 +1102,9 @@ Public Class Main
             txtEventTitle.Text = txtTitle.Text
         End If
 
-        If sender Is txtShortDescription Then
-            txtEventDescription.Text = txtShortDescription.Text
-        End If
+        'If sender Is txtShortDescription Then
+        'txtEventDescription.Text = txtShortDescription.Text
+        'End If
 
         'BuildGroupFlightPost()
 
@@ -1132,6 +1135,12 @@ Public Class Main
         End If
 
         CheckAndSetEventAward()
+
+    End Sub
+
+    Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
+
+        WeatherPresetsBrowser.ShowDialog(Me)
 
     End Sub
 
@@ -4616,7 +4625,7 @@ Public Class Main
             Case 69 'Group flight description
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 470
-                lblEventGuideInstructions.Text = "If you would like to specify a different description for the group flight, you can do so now. Otherwise, this is the same as the task's short description."
+                lblEventGuideInstructions.Text = "If you would like to specify a description for the group flight, you can do so now."
                 SetFocusOnField(txtEventDescription, fromF1Key)
 
             Case 70 'SSC Award

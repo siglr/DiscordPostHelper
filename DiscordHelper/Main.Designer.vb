@@ -79,6 +79,7 @@ Partial Class Main
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.btnWeatherBrowser = New System.Windows.Forms.Button()
         Me.btnSyncTitles = New System.Windows.Forms.Button()
         Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeWave = New System.Windows.Forms.CheckBox()
@@ -1145,6 +1146,7 @@ Partial Class Main
         Me.grbTaskInfo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskInfo.Controls.Add(Me.btnWeatherBrowser)
         Me.grbTaskInfo.Controls.Add(Me.btnSyncTitles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeDynamic)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
@@ -1211,6 +1213,20 @@ Partial Class Main
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
+        'btnWeatherBrowser
+        '
+        Me.btnWeatherBrowser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWeatherBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnWeatherBrowser.Location = New System.Drawing.Point(635, 24)
+        Me.btnWeatherBrowser.Name = "btnWeatherBrowser"
+        Me.btnWeatherBrowser.Size = New System.Drawing.Size(88, 32)
+        Me.btnWeatherBrowser.TabIndex = 56
+        Me.btnWeatherBrowser.Tag = "22"
+        Me.btnWeatherBrowser.Text = "Browser"
+        Me.ToolTip1.SetToolTip(Me.btnWeatherBrowser, "Click this button to open the weather profile browser / manager.")
+        Me.btnWeatherBrowser.UseVisualStyleBackColor = True
+        Me.btnWeatherBrowser.Visible = False
+        '
         'btnSyncTitles
         '
         Me.btnSyncTitles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1235,7 +1251,7 @@ Partial Class Main
         Me.chkSoaringTypeDynamic.TabIndex = 28
         Me.chkSoaringTypeDynamic.Tag = "8"
         Me.chkSoaringTypeDynamic.Text = "D"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeDynamic, "Check if track involves dynamic soaring.")
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeDynamic, "Check if task involves dynamic soaring.")
         Me.chkSoaringTypeDynamic.UseVisualStyleBackColor = True
         '
         'chkSoaringTypeWave
@@ -1248,7 +1264,7 @@ Partial Class Main
         Me.chkSoaringTypeWave.TabIndex = 27
         Me.chkSoaringTypeWave.Tag = "8"
         Me.chkSoaringTypeWave.Text = "W"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeWave, "Check if track involves wave soaring.")
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeWave, "Check if task involves wave soaring.")
         Me.chkSoaringTypeWave.UseVisualStyleBackColor = True
         '
         'btnPasteUsernameCredits
@@ -1318,7 +1334,7 @@ Partial Class Main
         Me.chkSoaringTypeThermal.TabIndex = 26
         Me.chkSoaringTypeThermal.Tag = "8"
         Me.chkSoaringTypeThermal.Text = "T"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeThermal, "Check if track involves thermal soaring.")
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeThermal, "Check if task involves thermal soaring.")
         Me.chkSoaringTypeThermal.UseVisualStyleBackColor = True
         '
         'chkSoaringTypeRidge
@@ -1331,7 +1347,7 @@ Partial Class Main
         Me.chkSoaringTypeRidge.TabIndex = 25
         Me.chkSoaringTypeRidge.Tag = "8"
         Me.chkSoaringTypeRidge.Text = "R"
-        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeRidge, "Check if track involves ridge soaring.")
+        Me.ToolTip1.SetToolTip(Me.chkSoaringTypeRidge, "Check if task involves ridge soaring.")
         Me.chkSoaringTypeRidge.UseVisualStyleBackColor = True
         '
         'txtSoaringTypeExtraInfo
@@ -1544,7 +1560,7 @@ Partial Class Main
         Me.txtTitle.Size = New System.Drawing.Size(461, 32)
         Me.txtTitle.TabIndex = 4
         Me.txtTitle.Tag = "3"
-        Me.ToolTip1.SetToolTip(Me.txtTitle, "Track title - can come from the flight plan's title.")
+        Me.ToolTip1.SetToolTip(Me.txtTitle, "Task title - can come from the flight plan's title.")
         '
         'lblTitle
         '
@@ -2357,9 +2373,9 @@ Partial Class Main
         Me.Label32.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label32.Location = New System.Drawing.Point(7, 443)
         Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(109, 26)
+        Me.Label32.Size = New System.Drawing.Size(159, 26)
         Me.Label32.TabIndex = 32
-        Me.Label32.Text = "Description"
+        Me.Label32.Text = "Event Description"
         '
         'txtEventDescription
         '
@@ -2373,8 +2389,7 @@ Partial Class Main
         Me.txtEventDescription.Size = New System.Drawing.Size(1257, 139)
         Me.txtEventDescription.TabIndex = 33
         Me.txtEventDescription.Tag = "69"
-        Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the flight - comes from the flight plan tab if created in th" &
-        "e same session.")
+        Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the event")
         '
         'chkUseStart
         '
@@ -5261,4 +5276,5 @@ Partial Class Main
     Friend WithEvents GroupBox5 As GroupBox
     Friend WithEvents btnStartFullPostingWorkflow As Button
     Friend WithEvents btnTaskAndGroupEventLinks As Button
+    Friend WithEvents btnWeatherBrowser As Button
 End Class

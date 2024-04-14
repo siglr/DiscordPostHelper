@@ -18,6 +18,7 @@ Imports NAudio.Utils
 Imports System.Runtime.InteropServices
 Imports System.Security.AccessControl
 Imports System.Reflection.Emit
+Imports System.Drawing
 
 Public Class SupportingFeatures
 
@@ -675,7 +676,22 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function CleanupDPHXTempFolder(ByVal unpackFolder As String) As Boolean
+    Public Shared Function DeleteFolderAndFiles(ByVal folderToDelete As String) As Boolean
+
+        If Not CleanupDPHXTempFolder(folderToDelete) Then
+            Return False
+        End If
+
+        Try
+            Directory.Delete(folderToDelete)
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+
+    End Function
+
+    Public Shared Function CleanupDPHXTempFolder(ByVal unpackFolder As String) As Boolean
 
         Dim success As Boolean = True
 
@@ -1820,7 +1836,153 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Sub BuildCloudAndWindLayersDatagrids(_weatherDetails As WeatherDetails, windLayersDatagrid As DataGridView, cloudLayersDatagrid As DataGridView, specPrefUnits As PreferredUnits)
+
+        'Build wind layers grid
+        Dim dtWinds As New DataTable()
+        dtWinds.Columns.Add("#", GetType(Integer))
+        Select Case specPrefUnits.Altitude
+            Case AltitudeUnits.Both
+                dtWinds.Columns.Add("Altitude (f / m)", GetType(String))
+            Case AltitudeUnits.Metric
+                dtWinds.Columns.Add("Altitude (m)", GetType(String))
+            Case AltitudeUnits.Imperial
+                dtWinds.Columns.Add("Altitude (f)", GetType(String))
+        End Select
+        Select Case specPrefUnits.WindSpeed
+            Case WindSpeedUnits.Both
+                dtWinds.Columns.Add("Speed (kts / m/s)", GetType(String))
+            Case WindSpeedUnits.Knots
+                dtWinds.Columns.Add("Speed (kts)", GetType(String))
+            Case WindSpeedUnits.MeterPerSecond
+                dtWinds.Columns.Add("Speed (m/s)", GetType(String))
+        End Select
+        dtWinds.Columns.Add("Angle", GetType(String))
+        dtWinds.Columns.Add("Gust", GetType(String))
+        Dim seqWindL As Integer = 0
+        For Each windL As WindLayer In _weatherDetails.WindLayers
+            seqWindL += 1
+            dtWinds.Rows.Add(seqWindL, windL.AltitudeCorrectUnit(specPrefUnits), windL.SpeedCorrectUnit(specPrefUnits), windL.Angle.ToString, windL.GetGustText(specPrefUnits))
+        Next
+        windLayersDatagrid.DataSource = dtWinds
+        windLayersDatagrid.Font = New Font(windLayersDatagrid.Font.FontFamily, 12)
+        windLayersDatagrid.RowTemplate.Height = 28
+        windLayersDatagrid.RowHeadersVisible = False
+        windLayersDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        windLayersDatagrid.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+        windLayersDatagrid.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        windLayersDatagrid.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        windLayersDatagrid.Columns(3).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+
+        'Build cloud layers grid
+        Dim dtClouds As New DataTable()
+        dtClouds.Columns.Add("#", GetType(Integer))
+        Select Case specPrefUnits.Altitude
+            Case AltitudeUnits.Both
+                dtClouds.Columns.Add("Base (f / m)", GetType(String))
+                dtClouds.Columns.Add("Top (f / m)", GetType(String))
+            Case AltitudeUnits.Metric
+                dtClouds.Columns.Add("Base (m)", GetType(String))
+                dtClouds.Columns.Add("Top (m)", GetType(String))
+            Case AltitudeUnits.Imperial
+                dtClouds.Columns.Add("Base (f)", GetType(String))
+                dtClouds.Columns.Add("Top (f)", GetType(String))
+        End Select
+        dtClouds.Columns.Add("Coverage", GetType(String))
+        dtClouds.Columns.Add("Density", GetType(String))
+        dtClouds.Columns.Add("Scattering", GetType(String))
+        Dim seqCloudL As Integer = 0
+        For Each CloudL As CloudLayer In _weatherDetails.CloudLayers
+            seqCloudL += 1
+            dtClouds.Rows.Add(seqCloudL, CloudL.AltitudeBottomCorrectUnit(specPrefUnits), CloudL.AltitudeTopCorrectUnit(specPrefUnits), CloudL.CoverageForGrid, CloudL.DensityForGrid, CloudL.ScatteringForGrid)
+        Next
+        cloudLayersDatagrid.DataSource = dtClouds
+        cloudLayersDatagrid.Font = New Font(cloudLayersDatagrid.Font.FontFamily, 12)
+        cloudLayersDatagrid.RowTemplate.Height = 28
+        cloudLayersDatagrid.RowHeadersVisible = False
+        cloudLayersDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        cloudLayersDatagrid.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+        cloudLayersDatagrid.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        cloudLayersDatagrid.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        cloudLayersDatagrid.Columns(3).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        cloudLayersDatagrid.Columns(4).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+
+    End Sub
+
+    Public Shared Function GetMSLPressure(MSLPressureInPa As Single, Optional prefUnits As PreferredUnits = Nothing, Optional forceinHg As Boolean = False, Optional forcehPa As Boolean = False) As String
+
+        If forcehPa Then
+            Return String.Format("{0:N0} hPa", MSLPressureInPa / 100)
+        End If
+        If forceinHg Then
+            Return String.Format("{0:F2} inHg", Conversions.PaToInHg(MSLPressureInPa))
+        End If
+        If prefUnits Is Nothing OrElse prefUnits.Barometric = BarometricUnits.Both Then
+            Return String.Format("{0:F2} inHg / {1:N0} hPa", Conversions.PaToInHg(MSLPressureInPa), MSLPressureInPa / 100)
+        Else
+            Select Case prefUnits.Barometric
+                Case BarometricUnits.hPa
+                    Return String.Format("{0:N0} hPa", MSLPressureInPa / 100)
+                Case BarometricUnits.inHg
+                    Return String.Format("{0:F2} inHg", Conversions.PaToInHg(MSLPressureInPa))
+            End Select
+        End If
+        Return String.Empty
+
+    End Function
+
+    Public Shared Function MSLTemperature(MSLTempKelvin As Single, Optional prefUnits As PreferredUnits = Nothing, Optional forceF As Boolean = False, Optional forceC As Boolean = False) As String
+
+        If forceF Then
+            Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(MSLTempKelvin))
+        End If
+        If forceC Then
+            Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(MSLTempKelvin))
+        End If
+        If prefUnits Is Nothing OrElse prefUnits.Temperature = TemperatureUnits.Both Then
+            Return String.Format("{0:N0}°C / {1:N0}°F", Conversions.KelvinToCelsius(MSLTempKelvin), Conversions.KelvinToFarenheit(MSLTempKelvin))
+        Else
+            Select Case prefUnits.Temperature
+                Case TemperatureUnits.Celsius
+                    Return String.Format("{0:N0}°C", Conversions.KelvinToCelsius(MSLTempKelvin))
+                Case TemperatureUnits.Fahrenheit
+                    Return String.Format("{0:N0}°F", Conversions.KelvinToFarenheit(MSLTempKelvin))
+            End Select
+        End If
+        Return String.Empty
+    End Function
+
+    Public Shared Function GetSnowCover(SnowCover As Single)
+        Dim cover As String
+        If SnowCover = 0 Then
+            cover = "0"
+        Else
+            cover = String.Format("{0:N0} inches / {1:N2} m", Conversions.MeterToInches(SnowCover), SnowCover)
+        End If
+
+        Return cover
+
+    End Function
+
+    Public Shared Function IsValidFolderOrFileName(name As String) As Boolean
+        ' Check for null or empty string
+        If String.IsNullOrEmpty(name) Then Return False
+
+        ' Check if the name contains any invalid characters
+        Dim invalidChars = Path.GetInvalidFileNameChars()
+        If name.Any(Function(ch) invalidChars.Contains(ch)) Then Return False
+
+        ' Check for reserved names. Extend this list based on your requirements.
+        Dim reservedNames As String() = {"CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"}
+        Dim nameWithoutExtension As String = Path.GetFileNameWithoutExtension(name).ToUpperInvariant()
+        If reservedNames.Contains(nameWithoutExtension) Then Return False
+
+        ' If all checks passed, the name is valid
+        Return True
+    End Function
+
 End Class
+
 
 Public Class NativeMethods
     <DllImport("user32.dll")>

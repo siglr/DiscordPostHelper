@@ -107,7 +107,7 @@ Public Class DPHXUnpackAndLoad
 
         lblAllFilesStatus.Text = String.Empty
 
-        _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+        SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -135,7 +135,7 @@ Public Class DPHXUnpackAndLoad
             Dim nbrTries As Integer = 0
             Do Until nbrTries = 10
                 nbrTries += 1
-                If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
+                If SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
                     nbrTries = 10
                 Else
                     Me.Refresh()
@@ -358,7 +358,7 @@ Public Class DPHXUnpackAndLoad
         Dim nbrTries As Integer = 0
         Do Until nbrTries = 10
             nbrTries += 1
-            If _SF.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
+            If SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
                 nbrTries = 10
             Else
                 Me.Refresh()

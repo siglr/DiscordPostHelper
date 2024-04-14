@@ -449,10 +449,14 @@ Public Class BriefingControl
 
         'Title
         sb.Append($"\b {_sessionData.Title}\b0\line ")
-        sb.Append($"{_sessionData.MainAreaPOI}\line ")
-        sb.Append("\line ")
-        sb.Append($"{_sessionData.ShortDescription}\line ")
-        sb.Append("\line ")
+        If _sessionData.MainAreaPOI.Trim <> String.Empty Then
+            sb.Append($"{_sessionData.MainAreaPOI}\line ")
+            sb.Append("\line ")
+        End If
+        If _sessionData.ShortDescription.Trim <> String.Empty Then
+            sb.Append($"{_sessionData.ShortDescription}\line ")
+            sb.Append("\line ")
+        End If
         sb.Append($"{_sessionData.Credits}\line ")
         sb.Append("\line ")
 
@@ -814,7 +818,7 @@ Public Class BriefingControl
             sb.Append($"The expected duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
             sb.Append("\line ")
 
-            If _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then
+            If _sessionData.EventDescription <> String.Empty AndAlso _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then
                 sb.Append($"{_sessionData.EventDescription}")
                 sb.Append("\line ")
                 sb.Append("\line ")
@@ -1035,74 +1039,7 @@ Public Class BriefingControl
 
     Private Sub BuildCloudAndWindLayersDatagrids()
 
-        'Build wind layers grid
-        Dim dtWinds As New DataTable()
-        dtWinds.Columns.Add("#", GetType(Integer))
-        Select Case PrefUnits.Altitude
-            Case AltitudeUnits.Both
-                dtWinds.Columns.Add("Altitude (f / m)", GetType(String))
-            Case AltitudeUnits.Metric
-                dtWinds.Columns.Add("Altitude (m)", GetType(String))
-            Case AltitudeUnits.Imperial
-                dtWinds.Columns.Add("Altitude (f)", GetType(String))
-        End Select
-        Select Case PrefUnits.WindSpeed
-            Case WindSpeedUnits.Both
-                dtWinds.Columns.Add("Speed (kts / m/s)", GetType(String))
-            Case WindSpeedUnits.Knots
-                dtWinds.Columns.Add("Speed (kts)", GetType(String))
-            Case WindSpeedUnits.MeterPerSecond
-                dtWinds.Columns.Add("Speed (m/s)", GetType(String))
-        End Select
-        dtWinds.Columns.Add("Angle", GetType(String))
-        dtWinds.Columns.Add("Gust", GetType(String))
-        Dim seqWindL As Integer = 0
-        For Each windL As WindLayer In _WeatherDetails.WindLayers
-            seqWindL += 1
-            dtWinds.Rows.Add(seqWindL, windL.AltitudeCorrectUnit(PrefUnits), windL.SpeedCorrectUnit(PrefUnits), windL.Angle.ToString, windL.GetGustText(PrefUnits))
-        Next
-        windLayersDatagrid.DataSource = dtWinds
-        windLayersDatagrid.Font = New Font(windLayersDatagrid.Font.FontFamily, 12)
-        windLayersDatagrid.RowTemplate.Height = 28
-        windLayersDatagrid.RowHeadersVisible = False
-        windLayersDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        windLayersDatagrid.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
-        windLayersDatagrid.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        windLayersDatagrid.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        windLayersDatagrid.Columns(3).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-
-        'Build cloud layers grid
-        Dim dtClouds As New DataTable()
-        dtClouds.Columns.Add("#", GetType(Integer))
-        Select Case PrefUnits.Altitude
-            Case AltitudeUnits.Both
-                dtClouds.Columns.Add("Base (f / m)", GetType(String))
-                dtClouds.Columns.Add("Top (f / m)", GetType(String))
-            Case AltitudeUnits.Metric
-                dtClouds.Columns.Add("Base (m)", GetType(String))
-                dtClouds.Columns.Add("Top (m)", GetType(String))
-            Case AltitudeUnits.Imperial
-                dtClouds.Columns.Add("Base (f)", GetType(String))
-                dtClouds.Columns.Add("Top (f)", GetType(String))
-        End Select
-        dtClouds.Columns.Add("Coverage", GetType(String))
-        dtClouds.Columns.Add("Density", GetType(String))
-        dtClouds.Columns.Add("Scattering", GetType(String))
-        Dim seqCloudL As Integer = 0
-        For Each CloudL As CloudLayer In _WeatherDetails.CloudLayers
-            seqCloudL += 1
-            dtClouds.Rows.Add(seqCloudL, CloudL.AltitudeBottomCorrectUnit(PrefUnits), CloudL.AltitudeTopCorrectUnit(PrefUnits), CloudL.CoverageForGrid, CloudL.DensityForGrid, CloudL.ScatteringForGrid)
-        Next
-        cloudLayersDatagrid.DataSource = dtClouds
-        cloudLayersDatagrid.Font = New Font(cloudLayersDatagrid.Font.FontFamily, 12)
-        cloudLayersDatagrid.RowTemplate.Height = 28
-        cloudLayersDatagrid.RowHeadersVisible = False
-        cloudLayersDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        cloudLayersDatagrid.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
-        cloudLayersDatagrid.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        cloudLayersDatagrid.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        cloudLayersDatagrid.Columns(3).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        cloudLayersDatagrid.Columns(4).AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        SupportingFeatures.BuildCloudAndWindLayersDatagrids(_WeatherDetails, windLayersDatagrid, cloudLayersDatagrid, PrefUnits)
 
     End Sub
 

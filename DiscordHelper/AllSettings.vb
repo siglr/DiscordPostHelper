@@ -1,8 +1,5 @@
-﻿Imports System.Configuration
-Imports System.IO
-Imports System.Linq.Expressions
+﻿Imports System.IO
 Imports System.Xml.Serialization
-Imports SIGLR.SoaringTools.CommonLibrary
 
 <XmlRoot("DPHSettings")>
 Public Class AllSettings
