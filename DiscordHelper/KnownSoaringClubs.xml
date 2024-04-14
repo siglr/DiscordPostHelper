@@ -43,9 +43,9 @@
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>GG-SFC</ClubId>
+    <ClubId>GG-FSC</ClubId>
     <ClubName>Friday</ClubName>
-    <ClubFullName>GotGravel's Soaring Friday Club</ClubFullName>
+    <ClubFullName>GotGravel's Friday Soaring Club</ClubFullName>
     <MSFSServer>West USA</MSFSServer>
     <VoiceChannel>[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)</VoiceChannel>
     <ZuluDayOfWeek>Friday</ZuluDayOfWeek>
@@ -162,6 +162,34 @@
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
     <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>
     <ZuluTime>7:15 PM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>UKVGA TUE (BST)</ClubId>
+    <ClubName>Soaring Tuesdays</ClubName>
+    <ClubFullName>UKVGA</ClubFullName>
+    <MSFSServer>West Europe</MSFSServer>
+    <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
+    <ZuluDayOfWeek>Tuesday</ZuluDayOfWeek>
+    <ZuluTime>6:15 PM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
+    <LaunchDelay>0</LaunchDelay>
+    <StartTaskDelay>15</StartTaskDelay>
+    <EligibleAward>False</EligibleAward>
+    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+  </KnownSoaringClub>
+  <KnownSoaringClub>
+    <ClubId>UKVGA THU (BST)</ClubId>
+    <ClubName>Soaring Thursdays</ClubName>
+    <ClubFullName>UKVGA</ClubFullName>
+    <MSFSServer>West Europe</MSFSServer>
+    <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
+    <ZuluDayOfWeek>Thursday</ZuluDayOfWeek>
+    <ZuluTime>6:15 PM</ZuluTime>
     <SyncFlyDelay>15</SyncFlyDelay>
     <LaunchDelay>0</LaunchDelay>
     <StartTaskDelay>15</StartTaskDelay>
