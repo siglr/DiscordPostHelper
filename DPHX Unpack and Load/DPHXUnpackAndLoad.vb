@@ -536,6 +536,7 @@ Public Class DPHXUnpackAndLoad
         Dim sizeString As String = Settings.SessionSettings.MainFormSize
         Dim locationString As String = Settings.SessionSettings.MainFormLocation
 
+        ' Restore Size
         If sizeString <> "" Then
             Dim sizeArray As String() = sizeString.TrimStart("{").TrimEnd("}").Split(",")
             Dim width As Integer = CInt(sizeArray(0).Split("=")(1))
@@ -543,11 +544,33 @@ Public Class DPHXUnpackAndLoad
             Me.Size = New Size(width, height)
         End If
 
+        ' Restore Location
         If locationString <> "" Then
             Dim locationArray As String() = locationString.TrimStart("{").TrimEnd("}").Split(",")
             Dim x As Integer = CInt(locationArray(0).Split("=")(1))
             Dim y As Integer = CInt(locationArray(1).Split("=")(1))
-            Me.Location = New Point(x, y)
+
+            ' Check if the saved position is off-screen or indicates a minimized window
+            Dim potentialLocation As New Point(x, y)
+            Dim isLocationVisible As Boolean = False
+
+            ' Check if the potential location is within any screen's bounds
+            For Each scr As Screen In Screen.AllScreens
+                If scr.WorkingArea.Contains(potentialLocation) Then
+                    isLocationVisible = True
+                    Exit For
+                End If
+            Next
+
+            If isLocationVisible Then
+                Me.Location = potentialLocation
+            Else
+                ' Center the form on the primary screen if the saved location is not valid
+                Me.StartPosition = FormStartPosition.CenterScreen
+            End If
+        Else
+            ' Default to center screen if no location was saved
+            Me.StartPosition = FormStartPosition.CenterScreen
         End If
     End Sub
 

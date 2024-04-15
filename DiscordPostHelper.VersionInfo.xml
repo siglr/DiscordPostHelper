@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.2.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.4.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.4.15.1</ReleaseVersion>
+      <ReleaseTitle>Redesigned Discord posting workflow</ReleaseTitle>
+      <ReleaseNotes>
+        Redesign of the Discord tab for better workflow, more options and enforcing the posting to Task Library first.
+        Unlinked task short description from event description.
+        Added AUSGLIDE summer time known soaring club config.
+        Added BST (British Summer Time) to the UKVGA group event entries.
+        Fixed the header type for the task thread anchor.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.2.24.1</ReleaseVersion>
       <ReleaseTitle>Various small fixes</ReleaseTitle>
