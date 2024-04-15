@@ -1,8 +1,8 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.4.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.4.15.2</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>24.4.15.1</ReleaseVersion>
+      <ReleaseVersion>24.4.15.2</ReleaseVersion>
       <ReleaseTitle>Redesigned Discord posting workflow</ReleaseTitle>
       <ReleaseNotes>
         Redesign of the Discord tab for better workflow, more options and enforcing the posting to Task Library first.

@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.3.3.3</CurrentLatestVersion>
+  <CurrentLatestVersion>24.4.15.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.4.15.2</ReleaseVersion>
+      <ReleaseTitle>Small fix</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a possible disappearance of the main window when closed while minimized.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.3.3.3</ReleaseVersion>
       <ReleaseTitle>New cleaner tool</ReleaseTitle>
