@@ -1218,7 +1218,6 @@ Partial Class Main
         '
         'btnRecallTaskDescriptionTemplate
         '
-        Me.btnRecallTaskDescriptionTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnRecallTaskDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnRecallTaskDescriptionTemplate.Location = New System.Drawing.Point(6, 644)
         Me.btnRecallTaskDescriptionTemplate.Name = "btnRecallTaskDescriptionTemplate"
@@ -1231,7 +1230,6 @@ Partial Class Main
         '
         'btnSaveDescriptionTemplate
         '
-        Me.btnSaveDescriptionTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSaveDescriptionTemplate.Location = New System.Drawing.Point(6, 601)
         Me.btnSaveDescriptionTemplate.Name = "btnSaveDescriptionTemplate"
