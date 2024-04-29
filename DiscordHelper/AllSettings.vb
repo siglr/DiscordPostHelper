@@ -128,6 +128,9 @@ Public Class AllSettings
     <XmlElement("TaskDescriptionTemplate")>
     Public Property TaskDescriptionTemplate As String
 
+    <XmlElement("EventDescriptionTemplate")>
+    Public Property EventDescriptionTemplate As String
+
     Public Sub New()
 
     End Sub
@@ -191,6 +194,7 @@ Public Class AllSettings
             DPO_chkDGPORelevantTaskDetails = settingsInFile.DPO_chkDGPORelevantTaskDetails
             DPO_chkDGPOEventLogistics = settingsInFile.DPO_chkDGPOEventLogistics
             TaskDescriptionTemplate = settingsInFile.TaskDescriptionTemplate
+            EventDescriptionTemplate = settingsInFile.EventDescriptionTemplate
         Else
             settingsFound = False
         End If

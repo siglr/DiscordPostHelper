@@ -298,6 +298,11 @@ Public Class Main
         Else
             txtLongDescription.Text = SessionSettings.TaskDescriptionTemplate.Replace("($*$)", Environment.NewLine)
         End If
+        If SessionSettings.EventDescriptionTemplate Is Nothing Then
+            txtEventDescription.Text = String.Empty
+        Else
+            txtEventDescription.Text = SessionSettings.EventDescriptionTemplate.Replace("($*$)", Environment.NewLine)
+        End If
         chkLockCountries.Checked = False
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
@@ -758,6 +763,38 @@ Public Class Main
         End If
     End Sub
 
+    Private Sub btnLoadEventDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnLoadEventDescriptionTemplate.Click
+
+        If SessionSettings.EventDescriptionTemplate IsNot Nothing AndAlso txtEventDescription.Text.Trim.Replace(Environment.NewLine, "($*$)") <> SessionSettings.EventDescriptionTemplate.Trim Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to overwrite the current description with your saved template?", "Loading event description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        If SessionSettings.EventDescriptionTemplate Is Nothing Then
+            Exit Sub
+        Else
+            txtEventDescription.Text = SessionSettings.EventDescriptionTemplate.Replace("($*$)", Environment.NewLine)
+        End If
+
+    End Sub
+
+    Private Sub btnSaveEventDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnSaveEventDescriptionTemplate.Click
+
+        If Not SessionSettings.EventDescriptionTemplate = String.Empty AndAlso SessionSettings.EventDescriptionTemplate.Trim <> txtEventDescription.Text.Trim.Replace(Environment.NewLine, "($*$)") Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to replace your existing description template?", "Saving event description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        SessionSettings.EventDescriptionTemplate = txtEventDescription.Text.Trim.Replace(Environment.NewLine, "($*$)")
+
+    End Sub
+
     Private Sub btnPasteUsernameCredits_Click(sender As Object, e As EventArgs) Handles btnPasteUsernameCredits.Click
 
         Dim userNameFromCB As String = String.Empty
@@ -775,7 +812,7 @@ Public Class Main
 
     Private Sub btnSaveDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnSaveDescriptionTemplate.Click
 
-        If Not SessionSettings.TaskDescriptionTemplate = String.Empty Then
+        If Not SessionSettings.TaskDescriptionTemplate = String.Empty AndAlso SessionSettings.TaskDescriptionTemplate.Trim <> txtLongDescription.Text.Trim.Replace(Environment.NewLine, "($*$)") Then
             Using New Centered_MessageBox(Me)
                 If MessageBox.Show(Me, "Are you sure you want to replace your existing description template?", "Saving task description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                     Exit Sub
@@ -789,7 +826,7 @@ Public Class Main
 
     Private Sub btnRecallTaskDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnRecallTaskDescriptionTemplate.Click
 
-        If SessionSettings.TaskDescriptionTemplate IsNot Nothing AndAlso txtLongDescription.Text.Trim <> SessionSettings.TaskDescriptionTemplate.Trim Then
+        If SessionSettings.TaskDescriptionTemplate IsNot Nothing AndAlso txtLongDescription.Text.Trim.Replace(Environment.NewLine, "($*$)") <> SessionSettings.TaskDescriptionTemplate.Trim Then
             Using New Centered_MessageBox(Me)
                 If MessageBox.Show(Me, "Are you sure you want to overwrite the current description with your saved template?", "Loading task description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                     Exit Sub
