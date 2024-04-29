@@ -88,7 +88,9 @@
     <Compile Include="CopyContent.Designer.vb">
       <DependentUpon>CopyContent.vb</DependentUpon>
     </Compile>
-    <Compile Include="CopyContent.vb" />
+    <Compile Include="CopyContent.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>

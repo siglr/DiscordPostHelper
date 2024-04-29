@@ -15,6 +15,7 @@ Imports System.Web.UI
 Imports System.Web
 Imports System.Collections.Specialized
 Imports System.Net.Mail
+Imports System.Windows.Interop
 
 Public Class Main
 
@@ -1688,13 +1689,17 @@ Public Class Main
 
     End Sub
 
-    Private Sub BuildFPResults()
+    Private Sub BuildFPResults(Optional fromGroup As Boolean = False)
 
         Dim sb As New StringBuilder()
 
-        sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
-        If chkRepost.Checked Then
-            sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+        If fromGroup Then
+            sb.AppendLine($"## Task Details")
+        Else
+            sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
+            If chkRepost.Checked Then
+                sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+            End If
         End If
         sb.AppendLine()
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
@@ -1709,9 +1714,13 @@ Public Class Main
         sb.AppendLine($"> ⏳ {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
         sb.AppendLine($"> ✈️ {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
         sb.AppendLine($"> 🎚 {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
-        sb.AppendLine()
-        sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
-        sb.Append("### See inside thread for most up-to-date files and more information.")
+
+        If Not fromGroup Then
+            sb.AppendLine()
+            sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
+            sb.Append("### See inside thread for most up-to-date files and more information.")
+        End If
+
         txtFPResults.Text = sb.ToString.Trim
 
         If txtLongDescription.Text.Trim.Length > 0 Then
@@ -2491,6 +2500,52 @@ Public Class Main
 
     Private Function PostTaskInGroupEventPartOne(autoContinue As Boolean) As Boolean
 
+        Dim msg As String = String.Empty
+
+        'Event Logistics
+        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
+            msg = GroupFlightEventThreadLogistics()
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                "Paste the message relative to event logistics into the thread and post it.",
+                                "Pasting event logistics",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+        End If
+        If Not autoContinue Then Return False
+
+        'Event relevant task details
+        If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
+
+            'Other task options after files
+            Dim altRestrictions As String = String.Empty
+            If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked Then
+                altRestrictions = txtAltRestrictions.Text.Trim
+            End If
+            Dim completeWeather As String = String.Empty
+            If chkDGPOWeatherInfo.Enabled AndAlso chkDGPOWeatherInfo.Checked Then
+                completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
+            End If
+            Dim addOns As String = String.Empty
+            If chkDGPOAddOns.Enabled AndAlso chkDGPOAddOns.Checked Then
+                addOns = txtAddOnsDetails.Text.Trim
+            End If
+
+            msg = BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
+                                                    addOns.Length = 0,
+                                                    completeWeather.Length = 0,
+                                                    Not (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked))
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                                msg,
+                                "Paste the relevant task details for the group flight event.",
+                                "Pasting relevant task details",
+                                New List(Of String) From {"^v"},
+                                chkDPOExpertMode.Checked)
+        End If
+        If Not autoContinue Then Return False
+
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
             autoContinue = FlightPlanMainInfoCopy(True)
@@ -2610,35 +2665,6 @@ Public Class Main
         End If
         If Not autoContinue Then
             Return False
-        End If
-
-        'Event relevant task details
-        If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
-            msg = BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
-                                                    addOns.Length = 0,
-                                                    completeWeather.Length = 0,
-                                                    Not (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked))
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the relevant task details for the group flight event.",
-                                "Pasting relevant task details",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
-        End If
-
-        If Not autoContinue Then Return False
-
-        'Event Logistics
-        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
-            msg = GroupFlightEventThreadLogistics()
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the message relative to event logistics into the thread and post it.",
-                                "Pasting event logistics",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
         End If
 
         Return True
@@ -3079,6 +3105,8 @@ Public Class Main
         Dim autoContinue As Boolean = True
         Dim origin As String = String.Empty
         Dim titleMsg As String = String.Empty
+
+        BuildFPResults(fromGroup)
 
         If Not fromGroup Then
             autoContinue = MsgBoxWithPicture.ShowContent(Me,
@@ -3896,11 +3924,6 @@ Public Class Main
 
         Dim fpTitle As New StringBuilder
         If txtEventTitle.Text <> String.Empty Then
-            If cboGroupOrClubName.SelectedIndex > -1 Then
-                fpTitle.Append($"{_ClubPreset.ClubName} - ")
-            Else
-                fpTitle.Append($"")
-            End If
             fpTitle.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
 
             Clipboard.SetText(fpTitle.ToString)
@@ -3949,7 +3972,7 @@ Public Class Main
         'Teaser message
         If txtEventTeaserMessage.Text.Trim <> String.Empty Then
             Dim teaser As New StringBuilder
-            teaser.AppendLine("# 🤐 Teaser")
+            teaser.AppendLine("## 🤐 Teaser")
             teaser.AppendLine(txtEventTeaserMessage.Text.Trim)
             Clipboard.SetText(teaser.ToString)
             autoContinue = CopyContent.ShowContent(Me,
@@ -3970,14 +3993,45 @@ Public Class Main
 
         Dim logisticInstructions As New StringBuilder
 
-        logisticInstructions.AppendLine("## 🗣 Event Logistics")
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+        Dim fullSyncFlyDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventSyncFlyDate, dtEventSyncFlyTime, chkDateTimeUTC.Checked)
+        Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventLaunchDate, dtEventLaunchTime, chkDateTimeUTC.Checked)
+        Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventStartTaskDate, dtEventStartTaskTime, chkDateTimeUTC.Checked)
+
+        Dim dateFormat As String
+        If chkIncludeYear.Checked Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+        Dim theLocalTime As String = String.Empty
+        If chkUseSyncFly.Checked Then
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        ElseIf chkUseLaunch.Checked Then
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        Else
+            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
+        End If
+
+        logisticInstructions.AppendLine("## Event Logistics")
+        logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
+        logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
+        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+
+        If chkUseSyncFly.Checked Then
+            logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
+        End If
+        logisticInstructions.AppendLine()
+        logisticInstructions.AppendLine($"*Don't forget to review the details for this group flight event (first post of the thread).*")
+        logisticInstructions.AppendLine()
         logisticInstructions.AppendLine("**Use this thread only to discuss logistics for this event!**")
-        logisticInstructions.AppendLine("> Focus on:")
+        logisticInstructions.AppendLine("> Please focus on:")
         logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
+        logisticInstructions.AppendLine("> - Asking for help to join and participate to this event")
         logisticInstructions.AppendLine("> - Providing feedback on the **event's** organization and coordination")
         If Not txtDiscordTaskID.Text = String.Empty Then
-            logisticInstructions.AppendLine("## 🏁 For posting results, screenshots, and **task** feedback, head over to the task's thread, please!")
-            logisticInstructions.AppendLine($"⏩ [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
+            logisticInstructions.AppendLine("### 🏁 For posting results, screenshots, and task feedback, please head over to the task's thread!")
+            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
         End If
 
         Return logisticInstructions.ToString()
@@ -3996,37 +4050,27 @@ Public Class Main
         Dim sb As New StringBuilder
 
         If Not txtDiscordTaskID.Text = String.Empty Then
-            sb.AppendLine("## ❗ Final task details and reminders")
+            sb.AppendLine("## Relevant task details summary")
             If altRestrictionsMsg AndAlso txtAltRestrictions.Text.Trim.Length > 33 Then
-                sb.AppendLine("> ⚠️ There are altitude restrictions on this task")
-
+                sb.AppendLine("⚠️ There are altitude restrictions on this task")
             End If
             If addOnsMsg AndAlso lstAllRecommendedAddOns.Items.Count > 0 Then
-                sb.AppendLine("> 📀 There are recommended add-ons with this task")
+                sb.AppendLine("📀 There are recommended add-ons with this task")
             End If
-            sb.AppendLine($"> 🔗 [Click here for the official task details in the Task Library]({GetDiscordLinkToTaskThread()})")
-            sb.AppendLine("> *If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
-            sb.AppendLine("> ")
+            sb.AppendLine($"🔗 [Click here for the official task details in the Task Library]({GetDiscordLinkToTaskThread()})")
+            sb.AppendLine("*If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
+            sb.AppendLine()
         End If
 
         If fltPlanMsg AndAlso Not txtFlightPlanFile.Text = String.Empty Then
-            sb.AppendLine($"> 📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
+            sb.AppendLine($"📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
         End If
         If weatherMsg AndAlso txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
-            sb.AppendLine($"> 🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
+            sb.AppendLine($"🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
         End If
-
-        If fltPlanMsg Then
-            sb.AppendLine("> ")
-            sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        If fltPlanMsg AndAlso Not chkDGPOEventLogistics.Checked Then
+            sb.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
         End If
-
-        If chkUseSyncFly.Checked Then
-            sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
-        End If
-
-        sb.AppendLine()
-        sb.AppendLine($"*Don't forget to review the details for this group flight event (first post of the thread).*")
 
         Return sb.ToString.Trim
 
@@ -4069,35 +4113,22 @@ Public Class Main
 
         txtGroupFlightEventPost.Text = String.Empty
 
-        sb.AppendLine($"## {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time")
-        sb.AppendLine()
-
         If txtEventTitle.Text = String.Empty Then
             txtEventTitle.Text = txtTitle.Text
         End If
         If txtEventTitle.Text <> String.Empty Then
-            If cboGroupOrClubName.SelectedIndex > -1 Then
-                sb.Append($"# {_ClubPreset.ClubName} - ")
-            Else
-                sb.Append($"# ")
-            End If
-            sb.AppendLine(txtEventTitle.Text & AddFlagsToTitle())
+            'If cboGroupOrClubName.SelectedIndex > -1 Then
+            'sb.Append($"# {_ClubPreset.ClubName} - ")
+            'Else
+            'sb.Append($"# ")
+            'End If
+            sb.AppendLine($"# {txtEventTitle.Text & AddFlagsToTitle()}")
         End If
+
+        sb.AppendLine($"**{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**")
+        sb.AppendLine()
+
         sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
-
-        sb.AppendLine($"## 💼 Meet/Briefing{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("dddd, MMMM dd", _EnglishCulture)}, {Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**{Environment.NewLine}> *At this time we meet in the voice chat and get ready.*")
-        sb.AppendLine("> ")
-        sb.AppendLine($"> 🗣 Voice: **{cboVoiceChannel.Text}**")
-
-        If chkDGPOFilesWithFullLegend.Checked OrElse chkDGPOFilesWithoutLegend.Checked Then
-            sb.AppendLine("> ")
-            sb.AppendLine($"> 📁 All files are shared inside the thread below")
-        Else
-            sb.AppendLine("> ")
-            sb.AppendLine($"> 📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
-        End If
-        sb.AppendLine("> ")
-        sb.AppendLine($"> 🌐 Server: **{cboMSFSServer.Text}**")
 
         Dim theLocalTime As String = String.Empty
         If chkUseSyncFly.Checked Then
@@ -4107,35 +4138,41 @@ Public Class Main
         Else
             theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
         End If
-        sb.AppendLine($"> 📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
 
-        sb.AppendLine("> ")
+        sb.AppendLine($"💼 Meet/Briefing: **{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we meet in the voice chat and get ready.")
+        sb.AppendLine()
 
         If chkUseSyncFly.Checked Then
-            sb.AppendLine("### :octagonal_sign: Stay on the world map to synchronize weather :octagonal_sign:")
-            sb.AppendLine($"## ⏱️ Sync Fly: {Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullSyncFlyDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we simultaneously click fly to sync our weather.*")
+            sb.AppendLine($"⏱️ Sync Fly: **{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we simultaneously click fly to sync our weather.")
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
-                sb.AppendLine("> *At this time we can also start launching from the airfield.*")
+                sb.AppendLine("At this time we can also start launching from the airfield.")
             End If
-            sb.AppendLine("> ")
+            sb.AppendLine()
         End If
-
         If chkUseLaunch.Checked AndAlso (fullSyncFlyDateTimeLocal <> fullLaunchDateTimeLocal OrElse Not chkUseSyncFly.Checked) Then
-            sb.AppendLine($"## 🚀 Launch:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullLaunchDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we can start launching from the airfield.*")
-            sb.AppendLine("> ")
+            sb.AppendLine($"🚀 Launch: **{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we can start launching from the airfield.")
+            sb.AppendLine()
         End If
 
         If chkUseStart.Checked Then
-            sb.AppendLine($"## 🟢 Task Start:{Environment.NewLine}> **{Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("hh:mm tt", _EnglishCulture)} Zulu / {_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)} your local time ({fullStartTaskDateTimeMSFS.ToString("hh:mm tt", _EnglishCulture)} in MSFS)**{Environment.NewLine}> *At this time we cross the starting line and start the task.*")
-            sb.AppendLine("> ")
+            sb.AppendLine($"🟢 Task Start: **{_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we cross the starting line and start the task.")
+            sb.AppendLine()
         End If
 
-        sb.AppendLine()
         sb.AppendLine($"⏳ Duration: **{_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
+        sb.AppendLine()
 
         If cboEligibleAward.SelectedIndex > 0 Then
-            sb.AppendLine()
             sb.AppendLine($"🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{cboEligibleAward.Text} Soaring Badge** :{cboEligibleAward.Text.ToLower()}:")
+            sb.AppendLine()
+        End If
+
+        If chkDGPOFilesWithFullLegend.Checked OrElse chkDGPOFilesWithoutLegend.Checked Then
+            sb.AppendLine($"📁 All files are shared inside the thread below")
+            sb.AppendLine()
+        Else
+            sb.AppendLine($"📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
+            sb.AppendLine()
         End If
 
         Dim urlBeginnerGuide As String = String.Empty
@@ -4151,12 +4188,11 @@ Public Class Main
             Case Else
         End Select
         If Not urlBeginnerGuide = String.Empty Then
-            sb.AppendLine()
             sb.AppendLine($"‍:student: If it's your first time flying with us, please make sure to read the following guide: {urlBeginnerGuide}")
+            sb.AppendLine()
         End If
 
         If txtCredits.Text <> String.Empty Then
-            sb.AppendLine()
             sb.AppendLine(txtCredits.Text)
         End If
 
