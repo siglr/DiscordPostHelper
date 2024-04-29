@@ -79,6 +79,8 @@ Partial Class Main
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.btnRecallTaskDescriptionTemplate = New System.Windows.Forms.Button()
+        Me.btnSaveDescriptionTemplate = New System.Windows.Forms.Button()
         Me.btnWeatherBrowser = New System.Windows.Forms.Button()
         Me.btnSyncTitles = New System.Windows.Forms.Button()
         Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
@@ -361,8 +363,8 @@ Partial Class Main
         Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
-        Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
         Me.toolStripResetAll = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripReload = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripDiscordTaskLibrary = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
@@ -506,7 +508,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(19, 705)
+        Me.pnlGuide.Location = New System.Drawing.Point(19, 760)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -1145,6 +1147,8 @@ Partial Class Main
         Me.grbTaskInfo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskInfo.Controls.Add(Me.btnRecallTaskDescriptionTemplate)
+        Me.grbTaskInfo.Controls.Add(Me.btnSaveDescriptionTemplate)
         Me.grbTaskInfo.Controls.Add(Me.btnWeatherBrowser)
         Me.grbTaskInfo.Controls.Add(Me.btnSyncTitles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeDynamic)
@@ -1211,6 +1215,33 @@ Partial Class Main
         Me.grbTaskInfo.Size = New System.Drawing.Size(729, 796)
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
+        '
+        'btnRecallTaskDescriptionTemplate
+        '
+        Me.btnRecallTaskDescriptionTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRecallTaskDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRecallTaskDescriptionTemplate.Location = New System.Drawing.Point(6, 644)
+        Me.btnRecallTaskDescriptionTemplate.Name = "btnRecallTaskDescriptionTemplate"
+        Me.btnRecallTaskDescriptionTemplate.Size = New System.Drawing.Size(177, 37)
+        Me.btnRecallTaskDescriptionTemplate.TabIndex = 58
+        Me.btnRecallTaskDescriptionTemplate.Tag = "22"
+        Me.btnRecallTaskDescriptionTemplate.Text = "Load template"
+        Me.ToolTip1.SetToolTip(Me.btnRecallTaskDescriptionTemplate, "Click this button to replace the current description with your saved template.")
+        Me.btnRecallTaskDescriptionTemplate.UseVisualStyleBackColor = True
+        '
+        'btnSaveDescriptionTemplate
+        '
+        Me.btnSaveDescriptionTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSaveDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSaveDescriptionTemplate.Location = New System.Drawing.Point(6, 601)
+        Me.btnSaveDescriptionTemplate.Name = "btnSaveDescriptionTemplate"
+        Me.btnSaveDescriptionTemplate.Size = New System.Drawing.Size(177, 37)
+        Me.btnSaveDescriptionTemplate.TabIndex = 57
+        Me.btnSaveDescriptionTemplate.Tag = "22"
+        Me.btnSaveDescriptionTemplate.Text = "Save template"
+        Me.ToolTip1.SetToolTip(Me.btnSaveDescriptionTemplate, "Click this button to save the current description to be used by default as templa" &
+        "te.")
+        Me.btnSaveDescriptionTemplate.UseVisualStyleBackColor = True
         '
         'btnWeatherBrowser
         '
@@ -4598,7 +4629,7 @@ Partial Class Main
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripReload, Me.toolStripResetAll, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
@@ -4624,6 +4655,15 @@ Partial Class Main
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
+        'toolStripResetAll
+        '
+        Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
+        Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripResetAll.Name = "toolStripResetAll"
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
+        Me.toolStripResetAll.Text = "&Reset All"
+        Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
+        '
         'toolStripReload
         '
         Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
@@ -4633,15 +4673,6 @@ Partial Class Main
         Me.toolStripReload.Text = "Discard"
         Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
         Me.toolStripReload.Visible = False
-        '
-        'toolStripResetAll
-        '
-        Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
-        Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
-        Me.toolStripResetAll.Text = "&Reset All"
-        Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
         'ToolStripSeparator1
         '
@@ -5265,4 +5296,6 @@ Partial Class Main
     Friend WithEvents btnStartFullPostingWorkflow As Button
     Friend WithEvents btnTaskAndGroupEventLinks As Button
     Friend WithEvents btnWeatherBrowser As Button
+    Friend WithEvents btnSaveDescriptionTemplate As Button
+    Friend WithEvents btnRecallTaskDescriptionTemplate As Button
 End Class

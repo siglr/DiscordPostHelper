@@ -125,6 +125,9 @@ Public Class AllSettings
     <XmlElement("DPO_chkDGPOEventLogistics")>
     Public Property DPO_chkDGPOEventLogistics As Boolean
 
+    <XmlElement("TaskDescriptionTemplate")>
+    Public Property TaskDescriptionTemplate As String
+
     Public Sub New()
 
     End Sub
@@ -187,6 +190,7 @@ Public Class AllSettings
             DPO_chkDGPOAddOns = settingsInFile.DPO_chkDGPOAddOns
             DPO_chkDGPORelevantTaskDetails = settingsInFile.DPO_chkDGPORelevantTaskDetails
             DPO_chkDGPOEventLogistics = settingsInFile.DPO_chkDGPOEventLogistics
+            TaskDescriptionTemplate = settingsInFile.TaskDescriptionTemplate
         Else
             settingsFound = False
         End If

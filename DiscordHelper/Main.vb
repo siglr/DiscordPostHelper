@@ -293,7 +293,11 @@ Public Class Main
         chkSuppressWarningForBaroPressure.Checked = False
         txtBaroPressureExtraInfo.Text = "Non standard: Set your altimeter! (Press ""B"" once in your glider)"
         txtCredits.Text = "All credits to @UserName for this task."
-        txtLongDescription.Text = String.Empty
+        If SessionSettings.TaskDescriptionTemplate Is Nothing Then
+            txtLongDescription.Text = String.Empty
+        Else
+            txtLongDescription.Text = SessionSettings.TaskDescriptionTemplate.Replace("($*$)", Environment.NewLine)
+        End If
         chkLockCountries.Checked = False
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
@@ -765,6 +769,38 @@ Public Class Main
 
         If Not userNameFromCB = String.Empty Then
             txtCredits.Text = $"All credits to @{userNameFromCB} for this task."
+        End If
+
+    End Sub
+
+    Private Sub btnSaveDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnSaveDescriptionTemplate.Click
+
+        If Not SessionSettings.TaskDescriptionTemplate = String.Empty Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to replace your existing description template?", "Saving task description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        SessionSettings.TaskDescriptionTemplate = txtLongDescription.Text.Trim.Replace(Environment.NewLine, "($*$)")
+
+    End Sub
+
+    Private Sub btnRecallTaskDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnRecallTaskDescriptionTemplate.Click
+
+        If SessionSettings.TaskDescriptionTemplate IsNot Nothing AndAlso txtLongDescription.Text.Trim <> SessionSettings.TaskDescriptionTemplate.Trim Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to overwrite the current description with your saved template?", "Loading task description template", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        If SessionSettings.TaskDescriptionTemplate Is Nothing Then
+            Exit Sub
+        Else
+            txtLongDescription.Text = SessionSettings.TaskDescriptionTemplate.Replace("($*$)", Environment.NewLine)
         End If
 
     End Sub
