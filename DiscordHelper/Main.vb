@@ -2577,18 +2577,9 @@ Public Class Main
 
         'Event Logistics
         If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
-            msg = GroupFlightEventThreadLogistics()
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the message relative to event logistics into the thread and post it.",
-                                "Pasting event logistics",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
+            msg = $"{GroupFlightEventThreadLogistics()}"
         End If
-        If Not autoContinue Then Return False
 
-        'Event relevant task details
         If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
 
             'Other task options after files
@@ -2601,24 +2592,26 @@ Public Class Main
                 addOns = txtAddOnsDetails.Text.Trim
             End If
 
-            msg = BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
+            msg = $"{msg}{BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
                                                     addOns.Length = 0,
                                                     chkDGPOFilesWithFullLegend.Checked AndAlso (Not chkDGPODPHXOnly.Checked),
-                                                    chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked)
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                "Paste the relevant task details for the group flight event.",
-                                "Pasting relevant task details",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
+                                                    chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked)}{Environment.NewLine}"
         End If
-        If Not autoContinue Then Return False
 
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
-            autoContinue = FlightPlanMainInfoCopy(True)
+            BuildFPResults(True)
+            msg = $"{msg}{txtFPResults.Text.Trim}"
         End If
+
+        Clipboard.SetText(msg)
+        autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            "Paste the first message in the thread and post it.",
+                            "Pasting first message in group event thread",
+                            New List(Of String) From {"^v"},
+                            chkDPOExpertMode.Checked)
+
         If Not autoContinue Then Return False
 
         'Full Description
