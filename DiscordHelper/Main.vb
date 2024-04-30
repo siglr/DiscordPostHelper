@@ -2596,10 +2596,6 @@ Public Class Main
             If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked Then
                 altRestrictions = txtAltRestrictions.Text.Trim
             End If
-            Dim completeWeather As String = String.Empty
-            If chkDGPOWeatherInfo.Enabled AndAlso chkDGPOWeatherInfo.Checked Then
-                completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
-            End If
             Dim addOns As String = String.Empty
             If chkDGPOAddOns.Enabled AndAlso chkDGPOAddOns.Checked Then
                 addOns = txtAddOnsDetails.Text.Trim
@@ -2607,8 +2603,8 @@ Public Class Main
 
             msg = BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
                                                     addOns.Length = 0,
-                                                    completeWeather.Length = 0,
-                                                    Not (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked))
+                                                    chkDGPOFilesWithFullLegend.Checked AndAlso (Not chkDGPODPHXOnly.Checked),
+                                                    chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked)
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                                 msg,
@@ -3536,8 +3532,8 @@ Public Class Main
         If Not DPHXOnly Then
 
             sb.AppendLine("### Required")
-            sb.AppendLine("> Flight plan (.pln)")
-            sb.AppendLine("> Weather preset (.wpr)")
+            sb.AppendLine($"> Flight plan: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
+            sb.AppendLine($"> Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
 
             'Check if there is a tsk file in the files
             Dim optionalAdded As Boolean = False
@@ -3854,10 +3850,22 @@ Public Class Main
 
     End Sub
 
+    Private Sub chkDGPOFilesWithFullLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithFullLegend.CheckedChanged
+        If chkDGPOFilesWithFullLegend.Checked Then
+            chkDGPOFilesWithoutLegend.Checked = False
+        End If
+        chkDGPOAll_CheckedChanged(sender, e)
+    End Sub
+
+    Private Sub chkDGPOFilesWithoutLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithoutLegend.CheckedChanged
+        If chkDGPOFilesWithoutLegend.Checked Then
+            chkDGPOFilesWithFullLegend.Checked = False
+        End If
+        chkDGPOAll_CheckedChanged(sender, e)
+    End Sub
+
     Private Sub chkDGPOAll_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOEventLogistics.CheckedChanged,
                                                                                     chkDGPORelevantTaskDetails.CheckedChanged,
-                                                                                    chkDGPOFilesWithFullLegend.CheckedChanged,
-                                                                                    chkDGPOFilesWithoutLegend.CheckedChanged,
                                                                                     chkDGPOFullDescription.CheckedChanged,
                                                                                     chkDGPOMainPost.CheckedChanged, chkDGPOWeatherInfo.CheckedChanged, chkDGPOWeatherChart.CheckedChanged, chkDGPOWaypoints.CheckedChanged, chkDGPOAltRestrictions.CheckedChanged, chkDGPOAddOns.CheckedChanged
 
@@ -4111,7 +4119,7 @@ Public Class Main
 
     End Function
 
-    Private Function BuildLightTaskDetailsForEventPost(altRestrictionsMsg As Boolean, addOnsMsg As Boolean, weatherMsg As Boolean, fltPlanMsg As Boolean) As String
+    Private Function BuildLightTaskDetailsForEventPost(altRestrictionsMsg As Boolean, addOnsMsg As Boolean, allFilesDetailsPosted As Boolean, fltPlanPosted As Boolean) As String
 
         Dim dateFormat As String
         If chkIncludeYear.Checked Then
@@ -4135,13 +4143,13 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        If fltPlanMsg AndAlso Not txtFlightPlanFile.Text = String.Empty Then
+        If (Not allFilesDetailsPosted) AndAlso (Not txtFlightPlanFile.Text = String.Empty) Then
             sb.AppendLine($"📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
         End If
-        If weatherMsg AndAlso txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
+        If (Not allFilesDetailsPosted) AndAlso txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
             sb.AppendLine($"🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
         End If
-        If fltPlanMsg AndAlso Not chkDGPOEventLogistics.Checked Then
+        If (Not fltPlanPosted) AndAlso (Not chkDGPOEventLogistics.Checked) Then
             sb.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
         End If
 
