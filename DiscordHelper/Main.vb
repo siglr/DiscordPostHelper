@@ -4198,6 +4198,11 @@ Public Class Main
             sb.AppendLine($"# {txtEventTitle.Text & AddFlagsToTitle()}")
         End If
 
+        If txtCredits.Text <> String.Empty Then
+            sb.AppendLine(txtCredits.Text)
+            sb.AppendLine()
+        End If
+
         sb.AppendLine($"**{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**")
         sb.AppendLine()
 
@@ -4265,12 +4270,7 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        If txtCredits.Text <> String.Empty Then
-            sb.AppendLine(txtCredits.Text)
-        End If
-
         If SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text) Then
-            sb.AppendLine()
             sb.AppendLine(txtDiscordEventShareURL.Text)
         End If
 
