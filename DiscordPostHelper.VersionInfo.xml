@@ -1,6 +1,18 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.4.15.2</CurrentLatestVersion>
+  <CurrentLatestVersion>24.5.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Group Event posts format revisited</ReleaseTitle>
+      <ReleaseNotes>
+        Updated the group event post format and order to align with most popular format.
+        Added a feature to save and recall a task description template.
+        Added a feature to save and recall a group event description template.
+        Removed duplication of information
+        Added actual flight plan filename, weather filename and profile name to the files legend post
+        Fixed the logic between With and Without Legend.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.4.15.2</ReleaseVersion>
       <ReleaseTitle>Redesigned Discord posting workflow</ReleaseTitle>
