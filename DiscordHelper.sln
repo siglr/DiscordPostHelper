@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WindLayers3DDisplay", "WindLayers3DDisplay\WindLayers3DDisplay.vbproj", "{2248B813-F058-4079-BD3E-F634B7D4E456}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TaskBrowserAdmin", "TaskBrowserAdmin\TaskBrowserAdmin.vbproj", "{1E992182-47CF-43E7-A529-2987F7DC3AC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2248B813-F058-4079-BD3E-F634B7D4E456}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2248B813-F058-4079-BD3E-F634B7D4E456}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2248B813-F058-4079-BD3E-F634B7D4E456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

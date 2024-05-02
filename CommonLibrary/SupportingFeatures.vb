@@ -40,6 +40,7 @@ Public Class SupportingFeatures
         DiscordPostHelper = 1
         SoaringTaskBrowser = 2
         DPHXUnpackAndLoad = 3
+        TaskBrowserAdmin = 4
     End Enum
 
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
