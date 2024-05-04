@@ -463,7 +463,7 @@ Public Class BriefingControl
         'Credits
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {_SF.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
 
         'Flight plan
         sb.Append($"The flight plan to load is \b {Path.GetFileName(_sessionData.FlightPlanFilename)}\b0\line ")
@@ -471,31 +471,31 @@ Public Class BriefingControl
         sb.Append("\line ")
 
         'Departure airfield And runway
-        sb.Append($"You will depart from \b {_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureICAO)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureName, True)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DepartureExtra, True, True)}\b0\line ")
+        sb.Append($"You will depart from \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureExtra, True, True)}\b0\line ")
 
         'Arrival airfield And expected runway
-        sb.Append($"You will land at \b {_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalICAO)}{_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalName, True)}{_SF.ValueToAppendIfNotEmpty(_sessionData.ArrivalExtra, True, True)}\b0\line ")
+        sb.Append($"You will land at \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalExtra, True, True)}\b0\line ")
 
         'Type of soaring
-        Dim soaringType As String = GetSoaringTypesSelected()
+        Dim soaringType As String = SupportingFeatures.GetSoaringTypesSelected(_sessionData.SoaringRidge, _sessionData.SoaringThermals, _sessionData.SoaringWaves, _sessionData.SoaringDynamic)
         If soaringType.Trim <> String.Empty OrElse _sessionData.SoaringExtraInfo <> String.Empty Then
-            sb.Append($"Soaring Type is \b {soaringType}{_SF.ValueToAppendIfNotEmpty(_sessionData.SoaringExtraInfo, True, True)}\b0\line ")
+            sb.Append($"Soaring Type is \b {soaringType}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SoaringExtraInfo, True, True)}\b0\line ")
         End If
 
         'Task distance And total distance
-        sb.Append($"Distance are \b {_SF.GetDistance(totalDistance.ToString, trackDistance.ToString, PrefUnits)}\b0\line ")
+        sb.Append($"Distance are \b {SupportingFeatures.GetDistance(totalDistance.ToString, trackDistance.ToString, PrefUnits)}\b0\line ")
 
         'Approx. duration
-        sb.Append($"Approx. duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
+        sb.Append($"Approx. duration should be \b {SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
 
         'Recommended gliders
         If _sessionData.RecommendedGliders.Trim <> String.Empty Then
-            sb.Append($"Recommended gliders: \b {_SF.ValueToAppendIfNotEmpty(_sessionData.RecommendedGliders)}\b0\line ")
+            sb.Append($"Recommended gliders: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.RecommendedGliders)}\b0\line ")
         End If
 
         'Difficulty rating
         If _sessionData.DifficultyRating.Trim <> String.Empty OrElse _sessionData.DifficultyExtraInfo.Trim <> String.Empty Then
-            sb.Append($"The difficulty is rated as \b {_SF.GetDifficulty(CInt(_sessionData.DifficultyRating.Substring(0, 1)), _sessionData.DifficultyExtraInfo, True)}\b0\line ")
+            sb.Append($"The difficulty is rated as \b {SupportingFeatures.GetDifficulty(CInt(_sessionData.DifficultyRating.Substring(0, 1)), _sessionData.DifficultyExtraInfo, True)}\b0\line ")
         End If
 
         sb.Append("\line ")
@@ -504,7 +504,7 @@ Public Class BriefingControl
             'Weather info (temperature, baro pressure, precipitations)
             sb.Append($"The weather profile to load is \b {_WeatherDetails.PresetName}\b0\line ")
             If _sessionData.WeatherSummary <> String.Empty Then
-                sb.Append($"Weather summary: \b {_SF.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}\b0\line ")
+                sb.Append($"Weather summary: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}\b0\line ")
             End If
             If _WeatherDetails.AltitudeMeasurement = "AMGL" Then
                 sb.Append($"The elevation measurement used is \b AMGL (Above Mean Ground Level)\b0\line ")
@@ -554,7 +554,7 @@ Public Class BriefingControl
 
         End If
         sb.Append("}")
-        _SF.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
+        SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
 
         sb.Clear()
@@ -574,7 +574,7 @@ Public Class BriefingControl
         If _sessionData.LongDescription <> String.Empty Then
             sb.AppendLine("**Full Description**($*$)")
             sb.AppendLine(_sessionData.LongDescription)
-            _SF.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
+            SupportingFeatures.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
 
         End If
 
@@ -733,7 +733,7 @@ Public Class BriefingControl
                 dateFormat = "MMMM dd"
             End If
 
-            sb.Append($"The MSFS Local Date & Time should be: \b {fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {_SF.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}\b0 ")
+            sb.Append($"The MSFS Local Date & Time should be: \b {fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}\b0 ")
             If _sessionData.UseEventSyncFly Then
                 sb.Append($" when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
             ElseIf _sessionData.UseEventLaunch Then
@@ -815,7 +815,7 @@ Public Class BriefingControl
                 sb.Append("\line ")
                 countDownTaskStart.ResetToZero(True)
             End If
-            sb.Append($"The expected duration should be \b {_SF.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{_SF.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
+            sb.Append($"The expected duration should be \b {SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
             sb.Append("\line ")
 
             If _sessionData.EventDescription <> String.Empty AndAlso _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then
@@ -838,7 +838,7 @@ Public Class BriefingControl
             chkShowGraph.Checked = False
         End If
 
-        _SF.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
+        SupportingFeatures.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
 
     End Sub
@@ -876,28 +876,6 @@ Public Class BriefingControl
 
     End Sub
 
-    Private Function GetSoaringTypesSelected() As String
-        Dim selectedTypes As New List(Of String)
-
-        If _sessionData.SoaringRidge Then
-            selectedTypes.Add("Ridge")
-        End If
-
-        If _sessionData.SoaringThermals Then
-            selectedTypes.Add("Thermal")
-        End If
-
-        If _sessionData.SoaringWaves Then
-            selectedTypes.Add("Wave")
-        End If
-
-        If _sessionData.SoaringDynamic Then
-            selectedTypes.Add("Dynamic")
-        End If
-
-        ' Join the selected types into a single string, separated by " and "
-        Return String.Join(", ", selectedTypes)
-    End Function
 
     Private Sub SetWPGridColumnsVisibility()
 

@@ -131,7 +131,17 @@ Public Class AllSettings
     <XmlElement("ExcludeXCSoarMapFileFromCleanup")>
     Public Property ExcludeXCSoarMapFileFromCleanup As Boolean
 
+    <XmlElement("LocalDBTimestamp")>
+    Public Property LocalDBTimestamp As String
+
+    <XmlArray("TBColumnsSettings")>
+    <XmlArrayItem("Column")>
+    Public Property TBColumnsSettings As List(Of TBColumnSetting)
+
     Public Sub New()
+
+        ' Initialize the list
+        TBColumnsSettings = New List(Of TBColumnSetting)
 
     End Sub
 
@@ -172,6 +182,11 @@ Public Class AllSettings
             ExcludeWeatherFileFromCleanup = settingsInFile.ExcludeWeatherFileFromCleanup
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
+            LocalDBTimestamp = settingsInFile.LocalDBTimestamp
+            TBColumnsSettings = settingsInFile.TBColumnsSettings
+            If LocalDBTimestamp = String.Empty Then
+                LocalDBTimestamp = "None"
+            End If
 
             'Check if valid folder
             If Not Directory.Exists(_FlightPlansFolder) Then
@@ -222,4 +237,19 @@ Public Class AllSettings
         _NB21IGCFolder = Nothing
     End Sub
 
+End Class
+
+Public Class TBColumnSetting
+    Public Property Name As String
+    Public Property DisplayIndex As Integer
+    Public Property Visible As Boolean
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(name As String, displayIndex As Integer, visible As Boolean)
+        Me.Name = name
+        Me.DisplayIndex = displayIndex
+        Me.Visible = visible
+    End Sub
 End Class

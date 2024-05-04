@@ -1775,22 +1775,22 @@ Public Class Main
             End If
         End If
         sb.AppendLine()
-        sb.Append(_SF.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
+        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
         If txtMainArea.Text.Trim.Length > 0 Then
-            sb.AppendLine("> 🗺 " & _SF.ValueToAppendIfNotEmpty(txtMainArea.Text))
+            sb.AppendLine("> 🗺 " & SupportingFeatures.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
-        sb.AppendLine($"> 🛫 {_SF.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> 🛬 {_SF.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{_SF.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{_SF.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
-        sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{_SF.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> 📏 {_SF.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
-        sb.AppendLine($"> ⏳ {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> ✈️ {_SF.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
-        sb.AppendLine($"> 🎚 {_SF.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
+        sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
+        sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
+        sb.AppendLine($"> ⏳ {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
+        sb.AppendLine($"> ✈️ {SupportingFeatures.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
+        sb.AppendLine($"> 🎚 {SupportingFeatures.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
 
         If Not fromGroup Then
             sb.AppendLine()
-            sb.Append(_SF.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
+            sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
             sb.Append("### See inside thread for most up-to-date files and more information.")
         End If
 
@@ -2043,11 +2043,11 @@ Public Class Main
         sb.AppendLine("## 🌡 Weather Basic Information")
 
         If _WeatherDetails Is Nothing Then
-            sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
+            sb.Append($"- Summary: {SupportingFeatures.ValueToAppendIfNotEmpty(txtWeatherSummary.Text, nbrLineFeed:=1)}")
         Else
             sb.Append($"- Weather file & profile name: ""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName}){Environment.NewLine}")
             If Not txtWeatherSummary.Text.Trim = String.Empty Then
-                sb.Append($"- Summary: {_SF.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}{Environment.NewLine}")
+                sb.Append($"- Summary: {SupportingFeatures.ValueToAppendIfNotEmpty(txtWeatherSummary.Text)}{Environment.NewLine}")
             End If
             sb.Append($"- Elevation measurement: {_WeatherDetails.AltitudeMeasurement}{Environment.NewLine}")
             sb.Append($"- MSLPressure: {_WeatherDetails.MSLPressure(txtBaroPressureExtraInfo.Text, chkSuppressWarningForBaroPressure.Checked)}{Environment.NewLine}")
@@ -4090,7 +4090,7 @@ Public Class Main
         logisticInstructions.AppendLine("## Event Logistics")
         logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
         logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
-        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
 
         If chkUseSyncFly.Checked Then
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
@@ -4143,7 +4143,7 @@ Public Class Main
             sb.AppendLine($"🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
         End If
         If (Not fltPlanPosted) AndAlso (Not chkDGPOEventLogistics.Checked) Then
-            sb.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {_SF.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+            sb.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
         End If
 
         Return sb.ToString.Trim
@@ -4207,7 +4207,7 @@ Public Class Main
         sb.AppendLine($"**{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**")
         sb.AppendLine()
 
-        sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
+        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
 
         Dim theLocalTime As String = String.Empty
         If chkUseSyncFly.Checked Then
@@ -4238,7 +4238,7 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        sb.AppendLine($"⏳ Duration: **{_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
+        sb.AppendLine($"⏳ Duration: **{SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
         sb.AppendLine()
 
         If cboEligibleAward.SelectedIndex > 0 Then
@@ -4292,9 +4292,9 @@ Public Class Main
         Dim sb As New StringBuilder
 
         sb.AppendLine($"**Server:** {cboMSFSServer.Text}")
-        sb.AppendLine($"**Duration:** {_SF.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{_SF.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
+        sb.AppendLine($"**Duration:** {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
         sb.AppendLine()
-        sb.Append(_SF.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
+        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
         sb.AppendLine("**More Information on this group flight event:**")
         sb.AppendLine(txtGroupEventPostURL.Text)
 

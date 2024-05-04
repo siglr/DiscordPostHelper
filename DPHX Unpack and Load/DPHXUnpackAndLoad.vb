@@ -295,7 +295,10 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
 
-        SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
+        TaskBrowser.ShowDialog(Me)
+
+        'Old button to go to the Discord library
+        'SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
 
     End Sub
 

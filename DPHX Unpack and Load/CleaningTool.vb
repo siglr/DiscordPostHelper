@@ -492,7 +492,6 @@ Public Class CleaningTool
         End Try
     End Sub
 
-
 #End Region
 
 End Class

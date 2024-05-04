@@ -1,7 +1,13 @@
-﻿Imports System.Xml.Serialization
+﻿Imports System.Web.ModelBinding
+Imports System.Web.Profile
+Imports System.Xml.Serialization
 
 <XmlRoot("TBTaskData")>
 Public Class TBTaskData
+
+    <XmlIgnore()>
+    Private Shared ReadOnly Property PrefUnits As New PreferredUnits
+
     <XmlElement("TaskID")>
     Public Property TaskID As String
 
@@ -29,20 +35,20 @@ Public Class TBTaskData
     <XmlElement("MainAreaPOI")>
     Public Property MainAreaPOI As String
 
-    <XmlElement("DepartureICAO")>
-    Public Property DepartureICAO As String
-
     <XmlElement("DepartureName")>
     Public Property DepartureName As String
+
+    <XmlElement("DepartureICAO")>
+    Public Property DepartureICAO As String
 
     <XmlElement("DepartureExtra")>
     Public Property DepartureExtra As String
 
-    <XmlElement("ArrivalICAO")>
-    Public Property ArrivalICAO As String
-
     <XmlElement("ArrivalName")>
     Public Property ArrivalName As String
+
+    <XmlElement("ArrivalICAO")>
+    Public Property ArrivalICAO As String
 
     <XmlElement("ArrivalExtra")>
     Public Property ArrivalExtra As String
@@ -68,8 +74,28 @@ Public Class TBTaskData
     <XmlElement("DurationMax")>
     Public Property DurationMax As String
 
+    <XmlIgnore()>
+    Public ReadOnly Property DurationConcat As String
+        Get
+            Return SupportingFeatures.GetDuration(DurationMin, DurationMax)
+        End Get
+    End Property
+
     <XmlElement("DurationExtraInfo")>
     Public Property DurationExtraInfo As String
+
+    <XmlElement("TaskDistance")>
+    Public Property TaskDistance As String
+
+    <XmlElement("TotalDistance")>
+    Public Property TotalDistance As String
+
+    <XmlIgnore()>
+    Public ReadOnly Property DistancesConcat As String
+        Get
+            Return SupportingFeatures.GetDistance(TotalDistance, TaskDistance, PrefUnits)
+        End Get
+    End Property
 
     <XmlElement("RecommendedGliders")>
     Public Property RecommendedGliders As String
@@ -79,6 +105,14 @@ Public Class TBTaskData
 
     <XmlElement("DifficultyExtraInfo")>
     Public Property DifficultyExtraInfo As String
+
+    <XmlIgnore()>
+    Public ReadOnly Property DifficultyConcat As String
+        Get
+            Dim diffIndex As Integer = CInt(DifficultyRating.Substring(0, 1))
+            Return SupportingFeatures.GetDifficulty(diffIndex, DifficultyExtraInfo)
+        End Get
+    End Property
 
     <XmlElement("ShortDescription")>
     Public Property ShortDescription As String
@@ -95,9 +129,14 @@ Public Class TBTaskData
     <XmlElement("Countries")>
     Public Property Countries As String
 
+    <XmlElement("RecommendedAddOns")>
+    Public Property RecommendedAddOns As Boolean
+
     Public Sub New()
 
     End Sub
 
 
 End Class
+
+

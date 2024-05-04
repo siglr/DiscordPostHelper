@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
 
@@ -10,6 +11,7 @@ Public Class AdminScreen
     Private TBTaskDatabaseXMLFile As String
     Private _currentTaskDBEntries As New Dictionary(Of String, TBTaskData)
     Private _incomingTaskDBEntries As Dictionary(Of String, TBTaskData)
+    Private _XmlDocFlightPlan As XmlDocument
 
     Private Sub AdminScreen_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -19,7 +21,7 @@ Public Class AdminScreen
         TBTaskDatabaseXMLFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TBTaskDatabase.xml")
 
         'Read the current database file
-        DeserializeTaskDataList()
+        SupportingFeatures.DeserializeTaskDataList(TBTaskDatabaseXMLFile, _currentTaskDBEntries)
         UpdateCurrentDBGrid()
 
     End Sub
@@ -146,7 +148,25 @@ Public Class AdminScreen
             .WeatherSummary = DPHData.WeatherSummary
             .Credits = DPHData.Credits
             .Countries = String.Join(", ", DPHData.Countries)
+            If DPHData.RecommendedAddOns Is Nothing OrElse DPHData.RecommendedAddOns.Count = 0 Then
+                .RecommendedAddOns = False
+            Else
+                .RecommendedAddOns = True
+            End If
             .DPHXFilename = dphxFilename
+
+            'We need to open up the flight plan file to get distances
+            Dim totalDistance As Integer
+            Dim taskDistance As Integer
+            Dim possibleElevationUpdateRequired As Boolean = False
+
+            'Load flight plan
+            _XmlDocFlightPlan = New XmlDocument
+            _XmlDocFlightPlan.Load($"{Path.Combine(Path.GetDirectoryName(DPHFilename), Path.GetFileName(DPHData.FlightPlanFilename))}")
+
+            _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, taskDistance, possibleElevationUpdateRequired, False)
+            .TaskDistance = taskDistance
+            .TotalDistance = totalDistance
         End With
 
         'Lookup the task ID in the current database to check if it's an update or an addition
@@ -182,25 +202,6 @@ Public Class AdminScreen
         Using writer As New StreamWriter(TBTaskDatabaseXMLFile)
             serializer.Serialize(writer, tasks)
         End Using
-
-    End Sub
-
-    Public Sub DeserializeTaskDataList()
-
-        Dim theList As List(Of TBTaskData)
-
-        ' Create an XmlSerializer for the List(Of TBTaskData)
-        Dim serializer As New XmlSerializer(GetType(List(Of TBTaskData)), New XmlRootAttribute("TBTaskDatabase"))
-
-        ' Use a StreamReader to read the XML from file
-        Using reader As New StreamReader(TBTaskDatabaseXMLFile)
-            ' Deserialize the XML to a list of TBTaskData
-            theList = CType(serializer.Deserialize(reader), List(Of TBTaskData))
-        End Using
-
-        For Each task In theList
-            _currentTaskDBEntries.Add(task.TaskID, task)
-        Next
 
     End Sub
 

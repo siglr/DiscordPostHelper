@@ -564,7 +564,7 @@ Partial Class CleaningTool
         Me.Name = "CleaningTool"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "CleaningTool"
+        Me.Text = "Cleaning Tool"
         Me.tabCtrlCleaningTool.ResumeLayout(False)
         Me.tabFlights.ResumeLayout(False)
         Me.tabWeather.ResumeLayout(False)

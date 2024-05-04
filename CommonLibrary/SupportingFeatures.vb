@@ -113,7 +113,7 @@ Public Class SupportingFeatures
         Return Math.Ceiling(minutes / 15.0) * 15
     End Function
 
-    Public Function GetDistance(totalDistanceKm As String, trackDistanceKm As String, Optional prefUnits As PreferredUnits = Nothing) As String
+    Public Shared Function GetDistance(totalDistanceKm As String, trackDistanceKm As String, Optional prefUnits As PreferredUnits = Nothing) As String
 
         Dim totalDistKm As Decimal
         Dim trackDistKm As Decimal
@@ -140,7 +140,7 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function GetDuration(durationMin As String, durationMax As String) As String
+    Public Shared Function GetDuration(durationMin As String, durationMax As String) As String
         Dim minHoursM As String = String.Empty
         Dim maxHoursM As String = String.Empty
         Dim minMinutes As Integer = 0
@@ -181,7 +181,7 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function GetDifficulty(difficultyIndex As Integer, difficultyExtraInfo As String, Optional textOnly As Boolean = False) As String
+    Public Shared Function GetDifficulty(difficultyIndex As Integer, difficultyExtraInfo As String, Optional textOnly As Boolean = False) As String
         Dim difficulty As String = String.Empty
 
         If textOnly Then
@@ -228,7 +228,7 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function ValueToAppendIfNotEmpty(textValue As String, Optional addSpace As Boolean = False, Optional useBrackets As Boolean = False, Optional nbrLineFeed As Integer = 0) As String
+    Public Shared Function ValueToAppendIfNotEmpty(textValue As String, Optional addSpace As Boolean = False, Optional useBrackets As Boolean = False, Optional nbrLineFeed As Integer = 0) As String
 
         If String.IsNullOrEmpty(textValue) Then
             Return String.Empty
@@ -1153,7 +1153,8 @@ Public Class SupportingFeatures
         ' Check if the local time zone is currently observing daylight saving time
         Return localTimeZone.IsDaylightSavingTime(localDateTime)
     End Function
-    Public Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
+
+    Public Shared Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
 
 #If DEBUG Then
         If debugMode Then
@@ -1191,7 +1192,7 @@ Public Class SupportingFeatures
         richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
     End Sub
 
-    Private Function ReplaceSpecialCharactersWithUnicodeEscapes(ByVal input As String) As String
+    Private Shared Function ReplaceSpecialCharactersWithUnicodeEscapes(ByVal input As String) As String
         Dim sb As New StringBuilder(input)
 
         ' Replace common special characters with RTF Unicode escape sequences
@@ -1980,6 +1981,48 @@ Public Class SupportingFeatures
 
         ' If all checks passed, the name is valid
         Return True
+    End Function
+
+    Public Shared Sub DeserializeTaskDataList(TBTaskDatabaseXMLFile As String, TaskDBEntries As Dictionary(Of String, TBTaskData))
+
+        Dim theList As List(Of TBTaskData)
+
+        ' Create an XmlSerializer for the List(Of TBTaskData)
+        Dim serializer As New XmlSerializer(GetType(List(Of TBTaskData)), New XmlRootAttribute("TBTaskDatabase"))
+
+        ' Use a StreamReader to read the XML from file
+        Using reader As New StreamReader(TBTaskDatabaseXMLFile)
+            ' Deserialize the XML to a list of TBTaskData
+            theList = CType(serializer.Deserialize(reader), List(Of TBTaskData))
+        End Using
+
+        For Each task In theList
+            TaskDBEntries.Add(task.TaskID, task)
+        Next
+
+    End Sub
+
+    Public Shared Function GetSoaringTypesSelected(Ridge As Boolean, Thermals As Boolean, Waves As Boolean, Dynamic As Boolean) As String
+        Dim selectedTypes As New List(Of String)
+
+        If Ridge Then
+            selectedTypes.Add("Ridge")
+        End If
+
+        If Thermals Then
+            selectedTypes.Add("Thermal")
+        End If
+
+        If Waves Then
+            selectedTypes.Add("Wave")
+        End If
+
+        If Dynamic Then
+            selectedTypes.Add("Dynamic")
+        End If
+
+        ' Join the selected types into a single string, separated by " and "
+        Return String.Join(", ", selectedTypes)
     End Function
 
 End Class
