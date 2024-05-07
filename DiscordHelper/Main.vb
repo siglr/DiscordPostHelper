@@ -4515,9 +4515,9 @@ Public Class Main
                     tb.Text = tb.Text.Remove(prevSpace, selStart - prevSpace)
                     tb.SelectionStart = prevSpace
                 End If
-                e.Handled = True  ' Prevent further processing of this key event and the ding sound
-                e.SuppressKeyPress = True
             End If
+            e.Handled = True  ' Prevent further processing of this key event and the ding sound
+            e.SuppressKeyPress = True
         End If
 
     End Sub
