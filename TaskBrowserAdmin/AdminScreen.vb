@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿Imports System.Drawing.Drawing2D
+Imports System.Drawing.Imaging
+Imports System.IO
 Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -97,9 +99,19 @@ Public Class AdminScreen
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
-            If newDPHFile = String.Empty OrElse _allDPHData.DiscordTaskID = String.Empty Then
+            If newDPHFile = String.Empty Then
                 'Invalid file loaded
-                MessageBox.Show(Me, $"The DPHX file {dphxFilename} contains an invalid DPH file or the task ID is missing.", "Loading DPHX file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Me, $"The DPHX file {dphxFilename} contains an invalid DPH file.", "Loading DPHX file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+
+            If _allDPHData.DiscordTaskID = String.Empty AndAlso _allDPHData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_allDPHData.DiscordTaskThreadURL) Then
+                _allDPHData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_allDPHData.DiscordTaskThreadURL, True)
+            End If
+
+            If _allDPHData.DiscordTaskID = String.Empty Then
+                'Invalid file loaded
+                MessageBox.Show(Me, $"The DPHX file {dphxFilename} contains an invalid or missing task ID.", "Loading DPHX file", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Else
                 'Process the DPH file
                 Dim newEntry As TBTaskData = CreateDPHFileEntry(_allDPHData, dphxFilename, newDPHFile)
@@ -226,4 +238,59 @@ Public Class AdminScreen
         End If
 
     End Sub
+
+    Public Function ResizeImageAndGetBase64(inputPath As String, maxWidth As Integer, maxHeight As Integer, quality As Long) As String
+        ' Load the original image
+        Using image As Image = Image.FromFile(inputPath)
+            ' Calculate the new size maintaining aspect ratio
+            Dim ratioX As Double = maxWidth / image.Width
+            Dim ratioY As Double = maxHeight / image.Height
+            Dim ratio As Double = Math.Min(ratioX, ratioY)
+
+            Dim newWidth As Integer = CInt(image.Width * ratio)
+            Dim newHeight As Integer = CInt(image.Height * ratio)
+
+            ' Create a new Bitmap with the proper dimensions
+            Using thumbnail As New Bitmap(newWidth, newHeight)
+                Using graphics As Graphics = Graphics.FromImage(thumbnail)
+                    ' High quality settings for better output
+                    graphics.CompositingQuality = CompositingQuality.HighQuality
+                    graphics.SmoothingMode = SmoothingMode.HighQuality
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
+
+                    ' Draw the original image onto the thumbnail
+                    graphics.DrawImage(image, 0, 0, newWidth, newHeight)
+                End Using
+
+                ' Image quality settings
+                Using ms As New MemoryStream()
+                    Dim jpgEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
+                    Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
+                    Dim myEncoderParameters As New EncoderParameters(1)
+                    Dim myEncoderParameter As New EncoderParameter(myEncoder, quality)
+                    myEncoderParameters.Param(0) = myEncoderParameter
+
+                    ' Save the image to a memory stream in JPEG format
+                    thumbnail.Save(ms, jpgEncoder, myEncoderParameters)
+
+                    ' Convert the image to a byte array
+                    Dim imageBytes As Byte() = ms.ToArray()
+
+                    ' Convert byte array to Base64 string
+                    Return Convert.ToBase64String(imageBytes)
+                End Using
+            End Using
+        End Using
+    End Function
+
+    Private Function GetEncoder(format As ImageFormat) As ImageCodecInfo
+        Dim codecs As ImageCodecInfo() = ImageCodecInfo.GetImageDecoders()
+        For Each codec In codecs
+            If codec.FormatID = format.Guid Then
+                Return codec
+            End If
+        Next
+        Return Nothing
+    End Function
+
 End Class

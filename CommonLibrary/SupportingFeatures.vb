@@ -1700,40 +1700,28 @@ Public Class SupportingFeatures
     End Function
 
     ' Function to bring a specific window to the top and unminimize it if minimized
-    Public Shared Function BringWindowToTopWithExe(partialTitle As String, exeFilePath As String) As Process
-        Try
-            Dim processes() As Process = Process.GetProcesses()
+    Public Shared Function BringWindowToTopWithPartialTitle(partialTitle As String) As IntPtr
+        Dim targetHandle As IntPtr = IntPtr.Zero
 
-            For Each p As Process In processes
-                Try
-                    If Not String.IsNullOrEmpty(p.MainWindowTitle) AndAlso p.MainWindowTitle.Contains(partialTitle) Then
-                        ' Check if the executable file path matches the specified one
-                        If String.Compare(Path.GetFileName(p.MainModule.FileName), exeFilePath, StringComparison.OrdinalIgnoreCase) = 0 Then
-                            Dim handle As IntPtr = p.MainWindowHandle
+        NativeMethods.EnumWindows(Function(hWnd, lParam)
+                                      Dim sbTitle As New StringBuilder(1024)
+                                      NativeMethods.GetWindowText(hWnd, sbTitle, sbTitle.Capacity)
+                                      Dim title As String = sbTitle.ToString()
 
-                            If NativeMethods.IsIconic(handle) Then
-                                ' If the window is minimized, unminimize it
-                                NativeMethods.ShowWindow(handle, SW_RESTORE)
-                            End If
+                                      If title.Contains(partialTitle) AndAlso NativeMethods.IsWindowVisible(hWnd) Then
+                                          targetHandle = hWnd
+                                          Return False ' Return False to stop enumerating windows
+                                      End If
 
-                            NativeMethods.SetForegroundWindow(handle)
-                            Return p ' Found and brought to the top
-                        End If
-                    End If
+                                      Return True ' Continue enumerating windows
+                                  End Function, 0)
 
-                Catch ex As Exception
-                End Try
-            Next
+        If targetHandle <> IntPtr.Zero Then
+            NativeMethods.SetForegroundWindow(targetHandle)
+        End If
 
-            ' If we reach here, the window was not found
-            ' Handle as needed or ignore the error
-        Catch ex As Exception
-            ' Handle any other exceptions here if needed
-        End Try
-
-        Return Nothing ' Window not found or other error occurred
+        Return targetHandle
     End Function
-
     Public Shared Sub BringDPHToolToTop(handle As IntPtr)
         NativeMethods.SetForegroundWindow(handle)
     End Sub
@@ -2029,6 +2017,10 @@ End Class
 
 
 Public Class NativeMethods
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Public Shared Function FindWindow(lpClassName As String, lpWindowName As String) As IntPtr
+    End Function
+
     <DllImport("user32.dll")>
     Public Shared Function SetForegroundWindow(hWnd As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
     End Function
@@ -2040,6 +2032,21 @@ Public Class NativeMethods
     <DllImport("user32.dll")>
     Public Shared Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
     End Function
+
+    Public Delegate Function EnumWindowsProc(hWnd As IntPtr, lParam As Integer) As Boolean
+
+    <DllImport("user32.dll")>
+    Public Shared Function EnumWindows(lpEnumFunc As EnumWindowsProc, lParam As Integer) As Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Public Shared Function GetWindowText(hWnd As IntPtr, lpString As StringBuilder, nMaxCount As Integer) As Integer
+    End Function
+
+    <DllImport("user32.dll")>
+    Public Shared Function IsWindowVisible(hWnd As IntPtr) As Boolean
+    End Function
+
 End Class
 
 

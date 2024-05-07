@@ -31,8 +31,8 @@ Public Class CopyContent
             Application.DoEvents()
         End If
 
-        Dim discordProcess As Process = SupportingFeatures.BringWindowToTopWithExe("Discord", "Discord.exe")
-        If discordProcess IsNot Nothing Then
+        Dim discordProcess As IntPtr = SupportingFeatures.BringWindowToTopWithPartialTitle(" - Discord")
+        If Not discordProcess = IntPtr.Zero Then
             For Each keySequence As String In _keySequences
                 My.Computer.Keyboard.SendKeys(keySequence, True)
             Next
