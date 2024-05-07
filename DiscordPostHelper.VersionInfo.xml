@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.5.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.5.7.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.5.7.3</ReleaseVersion>
+      <ReleaseTitle>Support for Discord 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for interaction with Discord 64 bits.
+        Implemented the Ctrl-Backspace feature on all text fields (text fields only and Ctrl-Z doesn't work with it).
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.5.2.1</ReleaseVersion>
       <ReleaseTitle>Group Event posts format revisited</ReleaseTitle>
