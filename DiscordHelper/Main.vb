@@ -16,6 +16,7 @@ Imports System.Web
 Imports System.Collections.Specialized
 Imports System.Net.Mail
 Imports System.Windows.Interop
+Imports System.Windows.Controls
 
 Public Class Main
 
@@ -4473,6 +4474,8 @@ Public Class Main
     End Sub
 
     Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles TabControl1.KeyDown, Me.KeyDown
+
+        ' Handle F1 for help
         If e.KeyCode = Keys.F1 Then
             Try
                 Dim controlTag As Integer = CInt(Me.ActiveControl.Tag)
@@ -4488,10 +4491,33 @@ Public Class Main
             ShowGuide(True)
             e.SuppressKeyPress = True ' This prevents the beep sound
         End If
+
+        ' Handle the CTRL-S key combination (e.g., save the file)
         If e.Control AndAlso e.KeyCode = Keys.S AndAlso _sessionModified Then
-            ' Handle the CTRL-S key combination (e.g., save the file)
             SaveSession()
             e.SuppressKeyPress = True ' This prevents the beep sound
+        End If
+
+        ' Handle Ctrl+Backspace for text control
+        If e.Control AndAlso e.KeyCode = Keys.Back Then
+            If (TypeOf Me.ActiveControl Is Windows.Forms.TextBox) Then
+
+                Dim tb As Windows.Forms.TextBox = CType(Me.ActiveControl, Windows.Forms.TextBox)
+                If Not String.IsNullOrWhiteSpace(tb.Text) AndAlso tb.SelectionStart > 0 Then
+                    Dim selStart As Integer = tb.SelectionStart
+                    While selStart > 0 AndAlso tb.Text.Substring(selStart - 1, 1) = " "
+                        selStart -= 1  ' Skip over any spaces
+                    End While
+
+                    Dim prevSpace As Integer = tb.Text.LastIndexOf(" "c, selStart - 1)
+                    If prevSpace = -1 Then prevSpace = 0  ' If no space found, go to start of text
+
+                    tb.Text = tb.Text.Remove(prevSpace, selStart - prevSpace)
+                    tb.SelectionStart = prevSpace
+                End If
+                e.Handled = True  ' Prevent further processing of this key event and the ding sound
+                e.SuppressKeyPress = True
+            End If
         End If
 
     End Sub
