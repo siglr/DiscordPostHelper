@@ -42,14 +42,13 @@ Public Class CopyContent
             Me.Cursor = Cursors.WaitCursor
             lblMessage.Text = "Waiting a bit for Discord to complete posting."
             Application.DoEvents()
-            Threading.Thread.Sleep(500)
             Threading.Thread.Sleep(_msToWaitAfterPost)
             Me.Cursor = Cursors.Default
             SupportingFeatures.BringDPHToolToTop(Me.Handle)
             Me.Close()
         Else
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, $"The Discord app can't be found / is not running.{Environment.NewLine}{Environment.NewLine}If you use Discord on a browser, you will have to paste and post manually.", "Discord app not running", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Me, $"The Discord window can't be found / is not running.{Environment.NewLine}{Environment.NewLine}If you use Discord on a browser, you will have to paste and post manually.", "Discord app not running", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
