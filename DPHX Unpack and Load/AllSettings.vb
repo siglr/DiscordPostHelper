@@ -134,6 +134,21 @@ Public Class AllSettings
     <XmlElement("LocalDBTimestamp")>
     Public Property LocalDBTimestamp As String
 
+    <XmlElement("TaskLibrarySortColumn")>
+    Public Property TaskLibrarySortColumn As String
+
+    <XmlElement("TaskLibrarySortAsc")>
+    Public Property TaskLibrarySortAsc As Boolean
+
+    <XmlElement("TaskLibrarySplitterLocation")>
+    Public Property TaskLibrarySplitterLocation As Integer
+
+    <XmlElement("TaskLibraryRightPartSplitterLocation")>
+    Public Property TaskLibraryRightPartSplitterLocation As Integer
+
+    <XmlElement("TaskLibraryDetailsZoomLevel")>
+    Public Property TaskLibraryDetailsZoomLevel As Single
+
     <XmlArray("TBColumnsSettings")>
     <XmlArrayItem("Column")>
     Public Property TBColumnsSettings As List(Of TBColumnSetting)
@@ -183,6 +198,24 @@ Public Class AllSettings
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
             LocalDBTimestamp = settingsInFile.LocalDBTimestamp
+            TaskLibrarySortColumn = settingsInFile.TaskLibrarySortColumn
+            TaskLibrarySortAsc = settingsInFile.TaskLibrarySortAsc
+            TaskLibrarySplitterLocation = settingsInFile.TaskLibrarySplitterLocation
+            If TaskLibrarySplitterLocation = 0 Then
+                TaskLibrarySplitterLocation = 60
+            End If
+            TaskLibraryRightPartSplitterLocation = settingsInFile.TaskLibraryRightPartSplitterLocation
+            If TaskLibraryRightPartSplitterLocation = 0 Then
+                TaskLibraryRightPartSplitterLocation = 50
+            End If
+            TaskLibraryDetailsZoomLevel = settingsInFile.TaskLibraryDetailsZoomLevel
+            If TaskLibraryDetailsZoomLevel = 0 Then
+                TaskLibraryDetailsZoomLevel = 1.5
+            End If
+            If TaskLibrarySortColumn = String.Empty Then
+                TaskLibrarySortColumn = "LastUpdate"
+                TaskLibrarySortAsc = True
+            End If
             TBColumnsSettings = settingsInFile.TBColumnsSettings
             If LocalDBTimestamp = String.Empty Then
                 LocalDBTimestamp = "None"
@@ -243,13 +276,15 @@ Public Class TBColumnSetting
     Public Property Name As String
     Public Property DisplayIndex As Integer
     Public Property Visible As Boolean
+    Public Property ColumnWidth As Integer
 
     Public Sub New()
     End Sub
 
-    Public Sub New(name As String, displayIndex As Integer, visible As Boolean)
+    Public Sub New(name As String, displayIndex As Integer, visible As Boolean, columnWidth As Integer)
         Me.Name = name
         Me.DisplayIndex = displayIndex
         Me.Visible = visible
+        Me.ColumnWidth = columnWidth
     End Sub
 End Class
