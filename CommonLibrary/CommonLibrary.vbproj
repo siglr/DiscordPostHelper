@@ -154,6 +154,7 @@
     <Compile Include="PreferredUnits.vb" />
     <Compile Include="PresetEvent.vb" />
     <Compile Include="RecommendedAddOn.vb" />
+    <Compile Include="SerializableDictionnary.vb" />
     <Compile Include="SupportingFeatures.vb" />
     <Compile Include="TBTaskData.vb" />
     <Compile Include="ToolStripExtended.vb" />

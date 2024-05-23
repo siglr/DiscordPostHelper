@@ -40,6 +40,12 @@ Partial Class TaskBrowser
         Me.WavesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DynamicToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddOnsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TextCriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.textCriteriaWords = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.NumbersCriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.numbersCriteriaFromTo = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.btnUpdateLocalDB = New System.Windows.Forms.Button()
         Me.lblOnlineDBTimestamp = New System.Windows.Forms.Label()
@@ -57,12 +63,13 @@ Partial Class TaskBrowser
         Me.splitImages = New System.Windows.Forms.SplitContainer()
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
-        Me.TextCriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.textCriteriaWords = New System.Windows.Forms.ToolStripTextBox()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.NumbersCriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.numbersCriteriaFromTo = New System.Windows.Forms.ToolStripTextBox()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.FavoritesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddCurrentAsFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.txtNewFavoriteTitle = New System.Windows.Forms.ToolStripTextBox()
+        Me.AddNewFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnDownloadOpen = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -88,6 +95,7 @@ Partial Class TaskBrowser
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnDownloadOpen)
         Me.Panel1.Controls.Add(Me.btnViewInLibrary)
         Me.Panel1.Controls.Add(Me.OK_Button)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -189,15 +197,15 @@ Partial Class TaskBrowser
         'FilterBoxContextMenu
         '
         Me.FilterBoxContextMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.FilterBoxContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.TextCriteriaToolStripMenuItem, Me.NumbersCriteriaToolStripMenuItem})
+        Me.FilterBoxContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.TextCriteriaToolStripMenuItem, Me.NumbersCriteriaToolStripMenuItem, Me.ToolStripSeparator4, Me.FavoritesToolStripMenuItem})
         Me.FilterBoxContextMenu.Name = "FilterBoxContextMenu"
-        Me.FilterBoxContextMenu.Size = New System.Drawing.Size(199, 101)
+        Me.FilterBoxContextMenu.Size = New System.Drawing.Size(180, 106)
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(198, 24)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(179, 24)
         Me.ToolStripMenuItem1.Text = "Boolean"
         '
         'RidgeToolStripMenuItem
@@ -230,6 +238,44 @@ Partial Class TaskBrowser
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
         Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
+        '
+        'TextCriteriaToolStripMenuItem
+        '
+        Me.TextCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.textCriteriaWords, Me.ToolStripSeparator2})
+        Me.TextCriteriaToolStripMenuItem.Name = "TextCriteriaToolStripMenuItem"
+        Me.TextCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.TextCriteriaToolStripMenuItem.Text = "Text criteria"
+        '
+        'textCriteriaWords
+        '
+        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.textCriteriaWords.Name = "textCriteriaWords"
+        Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
+        Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(165, 6)
+        '
+        'NumbersCriteriaToolStripMenuItem
+        '
+        Me.NumbersCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.numbersCriteriaFromTo, Me.ToolStripSeparator3})
+        Me.NumbersCriteriaToolStripMenuItem.Name = "NumbersCriteriaToolStripMenuItem"
+        Me.NumbersCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.NumbersCriteriaToolStripMenuItem.Text = "Numbers criteria"
+        '
+        'numbersCriteriaFromTo
+        '
+        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
+        Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
+        Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(203, 6)
         '
         'Panel3
         '
@@ -429,43 +475,51 @@ Partial Class TaskBrowser
         Me.imgCover.TabIndex = 2
         Me.imgCover.TabStop = False
         '
-        'TextCriteriaToolStripMenuItem
+        'ToolStripSeparator4
         '
-        Me.TextCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.textCriteriaWords, Me.ToolStripSeparator2})
-        Me.TextCriteriaToolStripMenuItem.Name = "TextCriteriaToolStripMenuItem"
-        Me.TextCriteriaToolStripMenuItem.Size = New System.Drawing.Size(198, 24)
-        Me.TextCriteriaToolStripMenuItem.Text = "Text criteria"
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
         '
-        'textCriteriaWords
+        'FavoritesToolStripMenuItem
         '
-        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
-        Me.textCriteriaWords.Name = "textCriteriaWords"
-        Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
-        Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
+        Me.FavoritesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddCurrentAsFavoriteToolStripMenuItem, Me.ToolStripSeparator5})
+        Me.FavoritesToolStripMenuItem.Name = "FavoritesToolStripMenuItem"
+        Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.FavoritesToolStripMenuItem.Text = "Favorites"
         '
-        'ToolStripSeparator2
+        'AddCurrentAsFavoriteToolStripMenuItem
         '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(203, 6)
+        Me.AddCurrentAsFavoriteToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.txtNewFavoriteTitle, Me.AddNewFavoriteToolStripMenuItem})
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Name = "AddCurrentAsFavoriteToolStripMenuItem"
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Size = New System.Drawing.Size(226, 24)
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Text = "Add current as favorite"
         '
-        'NumbersCriteriaToolStripMenuItem
+        'ToolStripSeparator5
         '
-        Me.NumbersCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.numbersCriteriaFromTo, Me.ToolStripSeparator3})
-        Me.NumbersCriteriaToolStripMenuItem.Name = "NumbersCriteriaToolStripMenuItem"
-        Me.NumbersCriteriaToolStripMenuItem.Size = New System.Drawing.Size(198, 24)
-        Me.NumbersCriteriaToolStripMenuItem.Text = "Numbers criteria"
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(223, 6)
         '
-        'numbersCriteriaFromTo
+        'txtNewFavoriteTitle
         '
-        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
-        Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
-        Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
-        Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
+        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
+        Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
-        'ToolStripSeparator3
+        'AddNewFavoriteToolStripMenuItem
         '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(203, 6)
+        Me.AddNewFavoriteToolStripMenuItem.Name = "AddNewFavoriteToolStripMenuItem"
+        Me.AddNewFavoriteToolStripMenuItem.Size = New System.Drawing.Size(223, 24)
+        Me.AddNewFavoriteToolStripMenuItem.Text = "Add (enter title above)"
+        '
+        'btnDownloadOpen
+        '
+        Me.btnDownloadOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDownloadOpen.Location = New System.Drawing.Point(733, 4)
+        Me.btnDownloadOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnDownloadOpen.Name = "btnDownloadOpen"
+        Me.btnDownloadOpen.Size = New System.Drawing.Size(142, 35)
+        Me.btnDownloadOpen.TabIndex = 2
+        Me.btnDownloadOpen.Text = "Download && Open"
         '
         'TaskBrowser
         '
@@ -551,4 +605,11 @@ Partial Class TaskBrowser
     Friend WithEvents NumbersCriteriaToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents numbersCriteriaFromTo As ToolStripTextBox
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents FavoritesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddCurrentAsFavoriteToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+    Friend WithEvents txtNewFavoriteTitle As ToolStripTextBox
+    Friend WithEvents AddNewFavoriteToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents btnDownloadOpen As Button
 End Class

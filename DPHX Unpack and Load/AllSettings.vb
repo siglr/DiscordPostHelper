@@ -149,6 +149,10 @@ Public Class AllSettings
     <XmlElement("TaskLibraryDetailsZoomLevel")>
     Public Property TaskLibraryDetailsZoomLevel As Single
 
+    <XmlElement("FavoriteSearches")>
+    Public Property FavoriteSearches As SerializableDictionary(Of String, List(Of String))
+
+
     <XmlArray("TBColumnsSettings")>
     <XmlArrayItem("Column")>
     Public Property TBColumnsSettings As List(Of TBColumnSetting)
@@ -157,6 +161,7 @@ Public Class AllSettings
 
         ' Initialize the list
         TBColumnsSettings = New List(Of TBColumnSetting)
+        FavoriteSearches = New SerializableDictionary(Of String, List(Of String))()
 
     End Sub
 
@@ -220,6 +225,19 @@ Public Class AllSettings
             If LocalDBTimestamp = String.Empty Then
                 LocalDBTimestamp = "None"
             End If
+            ' Add deserialization for StringListDictionary
+            FavoriteSearches = settingsInFile.FavoriteSearches
+
+            'Remove any favorite that doesn't contain any values
+            Dim allFavKeys As New List(Of String)
+            For Each favKey As String In FavoriteSearches.Keys
+                allFavKeys.Add(favKey)
+            Next
+            For Each favKey As String In allFavKeys
+                If FavoriteSearches(favKey).Count = 0 Then
+                    FavoriteSearches.Remove(favKey)
+                End If
+            Next
 
             'Check if valid folder
             If Not Directory.Exists(_FlightPlansFolder) Then

@@ -81,6 +81,58 @@ Public Class TaskBrowser
         AddFieldWithNumbersCriteria("duration", "Duration")
         AddFieldWithNumbersCriteria("distance", "Distance (in KM)")
 
+        BuildFavoritesMenu()
+
+    End Sub
+
+    Private Sub btnDownloadOpen_Click(sender As Object, e As EventArgs) Handles btnDownloadOpen.Click
+
+
+
+    End Sub
+
+    Private Sub AddNewFavoriteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewFavoriteToolStripMenuItem.Click
+
+        txtNewFavoriteTitle.Text = txtNewFavoriteTitle.Text.Replace("&", "")
+
+        If txtNewFavoriteTitle.Text.Trim = String.Empty Then
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, "No title specified for the favorite!", "Adding new search favorite", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
+        If _searchTerms.Count = 0 Then
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, "Please build your search criteria first!", "Adding new search favorite", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
+        'check if title already exists
+        If Settings.SessionSettings.FavoriteSearches.Keys.Contains(txtNewFavoriteTitle.Text.Trim) Then
+            Using New Centered_MessageBox()
+                If MessageBox.Show(Me, "This title already exists in your favorites! Do you want to replace it?", "Adding new search favorite", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    txtNewFavoriteTitle.Text = String.Empty
+                    Exit Sub
+                End If
+            End Using
+            'Replace the existing favorite
+            Settings.SessionSettings.FavoriteSearches(txtNewFavoriteTitle.Text.Trim).Clear()
+            For Each term As String In _searchTerms
+                Settings.SessionSettings.FavoriteSearches(txtNewFavoriteTitle.Text.Trim).Add(term)
+            Next
+        Else
+            'Add new favorite
+            Settings.SessionSettings.FavoriteSearches.Add(txtNewFavoriteTitle.Text.Trim, New List(Of String))
+            For Each term As String In _searchTerms
+                Settings.SessionSettings.FavoriteSearches(txtNewFavoriteTitle.Text.Trim).Add(term)
+            Next
+            'Add to the contextual menu
+            BuildFavoritesMenu()
+            txtNewFavoriteTitle.Text = String.Empty
+        End If
+
     End Sub
 
     Private Sub NumberCriteriaMenuItem_Click(sender As Object, e As EventArgs)
@@ -105,6 +157,69 @@ Public Class TaskBrowser
         ProcessSearch(txtSearch.Text.Trim, True)
         txtSearch.Text = String.Empty
         numbersCriteriaFromTo.Text = String.Empty
+
+    End Sub
+
+    Private Sub FavoriteReplaceSearchItem_Click(sender As Object, e As EventArgs)
+
+        btnResetSearch_Click(sender, e)
+        FavoriteAddToSearchItem_Click(sender, e)
+
+    End Sub
+
+    Private Sub FavoriteAddToSearchItem_Click(sender As Object, e As EventArgs)
+
+        Dim txtFavoriteTitle As String = sender.Tag
+
+        For Each termToAdd As String In Settings.SessionSettings.FavoriteSearches(txtFavoriteTitle)
+            ProcessSearch(termToAdd, True)
+        Next
+
+    End Sub
+
+    Private Sub FavoriteRenameItem_Click(sender As Object, e As EventArgs)
+
+        Dim txtRenameFavorite As ToolStripTextBox = sender.tag
+        Dim txtCurrentFavoriteTitle As String = txtRenameFavorite.Tag
+
+        If txtRenameFavorite.Text.Trim = String.Empty Then
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, "No new title specified for the favorite!", "Renaming favorite", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
+        txtRenameFavorite.Text = txtRenameFavorite.Text.Replace("&", "")
+
+        'check if title already exists
+        If Settings.SessionSettings.FavoriteSearches.Keys.Contains(txtRenameFavorite.Text.Trim) Then
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, "This title already exists in your favorites!", "Renaming favorite", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                txtRenameFavorite.Text = String.Empty
+                Exit Sub
+            End Using
+        End If
+
+        'Rename favorite
+        Settings.SessionSettings.FavoriteSearches.Add(txtRenameFavorite.Text.Trim, Settings.SessionSettings.FavoriteSearches(txtCurrentFavoriteTitle))
+        Settings.SessionSettings.FavoriteSearches.Remove(txtCurrentFavoriteTitle)
+        txtRenameFavorite.Text = String.Empty
+
+        BuildFavoritesMenu()
+
+    End Sub
+
+    Private Sub FavoriteDeleteItem_Click(sender As Object, e As EventArgs)
+
+        Dim txtFavoriteTitle As String = sender.Tag
+
+        Using New Centered_MessageBox()
+            If MessageBox.Show(Me, $"Are you sure you want to delete your favorite ""{txtFavoriteTitle}""?", "Deleting favorite", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
+                'Delete the favorite
+                Settings.SessionSettings.FavoriteSearches.Remove(txtFavoriteTitle)
+                BuildFavoritesMenu()
+            End If
+        End Using
 
     End Sub
 
@@ -367,6 +482,27 @@ Public Class TaskBrowser
 #End Region
 
 #Region "Subs and functions"
+
+    Private Sub BuildFavoritesMenu()
+
+        'Remove all elements
+        For i As Integer = FavoritesToolStripMenuItem.DropDownItems.Count - 1 To 2 Step -1
+            Dim item As ToolStripItem = FavoritesToolStripMenuItem.DropDownItems(i)
+            If TypeOf item Is ToolStripMenuItem Then
+                FavoritesToolStripMenuItem.DropDownItems.RemoveAt(i)
+            End If
+        Next
+
+        ' Get the sorted list of favorite titles
+        Dim sortedFavoriteTitles = Settings.SessionSettings.FavoriteSearches.Keys.ToList()
+        sortedFavoriteTitles.Sort()
+
+        ' Add the sorted favorite titles to the menu
+        For Each favTitle As String In sortedFavoriteTitles
+            AddFavoriteSearch(favTitle)
+        Next
+
+    End Sub
 
     Private Sub SortGrid(columnName As String, direction As ListSortDirection)
         ' Create a DataView from the DataTable
@@ -954,7 +1090,7 @@ Public Class TaskBrowser
 
         Dim validSearch As Boolean = True
 
-        Dim filteredRows As EnumerableRowCollection(Of DataRow)
+        Dim filteredRows As EnumerableRowCollection(Of DataRow) = Nothing
         Dim sourceTable As DataTable
         Dim specificSearch As Boolean = False
         Dim specificField As String = String.Empty
@@ -1142,6 +1278,43 @@ Public Class TaskBrowser
                 gridCurrentDatabase.FirstDisplayedScrollingColumnIndex = horizontalScrollIndex
             End If
         End If
+    End Sub
+
+    Private Sub AddFavoriteSearch(favoriteTitle As String)
+        ' Create the main menu item for the field
+        Dim favoriteMenuItem As New ToolStripMenuItem(favoriteTitle)
+
+        ' Create sub-menu items
+        Dim replaceSearchItem As New ToolStripMenuItem("Replace search")
+        Dim addToSearchItem As New ToolStripMenuItem("Add to search")
+        Dim separator As New ToolStripSeparator
+        Dim txtRenameTitle As New ToolStripTextBox("txtRenameFavorite")
+        Dim renameItem As New ToolStripMenuItem("Rename favorite")
+        Dim deleteItem As New ToolStripMenuItem("Delete favorite")
+
+        ' Set the Tag property to the field name
+        replaceSearchItem.Tag = favoriteTitle
+        addToSearchItem.Tag = favoriteTitle
+        txtRenameTitle.Tag = favoriteTitle
+        renameItem.Tag = txtRenameTitle
+        deleteItem.Tag = favoriteTitle
+
+        ' Add event handlers
+        AddHandler replaceSearchItem.Click, AddressOf FavoriteReplaceSearchItem_Click
+        AddHandler addToSearchItem.Click, AddressOf FavoriteAddToSearchItem_Click
+        AddHandler renameItem.Click, AddressOf FavoriteRenameItem_Click
+        AddHandler deleteItem.Click, AddressOf FavoriteDeleteItem_Click
+
+        ' Add sub-menu items to the field menu item
+        favoriteMenuItem.DropDownItems.Add(replaceSearchItem)
+        favoriteMenuItem.DropDownItems.Add(addToSearchItem)
+        favoriteMenuItem.DropDownItems.Add(separator)
+        favoriteMenuItem.DropDownItems.Add(txtRenameTitle)
+        favoriteMenuItem.DropDownItems.Add(renameItem)
+        favoriteMenuItem.DropDownItems.Add(deleteItem)
+
+        ' Add the field menu item to the main TextCriteriaToolStripMenuItem
+        FavoritesToolStripMenuItem.DropDownItems.Add(favoriteMenuItem)
     End Sub
 
     Private Sub AddFieldWithTextCriteria(fieldName As String, fieldLabel As String)
