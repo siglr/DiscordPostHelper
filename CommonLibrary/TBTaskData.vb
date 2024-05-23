@@ -1,6 +1,7 @@
 ﻿Public Class TBTaskData
 
     Private Shared ReadOnly Property PrefUnits As New PreferredUnits
+    Public Property EntrySeqID As Integer
 
     Public Property TaskID As String
 
@@ -92,6 +93,11 @@
     Public Property Countries As String
 
     Public Property RecommendedAddOns As Boolean
+
+    Public Property TotDownloads As Integer
+
+    Public Property LastDownloadUpdate As String
+
 
     Public Sub New()
 

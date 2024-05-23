@@ -24,6 +24,7 @@ Partial Class TaskBrowser
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnDownloadOpen = New System.Windows.Forms.Button()
         Me.btnViewInLibrary = New System.Windows.Forms.Button()
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
@@ -46,13 +47,14 @@ Partial Class TaskBrowser
         Me.NumbersCriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.numbersCriteriaFromTo = New System.Windows.Forms.ToolStripTextBox()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.FavoritesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddCurrentAsFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtNewFavoriteTitle = New System.Windows.Forms.ToolStripTextBox()
+        Me.AddNewFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.btnUpdateLocalDB = New System.Windows.Forms.Button()
-        Me.lblOnlineDBTimestamp = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.btnRetrieveOnlineDBTimestamp = New System.Windows.Forms.Button()
-        Me.lblLocalDBTimestamp = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.btnUpdateDB = New System.Windows.Forms.Button()
         Me.splitMain = New System.Windows.Forms.SplitContainer()
         Me.gridCurrentDatabase = New System.Windows.Forms.DataGridView()
         Me.TasksGridContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -63,13 +65,6 @@ Partial Class TaskBrowser
         Me.splitImages = New System.Windows.Forms.SplitContainer()
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.FavoritesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AddCurrentAsFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
-        Me.txtNewFavoriteTitle = New System.Windows.Forms.ToolStripTextBox()
-        Me.AddNewFavoriteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnDownloadOpen = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -103,6 +98,16 @@ Partial Class TaskBrowser
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1118, 44)
         Me.Panel1.TabIndex = 2
+        '
+        'btnDownloadOpen
+        '
+        Me.btnDownloadOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDownloadOpen.Location = New System.Drawing.Point(733, 4)
+        Me.btnDownloadOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnDownloadOpen.Name = "btnDownloadOpen"
+        Me.btnDownloadOpen.Size = New System.Drawing.Size(142, 35)
+        Me.btnDownloadOpen.TabIndex = 2
+        Me.btnDownloadOpen.Text = "Download && Open"
         '
         'btnViewInLibrary
         '
@@ -146,7 +151,7 @@ Partial Class TaskBrowser
         Me.Panel4.Controls.Add(Me.txtSearch)
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(665, 44)
+        Me.Panel4.Size = New System.Drawing.Size(1002, 44)
         Me.Panel4.TabIndex = 10
         '
         'chkNot
@@ -183,7 +188,7 @@ Partial Class TaskBrowser
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSearchTerms.Location = New System.Drawing.Point(353, 12)
         Me.lblSearchTerms.Name = "lblSearchTerms"
-        Me.lblSearchTerms.Size = New System.Drawing.Size(303, 24)
+        Me.lblSearchTerms.Size = New System.Drawing.Size(640, 24)
         Me.lblSearchTerms.TabIndex = 9
         '
         'txtSearch
@@ -211,32 +216,32 @@ Partial Class TaskBrowser
         'RidgeToolStripMenuItem
         '
         Me.RidgeToolStripMenuItem.Name = "RidgeToolStripMenuItem"
-        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.RidgeToolStripMenuItem.Tag = ""
         Me.RidgeToolStripMenuItem.Text = "Ridge"
         '
         'ThermalsToolStripMenuItem
         '
         Me.ThermalsToolStripMenuItem.Name = "ThermalsToolStripMenuItem"
-        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.ThermalsToolStripMenuItem.Text = "Thermals"
         '
         'WavesToolStripMenuItem
         '
         Me.WavesToolStripMenuItem.Name = "WavesToolStripMenuItem"
-        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.WavesToolStripMenuItem.Text = "Waves"
         '
         'DynamicToolStripMenuItem
         '
         Me.DynamicToolStripMenuItem.Name = "DynamicToolStripMenuItem"
-        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.DynamicToolStripMenuItem.Text = "Dynamic"
         '
         'AddOnsToolStripMenuItem
         '
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
-        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
         '
         'TextCriteriaToolStripMenuItem
@@ -275,76 +280,62 @@ Partial Class TaskBrowser
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(203, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(165, 6)
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
+        '
+        'FavoritesToolStripMenuItem
+        '
+        Me.FavoritesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddCurrentAsFavoriteToolStripMenuItem, Me.ToolStripSeparator5})
+        Me.FavoritesToolStripMenuItem.Name = "FavoritesToolStripMenuItem"
+        Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.FavoritesToolStripMenuItem.Text = "Favorites"
+        '
+        'AddCurrentAsFavoriteToolStripMenuItem
+        '
+        Me.AddCurrentAsFavoriteToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.txtNewFavoriteTitle, Me.AddNewFavoriteToolStripMenuItem})
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Name = "AddCurrentAsFavoriteToolStripMenuItem"
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Size = New System.Drawing.Size(226, 24)
+        Me.AddCurrentAsFavoriteToolStripMenuItem.Text = "Add current as favorite"
+        '
+        'txtNewFavoriteTitle
+        '
+        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
+        Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
+        '
+        'AddNewFavoriteToolStripMenuItem
+        '
+        Me.AddNewFavoriteToolStripMenuItem.Name = "AddNewFavoriteToolStripMenuItem"
+        Me.AddNewFavoriteToolStripMenuItem.Size = New System.Drawing.Size(223, 24)
+        Me.AddNewFavoriteToolStripMenuItem.Text = "Add (enter title above)"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(223, 6)
         '
         'Panel3
         '
         Me.Panel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel3.Controls.Add(Me.btnUpdateLocalDB)
-        Me.Panel3.Controls.Add(Me.lblOnlineDBTimestamp)
-        Me.Panel3.Controls.Add(Me.Label2)
-        Me.Panel3.Controls.Add(Me.btnRetrieveOnlineDBTimestamp)
-        Me.Panel3.Controls.Add(Me.lblLocalDBTimestamp)
-        Me.Panel3.Controls.Add(Me.Label1)
-        Me.Panel3.Location = New System.Drawing.Point(671, 3)
+        Me.Panel3.Controls.Add(Me.btnUpdateDB)
+        Me.Panel3.Location = New System.Drawing.Point(1008, 3)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(443, 41)
+        Me.Panel3.Size = New System.Drawing.Size(106, 41)
         Me.Panel3.TabIndex = 6
         '
-        'btnUpdateLocalDB
+        'btnUpdateDB
         '
-        Me.btnUpdateLocalDB.Enabled = False
-        Me.btnUpdateLocalDB.Location = New System.Drawing.Point(333, 3)
-        Me.btnUpdateLocalDB.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnUpdateLocalDB.Name = "btnUpdateLocalDB"
-        Me.btnUpdateLocalDB.Size = New System.Drawing.Size(107, 35)
-        Me.btnUpdateLocalDB.TabIndex = 11
-        Me.btnUpdateLocalDB.Text = "Download DB"
-        '
-        'lblOnlineDBTimestamp
-        '
-        Me.lblOnlineDBTimestamp.Location = New System.Drawing.Point(62, 20)
-        Me.lblOnlineDBTimestamp.Name = "lblOnlineDBTimestamp"
-        Me.lblOnlineDBTimestamp.Size = New System.Drawing.Size(159, 20)
-        Me.lblOnlineDBTimestamp.TabIndex = 10
-        Me.lblOnlineDBTimestamp.Text = "None"
-        Me.lblOnlineDBTimestamp.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 20)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(53, 20)
-        Me.Label2.TabIndex = 9
-        Me.Label2.Text = "Online:"
-        '
-        'btnRetrieveOnlineDBTimestamp
-        '
-        Me.btnRetrieveOnlineDBTimestamp.Location = New System.Drawing.Point(228, 3)
-        Me.btnRetrieveOnlineDBTimestamp.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnRetrieveOnlineDBTimestamp.Name = "btnRetrieveOnlineDBTimestamp"
-        Me.btnRetrieveOnlineDBTimestamp.Size = New System.Drawing.Size(97, 35)
-        Me.btnRetrieveOnlineDBTimestamp.TabIndex = 8
-        Me.btnRetrieveOnlineDBTimestamp.Text = "Check"
-        '
-        'lblLocalDBTimestamp
-        '
-        Me.lblLocalDBTimestamp.Location = New System.Drawing.Point(62, 0)
-        Me.lblLocalDBTimestamp.Name = "lblLocalDBTimestamp"
-        Me.lblLocalDBTimestamp.Size = New System.Drawing.Size(159, 20)
-        Me.lblLocalDBTimestamp.TabIndex = 7
-        Me.lblLocalDBTimestamp.Text = "None"
-        Me.lblLocalDBTimestamp.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(3, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(46, 20)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Local:"
+        Me.btnUpdateDB.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUpdateDB.Location = New System.Drawing.Point(5, 2)
+        Me.btnUpdateDB.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnUpdateDB.Name = "btnUpdateDB"
+        Me.btnUpdateDB.Size = New System.Drawing.Size(97, 35)
+        Me.btnUpdateDB.TabIndex = 8
+        Me.btnUpdateDB.Text = "Update DB"
         '
         'splitMain
         '
@@ -475,52 +466,6 @@ Partial Class TaskBrowser
         Me.imgCover.TabIndex = 2
         Me.imgCover.TabStop = False
         '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
-        '
-        'FavoritesToolStripMenuItem
-        '
-        Me.FavoritesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddCurrentAsFavoriteToolStripMenuItem, Me.ToolStripSeparator5})
-        Me.FavoritesToolStripMenuItem.Name = "FavoritesToolStripMenuItem"
-        Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
-        Me.FavoritesToolStripMenuItem.Text = "Favorites"
-        '
-        'AddCurrentAsFavoriteToolStripMenuItem
-        '
-        Me.AddCurrentAsFavoriteToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.txtNewFavoriteTitle, Me.AddNewFavoriteToolStripMenuItem})
-        Me.AddCurrentAsFavoriteToolStripMenuItem.Name = "AddCurrentAsFavoriteToolStripMenuItem"
-        Me.AddCurrentAsFavoriteToolStripMenuItem.Size = New System.Drawing.Size(226, 24)
-        Me.AddCurrentAsFavoriteToolStripMenuItem.Text = "Add current as favorite"
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(223, 6)
-        '
-        'txtNewFavoriteTitle
-        '
-        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
-        Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
-        Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
-        '
-        'AddNewFavoriteToolStripMenuItem
-        '
-        Me.AddNewFavoriteToolStripMenuItem.Name = "AddNewFavoriteToolStripMenuItem"
-        Me.AddNewFavoriteToolStripMenuItem.Size = New System.Drawing.Size(223, 24)
-        Me.AddNewFavoriteToolStripMenuItem.Text = "Add (enter title above)"
-        '
-        'btnDownloadOpen
-        '
-        Me.btnDownloadOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDownloadOpen.Location = New System.Drawing.Point(733, 4)
-        Me.btnDownloadOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnDownloadOpen.Name = "btnDownloadOpen"
-        Me.btnDownloadOpen.Size = New System.Drawing.Size(142, 35)
-        Me.btnDownloadOpen.TabIndex = 2
-        Me.btnDownloadOpen.Text = "Download && Open"
-        '
         'TaskBrowser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -545,7 +490,6 @@ Partial Class TaskBrowser
         Me.Panel4.PerformLayout()
         Me.FilterBoxContextMenu.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
         Me.splitMain.Panel1.ResumeLayout(False)
         Me.splitMain.Panel2.ResumeLayout(False)
         CType(Me.splitMain, System.ComponentModel.ISupportInitialize).EndInit()
@@ -567,12 +511,7 @@ Partial Class TaskBrowser
     End Sub
     Friend WithEvents OK_Button As Button
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents btnUpdateLocalDB As Button
-    Friend WithEvents lblOnlineDBTimestamp As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents btnRetrieveOnlineDBTimestamp As Button
-    Friend WithEvents lblLocalDBTimestamp As Label
-    Friend WithEvents Label1 As Label
+    Friend WithEvents btnUpdateDB As Button
     Friend WithEvents splitMain As SplitContainer
     Friend WithEvents gridCurrentDatabase As DataGridView
     Friend WithEvents TasksGridContextMenu As ContextMenuStrip

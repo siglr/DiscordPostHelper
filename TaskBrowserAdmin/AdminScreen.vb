@@ -36,6 +36,7 @@ Public Class AdminScreen
                 Using reader As SQLiteDataReader = cmd.ExecuteReader()
                     While reader.Read()
                         Dim task As New TBTaskData With {
+                        .EntrySeqID = Convert.ToInt32(reader("EntrySeqID")),
                         .TaskID = reader("TaskID").ToString(),
                         .Title = reader("Title").ToString(),
                         .LastUpdate = DateTime.Parse(reader("LastUpdate").ToString()),
@@ -67,7 +68,9 @@ Public Class AdminScreen
                         .WeatherSummary = reader("WeatherSummary").ToString(),
                         .Credits = reader("Credits").ToString(),
                         .Countries = reader("Countries").ToString(),
-                        .RecommendedAddOns = Convert.ToBoolean(reader("RecommendedAddOns"))
+                        .RecommendedAddOns = Convert.ToBoolean(reader("RecommendedAddOns")),
+                        .TotDownloads = Convert.ToInt32(reader("TotDownloads")),
+                        .LastDownloadUpdate = reader("LastDownloadUpdate").ToString()
                     }
 
                         ' Load the MapImage
@@ -230,6 +233,8 @@ Public Class AdminScreen
             If DPHData.CoverImageSelected <> String.Empty Then
                 .CoverImage = ResizeImageAndGetBytes(Path.Combine(Path.GetDirectoryName(DPHFilename), Path.GetFileName(DPHData.CoverImageSelected)), 400, 400, 25)
             End If
+            .TotDownloads = 0
+            .LastDownloadUpdate = "2000-01-01 00:00:00"
         End With
 
         If _currentTaskDBEntries.ContainsKey(newEntry.TaskID) Then
@@ -271,7 +276,7 @@ Public Class AdminScreen
             conn.Open()
             For Each task As TBTaskData In _currentTaskDBEntries.Values
                 Using cmd As New SQLiteCommand(conn)
-                    cmd.CommandText = "INSERT OR REPLACE INTO Tasks (TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo, MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName, ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves, SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo, TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo, ShortDescription, LongDescription, WeatherSummary, Credits, Countries, RecommendedAddOns, MapImage, CoverImage) VALUES (@TaskID, @Title, @LastUpdate, @SimDateTime, @IncludeYear, @SimDateTimeExtraInfo, @MainAreaPOI, @DepartureName, @DepartureICAO, @DepartureExtra, @ArrivalName, @ArrivalICAO, @ArrivalExtra, @SoaringRidge, @SoaringThermals, @SoaringWaves, @SoaringDynamic, @SoaringExtraInfo, @DurationMin, @DurationMax, @DurationExtraInfo, @TaskDistance, @TotalDistance, @RecommendedGliders, @DifficultyRating, @DifficultyExtraInfo, @ShortDescription, @LongDescription, @WeatherSummary, @Credits, @Countries, @RecommendedAddOns, @MapImage, @CoverImage)"
+                    cmd.CommandText = "INSERT OR REPLACE INTO Tasks (TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo, MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName, ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves, SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo, TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo, ShortDescription, LongDescription, WeatherSummary, Credits, Countries, RecommendedAddOns, MapImage, CoverImage, TotDownloads, LastDownloadUpdate) VALUES (@TaskID, @Title, @LastUpdate, @SimDateTime, @IncludeYear, @SimDateTimeExtraInfo, @MainAreaPOI, @DepartureName, @DepartureICAO, @DepartureExtra, @ArrivalName, @ArrivalICAO, @ArrivalExtra, @SoaringRidge, @SoaringThermals, @SoaringWaves, @SoaringDynamic, @SoaringExtraInfo, @DurationMin, @DurationMax, @DurationExtraInfo, @TaskDistance, @TotalDistance, @RecommendedGliders, @DifficultyRating, @DifficultyExtraInfo, @ShortDescription, @LongDescription, @WeatherSummary, @Credits, @Countries, @RecommendedAddOns, @MapImage, @CoverImage, @TotDownloads, @LastDownloadUpdate)"
 
                     cmd.Parameters.AddWithValue("@TaskID", task.TaskID)
                     cmd.Parameters.AddWithValue("@Title", task.Title)
@@ -305,6 +310,8 @@ Public Class AdminScreen
                     cmd.Parameters.AddWithValue("@Credits", task.Credits)
                     cmd.Parameters.AddWithValue("@Countries", task.Countries)
                     cmd.Parameters.AddWithValue("@RecommendedAddOns", task.RecommendedAddOns)
+                    cmd.Parameters.AddWithValue("@TotDownloads", task.TotDownloads)
+                    cmd.Parameters.AddWithValue("@LastDownloadUpdate", task.LastDownloadUpdate)
 
                     ' Handle BLOB fields
                     If task.MapImage IsNot Nothing Then
