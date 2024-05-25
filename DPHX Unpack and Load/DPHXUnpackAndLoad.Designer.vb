@@ -136,7 +136,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
         Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
-        Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
+        Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library Browser."
         '
         'ToolStripSeparator4
         '

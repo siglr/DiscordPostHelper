@@ -6,6 +6,7 @@ Imports System.Net
 Imports System.Net.Http
 Imports System.Text
 Imports System.Text.RegularExpressions
+Imports System.Windows.Forms.VisualStyles
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -399,24 +400,7 @@ Public Class TaskBrowser
     Private Sub ResetShowAllToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
 
         ' List of column names to exclude from the visibility toggle
-        Dim excludeColumns As New List(Of String) From {"TaskID",
-            "DPHXFilename",
-            "IsUpdate",
-            "SimDateTime",
-            "IncludeYear",
-            "SimDateTimeExtraInfo",
-            "DepartureExtra",
-            "ArrivalExtra",
-            "DurationMin",
-            "DurationMax",
-            "TaskDistance",
-            "TotalDistance",
-            "DifficultyRating",
-            "DifficultyExtraInfo",
-            "ShortDescription",
-            "LongDescription",
-            "LastDownloadUpdate",
-            "DBEntryUpdate"}
+        Dim excludeColumns As List(Of String) = GetListOfExcludedColumnNames()
 
         ' Set all columns visible
         For Each col As DataGridViewColumn In gridCurrentDatabase.Columns
@@ -638,32 +622,7 @@ Public Class TaskBrowser
     Private Sub AddColumnsVisibilityOptions()
 
         ' List of column names to exclude from the visibility toggle
-        Dim excludeColumns As New List(Of String) From {"TaskID",
-            "DPHXFilename",
-            "IsUpdate",
-            "SimDateTime",
-            "IncludeYear",
-            "IncludeYearBool",
-            "SimDateTimeExtraInfo",
-            "DepartureExtra",
-            "ArrivalExtra",
-            "DurationMin",
-            "DurationMax",
-            "TaskDistance",
-            "TotalDistance",
-            "DifficultyRating",
-            "DifficultyExtraInfo",
-            "MapImage",
-            "CoverImage",
-            "SoaringRidge",
-            "SoaringThermals",
-            "SoaringWaves",
-            "SoaringDynamic",
-            "RecommendedAddOns",
-            "ShortDescription",
-            "LongDescription",
-            "LastDownloadUpdate",
-            "DBEntryUpdate"}
+        Dim excludeColumns As List(Of String) = GetListOfExcludedColumnNames()
 
         ' Clear only dynamic items (those added for column visibility)
         For i As Integer = TasksGridContextMenu.Items.Count - 1 To 2 Step -1
@@ -685,6 +644,7 @@ Public Class TaskBrowser
                 Dim menuItem As New ToolStripMenuItem With
                             {
                             .Text = col.HeaderText,
+                            .ToolTipText = "Toggle visibility of the column.",
                             .Checked = col.Visible,
                             .Tag = col,
                             .Name = "dynamicCol_" & col.Tag  ' Tagging the item as dynamic
@@ -1281,10 +1241,15 @@ Public Class TaskBrowser
 
         ' Set the Tag property to the field name
         replaceSearchItem.Tag = favoriteTitle
+        replaceSearchItem.ToolTipText = "Replace the current search filter with this favorite."
         addToSearchItem.Tag = favoriteTitle
+        addToSearchItem.ToolTipText = "Add the filter from this favorite to current search filter."
         txtRenameTitle.Tag = favoriteTitle
+        txtRenameTitle.ToolTipText = "Specify the new name for your favorite."
         renameItem.Tag = txtRenameTitle
+        renameItem.ToolTipText = "Using the name specified above, rename this favorite."
         deleteItem.Tag = favoriteTitle
+        deleteItem.ToolTipText = "Delete this favorite search filter."
 
         ' Add event handlers
         AddHandler replaceSearchItem.Click, AddressOf FavoriteReplaceSearchItem_Click
@@ -1316,9 +1281,13 @@ Public Class TaskBrowser
 
         ' Set the Tag property to the field name
         containingItem.Tag = fieldName
+        containingItem.ToolTipText = $"Search in {fieldLabel} for tasks containing specified text."
         startsWithItem.Tag = fieldName
+        startsWithItem.ToolTipText = $"Search in {fieldLabel} for tasks that start with specified text."
         endsWithItem.Tag = fieldName
+        endsWithItem.ToolTipText = $"Search in {fieldLabel} for tasks that end with specified text."
         exactlyItem.Tag = fieldName
+        exactlyItem.ToolTipText = $"Search in {fieldLabel} for tasks that have exactly the specified text."
 
         ' Add event handlers
         AddHandler containingItem.Click, AddressOf TextCriteriaMenuItem_Click
@@ -1340,6 +1309,7 @@ Public Class TaskBrowser
         ' Create the main menu item for the field
         Dim fieldMenuItem As New ToolStripMenuItem(fieldLabel)
         fieldMenuItem.Tag = fieldName
+        fieldMenuItem.ToolTipText = $"Search {fieldLabel} for values that are in the range specified in the text field above."
 
         ' Add event handlers
         AddHandler fieldMenuItem.Click, AddressOf NumberCriteriaMenuItem_Click
@@ -1632,6 +1602,37 @@ Public Class TaskBrowser
         End Get
     End Property
 
+    Private Function GetListOfExcludedColumnNames() As List(Of String)
+        ' List of column names to exclude from the visibility toggle
+        Return New List(Of String) From {
+            "TaskID",
+            "DPHXFilename",
+            "IsUpdate",
+            "SimDateTime",
+            "IncludeYear",
+            "SimDateTimeExtraInfo",
+            "DepartureExtra",
+            "ArrivalExtra",
+            "DurationMin",
+            "DurationMax",
+            "TaskDistance",
+            "TotalDistance",
+            "DifficultyRating",
+            "DifficultyExtraInfo",
+            "ShortDescription",
+            "LongDescription",
+            "LastDownloadUpdate",
+            "SoaringRidge",
+            "SoaringThermals",
+            "SoaringWaves",
+            "SoaringDynamic",
+            "RecommendedAddOns",
+            "MapImage",
+            "CoverImage",
+            "IncludeYearBool",
+            "DBEntryUpdate"}
+
+    End Function
 #End Region
 
 End Class

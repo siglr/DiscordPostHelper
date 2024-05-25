@@ -24,6 +24,7 @@ Partial Class TaskBrowser
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblCurrentSelection = New System.Windows.Forms.Label()
         Me.btnDownloadOpen = New System.Windows.Forms.Button()
         Me.btnViewInLibrary = New System.Windows.Forms.Button()
         Me.OK_Button = New System.Windows.Forms.Button()
@@ -65,7 +66,7 @@ Partial Class TaskBrowser
         Me.splitImages = New System.Windows.Forms.SplitContainer()
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
-        Me.lblCurrentSelection = New System.Windows.Forms.Label()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -99,7 +100,17 @@ Partial Class TaskBrowser
         Me.Panel1.Location = New System.Drawing.Point(0, 723)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1118, 44)
-        Me.Panel1.TabIndex = 2
+        Me.Panel1.TabIndex = 0
+        '
+        'lblCurrentSelection
+        '
+        Me.lblCurrentSelection.AutoSize = True
+        Me.lblCurrentSelection.Location = New System.Drawing.Point(2, 11)
+        Me.lblCurrentSelection.Name = "lblCurrentSelection"
+        Me.lblCurrentSelection.Size = New System.Drawing.Size(114, 20)
+        Me.lblCurrentSelection.TabIndex = 0
+        Me.lblCurrentSelection.Text = "CurentSelection"
+        Me.ToolTip1.SetToolTip(Me.lblCurrentSelection, "This is the currently selected task's number, Discord ID and title.")
         '
         'btnDownloadOpen
         '
@@ -108,8 +119,9 @@ Partial Class TaskBrowser
         Me.btnDownloadOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnDownloadOpen.Name = "btnDownloadOpen"
         Me.btnDownloadOpen.Size = New System.Drawing.Size(160, 35)
-        Me.btnDownloadOpen.TabIndex = 2
+        Me.btnDownloadOpen.TabIndex = 1
         Me.btnDownloadOpen.Text = "Download && Open"
+        Me.ToolTip1.SetToolTip(Me.btnDownloadOpen, "Click to download (if missing locally) and open this task.")
         '
         'btnViewInLibrary
         '
@@ -118,8 +130,9 @@ Partial Class TaskBrowser
         Me.btnViewInLibrary.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnViewInLibrary.Name = "btnViewInLibrary"
         Me.btnViewInLibrary.Size = New System.Drawing.Size(126, 35)
-        Me.btnViewInLibrary.TabIndex = 1
+        Me.btnViewInLibrary.TabIndex = 2
         Me.btnViewInLibrary.Text = "Library thread"
+        Me.ToolTip1.SetToolTip(Me.btnViewInLibrary, "Click to go to this task's thread on Discord.")
         '
         'OK_Button
         '
@@ -129,8 +142,9 @@ Partial Class TaskBrowser
         Me.OK_Button.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New System.Drawing.Size(97, 35)
-        Me.OK_Button.TabIndex = 0
+        Me.OK_Button.TabIndex = 3
         Me.OK_Button.Text = "Close"
+        Me.ToolTip1.SetToolTip(Me.OK_Button, "Click to close the Task Library browser without selecting a task.")
         '
         'Panel2
         '
@@ -154,7 +168,7 @@ Partial Class TaskBrowser
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(1002, 44)
-        Me.Panel4.TabIndex = 10
+        Me.Panel4.TabIndex = 0
         '
         'chkNot
         '
@@ -162,8 +176,9 @@ Partial Class TaskBrowser
         Me.chkNot.Location = New System.Drawing.Point(164, 11)
         Me.chkNot.Name = "chkNot"
         Me.chkNot.Size = New System.Drawing.Size(53, 24)
-        Me.chkNot.TabIndex = 11
+        Me.chkNot.TabIndex = 2
         Me.chkNot.Text = "Not"
+        Me.ToolTip1.SetToolTip(Me.chkNot, "Tasks that DO NOT have the next criteria applied will be shown.")
         Me.chkNot.UseVisualStyleBackColor = True
         '
         'btnSearchBack
@@ -171,8 +186,9 @@ Partial Class TaskBrowser
         Me.btnSearchBack.Location = New System.Drawing.Point(85, 5)
         Me.btnSearchBack.Name = "btnSearchBack"
         Me.btnSearchBack.Size = New System.Drawing.Size(73, 35)
-        Me.btnSearchBack.TabIndex = 10
+        Me.btnSearchBack.TabIndex = 1
         Me.btnSearchBack.Text = "Back"
+        Me.ToolTip1.SetToolTip(Me.btnSearchBack, "Click to remove the last search/filter that was added.")
         Me.btnSearchBack.UseVisualStyleBackColor = True
         '
         'btnResetSearch
@@ -180,8 +196,9 @@ Partial Class TaskBrowser
         Me.btnResetSearch.Location = New System.Drawing.Point(6, 5)
         Me.btnResetSearch.Name = "btnResetSearch"
         Me.btnResetSearch.Size = New System.Drawing.Size(73, 35)
-        Me.btnResetSearch.TabIndex = 7
+        Me.btnResetSearch.TabIndex = 0
         Me.btnResetSearch.Text = "Reset"
+        Me.ToolTip1.SetToolTip(Me.btnResetSearch, "Click to reset all search/filtering and show all tasks.")
         Me.btnResetSearch.UseVisualStyleBackColor = True
         '
         'lblSearchTerms
@@ -191,7 +208,7 @@ Partial Class TaskBrowser
         Me.lblSearchTerms.Location = New System.Drawing.Point(353, 12)
         Me.lblSearchTerms.Name = "lblSearchTerms"
         Me.lblSearchTerms.Size = New System.Drawing.Size(640, 24)
-        Me.lblSearchTerms.TabIndex = 9
+        Me.lblSearchTerms.TabIndex = 4
         '
         'txtSearch
         '
@@ -199,7 +216,9 @@ Partial Class TaskBrowser
         Me.txtSearch.Location = New System.Drawing.Point(223, 9)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.Size = New System.Drawing.Size(124, 27)
-        Me.txtSearch.TabIndex = 8
+        Me.txtSearch.TabIndex = 3
+        Me.ToolTip1.SetToolTip(Me.txtSearch, "Right click for a contextual menu to build your next search criteria or acces you" &
+        "r favorite filters.")
         '
         'FilterBoxContextMenu
         '
@@ -212,8 +231,9 @@ Partial Class TaskBrowser
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(179, 24)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(198, 24)
         Me.ToolStripMenuItem1.Text = "Boolean"
+        Me.ToolStripMenuItem1.ToolTipText = "Menu for all true/false fields."
         '
         'RidgeToolStripMenuItem
         '
@@ -221,30 +241,35 @@ Partial Class TaskBrowser
         Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.RidgeToolStripMenuItem.Tag = ""
         Me.RidgeToolStripMenuItem.Text = "Ridge"
+        Me.RidgeToolStripMenuItem.ToolTipText = "Select to filter based on Ridge soaring."
         '
         'ThermalsToolStripMenuItem
         '
         Me.ThermalsToolStripMenuItem.Name = "ThermalsToolStripMenuItem"
-        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.ThermalsToolStripMenuItem.Text = "Thermals"
+        Me.ThermalsToolStripMenuItem.ToolTipText = "Select to filter based on Thermals soaring."
         '
         'WavesToolStripMenuItem
         '
         Me.WavesToolStripMenuItem.Name = "WavesToolStripMenuItem"
-        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.WavesToolStripMenuItem.Text = "Waves"
+        Me.WavesToolStripMenuItem.ToolTipText = "Select to filter based on Waves soaring."
         '
         'DynamicToolStripMenuItem
         '
         Me.DynamicToolStripMenuItem.Name = "DynamicToolStripMenuItem"
-        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.DynamicToolStripMenuItem.Text = "Dynamic"
+        Me.DynamicToolStripMenuItem.ToolTipText = "Select to filter based on Dynamic soaring."
         '
         'AddOnsToolStripMenuItem
         '
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
-        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
+        Me.AddOnsToolStripMenuItem.ToolTipText = "Select to filter based on the task having recommended add-ons or not."
         '
         'TextCriteriaToolStripMenuItem
         '
@@ -252,6 +277,7 @@ Partial Class TaskBrowser
         Me.TextCriteriaToolStripMenuItem.Name = "TextCriteriaToolStripMenuItem"
         Me.TextCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
         Me.TextCriteriaToolStripMenuItem.Text = "Text criteria"
+        Me.TextCriteriaToolStripMenuItem.ToolTipText = "Menu for all text fields."
         '
         'textCriteriaWords
         '
@@ -271,6 +297,7 @@ Partial Class TaskBrowser
         Me.NumbersCriteriaToolStripMenuItem.Name = "NumbersCriteriaToolStripMenuItem"
         Me.NumbersCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
         Me.NumbersCriteriaToolStripMenuItem.Text = "Numbers criteria"
+        Me.NumbersCriteriaToolStripMenuItem.ToolTipText = "Menu for all numbers fields."
         '
         'numbersCriteriaFromTo
         '
@@ -295,6 +322,7 @@ Partial Class TaskBrowser
         Me.FavoritesToolStripMenuItem.Name = "FavoritesToolStripMenuItem"
         Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
         Me.FavoritesToolStripMenuItem.Text = "Favorites"
+        Me.FavoritesToolStripMenuItem.ToolTipText = "Menu to select/manage your favorite filters."
         '
         'AddCurrentAsFavoriteToolStripMenuItem
         '
@@ -302,6 +330,7 @@ Partial Class TaskBrowser
         Me.AddCurrentAsFavoriteToolStripMenuItem.Name = "AddCurrentAsFavoriteToolStripMenuItem"
         Me.AddCurrentAsFavoriteToolStripMenuItem.Size = New System.Drawing.Size(226, 24)
         Me.AddCurrentAsFavoriteToolStripMenuItem.Text = "Add current as favorite"
+        Me.AddCurrentAsFavoriteToolStripMenuItem.ToolTipText = "Menu to add the current filter to your favorites."
         '
         'txtNewFavoriteTitle
         '
@@ -314,6 +343,7 @@ Partial Class TaskBrowser
         Me.AddNewFavoriteToolStripMenuItem.Name = "AddNewFavoriteToolStripMenuItem"
         Me.AddNewFavoriteToolStripMenuItem.Size = New System.Drawing.Size(223, 24)
         Me.AddNewFavoriteToolStripMenuItem.Text = "Add (enter title above)"
+        Me.AddNewFavoriteToolStripMenuItem.ToolTipText = "Specify a name for your favorite in the text field above and click to add."
         '
         'ToolStripSeparator5
         '
@@ -327,7 +357,7 @@ Partial Class TaskBrowser
         Me.Panel3.Location = New System.Drawing.Point(1008, 3)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(106, 41)
-        Me.Panel3.TabIndex = 6
+        Me.Panel3.TabIndex = 1
         '
         'btnUpdateDB
         '
@@ -336,8 +366,9 @@ Partial Class TaskBrowser
         Me.btnUpdateDB.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnUpdateDB.Name = "btnUpdateDB"
         Me.btnUpdateDB.Size = New System.Drawing.Size(97, 35)
-        Me.btnUpdateDB.TabIndex = 8
+        Me.btnUpdateDB.TabIndex = 0
         Me.btnUpdateDB.Text = "Update DB"
+        Me.ToolTip1.SetToolTip(Me.btnUpdateDB, "Click to force an online update of your local database.")
         '
         'splitMain
         '
@@ -387,13 +418,14 @@ Partial Class TaskBrowser
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(175, 24)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(198, 24)
         Me.ToolStripMenuItem2.Text = "Reset (Show All)"
+        Me.ToolStripMenuItem2.ToolTipText = "Click to unhide all columns."
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(172, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(195, 6)
         '
         'splitRightPart
         '
@@ -421,8 +453,9 @@ Partial Class TaskBrowser
         Me.txtBriefing.Name = "txtBriefing"
         Me.txtBriefing.ReadOnly = True
         Me.txtBriefing.Size = New System.Drawing.Size(314, 270)
-        Me.txtBriefing.TabIndex = 5
+        Me.txtBriefing.TabIndex = 0
         Me.txtBriefing.Text = ""
+        Me.ToolTip1.SetToolTip(Me.txtBriefing, "Use CTRL-MouseWheel to make the content smaller or larger.")
         Me.txtBriefing.ZoomFactor = 2.0!
         '
         'splitImages
@@ -456,6 +489,7 @@ Partial Class TaskBrowser
         Me.imgMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.imgMap.TabIndex = 1
         Me.imgMap.TabStop = False
+        Me.ToolTip1.SetToolTip(Me.imgMap, "Map image included with the task (if any).")
         '
         'imgCover
         '
@@ -468,15 +502,7 @@ Partial Class TaskBrowser
         Me.imgCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.imgCover.TabIndex = 2
         Me.imgCover.TabStop = False
-        '
-        'lblCurrentSelection
-        '
-        Me.lblCurrentSelection.AutoSize = True
-        Me.lblCurrentSelection.Location = New System.Drawing.Point(2, 11)
-        Me.lblCurrentSelection.Name = "lblCurrentSelection"
-        Me.lblCurrentSelection.Size = New System.Drawing.Size(114, 20)
-        Me.lblCurrentSelection.TabIndex = 3
-        Me.lblCurrentSelection.Text = "CurentSelection"
+        Me.ToolTip1.SetToolTip(Me.imgCover, "Cover image included with the task (if any).")
         '
         'TaskBrowser
         '
@@ -495,7 +521,7 @@ Partial Class TaskBrowser
         Me.ShowIcon = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Task Browser"
+        Me.Text = "Task Library Browser"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -565,4 +591,5 @@ Partial Class TaskBrowser
     Friend WithEvents AddNewFavoriteToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnDownloadOpen As Button
     Friend WithEvents lblCurrentSelection As Label
+    Friend WithEvents ToolTip1 As ToolTip
 End Class
