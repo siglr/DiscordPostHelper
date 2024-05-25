@@ -1971,25 +1971,6 @@ Public Class SupportingFeatures
         Return True
     End Function
 
-    Public Shared Sub DeserializeTaskDataList(TBTaskDatabaseXMLFile As String, TaskDBEntries As Dictionary(Of String, TBTaskData))
-
-        Dim theList As List(Of TBTaskData)
-
-        ' Create an XmlSerializer for the List(Of TBTaskData)
-        Dim serializer As New XmlSerializer(GetType(List(Of TBTaskData)), New XmlRootAttribute("TBTaskDatabase"))
-
-        ' Use a StreamReader to read the XML from file
-        Using reader As New StreamReader(TBTaskDatabaseXMLFile)
-            ' Deserialize the XML to a list of TBTaskData
-            theList = CType(serializer.Deserialize(reader), List(Of TBTaskData))
-        End Using
-
-        For Each task In theList
-            TaskDBEntries.Add(task.TaskID, task)
-        Next
-
-    End Sub
-
     Public Shared Function GetSoaringTypesSelected(Ridge As Boolean, Thermals As Boolean, Waves As Boolean, Dynamic As Boolean) As String
         Dim selectedTypes As New List(Of String)
 
@@ -2013,6 +1994,16 @@ Public Class SupportingFeatures
         Return String.Join(", ", selectedTypes)
     End Function
 
+    Public Shared Function GetDPHLastUpdateFromDPHXFile(dphxFilePath As String) As String
+        Using archive As ZipArchive = ZipFile.OpenRead(dphxFilePath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                If Path.GetExtension(entry.Name) = ".dph" Then
+                    Return entry.LastWriteTime.DateTime.ToString
+                End If
+            Next
+        End Using
+        Return String.Empty
+    End Function
 End Class
 
 

@@ -7,12 +7,14 @@ Imports System.Net.Http
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class TaskBrowser
 
 #Region "Constants and variables"
 
+    Public DownloadedFilePath As String = String.Empty
     Private _localTasksDatabaseFilePath As String
     Private _currentTaskDBEntries As DataTable
     Private _dataGridViewAllSet As Boolean = False
@@ -32,6 +34,8 @@ Public Class TaskBrowser
 #Region "Events"
 
     Private Sub TaskBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        lblCurrentSelection.Text = String.Empty
 
         _localTasksDatabaseFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TasksDatabase.db")
 
@@ -76,11 +80,27 @@ Public Class TaskBrowser
 
         BuildFavoritesMenu()
 
+        CheckForUpdates(False)
+
     End Sub
 
     Private Sub btnDownloadOpen_Click(sender As Object, e As EventArgs) Handles btnDownloadOpen.Click
 
-        'TODO!
+        If btnDownloadOpen.Text = "Open" Then
+            'Already exists locally
+            DownloadedFilePath = LocalDPHXFileName
+        Else
+            'Call the script to increment the download count by 1
+            If IncrementDownloadForTask(_selectedTaskRow("EntrySeqID")) Then
+                'Success
+            End If
+            'Download
+            DownloadedFilePath = DownloadTaskFile(_selectedTaskRow("TaskID").ToString(), _selectedTaskRow("Title").ToString(), Settings.SessionSettings.PackagesFolder)
+        End If
+
+        If Not String.IsNullOrEmpty(DownloadedFilePath) Then
+            Me.Close()
+        End If
 
     End Sub
 
@@ -395,7 +415,8 @@ Public Class TaskBrowser
             "DifficultyExtraInfo",
             "ShortDescription",
             "LongDescription",
-            "LastDownloadUpdate"}
+            "LastDownloadUpdate",
+            "DBEntryUpdate"}
 
         ' Set all columns visible
         For Each col As DataGridViewColumn In gridCurrentDatabase.Columns
@@ -418,7 +439,7 @@ Public Class TaskBrowser
 
     Private Sub btnUpdateDB_Click(sender As Object, e As EventArgs) Handles btnUpdateDB.Click
 
-        CheckForUpdates()
+        CheckForUpdates(True)
 
     End Sub
 
@@ -430,7 +451,21 @@ Public Class TaskBrowser
 
         Dim selectedEntrySeqID As Integer = gridCurrentDatabase.Rows(e.RowIndex).Cells("EntrySeqID").Value
         _selectedTaskRow = _currentTaskDBEntries.Select($"EntrySeqID = {selectedEntrySeqID}").FirstOrDefault()
+        lblCurrentSelection.Text = $"{_selectedTaskRow("EntrySeqID")} - {_selectedTaskRow("TaskID")} - {_selectedTaskRow("Title")}"
         BuildTaskData()
+
+        'Check if the file is already present locally
+        If File.Exists(LocalDPHXFileName) Then
+            'Check inside to get the timestamp of the DPH file
+            Dim dphUpdateStamp As String = SupportingFeatures.GetDPHLastUpdateFromDPHXFile(LocalDPHXFileName)
+            If dphUpdateStamp < _selectedTaskRow("LastUpdate") Then
+                btnDownloadOpen.Text = "Download && Open"
+            Else
+                btnDownloadOpen.Text = "Open"
+            End If
+        Else
+            btnDownloadOpen.Text = "Download && Open"
+        End If
 
     End Sub
 
@@ -627,7 +662,8 @@ Public Class TaskBrowser
             "RecommendedAddOns",
             "ShortDescription",
             "LongDescription",
-            "LastDownloadUpdate"}
+            "LastDownloadUpdate",
+            "DBEntryUpdate"}
 
         ' Clear only dynamic items (those added for column visibility)
         For i As Integer = TasksGridContextMenu.Items.Count - 1 To 2 Step -1
@@ -767,6 +803,7 @@ Public Class TaskBrowser
         gridCurrentDatabase.Columns("SoaringDynamic").Visible = False
         gridCurrentDatabase.Columns("RecommendedAddOns").Visible = False
         gridCurrentDatabase.Columns("LastDownloadUpdate").Visible = False
+        gridCurrentDatabase.Columns("DBEntryUpdate").Visible = False
 
         gridCurrentDatabase.Columns("EntrySeqID").HeaderText = "#"
         gridCurrentDatabase.Columns("EntrySeqID").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
@@ -1311,8 +1348,8 @@ Public Class TaskBrowser
         NumbersCriteriaToolStripMenuItem.DropDownItems.Add(fieldMenuItem)
     End Sub
 
-    Private Function FetchUpdatedTasks(lastUpdate As String) As DataTable
-        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedTasks.php?LastUpdate={lastUpdate}"
+    Private Function FetchUpdatedTasks(lastDBEntryUpdate As String) As DataTable
+        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedTasks.php?DBEntryUpdate={lastDBEntryUpdate}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
 
@@ -1344,11 +1381,11 @@ Public Class TaskBrowser
         Return JsonConvert.DeserializeObject(Of DataTable)(json)
     End Function
 
-    Private Sub CheckForUpdates()
-        Dim lastUpdate As String = GetMaxLastUpdateFromLocalDatabase()
+    Private Sub CheckForUpdates(showSuccessResults As Boolean)
+        Dim lastDBEntryUpdate As String = GetMaxLastDBEntryUpdateFromLocalDatabase()
         Dim lastDownloadUpdate As String = GetMaxLastDownloadUpdateFromLocalDatabase()
 
-        Dim updatedTasks As DataTable = FetchUpdatedTasks(lastUpdate)
+        Dim updatedTasks As DataTable = FetchUpdatedTasks(lastDBEntryUpdate)
         Dim updatedDownloads As DataTable = FetchUpdatedDownloads(lastDownloadUpdate)
 
         Dim updateResult As UpdateResult = UpdateLocalDatabase(updatedTasks, updatedDownloads)
@@ -1362,9 +1399,11 @@ Public Class TaskBrowser
             Else
                 msgResults = $"Database update check successful - No new or updated task."
             End If
-            Using New Centered_MessageBox()
-                MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End Using
+            If showSuccessResults Then
+                Using New Centered_MessageBox()
+                    MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
+            End If
         Else
             msgResults = $"Database update check unsuccessful.{Environment.NewLine}{updateResult.ErrorMessage}"
             Using New Centered_MessageBox()
@@ -1374,12 +1413,12 @@ Public Class TaskBrowser
 
     End Sub
 
-    Private Function GetMaxLastUpdateFromLocalDatabase() As String
+    Private Function GetMaxLastDBEntryUpdateFromLocalDatabase() As String
         If _currentTaskDBEntries Is Nothing OrElse _currentTaskDBEntries.Rows.Count = 0 Then
             Return "1970-01-01 00:00:00"
         End If
 
-        Dim maxLastUpdate As String = _currentTaskDBEntries.AsEnumerable().Max(Function(row) row.Field(Of String)("LastUpdate"))
+        Dim maxLastUpdate As String = _currentTaskDBEntries.AsEnumerable().Max(Function(row) row.Field(Of String)("DBEntryUpdate"))
         Return maxLastUpdate
     End Function
 
@@ -1404,7 +1443,7 @@ Public Class TaskBrowser
 
                     ' Update or insert tasks
                     For Each row As DataRow In updatedTasks.Rows
-                        Dim cmd As New SQLiteCommand("INSERT OR REPLACE INTO Tasks (EntrySeqID, TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo, MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName, ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves, SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo, TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo, ShortDescription, LongDescription, WeatherSummary, Credits, Countries, RecommendedAddOns, MapImage, CoverImage) VALUES (@EntrySeqID, @TaskID, @Title, @LastUpdate, @SimDateTime, @IncludeYear, @SimDateTimeExtraInfo, @MainAreaPOI, @DepartureName, @DepartureICAO, @DepartureExtra, @ArrivalName, @ArrivalICAO, @ArrivalExtra, @SoaringRidge, @SoaringThermals, @SoaringWaves, @SoaringDynamic, @SoaringExtraInfo, @DurationMin, @DurationMax, @DurationExtraInfo, @TaskDistance, @TotalDistance, @RecommendedGliders, @DifficultyRating, @DifficultyExtraInfo, @ShortDescription, @LongDescription, @WeatherSummary, @Credits, @Countries, @RecommendedAddOns, @MapImage, @CoverImage)", conn)
+                        Dim cmd As New SQLiteCommand("INSERT OR REPLACE INTO Tasks (EntrySeqID, TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo, MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName, ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves, SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo, TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo, ShortDescription, LongDescription, WeatherSummary, Credits, Countries, RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate) VALUES (@EntrySeqID, @TaskID, @Title, @LastUpdate, @SimDateTime, @IncludeYear, @SimDateTimeExtraInfo, @MainAreaPOI, @DepartureName, @DepartureICAO, @DepartureExtra, @ArrivalName, @ArrivalICAO, @ArrivalExtra, @SoaringRidge, @SoaringThermals, @SoaringWaves, @SoaringDynamic, @SoaringExtraInfo, @DurationMin, @DurationMax, @DurationExtraInfo, @TaskDistance, @TotalDistance, @RecommendedGliders, @DifficultyRating, @DifficultyExtraInfo, @ShortDescription, @LongDescription, @WeatherSummary, @Credits, @Countries, @RecommendedAddOns, @MapImage, @CoverImage, @DBEntryUpdate)", conn)
 
                         ' Add parameters and set their values
                         cmd.Parameters.AddWithValue("@EntrySeqID", row("EntrySeqID"))
@@ -1440,8 +1479,10 @@ Public Class TaskBrowser
                         cmd.Parameters.AddWithValue("@Credits", If(IsDBNull(row("Credits")), DBNull.Value, row("Credits")))
                         cmd.Parameters.AddWithValue("@Countries", If(IsDBNull(row("Countries")), DBNull.Value, row("Countries")))
                         cmd.Parameters.AddWithValue("@RecommendedAddOns", row("RecommendedAddOns"))
-                        cmd.Parameters.AddWithValue("@MapImage", If(IsDBNull(row("MapImage")), DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
-                        cmd.Parameters.AddWithValue("@CoverImage", If(IsDBNull(row("CoverImage")), DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
+                        cmd.Parameters.AddWithValue("@MapImage", If(row("MapImage") Is Nothing OrElse row("MapImage") = String.Empty OrElse IsDBNull(row("MapImage")), DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
+                        cmd.Parameters.AddWithValue("@CoverImage", If(row("CoverImage") Is Nothing OrElse row("CoverImage") = String.Empty OrElse IsDBNull(row("CoverImage")), DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
+                        cmd.Parameters.AddWithValue("@DBEntryUpdate", row("DBEntryUpdate"))
+
 
                         Dim rowsAffected = cmd.ExecuteNonQuery()
                         If rowsAffected = 1 Then
@@ -1480,6 +1521,116 @@ Public Class TaskBrowser
 
         Return result
     End Function
+
+    Private Function IncrementDownloadForTask(entrySeqID As String) As Boolean
+        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementDownloadForTask.php?EntrySeqID={entrySeqID}"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "GET"
+
+        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+            Using reader As New IO.StreamReader(response.GetResponseStream())
+                Dim jsonResponse As String = reader.ReadToEnd()
+                Return UpdateLocalDatabaseWithResponse(jsonResponse, entrySeqID)
+            End Using
+        End Using
+    End Function
+
+    Private Function UpdateLocalDatabaseWithResponse(jsonResponse As String, entrySeqID As String) As Boolean
+        Dim status As String = "failure"
+        Dim totDownloads As Integer = 0
+        Dim lastDownloadUpdate As String = ""
+
+        Try
+            Dim json As JObject = JObject.Parse(jsonResponse)
+            If json("status") IsNot Nothing AndAlso json("status").ToString() = "success" Then
+                status = "success"
+                totDownloads = Integer.Parse(json("TotDownloads").ToString())
+                lastDownloadUpdate = json("LastDownloadUpdate").ToString()
+
+                ' Update the local database
+                Using conn As New SQLiteConnection($"Data Source={_localTasksDatabaseFilePath};Version=3;")
+                    conn.Open()
+                    Dim query As String = "UPDATE Tasks SET TotDownloads = @TotDownloads, LastDownloadUpdate = @LastDownloadUpdate WHERE EntrySeqID = @EntrySeqID"
+                    Using cmd As New SQLiteCommand(query, conn)
+                        cmd.Parameters.AddWithValue("@TotDownloads", totDownloads)
+                        cmd.Parameters.AddWithValue("@LastDownloadUpdate", lastDownloadUpdate)
+                        cmd.Parameters.AddWithValue("@EntrySeqID", entrySeqID)
+                        cmd.ExecuteNonQuery()
+                    End Using
+                    conn.Close()
+                End Using
+
+                SaveCurrentPosition()
+                ' Find the row in the DataTable and update it
+                Dim sourceDataTable As DataTable = CType(gridCurrentDatabase.DataSource, DataTable)
+                For Each row As DataRow In sourceDataTable.Rows
+                    If row("EntrySeqID").ToString() = entrySeqID Then
+                        row.BeginEdit()
+                        row("TotDownloads") = totDownloads
+                        row("LastDownloadUpdate") = lastDownloadUpdate
+                        row.EndEdit()
+                        ' Notify that row has been changed
+                        sourceDataTable.AcceptChanges()
+                        Exit For
+                    End If
+                Next
+                Dim bindingSource As BindingSource = CType(gridCurrentDatabase.DataSource, BindingSource)
+                bindingSource.ResetBindings(False)
+                RestorePosition()
+
+                Return True
+            End If
+        Catch ex As Exception
+            ' Handle the exception (e.g., log the error)
+            status = "failure"
+        End Try
+
+        Return False
+    End Function
+
+    Private Function DownloadTaskFile(taskID As String, taskTitle As String, localFolder As String) As String
+        Dim baseUrl As String = "https://siglr.com/DiscordPostHelper/TaskBrowser/Tasks/"
+        Dim remoteFileName As String = taskID & ".dphx"
+        Dim localFileName As String = taskTitle & ".dphx"
+        Dim remoteFileUrl As String = baseUrl & remoteFileName
+        Dim localFilePath As String = Path.Combine(localFolder, localFileName)
+
+        Try
+            ' Create the directory if it doesn't exist
+            If Not Directory.Exists(localFolder) Then
+                Directory.CreateDirectory(localFolder)
+            End If
+
+            ' Download the file
+            Using client As New WebClient()
+                client.DownloadFile(remoteFileUrl, localFilePath)
+            End Using
+
+            ' Check if the file exists
+            If File.Exists(localFilePath) Then
+                Return localFilePath
+            Else
+                Throw New Exception("Failed to download the task file.")
+            End If
+
+        Catch ex As Exception
+            ' Handle the exception (e.g., log the error)
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, $"An error occurred while downloading the task file:{Environment.NewLine}{ex.Message}", "Downloading task", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return String.Empty
+        End Try
+    End Function
+
+    Private ReadOnly Property LocalDPHXFileName As String
+        Get
+            If _selectedTaskRow IsNot Nothing Then
+                Return Path.Combine(Settings.SessionSettings.PackagesFolder, _selectedTaskRow("Title").ToString() & ".dphx")
+            Else
+                Return String.Empty
+            End If
+        End Get
+    End Property
 
 #End Region
 

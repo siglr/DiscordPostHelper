@@ -296,6 +296,12 @@ Public Class DPHXUnpackAndLoad
     Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
 
         TaskBrowser.ShowDialog(Me)
+
+        Dim selectedFile As String = TaskBrowser.DownloadedFilePath
+        If selectedFile <> String.Empty Then
+            LoadDPHXPackage(selectedFile)
+        End If
+
         TaskBrowser.Dispose()
         TaskBrowser = Nothing
 

@@ -156,7 +156,6 @@
     <Compile Include="RecommendedAddOn.vb" />
     <Compile Include="SerializableDictionnary.vb" />
     <Compile Include="SupportingFeatures.vb" />
-    <Compile Include="TBTaskData.vb" />
     <Compile Include="ToolStripExtended.vb" />
     <Compile Include="VersionInfo.vb" />
     <Compile Include="VersionInfoForm.Designer.vb">

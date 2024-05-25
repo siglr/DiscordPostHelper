@@ -2,9 +2,12 @@
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
 Imports System.IO
+Imports System.Net
 Imports System.Xml
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 
 Public Class AdminScreen
 
@@ -32,7 +35,7 @@ Public Class AdminScreen
         Dim connectionString As String = $"Data Source={SQLiteDBFile};Version=3;"
         Using conn As New SQLiteConnection(connectionString)
             conn.Open()
-            Using cmd As New SQLiteCommand("SELECT * FROM Tasks", conn)
+            Using cmd As New SQLiteCommand("SELECT * FROM Tasks order by DBEntryUpdate DESC, EntrySeqID DESC", conn)
                 Using reader As SQLiteDataReader = cmd.ExecuteReader()
                     While reader.Read()
                         Dim task As New TBTaskData With {
@@ -41,7 +44,7 @@ Public Class AdminScreen
                         .Title = reader("Title").ToString(),
                         .LastUpdate = DateTime.Parse(reader("LastUpdate").ToString()),
                         .SimDateTime = DateTime.Parse(reader("SimDateTime").ToString()),
-                        .IncludeYear = Convert.ToBoolean(reader("IncludeYear")),
+                        .IncludeYear = If(Convert.ToBoolean(reader("IncludeYear")), 1, 0),
                         .SimDateTimeExtraInfo = reader("SimDateTimeExtraInfo").ToString(),
                         .MainAreaPOI = reader("MainAreaPOI").ToString(),
                         .DepartureName = reader("DepartureName").ToString(),
@@ -50,10 +53,10 @@ Public Class AdminScreen
                         .ArrivalName = reader("ArrivalName").ToString(),
                         .ArrivalICAO = reader("ArrivalICAO").ToString(),
                         .ArrivalExtra = reader("ArrivalExtra").ToString(),
-                        .SoaringRidge = Convert.ToBoolean(reader("SoaringRidge")),
-                        .SoaringThermals = Convert.ToBoolean(reader("SoaringThermals")),
-                        .SoaringWaves = Convert.ToBoolean(reader("SoaringWaves")),
-                        .SoaringDynamic = Convert.ToBoolean(reader("SoaringDynamic")),
+                        .SoaringRidge = If(Convert.ToBoolean(reader("SoaringRidge")), 1, 0),
+                        .SoaringThermals = If(Convert.ToBoolean(reader("SoaringThermals")), 1, 0),
+                        .SoaringWaves = If(Convert.ToBoolean(reader("SoaringWaves")), 1, 0),
+                        .SoaringDynamic = If(Convert.ToBoolean(reader("SoaringDynamic")), 1, 0),
                         .SoaringExtraInfo = reader("SoaringExtraInfo").ToString(),
                         .DurationMin = Convert.ToInt32(reader("DurationMin")),
                         .DurationMax = Convert.ToInt32(reader("DurationMax")),
@@ -68,9 +71,10 @@ Public Class AdminScreen
                         .WeatherSummary = reader("WeatherSummary").ToString(),
                         .Credits = reader("Credits").ToString(),
                         .Countries = reader("Countries").ToString(),
-                        .RecommendedAddOns = Convert.ToBoolean(reader("RecommendedAddOns")),
+                        .RecommendedAddOns = If(Convert.ToBoolean(reader("RecommendedAddOns")), 1, 0),
                         .TotDownloads = Convert.ToInt32(reader("TotDownloads")),
-                        .LastDownloadUpdate = reader("LastDownloadUpdate").ToString()
+                        .LastDownloadUpdate = reader("LastDownloadUpdate").ToString(),
+                        .DBEntryUpdate = reader("DBEntryUpdate").ToString()
                     }
 
                         ' Load the MapImage
@@ -181,7 +185,7 @@ Public Class AdminScreen
             .Title = DPHData.Title
             .LastUpdate = GetFileUpdateDateTime(DPHFilename)
             .SimDateTime = SupportingFeatures.GetFullEventDateTimeInLocal(DPHData.SimDate, DPHData.SimTime, False)
-            .IncludeYear = DPHData.IncludeYear
+            .IncludeYear = If(DPHData.IncludeYear, 1, 0)
             .SimDateTimeExtraInfo = DPHData.SimDateTimeExtraInfo
             .MainAreaPOI = DPHData.MainAreaPOI
             .DepartureICAO = DPHData.DepartureICAO
@@ -190,13 +194,13 @@ Public Class AdminScreen
             .ArrivalICAO = DPHData.ArrivalICAO
             .ArrivalName = DPHData.ArrivalName
             .ArrivalExtra = DPHData.ArrivalExtra
-            .SoaringRidge = DPHData.SoaringRidge
-            .SoaringThermals = DPHData.SoaringThermals
-            .SoaringWaves = DPHData.SoaringWaves
-            .SoaringDynamic = DPHData.SoaringDynamic
+            .SoaringRidge = If(DPHData.SoaringRidge, 1, 0)
+            .SoaringThermals = If(DPHData.SoaringThermals, 1, 0)
+            .SoaringWaves = If(DPHData.SoaringWaves, 1, 0)
+            .SoaringDynamic = If(DPHData.SoaringDynamic, 1, 0)
             .SoaringExtraInfo = DPHData.SoaringExtraInfo
-            .DurationMin = DPHData.DurationMin
-            .DurationMax = DPHData.DurationMax
+            .DurationMin = CInt(DPHData.DurationMin)
+            .DurationMax = CInt(DPHData.DurationMax)
             .DurationExtraInfo = DPHData.DurationExtraInfo
             .RecommendedGliders = DPHData.RecommendedGliders
             .DifficultyRating = DPHData.DifficultyRating
@@ -207,9 +211,9 @@ Public Class AdminScreen
             .Credits = DPHData.Credits
             .Countries = String.Join(", ", DPHData.Countries)
             If DPHData.RecommendedAddOns Is Nothing OrElse DPHData.RecommendedAddOns.Count = 0 Then
-                .RecommendedAddOns = False
+                .RecommendedAddOns = 0
             Else
-                .RecommendedAddOns = True
+                .RecommendedAddOns = 1
             End If
             .DPHXFilename = dphxFilename
 
@@ -235,10 +239,12 @@ Public Class AdminScreen
             End If
             .TotDownloads = 0
             .LastDownloadUpdate = "2000-01-01 00:00:00"
+            .DBEntryUpdate = Now.ToString
         End With
 
         If _currentTaskDBEntries.ContainsKey(newEntry.TaskID) Then
             newEntry.IsUpdate = True
+            newEntry.EntrySeqID = _currentTaskDBEntries(newEntry.TaskID).EntrySeqID
             If _currentTaskDBEntries(newEntry.TaskID).LastUpdate = newEntry.LastUpdate Then
                 newEntry = Nothing
             End If
@@ -263,10 +269,21 @@ Public Class AdminScreen
                 File.Copy(task.DPHXFilename, Path.Combine(ProcessedDPHXFilesFolder, $"{task.TaskID}.dphx"), True)
             Next
 
-            SaveTasksToDatabase()
-            UpdateCurrentDBGrid()
-            _incomingTaskDBEntries.Clear()
-            UpdateIncomingDBGrid()
+            MessageBox.Show(Me, "Upload new/updated DPHX files first.", "Waiting for new and updated DPHX files upload", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+            ' Call the new function to send the _incomingTaskDBEntries.Values containing new/updated tasks
+            Dim uploadResult As Boolean = UploadTasksToServer(_incomingTaskDBEntries.Values.ToList())
+
+            If uploadResult Then
+                'To review:
+                'SaveTasksToDatabase()
+                'UpdateCurrentDBGrid()
+                _incomingTaskDBEntries.Clear()
+                UpdateIncomingDBGrid()
+            Else
+                MessageBox.Show(Me, "Failed to upload tasks to server.", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+
         End If
     End Sub
 
@@ -312,6 +329,7 @@ Public Class AdminScreen
                     cmd.Parameters.AddWithValue("@RecommendedAddOns", task.RecommendedAddOns)
                     cmd.Parameters.AddWithValue("@TotDownloads", task.TotDownloads)
                     cmd.Parameters.AddWithValue("@LastDownloadUpdate", task.LastDownloadUpdate)
+                    cmd.Parameters.AddWithValue("@DBEntryUpdate", task.DBEntryUpdate)
 
                     ' Handle BLOB fields
                     If task.MapImage IsNot Nothing Then
@@ -381,6 +399,38 @@ Public Class AdminScreen
             End If
         Next
         Return Nothing
+    End Function
+
+    Private Function UploadTasksToServer(tasks As List(Of TBTaskData)) As Boolean
+        Try
+            ' Serialize the tasks to JSON
+            Dim json As String = JsonConvert.SerializeObject(tasks, New JsonSerializerSettings() With {
+                .NullValueHandling = NullValueHandling.Ignore
+            })
+
+            ' Prepare the request
+            Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/UpdateTasks.php"), HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "application/json"
+
+            ' Write the JSON to the request stream
+            Using writer As New StreamWriter(request.GetRequestStream())
+                writer.Write(json)
+            End Using
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim result As String = reader.ReadToEnd()
+                    ' Assuming the server returns a JSON object with a "status" field
+                    Dim responseJson As JObject = JObject.Parse(result)
+                    Return responseJson("status").ToString() = "success"
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(Me, $"Error uploading tasks: {ex.Message}", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
     End Function
 
 End Class

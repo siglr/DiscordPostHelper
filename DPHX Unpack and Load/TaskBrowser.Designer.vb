@@ -65,6 +65,7 @@ Partial Class TaskBrowser
         Me.splitImages = New System.Windows.Forms.SplitContainer()
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
+        Me.lblCurrentSelection = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -90,6 +91,7 @@ Partial Class TaskBrowser
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.lblCurrentSelection)
         Me.Panel1.Controls.Add(Me.btnDownloadOpen)
         Me.Panel1.Controls.Add(Me.btnViewInLibrary)
         Me.Panel1.Controls.Add(Me.OK_Button)
@@ -102,10 +104,10 @@ Partial Class TaskBrowser
         'btnDownloadOpen
         '
         Me.btnDownloadOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDownloadOpen.Location = New System.Drawing.Point(733, 4)
+        Me.btnDownloadOpen.Location = New System.Drawing.Point(715, 4)
         Me.btnDownloadOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnDownloadOpen.Name = "btnDownloadOpen"
-        Me.btnDownloadOpen.Size = New System.Drawing.Size(142, 35)
+        Me.btnDownloadOpen.Size = New System.Drawing.Size(160, 35)
         Me.btnDownloadOpen.TabIndex = 2
         Me.btnDownloadOpen.Text = "Download && Open"
         '
@@ -364,6 +366,7 @@ Partial Class TaskBrowser
         Me.gridCurrentDatabase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.gridCurrentDatabase.ContextMenuStrip = Me.TasksGridContextMenu
         Me.gridCurrentDatabase.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.gridCurrentDatabase.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.gridCurrentDatabase.Location = New System.Drawing.Point(0, 0)
         Me.gridCurrentDatabase.MultiSelect = False
         Me.gridCurrentDatabase.Name = "gridCurrentDatabase"
@@ -466,6 +469,15 @@ Partial Class TaskBrowser
         Me.imgCover.TabIndex = 2
         Me.imgCover.TabStop = False
         '
+        'lblCurrentSelection
+        '
+        Me.lblCurrentSelection.AutoSize = True
+        Me.lblCurrentSelection.Location = New System.Drawing.Point(2, 11)
+        Me.lblCurrentSelection.Name = "lblCurrentSelection"
+        Me.lblCurrentSelection.Size = New System.Drawing.Size(114, 20)
+        Me.lblCurrentSelection.TabIndex = 3
+        Me.lblCurrentSelection.Text = "CurentSelection"
+        '
         'TaskBrowser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -485,6 +497,7 @@ Partial Class TaskBrowser
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Task Browser"
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
@@ -551,4 +564,5 @@ Partial Class TaskBrowser
     Friend WithEvents txtNewFavoriteTitle As ToolStripTextBox
     Friend WithEvents AddNewFavoriteToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnDownloadOpen As Button
+    Friend WithEvents lblCurrentSelection As Label
 End Class
