@@ -377,6 +377,12 @@ Public Class TaskBrowser
     End Sub
 
     Private Sub btnViewInLibrary_Click(sender As Object, e As EventArgs) Handles btnViewInLibrary.Click
+
+        'Call the script to increment the Discord thread access by 1
+        If IncrementThreadAccessForTask(_selectedTaskRow("EntrySeqID")) Then
+            'Success
+        End If
+
         If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_selectedTaskRow("TaskID").ToString.Trim}") Then
             Using New Centered_MessageBox()
                 MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -1501,6 +1507,19 @@ Public Class TaskBrowser
             Using reader As New IO.StreamReader(response.GetResponseStream())
                 Dim jsonResponse As String = reader.ReadToEnd()
                 Return UpdateLocalDatabaseWithResponse(jsonResponse, entrySeqID)
+            End Using
+        End Using
+    End Function
+
+    Private Function IncrementThreadAccessForTask(entrySeqID As String) As Boolean
+        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementThreadAccessForTask.php?EntrySeqID={entrySeqID}"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "GET"
+
+        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+            Using reader As New IO.StreamReader(response.GetResponseStream())
+                Dim jsonResponse As String = reader.ReadToEnd()
+                Return True
             End Using
         End Using
     End Function
