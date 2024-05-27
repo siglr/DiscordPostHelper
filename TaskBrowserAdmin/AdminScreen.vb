@@ -199,8 +199,8 @@ Public Class AdminScreen
             .SoaringWaves = If(DPHData.SoaringWaves, 1, 0)
             .SoaringDynamic = If(DPHData.SoaringDynamic, 1, 0)
             .SoaringExtraInfo = DPHData.SoaringExtraInfo
-            .DurationMin = CInt(DPHData.DurationMin)
-            .DurationMax = CInt(DPHData.DurationMax)
+            .DurationMin = If(DPHData.DurationMin <> String.Empty, CInt(DPHData.DurationMin), 0)
+            .DurationMax = If(DPHData.DurationMax <> String.Empty, CInt(DPHData.DurationMax), 0)
             .DurationExtraInfo = DPHData.DurationExtraInfo
             .RecommendedGliders = DPHData.RecommendedGliders
             .DifficultyRating = DPHData.DifficultyRating
