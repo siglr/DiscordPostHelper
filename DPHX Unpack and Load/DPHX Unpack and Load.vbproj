@@ -148,6 +148,7 @@
   <ItemGroup>
     <EmbeddedResource Include="CleaningTool.resx">
       <DependentUpon>CleaningTool.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>

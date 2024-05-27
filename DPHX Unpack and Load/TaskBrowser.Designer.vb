@@ -13,6 +13,7 @@ Partial Class TaskBrowser
             ' Add custom dispose logic here
             If disposing Then
                 RemoveHandlers()
+                DisposeManagedResources()
             End If
 
         Finally
@@ -20,11 +21,24 @@ Partial Class TaskBrowser
         End Try
     End Sub
 
+    Private Sub DisposeManagedResources()
+        ' Dispose managed resources
+        If _currentTaskDBEntries IsNot Nothing Then
+            _currentTaskDBEntries.Dispose()
+            _currentTaskDBEntries = Nothing
+        End If
+        If _filteredDataTable IsNot Nothing Then
+            _filteredDataTable.Dispose()
+            _filteredDataTable = Nothing
+        End If
+        If _searchTerms IsNot Nothing Then
+            _searchTerms.Clear()
+        End If
+    End Sub
     ' Add a method to remove event handlers
     Private Sub RemoveHandlers()
-        ' Detach all event handlers added in the form
+        ' Remove event handlers
         RemoveHandler Me.Load, AddressOf TaskBrowser_Load
-        ' Add other event handlers you have attached
     End Sub
 
     'Required by the Windows Form Designer

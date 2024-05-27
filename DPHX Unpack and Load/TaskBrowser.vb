@@ -25,10 +25,19 @@ Public Class TaskBrowser
     Private scrollIndex As Integer
     Private selectedRowIndex As Integer
     Private horizontalScrollIndex As Integer
+
     Private Shared _processingChange As Boolean = False
 
-    Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
+    Private Shared ReadOnly _EnglishCulture As New CultureInfo("en-US")
     Private Shared ReadOnly Property PrefUnits As New PreferredUnits
+
+    Private _handlerFavoriteReplaceSearchItem_Click As New List(Of ToolStripMenuItem)
+    Private _handlerFavoriteAddToSearchItem_Click As New List(Of ToolStripMenuItem)
+    Private _handlerFavoriteRenameItem_Click As New List(Of ToolStripMenuItem)
+    Private _handlerFavoriteDeleteItem_Click As New List(Of ToolStripMenuItem)
+    Private _handlerColumnVisibilityToggle As New List(Of ToolStripMenuItem)
+    Private _handlerTextCriteriaMenuItem_Click As New List(Of ToolStripMenuItem)
+    Private _handlerNumberCriteriaMenuItem_Click As New List(Of ToolStripMenuItem)
 
 #End Region
 
@@ -446,6 +455,46 @@ Public Class TaskBrowser
 
     Private Sub TaskBrowser_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         SaveDataGridViewSettings()
+        RemoveEventHandlers()
+
+        If gridCurrentDatabase IsNot Nothing Then
+            gridCurrentDatabase.DataSource = Nothing
+            gridCurrentDatabase.Columns.Clear()
+            gridCurrentDatabase.Dispose()
+            gridCurrentDatabase = Nothing
+        End If
+
+        ' Dispose of DataTables
+        If _currentTaskDBEntries IsNot Nothing Then
+            _currentTaskDBEntries.Clear()
+            _currentTaskDBEntries.Dispose()
+            _currentTaskDBEntries = Nothing
+        End If
+
+        If _filteredDataTable IsNot Nothing Then
+            _filteredDataTable.Clear()
+            _filteredDataTable.Dispose()
+            _filteredDataTable = Nothing
+        End If
+
+        ' Dispose of images
+        If imgMap.Image IsNot Nothing Then
+            imgMap.Image.Dispose()
+            imgMap.Image = Nothing
+        End If
+
+        If imgCover.Image IsNot Nothing Then
+            imgCover.Image.Dispose()
+            imgCover.Image = Nothing
+        End If
+
+        _searchTerms.Clear()
+
+        ' Force garbage collection
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
+        GC.Collect()
+
     End Sub
 
     Private Sub gridCurrentDatabase_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles gridCurrentDatabase.RowEnter
@@ -667,6 +716,7 @@ Public Class TaskBrowser
                             .Name = "dynamicCol_" & col.Tag  ' Tagging the item as dynamic
                             }
                 AddHandler menuItem.Click, AddressOf ColumnVisibilityToggle
+                _handlerColumnVisibilityToggle.Add(menuItem)
                 ' Insert at specific index if needed, or add directly
                 TasksGridContextMenu.Items.Insert(index, menuItem)
                 index += 1
@@ -688,7 +738,44 @@ Public Class TaskBrowser
 
         Using conn As New SQLiteConnection(connectionString)
             conn.Open()
-            Using cmd As New SQLiteCommand("SELECT * FROM Tasks", conn)
+            Using cmd As New SQLiteCommand("SELECT EntrySeqID, 
+                                                    TaskID, 
+                                                    Title, 
+                                                    LastUpdate, 
+                                                    SimDateTime, 
+                                                    IncludeYear, 
+                                                    SimDateTimeExtraInfo, 
+                                                    MainAreaPOI,
+                                                    DepartureName, 
+                                                    DepartureICAO, 
+                                                    DepartureExtra, 
+                                                    ArrivalName, 
+                                                    ArrivalICAO, 
+                                                    ArrivalExtra, 
+                                                    SoaringRidge, 
+                                                    SoaringThermals, 
+                                                    SoaringWaves, 
+                                                    SoaringDynamic, 
+                                                    SoaringExtraInfo, 
+                                                    DurationMin, 
+                                                    DurationMax, 
+                                                    DurationExtraInfo, 
+                                                    TaskDistance, 
+                                                    TotalDistance, 
+                                                    RecommendedGliders, 
+                                                    DifficultyRating, 
+                                                    DifficultyExtraInfo, 
+                                                    ShortDescription, 
+                                                    LongDescription, 
+                                                    WeatherSummary, 
+                                                    Credits, 
+                                                    Countries, 
+                                                    RecommendedAddOns, 
+                                                    DBEntryUpdate, 
+                                                    TotDownloads,
+                                                    LastDownloadUpdate,
+                                                    ThreadAccess
+                                                    FROM Tasks", conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(_currentTaskDBEntries)
                 End Using
@@ -970,16 +1057,43 @@ Public Class TaskBrowser
         SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
         txtBriefing.ZoomFactor = oldZoomFactor
 
+        ' Dispose existing images
+        If imgMap.Image IsNot Nothing Then
+            imgMap.Image.Dispose()
+            imgMap.Image = Nothing
+        End If
+
+        If imgCover.Image IsNot Nothing Then
+            imgCover.Image.Dispose()
+            imgCover.Image = Nothing
+        End If
+
+        Dim connectionString As String = $"Data Source={_localTasksDatabaseFilePath};Version=3;"
+        Dim imgMapObject As Object = Nothing
+        Dim imgCoverObject As Object = Nothing
+        Using conn As New SQLiteConnection(connectionString)
+            conn.Open()
+            Using cmd As New SQLiteCommand("SELECT MapImage, CoverImage FROM Tasks WHERE EntrySeqID = @EntrySeqID", conn)
+                cmd.Parameters.AddWithValue("@EntrySeqID", _selectedTaskRow("EntrySeqID"))
+                Using reader As SQLiteDataReader = cmd.ExecuteReader()
+                    If reader.Read() Then
+                        imgMapObject = If(reader.IsDBNull(reader.GetOrdinal("MapImage")), Nothing, reader("MapImage"))
+                        imgCoverObject = If(reader.IsDBNull(reader.GetOrdinal("CoverImage")), Nothing, reader("CoverImage"))
+                    End If
+                End Using
+            End Using
+        End Using
+
         ' Set images to PictureBox controls
-        If Not IsDBNull(_selectedTaskRow("MapImage")) Then
-            Dim mapImageBytes As Byte() = CType(_selectedTaskRow("MapImage"), Byte())
+        If imgMapObject IsNot Nothing AndAlso Not IsDBNull(imgMapObject) Then
+            Dim mapImageBytes As Byte() = CType(imgMapObject, Byte())
             imgMap.Image = ByteArrayToImage(mapImageBytes)
         Else
             imgMap.Image = Nothing
         End If
 
-        If Not IsDBNull(_selectedTaskRow("CoverImage")) Then
-            Dim coverImageBytes As Byte() = CType(_selectedTaskRow("CoverImage"), Byte())
+        If imgCoverObject IsNot Nothing AndAlso Not IsDBNull(imgCoverObject) Then
+            Dim coverImageBytes As Byte() = CType(imgCoverObject, Byte())
             imgCover.Image = ByteArrayToImage(coverImageBytes)
         Else
             imgCover.Image = Nothing
@@ -1251,9 +1365,17 @@ Public Class TaskBrowser
 
         ' Add event handlers
         AddHandler replaceSearchItem.Click, AddressOf FavoriteReplaceSearchItem_Click
+        _handlerFavoriteReplaceSearchItem_Click.Add(replaceSearchItem)
+
         AddHandler addToSearchItem.Click, AddressOf FavoriteAddToSearchItem_Click
+        _handlerFavoriteAddToSearchItem_Click.Add(addToSearchItem)
+
         AddHandler renameItem.Click, AddressOf FavoriteRenameItem_Click
+        _handlerFavoriteRenameItem_Click.Add(renameItem)
+
         AddHandler deleteItem.Click, AddressOf FavoriteDeleteItem_Click
+        _handlerFavoriteDeleteItem_Click.Add(deleteItem)
+
 
         ' Add sub-menu items to the field menu item
         favoriteMenuItem.DropDownItems.Add(replaceSearchItem)
@@ -1289,9 +1411,16 @@ Public Class TaskBrowser
 
         ' Add event handlers
         AddHandler containingItem.Click, AddressOf TextCriteriaMenuItem_Click
+        _handlerTextCriteriaMenuItem_Click.Add(containingItem)
+
         AddHandler startsWithItem.Click, AddressOf TextCriteriaMenuItem_Click
+        _handlerTextCriteriaMenuItem_Click.Add(startsWithItem)
+
         AddHandler endsWithItem.Click, AddressOf TextCriteriaMenuItem_Click
+        _handlerTextCriteriaMenuItem_Click.Add(endsWithItem)
+
         AddHandler exactlyItem.Click, AddressOf TextCriteriaMenuItem_Click
+        _handlerTextCriteriaMenuItem_Click.Add(exactlyItem)
 
         ' Add sub-menu items to the field menu item
         fieldMenuItem.DropDownItems.Add(containingItem)
@@ -1311,6 +1440,7 @@ Public Class TaskBrowser
 
         ' Add event handlers
         AddHandler fieldMenuItem.Click, AddressOf NumberCriteriaMenuItem_Click
+        _handlerNumberCriteriaMenuItem_Click.Add(fieldMenuItem)
 
         ' Add the field menu item to the main TextCriteriaToolStripMenuItem
         NumbersCriteriaToolStripMenuItem.DropDownItems.Add(fieldMenuItem)
@@ -1320,26 +1450,36 @@ Public Class TaskBrowser
         Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedTasks.php?DBEntryUpdate={lastDBEntryUpdate}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
-
-        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-            Using reader As New IO.StreamReader(response.GetResponseStream())
-                Dim jsonResponse As String = reader.ReadToEnd()
-                Return ConvertJsonToDataTable(jsonResponse)
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Return ConvertJsonToDataTable(jsonResponse)
+                End Using
             End Using
-        End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Throw
+        End Try
     End Function
 
     Private Function FetchUpdatedDownloads(lastDownloadUpdate As String) As DataTable
         Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedDownloads.php?lastDownloadUpdate={lastDownloadUpdate}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
-
-        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-            Using reader As New IO.StreamReader(response.GetResponseStream())
-                Dim jsonResponse As String = reader.ReadToEnd()
-                Return ConvertJsonToDataTable(jsonResponse)
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Return ConvertJsonToDataTable(jsonResponse)
+                End Using
             End Using
-        End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Throw
+        End Try
     End Function
 
     Public Function ConvertJsonToDataTable(json As String) As DataTable
@@ -1353,32 +1493,32 @@ Public Class TaskBrowser
         Dim lastDBEntryUpdate As String = GetMaxLastDBEntryUpdateFromLocalDatabase()
         Dim lastDownloadUpdate As String = GetMaxLastDownloadUpdateFromLocalDatabase()
 
-        Dim updatedTasks As DataTable = FetchUpdatedTasks(lastDBEntryUpdate)
-        Dim updatedDownloads As DataTable = FetchUpdatedDownloads(lastDownloadUpdate)
+        Using updatedTasks As DataTable = FetchUpdatedTasks(lastDBEntryUpdate)
+            Using updatedDownloads As DataTable = FetchUpdatedDownloads(lastDownloadUpdate)
+                Dim updateResult As UpdateResult = UpdateLocalDatabase(updatedTasks, updatedDownloads)
 
-        Dim updateResult As UpdateResult = UpdateLocalDatabase(updatedTasks, updatedDownloads)
-
-        Dim msgResults As String = String.Empty
-        If updateResult.Success Then
-            If updateResult.RecordsAdded > 0 OrElse updateResult.RecordsUpdated > 0 Then
-                'Reopen the datatable
-                UpdateCurrentDBGrid()
-                msgResults = $"Database update successful.{Environment.NewLine}{updateResult.RecordsAdded} new or updated tasks{Environment.NewLine}{updateResult.RecordsUpdated} updated download counts"
-            Else
-                msgResults = $"Database update check successful - No new or updated task."
-            End If
-            If showSuccessResults Then
-                Using New Centered_MessageBox()
-                    MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End Using
-            End If
-        Else
-            msgResults = $"Database update check unsuccessful.{Environment.NewLine}{updateResult.ErrorMessage}"
-            Using New Centered_MessageBox()
-                MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim msgResults As String = String.Empty
+                If updateResult.Success Then
+                    If updateResult.RecordsAdded > 0 OrElse updateResult.RecordsUpdated > 0 Then
+                        'Reopen the datatable
+                        UpdateCurrentDBGrid()
+                        msgResults = $"Database update successful.{Environment.NewLine}{updateResult.RecordsAdded} new or updated tasks{Environment.NewLine}{updateResult.RecordsUpdated} updated download counts"
+                    Else
+                        msgResults = $"Database update check successful - No new or updated task."
+                    End If
+                    If showSuccessResults Then
+                        Using New Centered_MessageBox()
+                            MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        End Using
+                    End If
+                Else
+                    msgResults = $"Database update check unsuccessful.{Environment.NewLine}{updateResult.ErrorMessage}"
+                    Using New Centered_MessageBox()
+                        MessageBox.Show(Me, msgResults, "Database update", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Using
+                End If
             End Using
-        End If
-
+        End Using
     End Sub
 
     Private Function GetMaxLastDBEntryUpdateFromLocalDatabase() As String
@@ -1494,26 +1634,36 @@ Public Class TaskBrowser
         Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementDownloadForTask.php?EntrySeqID={entrySeqID}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
-
-        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-            Using reader As New IO.StreamReader(response.GetResponseStream())
-                Dim jsonResponse As String = reader.ReadToEnd()
-                Return UpdateLocalDatabaseWithResponse(jsonResponse, entrySeqID)
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Return UpdateLocalDatabaseWithResponse(jsonResponse, entrySeqID)
+                End Using
             End Using
-        End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Throw
+        End Try
     End Function
 
     Private Function IncrementThreadAccessForTask(entrySeqID As String) As Boolean
         Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementThreadAccessForTask.php?EntrySeqID={entrySeqID}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
-
-        Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-            Using reader As New IO.StreamReader(response.GetResponseStream())
-                Dim jsonResponse As String = reader.ReadToEnd()
-                Return True
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Return True
+                End Using
             End Using
-        End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Throw
+        End Try
     End Function
 
     Private Function UpdateLocalDatabaseWithResponse(jsonResponse As String, entrySeqID As String) As Boolean
@@ -1643,6 +1793,76 @@ Public Class TaskBrowser
             "ThreadAccess"}
 
     End Function
+
+    Private Sub RemoveEventHandlers()
+
+        For Each tmi As ToolStripMenuItem In _handlerFavoriteReplaceSearchItem_Click
+            RemoveHandler tmi.Click, AddressOf FavoriteReplaceSearchItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerFavoriteReplaceSearchItem_Click.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerFavoriteAddToSearchItem_Click
+            RemoveHandler tmi.Click, AddressOf FavoriteAddToSearchItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerFavoriteAddToSearchItem_Click.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerFavoriteRenameItem_Click
+            RemoveHandler tmi.Click, AddressOf FavoriteRenameItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerFavoriteRenameItem_Click.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerFavoriteDeleteItem_Click
+            RemoveHandler tmi.Click, AddressOf FavoriteDeleteItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerFavoriteDeleteItem_Click.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerColumnVisibilityToggle
+            RemoveHandler tmi.Click, AddressOf ColumnVisibilityToggle
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerColumnVisibilityToggle.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerTextCriteriaMenuItem_Click
+            RemoveHandler tmi.Click, AddressOf TextCriteriaMenuItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerTextCriteriaMenuItem_Click.Clear()
+
+        For Each tmi As ToolStripMenuItem In _handlerNumberCriteriaMenuItem_Click
+            RemoveHandler tmi.Click, AddressOf NumberCriteriaMenuItem_Click
+            tmi.Dispose()
+            tmi = Nothing
+        Next
+        _handlerNumberCriteriaMenuItem_Click.Clear()
+
+        RemoveHandler btnSmallerText.Click, AddressOf btnSmallerText_Click
+        RemoveHandler btnBiggerText.Click, AddressOf btnBiggerText_Click
+        RemoveHandler btnDownloadOpen.Click, AddressOf btnDownloadOpen_Click
+        RemoveHandler AddNewFavoriteToolStripMenuItem.Click, AddressOf AddNewFavoriteToolStripMenuItem_Click
+        RemoveHandler txtSearch.TextChanged, AddressOf txtSearch_TextChanged
+        RemoveHandler chkNot.CheckedChanged, AddressOf chkNot_CheckedChanged
+        RemoveHandler txtSearch.KeyDown, AddressOf txtSearch_KeyDown
+        RemoveHandler btnResetSearch.Click, AddressOf btnResetSearch_Click
+        RemoveHandler btnSearchBack.Click, AddressOf btnSearchBack_Click
+        RemoveHandler btnViewInLibrary.Click, AddressOf btnViewInLibrary_Click
+        RemoveHandler btnUpdateDB.Click, AddressOf btnUpdateDB_Click
+        RemoveHandler gridCurrentDatabase.RowEnter, AddressOf gridCurrentDatabase_RowEnter
+        RemoveHandler gridCurrentDatabase.Resize, AddressOf gridCurrentDatabase_Resize
+        RemoveHandler gridCurrentDatabase.DataSourceChanged, AddressOf gridCurrentDatabase_DataSourceChanged
+        RemoveHandler gridCurrentDatabase.ColumnHeaderMouseClick, AddressOf gridCurrentDatabase_ColumnHeaderMouseClick
+        RemoveHandler Me.FormClosing, AddressOf TaskBrowser_FormClosing
+
+    End Sub
 
 #End Region
 
