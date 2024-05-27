@@ -214,7 +214,7 @@ Public Class AllSettings
                 TaskLibraryRightPartSplitterLocation = 50
             End If
             TaskLibraryDetailsZoomLevel = settingsInFile.TaskLibraryDetailsZoomLevel
-            If TaskLibraryDetailsZoomLevel = 0 Then
+            If TaskLibraryDetailsZoomLevel <= 0.015625 OrElse TaskLibraryDetailsZoomLevel >= 64 Then
                 TaskLibraryDetailsZoomLevel = 1.5
             End If
             If TaskLibrarySortColumn = String.Empty Then

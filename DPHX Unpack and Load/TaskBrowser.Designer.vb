@@ -29,6 +29,9 @@ Partial Class TaskBrowser
         Me.btnViewInLibrary = New System.Windows.Forms.Button()
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.btnSmallerText = New System.Windows.Forms.Button()
+        Me.btnBiggerText = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.chkNot = New System.Windows.Forms.CheckBox()
         Me.btnSearchBack = New System.Windows.Forms.Button()
@@ -69,6 +72,7 @@ Partial Class TaskBrowser
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.FilterBoxContextMenu.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -148,6 +152,7 @@ Partial Class TaskBrowser
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.Panel5)
         Me.Panel2.Controls.Add(Me.Panel4)
         Me.Panel2.Controls.Add(Me.Panel3)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
@@ -155,6 +160,36 @@ Partial Class TaskBrowser
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1118, 47)
         Me.Panel2.TabIndex = 3
+        '
+        'Panel5
+        '
+        Me.Panel5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel5.Controls.Add(Me.btnSmallerText)
+        Me.Panel5.Controls.Add(Me.btnBiggerText)
+        Me.Panel5.Location = New System.Drawing.Point(804, 3)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(202, 41)
+        Me.Panel5.TabIndex = 1
+        '
+        'btnSmallerText
+        '
+        Me.btnSmallerText.Location = New System.Drawing.Point(50, 2)
+        Me.btnSmallerText.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnSmallerText.Name = "btnSmallerText"
+        Me.btnSmallerText.Size = New System.Drawing.Size(72, 35)
+        Me.btnSmallerText.TabIndex = 0
+        Me.btnSmallerText.Text = "Smaller"
+        Me.ToolTip1.SetToolTip(Me.btnSmallerText, "Click to make the task details smaller.")
+        '
+        'btnBiggerText
+        '
+        Me.btnBiggerText.Location = New System.Drawing.Point(126, 2)
+        Me.btnBiggerText.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnBiggerText.Name = "btnBiggerText"
+        Me.btnBiggerText.Size = New System.Drawing.Size(72, 35)
+        Me.btnBiggerText.TabIndex = 1
+        Me.btnBiggerText.Text = "Larger"
+        Me.ToolTip1.SetToolTip(Me.btnBiggerText, "Click to make the task details larger.")
         '
         'Panel4
         '
@@ -167,7 +202,7 @@ Partial Class TaskBrowser
         Me.Panel4.Controls.Add(Me.txtSearch)
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(1002, 44)
+        Me.Panel4.Size = New System.Drawing.Size(800, 44)
         Me.Panel4.TabIndex = 0
         '
         'chkNot
@@ -207,7 +242,7 @@ Partial Class TaskBrowser
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSearchTerms.Location = New System.Drawing.Point(353, 12)
         Me.lblSearchTerms.Name = "lblSearchTerms"
-        Me.lblSearchTerms.Size = New System.Drawing.Size(640, 24)
+        Me.lblSearchTerms.Size = New System.Drawing.Size(444, 24)
         Me.lblSearchTerms.TabIndex = 4
         '
         'txtSearch
@@ -231,7 +266,7 @@ Partial Class TaskBrowser
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(198, 24)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(179, 24)
         Me.ToolStripMenuItem1.Text = "Boolean"
         Me.ToolStripMenuItem1.ToolTipText = "Menu for all true/false fields."
         '
@@ -246,28 +281,28 @@ Partial Class TaskBrowser
         'ThermalsToolStripMenuItem
         '
         Me.ThermalsToolStripMenuItem.Name = "ThermalsToolStripMenuItem"
-        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.ThermalsToolStripMenuItem.Text = "Thermals"
         Me.ThermalsToolStripMenuItem.ToolTipText = "Select to filter based on Thermals soaring."
         '
         'WavesToolStripMenuItem
         '
         Me.WavesToolStripMenuItem.Name = "WavesToolStripMenuItem"
-        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.WavesToolStripMenuItem.Text = "Waves"
         Me.WavesToolStripMenuItem.ToolTipText = "Select to filter based on Waves soaring."
         '
         'DynamicToolStripMenuItem
         '
         Me.DynamicToolStripMenuItem.Name = "DynamicToolStripMenuItem"
-        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.DynamicToolStripMenuItem.Text = "Dynamic"
         Me.DynamicToolStripMenuItem.ToolTipText = "Select to filter based on Dynamic soaring."
         '
         'AddOnsToolStripMenuItem
         '
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
-        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
         Me.AddOnsToolStripMenuItem.ToolTipText = "Select to filter based on the task having recommended add-ons or not."
         '
@@ -281,7 +316,6 @@ Partial Class TaskBrowser
         '
         'textCriteriaWords
         '
-        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -301,7 +335,6 @@ Partial Class TaskBrowser
         '
         'numbersCriteriaFromTo
         '
-        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -334,7 +367,6 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
-        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
@@ -357,7 +389,7 @@ Partial Class TaskBrowser
         Me.Panel3.Location = New System.Drawing.Point(1008, 3)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(106, 41)
-        Me.Panel3.TabIndex = 1
+        Me.Panel3.TabIndex = 2
         '
         'btnUpdateDB
         '
@@ -418,14 +450,14 @@ Partial Class TaskBrowser
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(198, 24)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(175, 24)
         Me.ToolStripMenuItem2.Text = "Reset (Show All)"
         Me.ToolStripMenuItem2.ToolTipText = "Click to unhide all columns."
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(195, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(172, 6)
         '
         'splitRightPart
         '
@@ -525,6 +557,7 @@ Partial Class TaskBrowser
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
+        Me.Panel5.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         Me.FilterBoxContextMenu.ResumeLayout(False)
@@ -592,4 +625,7 @@ Partial Class TaskBrowser
     Friend WithEvents btnDownloadOpen As Button
     Friend WithEvents lblCurrentSelection As Label
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents btnBiggerText As Button
+    Friend WithEvents btnSmallerText As Button
 End Class

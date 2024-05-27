@@ -85,6 +85,17 @@ Public Class TaskBrowser
 
     End Sub
 
+    Private Sub btnSmallerText_Click(sender As Object, e As EventArgs) Handles btnSmallerText.Click
+        If Not (txtBriefing.ZoomFactor - 0.1) <= 0.015625 Then
+            txtBriefing.ZoomFactor = txtBriefing.ZoomFactor - 0.1
+        End If
+    End Sub
+    Private Sub btnBiggerText_Click(sender As Object, e As EventArgs) Handles btnBiggerText.Click
+        If Not (txtBriefing.ZoomFactor + 0.1) >= 64 Then
+            txtBriefing.ZoomFactor = txtBriefing.ZoomFactor + 0.1
+        End If
+    End Sub
+
     Private Sub btnDownloadOpen_Click(sender As Object, e As EventArgs) Handles btnDownloadOpen.Click
 
         If btnDownloadOpen.Text = "Open" Then
@@ -746,30 +757,6 @@ Public Class TaskBrowser
 
         gridCurrentDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader
         gridCurrentDatabase.ReadOnly = True
-        gridCurrentDatabase.Columns("TaskID").Visible = False
-        gridCurrentDatabase.Columns("SimDateTime").Visible = False
-        gridCurrentDatabase.Columns("IncludeYear").Visible = False
-        gridCurrentDatabase.Columns("IncludeYearBool").Visible = False
-        gridCurrentDatabase.Columns("SimDateTimeExtraInfo").Visible = False
-        gridCurrentDatabase.Columns("DepartureExtra").Visible = False
-        gridCurrentDatabase.Columns("ArrivalExtra").Visible = False
-        gridCurrentDatabase.Columns("DurationMin").Visible = False
-        gridCurrentDatabase.Columns("DurationMax").Visible = False
-        gridCurrentDatabase.Columns("TaskDistance").Visible = False
-        gridCurrentDatabase.Columns("TotalDistance").Visible = False
-        gridCurrentDatabase.Columns("DifficultyRating").Visible = False
-        gridCurrentDatabase.Columns("DifficultyExtraInfo").Visible = False
-        gridCurrentDatabase.Columns("ShortDescription").Visible = False
-        gridCurrentDatabase.Columns("LongDescription").Visible = False
-        gridCurrentDatabase.Columns("MapImage").Visible = False
-        gridCurrentDatabase.Columns("CoverImage").Visible = False
-        gridCurrentDatabase.Columns("SoaringRidge").Visible = False
-        gridCurrentDatabase.Columns("SoaringThermals").Visible = False
-        gridCurrentDatabase.Columns("SoaringWaves").Visible = False
-        gridCurrentDatabase.Columns("SoaringDynamic").Visible = False
-        gridCurrentDatabase.Columns("RecommendedAddOns").Visible = False
-        gridCurrentDatabase.Columns("LastDownloadUpdate").Visible = False
-        gridCurrentDatabase.Columns("DBEntryUpdate").Visible = False
 
         gridCurrentDatabase.Columns("EntrySeqID").HeaderText = "#"
         gridCurrentDatabase.Columns("EntrySeqID").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
@@ -873,23 +860,28 @@ Public Class TaskBrowser
         gridCurrentDatabase.Columns("TotDownloads").DisplayIndex = 22
         gridCurrentDatabase.Columns("TotDownloads").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
 
+        ' List of column names to exclude from the visibility toggle
+        Dim excludeColumns As List(Of String) = GetListOfExcludedColumnNames()
+
         If gridCurrentDatabase IsNot Nothing Then
             For Each setting In Settings.SessionSettings.TBColumnsSettings
                 If gridCurrentDatabase.Columns.Contains(setting.Name) Then
-                    gridCurrentDatabase.Columns(setting.Name).Visible = setting.Visible
-                    gridCurrentDatabase.Columns(setting.Name).DisplayIndex = setting.DisplayIndex
-                    If setting.ColumnWidth > 0 Then
-                        gridCurrentDatabase.Columns(setting.Name).Width = setting.ColumnWidth
+                    If excludeColumns.Contains(setting.Name) Then
+                        gridCurrentDatabase.Columns(setting.Name).Visible = False
                     Else
-
+                        gridCurrentDatabase.Columns(setting.Name).Visible = setting.Visible
+                        gridCurrentDatabase.Columns(setting.Name).DisplayIndex = setting.DisplayIndex
+                        If setting.ColumnWidth > 0 Then
+                            gridCurrentDatabase.Columns(setting.Name).Width = setting.ColumnWidth
+                        End If
+                        Select Case setting.Name
+                            Case "DurationConcat", "DistancesConcat", "TotDownloads"
+                                gridCurrentDatabase.Columns(setting.Name).SortMode = DataGridViewColumnSortMode.Programmatic
+                            Case Else
+                                gridCurrentDatabase.Columns(setting.Name).SortMode = DataGridViewColumnSortMode.Automatic
+                        End Select
+                        gridCurrentDatabase.Columns(setting.Name).Tag = setting.Name
                     End If
-                    Select Case setting.Name
-                        Case "DurationConcat", "DistancesConcat", "TotDownloads"
-                            gridCurrentDatabase.Columns(setting.Name).SortMode = DataGridViewColumnSortMode.Programmatic
-                        Case Else
-                            gridCurrentDatabase.Columns(setting.Name).SortMode = DataGridViewColumnSortMode.Automatic
-                    End Select
-                    gridCurrentDatabase.Columns(setting.Name).Tag = setting.Name
                 End If
             Next
         End If
@@ -1625,8 +1617,6 @@ Public Class TaskBrowser
         ' List of column names to exclude from the visibility toggle
         Return New List(Of String) From {
             "TaskID",
-            "DPHXFilename",
-            "IsUpdate",
             "SimDateTime",
             "IncludeYear",
             "SimDateTimeExtraInfo",
@@ -1652,6 +1642,7 @@ Public Class TaskBrowser
             "DBEntryUpdate"}
 
     End Function
+
 #End Region
 
 End Class
