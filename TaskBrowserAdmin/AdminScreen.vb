@@ -152,7 +152,7 @@ Public Class AdminScreen
             End Using
 
             If newDPHFile = String.Empty Then
-                MessageBox.Show(Me, $"The DPHX file {dphxFilename} contains an invalid DPH file.", "Loading DPHX file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Console.WriteLine($"The DPHX file {dphxFilename} contains an invalid DPH file.")
                 Exit Sub
             End If
 
@@ -161,7 +161,7 @@ Public Class AdminScreen
             End If
 
             If _allDPHData.DiscordTaskID = String.Empty Then
-                MessageBox.Show(Me, $"The DPHX file {dphxFilename} contains an invalid or missing task ID.", "Loading DPHX file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Console.WriteLine($"The DPHX file {dphxFilename} contains an invalid or missing task ID.")
             Else
                 If _incomingTaskDBEntries.ContainsKey(_allDPHData.DiscordTaskID) Then
                     Console.WriteLine($"Error: Duplicate DiscordTaskID {_allDPHData.DiscordTaskID} found in file {dphxFilename}.")
@@ -238,7 +238,7 @@ Public Class AdminScreen
                 .CoverImage = ResizeImageAndGetBytes(Path.Combine(Path.GetDirectoryName(DPHFilename), Path.GetFileName(DPHData.CoverImageSelected)), 400, 400, 25)
             End If
             .TotDownloads = 0
-            .LastDownloadUpdate = "2000-01-01 00:00:00"
+            .LastDownloadUpdate = "2000-01-01 23:59:00"
             .DBEntryUpdate = Now.ToString
         End With
 

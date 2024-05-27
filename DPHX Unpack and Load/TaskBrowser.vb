@@ -1639,7 +1639,8 @@ Public Class TaskBrowser
             "MapImage",
             "CoverImage",
             "IncludeYearBool",
-            "DBEntryUpdate"}
+            "DBEntryUpdate",
+            "ThreadAccess"}
 
     End Function
 
