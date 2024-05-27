@@ -2,16 +2,29 @@
 Partial Class TaskBrowser
     Inherits System.Windows.Forms.Form
 
-    'Form overrides dispose to clean up the component list.
+    ' Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
                 components.Dispose()
             End If
+
+            ' Add custom dispose logic here
+            If disposing Then
+                RemoveHandlers()
+            End If
+
         Finally
             MyBase.Dispose(disposing)
         End Try
+    End Sub
+
+    ' Add a method to remove event handlers
+    Private Sub RemoveHandlers()
+        ' Detach all event handlers added in the form
+        RemoveHandler Me.Load, AddressOf TaskBrowser_Load
+        ' Add other event handlers you have attached
     End Sub
 
     'Required by the Windows Form Designer

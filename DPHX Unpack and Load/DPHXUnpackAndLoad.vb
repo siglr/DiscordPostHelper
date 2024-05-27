@@ -295,18 +295,14 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
 
-        TaskBrowser.ShowDialog(Me)
+        Using taskBrowserForm As New TaskBrowser()
+            taskBrowserForm.ShowDialog(Me)
 
-        Dim selectedFile As String = TaskBrowser.DownloadedFilePath
-        If selectedFile <> String.Empty Then
-            LoadDPHXPackage(selectedFile)
-        End If
-
-        TaskBrowser.Dispose()
-        TaskBrowser = Nothing
-
-        'Old button to go to the Discord library
-        'SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1155511739799060552")
+            Dim selectedFile As String = taskBrowserForm.DownloadedFilePath
+            If selectedFile <> String.Empty Then
+                LoadDPHXPackage(selectedFile)
+            End If
+        End Using
 
     End Sub
 
