@@ -1447,8 +1447,8 @@ Public Class TaskBrowser
                         cmd.Parameters.AddWithValue("@Credits", If(IsDBNull(row("Credits")), DBNull.Value, row("Credits")))
                         cmd.Parameters.AddWithValue("@Countries", If(IsDBNull(row("Countries")), DBNull.Value, row("Countries")))
                         cmd.Parameters.AddWithValue("@RecommendedAddOns", row("RecommendedAddOns"))
-                        cmd.Parameters.AddWithValue("@MapImage", If(row("MapImage") Is Nothing OrElse row("MapImage") = String.Empty OrElse IsDBNull(row("MapImage")), DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
-                        cmd.Parameters.AddWithValue("@CoverImage", If(row("CoverImage") Is Nothing OrElse row("CoverImage") = String.Empty OrElse IsDBNull(row("CoverImage")), DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
+                        cmd.Parameters.AddWithValue("@MapImage", If(row("MapImage") Is Nothing OrElse IsDBNull(row("MapImage")) OrElse row("MapImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
+                        cmd.Parameters.AddWithValue("@CoverImage", If(row("CoverImage") Is Nothing OrElse IsDBNull(row("CoverImage")) OrElse row("CoverImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
                         cmd.Parameters.AddWithValue("@DBEntryUpdate", row("DBEntryUpdate"))
 
 

@@ -109,7 +109,7 @@ Public Class AdminScreen
     End Sub
 
     Private Sub btnSelectDPHXFiles_Click(sender As Object, e As EventArgs) Handles btnSelectDPHXFiles.Click
-        OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+        OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\Fly Now\TestBrowserAdmin"
         OpenFileDialog1.FileName = ""
         OpenFileDialog1.Title = "Select DPHX files"
         OpenFileDialog1.Filter = "DPHX|*.dphx"
