@@ -25,6 +25,8 @@ Public Class TaskBrowser
     Private scrollIndex As Integer
     Private selectedRowIndex As Integer
     Private horizontalScrollIndex As Integer
+    Private prevSortColumn As String
+    Private prevSortDirectionAsc As Boolean
 
     Private Shared _processingChange As Boolean = False
 
@@ -366,7 +368,9 @@ Public Class TaskBrowser
 
     Private Sub btnResetSearch_Click(sender As Object, e As EventArgs) Handles btnResetSearch.Click
 
+        SaveOrReapplySort(True)
         gridCurrentDatabase.DataSource = _currentTaskDBEntries
+        SaveOrReapplySort(False)
         _filteredDataTable = Nothing
         lblSearchTerms.Text = String.Empty
         txtSearch.Text = String.Empty
@@ -524,6 +528,9 @@ Public Class TaskBrowser
     End Sub
 
     Private Sub gridCurrentDatabase_DataSourceChanged(sender As Object, e As EventArgs) Handles gridCurrentDatabase.DataSourceChanged
+        If _dataGridViewAllSet Then
+            SaveDataGridViewSettings()
+        End If
         SetupDataGridView()
     End Sub
 
@@ -824,6 +831,8 @@ Public Class TaskBrowser
     Private Sub SaveDataGridViewSettings()
         If gridCurrentDatabase.SortedColumn IsNot Nothing Then
             Settings.SessionSettings.TaskLibrarySortColumn = gridCurrentDatabase.SortedColumn.Name
+        Else
+            Settings.SessionSettings.TaskLibrarySortColumn = "EntrySeqID"
         End If
         Settings.SessionSettings.TaskLibrarySortAsc = (gridCurrentDatabase.SortOrder = SortOrder.Ascending)
         Settings.SessionSettings.TaskLibrarySplitterLocation = CInt(splitMain.SplitterDistance / splitMain.Width * 100)
@@ -951,6 +960,11 @@ Public Class TaskBrowser
         Dim excludeColumns As List(Of String) = GetListOfExcludedColumnNames()
 
         If gridCurrentDatabase IsNot Nothing Then
+            If Settings.SessionSettings.TBColumnsSettings.Count = 0 Then
+                For Each col As DataGridViewColumn In gridCurrentDatabase.Columns
+                    Settings.SessionSettings.TBColumnsSettings.Add(New TBColumnSetting(col.Name, col.DisplayIndex, col.Visible, col.Width))
+                Next
+            End If
             For Each setting In Settings.SessionSettings.TBColumnsSettings
                 If gridCurrentDatabase.Columns.Contains(setting.Name) Then
                     If excludeColumns.Contains(setting.Name) Then
@@ -1296,16 +1310,37 @@ Public Class TaskBrowser
             End If
         End If
 
+        'save sort
+        SaveOrReapplySort(True)
         If filteredRows.Any() Then
             _filteredDataTable = filteredRows.CopyToDataTable()
             gridCurrentDatabase.DataSource = _filteredDataTable
         Else
             gridCurrentDatabase.DataSource = _currentTaskDBEntries.Clone() ' Return an empty DataTable with the same schema
         End If
+        'reapply sort
+        SaveOrReapplySort(False)
 
         Return validSearch
 
     End Function
+
+    Private Sub SaveOrReapplySort(save As Boolean)
+
+        If save Then
+            If gridCurrentDatabase.SortedColumn IsNot Nothing Then
+                prevSortColumn = gridCurrentDatabase.SortedColumn.Name
+            Else
+                prevSortColumn = String.Empty
+            End If
+            prevSortDirectionAsc = gridCurrentDatabase.SortOrder = SortOrder.Ascending
+        Else
+            If prevSortColumn IsNot Nothing Then
+                gridCurrentDatabase.Sort(gridCurrentDatabase.Columns(prevSortColumn), If(prevSortDirectionAsc, ListSortDirection.Ascending, ListSortDirection.Descending))
+            End If
+        End If
+
+    End Sub
 
     Private Function WildcardMatch(input As String, pattern As String) As Boolean
         ' Convert wildcard pattern to regex pattern
@@ -1863,6 +1898,7 @@ Public Class TaskBrowser
         RemoveHandler Me.FormClosing, AddressOf TaskBrowser_FormClosing
 
     End Sub
+
 
 #End Region
 

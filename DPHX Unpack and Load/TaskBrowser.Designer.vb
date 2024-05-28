@@ -343,6 +343,7 @@ Partial Class TaskBrowser
         '
         'textCriteriaWords
         '
+        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -362,6 +363,7 @@ Partial Class TaskBrowser
         '
         'numbersCriteriaFromTo
         '
+        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -394,6 +396,7 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
+        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
