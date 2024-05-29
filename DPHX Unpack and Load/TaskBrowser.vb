@@ -1518,6 +1518,35 @@ Public Class TaskBrowser
         End Try
     End Function
 
+    Public Function FetchDeletedTasks() As List(Of Integer)
+        Dim deletedTasks As New List(Of Integer)
+
+        Try
+            Dim apiUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveDeletedTasks.php"
+            Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+            request.Method = "GET"
+            request.ContentType = "application/json"
+
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim responseObject As JObject = JObject.Parse(jsonResponse)
+
+                    If responseObject("status").ToString() = "success" Then
+                        For Each task As JObject In responseObject("deletedTasks")
+                            deletedTasks.Add(CInt(task("EntrySeqID").ToString()))
+                        Next
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show(Me, $"Error retrieving deleted tasks: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return deletedTasks
+    End Function
+
     Public Function ConvertJsonToDataTable(json As String) As DataTable
         If String.IsNullOrEmpty(json) OrElse json.Trim() = "[]" Then
             Return New DataTable()
@@ -1529,18 +1558,22 @@ Public Class TaskBrowser
         Dim lastDBEntryUpdate As String = GetMaxLastDBEntryUpdateFromLocalDatabase()
         Dim lastDownloadUpdate As String = GetMaxLastDownloadUpdateFromLocalDatabase()
 
+        Dim deletedTasks As List(Of Integer) = FetchDeletedTasks()
+
         Using updatedTasks As DataTable = FetchUpdatedTasks(lastDBEntryUpdate)
             Using updatedDownloads As DataTable = FetchUpdatedDownloads(lastDownloadUpdate)
-                Dim updateResult As UpdateResult = UpdateLocalDatabase(updatedTasks, updatedDownloads)
+                Dim updateResult As UpdateResult = UpdateLocalDatabase(updatedTasks, updatedDownloads, deletedTasks)
 
                 Dim msgResults As String = String.Empty
                 If updateResult.Success Then
-                    If updateResult.RecordsAdded > 0 OrElse updateResult.RecordsUpdated > 0 Then
+                    If updateResult.RecordsAdded > 0 OrElse updateResult.RecordsUpdated > 0 OrElse updateResult.RecordsDeleted > 0 Then
                         'Reopen the datatable
+                        SaveOrReapplySort(True)
                         UpdateCurrentDBGrid()
-                        msgResults = $"Database update successful.{Environment.NewLine}{updateResult.RecordsAdded} new or updated tasks{Environment.NewLine}{updateResult.RecordsUpdated} updated download counts"
+                        SaveOrReapplySort(False)
+                        msgResults = $"Database update successful.{Environment.NewLine}{updateResult.RecordsAdded} new or updated tasks{Environment.NewLine}{updateResult.RecordsUpdated} updated download counts{Environment.NewLine}{updateResult.RecordsDeleted} tasks deleted"
                     Else
-                        msgResults = $"Database update check successful - No new or updated task."
+                        msgResults = $"Database update check successful - No new, updated or deleted task."
                     End If
                     If showSuccessResults Then
                         Using New Centered_MessageBox()
@@ -1575,10 +1608,11 @@ Public Class TaskBrowser
         Return maxLastDownloadUpdate
     End Function
 
-    Private Function UpdateLocalDatabase(updatedTasks As DataTable, updatedDownloads As DataTable) As UpdateResult
+    Private Function UpdateLocalDatabase(updatedTasks As DataTable, updatedDownloads As DataTable, deletedTasks As List(Of Integer)) As UpdateResult
         Dim result As New UpdateResult
         Dim recordsAdded As Integer = 0
         Dim recordsUpdated As Integer = 0
+        Dim recordsDeleted As Integer = 0
 
         Try
             Using conn As New SQLiteConnection($"Data Source={_localTasksDatabaseFilePath};Version=3;")
@@ -1651,6 +1685,17 @@ Public Class TaskBrowser
                         End If
                     Next
 
+                    ' Process deleted tasks
+                    For Each entrySeqID In deletedTasks
+                        Dim cmd As New SQLiteCommand("DELETE FROM Tasks WHERE EntrySeqID = @EntrySeqID", conn)
+                        cmd.Parameters.AddWithValue("@EntrySeqID", entrySeqID)
+
+                        Dim rowsAffected = cmd.ExecuteNonQuery()
+                        If rowsAffected = 1 Then
+                            recordsDeleted += 1
+                        End If
+                    Next
+
                     transaction.Commit()
                 End Using
             End Using
@@ -1658,6 +1703,7 @@ Public Class TaskBrowser
             result.Success = True
             result.RecordsAdded = recordsAdded
             result.RecordsUpdated = recordsUpdated
+            result.RecordsDeleted = recordsDeleted
         Catch ex As Exception
             result.Success = False
             result.ErrorMessage = ex.Message
@@ -1909,5 +1955,6 @@ Public Class UpdateResult
     Public Property Success As Boolean
     Public Property RecordsAdded As Integer
     Public Property RecordsUpdated As Integer
+    Public Property RecordsDeleted As Integer
     Public Property ErrorMessage As String
 End Class
