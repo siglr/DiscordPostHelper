@@ -1567,13 +1567,13 @@ Public Class TaskBrowser
                 Dim msgResults As String = String.Empty
                 If updateResult.Success Then
                     If updateResult.RecordsAdded > 0 OrElse updateResult.RecordsUpdated > 0 OrElse updateResult.RecordsDeleted > 0 Then
-                        'Reopen the datatable
+                        ' Reopen the datatable
                         SaveOrReapplySort(True)
                         UpdateCurrentDBGrid()
                         SaveOrReapplySort(False)
                         msgResults = $"Database update successful.{Environment.NewLine}{updateResult.RecordsAdded} new or updated tasks{Environment.NewLine}{updateResult.RecordsUpdated} updated download counts{Environment.NewLine}{updateResult.RecordsDeleted} tasks deleted"
                     Else
-                        msgResults = $"Database update check successful - No new, updated or deleted task."
+                        msgResults = "Database update check successful - No new, updated, or deleted tasks."
                     End If
                     If showSuccessResults Then
                         Using New Centered_MessageBox()
@@ -1660,7 +1660,6 @@ Public Class TaskBrowser
                         cmd.Parameters.AddWithValue("@MapImage", If(row("MapImage") Is Nothing OrElse IsDBNull(row("MapImage")) OrElse row("MapImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
                         cmd.Parameters.AddWithValue("@CoverImage", If(row("CoverImage") Is Nothing OrElse IsDBNull(row("CoverImage")) OrElse row("CoverImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
                         cmd.Parameters.AddWithValue("@DBEntryUpdate", row("DBEntryUpdate"))
-
 
                         Dim rowsAffected = cmd.ExecuteNonQuery()
                         If rowsAffected = 1 Then
