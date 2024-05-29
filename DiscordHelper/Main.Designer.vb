@@ -386,6 +386,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnUploadToTaskBrowser = New System.Windows.Forms.Button()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2778,6 +2779,7 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.btnUploadToTaskBrowser)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.GroupBox5)
         Me.tabDiscord.Controls.Add(Me.grpDiscordEvent)
@@ -4838,6 +4840,19 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'btnUploadToTaskBrowser
+        '
+        Me.btnUploadToTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnUploadToTaskBrowser.Location = New System.Drawing.Point(1266, 164)
+        Me.btnUploadToTaskBrowser.Name = "btnUploadToTaskBrowser"
+        Me.btnUploadToTaskBrowser.Size = New System.Drawing.Size(168, 66)
+        Me.btnUploadToTaskBrowser.TabIndex = 95
+        Me.btnUploadToTaskBrowser.Tag = "87"
+        Me.btnUploadToTaskBrowser.Text = "Upload to Task Library"
+        Me.ToolTip1.SetToolTip(Me.btnUploadToTaskBrowser, "Click this button to copy the message to post on the task and receive instruction" &
+        "s to paste it in the Discord.")
+        Me.btnUploadToTaskBrowser.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -5327,4 +5342,5 @@ Partial Class Main
     Friend WithEvents btnRecallTaskDescriptionTemplate As Button
     Friend WithEvents btnLoadEventDescriptionTemplate As Button
     Friend WithEvents btnSaveEventDescriptionTemplate As Button
+    Friend WithEvents btnUploadToTaskBrowser As Button
 End Class

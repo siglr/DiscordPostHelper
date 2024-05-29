@@ -3,20 +3,18 @@ Imports System.IO
 Imports System.Xml.Serialization
 Imports System.Text
 Imports System.Threading
-Imports System.Web.UI.WebControls
 Imports System.Globalization
 Imports SIGLR.SoaringTools.CommonLibrary
-Imports System.Text.RegularExpressions
 Imports System.Reflection
 Imports SIGLR.SoaringTools.ImageViewer
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
-Imports System.Linq.Expressions
-Imports System.Web.UI
-Imports System.Web
 Imports System.Collections.Specialized
-Imports System.Net.Mail
-Imports System.Windows.Interop
-Imports System.Windows.Controls
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
+Imports System.Net
+Imports System.ComponentModel
+Imports System.Data.SqlTypes
+Imports System.Drawing.Drawing2D
+Imports System.Drawing.Imaging
 
 Public Class Main
 
@@ -5582,6 +5580,204 @@ Public Class Main
         End If
 
     End Sub
+
+#End Region
+
+#Region "Task Browser Code"
+
+    Private Sub btnUploadToTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnUploadToTaskBrowser.Click
+
+        Dim taskInfo As AllData = SetAndRetrieveSessionData()
+
+        Dim theMapImage As Byte()
+        Dim theCoverImage As Byte()
+
+        ' Cover and map image
+        If taskInfo.MapImageSelected <> String.Empty Then
+            theMapImage = ResizeImageAndGetBytes(taskInfo.MapImageSelected, 400, 400, 25)
+        End If
+
+        If taskInfo.CoverImageSelected <> String.Empty Then
+            theCoverImage = ResizeImageAndGetBytes(taskInfo.CoverImageSelected, 400, 400, 25)
+        End If
+
+        Dim taskData As New Dictionary(Of String, Object) From {
+            {"TaskID", taskInfo.DiscordTaskID},
+            {"Title", taskInfo.Title},
+            {"LastUpdate", GetFileUpdateDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"SimDateTime", taskInfo.SimTime.ToString("yyyy-MM-dd HH:mm:ss")},
+            {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
+            {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
+            {"MainAreaPOI", taskInfo.MainAreaPOI},
+            {"DepartureName", taskInfo.DepartureName},
+            {"DepartureICAO", taskInfo.DepartureICAO},
+            {"DepartureExtra", taskInfo.DepartureExtra},
+            {"ArrivalName", taskInfo.ArrivalName},
+            {"ArrivalICAO", taskInfo.ArrivalICAO},
+            {"ArrivalExtra", taskInfo.ArrivalExtra},
+            {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
+            {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
+            {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
+            {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
+            {"SoaringExtraInfo", taskInfo.SoaringExtraInfo},
+            {"DurationMin", taskInfo.DurationMin},
+            {"DurationMax", taskInfo.DurationMax},
+            {"DurationExtraInfo", taskInfo.DurationExtraInfo},
+            {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
+            {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
+            {"RecommendedGliders", taskInfo.RecommendedGliders},
+            {"DifficultyRating", taskInfo.DifficultyRating},
+            {"DifficultyExtraInfo", taskInfo.DifficultyExtraInfo},
+            {"ShortDescription", taskInfo.ShortDescription},
+            {"LongDescription", taskInfo.LongDescription},
+            {"WeatherSummary", taskInfo.WeatherSummary},
+            {"Credits", taskInfo.Credits},
+            {"Countries", String.Join(", ", taskInfo.Countries)},
+            {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
+            {"MapImage", theMapImage},
+            {"CoverImage", theCoverImage},
+            {"DBEntryUpdate", Now.ToString("yyyy-MM-dd HH:mm:ss")}
+        }
+
+        Dim filePath As String = taskInfo.DPHXPackageFilename
+        Dim result As Boolean = UploadTaskToServer(taskData, filePath)
+
+        If result Then
+            MessageBox.Show("Task uploaded and database updated successfully.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Else
+            MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
+
+    End Sub
+
+    Private Function GetFileUpdateDateTime(filePath As String) As DateTime
+        Dim fileInfo As New FileInfo(filePath)
+        Return fileInfo.LastWriteTime
+    End Function
+
+    Private Function ResizeImageAndGetBytes(inputPath As String, maxWidth As Integer, maxHeight As Integer, quality As Long) As Byte()
+        ' Load the original image
+        Using image As Image = Image.FromFile(inputPath)
+            ' Calculate the new size maintaining aspect ratio
+            Dim ratioX As Double = maxWidth / image.Width
+            Dim ratioY As Double = maxHeight / image.Height
+            Dim ratio As Double = Math.Min(ratioX, ratioY)
+
+            Dim newWidth As Integer = CInt(image.Width * ratio)
+            Dim newHeight As Integer = CInt(image.Height * ratio)
+
+            ' Create a new Bitmap with the proper dimensions
+            Using thumbnail As New Bitmap(newWidth, newHeight)
+                Using graphics As Graphics = Graphics.FromImage(thumbnail)
+                    ' High quality settings for better output
+                    graphics.CompositingQuality = CompositingQuality.HighQuality
+                    graphics.SmoothingMode = SmoothingMode.HighQuality
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
+
+                    ' Draw the original image onto the thumbnail
+                    graphics.DrawImage(image, 0, 0, newWidth, newHeight)
+                End Using
+
+                ' Image quality settings
+                Using ms As New MemoryStream()
+                    Dim jpgEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
+                    Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
+                    Dim myEncoderParameters As New EncoderParameters(1)
+                    Dim myEncoderParameter As New EncoderParameter(myEncoder, quality)
+                    myEncoderParameters.Param(0) = myEncoderParameter
+
+                    ' Save the image to a memory stream in JPEG format
+                    thumbnail.Save(ms, jpgEncoder, myEncoderParameters)
+
+                    ' Convert the image to a byte array
+                    Return ms.ToArray()
+                End Using
+            End Using
+        End Using
+    End Function
+
+    Private Function GetEncoder(format As ImageFormat) As ImageCodecInfo
+        Dim codecs As ImageCodecInfo() = ImageCodecInfo.GetImageDecoders()
+        For Each codec In codecs
+            If codec.FormatID = format.Guid Then
+                Return codec
+            End If
+        Next
+        Return Nothing
+    End Function
+
+    Private Function UploadTaskToServer(task As Dictionary(Of String, Object), filePath As String) As Boolean
+        Try
+            ' Serialize the task to JSON
+            Dim json As String = JsonConvert.SerializeObject(task, New JsonSerializerSettings() With {
+            .NullValueHandling = NullValueHandling.Ignore
+        })
+
+            ' Prepare the request
+            Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "multipart/form-data"
+
+            ' Create boundary
+            Dim boundary As String = "----WebKitFormBoundary" & DateTime.Now.Ticks.ToString("x")
+
+            request.ContentType = "multipart/form-data; boundary=" & boundary
+            request.KeepAlive = True
+            request.Credentials = CredentialCache.DefaultCredentials
+
+            Using memStream As New MemoryStream()
+                Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
+                Dim endBoundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & "--" & vbCrLf)
+
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
+                ' Add task data
+                Dim taskDataHeader As String = "Content-Disposition: form-data; name=""task_data""" & vbCrLf & vbCrLf
+                Dim taskDataBytes As Byte() = Encoding.UTF8.GetBytes(taskDataHeader & json)
+                memStream.Write(taskDataBytes, 0, taskDataBytes.Length)
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
+                ' Add file
+                Dim header As String = "Content-Disposition: form-data; name=""file""; filename=""" & Path.GetFileName(filePath) & """" & vbCrLf & "Content-Type: application/octet-stream" & vbCrLf & vbCrLf
+                Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
+                memStream.Write(headerBytes, 0, headerBytes.Length)
+
+                Using fileStream As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+                    Dim buffer As Byte() = New Byte(1023) {}
+                    Dim bytesRead As Integer = fileStream.Read(buffer, 0, buffer.Length)
+
+                    While bytesRead <> 0
+                        memStream.Write(buffer, 0, bytesRead)
+                        bytesRead = fileStream.Read(buffer, 0, buffer.Length)
+                    End While
+                End Using
+
+                memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
+
+                request.ContentLength = memStream.Length
+
+                Using requestStream As Stream = request.GetRequestStream()
+                    memStream.Position = 0
+                    Dim tempBuffer As Byte() = New Byte(memStream.Length - 1) {}
+                    memStream.Read(tempBuffer, 0, tempBuffer.Length)
+                    requestStream.Write(tempBuffer, 0, tempBuffer.Length)
+                End Using
+            End Using
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim result As String = reader.ReadToEnd()
+                    ' Assuming the server returns a JSON object with a "status" field
+                    Dim responseJson As JObject = JObject.Parse(result)
+                    Return responseJson("status").ToString() = "success"
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(Me, $"Error uploading task: {ex.Message}", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+    End Function
 
 #End Region
 
