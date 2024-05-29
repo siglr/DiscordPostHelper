@@ -1335,9 +1335,10 @@ Public Class TaskBrowser
             End If
             prevSortDirectionAsc = gridCurrentDatabase.SortOrder = SortOrder.Ascending
         Else
-            If prevSortColumn IsNot Nothing Then
-                gridCurrentDatabase.Sort(gridCurrentDatabase.Columns(prevSortColumn), If(prevSortDirectionAsc, ListSortDirection.Ascending, ListSortDirection.Descending))
+            If prevSortColumn = String.Empty Then
+                prevSortColumn = "EntrySeqID"
             End If
+            gridCurrentDatabase.Sort(gridCurrentDatabase.Columns(prevSortColumn), If(prevSortDirectionAsc, ListSortDirection.Ascending, ListSortDirection.Descending))
         End If
 
     End Sub

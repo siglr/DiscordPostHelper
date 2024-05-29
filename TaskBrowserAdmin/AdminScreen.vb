@@ -41,6 +41,7 @@ Public Class AdminScreen
                         Dim task As New TBTaskData With {
                         .EntrySeqID = Convert.ToInt32(reader("EntrySeqID")),
                         .TaskID = reader("TaskID").ToString(),
+                        .DBEntryUpdate = reader("DBEntryUpdate").ToString(),
                         .Title = reader("Title").ToString(),
                         .LastUpdate = DateTime.Parse(reader("LastUpdate").ToString()),
                         .SimDateTime = DateTime.Parse(reader("SimDateTime").ToString()),
@@ -66,15 +67,14 @@ Public Class AdminScreen
                         .RecommendedGliders = reader("RecommendedGliders").ToString(),
                         .DifficultyRating = reader("DifficultyRating").ToString(),
                         .DifficultyExtraInfo = reader("DifficultyExtraInfo").ToString(),
-                        .ShortDescription = reader("ShortDescription").ToString(),
-                        .LongDescription = reader("LongDescription").ToString(),
                         .WeatherSummary = reader("WeatherSummary").ToString(),
                         .Credits = reader("Credits").ToString(),
                         .Countries = reader("Countries").ToString(),
                         .RecommendedAddOns = If(Convert.ToBoolean(reader("RecommendedAddOns")), 1, 0),
                         .TotDownloads = Convert.ToInt32(reader("TotDownloads")),
                         .LastDownloadUpdate = reader("LastDownloadUpdate").ToString(),
-                        .DBEntryUpdate = reader("DBEntryUpdate").ToString()
+                        .ShortDescription = reader("ShortDescription").ToString(),
+                        .LongDescription = reader("LongDescription").ToString()
                     }
 
                         ' Load the MapImage
@@ -96,7 +96,7 @@ Public Class AdminScreen
 
     Private Sub UpdateCurrentDBGrid()
         gridCurrentDatabase.DataSource = _currentTaskDBEntries.Values.ToList()
-        gridCurrentDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader
+        gridCurrentDatabase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         gridCurrentDatabase.ReadOnly = True
         gridCurrentDatabase.Columns(1).Visible = False
         gridCurrentDatabase.Columns(2).Visible = False
@@ -104,7 +104,7 @@ Public Class AdminScreen
 
     Private Sub UpdateIncomingDBGrid()
         gridIncomingDPHXFilesData.DataSource = _incomingTaskDBEntries.Values.ToList()
-        gridIncomingDPHXFilesData.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader
+        gridIncomingDPHXFilesData.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         gridIncomingDPHXFilesData.ReadOnly = True
     End Sub
 
