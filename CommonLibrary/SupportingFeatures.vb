@@ -1998,7 +1998,7 @@ Public Class SupportingFeatures
         Using archive As ZipArchive = ZipFile.OpenRead(dphxFilePath)
             For Each entry As ZipArchiveEntry In archive.Entries
                 If Path.GetExtension(entry.Name) = ".dph" Then
-                    Return entry.LastWriteTime.DateTime.ToString
+                    Return entry.LastWriteTime.DateTime.ToUniversalTime.ToString
                 End If
             Next
         End Using

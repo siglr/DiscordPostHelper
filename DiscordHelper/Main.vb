@@ -43,6 +43,11 @@ Public Class Main
     Private _sessionModified As Boolean = False
     Private _PossibleElevationUpdateRequired As Boolean = False
     Private _timeStampContextualMenuDateTime As DateTime
+    Private _userPermissionID As String
+    Private _userPermissions As New Dictionary(Of String, Boolean)
+    Private _TBTaskEntrySeqID As Integer
+    Private _TBTaskDBEntryUpdate As DateTime
+    Private _TBTaskLastUpdate As DateTime
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -115,6 +120,9 @@ Public Class Main
         LoadDPOptions()
         LoadDGPOptions()
 
+        'Get the permission ID
+        _userPermissionID = GetUserIDFromPermissionsFile()
+
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
             _CurrentSessionFile = My.Application.CommandLineArgs(0)
@@ -142,6 +150,85 @@ Public Class Main
         CheckForNewVersion()
 
     End Sub
+
+    Public Function GetUserRights(userID As String) As JObject
+        Try
+            Dim rightsUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveUserRights.php"
+
+            ' Create the web request
+            Dim request As HttpWebRequest = CType(WebRequest.Create(rightsUrl), HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "application/x-www-form-urlencoded"
+
+            ' Prepare the data to send
+            Dim postData As String = "user_id=" & userID
+            Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
+            request.ContentLength = byteArray.Length
+
+            ' Write data to request stream
+            Using dataStream As Stream = request.GetRequestStream()
+                dataStream.Write(byteArray, 0, byteArray.Length)
+            End Using
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As JObject = JObject.Parse(jsonResponse)
+
+                    ' Check the status
+                    If result("status").ToString() = "success" Then
+                        Return result("rights")
+                    Else
+                        Throw New Exception("Error retrieving user rights: " & result("message").ToString())
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            Throw New Exception("Error: " & ex.Message)
+        End Try
+    End Function
+
+    Public Function GetUserIDFromPermissionsFile() As String
+        Dim filePath As String = $"{Application.StartupPath}\UserPermissions.key"
+        Dim userID As String = String.Empty
+        Dim rightsObject As JObject
+
+        ' Check if the file exists
+        If File.Exists(filePath) Then
+            Try
+                ' Load the XML document
+                Dim xmlDoc As New XmlDocument()
+                xmlDoc.Load(filePath)
+
+                ' Retrieve the UserID from the XML
+                Dim userNode As XmlNode = xmlDoc.SelectSingleNode("/User/ID")
+                If userNode IsNot Nothing Then
+                    userID = userNode.InnerText
+
+                    'Retrieve rights from the server
+                    rightsObject = GetUserRights(userID)
+
+                    ' Iterate through the rightsObject properties and fill the dictionary
+                    For Each right As JProperty In rightsObject.Properties()
+                        _userPermissions.Add(right.Name, right.Value.ToObject(Of Boolean)())
+                    Next
+
+                Else
+                    Throw New Exception("User ID not found in the XML file.")
+                End If
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show($"Error reading UserPermissions.key file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End Try
+        End If
+
+        Return userID
+
+    End Function
 
     Private Sub LoadDPOptions()
 
@@ -883,24 +970,39 @@ Public Class Main
     End Sub
 
     Private Sub btnDeleteDiscordID_Click(sender As Object, e As EventArgs) Handles btnDeleteDiscordID.Click
-        Using New Centered_MessageBox(Me)
-            If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                txtDiscordTaskID.Text = String.Empty
-                _taskThreadFirstPostID = String.Empty
-                lblThread1stMsgIDNotAcquired.Visible = True
-                lblThread1stMsgIDAcquired.Visible = False
-            End If
-        End Using
+
+        If txtDiscordTaskID.Text.Trim <> String.Empty Then
+            'TODO: If the task exists online - do you want to delete it?
+
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    txtDiscordTaskID.Text = String.Empty
+                    _taskThreadFirstPostID = String.Empty
+                    lblThread1stMsgIDNotAcquired.Visible = True
+                    lblThread1stMsgIDAcquired.Visible = False
+                End If
+            End Using
+        End If
     End Sub
 
     Private Sub txtDiscordTaskID_TextChanged(sender As Object, e As EventArgs) Handles txtDiscordTaskID.TextChanged
         If txtDiscordTaskID.Text.Trim = String.Empty Then
             lblTaskLibraryIDNotAcquired.Visible = True
             lblTaskLibraryIDAcquired.Visible = False
+            'TODO: TaskID got deleted - do we need to do something?
         Else
             lblTaskLibraryIDAcquired.Visible = True
             lblTaskLibraryIDNotAcquired.Visible = False
+            'Try to retrieve the task EntrySeqID online
+            Try
+                GetTaskDetails(txtDiscordTaskID.Text.Trim)
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"An error occurred retrieving the online task details.{Environment.NewLine}{ex.Message}", "Retrieving online task details", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End Try
         End If
+        SetTBTaskDetailsLabel()
         AllFieldChanges(sender, e)
     End Sub
 
@@ -5222,8 +5324,8 @@ Public Class Main
         If validSessionFile Then
             ResetForm()
             _loadingFile = True
-            LoadSessionData(selectedFilename)
             _CurrentSessionFile = selectedFilename
+            LoadSessionData(selectedFilename)
             GenerateBriefing()
             _loadingFile = False
             CheckWhichOptionsCanBeEnabled()
@@ -5585,7 +5687,23 @@ Public Class Main
 
 #Region "Task Browser Code"
 
-    Private Sub btnUploadToTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnUploadToTaskBrowser.Click
+    Private Sub btnCreateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnCreateInTaskBrowser.Click
+        If UserCanCreateTask Then
+            UploadToTaskBrowser()
+            GetTaskDetails(txtDiscordTaskID.Text.Trim)
+            SetTBTaskDetailsLabel()
+        End If
+    End Sub
+
+    Private Sub btnUpdateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnUpdateInTaskBrowser.Click
+        If UserCanUpdateTask Then
+            UploadToTaskBrowser()
+            GetTaskDetails(txtDiscordTaskID.Text.Trim)
+            SetTBTaskDetailsLabel()
+        End If
+    End Sub
+
+    Private Sub UploadToTaskBrowser()
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
@@ -5604,7 +5722,7 @@ Public Class Main
         Dim taskData As New Dictionary(Of String, Object) From {
             {"TaskID", taskInfo.DiscordTaskID},
             {"Title", taskInfo.Title},
-            {"LastUpdate", GetFileUpdateDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", taskInfo.SimTime.ToString("yyyy-MM-dd HH:mm:ss")},
             {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
             {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
@@ -5636,7 +5754,7 @@ Public Class Main
             {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
             {"MapImage", theMapImage},
             {"CoverImage", theCoverImage},
-            {"DBEntryUpdate", Now.ToString("yyyy-MM-dd HH:mm:ss")}
+            {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")}
         }
 
         Dim filePath As String = taskInfo.DPHXPackageFilename
@@ -5650,9 +5768,14 @@ Public Class Main
 
     End Sub
 
-    Private Function GetFileUpdateDateTime(filePath As String) As DateTime
+    Private Function GetFileUpdateUTCDateTime(filePath As String, Optional inUTC As Boolean = True) As DateTime
         Dim fileInfo As New FileInfo(filePath)
-        Return fileInfo.LastWriteTime
+        Dim localDateTime As DateTime = fileInfo.LastWriteTime
+        If inUTC Then
+            Return localDateTime.ToUniversalTime()
+        Else
+            Return localDateTime
+        End If
     End Function
 
     Private Function ResizeImageAndGetBytes(inputPath As String, maxWidth As Integer, maxHeight As Integer, quality As Long) As Byte()
@@ -5737,6 +5860,12 @@ Public Class Main
                 memStream.Write(taskDataBytes, 0, taskDataBytes.Length)
                 memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
 
+                ' Add user ID
+                Dim userIDHeader As String = "Content-Disposition: form-data; name=""UserID""" & vbCrLf & vbCrLf
+                Dim userIDBytes As Byte() = Encoding.UTF8.GetBytes(userIDHeader & _userPermissionID)
+                memStream.Write(userIDBytes, 0, userIDBytes.Length)
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
                 ' Add file
                 Dim header As String = "Content-Disposition: form-data; name=""file""; filename=""" & Path.GetFileName(filePath) & """" & vbCrLf & "Content-Type: application/octet-stream" & vbCrLf & vbCrLf
                 Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
@@ -5779,6 +5908,139 @@ Public Class Main
         End Try
     End Function
 
+    Private ReadOnly Property UserCanCreateTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("CreateTask") Then
+                Return _userPermissions("CreateTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanUpdateTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("UpdateTask") Then
+                Return _userPermissions("UpdateTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanDeleteTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("DeleteTask") Then
+                Return _userPermissions("DeleteTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanCreateEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("CreateEvent") Then
+                Return _userPermissions("CreateEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanUpdateEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("UpdateEvent") Then
+                Return _userPermissions("UpdateEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanDeleteEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("DeleteEvent") Then
+                Return _userPermissions("DeleteEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+
+    Private Sub GetTaskDetails(taskID As String)
+        Try
+            Dim taskDetailsUrl As String = "https://siglr.com/DiscordPostHelper/FindTaskUsingID.php"
+
+            ' Create the web request
+            Dim request As HttpWebRequest = CType(WebRequest.Create(taskDetailsUrl & "?TaskID=" & taskID), HttpWebRequest)
+            request.Method = "GET"
+            request.ContentType = "application/json"
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As JObject = JObject.Parse(jsonResponse)
+
+                    ' Check the status
+                    If result("status").ToString() = "success" Then
+                        _TBTaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                        ' Specify the format of the datetime string
+                        Dim utcFormat As String = "yyyy-MM-dd HH:mm:ss"
+                        Dim cultureInfo As CultureInfo = CultureInfo.InvariantCulture
+                        ' Convert UTC datetime to local time before assigning to variables
+                        _TBTaskDBEntryUpdate = DateTime.ParseExact(result("taskDetails")("DBEntryUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
+                        _TBTaskLastUpdate = DateTime.ParseExact(result("taskDetails")("LastUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
+                    Else
+                        _TBTaskEntrySeqID = 0
+                        Throw New Exception("Error retrieving task details: " & result("message").ToString())
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            Throw New Exception("Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub SetTBTaskDetailsLabel()
+
+        Dim labelString As String = String.Empty
+        Dim dateFormat As String = "yyyy-MM-dd HH:mm:ss"
+
+        btnCreateInTaskBrowser.Enabled = False
+        btnUpdateInTaskBrowser.Enabled = False
+        btnDeleteFromTaskBrowser.Enabled = False
+
+        If txtDiscordTaskID.Text.Trim = String.Empty Then
+            lblTaskBrowserIDAndDate.Visible = False
+            Exit Sub
+        End If
+        lblTaskBrowserIDAndDate.Visible = True
+
+        If _TBTaskEntrySeqID > 0 Then
+            'Verify if local DPH has been changed
+            Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
+            labelString = $"#{_TBTaskEntrySeqID.ToString} - Online ({_TBTaskLastUpdate}) - Local ({localDPHTime})"
+            If _TBTaskLastUpdate.ToString(dateFormat) < localDPHTime.ToString(dateFormat) Then
+                'Local file is more recent - allow change
+                If UserCanUpdateTask Then
+                    btnUpdateInTaskBrowser.Enabled = True
+                End If
+                lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
+            Else
+                lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(0, 192, 0)
+            End If
+            If UserCanDeleteTask Then
+                btnDeleteFromTaskBrowser.Enabled = True
+            End If
+        Else
+            labelString = "Task does not exist for the task browser yet"
+            lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
+            If UserCanCreateTask Then
+                btnCreateInTaskBrowser.Enabled = True
+            End If
+        End If
+
+        lblTaskBrowserIDAndDate.Text = labelString
+
+    End Sub
 #End Region
 
 End Class

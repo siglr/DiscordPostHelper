@@ -210,6 +210,7 @@ Partial Class Main
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
+        Me.btnCreateInTaskBrowser = New System.Windows.Forms.Button()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -386,7 +387,10 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnUploadToTaskBrowser = New System.Windows.Forms.Button()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.btnUpdateInTaskBrowser = New System.Windows.Forms.Button()
+        Me.btnDeleteFromTaskBrowser = New System.Windows.Forms.Button()
+        Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -453,6 +457,7 @@ Partial Class Main
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.GroupBox6.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlScrollableSurface
@@ -480,7 +485,7 @@ Partial Class Main
         Me.TabControl1.Controls.Add(Me.tabDiscord)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControl1.ItemSize = New System.Drawing.Size(90, 25)
+        Me.TabControl1.ItemSize = New System.Drawing.Size(155, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.TabControl1.Name = "TabControl1"
@@ -2779,7 +2784,8 @@ Partial Class Main
         '
         'tabDiscord
         '
-        Me.tabDiscord.Controls.Add(Me.btnUploadToTaskBrowser)
+        Me.tabDiscord.Controls.Add(Me.lblTaskBrowserIDAndDate)
+        Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.GroupBox5)
         Me.tabDiscord.Controls.Add(Me.grpDiscordEvent)
@@ -2807,8 +2813,21 @@ Partial Class Main
         Me.tabDiscord.Name = "tabDiscord"
         Me.tabDiscord.Size = New System.Drawing.Size(1467, 860)
         Me.tabDiscord.TabIndex = 3
-        Me.tabDiscord.Text = "Discord"
+        Me.tabDiscord.Text = "Discord and Browser"
         Me.tabDiscord.UseVisualStyleBackColor = True
+        '
+        'btnCreateInTaskBrowser
+        '
+        Me.btnCreateInTaskBrowser.Enabled = False
+        Me.btnCreateInTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCreateInTaskBrowser.Location = New System.Drawing.Point(6, 27)
+        Me.btnCreateInTaskBrowser.Name = "btnCreateInTaskBrowser"
+        Me.btnCreateInTaskBrowser.Size = New System.Drawing.Size(212, 37)
+        Me.btnCreateInTaskBrowser.TabIndex = 95
+        Me.btnCreateInTaskBrowser.Tag = "87"
+        Me.btnCreateInTaskBrowser.Text = "Create task"
+        Me.ToolTip1.SetToolTip(Me.btnCreateInTaskBrowser, "Click this button to create this task for the online task browser.")
+        Me.btnCreateInTaskBrowser.UseVisualStyleBackColor = True
         '
         'pnlWizardDiscord
         '
@@ -2907,7 +2926,7 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
         Me.grpDiscordEvent.Location = New System.Drawing.Point(841, 351)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(614, 329)
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(623, 329)
         Me.grpDiscordEvent.TabIndex = 5
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Official Discord Event (if applicable)"
@@ -2927,7 +2946,7 @@ Partial Class Main
         Me.btnDiscordSharedEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(536, 282)
         Me.btnDiscordSharedEventURL.Name = "btnDiscordSharedEventURL"
-        Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(73, 29)
+        Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(81, 29)
         Me.btnDiscordSharedEventURL.TabIndex = 14
         Me.btnDiscordSharedEventURL.Tag = "98"
         Me.btnDiscordSharedEventURL.Text = "Paste"
@@ -4840,18 +4859,55 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
-        'btnUploadToTaskBrowser
+        'GroupBox6
         '
-        Me.btnUploadToTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnUploadToTaskBrowser.Location = New System.Drawing.Point(1266, 164)
-        Me.btnUploadToTaskBrowser.Name = "btnUploadToTaskBrowser"
-        Me.btnUploadToTaskBrowser.Size = New System.Drawing.Size(168, 66)
-        Me.btnUploadToTaskBrowser.TabIndex = 95
-        Me.btnUploadToTaskBrowser.Tag = "87"
-        Me.btnUploadToTaskBrowser.Text = "Upload to Task Library"
-        Me.ToolTip1.SetToolTip(Me.btnUploadToTaskBrowser, "Click this button to copy the message to post on the task and receive instruction" &
-        "s to paste it in the Discord.")
-        Me.btnUploadToTaskBrowser.UseVisualStyleBackColor = True
+        Me.GroupBox6.Controls.Add(Me.btnDeleteFromTaskBrowser)
+        Me.GroupBox6.Controls.Add(Me.btnUpdateInTaskBrowser)
+        Me.GroupBox6.Controls.Add(Me.btnCreateInTaskBrowser)
+        Me.GroupBox6.Location = New System.Drawing.Point(1240, 3)
+        Me.GroupBox6.Name = "GroupBox6"
+        Me.GroupBox6.Size = New System.Drawing.Size(224, 342)
+        Me.GroupBox6.TabIndex = 96
+        Me.GroupBox6.TabStop = False
+        Me.GroupBox6.Text = "Task Browser"
+        '
+        'btnUpdateInTaskBrowser
+        '
+        Me.btnUpdateInTaskBrowser.Enabled = False
+        Me.btnUpdateInTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnUpdateInTaskBrowser.Location = New System.Drawing.Point(6, 70)
+        Me.btnUpdateInTaskBrowser.Name = "btnUpdateInTaskBrowser"
+        Me.btnUpdateInTaskBrowser.Size = New System.Drawing.Size(212, 37)
+        Me.btnUpdateInTaskBrowser.TabIndex = 96
+        Me.btnUpdateInTaskBrowser.Tag = "87"
+        Me.btnUpdateInTaskBrowser.Text = "Update task"
+        Me.ToolTip1.SetToolTip(Me.btnUpdateInTaskBrowser, "Click this button to update this task for the online task browser.")
+        Me.btnUpdateInTaskBrowser.UseVisualStyleBackColor = True
+        '
+        'btnDeleteFromTaskBrowser
+        '
+        Me.btnDeleteFromTaskBrowser.Enabled = False
+        Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 113)
+        Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
+        Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(212, 37)
+        Me.btnDeleteFromTaskBrowser.TabIndex = 97
+        Me.btnDeleteFromTaskBrowser.Tag = "87"
+        Me.btnDeleteFromTaskBrowser.Text = "Remove task"
+        Me.ToolTip1.SetToolTip(Me.btnDeleteFromTaskBrowser, "Click this button to remove this task for the online task browser.")
+        Me.btnDeleteFromTaskBrowser.UseVisualStyleBackColor = True
+        '
+        'lblTaskBrowserIDAndDate
+        '
+        Me.lblTaskBrowserIDAndDate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTaskBrowserIDAndDate.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblTaskBrowserIDAndDate.Location = New System.Drawing.Point(841, 683)
+        Me.lblTaskBrowserIDAndDate.Name = "lblTaskBrowserIDAndDate"
+        Me.lblTaskBrowserIDAndDate.Size = New System.Drawing.Size(623, 33)
+        Me.lblTaskBrowserIDAndDate.TabIndex = 97
+        Me.lblTaskBrowserIDAndDate.Text = "This task does not exist in the Task Library Browser"
+        Me.lblTaskBrowserIDAndDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblTaskBrowserIDAndDate.Visible = False
         '
         'Main
         '
@@ -4977,6 +5033,7 @@ Partial Class Main
         Me.pnlWizardBriefing.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.GroupBox6.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -5342,5 +5399,9 @@ Partial Class Main
     Friend WithEvents btnRecallTaskDescriptionTemplate As Button
     Friend WithEvents btnLoadEventDescriptionTemplate As Button
     Friend WithEvents btnSaveEventDescriptionTemplate As Button
-    Friend WithEvents btnUploadToTaskBrowser As Button
+    Friend WithEvents btnCreateInTaskBrowser As Button
+    Friend WithEvents GroupBox6 As GroupBox
+    Friend WithEvents btnDeleteFromTaskBrowser As Button
+    Friend WithEvents btnUpdateInTaskBrowser As Button
+    Friend WithEvents lblTaskBrowserIDAndDate As Label
 End Class
