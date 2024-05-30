@@ -528,9 +528,6 @@ Public Class TaskBrowser
     End Sub
 
     Private Sub gridCurrentDatabase_DataSourceChanged(sender As Object, e As EventArgs) Handles gridCurrentDatabase.DataSourceChanged
-        If _dataGridViewAllSet Then
-            SaveDataGridViewSettings()
-        End If
         SetupDataGridView()
     End Sub
 
@@ -969,6 +966,7 @@ Public Class TaskBrowser
                 If gridCurrentDatabase.Columns.Contains(setting.Name) Then
                     If excludeColumns.Contains(setting.Name) Then
                         gridCurrentDatabase.Columns(setting.Name).Visible = False
+                        gridCurrentDatabase.Columns(setting.Name).DisplayIndex = setting.DisplayIndex
                     Else
                         gridCurrentDatabase.Columns(setting.Name).Visible = setting.Visible
                         gridCurrentDatabase.Columns(setting.Name).DisplayIndex = setting.DisplayIndex
@@ -1308,6 +1306,10 @@ Public Class TaskBrowser
             Else
                 filteredRows = sourceTable.AsEnumerable().Where(Function(row) row.ItemArray.Any(Function(field) WildcardMatch(field.ToString(), searchTerm)))
             End If
+        End If
+
+        If _dataGridViewAllSet Then
+            SaveDataGridViewSettings()
         End If
 
         'save sort
