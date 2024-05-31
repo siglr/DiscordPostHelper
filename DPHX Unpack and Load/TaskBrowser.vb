@@ -991,6 +991,7 @@ Public Class TaskBrowser
 
     Private Sub BuildTaskData()
 
+        Dim dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
         Dim dateFormat As String
         If _selectedTaskRow("IncludeYear") Then
             dateFormat = "MMMM dd, yyyy"
@@ -1016,7 +1017,7 @@ Public Class TaskBrowser
         sb.Append("\line ")
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString("hh:mm tt", _EnglishCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SimDateTimeExtraInfo").ToString().Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is \b {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SimDateTimeExtraInfo").ToString().Trim, True, True)}\b0\line ")
 
         'Departure airfield And runway
         sb.Append($"You will depart from \b {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureICAO").ToString())}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureName").ToString(), True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureExtra").ToString(), True, True)}\b0\line ")

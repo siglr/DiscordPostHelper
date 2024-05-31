@@ -1,6 +1,7 @@
 ﻿Imports System.Drawing
 Imports System.Globalization
 Imports System.IO
+Imports System.Runtime.Serialization
 Imports System.Text
 Imports System.Windows.Forms
 Imports System.Xml
@@ -438,6 +439,7 @@ Public Class BriefingControl
 
         _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, totalDistance, trackDistance, possibleElevationUpdateRequired, False)
 
+        Dim dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
         Dim dateFormat As String
         If _sessionData.IncludeYear Then
             dateFormat = "MMMM dd, yyyy"
@@ -463,7 +465,7 @@ Public Class BriefingControl
         'Credits
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString("hh:mm tt", _EnglishCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(DateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
 
         'Flight plan
         sb.Append($"The flight plan to load is \b {Path.GetFileName(_sessionData.FlightPlanFilename)}\b0\line ")

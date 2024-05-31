@@ -109,6 +109,7 @@
     <Compile Include="CleaningTool.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="NewsEntry.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
     </Compile>
@@ -144,6 +145,12 @@
     <Compile Include="TaskBrowser.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TaskEventNews.Designer.vb">
+      <DependentUpon>TaskEventNews.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TaskEventNews.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CleaningTool.resx">
@@ -165,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TaskBrowser.resx">
       <DependentUpon>TaskBrowser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaskEventNews.resx">
+      <DependentUpon>TaskEventNews.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

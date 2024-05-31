@@ -56,6 +56,9 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.flowNewsPanel = New System.Windows.Forms.FlowLayoutPanel()
+        Me.RetrieveNewsList = New System.Windows.Forms.Timer(Me.components)
+        Me.chkNewsRetrieval = New System.Windows.Forms.CheckBox()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
@@ -201,7 +204,7 @@ Partial Class DPHXUnpackAndLoad
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtPackageName.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtPackageName.Location = New System.Drawing.Point(793, 157)
+        Me.txtPackageName.Location = New System.Drawing.Point(793, 55)
         Me.txtPackageName.Name = "txtPackageName"
         Me.txtPackageName.ReadOnly = True
         Me.txtPackageName.Size = New System.Drawing.Size(176, 27)
@@ -326,14 +329,45 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(1006, 633)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(737, 633)
         Me.ctrlBriefing.TabIndex = 3
+        '
+        'flowNewsPanel
+        '
+        Me.flowNewsPanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.flowNewsPanel.AutoScroll = True
+        Me.flowNewsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.flowNewsPanel.Location = New System.Drawing.Point(728, 112)
+        Me.flowNewsPanel.Name = "flowNewsPanel"
+        Me.flowNewsPanel.Size = New System.Drawing.Size(278, 589)
+        Me.flowNewsPanel.TabIndex = 6
+        Me.flowNewsPanel.WrapContents = False
+        '
+        'RetrieveNewsList
+        '
+        Me.RetrieveNewsList.Enabled = True
+        Me.RetrieveNewsList.Interval = 5000
+        '
+        'chkNewsRetrieval
+        '
+        Me.chkNewsRetrieval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkNewsRetrieval.AutoSize = True
+        Me.chkNewsRetrieval.Location = New System.Drawing.Point(757, 88)
+        Me.chkNewsRetrieval.Name = "chkNewsRetrieval"
+        Me.chkNewsRetrieval.Size = New System.Drawing.Size(237, 24)
+        Me.chkNewsRetrieval.TabIndex = 7
+        Me.chkNewsRetrieval.Text = "Disable automatic news retrieval"
+        Me.ToolTip1.SetToolTip(Me.chkNewsRetrieval, "Check this to disable the automatic retrieval of news.")
+        Me.chkNewsRetrieval.UseVisualStyleBackColor = True
         '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1006, 724)
+        Me.Controls.Add(Me.chkNewsRetrieval)
+        Me.Controls.Add(Me.flowNewsPanel)
         Me.Controls.Add(Me.txtPackageName)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ctrlBriefing)
@@ -391,4 +425,7 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStatusStop As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents toolStripFileBrowser As ToolStripButton
+    Friend WithEvents flowNewsPanel As FlowLayoutPanel
+    Friend WithEvents RetrieveNewsList As Timer
+    Friend WithEvents chkNewsRetrieval As CheckBox
 End Class

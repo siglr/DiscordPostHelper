@@ -1,10 +1,12 @@
 ﻿Imports System.Configuration
 Imports System.IO
+Imports System.Net
 Imports System.Reflection
 Imports System.Text
 Imports System.Threading
 Imports System.Xml
 Imports System.Xml.Serialization
+Imports Newtonsoft.Json
 Imports SIGLR.SoaringTools.CommonLibrary
 Imports SIGLR.SoaringTools.ImageViewer
 
@@ -126,6 +128,8 @@ Public Class DPHXUnpackAndLoad
             End If
         End If
 
+        RetrieveNewsList_Tick(sender, e)
+
     End Sub
 
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -151,6 +155,10 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DPHXUnpackAndLoad_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
         ctrlBriefing.AdjustRTBoxControls()
+    End Sub
+
+    Private Sub chkNewsRetrieval_CheckedChanged(sender As Object, e As EventArgs) Handles chkNewsRetrieval.CheckedChanged
+        RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
     End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
@@ -265,10 +273,26 @@ Public Class DPHXUnpackAndLoad
     Private Sub ChkMSFS_Tick(sender As Object, e As EventArgs) Handles ChkMSFS.Tick
         Dim processList As Process() = Process.GetProcessesByName("FlightSimulator")
         If processList.Length > 0 Then
+            RetrieveNewsList.Enabled = False
             warningMSFSRunningToolStrip.Visible = True
         Else
+            RetrieveNewsList.Enabled = True
+            RetrieveNewsList_Tick(sender, e)
             warningMSFSRunningToolStrip.Visible = False
         End If
+
+    End Sub
+
+    Private Sub RetrieveNewsList_Tick(sender As Object, e As EventArgs) Handles RetrieveNewsList.Tick
+
+        RetrieveNewsList.Enabled = False
+
+        FetchNewsEntries()
+
+        'TODO: Change it back to every minute, if MSFS is not running!
+
+        RetrieveNewsList.Enabled = True
+
     End Sub
 
     Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
@@ -749,6 +773,79 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Public Sub FetchNewsEntries()
+        Dim apiUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveNews.php"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "GET"
+
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim newsEntries As List(Of NewsEntry) = ConvertJsonToDataTable(jsonResponse)
+
+                    For Each newsPanel As TaskEventNews In flowNewsPanel.Controls
+                        RemoveHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
+                        newsPanel.Dispose()
+                        newsPanel = Nothing
+                    Next
+                    flowNewsPanel.Controls.Clear()
+
+                    For Each newsEntry In newsEntries
+                        Dim newsPanel = New TaskEventNews()
+                        newsPanel.NewsDate = newsEntry.Published
+                        newsPanel.Title = newsEntry.Title
+                        newsPanel.Subtitle = newsEntry.Subtitle
+                        newsPanel.Comments = newsEntry.Comments
+                        newsPanel.Credits = newsEntry.Credits
+                        If newsEntry.EventDate IsNot Nothing Then
+                            newsPanel.EventDate = newsEntry.EventDate
+                        End If
+                        newsPanel.News = newsEntry.News
+                        Select Case newsEntry.NewsType
+                            Case 0
+                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.Task
+                            Case 1
+                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.Event
+                            Case 2
+                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.News
+                        End Select
+
+                        If newsEntry.EntrySeqID IsNot Nothing Then
+                            newsPanel.TaskEntrySeqID = newsEntry.EntrySeqID
+                        End If
+                        newsPanel.URLToGo = newsEntry.URLToGo
+                        AddHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
+
+                        flowNewsPanel.Controls.Add(newsPanel)
+                    Next
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Throw
+        End Try
+    End Sub
+
+    Private Sub NewsPanelClicked(sender As Object, e As EventArgs)
+        'TODO
+    End Sub
+
+    Private Function ConvertJsonToDataTable(jsonResponse As String) As List(Of NewsEntry)
+
+        Dim newsEntries As New List(Of NewsEntry)
+
+        Dim jsonResponseObject = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+        If jsonResponseObject("status").ToString() = "success" Then
+            newsEntries = JsonConvert.DeserializeObject(Of List(Of NewsEntry))(jsonResponseObject("data").ToString())
+
+        Else
+            Throw New Exception(jsonResponseObject("message").ToString())
+        End If
+
+        Return newsEntries
+    End Function
 
 #End Region
 

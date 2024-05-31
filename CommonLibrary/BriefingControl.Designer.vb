@@ -189,7 +189,7 @@ Partial Class BriefingControl
         Me.tabsBriefing.Controls.Add(Me.tbpgAddOns)
         Me.tabsBriefing.Controls.Add(Me.tabUnits)
         Me.tabsBriefing.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tabsBriefing.ItemSize = New System.Drawing.Size(100, 25)
+        Me.tabsBriefing.ItemSize = New System.Drawing.Size(90, 25)
         Me.tabsBriefing.Location = New System.Drawing.Point(7, 8)
         Me.tabsBriefing.Name = "tabsBriefing"
         Me.tabsBriefing.SelectedIndex = 0
@@ -208,7 +208,7 @@ Partial Class BriefingControl
         Me.tbpgMainTaskInfo.Padding = New System.Windows.Forms.Padding(3)
         Me.tbpgMainTaskInfo.Size = New System.Drawing.Size(963, 688)
         Me.tbpgMainTaskInfo.TabIndex = 0
-        Me.tbpgMainTaskInfo.Text = "Main Task Info"
+        Me.tbpgMainTaskInfo.Text = "Task"
         Me.tbpgMainTaskInfo.UseVisualStyleBackColor = True
         '
         'btnGotoDiscordTaskThread
@@ -286,14 +286,14 @@ Partial Class BriefingControl
         'mapAndWindLayersSplitter.Panel1
         '
         Me.mapAndWindLayersSplitter.Panel1.Controls.Add(Me.imageViewer)
-        Me.mapAndWindLayersSplitter.Panel1MinSize = 500
+        Me.mapAndWindLayersSplitter.Panel1MinSize = 450
         '
         'mapAndWindLayersSplitter.Panel2
         '
         Me.mapAndWindLayersSplitter.Panel2.Controls.Add(Me.windLayersFlowLayoutPnl)
         Me.mapAndWindLayersSplitter.Panel2MinSize = 100
         Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(957, 312)
-        Me.mapAndWindLayersSplitter.SplitterDistance = 696
+        Me.mapAndWindLayersSplitter.SplitterDistance = 650
         Me.mapAndWindLayersSplitter.TabIndex = 0
         '
         'imageViewer
@@ -303,7 +303,7 @@ Partial Class BriefingControl
         Me.imageViewer.Location = New System.Drawing.Point(0, 0)
         Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(696, 312)
+        Me.imageViewer.Size = New System.Drawing.Size(650, 312)
         Me.imageViewer.TabIndex = 1
         '
         'windLayersFlowLayoutPnl
@@ -314,7 +314,7 @@ Partial Class BriefingControl
         Me.windLayersFlowLayoutPnl.AutoScroll = True
         Me.windLayersFlowLayoutPnl.Location = New System.Drawing.Point(0, 0)
         Me.windLayersFlowLayoutPnl.Name = "windLayersFlowLayoutPnl"
-        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(257, 312)
+        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(303, 312)
         Me.windLayersFlowLayoutPnl.TabIndex = 0
         '
         'mapSplitterLeftRight
@@ -371,7 +371,7 @@ Partial Class BriefingControl
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
         Me.tbpgEventInfo.Size = New System.Drawing.Size(963, 688)
         Me.tbpgEventInfo.TabIndex = 3
-        Me.tbpgEventInfo.Text = "Event Info"
+        Me.tbpgEventInfo.Text = "Event"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
         '
         'eventInfoSplitContainer
@@ -629,7 +629,7 @@ Partial Class BriefingControl
         Me.tbpgXBOX.Name = "tbpgXBOX"
         Me.tbpgXBOX.Size = New System.Drawing.Size(963, 688)
         Me.tbpgXBOX.TabIndex = 4
-        Me.tbpgXBOX.Text = "All waypoints"
+        Me.tbpgXBOX.Text = "Waypoints"
         Me.tbpgXBOX.UseVisualStyleBackColor = True
         '
         'chkWPEnableLatLonColumns
