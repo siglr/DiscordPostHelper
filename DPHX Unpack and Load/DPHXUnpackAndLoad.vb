@@ -22,6 +22,7 @@ Public Class DPHXUnpackAndLoad
     Private _allDPHData As AllData
     Private _filesToUnpack As New Dictionary(Of String, String)
     Private _filesCurrentlyUnpacked As New Dictionary(Of String, String)
+    Private _currentNewsKey As New List(Of String)
 
 #End Region
 
@@ -159,6 +160,9 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub chkNewsRetrieval_CheckedChanged(sender As Object, e As EventArgs) Handles chkNewsRetrieval.CheckedChanged
         RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
+        If Not RetrieveNewsList.Enabled Then
+            RetrieveNewsList.Stop()
+        End If
     End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
@@ -276,8 +280,10 @@ Public Class DPHXUnpackAndLoad
             RetrieveNewsList.Enabled = False
             warningMSFSRunningToolStrip.Visible = True
         Else
-            RetrieveNewsList.Enabled = True
-            RetrieveNewsList_Tick(sender, e)
+            RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
+            If RetrieveNewsList.Enabled Then
+                RetrieveNewsList_Tick(sender, e)
+            End If
             warningMSFSRunningToolStrip.Visible = False
         End If
 
@@ -291,7 +297,11 @@ Public Class DPHXUnpackAndLoad
 
         'TODO: Change it back to every minute, if MSFS is not running!
 
-        RetrieveNewsList.Enabled = True
+        If Not chkNewsRetrieval.Enabled Then
+            RetrieveNewsList.Enabled = True
+        Else
+            RetrieveNewsList.Enabled = False
+        End If
 
     End Sub
 
@@ -319,6 +329,8 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
 
+        RetrieveNewsList.Enabled = False
+
         Using taskBrowserForm As New TaskBrowser()
             taskBrowserForm.ShowDialog(Me)
 
@@ -327,6 +339,8 @@ Public Class DPHXUnpackAndLoad
                 LoadDPHXPackage(selectedFile)
             End If
         End Using
+
+        RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
 
     End Sub
 
@@ -784,41 +798,47 @@ Public Class DPHXUnpackAndLoad
                     Dim jsonResponse As String = reader.ReadToEnd()
                     Dim newsEntries As List(Of NewsEntry) = ConvertJsonToDataTable(jsonResponse)
 
-                    For Each newsPanel As TaskEventNews In flowNewsPanel.Controls
-                        RemoveHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
-                        newsPanel.Dispose()
-                        newsPanel = Nothing
-                    Next
-                    flowNewsPanel.Controls.Clear()
-
+                    'Is there any change?
+                    Dim newsHaveChanged As Boolean = False
+                    Dim newKeys As New List(Of String)
                     For Each newsEntry In newsEntries
-                        Dim newsPanel = New TaskEventNews()
-                        newsPanel.NewsDate = newsEntry.Published
-                        newsPanel.Title = newsEntry.Title
-                        newsPanel.Subtitle = newsEntry.Subtitle
-                        newsPanel.Comments = newsEntry.Comments
-                        newsPanel.Credits = newsEntry.Credits
-                        If newsEntry.EventDate IsNot Nothing Then
-                            newsPanel.EventDate = newsEntry.EventDate
-                        End If
-                        newsPanel.News = newsEntry.News
-                        Select Case newsEntry.NewsType
-                            Case 0
-                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.Task
-                            Case 1
-                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.Event
-                            Case 2
-                                newsPanel.NewsType = TaskEventNews.NewsTypeEnum.News
-                        End Select
-
-                        If newsEntry.EntrySeqID IsNot Nothing Then
-                            newsPanel.TaskEntrySeqID = newsEntry.EntrySeqID
-                        End If
-                        newsPanel.URLToGo = newsEntry.URLToGo
-                        AddHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
-
-                        flowNewsPanel.Controls.Add(newsPanel)
+                        newKeys.Add(newsEntry.Key)
                     Next
+                    If _currentNewsKey.Count <> newKeys.Count Then
+                        'Change!
+                        newsHaveChanged = True
+                    Else
+                        'Same count - are they the same?
+                        For i = 0 To newKeys.Count - 1
+                            If newKeys(i) <> _currentNewsKey(i) Then
+                                'Change
+                                newsHaveChanged = True
+                                Exit For
+                            End If
+                        Next
+                    End If
+
+                    If newsHaveChanged Then
+                        _currentNewsKey.Clear()
+
+                        For Each newsPanel As TaskEventNews In flowNewsPanel.Controls
+                            RemoveHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
+                            newsPanel.Dispose()
+                            newsPanel = Nothing
+                        Next
+                        flowNewsPanel.Controls.Clear()
+
+                        For Each newsEntry In newsEntries
+                            Dim newsPanel = New TaskEventNews(newsEntry)
+                            AddHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
+                            _currentNewsKey.Add(newsEntry.Key)
+                            flowNewsPanel.Controls.Add(newsPanel)
+                        Next
+
+                        If newsSplitContainer.Panel2Collapsed Then
+                            btnNewsPanelCollapse.BackColor = Color.Yellow
+                        End If
+                    End If
                 End Using
             End Using
         Catch ex As Exception
@@ -829,7 +849,26 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub NewsPanelClicked(sender As Object, e As EventArgs)
-        'TODO
+
+        Dim theNewsEntry As TaskEventNews = CType(sender, TaskEventNews)
+
+        Select Case theNewsEntry.NewsType
+            Case TaskEventNews.NewsTypeEnum.Task
+                'Open the library with a specific task
+                'TODO
+
+            Case TaskEventNews.NewsTypeEnum.Event
+                'Open the Discord event
+                SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
+                'Open the library with the task
+                'TODO
+
+            Case TaskEventNews.NewsTypeEnum.News
+                'Launch URL
+                SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
+
+        End Select
+
     End Sub
 
     Private Function ConvertJsonToDataTable(jsonResponse As String) As List(Of NewsEntry)
@@ -846,6 +885,16 @@ Public Class DPHXUnpackAndLoad
 
         Return newsEntries
     End Function
+
+    Private Sub btnNewsPanelCollapse_Click(sender As Object, e As EventArgs) Handles btnNewsPanelCollapse.Click
+        newsSplitContainer.Panel2Collapsed = Not newsSplitContainer.Panel2Collapsed
+        btnNewsPanelCollapse.Text = If(newsSplitContainer.Panel2Collapsed, "<", ">")
+
+        If Not newsSplitContainer.Panel2Collapsed Then
+            btnNewsPanelCollapse.BackColor = SystemColors.Control
+        End If
+
+    End Sub
 
 #End Region
 

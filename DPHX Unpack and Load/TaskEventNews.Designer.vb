@@ -31,10 +31,10 @@ Partial Class TaskEventNews
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.MaximumSize = New System.Drawing.Size(250, 0)
-        Me.MinimumSize = New System.Drawing.Size(250, 0)
+        Me.MaximumSize = New System.Drawing.Size(240, 0)
+        Me.MinimumSize = New System.Drawing.Size(240, 0)
         Me.Name = "TaskEventNews"
-        Me.Size = New System.Drawing.Size(250, 0)
+        Me.Size = New System.Drawing.Size(240, 0)
         Me.ResumeLayout(False)
 
     End Sub

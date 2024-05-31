@@ -57,13 +57,19 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.flowNewsPanel = New System.Windows.Forms.FlowLayoutPanel()
         Me.RetrieveNewsList = New System.Windows.Forms.Timer(Me.components)
+        Me.newsSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.flowNewsPanel = New System.Windows.Forms.FlowLayoutPanel()
+        Me.btnNewsPanelCollapse = New System.Windows.Forms.Button()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
         Me.ToolStrip2.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
+        CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.newsSplitContainer.Panel1.SuspendLayout()
+        Me.newsSplitContainer.Panel2.SuspendLayout()
+        Me.newsSplitContainer.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlToolbar
@@ -85,7 +91,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.toolStripFileBrowser, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(996, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 8
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -95,7 +101,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPHX pacage from your PC."
         '
@@ -105,7 +111,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripUnpack.Image = CType(resources.GetObject("toolStripUnpack.Image"), System.Drawing.Image)
         Me.toolStripUnpack.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripUnpack.Name = "toolStripUnpack"
-        Me.toolStripUnpack.Size = New System.Drawing.Size(89, 25)
+        Me.toolStripUnpack.Size = New System.Drawing.Size(89, 26)
         Me.toolStripUnpack.Text = "&Unpack!"
         Me.toolStripUnpack.ToolTipText = "Click to unpack the files to their proper locations"
         '
@@ -115,7 +121,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripCleanup.Image = CType(resources.GetObject("toolStripCleanup.Image"), System.Drawing.Image)
         Me.toolStripCleanup.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCleanup.Name = "toolStripCleanup"
-        Me.toolStripCleanup.Size = New System.Drawing.Size(89, 25)
+        Me.toolStripCleanup.Size = New System.Drawing.Size(89, 26)
         Me.toolStripCleanup.Text = "&Cleanup"
         Me.toolStripCleanup.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -124,41 +130,41 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripFileBrowser.Image = CType(resources.GetObject("toolStripFileBrowser.Image"), System.Drawing.Image)
         Me.toolStripFileBrowser.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripFileBrowser.Name = "toolStripFileBrowser"
-        Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 25)
+        Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 26)
         Me.toolStripFileBrowser.Text = "File Browser"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library Browser."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
         '
         'ToolStripDropDownButton1
         '
@@ -167,7 +173,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -194,7 +200,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripSettings.Image = CType(resources.GetObject("toolStripSettings.Image"), System.Drawing.Image)
         Me.toolStripSettings.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSettings.Name = "toolStripSettings"
-        Me.toolStripSettings.Size = New System.Drawing.Size(88, 25)
+        Me.toolStripSettings.Size = New System.Drawing.Size(88, 26)
         Me.toolStripSettings.Text = "&Settings"
         Me.toolStripSettings.ToolTipText = "Click to open the Settings windows"
         '
@@ -204,7 +210,7 @@ Partial Class DPHXUnpackAndLoad
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtPackageName.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtPackageName.Location = New System.Drawing.Point(793, 55)
+        Me.txtPackageName.Location = New System.Drawing.Point(735, 11)
         Me.txtPackageName.Name = "txtPackageName"
         Me.txtPackageName.ReadOnly = True
         Me.txtPackageName.Size = New System.Drawing.Size(176, 27)
@@ -217,7 +223,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.chkNewsRetrieval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkNewsRetrieval.AutoSize = True
-        Me.chkNewsRetrieval.Location = New System.Drawing.Point(757, 88)
+        Me.chkNewsRetrieval.Location = New System.Drawing.Point(31, 6)
         Me.chkNewsRetrieval.Name = "chkNewsRetrieval"
         Me.chkNewsRetrieval.Size = New System.Drawing.Size(237, 24)
         Me.chkNewsRetrieval.TabIndex = 7
@@ -247,7 +253,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStatusOK, Me.toolStatusStop, Me.toolStatusWarning, Me.lblAllFilesStatus})
         Me.ToolStrip2.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip2.Name = "ToolStrip2"
-        Me.ToolStrip2.Size = New System.Drawing.Size(996, 25)
+        Me.ToolStrip2.Size = New System.Drawing.Size(996, 29)
         Me.ToolStrip2.TabIndex = 0
         Me.ToolStrip2.Text = "ToolStrip2"
         '
@@ -297,7 +303,7 @@ Partial Class DPHXUnpackAndLoad
         Me.lblAllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lblAllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lblAllFilesStatus.Name = "lblAllFilesStatus"
-        Me.lblAllFilesStatus.Size = New System.Drawing.Size(800, 25)
+        Me.lblAllFilesStatus.Size = New System.Drawing.Size(700, 29)
         '
         'StatusStrip1
         '
@@ -337,40 +343,72 @@ Partial Class DPHXUnpackAndLoad
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ctrlBriefing.EventIsEnabled = False
         Me.ctrlBriefing.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.ctrlBriefing.Location = New System.Drawing.Point(0, 77)
+        Me.ctrlBriefing.Location = New System.Drawing.Point(0, -4)
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(737, 633)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(737, 625)
         Me.ctrlBriefing.TabIndex = 3
-        '
-        'flowNewsPanel
-        '
-        Me.flowNewsPanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.flowNewsPanel.AutoScroll = True
-        Me.flowNewsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
-        Me.flowNewsPanel.Location = New System.Drawing.Point(728, 112)
-        Me.flowNewsPanel.Name = "flowNewsPanel"
-        Me.flowNewsPanel.Size = New System.Drawing.Size(278, 589)
-        Me.flowNewsPanel.TabIndex = 6
-        Me.flowNewsPanel.WrapContents = False
         '
         'RetrieveNewsList
         '
         Me.RetrieveNewsList.Enabled = True
         Me.RetrieveNewsList.Interval = 5000
         '
+        'newsSplitContainer
+        '
+        Me.newsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.newsSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.newsSplitContainer.IsSplitterFixed = True
+        Me.newsSplitContainer.Location = New System.Drawing.Point(0, 77)
+        Me.newsSplitContainer.Name = "newsSplitContainer"
+        '
+        'newsSplitContainer.Panel1
+        '
+        Me.newsSplitContainer.Panel1.Controls.Add(Me.btnNewsPanelCollapse)
+        Me.newsSplitContainer.Panel1.Controls.Add(Me.ctrlBriefing)
+        '
+        'newsSplitContainer.Panel2
+        '
+        Me.newsSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
+        Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
+        Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 623)
+        Me.newsSplitContainer.SplitterDistance = 740
+        Me.newsSplitContainer.SplitterWidth = 1
+        Me.newsSplitContainer.TabIndex = 8
+        '
+        'flowNewsPanel
+        '
+        Me.flowNewsPanel.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.flowNewsPanel.AutoScroll = True
+        Me.flowNewsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.flowNewsPanel.Location = New System.Drawing.Point(0, 36)
+        Me.flowNewsPanel.Name = "flowNewsPanel"
+        Me.flowNewsPanel.Size = New System.Drawing.Size(267, 587)
+        Me.flowNewsPanel.TabIndex = 6
+        Me.flowNewsPanel.WrapContents = False
+        '
+        'btnNewsPanelCollapse
+        '
+        Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(725, 17)
+        Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
+        Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
+        Me.btnNewsPanelCollapse.TabIndex = 4
+        Me.btnNewsPanelCollapse.Text = ">"
+        Me.btnNewsPanelCollapse.UseVisualStyleBackColor = True
+        '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1006, 724)
-        Me.Controls.Add(Me.chkNewsRetrieval)
-        Me.Controls.Add(Me.flowNewsPanel)
+        Me.Controls.Add(Me.newsSplitContainer)
         Me.Controls.Add(Me.txtPackageName)
         Me.Controls.Add(Me.StatusStrip1)
-        Me.Controls.Add(Me.ctrlBriefing)
         Me.Controls.Add(Me.pnlDPHFile)
         Me.Controls.Add(Me.pnlToolbar)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
@@ -391,6 +429,11 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip2.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
+        Me.newsSplitContainer.Panel1.ResumeLayout(False)
+        Me.newsSplitContainer.Panel2.ResumeLayout(False)
+        Me.newsSplitContainer.Panel2.PerformLayout()
+        CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.newsSplitContainer.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -425,7 +468,9 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStatusStop As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents toolStripFileBrowser As ToolStripButton
-    Friend WithEvents flowNewsPanel As FlowLayoutPanel
     Friend WithEvents RetrieveNewsList As Timer
     Friend WithEvents chkNewsRetrieval As CheckBox
+    Friend WithEvents newsSplitContainer As SplitContainer
+    Friend WithEvents flowNewsPanel As FlowLayoutPanel
+    Friend WithEvents btnNewsPanelCollapse As Button
 End Class

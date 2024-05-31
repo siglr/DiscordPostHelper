@@ -1,4 +1,5 @@
 ﻿Public Class NewsEntry
+    Public Property Key As String
     Public Property Published As DateTime
     Public Property Title As String
     Public Property Subtitle As String

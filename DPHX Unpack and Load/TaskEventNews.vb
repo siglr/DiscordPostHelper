@@ -9,6 +9,7 @@ Partial Class TaskEventNews
     Private hoverBackColor As Color
     Private clickBackColor As Color
     Private hoverBorderColor As Color
+    Private trueNews As Boolean = False
 
     Public Enum NewsTypeEnum
         Task = 1
@@ -17,6 +18,7 @@ Partial Class TaskEventNews
     End Enum
 
     ' Define properties
+    Public Property Key As String = String.Empty
     Public Property NewsDate As DateTime = Now.ToUniversalTime
     Public Property Title As String = "Title"
     Public Property Subtitle As String = "Subtitle"
@@ -24,7 +26,7 @@ Partial Class TaskEventNews
     Public Property Credits As String = "Credits"
     Public Property EventDate As DateTime = Now.ToUniversalTime
     Public Property News As String = "News"
-    Public Property NewsType As NewsTypeEnum = NewsTypeEnum.News
+    Public Property NewsType As NewsTypeEnum
     Public Property TaskEntrySeqID As Integer = 1
     Public Property URLToGo As String = String.Empty
     Public Event NewsClicked As EventHandler
@@ -38,15 +40,70 @@ Partial Class TaskEventNews
     Private ReadOnly TextBrush As New SolidBrush(Color.Black)
 
     Public Sub New()
+
         InitializeComponent()
+
+        'Create a fake news entry
+        Dim fakeNews As New NewsEntry
+        fakeNews.NewsType = NewsTypeEnum.News
+        fakeNews.Key = $"N-{Guid.NewGuid.ToString}"
+        fakeNews.Published = Now().ToUniversalTime
+        fakeNews.Title = "Fake news entry"
+        fakeNews.Subtitle = "This is a fake news entry!"
+        fakeNews.News = "Wow, this will bring you to Google."
+        fakeNews.URLToGo = "https://google.com"
+
+        OnCreation(fakeNews)
+
+    End Sub
+
+    Public Sub New(newsEntry As NewsEntry)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        OnCreation(newsEntry)
+
+    End Sub
+
+    Public Sub OnCreation(newsEntry As NewsEntry)
+
+        With newsEntry
+            Select Case .NewsType
+                Case 0
+                    Me.NewsType = NewsTypeEnum.Task
+                Case 1
+                    Me.NewsType = NewsTypeEnum.Event
+                Case 2
+                    Me.NewsType = NewsTypeEnum.News
+            End Select
+            Me.Key = .Key
+            Me.NewsDate = .Published
+            Me.Title = .Title
+            Me.Subtitle = .Subtitle
+            Me.News = .News
+            Me.URLToGo = .URLToGo
+            Me.Comments = .Comments
+            Me.Credits = .Credits
+            If .EntrySeqID IsNot Nothing Then
+                Me.TaskEntrySeqID = .EntrySeqID
+            End If
+            If .EventDate IsNot Nothing Then
+                Me.EventDate = .EventDate
+            End If
+        End With
+
+        trueNews = True
+        Me.Height = CalculateHeight()
 
         ' Set DoubleBuffered to true to reduce flicker
         Me.DoubleBuffered = True
-
         ' Add mouse event handlers for all child controls
         AddMouseEventHandlers(Me)
         ' Set background colors based on NewsType
         SetBackgroundColor()
+
     End Sub
 
     Private Sub SetBackgroundColor()
@@ -72,7 +129,7 @@ Partial Class TaskEventNews
 
     Protected Overrides Sub OnResize(e As EventArgs)
         MyBase.OnResize(e)
-        If Not Me.DesignMode Then
+        If trueNews Then
             Me.Height = CalculateHeight()
         End If
         Me.Invalidate() ' Redraw the control to update the text layout
@@ -80,7 +137,7 @@ Partial Class TaskEventNews
 
     Private Function CalculateHeight() As Integer
         ' Check if in design mode
-        If Me.DesignMode Then
+        If Not trueNews Then
             Return Me.Height
         End If
 
@@ -156,6 +213,9 @@ Partial Class TaskEventNews
                 textSize = e.Graphics.MeasureString(News, FifthElementFont, Me.Width - 10)
                 e.Graphics.DrawString(News, FifthElementFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
         End Select
+
+        CalculateHeight()
+
     End Sub
 
     Private Sub AddMouseEventHandlers(ctrl As Control)
