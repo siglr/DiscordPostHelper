@@ -43,15 +43,31 @@ Partial Class TaskEventNews
         ' Set DoubleBuffered to true to reduce flicker
         Me.DoubleBuffered = True
 
-        ' Store the default and hover background colors
-        hoverBackColor = Color.LightBlue
-        clickBackColor = Color.Cyan
-        hoverBorderColor = Color.DarkBlue
-        theBackColor = Color.FromArgb(Math.Max(Me.BackColor.R - 20, 0), Math.Max(Me.BackColor.G - 20, 0), Math.Max(Me.BackColor.B - 20, 0))
-        Me.BackColor = theBackColor
-
         ' Add mouse event handlers for all child controls
         AddMouseEventHandlers(Me)
+        ' Set background colors based on NewsType
+        SetBackgroundColor()
+    End Sub
+
+    Private Sub SetBackgroundColor()
+        Select Case NewsType
+            Case NewsTypeEnum.Task
+                theBackColor = Color.FromArgb(220, 238, 251) ' Light Blue
+                hoverBackColor = Color.FromArgb(192, 221, 247) ' Slightly Darker Blue
+                clickBackColor = Color.FromArgb(176, 211, 242) ' Even Darker Blue
+                hoverBorderColor = Color.DarkBlue
+            Case NewsTypeEnum.Event
+                theBackColor = Color.FromArgb(223, 255, 228) ' Light Green
+                hoverBackColor = Color.FromArgb(207, 255, 208) ' Slightly Darker Green
+                clickBackColor = Color.FromArgb(192, 245, 192) ' Even Darker Green
+                hoverBorderColor = Color.DarkGreen
+            Case NewsTypeEnum.News
+                theBackColor = Color.FromArgb(255, 249, 219) ' Light Yellow
+                hoverBackColor = Color.FromArgb(255, 243, 176) ' Slightly Darker Yellow
+                clickBackColor = Color.FromArgb(255, 235, 140) ' Even Darker Yellow
+                hoverBorderColor = Color.Orange
+        End Select
+        Me.BackColor = theBackColor
     End Sub
 
     Protected Overrides Sub OnResize(e As EventArgs)
@@ -196,5 +212,4 @@ Partial Class TaskEventNews
         MyBase.OnMouseClick(e)
         RaiseEvent NewsClicked(Me, EventArgs.Empty)
     End Sub
-
 End Class
