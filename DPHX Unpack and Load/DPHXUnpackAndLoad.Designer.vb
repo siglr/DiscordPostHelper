@@ -223,11 +223,11 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.chkNewsRetrieval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkNewsRetrieval.AutoSize = True
-        Me.chkNewsRetrieval.Location = New System.Drawing.Point(31, 6)
+        Me.chkNewsRetrieval.Location = New System.Drawing.Point(51, 6)
         Me.chkNewsRetrieval.Name = "chkNewsRetrieval"
-        Me.chkNewsRetrieval.Size = New System.Drawing.Size(237, 24)
+        Me.chkNewsRetrieval.Size = New System.Drawing.Size(199, 24)
         Me.chkNewsRetrieval.TabIndex = 7
-        Me.chkNewsRetrieval.Text = "Disable automatic news retrieval"
+        Me.chkNewsRetrieval.Text = "Disable automatic retrieval"
         Me.ToolTip1.SetToolTip(Me.chkNewsRetrieval, "Check this to disable the automatic retrieval of news.")
         Me.chkNewsRetrieval.UseVisualStyleBackColor = True
         '
@@ -353,7 +353,7 @@ Partial Class DPHXUnpackAndLoad
         'RetrieveNewsList
         '
         Me.RetrieveNewsList.Enabled = True
-        Me.RetrieveNewsList.Interval = 5000
+        Me.RetrieveNewsList.Interval = 60000
         '
         'newsSplitContainer
         '
