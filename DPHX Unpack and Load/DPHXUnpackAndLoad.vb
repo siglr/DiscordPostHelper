@@ -329,9 +329,20 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
 
+        OpenTaskLibraryBrowser()
+
+    End Sub
+
+#End Region
+
+#Region "Subs and functions"
+
+    Private Sub OpenTaskLibraryBrowser(Optional entrySeqID As Integer = 0)
+
         RetrieveNewsList.Enabled = False
 
         Using taskBrowserForm As New TaskBrowser()
+            taskBrowserForm.OpenWithEntrySeqID = entrySeqID
             taskBrowserForm.ShowDialog(Me)
 
             Dim selectedFile As String = taskBrowserForm.DownloadedFilePath
@@ -343,10 +354,6 @@ Public Class DPHXUnpackAndLoad
         RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
 
     End Sub
-
-#End Region
-
-#Region "Subs and functions"
 
     Private Sub SetFormCaption(filename As String)
 
@@ -855,13 +862,13 @@ Public Class DPHXUnpackAndLoad
         Select Case theNewsEntry.NewsType
             Case TaskEventNews.NewsTypeEnum.Task
                 'Open the library with a specific task
-                'TODO
+                OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
 
             Case TaskEventNews.NewsTypeEnum.Event
                 'Open the Discord event
                 SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
                 'Open the library with the task
-                'TODO
+                OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
 
             Case TaskEventNews.NewsTypeEnum.News
                 'Launch URL

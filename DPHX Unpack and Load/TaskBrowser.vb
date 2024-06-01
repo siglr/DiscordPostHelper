@@ -16,6 +16,7 @@ Public Class TaskBrowser
 #Region "Constants and variables"
 
     Public DownloadedFilePath As String = String.Empty
+    Public OpenWithEntrySeqID As Integer = 0
     Private _localTasksDatabaseFilePath As String
     Private _currentTaskDBEntries As DataTable
     Private _dataGridViewAllSet As Boolean = False
@@ -94,6 +95,9 @@ Public Class TaskBrowser
 
         CheckForUpdates(False)
 
+        If OpenWithEntrySeqID <> 0 Then
+            PerformSearch($"%nbr({OpenWithEntrySeqID.ToString})")
+        End If
     End Sub
 
     Private Sub btnSmallerText_Click(sender As Object, e As EventArgs) Handles btnSmallerText.Click
@@ -1191,6 +1195,7 @@ Public Class TaskBrowser
                 specificField = searchTerm
             End If
 
+            acceptableSpecialTerms.Add("nbr", "EntrySeqID")
             acceptableSpecialTerms.Add("ridge", "SoaringRidge")
             acceptableSpecialTerms.Add("thermals", "SoaringThermals")
             acceptableSpecialTerms.Add("waves", "SoaringWaves")
