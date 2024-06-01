@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports System.IO
 
 Partial Class TaskEventNews
     Inherits System.Windows.Forms.UserControl
@@ -10,6 +11,9 @@ Partial Class TaskEventNews
     Private clickBackColor As Color
     Private hoverBorderColor As Color
     Private trueNews As Boolean = False
+    Private taskImage As Image
+    Private eventImage As Image
+    Private newsImage As Image
 
     Public Enum NewsTypeEnum
         Task = 1
@@ -93,6 +97,12 @@ Partial Class TaskEventNews
                 Me.EventDate = .EventDate
             End If
         End With
+
+        ' Load images
+        Dim folderForImages As String = Path.GetDirectoryName(Application.ExecutablePath)
+        taskImage = Image.FromFile(Path.Combine(folderForImages, "Glider.png"))
+        eventImage = Image.FromFile(Path.Combine(folderForImages, "Calendar.png"))
+        newsImage = Image.FromFile(Path.Combine(folderForImages, "LoudSpeaker.png"))
 
         trueNews = True
         Me.Height = CalculateHeight()
@@ -179,6 +189,23 @@ Partial Class TaskEventNews
             ControlPaint.DrawBorder3D(e.Graphics, ClientRectangle, Border3DStyle.Raised)
         End If
 
+        ' Draw the image in the top right corner
+        Dim cornerImage As Image = Nothing
+        Select Case NewsType
+            Case NewsTypeEnum.Task
+                cornerImage = taskImage
+            Case NewsTypeEnum.Event
+                cornerImage = eventImage
+            Case NewsTypeEnum.News
+                cornerImage = newsImage
+        End Select
+
+        If cornerImage IsNot Nothing Then
+            Dim imageX As Integer = Me.Width - cornerImage.Width - 5 ' 5 pixels padding from the right edge
+            Dim imageY As Integer = 5 ' 5 pixels padding from the top edge
+            e.Graphics.DrawImage(cornerImage, imageX, imageY, cornerImage.Width, cornerImage.Height)
+        End If
+
         ' Draw text elements
         Dim y As Integer = 5
         Dim textSize As SizeF
@@ -189,11 +216,11 @@ Partial Class TaskEventNews
         y += CInt(textSize.Height) + 5
 
         textSize = e.Graphics.MeasureString(Title, TitleFont, Me.Width - 10)
-        e.Graphics.DrawString(Title, TitleFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+        e.Graphics.DrawString(Title, TitleFont, New SolidBrush(Me.ForeColor), New RectangleF(3, y, Me.Width - 10, textSize.Height))
         y += CInt(textSize.Height) + 5
 
         textSize = e.Graphics.MeasureString(Subtitle, SubtitleFont, Me.Width - 10)
-        e.Graphics.DrawString(Subtitle, SubtitleFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+        e.Graphics.DrawString(Subtitle, SubtitleFont, New SolidBrush(Me.ForeColor), New RectangleF(3, y, Me.Width - 10, textSize.Height))
         y += CInt(textSize.Height) + 5
 
         textSize = e.Graphics.MeasureString(Comments, CommentsFont, Me.Width - 10)
@@ -215,7 +242,6 @@ Partial Class TaskEventNews
         End Select
 
         CalculateHeight()
-
     End Sub
 
     Private Sub AddMouseEventHandlers(ctrl As Control)
@@ -240,6 +266,15 @@ Partial Class TaskEventNews
         For Each child As Control In ctrl.Controls
             RemoveMouseEventHandlers(child)
         Next
+
+        'Dispose of other stuff
+        taskImage.Dispose()
+        taskImage = Nothing
+        eventImage.Dispose()
+        eventImage = Nothing
+        newsImage.Dispose()
+        newsImage = Nothing
+
     End Sub
 
     Private Sub TaskEventNews_MouseEnter(sender As Object, e As EventArgs)
