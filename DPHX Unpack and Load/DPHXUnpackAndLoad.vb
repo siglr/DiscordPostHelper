@@ -129,6 +129,8 @@ Public Class DPHXUnpackAndLoad
             End If
         End If
 
+        DatabaseUpdate.CheckAndUpdateDatabase()
+
         RetrieveNewsList_Tick(sender, e)
 
     End Sub
