@@ -3156,6 +3156,14 @@ Public Class Main
 
     Private Sub CheckWhichOptionsCanBeEnabled()
 
+        'Is there a group selected for event news buttons
+        btnPublishEventNews.Enabled = False
+        btnDeleteEventNews.Enabled = False
+        If txtClubFullName.Text.Trim <> String.Empty Then
+            btnPublishEventNews.Enabled = UserCanCreateEvent
+            btnDeleteEventNews.Enabled = UserCanDeleteEvent
+        End If
+
         If txtTitle.Text.Trim.Length > 0 Then
             btnEventDPHXAndLinkOnly.Enabled = True
         Else
@@ -5685,6 +5693,7 @@ Public Class Main
 
 #Region "Task Browser Code"
 
+#Region "Event Handlers"
     Private Sub btnCreateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnCreateInTaskBrowser.Click
         If UserCanCreateTask Then
             UploadToTaskBrowser()
@@ -5700,6 +5709,113 @@ Public Class Main
             SetTBTaskDetailsLabel()
         End If
     End Sub
+
+    Private Sub btnPublishEventNews_Click(sender As Object, e As EventArgs) Handles btnPublishEventNews.Click
+        If UserCanCreateEvent Then
+            Dim key As String
+            Dim eventDate As Date
+            Dim comments As String = String.Empty
+
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+
+            If chkEventTeaser.Checked AndAlso txtEventTeaserMessage.Text.Trim <> String.Empty Then
+                comments = txtEventTeaserMessage.Text.Trim
+            ElseIf txtEventDescription.Text.Trim <> String.Empty Then
+                comments = txtEventDescription.Text.Trim
+            Else
+                comments = txtShortDescription.Text.Trim
+            End If
+            If comments.Length > 50 Then
+                comments = $"{comments.Substring(0, 50)}..."
+            End If
+            Dim result As Boolean = PublishEventNews(key,
+                                                    txtClubFullName.Text.Trim,
+                                                    txtEventTitle.Text.Trim,
+                                                    comments,
+                                                    eventDate,
+                                                    Now.ToUniversalTime,
+                                                    _TBTaskEntrySeqID,
+                                                    txtGroupEventPostURL.Text.Trim,
+                                                    eventDate.AddHours(3)
+)
+            If result Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("Event news published.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
+            Else
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("Failed publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End If
+
+        End If
+
+    End Sub
+
+#End Region
+
+#Region "Permissions"
+    Private ReadOnly Property UserCanCreateTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("CreateTask") Then
+                Return _userPermissions("CreateTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanUpdateTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("UpdateTask") Then
+                Return _userPermissions("UpdateTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanDeleteTask As Boolean
+        Get
+            If _userPermissions.ContainsKey("DeleteTask") Then
+                Return _userPermissions("DeleteTask")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanCreateEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("CreateEvent") Then
+                Return _userPermissions("CreateEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanUpdateEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("UpdateEvent") Then
+                Return _userPermissions("UpdateEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Private ReadOnly Property UserCanDeleteEvent As Boolean
+        Get
+            If _userPermissions.ContainsKey("DeleteEvent") Then
+                Return _userPermissions("DeleteEvent")
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+
+#End Region
+
+#Region "Tasks Subs"
 
     Private Sub UploadToTaskBrowser()
 
@@ -5759,9 +5875,13 @@ Public Class Main
         Dim result As Boolean = UploadTaskToServer(taskData, filePath)
 
         If result Then
-            MessageBox.Show("Task uploaded and database updated successfully.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Task uploaded and database updated successfully.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
         Else
-            MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
     End Sub
@@ -5901,65 +6021,13 @@ Public Class Main
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show(Me, $"Error uploading task: {ex.Message}", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error uploading task: {ex.Message}", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
             Return False
         End Try
     End Function
 
-    Private ReadOnly Property UserCanCreateTask As Boolean
-        Get
-            If _userPermissions.ContainsKey("CreateTask") Then
-                Return _userPermissions("CreateTask")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
-    Private ReadOnly Property UserCanUpdateTask As Boolean
-        Get
-            If _userPermissions.ContainsKey("UpdateTask") Then
-                Return _userPermissions("UpdateTask")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
-    Private ReadOnly Property UserCanDeleteTask As Boolean
-        Get
-            If _userPermissions.ContainsKey("DeleteTask") Then
-                Return _userPermissions("DeleteTask")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
-    Private ReadOnly Property UserCanCreateEvent As Boolean
-        Get
-            If _userPermissions.ContainsKey("CreateEvent") Then
-                Return _userPermissions("CreateEvent")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
-    Private ReadOnly Property UserCanUpdateEvent As Boolean
-        Get
-            If _userPermissions.ContainsKey("UpdateEvent") Then
-                Return _userPermissions("UpdateEvent")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
-    Private ReadOnly Property UserCanDeleteEvent As Boolean
-        Get
-            If _userPermissions.ContainsKey("DeleteEvent") Then
-                Return _userPermissions("DeleteEvent")
-            Else
-                Return False
-            End If
-        End Get
-    End Property
 
     Private Sub GetTaskDetails(taskID As String)
         Try
@@ -6039,6 +6107,47 @@ Public Class Main
         lblTaskBrowserIDAndDate.Text = labelString
 
     End Sub
+
+#End Region
+
+#Region "Events Subs"
+
+    Public Function PublishEventNews(key As String, title As String, subtitle As String, comments As String, eventDate As DateTime, published As DateTime, entrySeqID As Integer, urlToGo As String, expiration As DateTime) As Boolean
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNews.php"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/x-www-form-urlencoded"
+
+        Dim postData As String = $"action=CreateEvent&Key={Uri.EscapeDataString(key)}&Title={Uri.EscapeDataString(title)}&Subtitle={Uri.EscapeDataString(subtitle)}&Comments={Uri.EscapeDataString(comments)}&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}&EntrySeqID={entrySeqID}&URLToGo={Uri.EscapeDataString(urlToGo)}&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
+
+        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = data.Length
+
+        Try
+            Using stream As Stream = request.GetRequestStream()
+                stream.Write(data, 0, data.Length)
+            End Using
+
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    ' Assuming the response is a JSON object with a "status" field
+                    Dim result As Dictionary(Of String, Object) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+                    Return result("status").ToString() = "success"
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error publishing news entry: {ex.Message}", "News publishing error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
+
+#End Region
+
 #End Region
 
 End Class

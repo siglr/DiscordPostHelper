@@ -212,6 +212,8 @@ Partial Class Main
         Me.tabDiscord = New System.Windows.Forms.TabPage()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.btnDeleteEventNews = New System.Windows.Forms.Button()
+        Me.btnPublishEventNews = New System.Windows.Forms.Button()
         Me.btnDeleteFromTaskBrowser = New System.Windows.Forms.Button()
         Me.btnUpdateInTaskBrowser = New System.Windows.Forms.Button()
         Me.btnCreateInTaskBrowser = New System.Windows.Forms.Button()
@@ -2830,6 +2832,8 @@ Partial Class Main
         '
         'GroupBox6
         '
+        Me.GroupBox6.Controls.Add(Me.btnDeleteEventNews)
+        Me.GroupBox6.Controls.Add(Me.btnPublishEventNews)
         Me.GroupBox6.Controls.Add(Me.btnDeleteFromTaskBrowser)
         Me.GroupBox6.Controls.Add(Me.btnUpdateInTaskBrowser)
         Me.GroupBox6.Controls.Add(Me.btnCreateInTaskBrowser)
@@ -2839,6 +2843,32 @@ Partial Class Main
         Me.GroupBox6.TabIndex = 96
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "Task Browser"
+        '
+        'btnDeleteEventNews
+        '
+        Me.btnDeleteEventNews.Enabled = False
+        Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 199)
+        Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
+        Me.btnDeleteEventNews.Size = New System.Drawing.Size(212, 37)
+        Me.btnDeleteEventNews.TabIndex = 99
+        Me.btnDeleteEventNews.Tag = "87"
+        Me.btnDeleteEventNews.Text = "Remove event News"
+        Me.ToolTip1.SetToolTip(Me.btnDeleteEventNews, "Click this button to remove this group event's news entry.")
+        Me.btnDeleteEventNews.UseVisualStyleBackColor = True
+        '
+        'btnPublishEventNews
+        '
+        Me.btnPublishEventNews.Enabled = False
+        Me.btnPublishEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 156)
+        Me.btnPublishEventNews.Name = "btnPublishEventNews"
+        Me.btnPublishEventNews.Size = New System.Drawing.Size(212, 37)
+        Me.btnPublishEventNews.TabIndex = 98
+        Me.btnPublishEventNews.Tag = "87"
+        Me.btnPublishEventNews.Text = "Publish event News"
+        Me.ToolTip1.SetToolTip(Me.btnPublishEventNews, "Click this button to create or update this group event's news entry.")
+        Me.btnPublishEventNews.UseVisualStyleBackColor = True
         '
         'btnDeleteFromTaskBrowser
         '
@@ -5404,4 +5434,6 @@ Partial Class Main
     Friend WithEvents btnDeleteFromTaskBrowser As Button
     Friend WithEvents btnUpdateInTaskBrowser As Button
     Friend WithEvents lblTaskBrowserIDAndDate As Label
+    Friend WithEvents btnDeleteEventNews As Button
+    Friend WithEvents btnPublishEventNews As Button
 End Class

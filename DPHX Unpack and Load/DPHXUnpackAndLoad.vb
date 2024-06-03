@@ -866,7 +866,9 @@ Public Class DPHXUnpackAndLoad
                 'Open the Discord event
                 SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
                 'Open the library with the task
-                OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
+                If theNewsEntry.TaskEntrySeqID > 0 Then
+                    OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
+                End If
 
             Case TaskEventNews.NewsTypeEnum.News
                 'Launch URL
