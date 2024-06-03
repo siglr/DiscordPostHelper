@@ -98,6 +98,10 @@ Public Class TaskBrowser
         If OpenWithEntrySeqID <> 0 Then
             PerformSearch($"%nbr({OpenWithEntrySeqID.ToString})")
         End If
+
+        'Set focus on grid
+        Me.ActiveControl = gridCurrentDatabase
+
     End Sub
 
     Private Sub btnSmallerText_Click(sender As Object, e As EventArgs) Handles btnSmallerText.Click
