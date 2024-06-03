@@ -97,6 +97,25 @@ Partial Class TaskBrowser
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.tabctrlTBSections = New System.Windows.Forms.TabControl()
+        Me.tabImages = New System.Windows.Forms.TabPage()
+        Me.tabUserData = New System.Windows.Forms.TabPage()
+        Me.chkTaskFlown = New System.Windows.Forms.CheckBox()
+        Me.trkQualityRating = New System.Windows.Forms.TrackBar()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.pnlAllUserDataFields = New System.Windows.Forms.Panel()
+        Me.trkDifficultyRating = New System.Windows.Forms.TrackBar()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblQualityRating = New System.Windows.Forms.Label()
+        Me.lblDifficultyRating = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtTags = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtComment = New System.Windows.Forms.TextBox()
+        Me.btnUserDataSave = New System.Windows.Forms.Button()
+        Me.chkToFly = New System.Windows.Forms.CheckBox()
+        Me.TaskFlownToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToFlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -119,6 +138,12 @@ Partial Class TaskBrowser
         Me.splitImages.SuspendLayout()
         CType(Me.imgMap, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.imgCover, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabctrlTBSections.SuspendLayout()
+        Me.tabImages.SuspendLayout()
+        Me.tabUserData.SuspendLayout()
+        CType(Me.trkQualityRating, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlAllUserDataFields.SuspendLayout()
+        CType(Me.trkDifficultyRating, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -291,7 +316,7 @@ Partial Class TaskBrowser
         '
         'ToolStripMenuItem1
         '
-        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem})
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem, Me.TaskFlownToolStripMenuItem, Me.ToFlyToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(179, 24)
         Me.ToolStripMenuItem1.Text = "Boolean"
@@ -300,7 +325,7 @@ Partial Class TaskBrowser
         'RidgeToolStripMenuItem
         '
         Me.RidgeToolStripMenuItem.Name = "RidgeToolStripMenuItem"
-        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.RidgeToolStripMenuItem.Tag = ""
         Me.RidgeToolStripMenuItem.Text = "Ridge"
         Me.RidgeToolStripMenuItem.ToolTipText = "Select to filter based on Ridge soaring."
@@ -308,28 +333,28 @@ Partial Class TaskBrowser
         'ThermalsToolStripMenuItem
         '
         Me.ThermalsToolStripMenuItem.Name = "ThermalsToolStripMenuItem"
-        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.ThermalsToolStripMenuItem.Text = "Thermals"
         Me.ThermalsToolStripMenuItem.ToolTipText = "Select to filter based on Thermals soaring."
         '
         'WavesToolStripMenuItem
         '
         Me.WavesToolStripMenuItem.Name = "WavesToolStripMenuItem"
-        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.WavesToolStripMenuItem.Text = "Waves"
         Me.WavesToolStripMenuItem.ToolTipText = "Select to filter based on Waves soaring."
         '
         'DynamicToolStripMenuItem
         '
         Me.DynamicToolStripMenuItem.Name = "DynamicToolStripMenuItem"
-        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.DynamicToolStripMenuItem.Text = "Dynamic"
         Me.DynamicToolStripMenuItem.ToolTipText = "Select to filter based on Dynamic soaring."
         '
         'AddOnsToolStripMenuItem
         '
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
-        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
         Me.AddOnsToolStripMenuItem.ToolTipText = "Select to filter based on the task having recommended add-ons or not."
         '
@@ -502,7 +527,7 @@ Partial Class TaskBrowser
         '
         'splitRightPart.Panel2
         '
-        Me.splitRightPart.Panel2.Controls.Add(Me.splitImages)
+        Me.splitRightPart.Panel2.Controls.Add(Me.tabctrlTBSections)
         Me.splitRightPart.Size = New System.Drawing.Size(314, 676)
         Me.splitRightPart.SplitterDistance = 270
         Me.splitRightPart.TabIndex = 0
@@ -524,7 +549,7 @@ Partial Class TaskBrowser
         '
         Me.splitImages.Dock = System.Windows.Forms.DockStyle.Fill
         Me.splitImages.IsSplitterFixed = True
-        Me.splitImages.Location = New System.Drawing.Point(0, 0)
+        Me.splitImages.Location = New System.Drawing.Point(3, 3)
         Me.splitImages.Name = "splitImages"
         Me.splitImages.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -535,8 +560,8 @@ Partial Class TaskBrowser
         'splitImages.Panel2
         '
         Me.splitImages.Panel2.Controls.Add(Me.imgCover)
-        Me.splitImages.Size = New System.Drawing.Size(314, 402)
-        Me.splitImages.SplitterDistance = 201
+        Me.splitImages.Size = New System.Drawing.Size(300, 363)
+        Me.splitImages.SplitterDistance = 181
         Me.splitImages.SplitterWidth = 1
         Me.splitImages.TabIndex = 0
         '
@@ -547,7 +572,7 @@ Partial Class TaskBrowser
         Me.imgMap.Location = New System.Drawing.Point(0, 0)
         Me.imgMap.Margin = New System.Windows.Forms.Padding(0)
         Me.imgMap.Name = "imgMap"
-        Me.imgMap.Size = New System.Drawing.Size(314, 201)
+        Me.imgMap.Size = New System.Drawing.Size(300, 181)
         Me.imgMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.imgMap.TabIndex = 1
         Me.imgMap.TabStop = False
@@ -560,11 +585,230 @@ Partial Class TaskBrowser
         Me.imgCover.Location = New System.Drawing.Point(0, 0)
         Me.imgCover.Margin = New System.Windows.Forms.Padding(0)
         Me.imgCover.Name = "imgCover"
-        Me.imgCover.Size = New System.Drawing.Size(314, 200)
+        Me.imgCover.Size = New System.Drawing.Size(300, 181)
         Me.imgCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.imgCover.TabIndex = 2
         Me.imgCover.TabStop = False
         Me.ToolTip1.SetToolTip(Me.imgCover, "Cover image included with the task (if any).")
+        '
+        'tabctrlTBSections
+        '
+        Me.tabctrlTBSections.Controls.Add(Me.tabImages)
+        Me.tabctrlTBSections.Controls.Add(Me.tabUserData)
+        Me.tabctrlTBSections.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tabctrlTBSections.Location = New System.Drawing.Point(0, 0)
+        Me.tabctrlTBSections.Name = "tabctrlTBSections"
+        Me.tabctrlTBSections.SelectedIndex = 0
+        Me.tabctrlTBSections.Size = New System.Drawing.Size(314, 402)
+        Me.tabctrlTBSections.TabIndex = 1
+        '
+        'tabImages
+        '
+        Me.tabImages.Controls.Add(Me.splitImages)
+        Me.tabImages.Location = New System.Drawing.Point(4, 29)
+        Me.tabImages.Name = "tabImages"
+        Me.tabImages.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabImages.Size = New System.Drawing.Size(306, 369)
+        Me.tabImages.TabIndex = 0
+        Me.tabImages.Text = "Images"
+        Me.tabImages.UseVisualStyleBackColor = True
+        '
+        'tabUserData
+        '
+        Me.tabUserData.AutoScroll = True
+        Me.tabUserData.Controls.Add(Me.pnlAllUserDataFields)
+        Me.tabUserData.Controls.Add(Me.chkToFly)
+        Me.tabUserData.Controls.Add(Me.chkTaskFlown)
+        Me.tabUserData.Location = New System.Drawing.Point(4, 29)
+        Me.tabUserData.Name = "tabUserData"
+        Me.tabUserData.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabUserData.Size = New System.Drawing.Size(306, 369)
+        Me.tabUserData.TabIndex = 1
+        Me.tabUserData.Text = "Your data"
+        Me.tabUserData.UseVisualStyleBackColor = True
+        '
+        'chkTaskFlown
+        '
+        Me.chkTaskFlown.AutoEllipsis = True
+        Me.chkTaskFlown.AutoSize = True
+        Me.chkTaskFlown.Location = New System.Drawing.Point(6, 6)
+        Me.chkTaskFlown.Name = "chkTaskFlown"
+        Me.chkTaskFlown.Size = New System.Drawing.Size(147, 24)
+        Me.chkTaskFlown.TabIndex = 0
+        Me.chkTaskFlown.Text = "I've flown this task"
+        Me.ToolTip1.SetToolTip(Me.chkTaskFlown, "Check to mark this task as flown, and gain access to the other fields.")
+        Me.chkTaskFlown.UseVisualStyleBackColor = True
+        '
+        'trkQualityRating
+        '
+        Me.trkQualityRating.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.trkQualityRating.AutoSize = False
+        Me.trkQualityRating.Location = New System.Drawing.Point(46, 28)
+        Me.trkQualityRating.Maximum = 5
+        Me.trkQualityRating.Name = "trkQualityRating"
+        Me.trkQualityRating.Size = New System.Drawing.Size(254, 31)
+        Me.trkQualityRating.TabIndex = 2
+        Me.trkQualityRating.TickStyle = System.Windows.Forms.TickStyle.None
+        Me.ToolTip1.SetToolTip(Me.trkQualityRating, "0 (leftmost value) is considered not rated. Value 1 to 5 from bad to perfect.")
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(3, 5)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(203, 20)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Quality Rating (Bad to Perfect)"
+        '
+        'pnlAllUserDataFields
+        '
+        Me.pnlAllUserDataFields.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlAllUserDataFields.Controls.Add(Me.btnUserDataSave)
+        Me.pnlAllUserDataFields.Controls.Add(Me.txtComment)
+        Me.pnlAllUserDataFields.Controls.Add(Me.Label4)
+        Me.pnlAllUserDataFields.Controls.Add(Me.txtTags)
+        Me.pnlAllUserDataFields.Controls.Add(Me.Label3)
+        Me.pnlAllUserDataFields.Controls.Add(Me.lblDifficultyRating)
+        Me.pnlAllUserDataFields.Controls.Add(Me.lblQualityRating)
+        Me.pnlAllUserDataFields.Controls.Add(Me.trkDifficultyRating)
+        Me.pnlAllUserDataFields.Controls.Add(Me.Label2)
+        Me.pnlAllUserDataFields.Controls.Add(Me.trkQualityRating)
+        Me.pnlAllUserDataFields.Controls.Add(Me.Label1)
+        Me.pnlAllUserDataFields.Enabled = False
+        Me.pnlAllUserDataFields.Location = New System.Drawing.Point(0, 28)
+        Me.pnlAllUserDataFields.Name = "pnlAllUserDataFields"
+        Me.pnlAllUserDataFields.Size = New System.Drawing.Size(306, 341)
+        Me.pnlAllUserDataFields.TabIndex = 3
+        '
+        'trkDifficultyRating
+        '
+        Me.trkDifficultyRating.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.trkDifficultyRating.AutoSize = False
+        Me.trkDifficultyRating.Location = New System.Drawing.Point(46, 85)
+        Me.trkDifficultyRating.Maximum = 5
+        Me.trkDifficultyRating.Name = "trkDifficultyRating"
+        Me.trkDifficultyRating.Size = New System.Drawing.Size(254, 31)
+        Me.trkDifficultyRating.TabIndex = 5
+        Me.trkDifficultyRating.TickStyle = System.Windows.Forms.TickStyle.None
+        Me.ToolTip1.SetToolTip(Me.trkDifficultyRating, "0 (leftmost value) is considered not rated. Value 1 to 5 from easiest to hardest." &
+        "")
+        '
+        'Label2
+        '
+        Me.Label2.AutoEllipsis = True
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(3, 62)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(242, 20)
+        Me.Label2.TabIndex = 3
+        Me.Label2.Text = "Difficulty Rating (Easiest to Hardest)"
+        '
+        'lblQualityRating
+        '
+        Me.lblQualityRating.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblQualityRating.Location = New System.Drawing.Point(9, 26)
+        Me.lblQualityRating.Name = "lblQualityRating"
+        Me.lblQualityRating.Size = New System.Drawing.Size(39, 33)
+        Me.lblQualityRating.TabIndex = 1
+        Me.lblQualityRating.Text = "0"
+        Me.lblQualityRating.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblDifficultyRating
+        '
+        Me.lblDifficultyRating.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDifficultyRating.Location = New System.Drawing.Point(9, 82)
+        Me.lblDifficultyRating.Name = "lblDifficultyRating"
+        Me.lblDifficultyRating.Size = New System.Drawing.Size(39, 33)
+        Me.lblDifficultyRating.TabIndex = 4
+        Me.lblDifficultyRating.Text = "0"
+        Me.lblDifficultyRating.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label3
+        '
+        Me.Label3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label3.AutoEllipsis = True
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(3, 119)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(169, 20)
+        Me.Label3.TabIndex = 6
+        Me.Label3.Text = "Tags (comma separated)"
+        '
+        'txtTags
+        '
+        Me.txtTags.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTags.Location = New System.Drawing.Point(6, 142)
+        Me.txtTags.Name = "txtTags"
+        Me.txtTags.Size = New System.Drawing.Size(294, 27)
+        Me.txtTags.TabIndex = 7
+        Me.ToolTip1.SetToolTip(Me.txtTags, "You can enter several tags for this task, each separated by a comma.")
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoEllipsis = True
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(6, 172)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(83, 20)
+        Me.Label4.TabIndex = 8
+        Me.Label4.Text = "Comments"
+        '
+        'txtComment
+        '
+        Me.txtComment.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtComment.Location = New System.Drawing.Point(6, 195)
+        Me.txtComment.Multiline = True
+        Me.txtComment.Name = "txtComment"
+        Me.txtComment.Size = New System.Drawing.Size(294, 95)
+        Me.txtComment.TabIndex = 9
+        Me.ToolTip1.SetToolTip(Me.txtComment, "Enter any comment you want to keep about this task.")
+        '
+        'btnUserDataSave
+        '
+        Me.btnUserDataSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUserDataSave.Location = New System.Drawing.Point(7, 298)
+        Me.btnUserDataSave.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnUserDataSave.Name = "btnUserDataSave"
+        Me.btnUserDataSave.Size = New System.Drawing.Size(292, 35)
+        Me.btnUserDataSave.TabIndex = 10
+        Me.btnUserDataSave.Text = "Save"
+        Me.ToolTip1.SetToolTip(Me.btnUserDataSave, "Don't forget to click here to save your data.")
+        '
+        'chkToFly
+        '
+        Me.chkToFly.AutoSize = True
+        Me.chkToFly.Location = New System.Drawing.Point(159, 6)
+        Me.chkToFly.Name = "chkToFly"
+        Me.chkToFly.Size = New System.Drawing.Size(64, 24)
+        Me.chkToFly.TabIndex = 4
+        Me.chkToFly.Text = "To fly"
+        Me.ToolTip1.SetToolTip(Me.chkToFly, "Check to mark this task as one you want to fly.")
+        Me.chkToFly.UseVisualStyleBackColor = True
+        '
+        'TaskFlownToolStripMenuItem
+        '
+        Me.TaskFlownToolStripMenuItem.Name = "TaskFlownToolStripMenuItem"
+        Me.TaskFlownToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.TaskFlownToolStripMenuItem.Text = "Flown"
+        Me.TaskFlownToolStripMenuItem.ToolTipText = "Select to filter based on if you've flown the task."
+        '
+        'ToFlyToolStripMenuItem
+        '
+        Me.ToFlyToolStripMenuItem.Name = "ToFlyToolStripMenuItem"
+        Me.ToFlyToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.ToFlyToolStripMenuItem.Text = "ToFly"
+        Me.ToFlyToolStripMenuItem.ToolTipText = "Select to filter based on if you've flagged the task To Fly."
         '
         'TaskBrowser
         '
@@ -608,6 +852,14 @@ Partial Class TaskBrowser
         Me.splitImages.ResumeLayout(False)
         CType(Me.imgMap, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.imgCover, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabctrlTBSections.ResumeLayout(False)
+        Me.tabImages.ResumeLayout(False)
+        Me.tabUserData.ResumeLayout(False)
+        Me.tabUserData.PerformLayout()
+        CType(Me.trkQualityRating, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnlAllUserDataFields.ResumeLayout(False)
+        Me.pnlAllUserDataFields.PerformLayout()
+        CType(Me.trkDifficultyRating, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -658,4 +910,23 @@ Partial Class TaskBrowser
     Friend WithEvents Panel5 As Panel
     Friend WithEvents btnBiggerText As Button
     Friend WithEvents btnSmallerText As Button
+    Friend WithEvents tabctrlTBSections As TabControl
+    Friend WithEvents tabImages As TabPage
+    Friend WithEvents tabUserData As TabPage
+    Friend WithEvents Label1 As Label
+    Friend WithEvents trkQualityRating As TrackBar
+    Friend WithEvents chkTaskFlown As CheckBox
+    Friend WithEvents pnlAllUserDataFields As Panel
+    Friend WithEvents trkDifficultyRating As TrackBar
+    Friend WithEvents Label2 As Label
+    Friend WithEvents lblDifficultyRating As Label
+    Friend WithEvents lblQualityRating As Label
+    Friend WithEvents txtTags As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents txtComment As TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents btnUserDataSave As Button
+    Friend WithEvents chkToFly As CheckBox
+    Friend WithEvents TaskFlownToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToFlyToolStripMenuItem As ToolStripMenuItem
 End Class

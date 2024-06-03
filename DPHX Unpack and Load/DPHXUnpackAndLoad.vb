@@ -870,6 +870,10 @@ Public Class DPHXUnpackAndLoad
                 'Open the library with the task
                 If theNewsEntry.TaskEntrySeqID > 0 Then
                     OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
+                Else
+                    Using New Centered_MessageBox()
+                        MessageBox.Show(Me, "The associated task has not yet been published! Stay tuned!", "Task for group event", vbOKOnly, vbInformation)
+                    End Using
                 End If
 
             Case TaskEventNews.NewsTypeEnum.News

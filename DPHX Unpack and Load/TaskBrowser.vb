@@ -89,10 +89,14 @@ Public Class TaskBrowser
         AddFieldWithTextCriteria("weather", "Weather")
         AddFieldWithTextCriteria("credits", "Credits")
         AddFieldWithTextCriteria("description", "Descriptions")
+        AddFieldWithTextCriteria("tags", "Tags")
+        AddFieldWithTextCriteria("comment", "Comment")
         AddFieldWithTextCriteria("global", "Everywhere")
         AddFieldWithNumbersCriteria("duration", "Duration")
         AddFieldWithNumbersCriteria("distance", "Distance (in KM)")
         AddFieldWithNumbersCriteria("totdown", "Total downloads")
+        AddFieldWithNumbersCriteria("yq", "Your quality rating")
+        AddFieldWithNumbersCriteria("yd", "Your difficulty rating")
 
         BuildFavoritesMenu()
 
@@ -316,7 +320,7 @@ Public Class TaskBrowser
                                                                                          ThermalsToolStripMenuItem.Click,
                                                                                          WavesToolStripMenuItem.Click,
                                                                                          DynamicToolStripMenuItem.Click,
-                                                                                         AddOnsToolStripMenuItem.Click
+                                                                                         AddOnsToolStripMenuItem.Click, ToFlyToolStripMenuItem.Click, TaskFlownToolStripMenuItem.Click
         If chkNot.Checked Then
             txtSearch.Text = $"!%{CType(sender, ToolStripMenuItem).Text.ToLower}"
         Else
@@ -754,44 +758,51 @@ Public Class TaskBrowser
 
         Using conn As New SQLiteConnection(connectionString)
             conn.Open()
-            Using cmd As New SQLiteCommand("SELECT EntrySeqID, 
-                                                    TaskID, 
-                                                    Title, 
-                                                    LastUpdate, 
-                                                    SimDateTime, 
-                                                    IncludeYear, 
-                                                    SimDateTimeExtraInfo, 
-                                                    MainAreaPOI,
-                                                    DepartureName, 
-                                                    DepartureICAO, 
-                                                    DepartureExtra, 
-                                                    ArrivalName, 
-                                                    ArrivalICAO, 
-                                                    ArrivalExtra, 
-                                                    SoaringRidge, 
-                                                    SoaringThermals, 
-                                                    SoaringWaves, 
-                                                    SoaringDynamic, 
-                                                    SoaringExtraInfo, 
-                                                    DurationMin, 
-                                                    DurationMax, 
-                                                    DurationExtraInfo, 
-                                                    TaskDistance, 
-                                                    TotalDistance, 
-                                                    RecommendedGliders, 
-                                                    DifficultyRating, 
-                                                    DifficultyExtraInfo, 
-                                                    ShortDescription, 
-                                                    LongDescription, 
-                                                    WeatherSummary, 
-                                                    Credits, 
-                                                    Countries, 
-                                                    RecommendedAddOns, 
-                                                    DBEntryUpdate, 
-                                                    TotDownloads,
-                                                    LastDownloadUpdate,
-                                                    ThreadAccess
-                                                    FROM Tasks", conn)
+            Using cmd As New SQLiteCommand("SELECT Tasks.EntrySeqID, 
+                                               Tasks.TaskID, 
+                                               Tasks.Title, 
+                                               Tasks.LastUpdate, 
+                                               Tasks.SimDateTime, 
+                                               Tasks.IncludeYear, 
+                                               Tasks.SimDateTimeExtraInfo, 
+                                               Tasks.MainAreaPOI,
+                                               Tasks.DepartureName, 
+                                               Tasks.DepartureICAO, 
+                                               Tasks.DepartureExtra, 
+                                               Tasks.ArrivalName, 
+                                               Tasks.ArrivalICAO, 
+                                               Tasks.ArrivalExtra, 
+                                               Tasks.SoaringRidge, 
+                                               Tasks.SoaringThermals, 
+                                               Tasks.SoaringWaves, 
+                                               Tasks.SoaringDynamic, 
+                                               Tasks.SoaringExtraInfo, 
+                                               Tasks.DurationMin, 
+                                               Tasks.DurationMax, 
+                                               Tasks.DurationExtraInfo, 
+                                               Tasks.TaskDistance, 
+                                               Tasks.TotalDistance, 
+                                               Tasks.RecommendedGliders, 
+                                               Tasks.DifficultyRating, 
+                                               Tasks.DifficultyExtraInfo, 
+                                               Tasks.ShortDescription, 
+                                               Tasks.LongDescription, 
+                                               Tasks.WeatherSummary, 
+                                               Tasks.Credits, 
+                                               Tasks.Countries, 
+                                               Tasks.RecommendedAddOns, 
+                                               Tasks.DBEntryUpdate, 
+                                               Tasks.TotDownloads,
+                                               Tasks.LastDownloadUpdate,
+                                               Tasks.ThreadAccess,
+                                        	   COALESCE(UserData.TaskQualityRating, 0) AS TaskQualityRating,
+                                               COALESCE(UserData.TaskDifficultyRating, 0) AS TaskDifficultyRating,
+                                               COALESCE(UserData.Comment, '') AS Comment,
+                                               COALESCE(UserData.Tags, '') AS Tags,
+                                               COALESCE(UserData.TaskFlown, 0) AS TaskFlown,
+                                               COALESCE(UserData.ToFly, 0) AS ToFly
+                                        FROM Tasks
+                                        LEFT JOIN UserData ON Tasks.EntrySeqID = UserData.EntrySeqID", conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(_currentTaskDBEntries)
                 End Using
@@ -813,12 +824,16 @@ Public Class TaskBrowser
         Dim soaringWavesColumn As New DataColumn("SoaringWavesBool", GetType(Boolean))
         Dim soaringDynamicColumn As New DataColumn("SoaringDynamicBool", GetType(Boolean))
         Dim recommendedAddOnsColumn As New DataColumn("RecommendedAddOnsBool", GetType(Boolean))
+        Dim taskFlownColumn As New DataColumn("TaskFlownBool", GetType(Boolean))
+        Dim toFlyColumn As New DataColumn("ToFlyBool", GetType(Boolean))
         _currentTaskDBEntries.Columns.Add(includeYearColumn)
         _currentTaskDBEntries.Columns.Add(soaringRidgeColumn)
         _currentTaskDBEntries.Columns.Add(soaringThermalsColumn)
         _currentTaskDBEntries.Columns.Add(soaringWavesColumn)
         _currentTaskDBEntries.Columns.Add(soaringDynamicColumn)
         _currentTaskDBEntries.Columns.Add(recommendedAddOnsColumn)
+        _currentTaskDBEntries.Columns.Add(taskFlownColumn)
+        _currentTaskDBEntries.Columns.Add(toFlyColumn)
 
         ' Calculate values for the calculated and boolean columns
         For Each row As DataRow In _currentTaskDBEntries.Rows
@@ -834,6 +849,8 @@ Public Class TaskBrowser
             row("SoaringWavesBool") = (CInt(row("SoaringWaves")) = 1)
             row("SoaringDynamicBool") = (CInt(row("SoaringDynamic")) = 1)
             row("RecommendedAddOnsBool") = (CInt(row("RecommendedAddOns")) = 1)
+            row("TaskFlownBool") = If(IsDBNull(row("TaskFlown")), False, (CInt(row("TaskFlown")) = 1))
+            row("ToFlyBool") = If(IsDBNull(row("ToFly")), False, (CInt(row("ToFly")) = 1))
         Next
     End Sub
 
@@ -965,12 +982,46 @@ Public Class TaskBrowser
         gridCurrentDatabase.Columns("TotDownloads").DisplayIndex = 22
         gridCurrentDatabase.Columns("TotDownloads").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
 
+        gridCurrentDatabase.Columns("TaskQualityRating").HeaderText = "YQ"
+        gridCurrentDatabase.Columns("TaskQualityRating").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
+        gridCurrentDatabase.Columns("TaskQualityRating").DisplayIndex = 23
+        gridCurrentDatabase.Columns("TaskQualityRating").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        gridCurrentDatabase.Columns("TaskDifficultyRating").HeaderText = "YD"
+        gridCurrentDatabase.Columns("TaskDifficultyRating").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
+        gridCurrentDatabase.Columns("TaskDifficultyRating").DisplayIndex = 24
+        gridCurrentDatabase.Columns("TaskDifficultyRating").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        gridCurrentDatabase.Columns("TaskFlownBool").HeaderText = "Flown"
+        gridCurrentDatabase.Columns("TaskFlownBool").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
+        gridCurrentDatabase.Columns("TaskFlownBool").DisplayIndex = 25
+
+        gridCurrentDatabase.Columns("ToFlyBool").HeaderText = "To fly"
+        gridCurrentDatabase.Columns("ToFlyBool").AutoSizeMode = DataGridViewAutoSizeColumnsMode.AllCells
+        gridCurrentDatabase.Columns("ToFlyBool").DisplayIndex = 26
+
+        gridCurrentDatabase.Columns("Tags").HeaderText = "Tags"
+        gridCurrentDatabase.Columns("Tags").AutoSizeMode = DataGridViewAutoSizeColumnsMode.None
+        gridCurrentDatabase.Columns("Tags").DisplayIndex = 27
+        gridCurrentDatabase.Columns("Tags").Width = 80
+
         ' List of column names to exclude from the visibility toggle
         Dim excludeColumns As List(Of String) = GetListOfExcludedColumnNames()
 
         If gridCurrentDatabase IsNot Nothing Then
-            If Settings.SessionSettings.TBColumnsSettings.Count = 0 Then
+            If Settings.SessionSettings.TBColumnsSettings.Count <> gridCurrentDatabase.Columns.Count Then
+                'Check which column setting is missing
+                Dim columnNames As New List(Of String)
                 For Each col As DataGridViewColumn In gridCurrentDatabase.Columns
+                    columnNames.Add(col.Name)
+                Next
+                For Each setting In Settings.SessionSettings.TBColumnsSettings
+                    If columnNames.Contains(setting.Name) Then
+                        columnNames.Remove(setting.Name)
+                    End If
+                Next
+                For Each colName As String In columnNames
+                    Dim col As DataGridViewColumn = gridCurrentDatabase.Columns(colName)
                     Settings.SessionSettings.TBColumnsSettings.Add(New TBColumnSetting(col.Name, col.DisplayIndex, col.Visible, col.Width))
                 Next
             End If
@@ -1135,6 +1186,14 @@ Public Class TaskBrowser
             splitImages.Panel2Collapsed = False
         End If
 
+        'User Your Data
+        chkTaskFlown.Checked = _selectedTaskRow("TaskFlown")
+        chkToFly.Checked = _selectedTaskRow("ToFly")
+        trkDifficultyRating.Value = _selectedTaskRow("TaskDifficultyRating")
+        trkQualityRating.Value = _selectedTaskRow("TaskQualityRating")
+        txtComment.Text = _selectedTaskRow("Comment")
+        txtTags.Text = _selectedTaskRow("Tags")
+
     End Sub
 
     Private Function ByteArrayToImage(ByVal byteArray As Byte()) As Image
@@ -1226,6 +1285,12 @@ Public Class TaskBrowser
             acceptableSpecialTerms.Add("distance", "TotalDistance")
             acceptableSpecialTerms.Add("description", "")
             acceptableSpecialTerms.Add("totdown", "TotDownloads")
+            acceptableSpecialTerms.Add("comment", "Comment")
+            acceptableSpecialTerms.Add("tags", "Tags")
+            acceptableSpecialTerms.Add("yq", "YQ")
+            acceptableSpecialTerms.Add("yd", "YD")
+            acceptableSpecialTerms.Add("flown", "TaskFlown")
+            acceptableSpecialTerms.Add("tofly", "ToFly")
 
             If Not acceptableSpecialTerms.Keys.Contains(specificField) Then
                 Using New Centered_MessageBox()
@@ -1238,7 +1303,7 @@ Public Class TaskBrowser
         If specificSearch Then
             ' Process special search term
             Select Case specificField
-                Case "ridge", "thermals", "waves", "dynamic", "addons"
+                Case "ridge", "thermals", "waves", "dynamic", "addons", "flown", "tofly"
                     filteredRows = sourceTable.AsEnumerable().Where(Function(row) Convert.ToBoolean(row(acceptableSpecialTerms(specificField))) = Not negationCondition)
                 Case "description"
                     If negationCondition Then
@@ -1258,7 +1323,7 @@ Public Class TaskBrowser
                     Else
                         filteredRows = sourceTable.AsEnumerable().Where(Function(row) WildcardMatch(row("DepartureICAO").ToString(), specificFieldWord) OrElse WildcardMatch(row("ArrivalICAO").ToString(), specificFieldWord))
                     End If
-                Case "duration", "distance", "totdown"
+                Case "duration", "distance", "totdown", "yq", "yd"
                     Dim ranges() As String = specificFieldWord.Split("-"c)
                     Dim minValue As Integer
                     Dim maxValue As Integer
@@ -1301,6 +1366,26 @@ Public Class TaskBrowser
                             Else
                                 filteredRows = sourceTable.AsEnumerable().Where(Function(row) (
                                     (row("TotDownloads") <> 0 AndAlso Integer.Parse(row("TotDownloads")) >= minValue AndAlso Integer.Parse(row("TotDownloads")) <= maxValue)
+                                ))
+                            End If
+                        Case "yq"
+                            If negationCondition Then
+                                filteredRows = sourceTable.AsEnumerable().Where(Function(row) Not (
+                                    (row("TaskQualityRating") <> 0 AndAlso Integer.Parse(row("TaskQualityRating")) >= minValue AndAlso Integer.Parse(row("TaskQualityRating")) <= maxValue)
+                                ))
+                            Else
+                                filteredRows = sourceTable.AsEnumerable().Where(Function(row) (
+                                    (row("TaskQualityRating") <> 0 AndAlso Integer.Parse(row("TaskQualityRating")) >= minValue AndAlso Integer.Parse(row("TaskQualityRating")) <= maxValue)
+                                ))
+                            End If
+                        Case "yd"
+                            If negationCondition Then
+                                filteredRows = sourceTable.AsEnumerable().Where(Function(row) Not (
+                                    (row("TaskDifficultyRating") <> 0 AndAlso Integer.Parse(row("TaskDifficultyRating")) >= minValue AndAlso Integer.Parse(row("TaskDifficultyRating")) <= maxValue)
+                                ))
+                            Else
+                                filteredRows = sourceTable.AsEnumerable().Where(Function(row) (
+                                    (row("TaskDifficultyRating") <> 0 AndAlso Integer.Parse(row("TaskDifficultyRating")) >= minValue AndAlso Integer.Parse(row("TaskDifficultyRating")) <= maxValue)
                                 ))
                             End If
                     End Select
@@ -1887,7 +1972,10 @@ Public Class TaskBrowser
             "CoverImage",
             "IncludeYearBool",
             "DBEntryUpdate",
-            "ThreadAccess"}
+            "ThreadAccess",
+            "Comment",
+            "TaskFlown",
+            "ToFly"}
 
     End Function
 
@@ -1961,6 +2049,63 @@ Public Class TaskBrowser
 
     End Sub
 
+    Private Sub chkTaskFlown_CheckedChanged(sender As Object, e As EventArgs) Handles chkTaskFlown.CheckedChanged
+
+        pnlAllUserDataFields.Enabled = chkTaskFlown.Checked
+
+    End Sub
+
+    Private Sub trkQualityRating_Scroll(sender As Object, e As EventArgs) Handles trkQualityRating.ValueChanged
+
+        lblQualityRating.Text = trkQualityRating.Value.ToString
+
+    End Sub
+
+    Private Sub trkDifficultyRating_Scroll(sender As Object, e As EventArgs) Handles trkDifficultyRating.ValueChanged
+
+        lblDifficultyRating.Text = trkDifficultyRating.Value.ToString
+
+    End Sub
+
+    Private Sub btnUserDataSave_Click(sender As Object, e As EventArgs) Handles btnUserDataSave.Click
+        SaveUserData
+    End Sub
+
+    Private Sub SaveUserData()
+        Try
+            ' Update the local database
+            Using conn As New SQLiteConnection($"Data Source={_localTasksDatabaseFilePath};Version=3;")
+                conn.Open()
+                Dim query As String = "
+                INSERT OR REPLACE INTO UserData (EntrySeqID, TaskQualityRating, TaskDifficultyRating, Comment, Tags, TaskFlown, ToFly)
+                VALUES (@EntrySeqID, @TaskQualityRating, @TaskDifficultyRating, @Comment, @Tags, @TaskFlown, @ToFly)"
+                Using cmd As New SQLiteCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@EntrySeqID", _selectedTaskRow("EntrySeqID"))
+                    cmd.Parameters.AddWithValue("@TaskQualityRating", trkQualityRating.Value)
+                    cmd.Parameters.AddWithValue("@TaskDifficultyRating", trkDifficultyRating.Value)
+                    cmd.Parameters.AddWithValue("@Comment", txtComment.Text.Trim)
+                    cmd.Parameters.AddWithValue("@Tags", txtTags.Text.Trim)
+                    cmd.Parameters.AddWithValue("@TaskFlown", If(chkTaskFlown.Checked, 1, 0))
+                    cmd.Parameters.AddWithValue("@ToFly", If(chkToFly.Checked, 1, 0))
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+            _selectedTaskRow("TaskQualityRating") = trkQualityRating.Value
+            _selectedTaskRow("TaskDifficultyRating") = trkDifficultyRating.Value
+            _selectedTaskRow("Comment") = txtComment.Text.Trim
+            _selectedTaskRow("Tags") = txtTags.Text.Trim
+            _selectedTaskRow("TaskFlown") = chkTaskFlown.Checked
+            _selectedTaskRow("ToFly") = chkToFly.Checked
+
+            SaveCurrentPosition()
+            UpdateCurrentDBGrid()
+            RestorePosition()
+        Catch ex As Exception
+            ' Handle the exception (e.g., log the error)
+            Throw
+        End Try
+    End Sub
 
 #End Region
 
