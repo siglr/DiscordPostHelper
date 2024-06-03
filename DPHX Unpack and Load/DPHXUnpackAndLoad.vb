@@ -295,8 +295,6 @@ Public Class DPHXUnpackAndLoad
 
         FetchNewsEntries()
 
-        'TODO: Change it back to every minute, if MSFS is not running!
-
         If Not chkNewsRetrieval.Enabled Then
             RetrieveNewsList.Enabled = True
         Else
