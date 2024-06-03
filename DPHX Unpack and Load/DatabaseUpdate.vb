@@ -4,7 +4,7 @@ Imports System.IO
 
 Public Class DatabaseUpdate
 
-    Public Const ExpectedDatabaseVersion As Integer = 1
+    Public Const ExpectedDatabaseVersion As Integer = 0
     Private Shared _localTasksDatabaseFilePath As String = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SupportingFeatures.TasksDatabase)
     Private Shared _updateScriptsDatabaseFilePath As String = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DBUpdates.db")
 

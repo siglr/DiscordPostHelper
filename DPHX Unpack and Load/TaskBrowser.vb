@@ -540,6 +540,7 @@ Public Class TaskBrowser
 
     Private Sub gridCurrentDatabase_DataSourceChanged(sender As Object, e As EventArgs) Handles gridCurrentDatabase.DataSourceChanged
         SetupDataGridView()
+        Me.Text = $"Task Library Browser - {gridCurrentDatabase.Rows.Count.ToString} tasks displayed"
     End Sub
 
     Private Sub gridCurrentDatabase_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles gridCurrentDatabase.ColumnHeaderMouseClick
