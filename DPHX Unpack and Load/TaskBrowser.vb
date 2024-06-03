@@ -383,6 +383,7 @@ Public Class TaskBrowser
 
     Private Sub btnResetSearch_Click(sender As Object, e As EventArgs) Handles btnResetSearch.Click
 
+        SaveCurrentPosition()
         SaveOrReapplySort(True)
         gridCurrentDatabase.DataSource = _currentTaskDBEntries
         SaveOrReapplySort(False)
@@ -390,6 +391,7 @@ Public Class TaskBrowser
         lblSearchTerms.Text = String.Empty
         txtSearch.Text = String.Empty
         _searchTerms.Clear()
+        RestorePosition()
 
     End Sub
 
@@ -2098,9 +2100,34 @@ Public Class TaskBrowser
             _selectedTaskRow("TaskFlown") = chkTaskFlown.Checked
             _selectedTaskRow("ToFly") = chkToFly.Checked
 
+            'As it stands now, we don't have a choice but to reset the grid for the changes to be visible
+
+            'Save position and sort
             SaveCurrentPosition()
+            SaveOrReapplySort(True)
+
+            'Reload the datasource and grid
             UpdateCurrentDBGrid()
+            _filteredDataTable = Nothing
+
+            'reapply sort and restore position
+            SaveOrReapplySort(False)
             RestorePosition()
+
+            If _searchTerms.Count > 0 Then
+                Using New Centered_MessageBox()
+                    If MessageBox.Show(Me, "Would you like to reapply the search?", "Reapply search", vbYesNo, vbQuestion) = vbYes Then
+                        For Each searchTerm As String In _searchTerms
+                            PerformSearch(searchTerm)
+                        Next
+                    Else
+                        lblSearchTerms.Text = String.Empty
+                        txtSearch.Text = String.Empty
+                        _searchTerms.Clear()
+                    End If
+                End Using
+            End If
+
         Catch ex As Exception
             ' Handle the exception (e.g., log the error)
             Throw
