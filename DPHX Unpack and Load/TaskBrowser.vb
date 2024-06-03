@@ -54,6 +54,9 @@ Public Class TaskBrowser
 
         splitMain.SplitterDistance = splitMain.Width * (Settings.SessionSettings.TaskLibrarySplitterLocation / 100)
         splitRightPart.SplitterDistance = splitRightPart.Height * (Settings.SessionSettings.TaskLibraryRightPartSplitterLocation / 100)
+        If Settings.SessionSettings.TaskLibraryDetailsZoomLevel <= 0.015625 OrElse Settings.SessionSettings.TaskLibraryDetailsZoomLevel >= 64 Then
+            Settings.SessionSettings.TaskLibraryDetailsZoomLevel = 1.5
+        End If
         txtBriefing.ZoomFactor = Settings.SessionSettings.TaskLibraryDetailsZoomLevel
 
         UpdateCurrentDBGrid()
