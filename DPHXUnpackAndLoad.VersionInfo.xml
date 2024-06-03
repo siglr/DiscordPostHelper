@@ -1,14 +1,6 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.6.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.4.15.2</CurrentLatestVersion>
   <Releases>
-    <Release>
-      <ReleaseVersion>24.6.3.1</ReleaseVersion>
-      <ReleaseTitle>Task Library Browser</ReleaseTitle>
-      <ReleaseNotes>
-        Added Task Library Browser screen.
-        Added News panel on the main screen.
-      </ReleaseNotes>
-    </Release>
     <Release>
       <ReleaseVersion>24.4.15.2</ReleaseVersion>
       <ReleaseTitle>Small fix</ReleaseTitle>
