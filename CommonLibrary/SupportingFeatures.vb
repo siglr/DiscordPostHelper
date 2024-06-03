@@ -421,7 +421,7 @@ Public Class SupportingFeatures
 
     Public Sub UploadFile(folderName As String, fileName As String, xmlString As String)
 
-        Dim request As WebRequest = WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveFileUnderTempFolder.php")
+        Dim request As WebRequest = WebRequest.Create($"{SIGLRDiscordPostHelperFolder()}SaveFileUnderTempFolder.php")
         request.Method = "POST"
         Dim postData As String = $"xmlString={HttpUtility.UrlEncode(xmlString)}&folderName={HttpUtility.UrlEncode(folderName)}&fileName={HttpUtility.UrlEncode(fileName)}"
         Dim byteArray As Byte() = Encoding.UTF8.GetBytes(postData)
@@ -453,7 +453,7 @@ Public Class SupportingFeatures
 
     Public Sub UploadTextFile(folderName As String, fileName As String, textContent As String)
 
-        Dim request As WebRequest = WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveTextFileUnderTempFolder.php")
+        Dim request As WebRequest = WebRequest.Create($"{SIGLRDiscordPostHelperFolder()}SaveTextFileUnderTempFolder.php")
         request.Method = "POST"
         Dim postData As String = $"textContent={HttpUtility.UrlEncode(textContent)}&folderName={HttpUtility.UrlEncode(folderName)}&fileName={HttpUtility.UrlEncode(fileName)}"
         Dim byteArray As Byte() = Encoding.UTF8.GetBytes(postData)
@@ -475,7 +475,7 @@ Public Class SupportingFeatures
 
     Public Sub UploadDirectFile(folderName As String, filePath As String)
 
-        Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/SaveDirectFileUnderTempFolder.php"), HttpWebRequest)
+        Dim request As HttpWebRequest = CType(WebRequest.Create($"{SIGLRDiscordPostHelperFolder()}SaveDirectFileUnderTempFolder.php"), HttpWebRequest)
         request.Method = "POST"
 
         ' Boundary string and content type for multipart/form-data
@@ -536,7 +536,7 @@ Public Class SupportingFeatures
 
     Public Sub DeleteTempFile(ByVal fileName As String)
 
-        Dim request As HttpWebRequest = CType(WebRequest.Create($"https://siglr.com/DiscordPostHelper/DeleteTempFolder.php?folder={fileName}"), HttpWebRequest)
+        Dim request As HttpWebRequest = CType(WebRequest.Create($"{SIGLRDiscordPostHelperFolder()}DeleteTempFolder.php?folder={fileName}"), HttpWebRequest)
         request.Method = "GET"
 
         Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
@@ -786,7 +786,7 @@ Public Class SupportingFeatures
     End Function
 
     Public Sub LogDateTime(parameter As String)
-        Dim url As String = $"https://siglr.com/DiscordPostHelper/DPHGetVersionInfo.php?param={Uri.EscapeDataString(parameter)}"
+        Dim url As String = $"{SIGLRDiscordPostHelperFolder()}DPHGetVersionInfo.php?param={Uri.EscapeDataString(parameter)}"
         Dim client As New WebClient()
 
         If Debugger.IsAttached Or File.Exists($"{Application.StartupPath}\{Environment.UserName}.txt") Then
@@ -2004,6 +2004,47 @@ Public Class SupportingFeatures
         End Using
         Return String.Empty
     End Function
+
+    Private Shared _useTestServer As Boolean = False
+    Private Shared _testServerAskedOnce As Boolean = False
+    Public Shared Function SIGLRDiscordPostHelperFolder() As String
+        If Debugger.IsAttached Then
+            If Not _testServerAskedOnce Then
+                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
+                    _useTestServer = True
+                Else
+                    _useTestServer = False
+                End If
+                _testServerAskedOnce = True
+            End If
+            If _useTestServer Then
+                Return "https://siglr.com/DiscordPostHelperTest/"
+            Else
+                Return "https://siglr.com/DiscordPostHelper/"
+            End If
+        End If
+        Return "https://siglr.com/DiscordPostHelper/"
+    End Function
+    Public Shared Function TasksDatabase() As String
+
+        If Debugger.IsAttached Then
+            If Not _testServerAskedOnce Then
+                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
+                    _useTestServer = True
+                Else
+                    _useTestServer = False
+                End If
+                _testServerAskedOnce = True
+            End If
+            If _useTestServer Then
+                Return "TasksDatabaseTest.db"
+            Else
+                Return "TasksDatabase.db"
+            End If
+        End If
+        Return "TasksDatabase.db"
+    End Function
+
 End Class
 
 

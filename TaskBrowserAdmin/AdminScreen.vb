@@ -24,7 +24,7 @@ Public Class AdminScreen
         ' Set temporary unpack folder
         TempDPHXUnpackFolder = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TempUnpack")
         ProcessedDPHXFilesFolder = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ProcessedDPHXFiles")
-        SQLiteDBFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TasksDatabase.db")
+        SQLiteDBFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SupportingFeatures.TasksDatabase)
 
         ' Read the current database file
         LoadCurrentTasksFromDatabase()
@@ -409,7 +409,7 @@ Public Class AdminScreen
             })
 
             ' Prepare the request
-            Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/UpdateTasks.php"), HttpWebRequest)
+            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}UpdateTasks.php"), HttpWebRequest)
             request.Method = "POST"
             request.ContentType = "application/json"
 

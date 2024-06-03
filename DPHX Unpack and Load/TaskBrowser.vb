@@ -50,7 +50,7 @@ Public Class TaskBrowser
 
         lblCurrentSelection.Text = String.Empty
 
-        _localTasksDatabaseFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TasksDatabase.db")
+        _localTasksDatabaseFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SupportingFeatures.TasksDatabase)
 
         splitMain.SplitterDistance = splitMain.Width * (Settings.SessionSettings.TaskLibrarySplitterLocation / 100)
         splitRightPart.SplitterDistance = splitRightPart.Height * (Settings.SessionSettings.TaskLibraryRightPartSplitterLocation / 100)
@@ -1491,7 +1491,7 @@ Public Class TaskBrowser
     End Sub
 
     Private Function FetchUpdatedTasks(lastDBEntryUpdate As String) As DataTable
-        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedTasks.php?DBEntryUpdate={lastDBEntryUpdate}"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}GetUpdatedTasks.php?DBEntryUpdate={lastDBEntryUpdate}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
         Try
@@ -1509,7 +1509,7 @@ Public Class TaskBrowser
     End Function
 
     Private Function FetchUpdatedDownloads(lastDownloadUpdate As String) As DataTable
-        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/GetUpdatedDownloads.php?lastDownloadUpdate={lastDownloadUpdate}"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}GetUpdatedDownloads.php?lastDownloadUpdate={lastDownloadUpdate}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
         Try
@@ -1530,7 +1530,7 @@ Public Class TaskBrowser
         Dim deletedTasks As New List(Of Integer)
 
         Try
-            Dim apiUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveDeletedTasks.php"
+            Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveDeletedTasks.php"
             Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
             request.Method = "GET"
             request.ContentType = "application/json"
@@ -1720,7 +1720,7 @@ Public Class TaskBrowser
     End Function
 
     Private Function IncrementDownloadForTask(entrySeqID As String) As Boolean
-        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementDownloadForTask.php?EntrySeqID={entrySeqID}"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}IncrementDownloadForTask.php?EntrySeqID={entrySeqID}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
         Try
@@ -1738,7 +1738,7 @@ Public Class TaskBrowser
     End Function
 
     Private Function IncrementThreadAccessForTask(entrySeqID As String) As Boolean
-        Dim apiUrl As String = $"https://siglr.com/DiscordPostHelper/IncrementThreadAccessForTask.php?EntrySeqID={entrySeqID}"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}IncrementThreadAccessForTask.php?EntrySeqID={entrySeqID}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
         Try
@@ -1809,7 +1809,7 @@ Public Class TaskBrowser
     End Function
 
     Private Function DownloadTaskFile(taskID As String, taskTitle As String, localFolder As String) As String
-        Dim baseUrl As String = "https://siglr.com/DiscordPostHelper/TaskBrowser/Tasks/"
+        Dim baseUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}TaskBrowser/Tasks/"
         Dim remoteFileName As String = taskID & ".dphx"
         Dim localFileName As String = taskTitle & ".dphx"
         Dim remoteFileUrl As String = baseUrl & remoteFileName

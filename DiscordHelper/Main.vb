@@ -153,7 +153,7 @@ Public Class Main
 
     Public Function GetUserRights(userID As String) As JObject
         Try
-            Dim rightsUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveUserRights.php"
+            Dim rightsUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveUserRights.php"
 
             ' Create the web request
             Dim request As HttpWebRequest = CType(WebRequest.Create(rightsUrl), HttpWebRequest)
@@ -997,9 +997,7 @@ Public Class Main
             Try
                 GetTaskDetails(txtDiscordTaskID.Text.Trim)
             Catch ex As Exception
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, $"An error occurred retrieving the online task details.{Environment.NewLine}{ex.Message}", "Retrieving online task details", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
+                'Do nothing - it means the task has not been pushed to the online database
             End Try
         End If
         SetTBTaskDetailsLabel()
@@ -5837,7 +5835,7 @@ Public Class Main
         })
 
             ' Prepare the request
-            Dim request As HttpWebRequest = CType(WebRequest.Create("https://siglr.com/DiscordPostHelper/CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
+            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
             request.Method = "POST"
             request.ContentType = "multipart/form-data"
 
@@ -5965,7 +5963,7 @@ Public Class Main
 
     Private Sub GetTaskDetails(taskID As String)
         Try
-            Dim taskDetailsUrl As String = "https://siglr.com/DiscordPostHelper/FindTaskUsingID.php"
+            Dim taskDetailsUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingID.php"
 
             ' Create the web request
             Dim request As HttpWebRequest = CType(WebRequest.Create(taskDetailsUrl & "?TaskID=" & taskID), HttpWebRequest)

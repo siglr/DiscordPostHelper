@@ -795,7 +795,7 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Public Sub FetchNewsEntries()
-        Dim apiUrl As String = "https://siglr.com/DiscordPostHelper/RetrieveNews.php"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveNews.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
 
