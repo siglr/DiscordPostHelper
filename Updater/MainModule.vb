@@ -12,6 +12,8 @@ Module MainModule
         Dim zipFilename As String = String.Empty
         Dim processID As Integer = 0
         Dim programToStart As String = String.Empty
+        ' Define the list of files to be skipped if they already exist
+        Dim filesToSkip As New List(Of String) From {"TasksDatabase.db"}
 
         Dim updateForm As New UpdaterForm
 
@@ -100,6 +102,14 @@ Module MainModule
 
                         ' Combine the base directory with the entry's path to get the destination path
                         Dim destinationPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entryFullName.Replace("/", "\"))
+
+                        ' Check if the file is in the list of files to be skipped and already exists
+                        If filesToSkip.Contains(entry.Name) AndAlso File.Exists(destinationPath) Then
+                            updateForm.AddUnzippedFile($"Skipping existing file {destinationPath}")
+                            updateForm.Refresh()
+                            Application.DoEvents()
+                            Continue For
+                        End If
 
                         If entry.Name = String.Empty Then
                             ' Create the directory if it doesn't exist
