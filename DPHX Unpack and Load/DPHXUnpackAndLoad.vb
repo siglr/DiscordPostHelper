@@ -283,9 +283,6 @@ Public Class DPHXUnpackAndLoad
             warningMSFSRunningToolStrip.Visible = True
         Else
             RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
-            If RetrieveNewsList.Enabled Then
-                RetrieveNewsList_Tick(sender, e)
-            End If
             warningMSFSRunningToolStrip.Visible = False
         End If
 
