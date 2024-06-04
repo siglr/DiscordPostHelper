@@ -5739,7 +5739,7 @@ Public Class Main
                                                     Now.ToUniversalTime,
                                                     _TBTaskEntrySeqID,
                                                     txtGroupEventPostURL.Text.Trim,
-                                                    eventDate.AddHours(3)
+                                                    eventDate.AddHours(24)
 )
             If result Then
                 Using New Centered_MessageBox(Me)
