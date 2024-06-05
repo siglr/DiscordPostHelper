@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.6.3.4</CurrentLatestVersion>
+  <CurrentLatestVersion>24.6.4.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.6.4.1</ReleaseVersion>
+      <ReleaseTitle>Tasks - Your ratings (local only)</ReleaseTitle>
+      <ReleaseNotes>
+        Added number of tasks shown in the grid (after filtering).
+        Added a "Your data" section for each task, to rate, tag and comment a task.
+        Fixed the retrieval of news happening too frequently when MSFS not running.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.6.3.4</ReleaseVersion>
       <ReleaseTitle>Task Library Browser - day 1 fixes</ReleaseTitle>
