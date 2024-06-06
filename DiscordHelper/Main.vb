@@ -673,6 +673,7 @@ Public Class Main
             _SF.CreateDPHXFile(DPHXFilename, filesToInclude)
 
             SessionUntouched()
+            SetTBTaskDetailsLabel()
 
         End If
     End Sub
@@ -5837,7 +5838,7 @@ Public Class Main
             {"TaskID", taskInfo.DiscordTaskID},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
-            {"SimDateTime", taskInfo.SimTime.ToString("yyyy-MM-dd HH:mm:ss")},
+            {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
             {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
             {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
             {"MainAreaPOI", taskInfo.MainAreaPOI},
