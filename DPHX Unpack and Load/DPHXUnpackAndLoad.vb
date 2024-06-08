@@ -22,7 +22,7 @@ Public Class DPHXUnpackAndLoad
     Private _allDPHData As AllData
     Private _filesToUnpack As New Dictionary(Of String, String)
     Private _filesCurrentlyUnpacked As New Dictionary(Of String, String)
-    Private _currentNewsKey As New List(Of String)
+    Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
 
 #End Region
 
@@ -802,29 +802,33 @@ Public Class DPHXUnpackAndLoad
                     Dim jsonResponse As String = reader.ReadToEnd()
                     Dim newsEntries As List(Of NewsEntry) = ConvertJsonToDataTable(jsonResponse)
 
-                    'Is there any change?
-                    Dim newsHaveChanged As Boolean = False
-                    Dim newKeys As New List(Of String)
+                    ' Determine if there are new or updated entries
+                    Dim newOrUpdatedEntries As Boolean = False
+                    Dim fetchedKeys As New Dictionary(Of String, DateTime)
+
+                    ' Populate fetchedKeys with new entries' keys and Published dates
                     For Each newsEntry In newsEntries
-                        newKeys.Add(newsEntry.Key)
+                        Dim publishedDate As DateTime = DateTime.Parse(newsEntry.Published)
+                        fetchedKeys.Add(newsEntry.Key, publishedDate)
+
+                        ' Check if the entry is new or updated
+                        If Not _currentNewsKeyPublished.ContainsKey(newsEntry.Key) Then
+                            ' New entry
+                            newOrUpdatedEntries = True
+                        ElseIf _currentNewsKeyPublished(newsEntry.Key) < publishedDate Then
+                            ' Updated entry
+                            newOrUpdatedEntries = True
+                        End If
                     Next
-                    If _currentNewsKey.Count <> newKeys.Count Then
-                        'Change!
-                        newsHaveChanged = True
-                    Else
-                        'Same count - are they the same?
-                        For i = 0 To newKeys.Count - 1
-                            If newKeys(i) <> _currentNewsKey(i) Then
-                                'Change
-                                newsHaveChanged = True
-                                Exit For
-                            End If
-                        Next
-                    End If
 
-                    If newsHaveChanged Then
-                        _currentNewsKey.Clear()
+                    ' Determine if there are deletions by comparing keys
+                    Dim deletions As Boolean = _currentNewsKeyPublished.Keys.Except(fetchedKeys.Keys).Any()
 
+                    ' If there are new/updated entries or deletions, rebuild the news panel
+                    If newOrUpdatedEntries Or deletions Then
+                        _currentNewsKeyPublished.Clear()
+
+                        ' Clean up existing news panels
                         For Each newsPanel As TaskEventNews In flowNewsPanel.Controls
                             RemoveHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
                             newsPanel.Dispose()
@@ -832,15 +836,19 @@ Public Class DPHXUnpackAndLoad
                         Next
                         flowNewsPanel.Controls.Clear()
 
+                        ' Add new news panels
                         For Each newsEntry In newsEntries
                             Dim newsPanel = New TaskEventNews(newsEntry)
                             AddHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
-                            _currentNewsKey.Add(newsEntry.Key)
+                            _currentNewsKeyPublished.Add(newsEntry.Key, DateTime.Parse(newsEntry.Published))
                             flowNewsPanel.Controls.Add(newsPanel)
                         Next
 
-                        If newsSplitContainer.Panel2Collapsed Then
-                            btnNewsPanelCollapse.BackColor = Color.Yellow
+                        ' Update button color
+                        If newOrUpdatedEntries Then
+                            If newsSplitContainer.Panel2Collapsed Then
+                                btnNewsPanelCollapse.BackColor = Color.Yellow
+                            End If
                         End If
                     End If
                 End Using

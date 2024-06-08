@@ -42,7 +42,7 @@ Partial Class TaskEventNews
     Private ReadOnly TitleFont As New Font("Arial", 13, FontStyle.Bold)
     Private ReadOnly SubtitleFont As New Font("Arial", 10, FontStyle.Bold)
     Private ReadOnly CommentsFont As New Font("Arial", 9, FontStyle.Regular)
-    Private ReadOnly DateFont As New Font("Arial", 9, FontStyle.Regular)
+    Private ReadOnly PublishedDateFont As New Font("Arial", 8, FontStyle.Regular)
     Private ReadOnly FifthElementFont As New Font("Arial", 9, FontStyle.Regular)
     Private ReadOnly TextBrush As New SolidBrush(Color.Black)
 
@@ -154,11 +154,12 @@ Partial Class TaskEventNews
         End If
 
         Dim dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
+        Dim longDatePatternWithoutYear As String = dateTimeFormat.LongDatePattern.Replace("yyyy", "").Replace("yy", "").Trim(" ", ",")
 
         ' Calculate the height based on the text parts
         Dim g As Graphics = Me.CreateGraphics()
         Dim contentHeight As Integer = 0
-        contentHeight += CInt(g.MeasureString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), DateFont, Me.Width - 10).Height) + 5
+        contentHeight += CInt(g.MeasureString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), PublishedDateFont, Me.Width - 10).Height) + 5
         contentHeight += CInt(g.MeasureString(Title, TitleFont, Me.Width - 10).Height) + 5
         contentHeight += CInt(g.MeasureString(Subtitle, SubtitleFont, Me.Width - 10).Height) + 5
         contentHeight += CInt(g.MeasureString(Comments, CommentsFont, Me.Width - 10).Height) + 5
@@ -166,9 +167,11 @@ Partial Class TaskEventNews
         Select Case NewsType
             Case NewsTypeEnum.Task
                 contentHeight += CInt(g.MeasureString(Credits, FifthElementFont, Me.Width - 10).Height) + 5
+
             Case NewsTypeEnum.Event
-                ' Include day of the week in the EventDate
-                contentHeight += CInt(g.MeasureString(EventDate.ToLocalTime().ToString("dddd, " & dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), FifthElementFont, Me.Width - 10).Height) + 5
+                ' Include day of the week in the EventDate without the year
+                contentHeight += CInt(g.MeasureString(EventDate.ToLocalTime().ToString("dddd, " & longDatePatternWithoutYear & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), FifthElementFont, Me.Width - 10).Height) + 5
+
             Case NewsTypeEnum.News
                 contentHeight += CInt(g.MeasureString(News, FifthElementFont, Me.Width - 10).Height) + 5
         End Select
@@ -206,9 +209,14 @@ Partial Class TaskEventNews
         Dim textSize As SizeF
         Dim dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
 
-        textSize = e.Graphics.MeasureString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), DateFont, Me.Width - 10)
-        e.Graphics.DrawString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), DateFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
-        y += CInt(textSize.Height) + 5
+        If NewsType = NewsTypeEnum.Event Then
+            ' Include day of the week in the EventDate without the year
+            Dim longDatePatternWithoutYear As String = dateTimeFormat.LongDatePattern.Replace("yyyy", "").Replace("yy", "").Trim(" ", ",")
+            Dim eventDateFormatted = EventDate.ToLocalTime().ToString("dddd, " & longDatePatternWithoutYear & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)
+            textSize = e.Graphics.MeasureString(eventDateFormatted, FifthElementFont, Me.Width - 10)
+            e.Graphics.DrawString(eventDateFormatted, FifthElementFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+            y += CInt(textSize.Height) + 5
+        End If
 
         textSize = e.Graphics.MeasureString(Title, TitleFont, Me.Width - 10)
         e.Graphics.DrawString(Title, TitleFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
@@ -226,17 +234,17 @@ Partial Class TaskEventNews
             Case NewsTypeEnum.Task
                 textSize = e.Graphics.MeasureString(Credits, FifthElementFont, Me.Width - 10)
                 e.Graphics.DrawString(Credits, FifthElementFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
-            Case NewsTypeEnum.Event
-                ' Include day of the week in the EventDate
-                Dim eventDateFormatted = EventDate.ToLocalTime().ToString("dddd, " & dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)
-                textSize = e.Graphics.MeasureString(eventDateFormatted, FifthElementFont, Me.Width - 10)
-                e.Graphics.DrawString(eventDateFormatted, FifthElementFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+                y += CInt(textSize.Height) + 5
             Case NewsTypeEnum.News
                 textSize = e.Graphics.MeasureString(News, FifthElementFont, Me.Width - 10)
                 e.Graphics.DrawString(News, FifthElementFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+                y += CInt(textSize.Height) + 5
         End Select
 
-        ' Draw the image in the top right corner
+        textSize = e.Graphics.MeasureString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), PublishedDateFont, Me.Width - 10)
+        e.Graphics.DrawString(NewsDate.ToLocalTime().ToString(dateTimeFormat.LongDatePattern & " " & dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture), PublishedDateFont, New SolidBrush(Me.ForeColor), New RectangleF(5, y, Me.Width - 10, textSize.Height))
+
+        ' Draw the image in the bottom right corner
         Dim cornerImage As Image = Nothing
         Select Case NewsType
             Case NewsTypeEnum.Task
@@ -249,7 +257,7 @@ Partial Class TaskEventNews
 
         If cornerImage IsNot Nothing Then
             Dim imageX As Integer = Me.Width - cornerImage.Width - 5 ' 5 pixels padding from the right edge
-            Dim imageY As Integer = 5 ' 5 pixels padding from the top edge
+            Dim imageY As Integer = Me.Height - cornerImage.Height - 5 ' 5 pixels padding from the bottom edge
             e.Graphics.DrawImage(cornerImage, imageX, imageY, cornerImage.Width, cornerImage.Height)
         End If
 
@@ -286,6 +294,13 @@ Partial Class TaskEventNews
         eventImage = Nothing
         newsImage.Dispose()
         newsImage = Nothing
+
+        TitleFont.Dispose()
+        SubtitleFont.Dispose()
+        CommentsFont.Dispose()
+        PublishedDateFont.Dispose()
+        FifthElementFont.Dispose()
+        TextBrush.Dispose()
 
     End Sub
 

@@ -347,7 +347,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(749, 625)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(752, 625)
         Me.ctrlBriefing.TabIndex = 3
         '
         'RetrieveNewsList
@@ -374,14 +374,14 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
         Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
         Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 623)
-        Me.newsSplitContainer.SplitterDistance = 752
+        Me.newsSplitContainer.SplitterDistance = 755
         Me.newsSplitContainer.SplitterWidth = 1
         Me.newsSplitContainer.TabIndex = 8
         '
         'btnNewsPanelCollapse
         '
         Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(737, 17)
+        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(740, 17)
         Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
         Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
         Me.btnNewsPanelCollapse.TabIndex = 4
