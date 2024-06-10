@@ -1156,57 +1156,52 @@ Public Class SupportingFeatures
     End Function
 
     Public Shared Function ConvertMarkdownToRTF(ByVal input As String) As String
-        ' Replace custom newlines with actual carriage returns
-        input = input.Replace("($*$)", vbCrLf)
-
-        ' Convert markdown syntax to corresponding RTF code
-        input = Regex.Replace(input, "\*\*(.+?)\*\*", "{\b $1\b0}")
-        input = Regex.Replace(input, "(?<!\*)\*(.+?)\*(?!\*)", "{\i $1\i0}")
-        input = Regex.Replace(input, "__(.+?)__", "{\ul $1\ul0}")
-        input = Regex.Replace(input, "~~(.+?)~~", "{\strike $1\strike0}")
-        input = Regex.Replace(input, "`(.+?)`", "{\f1\fs18 $1\f0\fs20}") ' Adjust font and size for inline code
-        input = Regex.Replace(input, "```(.+?)```", "{\f1\fs18 $1\f0\fs20}") ' Adjust for code blocks
+        ' Replace special characters
+        input = ReplaceSpecialCharactersWithUnicodeEscapes(input)
 
         ' Replace the degree symbol with its RTF escape sequence
         Dim degreeSymbol As Char = ChrW(&HB0)
-        input = input.Replace(degreeSymbol.ToString(), "\u176'")
+        input = input.Replace(degreeSymbol.ToString(), "\u176\'")
 
-        ' Convert headers
-        input = Regex.Replace(input, "^\s*#\s+(.+)$", "{\b\f0\fs32 $1\b0}\par", RegexOptions.Multiline)
-        input = Regex.Replace(input, "^\s*##\s+(.+)$", "{\b\f0\fs28 $1\b0}\par", RegexOptions.Multiline)
-        input = Regex.Replace(input, "^\s*###\s+(.+)$", "{\b\f0\fs24 $1\b0}\par", RegexOptions.Multiline)
+        ' Replace custom newlines with actual carriage returns
+        input = input.Replace("($*$)", vbCrLf)
+
+        ' Ensure code blocks are on their own lines without adding extra new lines if already isolated
+        input = Regex.Replace(input, "(?<!\r?\n)```", vbCrLf & "```") ' Add newline before code block if not at start
+        input = Regex.Replace(input, "```(?![\r?\n])", "```" & vbCrLf) ' Add newline after code block if not at end
+
+        ' Handle code blocks: Convert to RTF
+        input = Regex.Replace(input, "```([\s\S]+?)```", Function(m)
+                                                             Dim codeContent As String = m.Groups(1).Value.Trim().Replace(vbCrLf, "\line ")
+                                                             Return "{\pard\li0\ri0\qj\sa100\sb100\brdrb\brdrs\brdrw10\brsp20\f1\fs18 " & codeContent & "}"
+                                                         End Function, RegexOptions.Singleline)
+
+        ' Convert inline code after handling code blocks
+        input = Regex.Replace(input, "`(.+?)`", "{\f1 $1\f0}") ' Inline code (monospace)
+
+        ' Convert markdown syntax to corresponding RTF code
+        input = Regex.Replace(input, "\*\*(.+?)\*\*", "{\b $1\b0}") ' Bold
+        input = Regex.Replace(input, "(?<!\*)\*(.+?)\*(?!\*)", "{\i $1\i0}") ' Italic
+        input = Regex.Replace(input, "__(.+?)__", "{\ul $1\ul0}") ' Underline
+        input = Regex.Replace(input, "~~(.+?)~~", "{\strike $1\strike0 }") ' Strikethrough
 
         ' Split the input into lines to handle list items separately
         Dim lines As String() = input.Split(New String() {vbCrLf}, StringSplitOptions.None)
         Dim processedLines As New List(Of String)
 
         For Each line As String In lines
-            ' Convert second-level unordered lists
-            If Regex.IsMatch(line, "^\s{2,}[\*\-\+]\s+(.+)$") Then
-                line = Regex.Replace(line, "^\s{2,}[\*\-\+]\s+(.+)$", "{\pard{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent0{\pntxtb\'B7}}\fi-240\li480 $1\par}\pard\plain\fs20")
-                ' Convert second-level ordered lists
-            ElseIf Regex.IsMatch(line, "^\s{2,}(\d+)\.\s+(.+)$") Then
-                line = Regex.Replace(line, "^\s{2,}(\d+)\.\s+(.+)$", "{\pard{\pntext\f0 $1.\tab}{\*\pn\pnlvlcont\pnf0\pnindent0{\pntxta .}}\fi-240\li480 $2\par}\pard\plain\fs20")
-                ' Convert first-level unordered lists
-            ElseIf Regex.IsMatch(line, "^\s*[\*\-\+]\s+(.+)$") Then
-                line = Regex.Replace(line, "^\s*[\*\-\+]\s+(.+)$", "{\pard{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent0{\pntxtb\'B7}}\fi-240\li240 $1\par}\pard\plain\fs20")
-                ' Convert first-level ordered lists
-            ElseIf Regex.IsMatch(line, "^\s*(\d+)\.\s+(.+)$") Then
-                line = Regex.Replace(line, "^\s*(\d+)\.\s+(.+)$", "{\pard{\pntext\f0 $1.\tab}{\*\pn\pnlvlcont\pnf0\pnindent0{\pntxta .}}\fi-240\li240 $2\par}\pard\plain\fs20")
-            Else
-                ' If it's not a list item, handle it as normal text
-                line = line & "\par"
+            ' Handle normal text
+            If Not String.IsNullOrWhiteSpace(line) Then
+                processedLines.Add($"{line}\par")
             End If
-            processedLines.Add(line)
         Next
 
         ' Combine processed lines back into a single RTF string
-        Dim rtfFormatted As String = String.Join("", processedLines)
+        Dim rtfFormatted As String = String.Join(" ", processedLines)
 
         ' Wrap the RTF content
-        Return rtfFormatted
+        Return "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fmodern\fcharset0 Courier New;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "}"
     End Function
-
 
     Public Shared Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
 

@@ -574,10 +574,10 @@ Public Class BriefingControl
 
         'Build full description
         If _sessionData.LongDescription <> String.Empty Then
-            sb.AppendLine("**Full Description**($*$)")
-            sb.AppendLine(_sessionData.LongDescription)
-            SupportingFeatures.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
-
+            sb.Append("**Full Description**($*$)")
+            sb.Append(_sessionData.LongDescription)
+            txtFullDescription.Rtf = SupportingFeatures.ConvertMarkdownToRTF(sb.ToString.Trim)
+            'SupportingFeatures.FormatMarkdownToRTF(sb.ToString.Trim, txtFullDescription)
         End If
 
         'Build altitude restrictions
