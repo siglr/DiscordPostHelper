@@ -5711,6 +5711,13 @@ Public Class Main
         End If
     End Sub
 
+    Private Sub btnDeleteFromTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnDeleteFromTaskBrowser.Click
+        If UserCanDeleteTask Then
+            DeleteTaskFromBrowser()
+            SetTBTaskDetailsLabel()
+        End If
+    End Sub
+
     Private Sub btnPublishEventNews_Click(sender As Object, e As EventArgs) Handles btnPublishEventNews.Click
         If UserCanCreateEvent Then
             Dim key As String
@@ -5817,6 +5824,57 @@ Public Class Main
 #End Region
 
 #Region "Tasks Subs"
+
+    Private Sub DeleteTaskFromBrowser()
+
+        Dim taskInfo As AllData = SetAndRetrieveSessionData()
+
+        Dim result As Boolean = DeleteTaskFromServer(taskInfo.DiscordTaskID)
+
+        If result Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Task removed from database successfully.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+        Else
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Failed to remove the task.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
+    Public Function DeleteTaskFromServer(taskID As String) As Boolean
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}DeleteTask.php"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/x-www-form-urlencoded"
+
+        Dim postData As String = $"TaskID={Uri.EscapeDataString(taskID)}&UserID={Uri.EscapeDataString(_userPermissionID)}"
+        Dim data As Byte() = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = data.Length
+
+        Try
+            Using stream As Stream = request.GetRequestStream()
+                stream.Write(data, 0, data.Length)
+            End Using
+
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    ' Assuming the response is a JSON object with a "status" field
+                    Dim result As Dictionary(Of String, Object) = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+                    Return result("status").ToString() = "success"
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle the exception
+            ' Log the error or display a message
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error deleting task: {ex.Message}", "Task deletion error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
 
     Private Sub UploadToTaskBrowser()
 
