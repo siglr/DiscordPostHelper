@@ -1098,9 +1098,25 @@ Public Class Main
                                                                                            txtArrivalName.Leave,
                                                                                            txtArrivalExtraInfo.Leave,
                                                                                            txtLongDescription.Leave,
-                                                                                           txtWeatherSummary.Leave, txtBaroPressureExtraInfo.Leave
+                                                                                           txtWeatherSummary.Leave,
+                                                                                           txtBaroPressureExtraInfo.Leave, txtGroupEventPostURL.Leave, txtDiscordEventShareURL.Leave
 
-        'BuildFPResults()
+        'Trim all text boxes!
+        If TypeOf sender Is Windows.Forms.TextBox Then
+            _SF.RemoveForbiddenPrefixes(sender)
+            Dim theTextBox As Windows.Forms.TextBox = DirectCast(sender, Windows.Forms.TextBox)
+            If theTextBox.Text <> theTextBox.Text.Trim Then
+                theTextBox.Text = theTextBox.Text.Trim
+            End If
+        End If
+
+        'Trim comboboxes!
+        If TypeOf sender Is Windows.Forms.ComboBox Then
+            Dim theComboBox As Windows.Forms.ComboBox = DirectCast(sender, Windows.Forms.ComboBox)
+            If theComboBox.Text <> theComboBox.Text.Trim Then
+                theComboBox.Text = theComboBox.Text.Trim
+            End If
+        End If
 
         'Some fields need to be copied to the Event tab
         If sender Is txtTitle OrElse sender Is txtShortDescription Then
@@ -1113,7 +1129,6 @@ Public Class Main
 
         'For text box, make sure to display the value from the start
         If TypeOf sender Is Windows.Forms.TextBox Then
-            _SF.RemoveForbiddenPrefixes(sender)
             LeavingTextBox(sender)
         End If
 
@@ -2270,6 +2285,10 @@ Public Class Main
 
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
 
+        If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
+            cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
+        End If
+
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
         txtClubFullName.Text = String.Empty
 
@@ -2406,10 +2425,26 @@ Public Class Main
 
     Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave
 
+        'Trim all text boxes!
+        If TypeOf sender Is Windows.Forms.TextBox Then
+            _SF.RemoveForbiddenPrefixes(sender)
+            Dim theTextBox As Windows.Forms.TextBox = DirectCast(sender, Windows.Forms.TextBox)
+            If theTextBox.Text <> theTextBox.Text.Trim Then
+                theTextBox.Text = theTextBox.Text.Trim
+            End If
+        End If
+
+        'Trim comboboxes!
+        If TypeOf sender Is Windows.Forms.ComboBox Then
+            Dim theComboBox As Windows.Forms.ComboBox = DirectCast(sender, Windows.Forms.ComboBox)
+            If theComboBox.Text <> theComboBox.Text.Trim Then
+                theComboBox.Text = theComboBox.Text.Trim
+            End If
+        End If
+
         _SF.RemoveForbiddenPrefixes(sender)
         LeavingTextBox(sender)
-        'BuildGroupFlightPost()
-        'BuildDiscordEventDescription()
+
     End Sub
 
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
