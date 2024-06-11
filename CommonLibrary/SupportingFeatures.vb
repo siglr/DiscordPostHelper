@@ -1296,43 +1296,43 @@ Public Class SupportingFeatures
         Return "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fmodern\fcharset0 Courier New;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "}"
     End Function
 
-    Public Shared Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
+    '    Public Shared Sub FormatMarkdownToRTF(ByVal input As String, ByRef richTextBox As RichTextBox, Optional debugMode As Boolean = False)
 
-#If DEBUG Then
-        If debugMode Then
-            Clipboard.SetText(input)
-            MsgBox("DEBUG - Paste the content of your clipboard - this is the source text")
-        End If
-#End If
+    '#If DEBUG Then
+    '        If debugMode Then
+    '            Clipboard.SetText(input)
+    '            MsgBox("DEBUG - Paste the content of your clipboard - this is the source text")
+    '        End If
+    '#End If
 
-        input = ReplaceSpecialCharactersWithUnicodeEscapes(input)
+    '        input = ReplaceSpecialCharactersWithUnicodeEscapes(input)
 
-        ' Regex patterns to match bold, italic, and underlined texts
-        Dim newlinePattern As String = "\(\$\*\$\)"
-        Dim boldPattern As String = "\*\*(.+?)\*\*"
-        Dim italicPattern As String = "(?<!\*)\*(.+?)\*(?!\*)"
-        Dim underlinePattern As String = "__(.+?)__"
+    '        ' Regex patterns to match bold, italic, and underlined texts
+    '        Dim newlinePattern As String = "\(\$\*\$\)"
+    '        Dim boldPattern As String = "\*\*(.+?)\*\*"
+    '        Dim italicPattern As String = "(?<!\*)\*(.+?)\*(?!\*)"
+    '        Dim underlinePattern As String = "__(.+?)__"
 
-        ' Replace line break, bold, italic, and underlined markdown syntax with corresponding RTF code
-        Dim rtfFormatted As String = Regex.Replace(input, newlinePattern, "\line ")
-        rtfFormatted = Regex.Replace(rtfFormatted, boldPattern, "{\b $1\b0 }")
-        rtfFormatted = Regex.Replace(rtfFormatted, italicPattern, "{\i $1\i0 }")
-        rtfFormatted = Regex.Replace(rtfFormatted, underlinePattern, "{\ul $1\ul0 }")
+    '        ' Replace line break, bold, italic, and underlined markdown syntax with corresponding RTF code
+    '        Dim rtfFormatted As String = Regex.Replace(input, newlinePattern, "\line ")
+    '        rtfFormatted = Regex.Replace(rtfFormatted, boldPattern, "{\b $1\b0 }")
+    '        rtfFormatted = Regex.Replace(rtfFormatted, italicPattern, "{\i $1\i0 }")
+    '        rtfFormatted = Regex.Replace(rtfFormatted, underlinePattern, "{\ul $1\ul0 }")
 
-        ' Replace the degree symbol with its RTF escape sequence
-        Dim degreeSymbol As Char = ChrW(&HB0)
-        rtfFormatted = rtfFormatted.Replace(degreeSymbol.ToString(), "\u176'")
+    '        ' Replace the degree symbol with its RTF escape sequence
+    '        Dim degreeSymbol As Char = ChrW(&HB0)
+    '        rtfFormatted = rtfFormatted.Replace(degreeSymbol.ToString(), "\u176'")
 
-#If DEBUG Then
-        If debugMode Then
-            Clipboard.SetText(rtfFormatted)
-            MsgBox("DEBUG - Paste the content of your clipboard - this is the transformed RTF code")
-        End If
-#End If
+    '#If DEBUG Then
+    '        If debugMode Then
+    '            Clipboard.SetText(rtfFormatted)
+    '            MsgBox("DEBUG - Paste the content of your clipboard - this is the transformed RTF code")
+    '        End If
+    '#End If
 
-        ' Set the RTF-formatted text to the RichTextBox control
-        richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
-    End Sub
+    '        ' Set the RTF-formatted text to the RichTextBox control
+    '        richTextBox.Rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "\par}"
+    '    End Sub
 
     Private Shared Function ReplaceSpecialCharactersWithUnicodeEscapes(ByVal input As String) As String
         Dim sb As New StringBuilder(input)
