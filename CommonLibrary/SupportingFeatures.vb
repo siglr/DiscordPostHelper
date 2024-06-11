@@ -1166,19 +1166,22 @@ Public Class SupportingFeatures
         ' Replace custom newlines with actual carriage returns
         input = input.Replace("($*$)", vbCrLf)
 
-        ' Ensure code blocks are on their own lines without adding extra new lines if already isolated
-        input = Regex.Replace(input, "(?<!\r?\n)```", vbCrLf & "```") ' Add newline before code block if not at start
-        input = Regex.Replace(input, "```(?![\r?\n])", "```" & vbCrLf) ' Add newline after code block if not at end
-
-        ' Handle code blocks: Convert to RTF
+        ' Step 1: Extract code blocks and replace them with placeholders
+        Dim codeBlocks As New List(Of String)
         input = Regex.Replace(input, "```([\s\S]+?)```", Function(m)
-                                                             Dim codeContent As String = m.Groups(1).Value.Trim().Replace(vbCrLf, "\line ")
-                                                             Return "{\pard\li0\ri0\qj\sa100\sb100\brdrb\brdrs\brdrw10\brsp20\f1\fs18 " & codeContent & "}"
+                                                             Dim codeContent As String = m.Groups(1).Value
+                                                             Dim placeholder As String = $"[CODE_BLOCK_{codeBlocks.Count}]"
+                                                             codeBlocks.Add(codeContent)
+                                                             Return placeholder
                                                          End Function, RegexOptions.Singleline)
 
-        ' Convert inline code after handling code blocks
-        input = Regex.Replace(input, "`(.+?)`", "{\f1 $1\f0}") ' Inline code (monospace)
+        ' Ensure placeholders are on their own lines
+        input = Regex.Replace(input, "(?<!\r?\n)\[CODE_BLOCK_(\d+)\]", vbCrLf & "[CODE_BLOCK_$1]" & vbCrLf) ' Add newline before placeholder if not at start
+        input = Regex.Replace(input, "\[CODE_BLOCK_(\d+)\](?![\r?\n])", "[CODE_BLOCK_$1]" & vbCrLf) ' Add newline after placeholder if not at end
 
+        ' Step 2: Convert markdown outside of code blocks
+        ' Convert inline code
+        input = Regex.Replace(input, "`(.+?)`", "{\f1 $1\f0}") ' Inline code (monospace)
         ' Convert markdown syntax to corresponding RTF code
         input = Regex.Replace(input, "\*\*(.+?)\*\*", "{\b $1\b0}") ' Bold
         input = Regex.Replace(input, "(?<!\*)\*(.+?)\*(?!\*)", "{\i $1\i0}") ' Italic
@@ -1189,15 +1192,63 @@ Public Class SupportingFeatures
         Dim lines As String() = input.Split(New String() {vbCrLf}, StringSplitOptions.None)
         Dim processedLines As New List(Of String)
 
+        Dim inList As Boolean = False
+        Dim listLevel As Integer = 0 ' 0: no list, 1: first-level, 2: second-level
+
         For Each line As String In lines
-            ' Handle normal text
-            If Not String.IsNullOrWhiteSpace(line) Then
+            If Regex.IsMatch(line, "^\s{1,2}-\s") Or Regex.IsMatch(line, "^\s{1,2}\d+\.\s") Then
+                ' Handle second-level lists first
+                If Not inList Or listLevel <> 2 Then
+                    If inList Then
+                        processedLines.Add("\pard") ' Close previous list
+                    End If
+                    listLevel = 2
+                    inList = True
+                    processedLines.Add("\pard\li480\fi-240") ' Start second-level list
+                End If
+                If Regex.IsMatch(line, "^\s{1,2}-\s") Then
+                    processedLines.Add("{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent240{\pntxtb\'B7}}\fi-240\li480 " & Regex.Replace(line, "^\s{1,2}-\s+", "") & "\par")
+                ElseIf Regex.IsMatch(line, "^\s{1,2}\d+\.\s") Then
+                    processedLines.Add("{\pntext\f0 $1.\tab}{\*\pn\pnlvlcont\pnf0\pnindent240{\pntxta .}}\fi-240\li480 " & Regex.Replace(line, "^\s{1,2}\d+\.\s+", "") & "\par")
+                End If
+            ElseIf Regex.IsMatch(line, "^\s*-\s") Or Regex.IsMatch(line, "^\s*\d+\.\s") Then
+                ' Handle first-level lists
+                If Not inList Or listLevel <> 1 Then
+                    If inList Then
+                        processedLines.Add("\pard") ' Close previous list
+                    End If
+                    listLevel = 1
+                    inList = True
+                    processedLines.Add("\pard\li240\fi-240") ' Start first-level list
+                End If
+                If Regex.IsMatch(line, "^\s*-\s") Then
+                    processedLines.Add("{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent240{\pntxtb\'B7}}\fi-240\li240 " & Regex.Replace(line, "^\s*-\s+", "") & "\par")
+                ElseIf Regex.IsMatch(line, "^\s*\d+\.\s") Then
+                    processedLines.Add("{\pntext\f0 $1.\tab}{\*\pn\pnlvlcont\pnf0\pnindent240{\pntxta .}}\fi-240\li240 " & Regex.Replace(line, "^\s*\d+\.\s+", "") & "\par")
+                End If
+            Else
+                ' Handle normal text
+                If inList Then
+                    processedLines.Add("\pard") ' Close list
+                    inList = False
+                    listLevel = 0
+                End If
                 processedLines.Add($"{line}\par")
             End If
         Next
 
-        ' Combine processed lines back into a single RTF string
+        ' Close any open list
+        If inList Then
+            processedLines.Add("\pard")
+        End If
+
+        ' Step 3: Restore the code blocks
         Dim rtfFormatted As String = String.Join(" ", processedLines)
+        For i As Integer = 0 To codeBlocks.Count - 1
+            Dim codeContent As String = codeBlocks(i).Trim().Replace(vbCrLf, "\line ")
+            Dim rtfCodeBlock As String = "{\pard\li0\ri0\qj\sa100\sb100\brdrb\brdrs\brdrw10\brsp20\f1\fs18 " & codeContent & "}"
+            rtfFormatted = rtfFormatted.Replace($"[CODE_BLOCK_{i}]", rtfCodeBlock)
+        Next
 
         ' Wrap the RTF content
         Return "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fmodern\fcharset0 Courier New;}}\viewkind4\uc1\pard\lang1033\f0\fs20 " & rtfFormatted & "}"
