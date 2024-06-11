@@ -450,98 +450,98 @@ Public Class BriefingControl
         Dim sb As New StringBuilder
 
         'Title
-        sb.Append($"\b {_sessionData.Title}\b0\line ")
+        sb.Append($"**{_sessionData.Title}**($*$)")
         If _sessionData.MainAreaPOI.Trim <> String.Empty Then
-            sb.Append($"{_sessionData.MainAreaPOI}\line ")
-            sb.Append("\line ")
+            sb.Append($"{_sessionData.MainAreaPOI}($*$)")
+            sb.Append("($*$)")
         End If
         If _sessionData.ShortDescription.Trim <> String.Empty Then
-            sb.Append($"{_sessionData.ShortDescription}\line ")
-            sb.Append("\line ")
+            sb.Append($"{_sessionData.ShortDescription}($*$)")
+            sb.Append("($*$)")
         End If
-        sb.Append($"{_sessionData.Credits}\line ")
-        sb.Append("\line ")
+        sb.Append($"{_sessionData.Credits}($*$)")
+        sb.Append("($*$)")
 
         'Credits
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(DateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is **{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}**($*$)")
 
         'Flight plan
-        sb.Append($"The flight plan to load is \b {Path.GetFileName(_sessionData.FlightPlanFilename)}\b0\line ")
+        sb.Append($"The flight plan to load is **{Path.GetFileName(_sessionData.FlightPlanFilename)}**($*$)")
 
-        sb.Append("\line ")
+        sb.Append("($*$)")
 
         'Departure airfield And runway
-        sb.Append($"You will depart from \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureExtra, True, True)}\b0\line ")
+        sb.Append($"You will depart from **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DepartureExtra, True, True)}**($*$)")
 
         'Arrival airfield And expected runway
-        sb.Append($"You will land at \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalExtra, True, True)}\b0\line ")
+        sb.Append($"You will land at **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalICAO)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalName, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.ArrivalExtra, True, True)}**($*$)")
 
         'Type of soaring
         Dim soaringType As String = SupportingFeatures.GetSoaringTypesSelected(_sessionData.SoaringRidge, _sessionData.SoaringThermals, _sessionData.SoaringWaves, _sessionData.SoaringDynamic)
         If soaringType.Trim <> String.Empty OrElse _sessionData.SoaringExtraInfo <> String.Empty Then
-            sb.Append($"Soaring Type is \b {soaringType}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SoaringExtraInfo, True, True)}\b0\line ")
+            sb.Append($"Soaring Type is **{soaringType}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SoaringExtraInfo, True, True)}**($*$)")
         End If
 
         'Task distance And total distance
-        sb.Append($"Distance are \b {SupportingFeatures.GetDistance(totalDistance.ToString, trackDistance.ToString, PrefUnits)}\b0\line ")
+        sb.Append($"Distance are **{SupportingFeatures.GetDistance(totalDistance.ToString, trackDistance.ToString, PrefUnits)}**($*$)")
 
         'Approx. duration
-        sb.Append($"Approx. duration should be \b {SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
+        sb.Append($"Approx. duration should be **{SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}**($*$)")
 
         'Recommended gliders
         If _sessionData.RecommendedGliders.Trim <> String.Empty Then
-            sb.Append($"Recommended gliders: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.RecommendedGliders)}\b0\line ")
+            sb.Append($"Recommended gliders: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.RecommendedGliders)}**($*$)")
         End If
 
         'Difficulty rating
         If _sessionData.DifficultyRating.Trim <> String.Empty OrElse _sessionData.DifficultyExtraInfo.Trim <> String.Empty Then
-            sb.Append($"The difficulty is rated as \b {SupportingFeatures.GetDifficulty(CInt(_sessionData.DifficultyRating.Substring(0, 1)), _sessionData.DifficultyExtraInfo, True)}\b0\line ")
+            sb.Append($"The difficulty is rated as **{SupportingFeatures.GetDifficulty(CInt(_sessionData.DifficultyRating.Substring(0, 1)), _sessionData.DifficultyExtraInfo, True)}**($*$)")
         End If
 
-        sb.Append("\line ")
+        sb.Append("($*$)")
 
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
-            sb.Append($"The weather profile to load is \b {_WeatherDetails.PresetName}\b0\line ")
+            sb.Append($"The weather profile to load is **{_WeatherDetails.PresetName}**($*$)")
             If _sessionData.WeatherSummary <> String.Empty Then
-                sb.Append($"Weather summary: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}\b0\line ")
+                sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}**($*$)")
             End If
             If _WeatherDetails.AltitudeMeasurement = "AMGL" Then
-                sb.Append($"The elevation measurement used is \b AMGL (Above Mean Ground Level)\b0\line ")
+                sb.Append($"The elevation measurement used is **AMGL (Above Mean Ground Level)**($*$)")
             Else
-                sb.Append($"The elevation measurement used is \b AMSL (Above Mean Sea Level)\b0\line ")
+                sb.Append($"The elevation measurement used is **AMSL (Above Mean Sea Level)**($*$)")
             End If
-            sb.Append($"The barometric pressure is \b {_WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)}\b0\line ")
-            sb.Append($"The temperature is \b {_WeatherDetails.MSLTemperature(PrefUnits)}\b0\line ")
-            sb.Append($"The aerosol index is \b {_WeatherDetails.Humidity}\b0\line ")
+            sb.Append($"The barometric pressure is **{_WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)}**($*$)")
+            sb.Append($"The temperature is **{_WeatherDetails.MSLTemperature(PrefUnits)}**($*$)")
+            sb.Append($"The aerosol index is **{_WeatherDetails.Humidity}**($*$)")
             If _WeatherDetails.HasPrecipitations Then
-                sb.Append($"The precipitations are: \b {_WeatherDetails.Precipitations}\b0\line ")
+                sb.Append($"The precipitations are: **{_WeatherDetails.Precipitations}**($*$)")
             End If
             If _WeatherDetails.HasSnowCover Then
-                sb.Append($"The snow cover is: \b {_WeatherDetails.SnowCover}\b0\line ")
+                sb.Append($"The snow cover is: **{_WeatherDetails.SnowCover}**($*$)")
             End If
             If _WeatherDetails.ThunderstormIntensity > 0 Then
-                sb.Append($"The lightning intensity is: \b {_WeatherDetails.ThunderstormIntensity}%\b0\line ")
+                sb.Append($"The lightning intensity is: **{_WeatherDetails.ThunderstormIntensity}%**($*$)")
             End If
 
-            sb.Append("\line ")
+            sb.Append("($*$)")
 
             'Winds
-            sb.Append($"\b Wind Layers\b0\line ")
+            sb.Append($"**Wind Layers**($*$)")
             Dim lines As String() = _WeatherDetails.WindLayersAsString(PrefUnits).Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
-                sb.Append($"{line}\line ")
+                sb.Append($"{line}($*$)")
             Next
 
-            sb.Append(" \line ")
+            sb.Append(" ($*$)")
 
             'Clouds
-            sb.Append($"\b Cloud Layers\b0\line ")
+            sb.Append($"**Cloud Layers**($*$)")
             lines = _WeatherDetails.CloudLayersText(PrefUnits).Split(New String() {Environment.NewLine}, StringSplitOptions.None)
             For Each line In lines
-                sb.Append($"{line}\line ")
+                sb.Append($"{line}($*$)")
             Next
 
             ' Create and add wind layer controls to flow layout panel
@@ -555,8 +555,9 @@ Public Class BriefingControl
             Next
 
         End If
-        sb.Append("}")
-        SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
+
+        txtBriefing.Rtf = SupportingFeatures.ConvertMarkdownToRTF(sb.ToString.Trim)
+        'SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
 
         sb.Clear()
@@ -658,14 +659,13 @@ Public Class BriefingControl
     Private Sub BuildEventInfoTab()
 
         Dim sb As New StringBuilder
-        'sb.Append("{\rtf1\ansi ")
 
         If Not EventIsEnabled Then
-            sb.Append($"There is currently no group flight or event defined with this task. \line ")
+            sb.Append($"There is currently no group flight or event defined with this task. ($*$)")
             CountDownReset()
         Else
             'Group/Club Name
-            sb.Append($"\b {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}\b0\line ")
+            sb.Append($"**{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}**($*$)")
 
             Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
             Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
@@ -703,30 +703,30 @@ Public Class BriefingControl
 
             'Timezone
             Dim timezoneInfos As List(Of String) = SupportingFeatures.GetTimeZoneInformation
-            sb.Append($"The local times displayed here are for the timezone: \b {timezoneInfos(0)} (UTC{timezoneInfos(1)})\b0\line ")
-            sb.Append("\line ")
+            sb.Append($"The local times displayed here are for the timezone: **{timezoneInfos(0)} (UTC{timezoneInfos(1)})**($*$)")
+            sb.Append("($*$)")
 
             'Date
-            sb.Append($"Event Date: \b {fullMeetDateTimeLocal.ToString("dddd, MMMM d, yyyy", CultureInfo.CurrentCulture)}\b0\line ")
-            sb.Append("\line ")
+            sb.Append($"Event Date: **{fullMeetDateTimeLocal.ToString("dddd, MMMM d, yyyy", CultureInfo.CurrentCulture)}**($*$)")
+            sb.Append("($*$)")
 
             'Meeting Time and Discord Voice Channel
             If _sessionData.VoiceChannel <> String.Empty Then
-                sb.Append($"We meet at: \b {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
-                sb.Append($"on voice channel: \b {SupportingFeatures.GetTextPartFromURLMarkdown(_sessionData.VoiceChannel)}\b0\line ")
-                sb.Append("\line ")
+                sb.Append($"We meet at: **{fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} ** your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
+                sb.Append($"on voice channel: **{SupportingFeatures.GetTextPartFromURLMarkdown(_sessionData.VoiceChannel)}**($*$)")
+                sb.Append("($*$)")
             End If
 
             'MSFS Server
             If _sessionData.MSFSServer > 0 Then
-                sb.Append($"Set MSFS Server to: \b {_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}\b0\line ")
-                sb.Append("\line ")
+                sb.Append($"Set MSFS Server to: **{_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}**($*$)")
+                sb.Append("($*$)")
             End If
 
             'Weather ad flight plan
-            sb.Append($"Load weather preset: \b {_WeatherDetails.PresetName}\b0\line ")
-            sb.Append($"And flight plan: \b ""{Path.GetFileName(_sessionData.FlightPlanFilename)}""\b0\line ")
-            sb.Append("\line ")
+            sb.Append($"Load weather preset: **{_WeatherDetails.PresetName}**($*$)")
+            sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
+            sb.Append("($*$)")
 
             Dim dateFormat As String
             If _sessionData.IncludeYear Then
@@ -735,21 +735,21 @@ Public Class BriefingControl
                 dateFormat = "MMMM dd"
             End If
 
-            sb.Append($"The MSFS Local Date & Time should be: \b {fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}\b0 ")
+            sb.Append($"The MSFS Local Date & Time should be: **{fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}** ")
             If _sessionData.UseEventSyncFly Then
-                sb.Append($" when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
+                sb.Append($" when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
             ElseIf _sessionData.UseEventLaunch Then
-                sb.Append($" when it's the Launch time ({fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
+                sb.Append($" when it's the Launch time ({fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
             Else
-                sb.Append($" when it's the Meet time ({fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) \line ")
+                sb.Append($" when it's the Meet time ({fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
             End If
-            sb.Append("\line ")
+            sb.Append("($*$)")
 
             'Sync Start or not?
             If _sessionData.UseEventSyncFly Then
-                sb.Append($"This task requires a \b SYNC FLY \b0 so \b WAIT \b0 on the World Map for the signal. \line ")
-                sb.Append($"Sync Fly expected at \b {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullSyncFlyDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
-                sb.Append("\line ")
+                sb.Append($"This task requires a **SYNC FLY ** so **WAIT ** on the World Map for the signal. ($*$)")
+                sb.Append($"Sync Fly expected at **{fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} ** your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullSyncFlyDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append("($*$)")
 
                 ' Add cues with their associated embedded resource paths - for Sync Fly countdown
                 audioCueDictionary.Clear()
@@ -761,21 +761,21 @@ Public Class BriefingControl
 
                 countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. \line ")
-                sb.Append("\line ")
+                sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. ($*$)")
+                sb.Append("($*$)")
                 countDownToSyncFly.ResetToZero(True)
             End If
 
             'Unstandard Barometric pressure
             If Not _WeatherDetails.IsStandardMSLPressure Then
-                sb.Append($"Barometric pressure is {_WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)} \line ")
-                sb.Append("\line ")
+                sb.Append($"Barometric pressure is {_WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)} ($*$)")
+                sb.Append("($*$)")
             End If
 
             'Launch
             If _sessionData.UseEventLaunch Then
-                sb.Append($"Launch/Winch/Tow signal expected at \b {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullLaunchDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
-                sb.Append("\line ")
+                sb.Append($"Launch/Winch/Tow signal expected at **{fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} ** your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullLaunchDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append("($*$)")
 
                 audioCueDictionary.Clear()
 
@@ -793,15 +793,15 @@ Public Class BriefingControl
 
                 countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. \line ")
-                sb.Append("\line ")
+                sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. ($*$)")
+                sb.Append("($*$)")
                 countDownToLaunch.ResetToZero(True)
             End If
 
             'Start task
             If _sessionData.UseEventStartTask Then
-                sb.Append($"Task start/Start gate opening signal expected at \b {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} \b0 your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullStartTaskDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) \line ")
-                sb.Append("\line ")
+                sb.Append($"Task start/Start gate opening signal expected at **{fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} ** your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullStartTaskDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append("($*$)")
 
                 ' Add cues with their associated embedded resource paths - for task start
                 audioCueDictionary.Clear()
@@ -813,22 +813,21 @@ Public Class BriefingControl
 
                 countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. \line ")
-                sb.Append("\line ")
+                sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. ($*$)")
+                sb.Append("($*$)")
                 countDownTaskStart.ResetToZero(True)
             End If
-            sb.Append($"The expected duration should be \b {SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}\b0\line ")
-            sb.Append("\line ")
+            sb.Append($"The expected duration should be **{SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}**($*$)")
+            sb.Append("($*$)")
 
             If _sessionData.EventDescription <> String.Empty AndAlso _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then
                 sb.Append($"{_sessionData.EventDescription}")
-                sb.Append("\line ")
-                sb.Append("\line ")
+                sb.Append("($*$)")
+                sb.Append("($*$)")
             End If
 
-            sb.Append($"See Main Task Info and Map tabs for other important task information. \line ")
+            sb.Append($"See Main Task Info and Map tabs for other important task information.($*$)")
 
-            sb.Append("}")
             Timer1.Start()
         End If
 
@@ -840,7 +839,8 @@ Public Class BriefingControl
             chkShowGraph.Checked = False
         End If
 
-        SupportingFeatures.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
+        txtEventInfo.Rtf = SupportingFeatures.ConvertMarkdownToRTF(sb.ToString.Trim)
+        'SupportingFeatures.FormatMarkdownToRTF(sb.ToString, txtEventInfo)
         SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
 
     End Sub
@@ -1062,6 +1062,12 @@ Public Class BriefingControl
 
         ' Reset the flag when the mouse button is released
         isRightMousePressed = False
+    End Sub
+
+    Private Sub rtfControl_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles txtFullDescription.LinkClicked,
+                                                                                            txtBriefing.LinkClicked,
+                                                                                            txtEventInfo.LinkClicked
+        Process.Start(e.LinkText)
     End Sub
 
 #End Region

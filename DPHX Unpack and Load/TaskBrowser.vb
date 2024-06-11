@@ -1067,72 +1067,71 @@ Public Class TaskBrowser
         Dim sb As New StringBuilder
 
         'Title
-        sb.Append($"\b {_selectedTaskRow("Title")}\b0\line ")
+        sb.Append($"**{_selectedTaskRow("Title")}**($*$)")
         If _selectedTaskRow("MainAreaPOI").ToString().Trim <> String.Empty Then
-            sb.Append($"{_selectedTaskRow("MainAreaPOI")}\line ")
-            sb.Append("\line ")
+            sb.Append($"{_selectedTaskRow("MainAreaPOI")}($*$)")
+            sb.Append("($*$)")
         End If
         If _selectedTaskRow("ShortDescription").ToString().Trim <> String.Empty Then
-            sb.Append($"{_selectedTaskRow("ShortDescription")}\line ")
-            sb.Append("\line ")
+            sb.Append($"{_selectedTaskRow("ShortDescription")}($*$)")
+            sb.Append("($*$)")
         End If
 
         'Credits
-        sb.Append($"{_selectedTaskRow("Credits")}\line ")
-        sb.Append("\line ")
+        sb.Append($"{_selectedTaskRow("Credits")}($*$)")
+        sb.Append("($*$)")
 
         'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is \b {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SimDateTimeExtraInfo").ToString().Trim, True, True)}\b0\line ")
+        sb.Append($"MSFS Local date & time is **{Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SimDateTimeExtraInfo").ToString().Trim, True, True)}**($*$)")
 
         'Departure airfield And runway
-        sb.Append($"You will depart from \b {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureICAO").ToString())}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureName").ToString(), True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureExtra").ToString(), True, True)}\b0\line ")
+        sb.Append($"You will depart from **{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureICAO").ToString())}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureName").ToString(), True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DepartureExtra").ToString(), True, True)}**($*$)")
 
         'Arrival airfield And expected runway
-        sb.Append($"You will land at \b {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalICAO").ToString())}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalName").ToString(), True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalExtra").ToString(), True, True)}\b0\line ")
+        sb.Append($"You will land at **{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalICAO").ToString())}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalName").ToString(), True)}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("ArrivalExtra").ToString(), True, True)}**($*$)")
 
         'Type of soaring
         Dim soaringType As String = SupportingFeatures.GetSoaringTypesSelected(Convert.ToBoolean(_selectedTaskRow("SoaringRidge")), Convert.ToBoolean(_selectedTaskRow("SoaringThermals")), Convert.ToBoolean(_selectedTaskRow("SoaringWaves")), Convert.ToBoolean(_selectedTaskRow("SoaringDynamic")))
         If soaringType.Trim <> String.Empty OrElse _selectedTaskRow("SoaringExtraInfo").ToString() <> String.Empty Then
-            sb.Append($"Soaring Type is \b {soaringType}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SoaringExtraInfo").ToString(), True, True)}\b0\line ")
+            sb.Append($"Soaring Type is **{soaringType}{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SoaringExtraInfo").ToString(), True, True)}**($*$)")
         End If
 
         'Task distance And total distance
-        sb.Append($"Distance are \b {_selectedTaskRow("DistancesConcat")}\b0\line ")
+        sb.Append($"Distance are **{_selectedTaskRow("DistancesConcat")}**($*$)")
 
         'Approx. duration
-        sb.Append($"Approx. duration should be \b {_selectedTaskRow("DurationConcat")} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DurationExtraInfo").ToString(), True, True)}\b0\line ")
+        sb.Append($"Approx. duration should be **{_selectedTaskRow("DurationConcat")} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("DurationExtraInfo").ToString(), True, True)}**($*$)")
 
         'Recommended gliders
         If _selectedTaskRow("RecommendedGliders").ToString().Trim <> String.Empty Then
-            sb.Append($"Recommended gliders: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("RecommendedGliders").ToString())}\b0\line ")
+            sb.Append($"Recommended gliders: **{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("RecommendedGliders").ToString())}**($*$)")
         End If
 
         'Difficulty rating
         If _selectedTaskRow("DifficultyRating").ToString().Trim <> String.Empty OrElse _selectedTaskRow("DifficultyExtraInfo").ToString().Trim <> String.Empty Then
-            sb.Append($"The difficulty is rated as \b {SupportingFeatures.GetDifficulty(CInt(_selectedTaskRow("DifficultyRating").ToString().Substring(0, 1)), _selectedTaskRow("DifficultyExtraInfo").ToString(), True)}\b0\line ")
+            sb.Append($"The difficulty is rated as **{SupportingFeatures.GetDifficulty(CInt(_selectedTaskRow("DifficultyRating").ToString().Substring(0, 1)), _selectedTaskRow("DifficultyExtraInfo").ToString(), True)}**($*$)")
         End If
 
-        sb.Append("\line ")
+        sb.Append("($*$)")
 
         If _selectedTaskRow("WeatherSummary").ToString() <> String.Empty Then
-            sb.Append($"Weather summary: \b {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("WeatherSummary").ToString())}\b0\line ")
-            sb.Append("\line ")
+            sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("WeatherSummary").ToString())}**($*$)")
+            sb.Append("($*$)")
         End If
 
         'Build full description
         If _selectedTaskRow("LongDescription").ToString() <> String.Empty Then
-            sb.AppendLine("**Full Description**($*$)")
-            sb.AppendLine(_selectedTaskRow("LongDescription").ToString())
+            sb.Append("**Full Description**($*$)")
+            sb.Append(_selectedTaskRow("LongDescription").ToString())
         End If
-
-        sb.Append("}")
 
         Dim oldZoomFactor As Single = txtBriefing.ZoomFactor
         'If oldZoomFactor = 1 Then
         'oldZoomFactor = 1.1
         'End If
         txtBriefing.ZoomFactor = 1
-        SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
+        txtBriefing.Rtf = SupportingFeatures.ConvertMarkdownToRTF(sb.ToString.Trim)
+        'SupportingFeatures.FormatMarkdownToRTF(sb.ToString(), txtBriefing)
         txtBriefing.ZoomFactor = oldZoomFactor
 
         ' Dispose existing images

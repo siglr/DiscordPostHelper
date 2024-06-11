@@ -1180,6 +1180,14 @@ Public Class SupportingFeatures
         input = Regex.Replace(input, "\[CODE_BLOCK_(\d+)\](?![\r?\n])", "[CODE_BLOCK_$1]" & vbCrLf) ' Add newline after placeholder if not at end
 
         ' Step 2: Convert markdown outside of code blocks
+        ' Handle URLs: Convert Markdown-style links to RTF hyperlinks
+        input = Regex.Replace(input, "\[(.+?)\]\((.+?)\)", Function(m)
+                                                               Dim linkText As String = m.Groups(1).Value
+                                                               Dim url As String = m.Groups(2).Value
+                                                               Return "{\field{\*\fldinst{HYPERLINK """ & url & """}}{\fldrslt{\ul\cf1 " & linkText & "}}}"
+                                                           End Function)
+
+
         ' Convert inline code
         input = Regex.Replace(input, "`(.+?)`", "{\f1 $1\f0}") ' Inline code (monospace)
         ' Convert markdown syntax to corresponding RTF code
