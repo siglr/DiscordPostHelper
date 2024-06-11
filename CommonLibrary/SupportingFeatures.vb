@@ -1198,19 +1198,7 @@ Public Class SupportingFeatures
         For Each line As String In lines
             If Regex.IsMatch(line, "^\s{1,2}[-\*]\s") Or Regex.IsMatch(line, "^\s{1,2}\d+\.\s") Or Regex.IsMatch(line, "^\s{1,2}[a-zA-Z]\.\s") Then
                 ' Handle second-level lists first
-                If Regex.IsMatch(line, "^\s{1,2}\d+\.\s") Then
-                    ' Ensure correct list level
-                    If Not inList Or listLevel <> 1 Then
-                        If inList Then
-                            processedLines.Add("\pard") ' Close previous list
-                        End If
-                        listLevel = 1
-                        inList = True
-                        processedLines.Add("\pard\li240\fi-240") ' Start first-level list
-                    End If
-                    Dim listMarker As String = Regex.Match(line, "^\s{1,2}(\d+)\.\s").Groups(1).Value
-                    processedLines.Add("{\pntext\f0 " & listMarker & ".\tab}{\*\pn\pnlvlbody\pnf0\pnindent240{\pntxta .}}\fi-240\li240 " & Regex.Replace(line, "^\s{1,2}\d+\.\s+", "") & "\par")
-                ElseIf Regex.IsMatch(line, "^\s{1,2}[-\*]\s") Then
+                If Regex.IsMatch(line, "^\s{1,2}[-\*]\s") Then
                     ' Ensure correct list level
                     If Not inList Or listLevel <> 2 Then
                         If inList Then
@@ -1218,9 +1206,9 @@ Public Class SupportingFeatures
                         End If
                         listLevel = 2
                         inList = True
-                        processedLines.Add("\pard\li480\fi-360") ' Start second-level list
+                        processedLines.Add("\pard\li480\fi-240") ' Adjusted indent for second-level bullet points
                     End If
-                    processedLines.Add("{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent360{\pntxtb\'B7}}\fi-360\li480 " & Regex.Replace(line, "^\s{1,2}[-\*]\s+", "") & "\par")
+                    processedLines.Add("{\pntext\f0\'B7\tab}{\*\pn\pnlvlblt\pnf0\pnindent240{\pntxtb\'B7}}\fi-240\li480 " & Regex.Replace(line, "^\s{1,2}[-\*]\s+", "") & "\par")
                 ElseIf Regex.IsMatch(line, "^\s{1,2}[a-zA-Z]\.\s") Then
                     ' Ensure correct list level
                     If Not inList Or listLevel <> 2 Then
@@ -1229,10 +1217,22 @@ Public Class SupportingFeatures
                         End If
                         listLevel = 2
                         inList = True
-                        processedLines.Add("\pard\li480\fi-360") ' Start second-level list
+                        processedLines.Add("\pard\li480\fi-240") ' Adjusted indent for second-level lettered lists
                     End If
                     Dim listMarker As String = Regex.Match(line, "^\s{1,2}([a-zA-Z])\.\s").Groups(1).Value
-                    processedLines.Add("{\pntext\f0 " & listMarker & ".\tab}{\*\pn\pnlvlbody\pnf0\pnindent360{\pntxta .}}\fi-360\li480 " & Regex.Replace(line, "^\s{1,2}[a-zA-Z]\.\s+", "") & "\par")
+                    processedLines.Add("{\pntext\f0 " & listMarker & ".\tab}{\*\pn\pnlvlbody\pnf0\pnindent240{\pntxta .}}\fi-240\li480 " & Regex.Replace(line, "^\s{1,2}[a-zA-Z]\.\s+", "") & "\par")
+                ElseIf Regex.IsMatch(line, "^\s{1,2}\d+\.\s") Then
+                    ' Ensure correct list level
+                    If Not inList Or listLevel <> 2 Then
+                        If inList Then
+                            processedLines.Add("\pard") ' Close previous list
+                        End If
+                        listLevel = 2
+                        inList = True
+                        processedLines.Add("\pard\li480\fi-240") ' Adjusted indent for second-level numbered lists
+                    End If
+                    Dim listMarker As String = Regex.Match(line, "^\s{1,2}(\d+)\.\s").Groups(1).Value
+                    processedLines.Add("{\pntext\f0 " & listMarker & ".\tab}{\*\pn\pnlvlbody\pnf0\pnindent240{\pntxta .}}\fi-240\li480 " & Regex.Replace(line, "^\s{1,2}\d+\.\s+", "") & "\par")
                 End If
             ElseIf Regex.IsMatch(line, "^\s*[-\*]\s") Or Regex.IsMatch(line, "^\s*\d+\.\s") Then
                 ' Handle first-level lists
