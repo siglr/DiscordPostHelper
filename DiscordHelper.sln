@@ -52,6 +52,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\UpdateTasks.php = Main PHP Scripts\UpdateTasks.php
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Site Files", "Web Site Files", "{0F3E0800-45D3-4CB5-8FA3-5E70880F51B0}"
+	ProjectSection(SolutionItems) = preProject
+		Web Site Files\CommonFunctions.php = Web Site Files\CommonFunctions.php
+		Web Site Files\GetTasks.php = Web Site Files\GetTasks.php
+		Web Site Files\index.html = Web Site Files\index.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
