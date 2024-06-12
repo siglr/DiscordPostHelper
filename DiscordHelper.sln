@@ -23,6 +23,35 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WindLayers3DDisplay", "Wind
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TaskBrowserAdmin", "TaskBrowserAdmin\TaskBrowserAdmin.vbproj", "{1E992182-47CF-43E7-A529-2987F7DC3AC1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PHP Scripts", "{2363873E-68A6-4AA1-8D35-BB1D68483494}"
+	ProjectSection(SolutionItems) = preProject
+		Main PHP Scripts\ChangeDBStructure.php = Main PHP Scripts\ChangeDBStructure.php
+		Main PHP Scripts\CheckPermissions.php = Main PHP Scripts\CheckPermissions.php
+		Main PHP Scripts\CommonFunctions.php = Main PHP Scripts\CommonFunctions.php
+		Main PHP Scripts\CreateUpdateTaskFromDPHTool.php = Main PHP Scripts\CreateUpdateTaskFromDPHTool.php
+		Main PHP Scripts\DeleteTask.php = Main PHP Scripts\DeleteTask.php
+		Main PHP Scripts\DeleteTempFolder.php = Main PHP Scripts\DeleteTempFolder.php
+		Main PHP Scripts\DPHGetVersion.txt = Main PHP Scripts\DPHGetVersion.txt
+		Main PHP Scripts\DPHGetVersionInfo.php = Main PHP Scripts\DPHGetVersionInfo.php
+		Main PHP Scripts\FindTaskUsingID.php = Main PHP Scripts\FindTaskUsingID.php
+		Main PHP Scripts\FixEmptyImagesToNull.php = Main PHP Scripts\FixEmptyImagesToNull.php
+		Main PHP Scripts\GetUpdatedDownloads.php = Main PHP Scripts\GetUpdatedDownloads.php
+		Main PHP Scripts\GetUpdatedTasks.php = Main PHP Scripts\GetUpdatedTasks.php
+		Main PHP Scripts\IncrementDownloadForTask.php = Main PHP Scripts\IncrementDownloadForTask.php
+		Main PHP Scripts\IncrementThreadAccessForTask.php = Main PHP Scripts\IncrementThreadAccessForTask.php
+		Main PHP Scripts\ManageNews.php = Main PHP Scripts\ManageNews.php
+		Main PHP Scripts\ResetDownloadsForTask.php = Main PHP Scripts\ResetDownloadsForTask.php
+		Main PHP Scripts\ResetThreadAccessForTask.php = Main PHP Scripts\ResetThreadAccessForTask.php
+		Main PHP Scripts\RetrieveDeletedTasks.php = Main PHP Scripts\RetrieveDeletedTasks.php
+		Main PHP Scripts\RetrieveNews.php = Main PHP Scripts\RetrieveNews.php
+		Main PHP Scripts\RetrieveUserRights.php = Main PHP Scripts\RetrieveUserRights.php
+		Main PHP Scripts\SaveDirectFileUnderTempFolder.php = Main PHP Scripts\SaveDirectFileUnderTempFolder.php
+		Main PHP Scripts\SaveFileUnderTempFolder.php = Main PHP Scripts\SaveFileUnderTempFolder.php
+		Main PHP Scripts\SaveTextFileUnderTempFolder.php = Main PHP Scripts\SaveTextFileUnderTempFolder.php
+		Main PHP Scripts\TestDB.php = Main PHP Scripts\TestDB.php
+		Main PHP Scripts\UpdateTasks.php = Main PHP Scripts\UpdateTasks.php
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
