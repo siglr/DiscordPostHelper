@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.6.4.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.6.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.6.11.1</ReleaseVersion>
+      <ReleaseTitle>Better formatting of text and news tab</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for most of the Discord markdown formatting in the rich text controls on all the briefing tabs and library browser.
+        Improved: Display the yellow tab on the news panel only when new or updated news are available - not for removal.
+        Improved: Reviewed the news format a bit, event date is now clearer vs published date.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.6.4.1</ReleaseVersion>
       <ReleaseTitle>Tasks - Your ratings (local only)</ReleaseTitle>
