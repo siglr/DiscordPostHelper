@@ -124,9 +124,11 @@ try {
         // Retrieve the EntrySeqID of the newly inserted task
         $taskData['EntrySeqID'] = $pdo->lastInsertId();
 
+        // Create or update WorldMapInfo
+        createOrUpdateWorldMapInfo($pdo, $taskData);
+
         // Create corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, false);
-
 
     } else {
         // Check if the user has UpdateTask rights
@@ -206,9 +208,11 @@ try {
         $stmt->execute([':TaskID' => $taskData['TaskID']]);
         $taskData['EntrySeqID'] = $stmt->fetchColumn();
 
+        // Update WorldMapInfo
+        createOrUpdateWorldMapInfo($pdo, $taskData);
+
         // Update corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, true);
-
     }
 
     echo json_encode(['status' => 'success', 'message' => 'Task uploaded and database updated successfully.']);
@@ -218,5 +222,31 @@ try {
     logMessage("Connection failed: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $e->getMessage()]);
     logMessage("--- End of script CreateUpdateTaskFromDPHTool ---");
+}
+
+// Function to create or update WorldMapInfo entry
+function createOrUpdateWorldMapInfo($pdo, $taskData) {
+    $stmt = $pdo->prepare("
+        INSERT OR REPLACE INTO WorldMapInfo (
+            EntrySeqID, TaskID, PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax
+        ) VALUES (
+            :EntrySeqID, :TaskID, :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax
+        )
+    ");
+
+    $stmt->execute([
+        ':EntrySeqID' => $taskData['EntrySeqID'],
+        ':TaskID' => $taskData['TaskID'],
+        ':PLNFilename' => $taskData['PLNFilename'],
+        ':PLNXML' => $taskData['PLNXML'],
+        ':WPRFilename' => $taskData['WPRFilename'],
+        ':WPRXML' => $taskData['WPRXML'],
+        ':LatMin' => $taskData['LatMin'],
+        ':LatMax' => $taskData['LatMax'],
+        ':LongMin' => $taskData['LongMin'],
+        ':LongMax' => $taskData['LongMax']
+    ]);
+
+    logMessage("WorldMapInfo entry updated for TaskID: " . $taskData['TaskID']);
 }
 ?>

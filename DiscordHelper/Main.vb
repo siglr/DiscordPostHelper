@@ -5927,43 +5927,59 @@ Public Class Main
             theCoverImage = ResizeImageAndGetBytes(taskInfo.CoverImageSelected, 400, 400, 25)
         End If
 
+        ' Assume these values are computed or retrieved as part of the taskInfo
+        Dim latitudeMin As Double
+        Dim latitudeMax As Double
+        Dim longitudeMin As Double
+        Dim longitudeMax As Double
+        _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
+
+        ' Update the taskData dictionary to include WorldMapInfo fields
         Dim taskData As New Dictionary(Of String, Object) From {
-            {"TaskID", taskInfo.DiscordTaskID},
-            {"Title", taskInfo.Title},
-            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
-            {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
-            {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
-            {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
-            {"MainAreaPOI", taskInfo.MainAreaPOI},
-            {"DepartureName", taskInfo.DepartureName},
-            {"DepartureICAO", taskInfo.DepartureICAO},
-            {"DepartureExtra", taskInfo.DepartureExtra},
-            {"ArrivalName", taskInfo.ArrivalName},
-            {"ArrivalICAO", taskInfo.ArrivalICAO},
-            {"ArrivalExtra", taskInfo.ArrivalExtra},
-            {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
-            {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
-            {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
-            {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
-            {"SoaringExtraInfo", taskInfo.SoaringExtraInfo},
-            {"DurationMin", taskInfo.DurationMin},
-            {"DurationMax", taskInfo.DurationMax},
-            {"DurationExtraInfo", taskInfo.DurationExtraInfo},
-            {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
-            {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
-            {"RecommendedGliders", taskInfo.RecommendedGliders},
-            {"DifficultyRating", taskInfo.DifficultyRating},
-            {"DifficultyExtraInfo", taskInfo.DifficultyExtraInfo},
-            {"ShortDescription", taskInfo.ShortDescription},
-            {"LongDescription", taskInfo.LongDescription},
-            {"WeatherSummary", taskInfo.WeatherSummary},
-            {"Credits", taskInfo.Credits},
-            {"Countries", String.Join(", ", taskInfo.Countries)},
-            {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
-            {"MapImage", theMapImage},
-            {"CoverImage", theCoverImage},
-            {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")}
-        }
+        {"TaskID", taskInfo.DiscordTaskID},
+        {"Title", taskInfo.Title},
+        {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+        {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
+        {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
+        {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
+        {"MainAreaPOI", taskInfo.MainAreaPOI},
+        {"DepartureName", taskInfo.DepartureName},
+        {"DepartureICAO", taskInfo.DepartureICAO},
+        {"DepartureExtra", taskInfo.DepartureExtra},
+        {"ArrivalName", taskInfo.ArrivalName},
+        {"ArrivalICAO", taskInfo.ArrivalICAO},
+        {"ArrivalExtra", taskInfo.ArrivalExtra},
+        {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
+        {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
+        {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
+        {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
+        {"SoaringExtraInfo", taskInfo.SoaringExtraInfo},
+        {"DurationMin", taskInfo.DurationMin},
+        {"DurationMax", taskInfo.DurationMax},
+        {"DurationExtraInfo", taskInfo.DurationExtraInfo},
+        {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
+        {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
+        {"RecommendedGliders", taskInfo.RecommendedGliders},
+        {"DifficultyRating", taskInfo.DifficultyRating},
+        {"DifficultyExtraInfo", taskInfo.DifficultyExtraInfo},
+        {"ShortDescription", taskInfo.ShortDescription},
+        {"LongDescription", taskInfo.LongDescription},
+        {"WeatherSummary", taskInfo.WeatherSummary},
+        {"Credits", taskInfo.Credits},
+        {"Countries", String.Join(", ", taskInfo.Countries)},
+        {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
+        {"MapImage", theMapImage},
+        {"CoverImage", theCoverImage},
+        {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
+        {"LatMin", latitudeMin},
+        {"LatMax", latitudeMax},
+        {"LongMin", longitudeMin},
+        {"LongMax", longitudeMax},
+        {"PLNFilename", taskInfo.FlightPlanFilename},
+        {"PLNXML", _XmlDocFlightPlan.InnerXml},
+        {"WPRFilename", taskInfo.WeatherFilename},
+        {"WPRXML", _XmlDocWeatherPreset.InnerXml}
+    }
 
         Dim filePath As String = taskInfo.DPHXPackageFilename
         Dim result As Boolean = UploadTaskToServer(taskData, filePath)
