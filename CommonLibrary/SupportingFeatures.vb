@@ -253,6 +253,35 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Sub GetTaskBoundaries(ByRef minLongitude As Double, ByRef maxLongitude As Double, ByRef minLatitude As Double, ByRef maxLatitude As Double)
+        ' Initialize the boundary variables with extreme values
+        minLongitude = Double.MaxValue
+        maxLongitude = Double.MinValue
+        minLatitude = Double.MaxValue
+        maxLatitude = Double.MinValue
+
+        ' Loop through each waypoint in the list
+        For Each waypoint As ATCWaypoint In AllWaypoints
+            ' Update min and max longitude
+            If waypoint.Longitude < minLongitude Then
+                minLongitude = waypoint.Longitude
+            End If
+
+            If waypoint.Longitude > maxLongitude Then
+                maxLongitude = waypoint.Longitude
+            End If
+
+            ' Update min and max latitude
+            If waypoint.Latitude < minLatitude Then
+                minLatitude = waypoint.Latitude
+            End If
+
+            If waypoint.Latitude > maxLatitude Then
+                maxLatitude = waypoint.Latitude
+            End If
+        Next
+    End Sub
+
     Public Function BuildAltitudeRestrictions(ByVal pXmlDocFlightPlan As XmlDocument,
                                               ByRef pFlightTotalDistanceInKm As Single,
                                               ByRef pTaskTotalDistanceInKm As Single,

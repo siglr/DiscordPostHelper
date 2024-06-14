@@ -6,15 +6,25 @@ try {
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Update the Tasks table to trim Title and set DBEntryUpdate to now
-    $updateQuery = "
-        UPDATE Tasks
-        SET DBEntryUpdate = datetime('now'), Title = TRIM(Title)
-        WHERE Title != TRIM(Title)
+    // Create the WorldMapInfo table if it does not exist
+    $createQuery = "
+        CREATE TABLE IF NOT EXISTS WorldMapInfo (
+            EntrySeqID INTEGER NOT NULL UNIQUE,
+            TaskID TEXT NOT NULL UNIQUE,
+            PLNFilename TEXT,
+            PLNXML TEXT,
+            WPRFilename TEXT,
+            WPRXML TEXT,
+            LatMin REAL NOT NULL,
+            LatMax REAL NOT NULL,
+            LongMin REAL NOT NULL,
+            LongMax REAL NOT NULL,
+            PRIMARY KEY(EntrySeqID)
+        )
     ";
-    $pdo->exec($updateQuery);
+    $pdo->exec($createQuery);
 
-    echo "Spaces trimmed from Title successfully.";
+    echo "Table WorldMapInfo created successfully.\n";
 } catch (PDOException $e) {
     echo "Update failed: " . $e->getMessage();
 }

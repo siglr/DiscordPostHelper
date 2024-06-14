@@ -50,6 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\SaveTextFileUnderTempFolder.php = Main PHP Scripts\SaveTextFileUnderTempFolder.php
 		Main PHP Scripts\TestDB.php = Main PHP Scripts\TestDB.php
 		Main PHP Scripts\UpdateTasks.php = Main PHP Scripts\UpdateTasks.php
+		UpdateWorldMapInfo.php = UpdateWorldMapInfo.php
 	EndProjectSection
 EndProject
 Global
