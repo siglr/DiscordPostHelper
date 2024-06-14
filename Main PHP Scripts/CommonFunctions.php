@@ -111,7 +111,13 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
         $action = $isUpdate ? 'UpdateTask' : 'CreateTask';
         $title = $isUpdate ? "Updated task #" . $taskData['EntrySeqID'] : "New task #" . $taskData['EntrySeqID'];
 
+        // Handle comments, truncate if longer than 75 characters
         $comments = !empty($taskData['MainAreaPOI']) ? $taskData['MainAreaPOI'] : $taskData['ShortDescription'];
+        if (strlen($comments) > 75) {
+            $comments = substr($comments, 0, 75) . '...';
+        }
+
+        // Process credits
         $credits = str_replace("All credits to ", "By ", preg_replace("/ for this task.*/", "", $taskData['Credits']));
 
         // Prepare the delete statement
@@ -143,7 +149,7 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
         logMessage("News entry created or updated for TaskID: {$taskData['TaskID']}.");
 
     } catch (Exception $e) {
-        logMessage("Error in createOrUpdateNewsEntry: " . $e->getMessage());
+        logMessage("Error in createOrUpdateTaskNewsEntry: " . $e->getMessage());
         throw new Exception('Failed to create or update news entry.');
     }
 }

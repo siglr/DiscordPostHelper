@@ -24,11 +24,6 @@ try {
 
     $action = $_POST['action'];
 
-    // Format the expiration datetime
-    if (isset($_POST['Expiration'])) {
-        $_POST['Expiration'] = formatDatetime($_POST['Expiration']);
-    }
-
     // Handle the different actions
     switch ($action) {
         case 'CreateTask':
@@ -38,13 +33,15 @@ try {
             }
             $taskID = $_POST['TaskID'];
             $key = "T-$taskID";
+
             // Delete existing Task entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 0 AND Key = ?")->execute([$key]);
             logMessage("Existing Task entry deleted for TaskID: $taskID.");
+
             // Insert new Task entry
             $stmt = $pdo->prepare("
                 INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
-                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, :News, 0, :TaskID, :EntrySeqID, :URLToGo, :Expiration)
+                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, NULL, :News, 0, :TaskID, :EntrySeqID, :URLToGo, NULL)
             ");
             $stmt->execute([
                 ':Key' => $key,
@@ -53,12 +50,10 @@ try {
                 ':Subtitle' => $_POST['Subtitle'],
                 ':Comments' => $_POST['Comments'],
                 ':Credits' => $_POST['Credits'],
-                ':EventDate' => formatDatetime($_POST['EventDate']),
                 ':News' => $_POST['News'],
                 ':TaskID' => $taskID,
                 ':EntrySeqID' => $_POST['EntrySeqID'],
-                ':URLToGo' => $_POST['URLToGo'],
-                ':Expiration' => $_POST['Expiration']
+                ':URLToGo' => $_POST['URLToGo']
             ]);
             logMessage("Task entry created for TaskID: $taskID.");
             break;
@@ -69,6 +64,7 @@ try {
             }
             $taskID = $_POST['TaskID'];
             $key = "T-$taskID";
+
             // Delete existing Task entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 0 AND Key = ?")->execute([$key]);
             logMessage("Task entry deleted for TaskID: $taskID.");
@@ -79,9 +75,11 @@ try {
                 throw new Exception('Key missing.');
             }
             $key = $_POST['Key'];
+
             // Delete existing Event entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
             logMessage("Existing Event entry deleted for Key: $key.");
+
             // Insert new Event entry
             $stmt = $pdo->prepare("
                 INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
@@ -99,7 +97,7 @@ try {
                 ':TaskID' => $_POST['TaskID'],
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo' => $_POST['URLToGo'],
-                ':Expiration' => $_POST['Expiration']
+                ':Expiration' => formatDatetime($_POST['Expiration'])
             ]);
             logMessage("Event entry created for Key: $key.");
             break;
@@ -109,6 +107,7 @@ try {
                 throw new Exception('Key missing.');
             }
             $key = $_POST['Key'];
+
             // Delete existing Event entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
             logMessage("Event entry deleted for Key: $key.");
@@ -119,9 +118,11 @@ try {
                 throw new Exception('Key missing.');
             }
             $key = $_POST['Key'];
+
             // Delete existing News entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
             logMessage("Existing News entry deleted for Key: $key.");
+
             // Insert new News entry
             $stmt = $pdo->prepare("
                 INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
@@ -139,7 +140,7 @@ try {
                 ':TaskID' => $_POST['TaskID'],
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo' => $_POST['URLToGo'],
-                ':Expiration' => $_POST['Expiration']
+                ':Expiration' => formatDatetime($_POST['Expiration'])
             ]);
             logMessage("News entry created for Key: $key.");
             break;
@@ -149,6 +150,7 @@ try {
                 throw new Exception('Key missing.');
             }
             $key = $_POST['Key'];
+
             // Delete existing News entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
             logMessage("News entry deleted for Key: $key.");
