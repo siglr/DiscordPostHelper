@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\ChangeDBStructure.php = Main PHP Scripts\ChangeDBStructure.php
 		Main PHP Scripts\CheckPermissions.php = Main PHP Scripts\CheckPermissions.php
 		Main PHP Scripts\CommonFunctions.php = Main PHP Scripts\CommonFunctions.php
+		config.php = config.php
 		Main PHP Scripts\CreateUpdateTaskFromDPHTool.php = Main PHP Scripts\CreateUpdateTaskFromDPHTool.php
 		Main PHP Scripts\DeleteTask.php = Main PHP Scripts\DeleteTask.php
 		Main PHP Scripts\DeleteTempFolder.php = Main PHP Scripts\DeleteTempFolder.php

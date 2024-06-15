@@ -1,9 +1,12 @@
 <?php
-// Database and important files path
-$databasePath = '/home2/siglr3/private/DPHXTaskBrowser/TasksDatabase.db';
-$newsDBPath = '/home2/siglr3/private/DPHXTaskBrowser/News.db';
-$logFile = '/home2/siglr3/private/DPHXTaskBrowser/error_log.txt';
-$userPermissionsPath = '/home2/siglr3/private/DPHXTaskBrowser/UserRights.xml';
+// Include the configuration file
+$config = include 'config.php';
+
+// Assign paths from the configuration array
+$databasePath = $config['databasePath'];
+$newsDBPath = $config['newsDBPath'];
+$logFile = $config['logFile'];
+$userPermissionsPath = $config['userPermissionsPath'];
 
 // Function to log messages
 function logMessage($message) {
