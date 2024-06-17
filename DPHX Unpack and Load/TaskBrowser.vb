@@ -545,17 +545,8 @@ Public Class TaskBrowser
         SetupDataGridView()
         Me.Text = $"Task Library Browser - {gridCurrentDatabase.Rows.Count.ToString} tasks displayed"
 
-
-        If _currentTaskDBEntries.Rows.Count = gridCurrentDatabase.Rows.Count Then
-            ClearTaskFilterOnMap()
-        Else
-            Dim entrySeqIDs As New List(Of String)
-
-            For Each row As DataGridViewRow In gridCurrentDatabase.Rows
-                entrySeqIDs.Add(row.Cells("EntrySeqID").Value)
-            Next
-
-            FilterTasksOnMap(entrySeqIDs)
+        If tabGridAndMap.SelectedTab Is tabMap Then
+            ApplyTaskFilter()
         End If
 
     End Sub
@@ -628,6 +619,10 @@ Public Class TaskBrowser
     Private Sub tabGridAndMap_Selected(sender As Object, e As TabControlEventArgs) Handles tabGridAndMap.Selected
 
         If tabGridAndMap.SelectedTab Is tabMap Then
+            'Apply filter
+            ApplyTaskFilter()
+
+            'Select current task
             SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
         End If
 
@@ -647,6 +642,20 @@ Public Class TaskBrowser
         If webView.CoreWebView2 IsNot Nothing Then
             Dim script As String = $"window.filterTasks({Newtonsoft.Json.JsonConvert.SerializeObject(entrySeqIDs)});"
             webView.CoreWebView2.ExecuteScriptAsync(script)
+        End If
+    End Sub
+
+    Private Sub ApplyTaskFilter()
+        If _currentTaskDBEntries.Rows.Count = gridCurrentDatabase.Rows.Count Then
+            ClearTaskFilterOnMap()
+        Else
+            Dim entrySeqIDs As New List(Of String)
+
+            For Each row As DataGridViewRow In gridCurrentDatabase.Rows
+                entrySeqIDs.Add(row.Cells("EntrySeqID").Value)
+            Next
+
+            FilterTasksOnMap(entrySeqIDs)
         End If
     End Sub
 
