@@ -625,6 +625,14 @@ Public Class TaskBrowser
         InitializeWebView2()
     End Sub
 
+    Private Sub tabGridAndMap_Selected(sender As Object, e As TabControlEventArgs) Handles tabGridAndMap.Selected
+
+        If tabGridAndMap.SelectedTab Is tabMap Then
+            SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
+        End If
+
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
@@ -2328,7 +2336,7 @@ Public Class TaskBrowser
             ' Attempt to create the WebView2 environment
             Dim env As CoreWebView2Environment = Await CoreWebView2Environment.CreateAsync()
             Await webView.EnsureCoreWebView2Async(env)
-            webView.Source = New Uri("https://soaring.siglr.com/maplines.html")
+            webView.Source = New Uri("https://soaring.siglr.com/maplines.html?appContext=true")
         Catch ex As Exception
             MessageBox.Show("Error initializing the map view: " & ex.Message)
         End Try
@@ -2380,13 +2388,6 @@ Public Class TaskBrowser
         End Using
     End Sub
 
-    Private Sub tabGridAndMap_Selected(sender As Object, e As TabControlEventArgs) Handles tabGridAndMap.Selected
-
-        If tabGridAndMap.SelectedTab Is tabMap Then
-            SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
-        End If
-
-    End Sub
 
 #End Region
 
