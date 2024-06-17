@@ -89,10 +89,14 @@ Partial Class TaskBrowser
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.btnUpdateDB = New System.Windows.Forms.Button()
         Me.splitMain = New System.Windows.Forms.SplitContainer()
+        Me.tabGridAndMap = New System.Windows.Forms.TabControl()
+        Me.tabGrid = New System.Windows.Forms.TabPage()
         Me.gridCurrentDatabase = New System.Windows.Forms.DataGridView()
         Me.TasksGridContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tabMap = New System.Windows.Forms.TabPage()
+        Me.webView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.splitRightPart = New System.Windows.Forms.SplitContainer()
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
         Me.tabctrlTBSections = New System.Windows.Forms.TabControl()
@@ -101,8 +105,8 @@ Partial Class TaskBrowser
         Me.imgMap = New System.Windows.Forms.PictureBox()
         Me.imgCover = New System.Windows.Forms.PictureBox()
         Me.tabUserData = New System.Windows.Forms.TabPage()
-        Me.pnlAllUserDataFields = New System.Windows.Forms.Panel()
         Me.btnUserDataSave = New System.Windows.Forms.Button()
+        Me.pnlAllUserDataFields = New System.Windows.Forms.Panel()
         Me.txtComment = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtTags = New System.Windows.Forms.TextBox()
@@ -116,6 +120,7 @@ Partial Class TaskBrowser
         Me.chkToFly = New System.Windows.Forms.CheckBox()
         Me.chkTaskFlown = New System.Windows.Forms.CheckBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnInstallWebView = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -126,8 +131,12 @@ Partial Class TaskBrowser
         Me.splitMain.Panel1.SuspendLayout()
         Me.splitMain.Panel2.SuspendLayout()
         Me.splitMain.SuspendLayout()
+        Me.tabGridAndMap.SuspendLayout()
+        Me.tabGrid.SuspendLayout()
         CType(Me.gridCurrentDatabase, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TasksGridContextMenu.SuspendLayout()
+        Me.tabMap.SuspendLayout()
+        CType(Me.webView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.splitRightPart, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.splitRightPart.Panel1.SuspendLayout()
         Me.splitRightPart.Panel2.SuspendLayout()
@@ -312,7 +321,7 @@ Partial Class TaskBrowser
         Me.FilterBoxContextMenu.ImageScalingSize = New System.Drawing.Size(18, 18)
         Me.FilterBoxContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.TextCriteriaToolStripMenuItem, Me.NumbersCriteriaToolStripMenuItem, Me.ToolStripSeparator4, Me.FavoritesToolStripMenuItem})
         Me.FilterBoxContextMenu.Name = "FilterBoxContextMenu"
-        Me.FilterBoxContextMenu.Size = New System.Drawing.Size(180, 106)
+        Me.FilterBoxContextMenu.Size = New System.Drawing.Size(199, 131)
         '
         'ToolStripMenuItem1
         '
@@ -382,6 +391,7 @@ Partial Class TaskBrowser
         '
         'textCriteriaWords
         '
+        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -401,6 +411,7 @@ Partial Class TaskBrowser
         '
         'numbersCriteriaFromTo
         '
+        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -433,6 +444,7 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
+        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
@@ -476,7 +488,7 @@ Partial Class TaskBrowser
         '
         'splitMain.Panel1
         '
-        Me.splitMain.Panel1.Controls.Add(Me.gridCurrentDatabase)
+        Me.splitMain.Panel1.Controls.Add(Me.tabGridAndMap)
         '
         'splitMain.Panel2
         '
@@ -484,6 +496,28 @@ Partial Class TaskBrowser
         Me.splitMain.Size = New System.Drawing.Size(1118, 676)
         Me.splitMain.SplitterDistance = 800
         Me.splitMain.TabIndex = 4
+        '
+        'tabGridAndMap
+        '
+        Me.tabGridAndMap.Controls.Add(Me.tabGrid)
+        Me.tabGridAndMap.Controls.Add(Me.tabMap)
+        Me.tabGridAndMap.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tabGridAndMap.Location = New System.Drawing.Point(0, 0)
+        Me.tabGridAndMap.Name = "tabGridAndMap"
+        Me.tabGridAndMap.SelectedIndex = 0
+        Me.tabGridAndMap.Size = New System.Drawing.Size(800, 676)
+        Me.tabGridAndMap.TabIndex = 2
+        '
+        'tabGrid
+        '
+        Me.tabGrid.Controls.Add(Me.gridCurrentDatabase)
+        Me.tabGrid.Location = New System.Drawing.Point(4, 29)
+        Me.tabGrid.Name = "tabGrid"
+        Me.tabGrid.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabGrid.Size = New System.Drawing.Size(792, 643)
+        Me.tabGrid.TabIndex = 0
+        Me.tabGrid.Text = "Grid"
+        Me.tabGrid.UseVisualStyleBackColor = True
         '
         'gridCurrentDatabase
         '
@@ -496,14 +530,14 @@ Partial Class TaskBrowser
         Me.gridCurrentDatabase.ContextMenuStrip = Me.TasksGridContextMenu
         Me.gridCurrentDatabase.Dock = System.Windows.Forms.DockStyle.Fill
         Me.gridCurrentDatabase.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
-        Me.gridCurrentDatabase.Location = New System.Drawing.Point(0, 0)
+        Me.gridCurrentDatabase.Location = New System.Drawing.Point(3, 3)
         Me.gridCurrentDatabase.MultiSelect = False
         Me.gridCurrentDatabase.Name = "gridCurrentDatabase"
         Me.gridCurrentDatabase.RowHeadersVisible = False
         Me.gridCurrentDatabase.RowHeadersWidth = 47
         Me.gridCurrentDatabase.RowTemplate.Height = 35
         Me.gridCurrentDatabase.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.gridCurrentDatabase.Size = New System.Drawing.Size(800, 676)
+        Me.gridCurrentDatabase.Size = New System.Drawing.Size(786, 637)
         Me.gridCurrentDatabase.TabIndex = 0
         '
         'TasksGridContextMenu
@@ -524,6 +558,30 @@ Partial Class TaskBrowser
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(172, 6)
+        '
+        'tabMap
+        '
+        Me.tabMap.Controls.Add(Me.btnInstallWebView)
+        Me.tabMap.Controls.Add(Me.webView)
+        Me.tabMap.Location = New System.Drawing.Point(4, 29)
+        Me.tabMap.Name = "tabMap"
+        Me.tabMap.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabMap.Size = New System.Drawing.Size(792, 643)
+        Me.tabMap.TabIndex = 1
+        Me.tabMap.Text = "Map"
+        Me.tabMap.UseVisualStyleBackColor = True
+        '
+        'webView
+        '
+        Me.webView.AllowExternalDrop = True
+        Me.webView.CreationProperties = Nothing
+        Me.webView.DefaultBackgroundColor = System.Drawing.Color.White
+        Me.webView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.webView.Location = New System.Drawing.Point(3, 3)
+        Me.webView.Name = "webView"
+        Me.webView.Size = New System.Drawing.Size(786, 637)
+        Me.webView.TabIndex = 1
+        Me.webView.ZoomFactor = 1.0R
         '
         'splitRightPart
         '
@@ -631,13 +689,25 @@ Partial Class TaskBrowser
         Me.tabUserData.Controls.Add(Me.pnlAllUserDataFields)
         Me.tabUserData.Controls.Add(Me.chkToFly)
         Me.tabUserData.Controls.Add(Me.chkTaskFlown)
-        Me.tabUserData.Location = New System.Drawing.Point(4, 29)
+        Me.tabUserData.Location = New System.Drawing.Point(4, 22)
         Me.tabUserData.Name = "tabUserData"
         Me.tabUserData.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabUserData.Size = New System.Drawing.Size(306, 369)
+        Me.tabUserData.Size = New System.Drawing.Size(306, 376)
         Me.tabUserData.TabIndex = 1
         Me.tabUserData.Text = "Your data"
         Me.tabUserData.UseVisualStyleBackColor = True
+        '
+        'btnUserDataSave
+        '
+        Me.btnUserDataSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUserDataSave.Location = New System.Drawing.Point(7, 330)
+        Me.btnUserDataSave.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnUserDataSave.Name = "btnUserDataSave"
+        Me.btnUserDataSave.Size = New System.Drawing.Size(292, 35)
+        Me.btnUserDataSave.TabIndex = 10
+        Me.btnUserDataSave.Text = "Save"
+        Me.ToolTip1.SetToolTip(Me.btnUserDataSave, "Don't forget to click here to save your data.")
         '
         'pnlAllUserDataFields
         '
@@ -659,18 +729,6 @@ Partial Class TaskBrowser
         Me.pnlAllUserDataFields.Name = "pnlAllUserDataFields"
         Me.pnlAllUserDataFields.Size = New System.Drawing.Size(306, 301)
         Me.pnlAllUserDataFields.TabIndex = 3
-        '
-        'btnUserDataSave
-        '
-        Me.btnUserDataSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnUserDataSave.Location = New System.Drawing.Point(7, 330)
-        Me.btnUserDataSave.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnUserDataSave.Name = "btnUserDataSave"
-        Me.btnUserDataSave.Size = New System.Drawing.Size(292, 35)
-        Me.btnUserDataSave.TabIndex = 10
-        Me.btnUserDataSave.Text = "Save"
-        Me.ToolTip1.SetToolTip(Me.btnUserDataSave, "Don't forget to click here to save your data.")
         '
         'txtComment
         '
@@ -808,6 +866,18 @@ Partial Class TaskBrowser
         Me.ToolTip1.SetToolTip(Me.chkTaskFlown, "Check to mark this task as flown, and gain access to the other fields.")
         Me.chkTaskFlown.UseVisualStyleBackColor = True
         '
+        'btnInstallWebView
+        '
+        Me.btnInstallWebView.Location = New System.Drawing.Point(8, 6)
+        Me.btnInstallWebView.Name = "btnInstallWebView"
+        Me.btnInstallWebView.Size = New System.Drawing.Size(245, 48)
+        Me.btnInstallWebView.TabIndex = 2
+        Me.btnInstallWebView.Text = "Install WebView to enable map"
+        Me.ToolTip1.SetToolTip(Me.btnInstallWebView, "Click to install the required Microsoft Windows WebView component and enable the " &
+        "map.")
+        Me.btnInstallWebView.UseVisualStyleBackColor = True
+        Me.btnInstallWebView.Visible = False
+        '
         'TaskBrowser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -838,8 +908,12 @@ Partial Class TaskBrowser
         Me.splitMain.Panel2.ResumeLayout(False)
         CType(Me.splitMain, System.ComponentModel.ISupportInitialize).EndInit()
         Me.splitMain.ResumeLayout(False)
+        Me.tabGridAndMap.ResumeLayout(False)
+        Me.tabGrid.ResumeLayout(False)
         CType(Me.gridCurrentDatabase, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TasksGridContextMenu.ResumeLayout(False)
+        Me.tabMap.ResumeLayout(False)
+        CType(Me.webView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.splitRightPart.Panel1.ResumeLayout(False)
         Me.splitRightPart.Panel2.ResumeLayout(False)
         CType(Me.splitRightPart, System.ComponentModel.ISupportInitialize).EndInit()
@@ -927,4 +1001,9 @@ Partial Class TaskBrowser
     Friend WithEvents chkToFly As CheckBox
     Friend WithEvents TaskFlownToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToFlyToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents webView As Microsoft.Web.WebView2.WinForms.WebView2
+    Friend WithEvents tabGridAndMap As TabControl
+    Friend WithEvents tabGrid As TabPage
+    Friend WithEvents tabMap As TabPage
+    Friend WithEvents btnInstallWebView As Button
 End Class

@@ -4,9 +4,11 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.VisualStyles
+Imports Microsoft.Web.WebView2.Core
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -28,6 +30,7 @@ Public Class TaskBrowser
     Private horizontalScrollIndex As Integer
     Private prevSortColumn As String
     Private prevSortDirectionAsc As Boolean
+    Private initializing As Boolean = True
 
     Private Shared _processingChange As Boolean = False
 
@@ -47,6 +50,10 @@ Public Class TaskBrowser
 #Region "Events"
 
     Private Sub TaskBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        initializing = True
+
+        InitializeWebView2()
 
         lblCurrentSelection.Text = String.Empty
 
@@ -105,6 +112,8 @@ Public Class TaskBrowser
         If OpenWithEntrySeqID <> 0 Then
             PerformSearch($"%nbr({OpenWithEntrySeqID.ToString})")
         End If
+
+        initializing = False
 
         'Set focus on grid
         Me.ActiveControl = gridCurrentDatabase
@@ -392,6 +401,7 @@ Public Class TaskBrowser
         txtSearch.Text = String.Empty
         _searchTerms.Clear()
         RestorePosition()
+        SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
 
     End Sub
 
@@ -520,24 +530,11 @@ Public Class TaskBrowser
 
     Private Sub gridCurrentDatabase_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles gridCurrentDatabase.RowEnter
 
-        Dim selectedEntrySeqID As Integer = gridCurrentDatabase.Rows(e.RowIndex).Cells("EntrySeqID").Value
-        _selectedTaskRow = _currentTaskDBEntries.Select($"EntrySeqID = {selectedEntrySeqID}").FirstOrDefault()
-        lblCurrentSelection.Text = $"{_selectedTaskRow("EntrySeqID")} - {_selectedTaskRow("TaskID")} - {_selectedTaskRow("Title")}"
-        BuildTaskData()
-
-        'Check if the file is already present locally
-        If File.Exists(LocalDPHXFileName) Then
-            'Check inside to get the timestamp of the DPH file
-            Dim dphUpdateStamp As String = SupportingFeatures.GetDPHLastUpdateFromDPHXFile(LocalDPHXFileName)
-            If dphUpdateStamp < _selectedTaskRow("LastUpdate") Then
-                btnDownloadOpen.Text = "Download && Open"
-            Else
-                btnDownloadOpen.Text = "Open"
-            End If
-        Else
-            btnDownloadOpen.Text = "Download && Open"
+        If initializing Then
+            Exit Sub
         End If
-
+        Dim selectedEntrySeqID As Integer = gridCurrentDatabase.Rows(e.RowIndex).Cells("EntrySeqID").Value
+        RowEnterInGrid(selectedEntrySeqID)
     End Sub
 
     Private Sub gridCurrentDatabase_Resize(sender As Object, e As EventArgs) Handles gridCurrentDatabase.Resize
@@ -547,6 +544,20 @@ Public Class TaskBrowser
     Private Sub gridCurrentDatabase_DataSourceChanged(sender As Object, e As EventArgs) Handles gridCurrentDatabase.DataSourceChanged
         SetupDataGridView()
         Me.Text = $"Task Library Browser - {gridCurrentDatabase.Rows.Count.ToString} tasks displayed"
+
+
+        If _currentTaskDBEntries.Rows.Count = gridCurrentDatabase.Rows.Count Then
+            ClearTaskFilterOnMap()
+        Else
+            Dim entrySeqIDs As New List(Of String)
+
+            For Each row As DataGridViewRow In gridCurrentDatabase.Rows
+                entrySeqIDs.Add(row.Cells("EntrySeqID").Value)
+            Next
+
+            FilterTasksOnMap(entrySeqIDs)
+        End If
+
     End Sub
 
     Private Sub gridCurrentDatabase_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles gridCurrentDatabase.ColumnHeaderMouseClick
@@ -575,9 +586,122 @@ Public Class TaskBrowser
 
         End If
     End Sub
+
+    Private Sub chkTaskFlown_CheckedChanged(sender As Object, e As EventArgs) Handles chkTaskFlown.CheckedChanged
+
+        pnlAllUserDataFields.Enabled = chkTaskFlown.Checked
+
+    End Sub
+
+    Private Sub trkQualityRating_Scroll(sender As Object, e As EventArgs) Handles trkQualityRating.ValueChanged
+
+        lblQualityRating.Text = trkQualityRating.Value.ToString
+
+    End Sub
+
+    Private Sub trkDifficultyRating_Scroll(sender As Object, e As EventArgs) Handles trkDifficultyRating.ValueChanged
+
+        lblDifficultyRating.Text = trkDifficultyRating.Value.ToString
+
+    End Sub
+
+    Private Sub btnUserDataSave_Click(sender As Object, e As EventArgs) Handles btnUserDataSave.Click
+        SaveUserData()
+    End Sub
+
+    Private Sub webView_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles webView.WebMessageReceived
+        Dim message = e.WebMessageAsJson
+        If Not String.IsNullOrEmpty(message) Then
+            Dim json = JObject.Parse(message)
+            Dim action = json("action").ToString()
+            If action = "selectTask" Then
+                Dim entrySeqID = json("entrySeqID").ToString()
+                SelectTaskOnGrid(entrySeqID)
+            End If
+        End If
+    End Sub
+
+    Private Sub btnInstallWebView_Click(sender As Object, e As EventArgs) Handles btnInstallWebView.Click
+        InitializeWebView2()
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
+
+    Private Sub ClearTaskFilterOnMap()
+        If webView.CoreWebView2 IsNot Nothing Then
+            webView.CoreWebView2.ExecuteScriptAsync("window.clearFilter();")
+        End If
+    End Sub
+
+    Private Sub FilterTasksOnMap(entrySeqIDs As List(Of String))
+        If webView.CoreWebView2 IsNot Nothing Then
+            Dim script As String = $"window.filterTasks({Newtonsoft.Json.JsonConvert.SerializeObject(entrySeqIDs)});"
+            webView.CoreWebView2.ExecuteScriptAsync(script)
+        End If
+    End Sub
+
+    Private Sub SelectTaskOnGrid(entrySeqID As String)
+        ' Ensure the DataGridView is bound to a data source
+        If gridCurrentDatabase.DataSource IsNot Nothing Then
+            For i As Integer = 0 To gridCurrentDatabase.Rows.Count - 1
+                Dim row As DataGridViewRow = gridCurrentDatabase.Rows(i)
+                If row.DataBoundItem IsNot Nothing Then
+                    ' Assuming the data item has an EntrySeqID property
+                    If row.Cells("EntrySeqID").Value = entrySeqID Then
+                        ' Select the row and scroll it into view
+                        gridCurrentDatabase.ClearSelection()
+                        row.Selected = True
+                        gridCurrentDatabase.FirstDisplayedScrollingRowIndex = row.Index
+                        RowEnterInGrid(entrySeqID)
+                        Exit For
+                    End If
+                End If
+            Next
+        End If
+    End Sub
+
+    Public Sub SelectTaskOnMap(entrySeqID As String)
+
+        If Not tabGridAndMap.SelectedTab Is tabMap Then
+            Exit Sub
+        End If
+
+        Dim script As String = $"window.selectTask('{entrySeqID}');"
+        Try
+            If webView.CoreWebView2 IsNot Nothing Then
+                webView.CoreWebView2.ExecuteScriptAsync(script)
+            Else
+                Application.DoEvents()
+                webView.Refresh()
+                webView.CoreWebView2.ExecuteScriptAsync(script)
+            End If
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RowEnterInGrid(selectedEntrySeqID As Integer)
+        _selectedTaskRow = _currentTaskDBEntries.Select($"EntrySeqID = {selectedEntrySeqID}").FirstOrDefault()
+        lblCurrentSelection.Text = $"{_selectedTaskRow("EntrySeqID")} - {_selectedTaskRow("TaskID")} - {_selectedTaskRow("Title")}"
+        BuildTaskData()
+
+        'Check if the file is already present locally
+        If File.Exists(LocalDPHXFileName) Then
+            'Check inside to get the timestamp of the DPH file
+            Dim dphUpdateStamp As String = SupportingFeatures.GetDPHLastUpdateFromDPHXFile(LocalDPHXFileName)
+            If dphUpdateStamp < _selectedTaskRow("LastUpdate") Then
+                btnDownloadOpen.Text = "Download && Open"
+            Else
+                btnDownloadOpen.Text = "Open"
+            End If
+        Else
+            btnDownloadOpen.Text = "Download && Open"
+        End If
+
+    End Sub
 
     Private Sub BuildFavoritesMenu()
 
@@ -1216,6 +1340,7 @@ Public Class TaskBrowser
                 lblSearchTerms.Text = $"{lblSearchTerms.Text} - {searchTerm}"
             End If
             RestorePosition()
+            SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
         End If
     End Sub
 
@@ -2121,28 +2246,6 @@ Public Class TaskBrowser
 
     End Sub
 
-    Private Sub chkTaskFlown_CheckedChanged(sender As Object, e As EventArgs) Handles chkTaskFlown.CheckedChanged
-
-        pnlAllUserDataFields.Enabled = chkTaskFlown.Checked
-
-    End Sub
-
-    Private Sub trkQualityRating_Scroll(sender As Object, e As EventArgs) Handles trkQualityRating.ValueChanged
-
-        lblQualityRating.Text = trkQualityRating.Value.ToString
-
-    End Sub
-
-    Private Sub trkDifficultyRating_Scroll(sender As Object, e As EventArgs) Handles trkDifficultyRating.ValueChanged
-
-        lblDifficultyRating.Text = trkDifficultyRating.Value.ToString
-
-    End Sub
-
-    Private Sub btnUserDataSave_Click(sender As Object, e As EventArgs) Handles btnUserDataSave.Click
-        SaveUserData
-    End Sub
-
     Private Sub SaveUserData()
         Try
             ' Update the local database
@@ -2202,6 +2305,87 @@ Public Class TaskBrowser
             ' Handle the exception (e.g., log the error)
             Throw
         End Try
+    End Sub
+
+    Private Async Sub InitializeWebView2()
+
+        If Not IsWebView2RuntimeInstalled() Then
+            Dim result = MessageBox.Show("WebView2 Runtime is not installed. Would you like to install it now?", "WebView2 Required", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If result = DialogResult.Yes Then
+                InstallWebView2Runtime()
+            Else
+                btnInstallWebView.Visible = True
+                Exit Sub
+            End If
+        End If
+
+        btnInstallWebView.Visible = False
+
+        Try
+            ' Clear WebView2 cache before initialization
+            ClearWebView2Cache()
+
+            ' Attempt to create the WebView2 environment
+            Dim env As CoreWebView2Environment = Await CoreWebView2Environment.CreateAsync()
+            Await webView.EnsureCoreWebView2Async(env)
+            webView.Source = New Uri("https://soaring.siglr.com/maplines.html")
+        Catch ex As Exception
+            MessageBox.Show("Error initializing the map view: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ClearWebView2Cache()
+        ' Get the default user data folder location for WebView2
+        Dim userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "WebView2", "User Data")
+
+        ' Delete the user data folder if it exists
+        If Directory.Exists(userDataFolder) Then
+            Try
+                Directory.Delete(userDataFolder, True)
+            Catch ex As Exception
+                MessageBox.Show("Error clearing WebView2 cache: " & ex.Message)
+            End Try
+        End If
+    End Sub
+
+    Private Function IsWebView2RuntimeInstalled() As Boolean
+        Try
+            Dim env = CoreWebView2Environment.GetAvailableBrowserVersionString()
+            Return Not String.IsNullOrEmpty(env)
+        Catch ex As COMException
+            Return False
+        End Try
+    End Function
+
+    Private Sub InstallWebView2Runtime()
+        Dim bootstrapperLink As String = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
+        Dim bootstrapperPath As String = IO.Path.Combine(Application.StartupPath, "MicrosoftEdgeWebView2Setup.exe")
+
+        ' Download the bootstrapper
+        Using client As New WebClient()
+            Try
+                client.DownloadFile(bootstrapperLink, bootstrapperPath)
+                ' Run the downloaded bootstrapper
+                Dim psi As New ProcessStartInfo(bootstrapperPath) With {
+                    .UseShellExecute = True
+                }
+                Dim process As Process = Process.Start(psi)
+                process.WaitForExit() ' Wait for the installer to finish
+
+                ' Try to reinitialize WebView2 after installation
+                InitializeWebView2()
+            Catch ex As Exception
+                MessageBox.Show("Failed to download or run WebView2 bootstrapper. Please install it from: " & bootstrapperLink)
+            End Try
+        End Using
+    End Sub
+
+    Private Sub tabGridAndMap_Selected(sender As Object, e As TabControlEventArgs) Handles tabGridAndMap.Selected
+
+        If tabGridAndMap.SelectedTab Is tabMap Then
+            SelectTaskOnMap(_selectedTaskRow("EntrySeqID"))
+        End If
+
     End Sub
 
 #End Region
