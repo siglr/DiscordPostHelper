@@ -58,7 +58,8 @@ try {
                 SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
                 TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
-                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate
+                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, 
+                PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax
             ) VALUES (
                 :TaskID, :Title, :LastUpdate, :SimDateTime, :IncludeYear, :SimDateTimeExtraInfo,
                 :MainAreaPOI, :DepartureName, :DepartureICAO, :DepartureExtra, :ArrivalName,
@@ -66,7 +67,8 @@ try {
                 :SoaringDynamic, :SoaringExtraInfo, :DurationMin, :DurationMax, :DurationExtraInfo,
                 :TaskDistance, :TotalDistance, :RecommendedGliders, :DifficultyRating, :DifficultyExtraInfo,
                 :ShortDescription, :LongDescription, :WeatherSummary, :Credits, :Countries,
-                :RecommendedAddOns, :MapImage, :CoverImage, :DBEntryUpdate
+                :RecommendedAddOns, :MapImage, :CoverImage, :DBEntryUpdate, 
+                :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax
             )
         ");
         logMessage("Insert statement prepared.");
@@ -74,7 +76,6 @@ try {
         // Ensure datetime fields are properly formatted
         $taskData['LastUpdate'] = formatDatetime($taskData['LastUpdate']);
         $taskData['SimDateTime'] = formatDatetime($taskData['SimDateTime']);
-        $taskData['LastDownloadUpdate'] = formatDatetime($taskData['LastDownloadUpdate']);
         $taskData['DBEntryUpdate'] = formatDatetime($taskData['DBEntryUpdate']);
 
         // Handle the task data
@@ -117,15 +118,20 @@ try {
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
-            ':DBEntryUpdate' => $taskData['DBEntryUpdate']
+            ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
+            ':PLNFilename' => $taskData['PLNFilename'],
+            ':PLNXML' => $taskData['PLNXML'],
+            ':WPRFilename' => $taskData['WPRFilename'],
+            ':WPRXML' => $taskData['WPRXML'],
+            ':LatMin' => $taskData['LatMin'],
+            ':LatMax' => $taskData['LatMax'],
+            ':LongMin' => $taskData['LongMin'],
+            ':LongMax' => $taskData['LongMax']
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
         // Retrieve the EntrySeqID of the newly inserted task
         $taskData['EntrySeqID'] = $pdo->lastInsertId();
-
-        // Create or update WorldMapInfo
-        createOrUpdateWorldMapInfo($pdo, $taskData);
 
         // Create corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, false);
@@ -148,7 +154,8 @@ try {
                 TaskDistance = :TaskDistance, TotalDistance = :TotalDistance, RecommendedGliders = :RecommendedGliders, DifficultyRating = :DifficultyRating,
                 DifficultyExtraInfo = :DifficultyExtraInfo, ShortDescription = :ShortDescription, LongDescription = :LongDescription,
                 WeatherSummary = :WeatherSummary, Credits = :Credits, Countries = :Countries, RecommendedAddOns = :RecommendedAddOns,
-                MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate
+                MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
+                PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -156,7 +163,6 @@ try {
         // Ensure datetime fields are properly formatted
         $taskData['LastUpdate'] = formatDatetime($taskData['LastUpdate']);
         $taskData['SimDateTime'] = formatDatetime($taskData['SimDateTime']);
-        $taskData['LastDownloadUpdate'] = formatDatetime($taskData['LastDownloadUpdate']);
         $taskData['DBEntryUpdate'] = formatDatetime($taskData['DBEntryUpdate']);
 
         // Handle the task data
@@ -199,7 +205,15 @@ try {
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
-            ':DBEntryUpdate' => $taskData['DBEntryUpdate']
+            ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
+            ':PLNFilename' => $taskData['PLNFilename'],
+            ':PLNXML' => $taskData['PLNXML'],
+            ':WPRFilename' => $taskData['WPRFilename'],
+            ':WPRXML' => $taskData['WPRXML'],
+            ':LatMin' => $taskData['LatMin'],
+            ':LatMax' => $taskData['LatMax'],
+            ':LongMin' => $taskData['LongMin'],
+            ':LongMax' => $taskData['LongMax']
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 
@@ -207,9 +221,6 @@ try {
         $stmt = $pdo->prepare("SELECT EntrySeqID FROM Tasks WHERE TaskID = :TaskID");
         $stmt->execute([':TaskID' => $taskData['TaskID']]);
         $taskData['EntrySeqID'] = $stmt->fetchColumn();
-
-        // Update WorldMapInfo
-        createOrUpdateWorldMapInfo($pdo, $taskData);
 
         // Update corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, true);
@@ -222,31 +233,5 @@ try {
     logMessage("Connection failed: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $e->getMessage()]);
     logMessage("--- End of script CreateUpdateTaskFromDPHTool ---");
-}
-
-// Function to create or update WorldMapInfo entry
-function createOrUpdateWorldMapInfo($pdo, $taskData) {
-    $stmt = $pdo->prepare("
-        INSERT OR REPLACE INTO WorldMapInfo (
-            EntrySeqID, TaskID, PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax
-        ) VALUES (
-            :EntrySeqID, :TaskID, :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax
-        )
-    ");
-
-    $stmt->execute([
-        ':EntrySeqID' => $taskData['EntrySeqID'],
-        ':TaskID' => $taskData['TaskID'],
-        ':PLNFilename' => $taskData['PLNFilename'],
-        ':PLNXML' => $taskData['PLNXML'],
-        ':WPRFilename' => $taskData['WPRFilename'],
-        ':WPRXML' => $taskData['WPRXML'],
-        ':LatMin' => $taskData['LatMin'],
-        ':LatMax' => $taskData['LatMax'],
-        ':LongMin' => $taskData['LongMin'],
-        ':LongMax' => $taskData['LongMax']
-    ]);
-
-    logMessage("WorldMapInfo entry updated for TaskID: " . $taskData['TaskID']);
 }
 ?>

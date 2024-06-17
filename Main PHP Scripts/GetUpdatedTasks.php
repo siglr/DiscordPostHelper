@@ -11,9 +11,18 @@ try {
         $dbEntryUpdate = $_GET['DBEntryUpdate'];
 
         // Define the query to retrieve the records with DBEntryUpdate greater than the provided parameter
-        $query = "SELECT *
-                  FROM Tasks
-                  WHERE DBEntryUpdate > :dbEntryUpdate";
+        $query = "
+            SELECT 
+                EntrySeqID, TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo,
+                MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName,
+                ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves,
+                SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
+                TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
+                ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
+                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate
+            FROM Tasks
+            WHERE DBEntryUpdate > :dbEntryUpdate
+        ";
 
         // Prepare and execute the query
         $stmt = $pdo->prepare($query);
