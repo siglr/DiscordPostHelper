@@ -137,12 +137,13 @@ Public Class TaskBrowser
             'Already exists locally
             DownloadedFilePath = LocalDPHXFileName
         Else
+            'Download
+            Dim selTaskSeqID As String = _selectedTaskRow("EntrySeqID")
+            DownloadedFilePath = DownloadTaskFile(_selectedTaskRow("TaskID").ToString(), _selectedTaskRow("Title").ToString(), Settings.SessionSettings.PackagesFolder)
             'Call the script to increment the download count by 1
-            If IncrementDownloadForTask(_selectedTaskRow("EntrySeqID")) Then
+            If IncrementDownloadForTask(selTaskSeqID) Then
                 'Success
             End If
-            'Download
-            DownloadedFilePath = DownloadTaskFile(_selectedTaskRow("TaskID").ToString(), _selectedTaskRow("Title").ToString(), Settings.SessionSettings.PackagesFolder)
         End If
 
         If Not String.IsNullOrEmpty(DownloadedFilePath) Then
