@@ -96,6 +96,7 @@ Partial Class TaskBrowser
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabMap = New System.Windows.Forms.TabPage()
+        Me.btnInstallWebView = New System.Windows.Forms.Button()
         Me.webView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.splitRightPart = New System.Windows.Forms.SplitContainer()
         Me.txtBriefing = New System.Windows.Forms.RichTextBox()
@@ -120,7 +121,6 @@ Partial Class TaskBrowser
         Me.chkToFly = New System.Windows.Forms.CheckBox()
         Me.chkTaskFlown = New System.Windows.Forms.CheckBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnInstallWebView = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -327,14 +327,14 @@ Partial Class TaskBrowser
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RidgeToolStripMenuItem, Me.ThermalsToolStripMenuItem, Me.WavesToolStripMenuItem, Me.DynamicToolStripMenuItem, Me.AddOnsToolStripMenuItem, Me.TaskFlownToolStripMenuItem, Me.ToFlyToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(179, 24)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(198, 24)
         Me.ToolStripMenuItem1.Text = "Boolean"
         Me.ToolStripMenuItem1.ToolTipText = "Menu for all true/false fields."
         '
         'RidgeToolStripMenuItem
         '
         Me.RidgeToolStripMenuItem.Name = "RidgeToolStripMenuItem"
-        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.RidgeToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.RidgeToolStripMenuItem.Tag = ""
         Me.RidgeToolStripMenuItem.Text = "Ridge"
         Me.RidgeToolStripMenuItem.ToolTipText = "Select to filter based on Ridge soaring."
@@ -342,42 +342,42 @@ Partial Class TaskBrowser
         'ThermalsToolStripMenuItem
         '
         Me.ThermalsToolStripMenuItem.Name = "ThermalsToolStripMenuItem"
-        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.ThermalsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.ThermalsToolStripMenuItem.Text = "Thermals"
         Me.ThermalsToolStripMenuItem.ToolTipText = "Select to filter based on Thermals soaring."
         '
         'WavesToolStripMenuItem
         '
         Me.WavesToolStripMenuItem.Name = "WavesToolStripMenuItem"
-        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.WavesToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.WavesToolStripMenuItem.Text = "Waves"
         Me.WavesToolStripMenuItem.ToolTipText = "Select to filter based on Waves soaring."
         '
         'DynamicToolStripMenuItem
         '
         Me.DynamicToolStripMenuItem.Name = "DynamicToolStripMenuItem"
-        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.DynamicToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.DynamicToolStripMenuItem.Text = "Dynamic"
         Me.DynamicToolStripMenuItem.ToolTipText = "Select to filter based on Dynamic soaring."
         '
         'AddOnsToolStripMenuItem
         '
         Me.AddOnsToolStripMenuItem.Name = "AddOnsToolStripMenuItem"
-        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
-        Me.AddOnsToolStripMenuItem.Text = "Add-Ons"
+        Me.AddOnsToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
+        Me.AddOnsToolStripMenuItem.Text = "AddOns"
         Me.AddOnsToolStripMenuItem.ToolTipText = "Select to filter based on the task having recommended add-ons or not."
         '
         'TaskFlownToolStripMenuItem
         '
         Me.TaskFlownToolStripMenuItem.Name = "TaskFlownToolStripMenuItem"
-        Me.TaskFlownToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.TaskFlownToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.TaskFlownToolStripMenuItem.Text = "Flown"
         Me.TaskFlownToolStripMenuItem.ToolTipText = "Select to filter based on if you've flown the task."
         '
         'ToFlyToolStripMenuItem
         '
         Me.ToFlyToolStripMenuItem.Name = "ToFlyToolStripMenuItem"
-        Me.ToFlyToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
+        Me.ToFlyToolStripMenuItem.Size = New System.Drawing.Size(206, 24)
         Me.ToFlyToolStripMenuItem.Text = "ToFly"
         Me.ToFlyToolStripMenuItem.ToolTipText = "Select to filter based on if you've flagged the task To Fly."
         '
@@ -385,13 +385,12 @@ Partial Class TaskBrowser
         '
         Me.TextCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.textCriteriaWords, Me.ToolStripSeparator2})
         Me.TextCriteriaToolStripMenuItem.Name = "TextCriteriaToolStripMenuItem"
-        Me.TextCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.TextCriteriaToolStripMenuItem.Size = New System.Drawing.Size(198, 24)
         Me.TextCriteriaToolStripMenuItem.Text = "Text criteria"
         Me.TextCriteriaToolStripMenuItem.ToolTipText = "Menu for all text fields."
         '
         'textCriteriaWords
         '
-        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -405,13 +404,12 @@ Partial Class TaskBrowser
         '
         Me.NumbersCriteriaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.numbersCriteriaFromTo, Me.ToolStripSeparator3})
         Me.NumbersCriteriaToolStripMenuItem.Name = "NumbersCriteriaToolStripMenuItem"
-        Me.NumbersCriteriaToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.NumbersCriteriaToolStripMenuItem.Size = New System.Drawing.Size(198, 24)
         Me.NumbersCriteriaToolStripMenuItem.Text = "Numbers criteria"
         Me.NumbersCriteriaToolStripMenuItem.ToolTipText = "Menu for all numbers fields."
         '
         'numbersCriteriaFromTo
         '
-        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -424,13 +422,13 @@ Partial Class TaskBrowser
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(176, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(195, 6)
         '
         'FavoritesToolStripMenuItem
         '
         Me.FavoritesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddCurrentAsFavoriteToolStripMenuItem, Me.ToolStripSeparator5})
         Me.FavoritesToolStripMenuItem.Name = "FavoritesToolStripMenuItem"
-        Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.FavoritesToolStripMenuItem.Size = New System.Drawing.Size(198, 24)
         Me.FavoritesToolStripMenuItem.Text = "Favorites"
         Me.FavoritesToolStripMenuItem.ToolTipText = "Menu to select/manage your favorite filters."
         '
@@ -444,7 +442,6 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
-        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
@@ -563,13 +560,25 @@ Partial Class TaskBrowser
         '
         Me.tabMap.Controls.Add(Me.btnInstallWebView)
         Me.tabMap.Controls.Add(Me.webView)
-        Me.tabMap.Location = New System.Drawing.Point(4, 29)
+        Me.tabMap.Location = New System.Drawing.Point(4, 22)
         Me.tabMap.Name = "tabMap"
         Me.tabMap.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMap.Size = New System.Drawing.Size(792, 643)
+        Me.tabMap.Size = New System.Drawing.Size(792, 650)
         Me.tabMap.TabIndex = 1
         Me.tabMap.Text = "Map"
         Me.tabMap.UseVisualStyleBackColor = True
+        '
+        'btnInstallWebView
+        '
+        Me.btnInstallWebView.Location = New System.Drawing.Point(8, 6)
+        Me.btnInstallWebView.Name = "btnInstallWebView"
+        Me.btnInstallWebView.Size = New System.Drawing.Size(245, 48)
+        Me.btnInstallWebView.TabIndex = 2
+        Me.btnInstallWebView.Text = "Install WebView to enable map"
+        Me.ToolTip1.SetToolTip(Me.btnInstallWebView, "Click to install the required Microsoft Windows WebView component and enable the " &
+        "map.")
+        Me.btnInstallWebView.UseVisualStyleBackColor = True
+        Me.btnInstallWebView.Visible = False
         '
         'webView
         '
@@ -579,7 +588,7 @@ Partial Class TaskBrowser
         Me.webView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.webView.Location = New System.Drawing.Point(3, 3)
         Me.webView.Name = "webView"
-        Me.webView.Size = New System.Drawing.Size(786, 637)
+        Me.webView.Size = New System.Drawing.Size(786, 644)
         Me.webView.TabIndex = 1
         Me.webView.ZoomFactor = 1.0R
         '
@@ -865,18 +874,6 @@ Partial Class TaskBrowser
         Me.chkTaskFlown.Text = "I've flown this task"
         Me.ToolTip1.SetToolTip(Me.chkTaskFlown, "Check to mark this task as flown, and gain access to the other fields.")
         Me.chkTaskFlown.UseVisualStyleBackColor = True
-        '
-        'btnInstallWebView
-        '
-        Me.btnInstallWebView.Location = New System.Drawing.Point(8, 6)
-        Me.btnInstallWebView.Name = "btnInstallWebView"
-        Me.btnInstallWebView.Size = New System.Drawing.Size(245, 48)
-        Me.btnInstallWebView.TabIndex = 2
-        Me.btnInstallWebView.Text = "Install WebView to enable map"
-        Me.ToolTip1.SetToolTip(Me.btnInstallWebView, "Click to install the required Microsoft Windows WebView component and enable the " &
-        "map.")
-        Me.btnInstallWebView.UseVisualStyleBackColor = True
-        Me.btnInstallWebView.Visible = False
         '
         'TaskBrowser
         '
