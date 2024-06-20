@@ -606,10 +606,13 @@ Public Class TaskBrowser
         If Not String.IsNullOrEmpty(message) Then
             Dim json = JObject.Parse(message)
             Dim action = json("action").ToString()
-            If action = "selectTask" Then
-                Dim entrySeqID = json("entrySeqID").ToString()
-                SelectTaskOnGrid(entrySeqID)
-            End If
+            Select Case action
+                Case "selectTask"
+                    Dim entrySeqID = json("entrySeqID").ToString()
+                    SelectTaskOnGrid(entrySeqID)
+                Case "escapeKeyPressed"
+                    OK_Button.PerformClick()
+            End Select
         End If
     End Sub
 
