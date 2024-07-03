@@ -404,7 +404,6 @@ Partial Class TaskBrowser
         '
         'textCriteriaWords
         '
-        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -424,7 +423,6 @@ Partial Class TaskBrowser
         '
         'numbersCriteriaFromTo
         '
-        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -457,7 +455,6 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
-        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
@@ -714,10 +711,10 @@ Partial Class TaskBrowser
         Me.tabUserData.Controls.Add(Me.pnlAllUserDataFields)
         Me.tabUserData.Controls.Add(Me.chkToFly)
         Me.tabUserData.Controls.Add(Me.chkTaskFlown)
-        Me.tabUserData.Location = New System.Drawing.Point(4, 22)
+        Me.tabUserData.Location = New System.Drawing.Point(4, 29)
         Me.tabUserData.Name = "tabUserData"
         Me.tabUserData.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabUserData.Size = New System.Drawing.Size(306, 376)
+        Me.tabUserData.Size = New System.Drawing.Size(306, 369)
         Me.tabUserData.TabIndex = 1
         Me.tabUserData.Text = "Your data"
         Me.tabUserData.UseVisualStyleBackColor = True
@@ -726,7 +723,7 @@ Partial Class TaskBrowser
         '
         Me.btnUserDataSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnUserDataSave.Location = New System.Drawing.Point(7, 330)
+        Me.btnUserDataSave.Location = New System.Drawing.Point(7, 323)
         Me.btnUserDataSave.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnUserDataSave.Name = "btnUserDataSave"
         Me.btnUserDataSave.Size = New System.Drawing.Size(292, 35)
@@ -752,7 +749,7 @@ Partial Class TaskBrowser
         Me.pnlAllUserDataFields.Enabled = False
         Me.pnlAllUserDataFields.Location = New System.Drawing.Point(0, 28)
         Me.pnlAllUserDataFields.Name = "pnlAllUserDataFields"
-        Me.pnlAllUserDataFields.Size = New System.Drawing.Size(306, 301)
+        Me.pnlAllUserDataFields.Size = New System.Drawing.Size(306, 294)
         Me.pnlAllUserDataFields.TabIndex = 3
         '
         'txtComment
@@ -763,7 +760,7 @@ Partial Class TaskBrowser
         Me.txtComment.Location = New System.Drawing.Point(6, 195)
         Me.txtComment.Multiline = True
         Me.txtComment.Name = "txtComment"
-        Me.txtComment.Size = New System.Drawing.Size(294, 99)
+        Me.txtComment.Size = New System.Drawing.Size(294, 92)
         Me.txtComment.TabIndex = 9
         Me.ToolTip1.SetToolTip(Me.txtComment, "Enter any comment you want to keep about this task.")
         '

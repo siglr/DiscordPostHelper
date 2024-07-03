@@ -641,6 +641,19 @@ Public Class TaskBrowser
 
     End Sub
 
+    Private Sub gridCurrentDatabase_CellMouseDoubleClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles gridCurrentDatabase.CellMouseDoubleClick
+
+        Select Case gridCurrentDatabase.Columns(e.ColumnIndex).Name
+            Case "TaskFlownBool"
+                chkTaskFlown.Checked = Not chkTaskFlown.Checked
+                SaveUserData()
+            Case "ToFlyBool"
+                chkToFly.Checked = Not chkToFly.Checked
+                SaveUserData()
+        End Select
+
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
@@ -2409,7 +2422,6 @@ Public Class TaskBrowser
             End Try
         End Using
     End Sub
-
 
 #End Region
 
