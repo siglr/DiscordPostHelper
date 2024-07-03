@@ -152,6 +152,15 @@ Public Class TaskBrowser
 
     End Sub
 
+    Private Sub btnCopyLinkToWeSimGlide_Click(sender As Object, e As EventArgs) Handles btnCopyLinkToWeSimGlide.Click
+        Dim textToCopy As String = String.Empty
+        textToCopy = $"https://wesimglide.org/index.html?task={_selectedTaskRow("EntrySeqID")}"
+        Clipboard.SetText(textToCopy)
+        Using New Centered_MessageBox()
+            MessageBox.Show(Me, "The link to this task has been copied to your clipboard!", "Sharing task link", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+    End Sub
+
     Private Sub AddNewFavoriteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewFavoriteToolStripMenuItem.Click
 
         txtNewFavoriteTitle.Text = txtNewFavoriteTitle.Text.Replace("&", "")
