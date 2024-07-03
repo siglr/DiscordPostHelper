@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.6.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.3.1</ReleaseVersion>
+      <ReleaseTitle>Small fix and sync with WeSimGlide.org</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed countries with a comma in the name. Caused troubles with the task browser.
+        Staying in sync with DPHX and the new WeSimGlide.org feature.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.6.11.1</ReleaseVersion>
       <ReleaseTitle>Publishing to the task browser</ReleaseTitle>

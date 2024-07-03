@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.6.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.3.1</ReleaseVersion>
+      <ReleaseTitle>World Map view of the tasks library</ReleaseTitle>
+      <ReleaseNotes>
+        Added integration with WeSimGlide.org and world map view of all tasks in the library.
+        Added a button to copy the link to the selected task on WeSimGlide.org.
+        Added support for double-clicking on "Flown" or "ToFly" on the grid to mark the task as flown or as to fly.
+        Fixed a few minor bugs.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.6.11.1</ReleaseVersion>
       <ReleaseTitle>Better formatting of text and news tab</ReleaseTitle>
