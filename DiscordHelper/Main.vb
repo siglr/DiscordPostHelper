@@ -5966,7 +5966,7 @@ Public Class Main
         {"LongDescription", taskInfo.LongDescription},
         {"WeatherSummary", taskInfo.WeatherSummary},
         {"Credits", taskInfo.Credits},
-        {"Countries", String.Join(", ", taskInfo.Countries)},
+        {"Countries", String.Join(", ", taskInfo.Countries.Select(Function(country) country.Replace(", ", " - ")))},
         {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
         {"MapImage", theMapImage},
         {"CoverImage", theCoverImage},
