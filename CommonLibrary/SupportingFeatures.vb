@@ -23,6 +23,7 @@ Imports System.Drawing
 Public Class SupportingFeatures
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+    Private Const WeSimGlide As String = "https://wesimglide.org/"
     Private Const SW_RESTORE As Integer = 9
     Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
@@ -1805,6 +1806,10 @@ Public Class SupportingFeatures
 
         ' Return blank if URL doesn't match the expected format
         Return String.Empty
+    End Function
+
+    Public Shared Function GetWeSimGlideTaskURL(entrySeqID As Integer) As String
+        Return $"{WeSimGlide}index.html?task={entrySeqID.ToString.Trim}"
     End Function
 
     Public Shared ReadOnly Property GetMSFSSoaringToolsDiscordID As String

@@ -3937,7 +3937,12 @@ Public Class Main
 
         If Not autoContinue Then Exit Sub
 
-        txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})"
+        If _TBTaskEntrySeqID > 0 Then
+            txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})" &
+                            $"{Environment.NewLine}[Task #{_TBTaskEntrySeqID}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)}) and event have been published to WeSimGlide.org so are also directly accessible through the tool."
+        Else
+            txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})"
+        End If
         Clipboard.SetText(txtFilesText.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtFilesText.Text,
