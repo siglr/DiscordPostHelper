@@ -19,7 +19,7 @@ try {
                 SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
                 TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
-                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate
+                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, RepostText, LastUpdateDescription
             FROM Tasks
             WHERE DBEntryUpdate > :dbEntryUpdate
         ";

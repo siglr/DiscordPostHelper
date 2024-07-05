@@ -654,6 +654,10 @@ Public Class TaskBrowser
 
     End Sub
 
+    Private Sub txtBriefing_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles txtBriefing.LinkClicked
+        Process.Start(e.LinkText)
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
@@ -964,6 +968,8 @@ Public Class TaskBrowser
                                                Tasks.TotDownloads,
                                                Tasks.LastDownloadUpdate,
                                                Tasks.ThreadAccess,
+                                               Tasks.RepostText,
+                                               Tasks.LastUpdateDescription,
                                         	   COALESCE(UserData.TaskQualityRating, 0) AS TaskQualityRating,
                                                COALESCE(UserData.TaskDifficultyRating, 0) AS TaskDifficultyRating,
                                                COALESCE(UserData.Comment, '') AS Comment,
@@ -1246,6 +1252,11 @@ Public Class TaskBrowser
 
         'Credits
         sb.Append($"{_selectedTaskRow("Credits")}($*$)")
+        If _selectedTaskRow("RepostText").ToString().Trim <> String.Empty Then
+            Dim discordURL As String = _selectedTaskRow("RepostText").ToString().Replace("http://discord.com", "discord://discord.com")
+            discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+            sb.Append($"{discordURL}($*$)")
+        End If
         sb.Append("($*$)")
 
         'Local MSFS date and time 
@@ -1926,7 +1937,9 @@ Public Class TaskBrowser
                                                                                     RecommendedAddOns,  
                                                                                     MapImage,  
                                                                                     CoverImage,  
-                                                                                    DBEntryUpdate) 
+                                                                                    DBEntryUpdate,
+                                                                                    RepostText,
+                                                                                    LastUpdateDescription) 
                                                         VALUES (@EntrySeqID,  
                                                                 @TaskID, 
                                                                 @Title, 
@@ -1962,7 +1975,9 @@ Public Class TaskBrowser
                                                                 @RecommendedAddOns, 
                                                                 @MapImage, 
                                                                 @CoverImage, 
-                                                                @DBEntryUpdate)", conn)
+                                                                @DBEntryUpdate,
+                                                                @RepostText,
+                                                                @LastUpdateDescription)", conn)
 
                         ' Add parameters and set their values
                         cmd.Parameters.AddWithValue("@EntrySeqID", row("EntrySeqID"))
@@ -2001,6 +2016,8 @@ Public Class TaskBrowser
                         cmd.Parameters.AddWithValue("@MapImage", If(row("MapImage") Is Nothing OrElse IsDBNull(row("MapImage")) OrElse row("MapImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("MapImage").ToString())))
                         cmd.Parameters.AddWithValue("@CoverImage", If(row("CoverImage") Is Nothing OrElse IsDBNull(row("CoverImage")) OrElse row("CoverImage") = String.Empty, DBNull.Value, Convert.FromBase64String(row("CoverImage").ToString())))
                         cmd.Parameters.AddWithValue("@DBEntryUpdate", row("DBEntryUpdate"))
+                        cmd.Parameters.AddWithValue("@RepostText", row("RepostText"))
+                        cmd.Parameters.AddWithValue("@LastUpdateDescription", row("LastUpdateDescription"))
 
                         Dim rowsAffected = cmd.ExecuteNonQuery()
                         If rowsAffected = 1 Then
@@ -2215,7 +2232,9 @@ Public Class TaskBrowser
             "ThreadAccess",
             "Comment",
             "TaskFlown",
-            "ToFly"}
+            "ToFly",
+            "RepostText",
+            "LastUpdateDescription"}
 
     End Function
 

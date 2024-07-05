@@ -404,6 +404,7 @@ Partial Class TaskBrowser
         '
         'textCriteriaWords
         '
+        Me.textCriteriaWords.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.textCriteriaWords.Name = "textCriteriaWords"
         Me.textCriteriaWords.Size = New System.Drawing.Size(100, 26)
         Me.textCriteriaWords.ToolTipText = "Specify the text value to search for"
@@ -423,6 +424,7 @@ Partial Class TaskBrowser
         '
         'numbersCriteriaFromTo
         '
+        Me.numbersCriteriaFromTo.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.numbersCriteriaFromTo.Name = "numbersCriteriaFromTo"
         Me.numbersCriteriaFromTo.Size = New System.Drawing.Size(100, 26)
         Me.numbersCriteriaFromTo.ToolTipText = "Specify the minimum and maximum values from-to"
@@ -455,6 +457,7 @@ Partial Class TaskBrowser
         '
         'txtNewFavoriteTitle
         '
+        Me.txtNewFavoriteTitle.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.txtNewFavoriteTitle.Name = "txtNewFavoriteTitle"
         Me.txtNewFavoriteTitle.Size = New System.Drawing.Size(100, 26)
         '
@@ -711,10 +714,10 @@ Partial Class TaskBrowser
         Me.tabUserData.Controls.Add(Me.pnlAllUserDataFields)
         Me.tabUserData.Controls.Add(Me.chkToFly)
         Me.tabUserData.Controls.Add(Me.chkTaskFlown)
-        Me.tabUserData.Location = New System.Drawing.Point(4, 29)
+        Me.tabUserData.Location = New System.Drawing.Point(4, 22)
         Me.tabUserData.Name = "tabUserData"
         Me.tabUserData.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabUserData.Size = New System.Drawing.Size(306, 369)
+        Me.tabUserData.Size = New System.Drawing.Size(306, 376)
         Me.tabUserData.TabIndex = 1
         Me.tabUserData.Text = "Your data"
         Me.tabUserData.UseVisualStyleBackColor = True
