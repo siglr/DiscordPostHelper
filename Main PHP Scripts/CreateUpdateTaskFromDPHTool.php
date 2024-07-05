@@ -157,7 +157,7 @@ try {
                 WeatherSummary = :WeatherSummary, Credits = :Credits, Countries = :Countries, RecommendedAddOns = :RecommendedAddOns,
                 MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
                 PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, 
-                LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText
+                LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText, LastUpdateDescription = :LastUpdateDescription
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -216,7 +216,8 @@ try {
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
-            ':RepostText' => $taskData['RepostText']
+            ':RepostText' => $taskData['RepostText'],
+            ':LastUpdateDescription' => $taskData['LastUpdateDescription']
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 

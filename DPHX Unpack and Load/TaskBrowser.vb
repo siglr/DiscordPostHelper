@@ -1258,6 +1258,8 @@ Public Class TaskBrowser
             sb.Append($"{discordURL}($*$)")
         End If
         sb.Append("($*$)")
+        sb.Append($"Last update: {Convert.ToDateTime(_selectedTaskRow("LastUpdate")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("LastUpdate")).ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} UTC{If(_selectedTaskRow("LastUpdateDescription").ToString.Trim.Length = 0, "", $" ({_selectedTaskRow("LastUpdateDescription")})")}($*$)")
+        sb.Append("($*$)")
 
         'Local MSFS date and time 
         sb.Append($"MSFS Local date & time is **{Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateFormat, _EnglishCulture)}, {Convert.ToDateTime(_selectedTaskRow("SimDateTime")).ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_selectedTaskRow("SimDateTimeExtraInfo").ToString().Trim, True, True)}**($*$)")

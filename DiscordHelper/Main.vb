@@ -435,6 +435,7 @@ Public Class Main
         txtBaroPressureExtraInfo.Enabled = False
         lblNonStdBaroPressure.Enabled = False
         chkRepost.Checked = False
+        txtLastUpdateDescription.Text = String.Empty
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.AllWaypoints.Clear()
@@ -1102,7 +1103,8 @@ Public Class Main
                                                                                            txtBaroPressureExtraInfo.Leave,
                                                                                            txtGroupEventPostURL.Leave,
                                                                                            txtDiscordEventShareURL.Leave,
-                                                                                           txtRepostOriginalURL.Leave
+                                                                                           txtRepostOriginalURL.Leave,
+                                                                                           txtLastUpdateDescription.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -5765,6 +5767,13 @@ Public Class Main
 
     Private Sub btnUpdateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnUpdateInTaskBrowser.Click
         If UserCanUpdateTask Then
+            'Check if an update description is present
+            If txtLastUpdateDescription.TextLength = 0 Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Exit Sub
+                End Using
+            End If
             UploadToTaskBrowser()
             GetTaskDetails(txtDiscordTaskID.Text.Trim)
             SetTBTaskDetailsLabel()
@@ -6014,7 +6023,8 @@ Public Class Main
         {"PLNXML", _XmlDocFlightPlan.InnerXml},
         {"WPRFilename", taskInfo.WeatherFilename},
         {"WPRXML", _XmlDocWeatherPreset.InnerXml},
-        {"RepostText", repostText}
+        {"RepostText", repostText},
+        {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim}
     }
 
         Dim filePath As String = taskInfo.DPHXPackageFilename
@@ -6218,6 +6228,7 @@ Public Class Main
 
         btnCreateInTaskBrowser.Enabled = False
         btnUpdateInTaskBrowser.Enabled = False
+        txtLastUpdateDescription.Enabled = False
         btnDeleteFromTaskBrowser.Enabled = False
 
         If txtDiscordTaskID.Text.Trim = String.Empty Then
@@ -6234,6 +6245,7 @@ Public Class Main
                 'Local file is more recent - allow change
                 If UserCanUpdateTask Then
                     btnUpdateInTaskBrowser.Enabled = True
+                    txtLastUpdateDescription.Enabled = True
                 End If
                 lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             Else

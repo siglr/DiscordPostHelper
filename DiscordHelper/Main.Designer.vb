@@ -211,6 +211,7 @@ Partial Class Main
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
         Me.btnDeleteEventNews = New System.Windows.Forms.Button()
         Me.btnPublishEventNews = New System.Windows.Forms.Button()
         Me.btnDeleteFromTaskBrowser = New System.Windows.Forms.Button()
@@ -2822,6 +2823,7 @@ Partial Class Main
         '
         'GroupBox6
         '
+        Me.GroupBox6.Controls.Add(Me.txtLastUpdateDescription)
         Me.GroupBox6.Controls.Add(Me.btnDeleteEventNews)
         Me.GroupBox6.Controls.Add(Me.btnPublishEventNews)
         Me.GroupBox6.Controls.Add(Me.btnDeleteFromTaskBrowser)
@@ -2834,11 +2836,22 @@ Partial Class Main
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "Task Browser"
         '
+        'txtLastUpdateDescription
+        '
+        Me.txtLastUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 70)
+        Me.txtLastUpdateDescription.Multiline = True
+        Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
+        Me.txtLastUpdateDescription.Size = New System.Drawing.Size(212, 86)
+        Me.txtLastUpdateDescription.TabIndex = 100
+        Me.txtLastUpdateDescription.Tag = "87"
+        Me.ToolTip1.SetToolTip(Me.txtLastUpdateDescription, "Enter a description for this task update")
+        '
         'btnDeleteEventNews
         '
         Me.btnDeleteEventNews.Enabled = False
         Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 199)
+        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 291)
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteEventNews.TabIndex = 99
@@ -2851,7 +2864,7 @@ Partial Class Main
         '
         Me.btnPublishEventNews.Enabled = False
         Me.btnPublishEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 156)
+        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 248)
         Me.btnPublishEventNews.Name = "btnPublishEventNews"
         Me.btnPublishEventNews.Size = New System.Drawing.Size(212, 37)
         Me.btnPublishEventNews.TabIndex = 98
@@ -2864,7 +2877,7 @@ Partial Class Main
         '
         Me.btnDeleteFromTaskBrowser.Enabled = False
         Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 113)
+        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 205)
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteFromTaskBrowser.TabIndex = 97
@@ -2877,7 +2890,7 @@ Partial Class Main
         '
         Me.btnUpdateInTaskBrowser.Enabled = False
         Me.btnUpdateInTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnUpdateInTaskBrowser.Location = New System.Drawing.Point(6, 70)
+        Me.btnUpdateInTaskBrowser.Location = New System.Drawing.Point(6, 162)
         Me.btnUpdateInTaskBrowser.Name = "btnUpdateInTaskBrowser"
         Me.btnUpdateInTaskBrowser.Size = New System.Drawing.Size(212, 37)
         Me.btnUpdateInTaskBrowser.TabIndex = 96
@@ -5014,6 +5027,7 @@ Partial Class Main
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox6.PerformLayout()
         Me.pnlWizardDiscord.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.GroupBox5.ResumeLayout(False)
@@ -5467,4 +5481,5 @@ Partial Class Main
     Friend WithEvents btnPublishEventNews As Button
     Friend WithEvents btnRepostOriginalURLPaste As Button
     Friend WithEvents txtRepostOriginalURL As TextBox
+    Friend WithEvents txtLastUpdateDescription As TextBox
 End Class

@@ -114,8 +114,14 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
         $action = $isUpdate ? 'UpdateTask' : 'CreateTask';
         $title = $isUpdate ? "Updated task #" . $taskData['EntrySeqID'] : "New task #" . $taskData['EntrySeqID'];
 
-        // Handle comments, truncate if longer than 75 characters
-        $comments = !empty($taskData['MainAreaPOI']) ? $taskData['MainAreaPOI'] : $taskData['ShortDescription'];
+        // Handle comments
+        if ($isUpdate && !empty($taskData['LastUpdateDescription'])) {
+            $comments = $taskData['LastUpdateDescription'];
+        } else {
+            $comments = !empty($taskData['MainAreaPOI']) ? $taskData['MainAreaPOI'] : $taskData['ShortDescription'];
+        }
+        
+        // Truncate comments if longer than 75 characters
         if (strlen($comments) > 75) {
             $comments = substr($comments, 0, 75) . '...';
         }
