@@ -460,6 +460,15 @@ Public Class BriefingControl
             sb.Append("($*$)")
         End If
         sb.Append($"{_sessionData.Credits}($*$)")
+        If _sessionData.EnableRepostInfo Then
+            If _sessionData.RepostOriginalURL.Length > 0 Then
+                Dim discordURL As String = _sessionData.RepostOriginalURL.Replace("http://discord.com", "discord://discord.com")
+                discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                sb.AppendLine($"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(_sessionData.RepostOriginalURL)}]({discordURL}) on {_sessionData.RepostOriginalDate.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+            Else
+                sb.AppendLine($"This task was originally posted on {_sessionData.RepostOriginalDate.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+            End If
+        End If
         sb.Append("($*$)")
 
         'Credits
@@ -665,7 +674,13 @@ Public Class BriefingControl
             CountDownReset()
         Else
             'Group/Club Name
-            sb.Append($"**{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}**($*$)")
+            If _sessionData.URLGroupEventPost.Length > 0 Then
+                Dim discordURL As String = _sessionData.URLGroupEventPost.Replace("http://discord.com", "discord://discord.com")
+                discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                sb.Append($"**[{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}]({discordURL})**($*$)")
+            Else
+                sb.Append($"**{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}**($*$)")
+            End If
 
             Dim fullMeetDateTimeLocal As DateTime = _sessionData.MeetLocalDateTime
             Dim fullSyncFlyDateTimeLocal As DateTime = _sessionData.SyncFlyLocalDateTime
