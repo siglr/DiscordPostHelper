@@ -59,7 +59,7 @@ try {
                 TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
                 RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, 
-                PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax
+                PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax, RepostText
             ) VALUES (
                 :TaskID, :Title, :LastUpdate, :SimDateTime, :IncludeYear, :SimDateTimeExtraInfo,
                 :MainAreaPOI, :DepartureName, :DepartureICAO, :DepartureExtra, :ArrivalName,
@@ -68,7 +68,7 @@ try {
                 :TaskDistance, :TotalDistance, :RecommendedGliders, :DifficultyRating, :DifficultyExtraInfo,
                 :ShortDescription, :LongDescription, :WeatherSummary, :Credits, :Countries,
                 :RecommendedAddOns, :MapImage, :CoverImage, :DBEntryUpdate, 
-                :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax
+                :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax, :RepostText
             )
         ");
         logMessage("Insert statement prepared.");
@@ -126,7 +126,8 @@ try {
             ':LatMin' => $taskData['LatMin'],
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
-            ':LongMax' => $taskData['LongMax']
+            ':LongMax' => $taskData['LongMax'],
+            ':RepostText' => $taskData['RepostText']
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
@@ -155,7 +156,8 @@ try {
                 DifficultyExtraInfo = :DifficultyExtraInfo, ShortDescription = :ShortDescription, LongDescription = :LongDescription,
                 WeatherSummary = :WeatherSummary, Credits = :Credits, Countries = :Countries, RecommendedAddOns = :RecommendedAddOns,
                 MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
-                PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax
+                PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, 
+                LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -213,7 +215,8 @@ try {
             ':LatMin' => $taskData['LatMin'],
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
-            ':LongMax' => $taskData['LongMax']
+            ':LongMax' => $taskData['LongMax'],
+            ':RepostText' => $taskData['RepostText']
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 

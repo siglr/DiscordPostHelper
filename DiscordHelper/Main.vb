@@ -5959,6 +5959,16 @@ Public Class Main
         Dim longitudeMax As Double
         _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
 
+        'Set RepostText
+        Dim repostText As String = String.Empty
+        If chkRepost.Checked Then
+            If txtRepostOriginalURL.TextLength > 0 Then
+                repostText = $"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}]({txtRepostOriginalURL.Text}) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
+            Else
+                repostText = $"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
+            End If
+        End If
+
         ' Update the taskData dictionary to include WorldMapInfo fields
         Dim taskData As New Dictionary(Of String, Object) From {
         {"TaskID", taskInfo.DiscordTaskID},
@@ -6003,7 +6013,8 @@ Public Class Main
         {"PLNFilename", taskInfo.FlightPlanFilename},
         {"PLNXML", _XmlDocFlightPlan.InnerXml},
         {"WPRFilename", taskInfo.WeatherFilename},
-        {"WPRXML", _XmlDocWeatherPreset.InnerXml}
+        {"WPRXML", _XmlDocWeatherPreset.InnerXml},
+        {"RepostText", repostText}
     }
 
         Dim filePath As String = taskInfo.DPHXPackageFilename
