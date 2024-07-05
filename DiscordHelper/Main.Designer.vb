@@ -210,7 +210,6 @@ Partial Class Main
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
-        Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
         Me.btnDeleteEventNews = New System.Windows.Forms.Button()
         Me.btnPublishEventNews = New System.Windows.Forms.Button()
@@ -249,6 +248,8 @@ Partial Class Main
         Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
         Me.grpRepost = New System.Windows.Forms.GroupBox()
+        Me.btnRepostOriginalURLPaste = New System.Windows.Forms.Button()
+        Me.txtRepostOriginalURL = New System.Windows.Forms.TextBox()
         Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
         Me.chkRepost = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -294,8 +295,8 @@ Partial Class Main
         Me.btnDPOResetToDefault = New System.Windows.Forms.Button()
         Me.btnStartTaskPost = New System.Windows.Forms.Button()
         Me.lblTaskLibraryIDNotAcquired = New System.Windows.Forms.Label()
-        Me.lblThread1stMsgIDNotAcquired = New System.Windows.Forms.Label()
         Me.lblTaskLibraryIDAcquired = New System.Windows.Forms.Label()
+        Me.lblThread1stMsgIDNotAcquired = New System.Windows.Forms.Label()
         Me.lblThread1stMsgIDAcquired = New System.Windows.Forms.Label()
         Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
         Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
@@ -359,6 +360,7 @@ Partial Class Main
         Me.Label15 = New System.Windows.Forms.Label()
         Me.chkDPOExpertMode = New System.Windows.Forms.CheckBox()
         Me.numWaitSecondsForFiles = New System.Windows.Forms.NumericUpDown()
+        Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
@@ -2786,7 +2788,6 @@ Partial Class Main
         '
         'tabDiscord
         '
-        Me.tabDiscord.Controls.Add(Me.lblTaskBrowserIDAndDate)
         Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.GroupBox5)
@@ -2811,24 +2812,13 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.lblNbrCarsFilesText)
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
         Me.tabDiscord.Controls.Add(Me.GroupBox4)
+        Me.tabDiscord.Controls.Add(Me.lblTaskBrowserIDAndDate)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
         Me.tabDiscord.Name = "tabDiscord"
         Me.tabDiscord.Size = New System.Drawing.Size(1467, 860)
         Me.tabDiscord.TabIndex = 3
         Me.tabDiscord.Text = "Discord and Browser"
         Me.tabDiscord.UseVisualStyleBackColor = True
-        '
-        'lblTaskBrowserIDAndDate
-        '
-        Me.lblTaskBrowserIDAndDate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTaskBrowserIDAndDate.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskBrowserIDAndDate.Location = New System.Drawing.Point(841, 683)
-        Me.lblTaskBrowserIDAndDate.Name = "lblTaskBrowserIDAndDate"
-        Me.lblTaskBrowserIDAndDate.Size = New System.Drawing.Size(623, 33)
-        Me.lblTaskBrowserIDAndDate.TabIndex = 97
-        Me.lblTaskBrowserIDAndDate.Text = "This task does not exist in the Task Library Browser"
-        Me.lblTaskBrowserIDAndDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.lblTaskBrowserIDAndDate.Visible = False
         '
         'GroupBox6
         '
@@ -3035,10 +3025,10 @@ Partial Class Main
         '
         'txtDiscordEventShareURL
         '
-        Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(23, 281)
         Me.txtDiscordEventShareURL.Name = "txtDiscordEventShareURL"
-        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(507, 32)
+        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(507, 30)
         Me.txtDiscordEventShareURL.TabIndex = 13
         Me.txtDiscordEventShareURL.Tag = "98"
         Me.ToolTip1.SetToolTip(Me.txtDiscordEventShareURL, "Enter the URL to the Discord post created above in step 1.")
@@ -3272,19 +3262,45 @@ Partial Class Main
         '
         Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpRepost.Controls.Add(Me.btnRepostOriginalURLPaste)
+        Me.grpRepost.Controls.Add(Me.txtRepostOriginalURL)
         Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
         Me.grpRepost.Controls.Add(Me.chkRepost)
-        Me.grpRepost.Location = New System.Drawing.Point(6, 26)
+        Me.grpRepost.Location = New System.Drawing.Point(6, 23)
         Me.grpRepost.Name = "grpRepost"
-        Me.grpRepost.Size = New System.Drawing.Size(393, 68)
+        Me.grpRepost.Size = New System.Drawing.Size(393, 92)
         Me.grpRepost.TabIndex = 0
         Me.grpRepost.TabStop = False
+        '
+        'btnRepostOriginalURLPaste
+        '
+        Me.btnRepostOriginalURLPaste.Enabled = False
+        Me.btnRepostOriginalURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRepostOriginalURLPaste.Location = New System.Drawing.Point(313, 57)
+        Me.btnRepostOriginalURLPaste.Name = "btnRepostOriginalURLPaste"
+        Me.btnRepostOriginalURLPaste.Size = New System.Drawing.Size(74, 29)
+        Me.btnRepostOriginalURLPaste.TabIndex = 3
+        Me.btnRepostOriginalURLPaste.Tag = "40"
+        Me.btnRepostOriginalURLPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnRepostOriginalURLPaste, "Click this button to paste the original task post URL from your clipboard")
+        Me.btnRepostOriginalURLPaste.UseVisualStyleBackColor = True
+        '
+        'txtRepostOriginalURL
+        '
+        Me.txtRepostOriginalURL.Enabled = False
+        Me.txtRepostOriginalURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.txtRepostOriginalURL.Location = New System.Drawing.Point(6, 55)
+        Me.txtRepostOriginalURL.Name = "txtRepostOriginalURL"
+        Me.txtRepostOriginalURL.Size = New System.Drawing.Size(301, 30)
+        Me.txtRepostOriginalURL.TabIndex = 2
+        Me.txtRepostOriginalURL.Tag = "40"
+        Me.ToolTip1.SetToolTip(Me.txtRepostOriginalURL, "Enter the URL to the original task post.")
         '
         'dtRepostOriginalDate
         '
         Me.dtRepostOriginalDate.Enabled = False
         Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 26)
+        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 23)
         Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
         Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
         Me.dtRepostOriginalDate.TabIndex = 1
@@ -3296,13 +3312,14 @@ Partial Class Main
         Me.chkRepost.AutoSize = True
         Me.chkRepost.BackColor = System.Drawing.SystemColors.Control
         Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.chkRepost.Location = New System.Drawing.Point(8, 0)
+        Me.chkRepost.Location = New System.Drawing.Point(8, -3)
         Me.chkRepost.Name = "chkRepost"
-        Me.chkRepost.Size = New System.Drawing.Size(255, 24)
+        Me.chkRepost.Size = New System.Drawing.Size(299, 24)
         Me.chkRepost.TabIndex = 0
         Me.chkRepost.Tag = "40"
-        Me.chkRepost.Text = "This is a repost from an old source"
-        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a pre-existing flight")
+        Me.chkRepost.Text = "External task original date and source URL"
+        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a previous task published somewhere else (not the" &
+        " Task Library)")
         Me.chkRepost.UseVisualStyleBackColor = False
         '
         'GroupBox1
@@ -3315,12 +3332,12 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.btnDPOResetToDefault)
         Me.GroupBox1.Controls.Add(Me.btnStartTaskPost)
         Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
-        Me.GroupBox1.Controls.Add(Me.lblThread1stMsgIDNotAcquired)
         Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDAcquired)
+        Me.GroupBox1.Controls.Add(Me.lblThread1stMsgIDNotAcquired)
         Me.GroupBox1.Controls.Add(Me.lblThread1stMsgIDAcquired)
-        Me.GroupBox1.Location = New System.Drawing.Point(6, 100)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 116)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 611)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 595)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Discord Post Options"
@@ -3328,7 +3345,7 @@ Partial Class Main
         'btnDPORecallSettings
         '
         Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 526)
+        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 510)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORecallSettings.TabIndex = 2
@@ -3340,7 +3357,7 @@ Partial Class Main
         'btnDPORememberSettings
         '
         Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 526)
+        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 510)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORememberSettings.TabIndex = 3
@@ -3373,7 +3390,7 @@ Partial Class Main
         Me.flpDiscordPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordPostOptions.Location = New System.Drawing.Point(0, 26)
         Me.flpDiscordPostOptions.Name = "flpDiscordPostOptions"
-        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 442)
+        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 420)
         Me.flpDiscordPostOptions.TabIndex = 0
         '
         'FlowLayoutPanel1
@@ -3832,7 +3849,7 @@ Partial Class Main
         'btnDPOResetToDefault
         '
         Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 526)
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 510)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDPOResetToDefault.TabIndex = 4
@@ -3844,7 +3861,7 @@ Partial Class Main
         'btnStartTaskPost
         '
         Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 567)
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 551)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartTaskPost.TabIndex = 5
@@ -3857,29 +3874,18 @@ Partial Class Main
         '
         Me.lblTaskLibraryIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTaskLibraryIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskLibraryIDNotAcquired.Location = New System.Drawing.Point(6, 459)
+        Me.lblTaskLibraryIDNotAcquired.Location = New System.Drawing.Point(6, 448)
         Me.lblTaskLibraryIDNotAcquired.Name = "lblTaskLibraryIDNotAcquired"
         Me.lblTaskLibraryIDNotAcquired.Size = New System.Drawing.Size(381, 33)
         Me.lblTaskLibraryIDNotAcquired.TabIndex = 0
         Me.lblTaskLibraryIDNotAcquired.Text = "⚠️ = TASK LIBRARY ID NOT ACQUIRED"
         Me.lblTaskLibraryIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'lblThread1stMsgIDNotAcquired
-        '
-        Me.lblThread1stMsgIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblThread1stMsgIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblThread1stMsgIDNotAcquired.Location = New System.Drawing.Point(6, 485)
-        Me.lblThread1stMsgIDNotAcquired.Name = "lblThread1stMsgIDNotAcquired"
-        Me.lblThread1stMsgIDNotAcquired.Size = New System.Drawing.Size(381, 33)
-        Me.lblThread1stMsgIDNotAcquired.TabIndex = 1
-        Me.lblThread1stMsgIDNotAcquired.Text = "⚠️ = Thread First Msg ID NOT Acquired"
-        Me.lblThread1stMsgIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'lblTaskLibraryIDAcquired
         '
         Me.lblTaskLibraryIDAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTaskLibraryIDAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskLibraryIDAcquired.Location = New System.Drawing.Point(6, 459)
+        Me.lblTaskLibraryIDAcquired.Location = New System.Drawing.Point(6, 448)
         Me.lblTaskLibraryIDAcquired.Name = "lblTaskLibraryIDAcquired"
         Me.lblTaskLibraryIDAcquired.Size = New System.Drawing.Size(381, 33)
         Me.lblTaskLibraryIDAcquired.TabIndex = 17
@@ -3887,11 +3893,22 @@ Partial Class Main
         Me.lblTaskLibraryIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblTaskLibraryIDAcquired.Visible = False
         '
+        'lblThread1stMsgIDNotAcquired
+        '
+        Me.lblThread1stMsgIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblThread1stMsgIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblThread1stMsgIDNotAcquired.Location = New System.Drawing.Point(6, 474)
+        Me.lblThread1stMsgIDNotAcquired.Name = "lblThread1stMsgIDNotAcquired"
+        Me.lblThread1stMsgIDNotAcquired.Size = New System.Drawing.Size(381, 33)
+        Me.lblThread1stMsgIDNotAcquired.TabIndex = 1
+        Me.lblThread1stMsgIDNotAcquired.Text = "⚠️ = Thread First Msg ID NOT Acquired"
+        Me.lblThread1stMsgIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'lblThread1stMsgIDAcquired
         '
         Me.lblThread1stMsgIDAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblThread1stMsgIDAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblThread1stMsgIDAcquired.Location = New System.Drawing.Point(6, 485)
+        Me.lblThread1stMsgIDAcquired.Location = New System.Drawing.Point(6, 474)
         Me.lblThread1stMsgIDAcquired.Name = "lblThread1stMsgIDAcquired"
         Me.lblThread1stMsgIDAcquired.Size = New System.Drawing.Size(381, 33)
         Me.lblThread1stMsgIDAcquired.TabIndex = 21
@@ -4604,10 +4621,10 @@ Partial Class Main
         '
         'txtGroupEventPostURL
         '
-        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.txtGroupEventPostURL.Location = New System.Drawing.Point(4, 561)
         Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
-        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(304, 32)
+        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(304, 30)
         Me.txtGroupEventPostURL.TabIndex = 2
         Me.txtGroupEventPostURL.Tag = "81"
         Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
@@ -4670,6 +4687,18 @@ Partial Class Main
         Me.numWaitSecondsForFiles.Tag = "84"
         Me.numWaitSecondsForFiles.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.numWaitSecondsForFiles.Value = New Decimal(New Integer() {5, 0, 0, 0})
+        '
+        'lblTaskBrowserIDAndDate
+        '
+        Me.lblTaskBrowserIDAndDate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTaskBrowserIDAndDate.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblTaskBrowserIDAndDate.Location = New System.Drawing.Point(841, 683)
+        Me.lblTaskBrowserIDAndDate.Name = "lblTaskBrowserIDAndDate"
+        Me.lblTaskBrowserIDAndDate.Size = New System.Drawing.Size(623, 33)
+        Me.lblTaskBrowserIDAndDate.TabIndex = 97
+        Me.lblTaskBrowserIDAndDate.Text = "This task does not exist in the Task Library Browser"
+        Me.lblTaskBrowserIDAndDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblTaskBrowserIDAndDate.Visible = False
         '
         'tabBriefing
         '
@@ -5436,4 +5465,6 @@ Partial Class Main
     Friend WithEvents lblTaskBrowserIDAndDate As Label
     Friend WithEvents btnDeleteEventNews As Button
     Friend WithEvents btnPublishEventNews As Button
+    Friend WithEvents btnRepostOriginalURLPaste As Button
+    Friend WithEvents txtRepostOriginalURL As TextBox
 End Class

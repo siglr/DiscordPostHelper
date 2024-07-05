@@ -408,6 +408,7 @@ Public Class Main
         txtEventDescription.Text = String.Empty
         cboEligibleAward.SelectedIndex = -1
         txtGroupEventPostURL.Text = String.Empty
+        txtRepostOriginalURL.Text = String.Empty
         txtDiscordEventShareURL.Text = String.Empty
         txtDPHXPackageFilename.Text = String.Empty
         txtAddOnsDetails.Text = String.Empty
@@ -1043,7 +1044,13 @@ Public Class Main
                                                                           cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
-                                                                          cboDifficulty.SelectedIndexChanged, txtOtherBeginnerLink.TextChanged, chkSoaringTypeDynamic.CheckedChanged, txtEventTeaserMessage.TextChanged, txtClubFullName.TextChanged
+                                                                          cboDifficulty.SelectedIndexChanged,
+                                                                          txtOtherBeginnerLink.TextChanged,
+                                                                          chkSoaringTypeDynamic.CheckedChanged,
+                                                                          txtEventTeaserMessage.TextChanged,
+                                                                          txtClubFullName.TextChanged,
+                                                                          txtRepostOriginalURL.TextChanged,
+                                                                          dtRepostOriginalDate.ValueChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -1067,13 +1074,6 @@ Public Class Main
 
         CheckWhichOptionsCanBeEnabled()
         SessionModified()
-
-        'Some fields have an impact on the events tab
-        If sender Is dtSimDate OrElse
-           sender Is dtSimLocalTime OrElse
-           sender Is chkIncludeYear Then
-            CopyToEventFields(sender, e)
-        End If
 
         If TypeOf sender IsNot Windows.Forms.TextBox Then
             GeneralFPTabFieldLeaveDetection(sender, e)
@@ -1099,7 +1099,10 @@ Public Class Main
                                                                                            txtArrivalExtraInfo.Leave,
                                                                                            txtLongDescription.Leave,
                                                                                            txtWeatherSummary.Leave,
-                                                                                           txtBaroPressureExtraInfo.Leave, txtGroupEventPostURL.Leave, txtDiscordEventShareURL.Leave
+                                                                                           txtBaroPressureExtraInfo.Leave,
+                                                                                           txtGroupEventPostURL.Leave,
+                                                                                           txtDiscordEventShareURL.Leave,
+                                                                                           txtRepostOriginalURL.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -1290,12 +1293,6 @@ Public Class Main
         If sender Is txtTitle Then
             txtEventTitle.Text = txtTitle.Text
         End If
-
-        'If sender Is txtShortDescription Then
-        'txtEventDescription.Text = txtShortDescription.Text
-        'End If
-
-        'BuildGroupFlightPost()
 
     End Sub
 
@@ -1886,7 +1883,11 @@ Public Class Main
         Else
             sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
             If chkRepost.Checked Then
-                sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+                If txtRepostOriginalURL.TextLength > 0 Then
+                    sb.AppendLine($"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}]({txtRepostOriginalURL.Text}) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+                Else
+                    sb.AppendLine($"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}")
+                End If
             End If
         End If
         sb.AppendLine()
@@ -2623,6 +2624,14 @@ Public Class Main
     Private Sub chkRepost_CheckedChanged(sender As Object, e As EventArgs) Handles chkRepost.CheckedChanged
 
         dtRepostOriginalDate.Enabled = chkRepost.Checked
+        txtRepostOriginalURL.Enabled = chkRepost.Checked
+        btnRepostOriginalURLPaste.Enabled = chkRepost.Checked
+
+        If dtRepostOriginalDate.Enabled Then
+            dtRepostOriginalDate.Value = Now
+        End If
+
+        AllFieldChanges(sender, e)
 
     End Sub
 
@@ -3794,7 +3803,12 @@ Public Class Main
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
             txtGroupEventPostURL.Text = Clipboard.GetText
         End If
-        'BuildDiscordEventDescription()
+    End Sub
+
+    Private Sub btnRepostOriginalURLPaste_Click(sender As Object, e As EventArgs) Handles btnRepostOriginalURLPaste.Click
+        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
+            txtRepostOriginalURL.Text = Clipboard.GetText
+        End If
     End Sub
 
     Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
@@ -4826,7 +4840,7 @@ Public Class Main
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = 26
-                lblDiscordGuideInstructions.Text = "If this is a repost on an existing task, enable this to set the original date the task was published."
+                lblDiscordGuideInstructions.Text = "If you'd like to specify where and when this task has been published first, enable this to set the original date the task was published and its URL."
                 SetFocusOnField(chkRepost, fromF1Key)
             Case 41 'Discord Post Options for task
                 TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
@@ -5477,6 +5491,9 @@ Public Class Main
             .EventStartTaskTime = dtEventStartTaskTime.Value
             .EventDescription = txtEventDescription.Text.Replace(Environment.NewLine, "($*$)")
             .EligibleAward = cboEligibleAward.SelectedIndex
+            .EnableRepostInfo = chkRepost.Checked
+            .RepostOriginalDate = dtRepostOriginalDate.Value
+            .RepostOriginalURL = txtRepostOriginalURL.Text
             .URLGroupEventPost = txtGroupEventPostURL.Text
             .URLDiscordEventInvite = txtDiscordEventShareURL.Text
             .MapImageSelected = cboBriefingMap.Text
@@ -5635,6 +5652,9 @@ Public Class Main
                 dtEventStartTaskTime.Value = .EventStartTaskTime
                 txtEventDescription.Text = .EventDescription.Replace("($*$)", Environment.NewLine)
                 cboEligibleAward.SelectedIndex = .EligibleAward
+                chkRepost.Checked = .EnableRepostInfo
+                dtRepostOriginalDate.Value = .RepostOriginalDate
+                txtRepostOriginalURL.Text = .RepostOriginalURL
                 txtGroupEventPostURL.Text = .URLGroupEventPost
                 txtDiscordEventShareURL.Text = .URLDiscordEventInvite
                 cboBeginnersGuide.Text = .BeginnersGuide

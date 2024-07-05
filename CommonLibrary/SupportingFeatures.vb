@@ -1860,15 +1860,33 @@ Public Class SupportingFeatures
 
     Public Shared Function ReturnDiscordServer(urlExtract As String, Optional forceMSFSSoaringTools As Boolean = False) As String
 
-        If urlExtract.Contains("channels/793376245915189268") Then
-            'Got Gravel
+        If urlExtract.Contains("channels/793376245915189268/1097354088892596234") Then
+            Return "Got Gravel's Friday Soaring Club"
+        ElseIf urlExtract.Contains("channels/793376245915189268/1097353400015921252") Then
+            Return "Got Gravel's Diamonds Club"
+        ElseIf urlExtract.Contains("channels/793376245915189268") Then
             Return "Got Gravel"
+
         ElseIf urlExtract.Contains($"channels/{MSFSSoaringToolsDiscordID}") OrElse forceMSFSSoaringTools Then
-            'MSFS Soaring Task Tools
             Return "MSFS Soaring Task Tools"
+
+        ElseIf urlExtract.Contains("channels/876123356385149009/1128345453063327835") Then
+            Return "Wednesday's Sim Soaring Club"
+        ElseIf urlExtract.Contains("channels/876123356385149009/987611111509590087") Then
+            Return "Saturday's Sim Soaring Club"
+        ElseIf urlExtract.Contains("channels/876123356385149009/1066655140733517844") Then
+            Return "AusGlide's Sim Soaring Club"
         ElseIf urlExtract.Contains("channels/876123356385149009") Then
-            'SSC
             Return "Sim Soaring Club"
+
+        ElseIf urlExtract.Contains("channels/732949977768132660/1197570373525459106") Then
+            Return "MSFS 20-24 Planeur"
+        ElseIf urlExtract.Contains("channels/732949977768132660") Then
+            Return "MSFS 20-24"
+
+        ElseIf urlExtract.Contains("channels/325227457445625856") Then
+            Return "UKVGA"
+
         Else
             Return "unknown"
         End If

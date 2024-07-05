@@ -202,6 +202,15 @@ Public Class AllData
     <XmlElement("EligibleAward")>
     Public Property EligibleAward As Integer
 
+    <XmlElement("EnableRepostInfo")>
+    Public Property EnableRepostInfo As Boolean
+
+    <XmlElement("RepostOriginalURL")>
+    Public Property RepostOriginalURL As String
+
+    <XmlElement("RepostOriginalDate")>
+    Public Property RepostOriginalDate As DateTime
+
     <XmlElement("URLGroupEventPost")>
     Public Property URLGroupEventPost As String
 
