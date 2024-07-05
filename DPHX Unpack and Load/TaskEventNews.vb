@@ -88,10 +88,16 @@ Partial Class TaskEventNews
             Me.Key = .Key
             Me.NewsDate = .Published
             Me.Title = .Title
-            Me.Subtitle = .Subtitle
-            Me.News = .News
+            If .Subtitle IsNot Nothing Then
+                Me.Subtitle = .Subtitle.Replace("($*$)", Environment.NewLine)
+            End If
+            If .News IsNot Nothing Then
+                Me.News = .News.Replace("($*$)", Environment.NewLine)
+            End If
             Me.URLToGo = .URLToGo
-            Me.Comments = .Comments
+            If .Comments IsNot Nothing Then
+                Me.Comments = .Comments.Replace("($*$)", Environment.NewLine)
+            End If
             Me.Credits = .Credits
             If .EntrySeqID IsNot Nothing Then
                 Me.TaskEntrySeqID = .EntrySeqID
