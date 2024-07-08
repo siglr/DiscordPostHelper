@@ -2392,7 +2392,7 @@ Public Class TaskBrowser
             ' Attempt to create the WebView2 environment
             Dim env As CoreWebView2Environment = Await CoreWebView2Environment.CreateAsync()
             Await webView.EnsureCoreWebView2Async(env)
-            webView.Source = New Uri("https://wesimglide.org/integrated.html?appContext=true")
+            webView.Source = New Uri($"{SupportingFeatures.WeSimGlideView}")
         Catch ex As Exception
             MessageBox.Show("Error initializing the map view: " & ex.Message)
         End Try

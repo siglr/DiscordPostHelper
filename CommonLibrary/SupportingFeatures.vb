@@ -2239,6 +2239,26 @@ Public Class SupportingFeatures
         Return "TasksDatabase.db"
     End Function
 
+    Public Shared Function WeSimGlideView() As String
+        If Debugger.IsAttached Then
+            If Not _testServerAskedOnce Then
+                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
+                    _useTestServer = True
+                Else
+                    _useTestServer = False
+                End If
+                _testServerAskedOnce = True
+            End If
+            If _useTestServer Then
+                Return "https://soaring.siglr.com/integrated.html?appContext=true"
+            Else
+                Return "https://wesimglide.org/integrated.html?appContext=true"
+            End If
+        End If
+        Return "https://wesimglide.org/integrated.html?appContext=true"
+
+    End Function
+
 End Class
 
 
