@@ -1198,6 +1198,15 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            If txtFlightPlanFile.Text.Trim.Length > 0 AndAlso OpenFileDialog1.FileName <> txtFlightPlanFile.Text Then
+                'User has selected a different flight plan than the current one - ask to reset first?
+                Using New Centered_MessageBox(Me)
+                    If MessageBox.Show(Me, "You have selected a different flight plan file. Do you want to reset first ?", "Selecting a new flight plan file", vbYesNo, MessageBoxIcon.Question) = vbYes Then
+                        'Reset first
+                        ResetForm()
+                    End If
+                End Using
+            End If
             LoadFlightPlan(OpenFileDialog1.FileName)
         End If
 
