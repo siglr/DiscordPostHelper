@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.9.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.9.1</ReleaseVersion>
+      <ReleaseTitle>Task original source and some small improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a field to provide URL and date of original task source.
+        Added “update” explanation when updating task online.
+        Added asking user if they want to reset first when loading a different file plan.
+        Fixed the Ctrl-Backspace behavior and also better trimming of text and combobox fields.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.3.1</ReleaseVersion>
       <ReleaseTitle>Small fix and sync with WeSimGlide.org</ReleaseTitle>

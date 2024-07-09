@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.9.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.9.1</ReleaseVersion>
+      <ReleaseTitle>Repost info and several improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added last update date and explanation in the task browser.
+        Added repost information when available.
+        Added link to the event title when available.
+        Fixed the ($*$) symbol with a line feed in the news panel.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.3.1</ReleaseVersion>
       <ReleaseTitle>World Map view of the tasks library</ReleaseTitle>
