@@ -1042,7 +1042,6 @@ Public Class Main
                                                                           txtBaroPressureExtraInfo.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
-                                                                          cboRecommendedGliders.TextChanged,
                                                                           cboRecommendedGliders.SelectedIndexChanged,
                                                                           cboDifficulty.TextChanged,
                                                                           cboDifficulty.SelectedIndexChanged,
@@ -1104,7 +1103,8 @@ Public Class Main
                                                                                            txtGroupEventPostURL.Leave,
                                                                                            txtDiscordEventShareURL.Leave,
                                                                                            txtRepostOriginalURL.Leave,
-                                                                                           txtLastUpdateDescription.Leave
+                                                                                           txtLastUpdateDescription.Leave,
+                                                                                           cboRecommendedGliders.Leave, cboCountryFlag.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -2295,7 +2295,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged, cboGroupOrClubName.TextChanged
+    Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
 
         If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
@@ -4672,20 +4672,49 @@ Public Class Main
 
         ' Handle Ctrl+Backspace for text control
         If e.Control AndAlso e.KeyCode = Keys.Back Then
-            If (TypeOf Me.ActiveControl Is Windows.Forms.TextBox) Then
-
+            If TypeOf Me.ActiveControl Is Windows.Forms.TextBox Then
                 Dim tb As Windows.Forms.TextBox = CType(Me.ActiveControl, Windows.Forms.TextBox)
                 If Not String.IsNullOrWhiteSpace(tb.Text) AndAlso tb.SelectionStart > 0 Then
                     Dim selStart As Integer = tb.SelectionStart
+                    ' Skip over any spaces before the current position
                     While selStart > 0 AndAlso tb.Text.Substring(selStart - 1, 1) = " "
-                        selStart -= 1  ' Skip over any spaces
+                        selStart -= 1
                     End While
 
                     Dim prevSpace As Integer = tb.Text.LastIndexOf(" "c, selStart - 1)
-                    If prevSpace = -1 Then prevSpace = 0  ' If no space found, go to start of text
+                    If prevSpace = -1 Then prevSpace = 0 ' If no space found, go to start of text
 
-                    tb.Text = tb.Text.Remove(prevSpace, selStart - prevSpace)
-                    tb.SelectionStart = prevSpace
+                    ' Calculate the start position to delete while retaining the space before the word
+                    Dim startPos As Integer = prevSpace
+                    If startPos > 0 AndAlso tb.Text(startPos) = " "c Then
+                        startPos += 1
+                    End If
+
+                    ' Remove the text from the adjusted start position
+                    tb.Text = tb.Text.Remove(startPos, tb.SelectionStart - startPos)
+                    tb.SelectionStart = startPos
+                End If
+            ElseIf TypeOf Me.ActiveControl Is Windows.Forms.ComboBox Then
+                Dim tb As Windows.Forms.ComboBox = CType(Me.ActiveControl, Windows.Forms.ComboBox)
+                If Not String.IsNullOrWhiteSpace(tb.Text) AndAlso tb.SelectionStart > 0 Then
+                    Dim selStart As Integer = tb.SelectionStart
+                    ' Skip over any spaces before the current position
+                    While selStart > 0 AndAlso tb.Text.Substring(selStart - 1, 1) = " "
+                        selStart -= 1
+                    End While
+
+                    Dim prevSpace As Integer = tb.Text.LastIndexOf(" "c, selStart - 1)
+                    If prevSpace = -1 Then prevSpace = 0 ' If no space found, go to start of text
+
+                    ' Calculate the start position to delete while retaining the space before the word
+                    Dim startPos As Integer = prevSpace
+                    If startPos > 0 AndAlso tb.Text(startPos) = " "c Then
+                        startPos += 1
+                    End If
+
+                    ' Remove the text from the adjusted start position
+                    tb.Text = tb.Text.Remove(startPos, tb.SelectionStart - startPos)
+                    tb.SelectionStart = startPos
                 End If
             End If
             e.Handled = True  ' Prevent further processing of this key event and the ding sound
