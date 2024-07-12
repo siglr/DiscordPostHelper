@@ -121,11 +121,6 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
             $comments = !empty($taskData['MainAreaPOI']) ? $taskData['MainAreaPOI'] : $taskData['ShortDescription'];
         }
         
-        // Truncate comments if longer than 75 characters
-        if (strlen($comments) > 75) {
-            $comments = substr($comments, 0, 75) . '...';
-        }
-
         // Process credits
         $credits = str_replace("All credits to ", "By ", preg_replace("/ for this task.*/", "", $taskData['Credits']));
 
