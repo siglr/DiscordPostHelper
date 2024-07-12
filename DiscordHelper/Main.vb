@@ -5843,9 +5843,6 @@ Public Class Main
             Else
                 comments = txtShortDescription.Text.Trim
             End If
-            If comments.Length > 75 Then
-                comments = $"{comments.Substring(0, 75)}..."
-            End If
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
                                                     txtEventTitle.Text.Trim,

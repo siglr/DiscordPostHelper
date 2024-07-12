@@ -89,14 +89,14 @@ Partial Class TaskEventNews
             Me.NewsDate = .Published
             Me.Title = .Title
             If .Subtitle IsNot Nothing Then
-                Me.Subtitle = .Subtitle.Replace("($*$)", Environment.NewLine)
+                Me.Subtitle = .Subtitle.Replace("($*$)", Environment.NewLine).Replace("*", "")
             End If
             If .News IsNot Nothing Then
-                Me.News = .News.Replace("($*$)", Environment.NewLine)
+                Me.News = .News.Replace("($*$)", Environment.NewLine).Replace("*", "")
             End If
             Me.URLToGo = .URLToGo
             If .Comments IsNot Nothing Then
-                Me.Comments = .Comments.Replace("($*$)", Environment.NewLine)
+                Me.Comments = .Comments.Replace("($*$)", Environment.NewLine).Replace("*", "")
             End If
             Me.Credits = .Credits
             If .EntrySeqID IsNot Nothing Then
