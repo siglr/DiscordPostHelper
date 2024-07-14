@@ -295,6 +295,7 @@ Public Class SupportingFeatures
         Dim strRestrictions As String = String.Empty
         Dim blnInTask As Boolean = False
         Dim dblDistanceToPrevious As Single = 0
+        AATMinDuration = TimeSpan.Zero
 
         pFlightTotalDistanceInKm = 0
         pTaskTotalDistanceInKm = 0

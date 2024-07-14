@@ -370,6 +370,7 @@ Public Class Main
         txtDurationExtraInfo.Text = String.Empty
         txtDurationMin.Text = String.Empty
         txtDurationMax.Text = String.Empty
+        txtAATTask.Text = String.Empty
         txtDifficultyExtraInfo.Text = String.Empty
         txtShortDescription.Text = String.Empty
         chkDescriptionLock.Checked = False
