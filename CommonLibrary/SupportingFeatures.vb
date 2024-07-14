@@ -46,6 +46,7 @@ Public Class SupportingFeatures
 
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
+    Public AATMinDuration As TimeSpan = TimeSpan.Zero
     Public ReadOnly CountryFlagCodes As Dictionary(Of String, ValueTuple(Of String, String))
     Private Shared _ClientRunning As ClientApp
 
@@ -340,8 +341,11 @@ Public Class SupportingFeatures
             End If
             If atcWaypoint.IsTaskStart Then
                 blnInTask = True
+                If atcWaypoint.IsAAT AndAlso atcWaypoint.AATMinDuration > TimeSpan.Zero Then
+                    AATMinDuration = atcWaypoint.AATMinDuration
+                End If
             End If
-            If atcWaypoint.IsTaskEnd Then
+                If atcWaypoint.IsTaskEnd Then
                 blnInTask = False
             End If
             previousATCWaypoing = atcWaypoint
@@ -2163,6 +2167,34 @@ Public Class SupportingFeatures
 
         ' If all checks passed, the name is valid
         Return True
+    End Function
+
+    ' Helper function to format TimeSpan as text
+    Public Shared Function FormatTimeSpanAsText(duration As TimeSpan) As String
+        Dim result As String = ""
+
+        If duration.Hours > 0 Then
+            result &= $"{duration.Hours} hour"
+            If duration.Hours > 1 Then
+                result &= "s"
+            End If
+        End If
+
+        If duration.Minutes > 0 Then
+            If result <> "" Then
+                result &= " "
+            End If
+            result &= $"{duration.Minutes} minute"
+            If duration.Minutes > 1 Then
+                result &= "s"
+            End If
+        End If
+
+        If result = "" Then
+            result = "0 minutes"
+        End If
+
+        Return result
     End Function
 
     Public Shared Function GetSoaringTypesSelected(Ridge As Boolean, Thermals As Boolean, Waves As Boolean, Dynamic As Boolean) As String

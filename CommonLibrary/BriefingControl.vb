@@ -498,6 +498,9 @@ Public Class BriefingControl
 
         'Approx. duration
         sb.Append($"Approx. duration should be **{SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}**($*$)")
+        If _SF.AATMinDuration > TimeSpan.Zero Then
+            sb.Append($"This is an **AAT** with a minimum duration of **{SupportingFeatures.FormatTimeSpanAsText(_SF.AATMinDuration)}**($*$)")
+        End If
 
         'Recommended gliders
         If _sessionData.RecommendedGliders.Trim <> String.Empty Then
@@ -833,6 +836,9 @@ Public Class BriefingControl
                 countDownTaskStart.ResetToZero(True)
             End If
             sb.Append($"The expected duration should be **{SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}**($*$)")
+            If _SF.AATMinDuration > TimeSpan.Zero Then
+                sb.Append($"This is an **AAT** with a minimum duration of **{SupportingFeatures.FormatTimeSpanAsText(_SF.AATMinDuration)}**($*$)")
+            End If
             sb.Append("($*$)")
 
             If _sessionData.EventDescription <> String.Empty AndAlso _sessionData.EventDescription <> _sessionData.ShortDescription AndAlso _sessionData.EventDescription <> _sessionData.LongDescription Then

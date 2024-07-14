@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports System.Text.RegularExpressions
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class ATCWaypoint
@@ -6,6 +7,8 @@ Public Class ATCWaypoint
     Private ReadOnly _MinAlt As Nullable(Of Integer) = Nothing
     Private ReadOnly _MaxAlt As Nullable(Of Integer) = Nothing
     Private ReadOnly _Diameter As Integer = 0
+
+    Public ReadOnly Property AATMinDuration As TimeSpan = TimeSpan.Zero
 
     Public ReadOnly Property Sequence As Integer = 0
 
@@ -103,6 +106,11 @@ Public Class ATCWaypoint
         'Check if AAT waypoint and remove that bit if so
         If strFullATCId.ToUpper.Contains(";AAT") Then
             IsAAT = True
+            'Check if it's also the start waypoint, as the minimum AAT time will be specified here
+            If IsTaskStart Then
+                'Read the minimum AAT time
+                AATMinDuration = ExtractAATTime(strFullATCId)
+            End If
             strFullATCId = strFullATCId.Substring(0, strFullATCId.Length - 4)
         End If
 
@@ -176,6 +184,22 @@ Public Class ATCWaypoint
         End If
 
     End Sub
+
+    Private Function ExtractAATTime(input As String) As TimeSpan
+        ' Define a regular expression to match the AAT time format
+        Dim regex As New Regex("AAT(\d{2}):(\d{2});")
+        Dim match As Match = regex.Match(input)
+
+        ' If a match is found, return the extracted time as a TimeSpan
+        If match.Success Then
+            Dim hours As Integer = Integer.Parse(match.Groups(1).Value)
+            Dim minutes As Integer = Integer.Parse(match.Groups(2).Value)
+            Return New TimeSpan(hours, minutes, 0)
+        End If
+
+        ' Return TimeSpan.Zero if no match is found
+        Return TimeSpan.Zero
+    End Function
 
     Private Sub SetLatitudeAndLongitude(strWorldPosition As String, ByRef pLatitude As Double, ByRef pLongitude As Double, ByRef pElevation As Double)
         Dim strParts As String() = strWorldPosition.Split(",")

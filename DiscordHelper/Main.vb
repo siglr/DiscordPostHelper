@@ -333,7 +333,6 @@ Public Class Main
         _PossibleElevationUpdateRequired = False
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
 
-        cboSpeedUnits.SelectedIndex = 0
         cboDifficulty.SelectedIndex = 0
         cboVoiceChannel.Items.Clear()
         cboVoiceChannel.Items.AddRange(_SF.GetVoiceChannels.ToArray)
@@ -368,8 +367,6 @@ Public Class Main
         txtSoaringTypeExtraInfo.Text = String.Empty
         txtDistanceTotal.Text = String.Empty
         txtDistanceTrack.Text = String.Empty
-        txtMaxAvgSpeed.Text = String.Empty
-        txtMinAvgSpeed.Text = String.Empty
         txtDurationExtraInfo.Text = String.Empty
         txtDurationMin.Text = String.Empty
         txtDurationMax.Text = String.Empty
@@ -521,7 +518,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMinAvgSpeed.Enter, txtMaxAvgSpeed.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -726,6 +723,8 @@ Public Class Main
         Dim tempUnits As New PreferredUnits
         tempUnits.Altitude = PreferredUnits.AltitudeUnits.Both
         tempUnits.WindSpeed = PreferredUnits.WindSpeedUnits.Both
+        tempUnits.Temperature = PreferredUnits.TemperatureUnits.Both
+        tempUnits.Barometric = PreferredUnits.BarometricUnits.Both
         control.SetWeatherInfo(_WeatherDetails, tempUnits, SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked))
 
         ' Create a bitmap with the specified size
@@ -1034,8 +1033,6 @@ Public Class Main
                                                                           txtArrivalName.TextChanged,
                                                                           txtArrivalExtraInfo.TextChanged,
                                                                           txtSoaringTypeExtraInfo.TextChanged,
-                                                                          txtMinAvgSpeed.TextChanged,
-                                                                          txtMaxAvgSpeed.TextChanged,
                                                                           txtDifficultyExtraInfo.TextChanged,
                                                                           txtGroupEventPostURL.TextChanged,
                                                                           txtDiscordEventShareURL.TextChanged,
@@ -1161,7 +1158,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress, txtMaxAvgSpeed.KeyPress, txtMinAvgSpeed.KeyPress
+    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress
         Dim keyChar = e.KeyChar
 
         If Char.IsControl(keyChar) Then
@@ -1218,15 +1215,6 @@ Public Class Main
 
     Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
         lblNbrCarsRestrictions.Text = $"{txtAltRestrictions.Text.Length} chars"
-    End Sub
-
-    Private Sub txtMaxAvgSpeed_Leave(sender As Object, e As EventArgs) Handles txtMinAvgSpeed.Leave, txtMaxAvgSpeed.Leave
-        CalculateDuration()
-    End Sub
-
-    Private Sub cboSpeedUnits_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSpeedUnits.SelectedIndexChanged
-        SessionModified()
-        CalculateDuration()
     End Sub
 
     Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsWeather.TextChanged, lblNbrCarsRestrictions.TextChanged, lblNbrCarsWaypoints.TextChanged
@@ -1912,6 +1900,9 @@ Public Class Main
         sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
         sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
         sb.AppendLine($"> ⏳ {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
+        If txtAATTask.Text.Length > 0 Then
+            sb.AppendLine($"> ⚠️ {txtAATTask.Text}")
+        End If
         sb.AppendLine($"> ✈️ {SupportingFeatures.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
         sb.AppendLine($"> 🎚 {SupportingFeatures.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
 
@@ -1945,51 +1936,6 @@ Public Class Main
         Return answer.ToString
 
     End Function
-
-    Private Sub CalculateDuration()
-
-        Dim minAvgspeedInKmh As Single
-        Dim maxAvgspeedInKmh As Single
-        Dim totalDistanceInKm As Single
-
-        If Not Single.TryParse(txtMinAvgSpeed.Text, minAvgspeedInKmh) Then
-            minAvgspeedInKmh = 0
-        End If
-        If Not Single.TryParse(txtMaxAvgSpeed.Text, maxAvgspeedInKmh) Then
-            maxAvgspeedInKmh = 0
-        End If
-
-        Select Case cboSpeedUnits.SelectedIndex
-            Case 0 ' KM/h
-                'Already in the right units - do nothing
-
-            Case 1 ' Miles/h
-                minAvgspeedInKmh = Conversions.MilesToKm(minAvgspeedInKmh)
-                maxAvgspeedInKmh = Conversions.MilesToKm(maxAvgspeedInKmh)
-
-            Case 2 'Knots
-                minAvgspeedInKmh = Conversions.KnotsToKmh(minAvgspeedInKmh)
-                maxAvgspeedInKmh = Conversions.KnotsToKmh(maxAvgspeedInKmh)
-
-        End Select
-
-        'Use distance in km
-        If Not Single.TryParse(txtDistanceTotal.Text, totalDistanceInKm) Then
-            totalDistanceInKm = 0
-        End If
-
-        If totalDistanceInKm > 0 Then
-            If minAvgspeedInKmh > 0 Then
-                txtDurationMax.Text = FormatNumber(_SF.RoundTo15Minutes((totalDistanceInKm / minAvgspeedInKmh) * 60), 0)
-            End If
-            If maxAvgspeedInKmh > 0 Then
-                txtDurationMin.Text = FormatNumber(_SF.RoundTo15Minutes((totalDistanceInKm / maxAvgspeedInKmh) * 60), 0)
-            End If
-        End If
-
-        'BuildFPResults()
-
-    End Sub
 
     Private Function GetSoaringTypesSelected() As String
         Dim selectedTypes As New List(Of String)
@@ -2052,6 +1998,16 @@ Public Class Main
         End If
 
         txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm, _PossibleElevationUpdateRequired)
+
+        'Check if there is an AATMinDuration
+        If _SF.AATMinDuration > TimeSpan.Zero Then
+            txtAATTask.Enabled = True
+            txtAATTask.Text = $"AAT with a minimum duration of {SupportingFeatures.FormatTimeSpanAsText(_SF.AATMinDuration)}"
+        Else
+            txtAATTask.Enabled = False
+            txtAATTask.Text = String.Empty
+        End If
+
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
 
@@ -3006,17 +2962,19 @@ Public Class Main
         Dim msg As String = String.Empty
         'If the weather chart is included, do Restrictions and Weather together then chart, then rest of details together.
         'If weather chart is not included, do everything together.
-        If chkDPOWeatherChart.Enabled AndAlso chkDPOWeatherChart.Checked Then
-            msg = $"{altRestrictions}{completeWeather}"
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
+        If (chkDPOWeatherChart.Enabled AndAlso chkDPOWeatherChart.Checked) Then
+            If (altRestrictions.Length + completeWeather.Length > 0) Then
+                msg = $"{altRestrictions}{completeWeather}"
+                Clipboard.SetText(msg)
+                autoContinue = CopyContent.ShowContent(Me,
                                 msg,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
                                 "Creating altitude restrictions and weather details post in the thread.",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked)
-            If Not autoContinue Then
-                Return False
+                If Not autoContinue Then
+                    Return False
+                End If
             End If
             'Weather Chart
             Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
@@ -4412,6 +4370,9 @@ Public Class Main
         End If
 
         sb.AppendLine($"⏳ Duration: **{SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
+        If txtAATTask.Text.Length > 0 Then
+            sb.AppendLine($"⚠️ **{txtAATTask.Text}**")
+        End If
         sb.AppendLine()
 
         If cboEligibleAward.SelectedIndex > 0 Then
@@ -4787,11 +4748,11 @@ Public Class Main
                 pnlGuide.Top = 332
                 lblGuideInstructions.Text = "The total distance and track only distance are calculated automatically based on the provided flight plan, there's nothing to do here."
                 SetFocusOnField(txtDistanceTotal, fromF1Key)
-            Case 10 'Speeds
+            Case 10 'AAT TODO: Complete
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 371
-                lblGuideInstructions.Text = "Optionally, you can specify the average min and max speeds to expect in the task. This pre-calculate the duration of the task below."
-                SetFocusOnField(txtMinAvgSpeed, fromF1Key)
+                lblGuideInstructions.Text = "This field only displays information if the task is an AAT. Nothing to do but to validate the info."
+                SetFocusOnField(txtAATTask, fromF1Key)
             Case 11 'Durations
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 403
@@ -5475,9 +5436,6 @@ Public Class Main
             .SoaringWaves = chkSoaringTypeWave.Checked
             .SoaringDynamic = chkSoaringTypeDynamic.Checked
             .SoaringExtraInfo = txtSoaringTypeExtraInfo.Text
-            .AvgSpeedsUnit = cboSpeedUnits.SelectedIndex
-            .AvgMinSpeed = txtMinAvgSpeed.Text
-            .AvgMaxSpeed = txtMaxAvgSpeed.Text
             .DurationMin = txtDurationMin.Text
             .DurationMax = txtDurationMax.Text
             .DurationExtraInfo = txtDurationExtraInfo.Text
@@ -5611,9 +5569,6 @@ Public Class Main
                 chkSoaringTypeThermal.Checked = .SoaringThermals
                 chkSoaringTypeWave.Checked = .SoaringWaves
                 txtSoaringTypeExtraInfo.Text = .SoaringExtraInfo
-                cboSpeedUnits.SelectedIndex = .AvgSpeedsUnit
-                txtMinAvgSpeed.Text = .AvgMinSpeed
-                txtMaxAvgSpeed.Text = .AvgMaxSpeed
                 txtDurationMin.Text = .DurationMin
                 txtDurationMax.Text = .DurationMax
                 txtDurationExtraInfo.Text = .DurationExtraInfo
