@@ -9,6 +9,8 @@ Imports SIGLR.SoaringTools.CommonLibrary
 
 Module ParseTasksToCreateWorldMapInfo
 
+    Private Const StartingFrom As Integer = 509
+
     Private _sf As New SupportingFeatures(SupportingFeatures.ClientApp.TaskBrowserAdmin)
     Private _localTasksDatabaseFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SupportingFeatures.TasksDatabase)
     Private _currentTaskDBEntries As DataTable
@@ -17,10 +19,19 @@ Module ParseTasksToCreateWorldMapInfo
     Private _plnFilename As String
     Private _wprFilename As String
     Private TempDPHXUnpackFolder = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TempUnpack")
+    Private ProcessedWeatherCharts = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ProcessedWeatherCharts")
     Private plnXMLDocument As XmlDocument
     Private wprXMLDocument As XmlDocument
+    Private _WeatherDetails As WeatherDetails = Nothing
+
+    ' Set the image quality
+    private qualityParam As New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 80L)
+    private jpegCodec As System.Drawing.Imaging.ImageCodecInfo = GetEncoderInfo("image/jpeg")
+    private encoderParams As New System.Drawing.Imaging.EncoderParameters(1)
 
     Public Sub Main()
+
+        encoderParams.Param(0) = qualityParam
 
         Console.WriteLine("Reading the tasks from the local database")
         LoadTasksFromDatabase()
@@ -29,13 +40,6 @@ Module ParseTasksToCreateWorldMapInfo
         Console.WriteLine("Press enter to begin processing.")
         Console.ReadLine()
 
-        Dim totalDistance As Single = 0
-        Dim taskDistance As Single = 0
-        Dim possibleElevUpdate As Boolean = False
-        Dim LatitudeMin As Double
-        Dim Latitudemax As Double
-        Dim LongitudeMin As Double
-        Dim LongitudeMax As Double
         Dim EntrySeqID As Integer
         Dim TaskID As String
 
@@ -54,18 +58,11 @@ Module ParseTasksToCreateWorldMapInfo
                 Console.WriteLine("Unzipping files")
                 LoadDPHXPackage(_localDPHXFileName)
 
-                'Build the AllWaypoints list
-                Console.WriteLine("Building waypoints")
-                _sf.BuildAltitudeRestrictions(plnXMLDocument, totalDistance, taskDistance, possibleElevUpdate)
+                'Load the weather file
+                _WeatherDetails = Nothing
+                _WeatherDetails = New WeatherDetails(wprXMLDocument)
 
-                'Retrieve the task boundary
-                Console.WriteLine("Getting task boundaries")
-                _sf.GetTaskBoundaries(LongitudeMin, LongitudeMax, LatitudeMin, Latitudemax)
-
-                'Submit to the PHP script to create / update the WorldMapInfo online for that task
-                Console.WriteLine("Calling the PHP script online")
-                ' Call the asynchronous method to update or insert the entry
-                Console.WriteLine(UpdateWorldMapInfo(EntrySeqID, TaskID, _plnFilename, plnXMLDocument.InnerXml, _wprFilename, wprXMLDocument.InnerXml, LatitudeMin, Latitudemax, LongitudeMin, LongitudeMax))
+                SaveWeatherGraphToFile(EntrySeqID, row("SimDateTime"), If(row("IncludeYear") = 1, True, False))
 
                 'Delete the PLN and WPR files
                 Console.WriteLine("Cleaning up")
@@ -92,9 +89,11 @@ Module ParseTasksToCreateWorldMapInfo
 
         Using conn As New SQLiteConnection(connectionString)
             conn.Open()
-            Using cmd As New SQLiteCommand("SELECT Tasks.EntrySeqID, 
-                                                   Tasks.TaskID 
-                                            FROM Tasks", conn)
+            Using cmd As New SQLiteCommand($"SELECT Tasks.EntrySeqID, 
+                                                   Tasks.TaskID,
+                                                   Tasks.SimDateTime,
+                                                   Tasks.IncludeYear
+                                            FROM Tasks Where EntrySeqID > {StartingFrom} Order By EntrySeqID ASC", conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(_currentTaskDBEntries)
                 End Using
@@ -191,28 +190,54 @@ Module ParseTasksToCreateWorldMapInfo
         Return newEntry
     End Function
 
-    Public Function UpdateWorldMapInfo(entrySeqID As Integer, taskID As String, plnFilename As String, plnXML As String, wprFilename As String, wprXML As String, latMin As Double, latMax As Double, longMin As Double, longMax As Double) As String
-        Using client As New HttpClient()
-            Dim content As New FormUrlEncodedContent(New Dictionary(Of String, String) From {
-                {"EntrySeqID", entrySeqID.ToString()},
-                {"TaskID", taskID},
-                {"PLNFilename", plnFilename},
-                {"PLNXML", plnXML},
-                {"WPRFilename", wprFilename},
-                {"WPRXML", wprXML},
-                {"LatMin", latMin.ToString()},
-                {"LatMax", latMax.ToString()},
-                {"LongMin", longMin.ToString()},
-                {"LongMax", longMax.ToString()}
-            })
+    Private Sub SaveWeatherGraphToFile(taskEntrySeqID As Integer, simDateTime As String, blnIncludeYear As Boolean)
 
-            ' Execute the request synchronously
-            Dim response As HttpResponseMessage = client.PostAsync($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}UpdateWorldMapInfo.php", content).Result
-            response.EnsureSuccessStatusCode()
+        Dim control = New FullWeatherGraphPanel
+        Dim imageWidth As Integer = 1333
+        Dim imageHeight As Integer = 1000
+        Dim tempUnits As New PreferredUnits
+        tempUnits.Altitude = PreferredUnits.AltitudeUnits.Both
+        tempUnits.WindSpeed = PreferredUnits.WindSpeedUnits.Both
+        tempUnits.Temperature = PreferredUnits.TemperatureUnits.Both
+        tempUnits.Barometric = PreferredUnits.BarometricUnits.Both
 
-            Return response.Content.ReadAsStringAsync().Result
+        Dim format As String = "yyyy-MM-dd HH:mm:ss"
+        Dim parsedDate As DateTime = DateTime.ParseExact(simDateTime, format, System.Globalization.CultureInfo.InvariantCulture)
 
+        control.SetWeatherInfo(_WeatherDetails, tempUnits, SupportingFeatures.GetEnUSFormattedDate(parsedDate, parsedDate, blnIncludeYear))
+
+        ' Create a bitmap with the specified size
+        Dim bmp As New Bitmap(imageWidth, imageHeight)
+
+        ' Scale the drawing to the specified size
+        control.Width = imageWidth
+        control.Height = imageHeight
+
+        ' Create a graphics object to draw the control's image
+        Using g As Graphics = Graphics.FromImage(bmp)
+            ' Draw the control onto the graphics object
+            control.DrawToBitmap(bmp, New Rectangle(0, 0, imageWidth, imageHeight))
         End Using
+
+        ' Define the file path and name
+        Dim filePath As String = $"{ProcessedWeatherCharts}\{taskEntrySeqID}.jpg"
+
+        ' Save the bitmap as a JPG file with the specified quality
+        bmp.Save(filePath, jpegCodec, encoderParams)
+
+        bmp.Dispose()
+        bmp = Nothing
+
+    End Sub
+
+    Private Function GetEncoderInfo(mimeType As String) As System.Drawing.Imaging.ImageCodecInfo
+        Dim codecs() As System.Drawing.Imaging.ImageCodecInfo = System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders()
+        For Each codec As System.Drawing.Imaging.ImageCodecInfo In codecs
+            If codec.MimeType = mimeType Then
+                Return codec
+            End If
+        Next
+        Return Nothing
     End Function
 
 End Module

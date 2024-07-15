@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1E992182-47CF-43E7-A529-2987F7DC3AC1}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <StartupObject>TaskBrowserAdmin.My.MyApplication</StartupObject>
+    <OutputType>Exe</OutputType>
+    <StartupObject>TaskBrowserAdmin.ParseTasksToCreateWorldMapInfo</StartupObject>
     <RootNamespace>TaskBrowserAdmin</RootNamespace>
     <AssemblyName>TaskBrowserAdmin</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -148,7 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ProcessedDPHXFiles\" />
+    <Folder Include="ProcessedWeatherCharts\" />
     <Folder Include="TempUnpack\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
