@@ -6094,7 +6094,7 @@ Public Class Main
         Return Nothing
     End Function
 
-    Private Function UploadTaskToServer(task As Dictionary(Of String, Object), filePath As String) As Boolean
+    Private Function UploadTaskToServer(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
         Try
             ' Serialize the task to JSON
             Dim json As String = JsonConvert.SerializeObject(task, New JsonSerializerSettings() With {
@@ -6112,6 +6112,13 @@ Public Class Main
             request.ContentType = "multipart/form-data; boundary=" & boundary
             request.KeepAlive = True
             request.Credentials = CredentialCache.DefaultCredentials
+
+            ' Get the weather graph image as BMP
+            Dim bmp As Drawing.Image = CopyWeatherGraphToClipboard()
+
+            ' Convert BMP to JPG with specified quality
+            Dim jpgFilePath As String = Path.Combine(Path.GetTempPath(), "weather_chart.jpg")
+            SaveJpegWithQuality(bmp, jpgFilePath, 80L)
 
             Using memStream As New MemoryStream()
                 Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
@@ -6131,20 +6138,11 @@ Public Class Main
                 memStream.Write(userIDBytes, 0, userIDBytes.Length)
                 memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
 
-                ' Add file
-                Dim header As String = "Content-Disposition: form-data; name=""file""; filename=""" & Path.GetFileName(filePath) & """" & vbCrLf & "Content-Type: application/octet-stream" & vbCrLf & vbCrLf
-                Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
-                memStream.Write(headerBytes, 0, headerBytes.Length)
+                ' Add DPHX file
+                AddFileToRequest(memStream, dphxFilePath, "file", boundaryBytes)
 
-                Using fileStream As New FileStream(filePath, FileMode.Open, FileAccess.Read)
-                    Dim buffer As Byte() = New Byte(1023) {}
-                    Dim bytesRead As Integer = fileStream.Read(buffer, 0, buffer.Length)
-
-                    While bytesRead <> 0
-                        memStream.Write(buffer, 0, bytesRead)
-                        bytesRead = fileStream.Read(buffer, 0, buffer.Length)
-                    End While
-                End Using
+                ' Add JPG file
+                AddFileToRequest(memStream, jpgFilePath, "image", boundaryBytes)
 
                 memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
 
@@ -6175,6 +6173,42 @@ Public Class Main
         End Try
     End Function
 
+    Private Sub SaveJpegWithQuality(image As Drawing.Image, filePath As String, quality As Long)
+        Dim qualityParam As New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality)
+        Dim jpegCodec As System.Drawing.Imaging.ImageCodecInfo = GetEncoderInfo("image/jpeg")
+        Dim encoderParams As New System.Drawing.Imaging.EncoderParameters(1)
+        encoderParams.Param(0) = qualityParam
+
+        image.Save(filePath, jpegCodec, encoderParams)
+    End Sub
+
+    Private Sub AddFileToRequest(memStream As MemoryStream, filePath As String, fieldName As String, boundaryBytes As Byte())
+        Dim header As String = $"Content-Disposition: form-data; name=""{fieldName}""; filename=""{Path.GetFileName(filePath)}""" & vbCrLf & "Content-Type: application/octet-stream" & vbCrLf & vbCrLf
+        Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
+        memStream.Write(headerBytes, 0, headerBytes.Length)
+
+        Using fileStream As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+            Dim buffer As Byte() = New Byte(1023) {}
+            Dim bytesRead As Integer = fileStream.Read(buffer, 0, buffer.Length)
+
+            While bytesRead <> 0
+                memStream.Write(buffer, 0, bytesRead)
+                bytesRead = fileStream.Read(buffer, 0, buffer.Length)
+            End While
+        End Using
+
+        memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+    End Sub
+
+    Private Function GetEncoderInfo(mimeType As String) As Imaging.ImageCodecInfo
+        Dim codecs As Imaging.ImageCodecInfo() = Imaging.ImageCodecInfo.GetImageEncoders()
+        For Each codec As Imaging.ImageCodecInfo In codecs
+            If codec.MimeType = mimeType Then
+                Return codec
+            End If
+        Next
+        Return Nothing
+    End Function
 
     Private Sub GetTaskDetails(taskID As String)
         Try

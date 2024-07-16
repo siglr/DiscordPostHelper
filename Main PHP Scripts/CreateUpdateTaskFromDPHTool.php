@@ -14,9 +14,9 @@ try {
         throw new Exception('Invalid request method.');
     }
 
-    // Check if the file and task_data are set
-    if (!isset($_FILES['file']) || !isset($_POST['task_data']) || !isset($_POST['UserID'])) {
-        throw new Exception('File, task data, or UserID missing.');
+    // Check if the required fields are set
+    if (!isset($_FILES['file']) || !isset($_FILES['image']) || !isset($_POST['task_data']) || !isset($_POST['UserID'])) {
+        throw new Exception('File, image, task data, or UserID missing.');
     }
 
     // Get the task data from POST
@@ -31,11 +31,11 @@ try {
     // Ensure the DPHX file is uploaded
     $file = $_FILES['file'];
     $taskID = $taskData['TaskID'];
-    $target_dir = '/home2/siglr3/public_html/DiscordPostHelper/TaskBrowser/Tasks/';
-    $target_file = $target_dir . basename($taskID . '.dphx');
+    $dphxPath = $fileRootPath . 'TaskBrowser/Tasks/';
+    $target_file = $dphxPath . basename($taskID . '.dphx');
 
     if (!move_uploaded_file($file['tmp_name'], $target_file)) {
-        throw new Exception('Failed to upload the file.');
+        throw new Exception('Failed to upload the DPHX file.');
     }
 
     // Check if the task exists
@@ -228,6 +228,15 @@ try {
 
         // Update corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, true);
+    }
+
+    // Ensure the image file is uploaded
+    $image = $_FILES['image'];
+    $target_image_dir = '/home2/siglr3/public_html/DiscordPostHelper/TaskBrowser/WeatherCharts/';
+    $target_image_file = $target_image_dir . basename($taskData['EntrySeqID'] . '.jpg'); // Assuming the image is a JPG
+
+    if (!move_uploaded_file($image['tmp_name'], $target_image_file)) {
+        throw new Exception('Failed to upload the image file.');
     }
 
     echo json_encode(['status' => 'success', 'message' => 'Task uploaded and database updated successfully.']);
