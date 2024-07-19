@@ -7,8 +7,7 @@ Public Class ATCWaypoint
     Private ReadOnly _MinAlt As Nullable(Of Integer) = Nothing
     Private ReadOnly _MaxAlt As Nullable(Of Integer) = Nothing
     Private ReadOnly _Diameter As Integer = 0
-
-    Public ReadOnly Property AATMinDuration As TimeSpan = TimeSpan.Zero
+    Private ReadOnly _AATMinDuration As TimeSpan = TimeSpan.Zero
 
     Public ReadOnly Property Sequence As Integer = 0
 
@@ -109,7 +108,7 @@ Public Class ATCWaypoint
             'Check if it's also the start waypoint, as the minimum AAT time will be specified here
             If IsTaskStart Then
                 'Read the minimum AAT time
-                AATMinDuration = ExtractAATTime(strFullATCId)
+                _AATMinDuration = ExtractAATTime(strFullATCId)
             End If
             strFullATCId = strFullATCId.Substring(0, strFullATCId.Length - 4)
         End If
@@ -359,5 +358,9 @@ Public Class ATCWaypoint
             Return Conversions.KmToMiles(DistanceFromDepartureKM)
         End Get
     End Property
+
+    Public Function AATMinDuration() As TimeSpan
+        Return _AATMinDuration
+    End Function
 
 End Class
