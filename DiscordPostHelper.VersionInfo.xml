@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.9.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.22.1</ReleaseVersion>
+      <ReleaseTitle>Support new AAT specs in PLN</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for new AAT minimum time specs in the PLN file.
+        Fixed the weather chart's bottom part information (temperature and barometric pressure) creation.
+        Added sending the weather chart when publishing to WeSimGlide.org.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.9.1</ReleaseVersion>
       <ReleaseTitle>Task original source and some small improvements</ReleaseTitle>

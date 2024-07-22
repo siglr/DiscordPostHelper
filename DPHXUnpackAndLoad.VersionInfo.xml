@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.9.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.7.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.7.22.1</ReleaseVersion>
+      <ReleaseTitle>Support new AAT minimum time</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for new AAT minimum time specs in the PLN file.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.9.1</ReleaseVersion>
       <ReleaseTitle>Repost info and several improvements</ReleaseTitle>
