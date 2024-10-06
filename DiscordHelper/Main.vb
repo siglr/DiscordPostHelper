@@ -437,6 +437,7 @@ Public Class Main
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.AllWaypoints.Clear()
+        _TBTaskEntrySeqID = 0
 
         'BuildFPResults()
         'BuildGroupFlightPost()
@@ -2531,7 +2532,7 @@ Public Class Main
 
     Private Sub lblTaskBrowserIDAndDate_DoubleClick(sender As Object, e As EventArgs) Handles lblTaskBrowserIDAndDate.DoubleClick
 
-        WeSimGlideLinkPosting()
+        WeSimGlideTaskLinkPosting()
 
     End Sub
 
@@ -2648,7 +2649,7 @@ Public Class Main
 
 #Region "Discord - Flight Plan Subs & Functions"
 
-    Private Sub WeSimGlideLinkPosting()
+    Private Sub WeSimGlideTaskLinkPosting()
 
         If _TBTaskEntrySeqID > 0 Then
             Dim msgWeSimGlideLink As String = String.Empty
@@ -5778,7 +5779,7 @@ Public Class Main
             UploadToTaskBrowser()
             GetTaskDetails(txtDiscordTaskID.Text.Trim)
             SetTBTaskDetailsLabel()
-            WeSimGlideLinkPosting()
+            WeSimGlideTaskLinkPosting()
         End If
     End Sub
 
@@ -5834,7 +5835,11 @@ Public Class Main
 )
             If result Then
                 Dim msgForEventHunters As String = String.Empty
-                msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                If _TBTaskEntrySeqID > 0 Then
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                Else
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}Please monitor the original event as task has not been published yet.)"
+                End If
                 Clipboard.SetText(msgForEventHunters)
 
                 CopyContent.ShowContent(Me,
