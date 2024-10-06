@@ -2649,15 +2649,19 @@ Public Class Main
 #Region "Discord - Flight Plan Subs & Functions"
 
     Private Sub WeSimGlideLinkPosting()
-        Dim msgWeSimGlideLink As String = String.Empty
-        msgWeSimGlideLink = $"## 🌐 WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
-        Clipboard.SetText(msgWeSimGlideLink)
 
-        CopyContent.ShowContent(Me,
+        If _TBTaskEntrySeqID > 0 Then
+            Dim msgWeSimGlideLink As String = String.Empty
+            msgWeSimGlideLink = $"## 🌐 WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+            Clipboard.SetText(msgWeSimGlideLink)
+
+            CopyContent.ShowContent(Me,
                                 msgWeSimGlideLink,
                                 "Task uploaded and database updated successfully! You can now paste the content of the message in the task's thread to share the WSG link.",
                                 "Sharing WeSimGlide.org Task link",
                                 New List(Of String) From {"^v"})
+        End If
+
     End Sub
 
     Private Function ValidPostingRequirements(Optional fromGroupOnly As Boolean = False) As Boolean
@@ -5774,6 +5778,7 @@ Public Class Main
             UploadToTaskBrowser()
             GetTaskDetails(txtDiscordTaskID.Text.Trim)
             SetTBTaskDetailsLabel()
+            WeSimGlideLinkPosting()
         End If
     End Sub
 
@@ -6047,7 +6052,7 @@ Public Class Main
         Dim result As Boolean = UploadTaskToServer(taskData, filePath)
 
         If result Then
-            WeSimGlideLinkPosting()
+            'Nothing to do
         Else
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -6351,7 +6356,6 @@ Public Class Main
             Return False
         End Try
     End Function
-
 
 #End Region
 
