@@ -5845,9 +5845,9 @@ Public Class Main
             If result Then
                 Dim msgForEventHunters As String = String.Empty
                 If _TBTaskEntrySeqID > 0 Then
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}) ({_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
                 Else
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}Please monitor the original event as task has not been published yet."
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}) ({_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}){Environment.NewLine}Please monitor the original event as task has not been published yet."
                 End If
                 Clipboard.SetText(msgForEventHunters)
 
