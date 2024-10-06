@@ -436,6 +436,7 @@ Public Class Main
         txtLastUpdateDescription.Text = String.Empty
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
+        _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
         _SF.AllWaypoints.Clear()
         _TBTaskEntrySeqID = 0
 
@@ -760,6 +761,14 @@ Public Class Main
 #Region "Flight Plan Tab"
 
 #Region "Event Handlers"
+
+    Private Sub cboKnownTaskDesigners_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboKnownTaskDesigners.SelectedIndexChanged
+
+        Dim designerSelected As String = cboKnownTaskDesigners.Text.Substring(0, cboKnownTaskDesigners.Text.LastIndexOf("#")).Trim
+
+        txtCredits.Text = $"All credits to @{designerSelected} for this task."
+
+    End Sub
 
     Private Sub FileDropZone1_FilesDropped(sender As Object, e As FilesDroppedEventArgs) Handles FileDropZone1.FilesDropped
 

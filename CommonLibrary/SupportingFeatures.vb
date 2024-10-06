@@ -19,6 +19,7 @@ Imports System.Runtime.InteropServices
 Imports System.Security.AccessControl
 Imports System.Reflection.Emit
 Imports System.Drawing
+Imports System.Web.UI.HtmlControls
 
 Public Class SupportingFeatures
 
@@ -45,6 +46,7 @@ Public Class SupportingFeatures
     End Enum
 
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
+    Public ReadOnly KnownDesigners As New List(Of String)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
     Public AATMinDuration As TimeSpan = TimeSpan.Zero
     Public ReadOnly CountryFlagCodes As Dictionary(Of String, ValueTuple(Of String, String))
@@ -70,10 +72,27 @@ Public Class SupportingFeatures
 
         If _ClientRunning = ClientApp.DiscordPostHelper Then
             LoadDefaultClubEvents()
+            LoadKnownDesigners()
         End If
 
         CountryFlagCodes = New Dictionary(Of String, ValueTuple(Of String, String))
         GetCountryFlagCodes()
+
+    End Sub
+
+    Private Sub LoadKnownDesigners()
+        Dim xmlDoc As New XmlDocument()
+        Dim fileName As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KnownDesigners.xml")
+        If File.Exists(fileName) Then
+            xmlDoc.Load(fileName)
+
+            Dim designers As XmlNodeList = xmlDoc.GetElementsByTagName("KnownDesigner")
+
+            For Each designerNode As XmlNode In designers
+                Dim designerName As String = designerNode("Name").InnerText
+                KnownDesigners.Add(designerName)
+            Next
+        End If
 
     End Sub
 
@@ -112,6 +131,15 @@ Public Class SupportingFeatures
         Next
 
     End Sub
+
+    Public Sub PopulateKnownDesignersList(ByVal ctlControl As IList)
+        ctlControl.Clear()
+
+        For Each designer As String In KnownDesigners
+            ctlControl.Add(designer)
+        Next
+    End Sub
+
     Public Function RoundTo15Minutes(ByVal minutes As Integer) As Integer
         Return Math.Ceiling(minutes / 15.0) * 15
     End Function
@@ -346,7 +374,7 @@ Public Class SupportingFeatures
                     AATMinDuration = atcWaypoint.AATMinDuration
                 End If
             End If
-                If atcWaypoint.IsTaskEnd Then
+            If atcWaypoint.IsTaskEnd Then
                 blnInTask = False
             End If
             previousATCWaypoing = atcWaypoint

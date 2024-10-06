@@ -94,6 +94,9 @@
     <Compile Include="CopyContent.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Content Include="KnownDesigners.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
