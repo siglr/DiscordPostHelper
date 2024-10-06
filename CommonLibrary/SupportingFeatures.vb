@@ -1817,6 +1817,10 @@ Public Class SupportingFeatures
         Return $"{WeSimGlide}index.html?task={entrySeqID.ToString.Trim}"
     End Function
 
+    Public Shared Function GetWeSimGlideEventURL(eventKey As String) As String
+        Return $"{WeSimGlide}index.html?event={eventKey.Trim}"
+    End Function
+
     Public Shared ReadOnly Property GetMSFSSoaringToolsDiscordID As String
         Get
             Return MSFSSoaringToolsDiscordID

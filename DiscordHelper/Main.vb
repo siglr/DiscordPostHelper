@@ -2529,6 +2529,12 @@ Public Class Main
 
 #Region "Discord - Flight Plan event handlers"
 
+    Private Sub lblTaskBrowserIDAndDate_DoubleClick(sender As Object, e As EventArgs) Handles lblTaskBrowserIDAndDate.DoubleClick
+
+        WeSimGlideLinkPosting()
+
+    End Sub
+
     Private Sub btnStartFullPostingWorkflow_Click(sender As Object, e As EventArgs) Handles btnStartFullPostingWorkflow.Click
 
         Dim enforceTaskLibrary As Boolean = True
@@ -2641,6 +2647,18 @@ Public Class Main
 #End Region
 
 #Region "Discord - Flight Plan Subs & Functions"
+
+    Private Sub WeSimGlideLinkPosting()
+        Dim msgWeSimGlideLink As String = String.Empty
+        msgWeSimGlideLink = $"## 🌐 WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+        Clipboard.SetText(msgWeSimGlideLink)
+
+        CopyContent.ShowContent(Me,
+                                msgWeSimGlideLink,
+                                "Task uploaded and database updated successfully! You can now paste the content of the message in the task's thread to share the WSG link.",
+                                "Sharing WeSimGlide.org Task link",
+                                New List(Of String) From {"^v"})
+    End Sub
 
     Private Function ValidPostingRequirements(Optional fromGroupOnly As Boolean = False) As Boolean
 
@@ -4607,7 +4625,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub Main_KeyDown(sender As Object, e As KeyEventArgs) Handles TabControl1.KeyDown, Me.KeyDown
+    Private Sub Main_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles TabControl1.KeyDown, Me.KeyDown
 
         ' Handle F1 for help
         If e.KeyCode = Keys.F1 Then
@@ -5810,9 +5828,16 @@ Public Class Main
                                                     eventDate.AddHours(3)
 )
             If result Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Event news published.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End Using
+                Dim msgForEventHunters As String = String.Empty
+                msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                Clipboard.SetText(msgForEventHunters)
+
+                CopyContent.ShowContent(Me,
+                                msgForEventHunters,
+                                "Event news published! You can now paste the content of the message into the 'wsg-accouncements' channel to share WSG event and task links.",
+                                "Sharing WeSimGlide.org Task and Group Event links",
+                                New List(Of String) From {"^v"})
+
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show("Failed publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -6022,9 +6047,7 @@ Public Class Main
         Dim result As Boolean = UploadTaskToServer(taskData, filePath)
 
         If result Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show("Task uploaded and database updated successfully.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End Using
+            WeSimGlideLinkPosting()
         Else
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -6328,6 +6351,7 @@ Public Class Main
             Return False
         End Try
     End Function
+
 
 #End Region
 
