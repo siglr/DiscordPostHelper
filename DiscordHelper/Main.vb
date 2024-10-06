@@ -5847,7 +5847,7 @@ Public Class Main
                 If _TBTaskEntrySeqID > 0 Then
                     msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
                 Else
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}Please monitor the original event as task has not been published yet.)"
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}Please monitor the original event as task has not been published yet."
                 End If
                 Clipboard.SetText(msgForEventHunters)
 
