@@ -3,6 +3,7 @@
     Public ReadOnly Property ClubId As String
     Public ReadOnly Property ClubName As String
     Public ReadOnly Property ClubFullName As String
+    Public ReadOnly Property TrackerGroup As String
     Public ReadOnly Property EventNewsID As String
     Public ReadOnly Property MSFSServer As String
     Public ReadOnly Property VoiceChannel As String
@@ -18,6 +19,7 @@
     Public Sub New(pClubId As String,
                    pClubName As String,
                    pClubFullName As String,
+                   pTrackerGroup As String,
                    pEventNewsID As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
@@ -32,6 +34,7 @@
         ClubId = pClubId
         ClubName = pClubName
         ClubFullName = pClubFullName
+        TrackerGroup = pTrackerGroup
         EventNewsID = pEventNewsID
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
