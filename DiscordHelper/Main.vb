@@ -397,6 +397,7 @@ Public Class Main
         cboGroupOrClubName.SelectedIndex = -1
         txtClubFullName.Text = String.Empty
         txtClubFullName.ReadOnly = True
+        txtTrackerGroup.Text = String.Empty
         cboMSFSServer.SelectedIndex = -1
         cboVoiceChannel.SelectedIndex = -1
         chkDateTimeUTC.Checked = True
@@ -521,7 +522,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -1058,7 +1059,8 @@ Public Class Main
                                                                           txtEventTeaserMessage.TextChanged,
                                                                           txtClubFullName.TextChanged,
                                                                           txtRepostOriginalURL.TextChanged,
-                                                                          dtRepostOriginalDate.ValueChanged
+                                                                          dtRepostOriginalDate.ValueChanged,
+                                                                          txtTrackerGroup.TextChanged
 
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
@@ -2270,6 +2272,7 @@ Public Class Main
 
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
         txtClubFullName.Text = String.Empty
+        txtTrackerGroup.Text = String.Empty
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
@@ -2277,9 +2280,11 @@ Public Class Main
             If _ClubPreset.IsCustom Then
                 txtClubFullName.ReadOnly = False
                 txtClubFullName.Text = "Specify your own club name"
+                txtTrackerGroup.Text = String.Empty
             Else
                 txtClubFullName.ReadOnly = True
                 cboGroupOrClubName.Text = _ClubPreset.ClubId
+                txtTrackerGroup.Text = _ClubPreset.TrackerGroup
                 If _ClubPreset.ClubFullName.Trim.ToUpper.Contains(_ClubPreset.ClubName.Trim.ToUpper) Then
                     txtClubFullName.Text = _ClubPreset.ClubFullName
                 Else
@@ -2402,7 +2407,7 @@ Public Class Main
         SessionModified()
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -5503,6 +5508,7 @@ Public Class Main
             Else
                 .GroupClubName = String.Empty
             End If
+            .TrackerGroup = txtTrackerGroup.Text
             .DiscordTaskID = txtDiscordTaskID.Text
             .TaskThreadFirstPostID = _taskThreadFirstPostID
             .EventTopic = txtEventTitle.Text
@@ -5663,6 +5669,7 @@ Public Class Main
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
+                txtTrackerGroup.Text = .TrackerGroup
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
                 cboVoiceChannel.Text = .VoiceChannel
@@ -5840,8 +5847,9 @@ Public Class Main
                                                     Now.ToUniversalTime,
                                                     _TBTaskEntrySeqID,
                                                     txtGroupEventPostURL.Text.Trim,
-                                                    eventDate.AddHours(3)
-)
+                                                    eventDate.AddHours(3),
+                                                    txtTrackerGroup.Text)
+
             If result Then
                 Dim msgForEventHunters As String = String.Empty
                 If _TBTaskEntrySeqID > 0 Then
@@ -6337,13 +6345,23 @@ Public Class Main
 
 #Region "Events Subs"
 
-    Public Function PublishEventNews(key As String, title As String, subtitle As String, comments As String, eventDate As DateTime, published As DateTime, entrySeqID As Integer, urlToGo As String, expiration As DateTime) As Boolean
+    Public Function PublishEventNews(key As String,
+                                     title As String,
+                                     subtitle As String,
+                                     comments As String,
+                                     eventDate As DateTime,
+                                     published As DateTime,
+                                     entrySeqID As Integer,
+                                     urlToGo As String,
+                                     expiration As DateTime,
+                                     trackerGroup As String) As Boolean
+
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNews.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/x-www-form-urlencoded"
 
-        Dim postData As String = $"action=CreateEvent&Key={Uri.EscapeDataString(key)}&Title={Uri.EscapeDataString(title)}&Subtitle={Uri.EscapeDataString(subtitle)}&Comments={Uri.EscapeDataString(comments)}&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}&EntrySeqID={entrySeqID}&URLToGo={Uri.EscapeDataString(urlToGo)}&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
+        Dim postData As String = $"action=CreateEvent&Key={Uri.EscapeDataString(key)}&Credits={Uri.EscapeDataString(trackerGroup)}&Title={Uri.EscapeDataString(title)}&Subtitle={Uri.EscapeDataString(subtitle)}&Comments={Uri.EscapeDataString(comments)}&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}&EntrySeqID={entrySeqID}&URLToGo={Uri.EscapeDataString(urlToGo)}&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
 
         Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
         request.ContentLength = data.Length

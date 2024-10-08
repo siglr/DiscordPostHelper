@@ -151,6 +151,9 @@ Public Class AllData
     <XmlElement("GroupClubName")>
     Public Property GroupClubName As String
 
+    <XmlElement("TrackerGroup")>
+    Public Property TrackerGroup As String
+
     <XmlElement("EventTopic")>
     Public Property EventTopic As String
 
