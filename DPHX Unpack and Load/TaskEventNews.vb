@@ -7,8 +7,6 @@ Partial Class TaskEventNews
 
     Private isMouseDown As Boolean = False
     Private isMouseHover As Boolean = False
-    'Private theBackColor As Color
-    'Private hoverBackColor As Color
     Private lightBackColor As Color
     Private darkBackColor As Color
     Private clickBackColor As Color
@@ -331,7 +329,9 @@ Partial Class TaskEventNews
     End Sub
 
     Protected Overrides Sub OnMouseClick(e As MouseEventArgs)
-        MyBase.OnMouseClick(e)
-        RaiseEvent NewsClicked(Me, EventArgs.Empty)
+        If e.Button = MouseButtons.Left Then
+            MyBase.OnMouseClick(e)
+            RaiseEvent NewsClicked(Me, EventArgs.Empty)
+        End If
     End Sub
 End Class

@@ -132,7 +132,7 @@
     <ClubId>AUSGLIDE</ClubId>
     <ClubName>Tuesdays</ClubName>
     <ClubFullName>AusGlide Soaring</ClubFullName>
-    <TrackerGroup>SSC</TrackerGroup>
+    <TrackerGroup>AusGlide</TrackerGroup>
     <EventNewsID>AUSTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>
@@ -148,7 +148,7 @@
     <ClubId>AUSGLIDE SUMMER TIME</ClubId>
     <ClubName>Tuesdays</ClubName>
     <ClubFullName>AusGlide Soaring</ClubFullName>
-    <TrackerGroup>SSC</TrackerGroup>
+    <TrackerGroup>AusGlide</TrackerGroup>
     <EventNewsID>AUSTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>

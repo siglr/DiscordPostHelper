@@ -61,6 +61,12 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.btnNewsPanelCollapse = New System.Windows.Forms.Button()
         Me.flowNewsPanel = New System.Windows.Forms.FlowLayoutPanel()
+        Me.contextGroupEventNews = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ctxtNewsViewTaskInLibrary = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ctxtNewsDownloadAndOpenTask = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ctxtNewsVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
@@ -70,6 +76,7 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel1.SuspendLayout()
         Me.newsSplitContainer.Panel2.SuspendLayout()
         Me.newsSplitContainer.SuspendLayout()
+        Me.contextGroupEventNews.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlToolbar
@@ -347,7 +354,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(752, 625)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(758, 625)
         Me.ctrlBriefing.TabIndex = 3
         '
         'RetrieveNewsList
@@ -374,14 +381,14 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
         Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
         Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 623)
-        Me.newsSplitContainer.SplitterDistance = 755
+        Me.newsSplitContainer.SplitterDistance = 761
         Me.newsSplitContainer.SplitterWidth = 1
         Me.newsSplitContainer.TabIndex = 8
         '
         'btnNewsPanelCollapse
         '
         Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(740, 17)
+        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(746, 17)
         Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
         Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
         Me.btnNewsPanelCollapse.TabIndex = 4
@@ -400,6 +407,44 @@ Partial Class DPHXUnpackAndLoad
         Me.flowNewsPanel.Size = New System.Drawing.Size(267, 587)
         Me.flowNewsPanel.TabIndex = 6
         Me.flowNewsPanel.WrapContents = False
+        '
+        'contextGroupEventNews
+        '
+        Me.contextGroupEventNews.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.contextGroupEventNews.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ctxtNewsViewTaskInLibrary, Me.ctxtNewsDownloadAndOpenTask, Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent, Me.ctxtNewsViewTaskInLibraryVisitGroupEvent, Me.ctxtNewsVisitGroupEvent})
+        Me.contextGroupEventNews.Name = "contextGroupEventNews"
+        Me.contextGroupEventNews.ShowImageMargin = False
+        Me.contextGroupEventNews.Size = New System.Drawing.Size(228, 149)
+        '
+        'ctxtNewsViewTaskInLibrary
+        '
+        Me.ctxtNewsViewTaskInLibrary.Name = "ctxtNewsViewTaskInLibrary"
+        Me.ctxtNewsViewTaskInLibrary.Size = New System.Drawing.Size(227, 24)
+        Me.ctxtNewsViewTaskInLibrary.Text = "View in library"
+        '
+        'ctxtNewsDownloadAndOpenTask
+        '
+        Me.ctxtNewsDownloadAndOpenTask.Name = "ctxtNewsDownloadAndOpenTask"
+        Me.ctxtNewsDownloadAndOpenTask.Size = New System.Drawing.Size(227, 24)
+        Me.ctxtNewsDownloadAndOpenTask.Text = "Open task"
+        '
+        'ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent
+        '
+        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Name = "ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent"
+        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
+        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Text = "Open task && event"
+        '
+        'ctxtNewsViewTaskInLibraryVisitGroupEvent
+        '
+        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Name = "ctxtNewsViewTaskInLibraryVisitGroupEvent"
+        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
+        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Text = "View in library && open event"
+        '
+        'ctxtNewsVisitGroupEvent
+        '
+        Me.ctxtNewsVisitGroupEvent.Name = "ctxtNewsVisitGroupEvent"
+        Me.ctxtNewsVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
+        Me.ctxtNewsVisitGroupEvent.Text = "Open event"
         '
         'DPHXUnpackAndLoad
         '
@@ -434,6 +479,7 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.PerformLayout()
         CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.newsSplitContainer.ResumeLayout(False)
+        Me.contextGroupEventNews.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -473,4 +519,10 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents newsSplitContainer As SplitContainer
     Friend WithEvents flowNewsPanel As FlowLayoutPanel
     Friend WithEvents btnNewsPanelCollapse As Button
+    Friend WithEvents contextGroupEventNews As ContextMenuStrip
+    Friend WithEvents ctxtNewsViewTaskInLibrary As ToolStripMenuItem
+    Friend WithEvents ctxtNewsDownloadAndOpenTask As ToolStripMenuItem
+    Friend WithEvents ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent As ToolStripMenuItem
+    Friend WithEvents ctxtNewsViewTaskInLibraryVisitGroupEvent As ToolStripMenuItem
+    Friend WithEvents ctxtNewsVisitGroupEvent As ToolStripMenuItem
 End Class

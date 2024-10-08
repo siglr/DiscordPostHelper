@@ -28,7 +28,7 @@ try {
     if (!$fullText) {
         foreach ($newsEntries as &$entry) {
             foreach ($entry as $key => $value) {
-                if (is_string($value)) {
+                if (is_string($value) && $key !== 'URLToGo') {  // Skip truncation for 'URLToGo' field
                     $entry[$key] = truncate($value);
                 }
             }

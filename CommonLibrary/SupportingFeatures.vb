@@ -2325,6 +2325,40 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Function DownloadTaskFile(taskID As String, taskTitle As String, localFolder As String) As String
+        Dim baseUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}TaskBrowser/Tasks/"
+        Dim remoteFileName As String = taskID & ".dphx"
+        Dim localFileName As String = taskTitle & ".dphx"
+        Dim remoteFileUrl As String = baseUrl & remoteFileName
+        Dim localFilePath As String = Path.Combine(localFolder, localFileName)
+
+        Try
+            ' Create the directory if it doesn't exist
+            If Not Directory.Exists(localFolder) Then
+                Directory.CreateDirectory(localFolder)
+            End If
+
+            ' Download the file
+            Using client As New WebClient()
+                client.DownloadFile(remoteFileUrl, localFilePath)
+            End Using
+
+            ' Check if the file exists
+            If File.Exists(localFilePath) Then
+                Return localFilePath
+            Else
+                Throw New Exception("Failed to download the task file.")
+            End If
+
+        Catch ex As Exception
+            ' Handle the exception (e.g., log the error)
+            Using New Centered_MessageBox()
+                MessageBox.Show($"An error occurred while downloading the task file:{Environment.NewLine}{ex.Message}", "Downloading task", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return String.Empty
+        End Try
+    End Function
+
 End Class
 
 

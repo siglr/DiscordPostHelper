@@ -11,4 +11,23 @@
     Public Property TaskID As String
     Public Property EntrySeqID As Integer?
     Public Property URLToGo As String
+    Public Property UserHasAnswered As Boolean
+
+    Public ReadOnly Property IsWithin2HoursOfEvent As Boolean
+        Get
+            Dim currentTimeUtc As DateTime = DateTime.UtcNow
+
+            ' Calculate the time difference
+            Dim timeDifference As TimeSpan = EventDate - currentTimeUtc
+
+            ' Check if the difference is within 2 hours and up to 30 minutes into the event (for those who are late)
+            If Math.Abs(timeDifference.TotalHours) <= 2 AndAlso (timeDifference.TotalMinutes) >= -30 Then
+                Return True
+            Else
+                Return False
+            End If
+
+        End Get
+    End Property
+
 End Class
