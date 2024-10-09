@@ -4786,7 +4786,7 @@ Public Class Main
                 pnlGuide.Top = 332
                 lblGuideInstructions.Text = "The total distance and track only distance are calculated automatically based on the provided flight plan, there's nothing to do here."
                 SetFocusOnField(txtDistanceTotal, fromF1Key)
-            Case 10 'AAT TODO: Complete
+            Case 10 'AAT
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 371
                 lblGuideInstructions.Text = "This field only displays information if the task is an AAT. Nothing to do but to validate the info."
