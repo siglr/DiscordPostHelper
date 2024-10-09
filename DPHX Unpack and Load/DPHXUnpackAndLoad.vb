@@ -303,6 +303,7 @@ Public Class DPHXUnpackAndLoad
         End If
 
         'Check if there is an group event that is within 2 hours and user has not provided an answer
+        Dim userParticipatingInEvent As Boolean = False
         For Each groupEventNews As NewsEntry In _groupEventNewsEntries.Values
             If groupEventNews.IsWithin2HoursOfEvent AndAlso Not groupEventNews.UserHasAnswered Then
                 'Ask user!
@@ -310,14 +311,25 @@ Public Class DPHXUnpackAndLoad
                 Using New Centered_MessageBox()
                     If MessageBox.Show(msgPrompt, "Group Event Starting Soon", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
                         'User will be participating
-                        SupportingFeatures.LaunchDiscordURL(groupEventNews.URLToGo)
-                        DownloadAndOpenTaskUsingNewsEntry(groupEventNews)
+                        userParticipatingInEvent = True
                     Else
                         'User will not be participating - do nothing
                     End If
                     groupEventNews.UserHasAnswered = True
                 End Using
             End If
+            If userParticipatingInEvent Then
+                SupportingFeatures.LaunchDiscordURL(groupEventNews.URLToGo)
+                If groupEventNews.EntrySeqID > 0 Then
+                    DownloadAndOpenTaskUsingNewsEntry(groupEventNews)
+                Else
+                    Using New Centered_MessageBox()
+                        MessageBox.Show("The task has not yet been published for the event!", "Group Event Starting Soon", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                End If
+                Exit For
+            End If
+
         Next
     End Sub
 
