@@ -1,6 +1,18 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.10.10.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.10.10.1</ReleaseVersion>
+      <ReleaseTitle>WSG Integration and more!</ReleaseTitle>
+      <ReleaseNotes>
+        Once a task is posted to WSG, prepare the new WeSimGlide.org section with task URL to be added to the task's thread.
+        Once event news is pushed to WSG, prepare the post content to be published on the wsg-announcements channel.
+        Added a list to the "Credits" field for shortcuts to known task designers.
+        Added new gliders and adjusted some time info for SSC events.
+        Added SSC-Tracker group name to the group event to get it published to WSG.
+        Added default SSC-Tracker group name in the KnownSoaringClubs XML file and auto fill the field at club selection.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.22.1</ReleaseVersion>
       <ReleaseTitle>Support new AAT specs in PLN</ReleaseTitle>

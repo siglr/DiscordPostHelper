@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.7.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.10.10.</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.10.10.1</ReleaseVersion>
+      <ReleaseTitle>Detect group event starting soon</ReleaseTitle>
+      <ReleaseNotes>
+        When inside 2 hours of a group event, check task availability and ask to download and open DPHX file.
+        Added contextual menu to task and event news panels to either go to the task library, download, open and unpack the task for that event, and go to the event's URL.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.7.22.1</ReleaseVersion>
       <ReleaseTitle>Support new AAT minimum time</ReleaseTitle>
