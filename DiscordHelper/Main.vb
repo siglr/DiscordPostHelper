@@ -5861,7 +5861,7 @@ Public Class Main
 
                 CopyContent.ShowContent(Me,
                                 msgForEventHunters,
-                                "Event news published! You can now paste the content of the message into the 'wsg-accouncements' channel to share WSG event and task links.",
+                                "Event news published! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
                                 "Sharing WeSimGlide.org Task and Group Event links",
                                 New List(Of String) From {"^v"})
 
