@@ -45,6 +45,7 @@ Public Class NewsManagement
                 txtTitle.Enabled = True
                 txtSubtitle.Enabled = True
                 txtComments.Enabled = True
+                txtCredits.Enabled = True
                 txtEventDate.Enabled = True
                 txtEntrySeqID.Enabled = True
                 txtURLToGo.Enabled = True
