@@ -3780,6 +3780,8 @@ Public Class Main
 
     Private Sub grpDiscordGroupFlight_EnabledChanged(sender As Object, e As EventArgs) Handles grpDiscordGroupFlight.EnabledChanged
         btnTaskFeaturedOnGroupFlight.Enabled = grpDiscordGroupFlight.Enabled
+        pnlFullWorkflowTaskGroupFlight.Enabled = grpDiscordGroupFlight.Enabled
+
     End Sub
 
     Private Sub btnDGPOResetToDefault_Click(sender As Object, e As EventArgs) Handles btnDGPOResetToDefault.Click

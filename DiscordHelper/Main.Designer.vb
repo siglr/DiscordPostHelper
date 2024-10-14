@@ -69,6 +69,7 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
         Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
         Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
@@ -147,6 +148,8 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.txtTrackerGroup = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.btnLoadEventDescriptionTemplate = New System.Windows.Forms.Button()
         Me.btnSaveEventDescriptionTemplate = New System.Windows.Forms.Button()
         Me.txtClubFullName = New System.Windows.Forms.TextBox()
@@ -219,7 +222,7 @@ Partial Class Main
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblDiscordGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlDiscordArrow = New System.Windows.Forms.Panel()
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.pnlFullWorkflowTaskGroupFlight = New System.Windows.Forms.GroupBox()
         Me.btnStartFullPostingWorkflow = New System.Windows.Forms.Button()
         Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
         Me.Label19 = New System.Windows.Forms.Label()
@@ -364,12 +367,11 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.txtTrackerGroup = New System.Windows.Forms.TextBox()
         Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
@@ -394,8 +396,6 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -419,7 +419,7 @@ Partial Class Main
         Me.GroupBox6.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        Me.GroupBox5.SuspendLayout()
+        Me.pnlFullWorkflowTaskGroupFlight.SuspendLayout()
         Me.grpDiscordEvent.SuspendLayout()
         Me.grpDiscordOthers.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
@@ -1036,6 +1036,19 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'grbTaskDiscord
         '
@@ -2059,6 +2072,28 @@ Partial Class Main
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         '
+        'txtTrackerGroup
+        '
+        Me.txtTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTrackerGroup.Location = New System.Drawing.Point(655, 89)
+        Me.txtTrackerGroup.Name = "txtTrackerGroup"
+        Me.txtTrackerGroup.Size = New System.Drawing.Size(210, 32)
+        Me.txtTrackerGroup.TabIndex = 87
+        Me.txtTrackerGroup.Tag = "61"
+        Me.ToolTip1.SetToolTip(Me.txtTrackerGroup, "You can specify the club's group name used in the tracker utility.")
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.Location = New System.Drawing.Point(520, 92)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(129, 26)
+        Me.Label14.TabIndex = 86
+        Me.Label14.Text = "Tracker Group"
+        '
         'btnLoadEventDescriptionTemplate
         '
         Me.btnLoadEventDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -2758,7 +2793,7 @@ Partial Class Main
         '
         Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
-        Me.tabDiscord.Controls.Add(Me.GroupBox5)
+        Me.tabDiscord.Controls.Add(Me.pnlFullWorkflowTaskGroupFlight)
         Me.tabDiscord.Controls.Add(Me.grpDiscordEvent)
         Me.tabDiscord.Controls.Add(Me.grpDiscordOthers)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
@@ -2934,15 +2969,15 @@ Partial Class Main
         Me.pnlDiscordArrow.Size = New System.Drawing.Size(91, 89)
         Me.pnlDiscordArrow.TabIndex = 80
         '
-        'GroupBox5
+        'pnlFullWorkflowTaskGroupFlight
         '
-        Me.GroupBox5.Controls.Add(Me.btnStartFullPostingWorkflow)
-        Me.GroupBox5.Location = New System.Drawing.Point(841, 104)
-        Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(393, 72)
-        Me.GroupBox5.TabIndex = 3
-        Me.GroupBox5.TabStop = False
-        Me.GroupBox5.Text = "Full Task and Group Flight Event"
+        Me.pnlFullWorkflowTaskGroupFlight.Controls.Add(Me.btnStartFullPostingWorkflow)
+        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(841, 104)
+        Me.pnlFullWorkflowTaskGroupFlight.Name = "pnlFullWorkflowTaskGroupFlight"
+        Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(393, 72)
+        Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 3
+        Me.pnlFullWorkflowTaskGroupFlight.TabStop = False
+        Me.pnlFullWorkflowTaskGroupFlight.Text = "Full Task and Group Flight Event"
         '
         'btnStartFullPostingWorkflow
         '
@@ -4738,6 +4773,19 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -4746,28 +4794,6 @@ Partial Class Main
         '
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(520, 92)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(129, 26)
-        Me.Label14.TabIndex = 86
-        Me.Label14.Text = "Tracker Group"
-        '
-        'txtTrackerGroup
-        '
-        Me.txtTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTrackerGroup.Location = New System.Drawing.Point(655, 89)
-        Me.txtTrackerGroup.Name = "txtTrackerGroup"
-        Me.txtTrackerGroup.Size = New System.Drawing.Size(210, 32)
-        Me.txtTrackerGroup.TabIndex = 87
-        Me.txtTrackerGroup.Tag = "61"
-        Me.ToolTip1.SetToolTip(Me.txtTrackerGroup, "You can specify the club's group name used in the tracker utility.")
         '
         'ToolStrip1
         '
@@ -4778,7 +4804,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -4788,7 +4814,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -4797,7 +4823,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4806,7 +4832,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4815,7 +4841,7 @@ Partial Class Main
         Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
         Me.toolStripReload.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripReload.Name = "toolStripReload"
-        Me.toolStripReload.Size = New System.Drawing.Size(84, 26)
+        Me.toolStripReload.Size = New System.Drawing.Size(84, 25)
         Me.toolStripReload.Text = "Discard"
         Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
         Me.toolStripReload.Visible = False
@@ -4823,56 +4849,56 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4881,7 +4907,7 @@ Partial Class Main
         Me.toolStripStopGuide.Image = CType(resources.GetObject("toolStripStopGuide.Image"), System.Drawing.Image)
         Me.toolStripStopGuide.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripStopGuide.Name = "toolStripStopGuide"
-        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 26)
+        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 25)
         Me.toolStripStopGuide.Text = "&Turn guide off"
         Me.toolStripStopGuide.ToolTipText = "Click to disable wizard"
         Me.toolStripStopGuide.Visible = False
@@ -4893,7 +4919,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4923,7 +4949,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4956,32 +4982,6 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Name = "GetNowTimeStampOnly"
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -5032,7 +5032,7 @@ Partial Class Main
         Me.GroupBox6.PerformLayout()
         Me.pnlWizardDiscord.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
-        Me.GroupBox5.ResumeLayout(False)
+        Me.pnlFullWorkflowTaskGroupFlight.ResumeLayout(False)
         Me.grpDiscordEvent.ResumeLayout(False)
         Me.grpDiscordEvent.PerformLayout()
         Me.grpDiscordOthers.ResumeLayout(False)
@@ -5462,7 +5462,7 @@ Partial Class Main
     Friend WithEvents GroupBox4 As GroupBox
     Friend WithEvents lblThread1stMsgIDAcquired As Label
     Friend WithEvents lblThread1stMsgIDNotAcquired As Label
-    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents pnlFullWorkflowTaskGroupFlight As GroupBox
     Friend WithEvents btnStartFullPostingWorkflow As Button
     Friend WithEvents btnTaskAndGroupEventLinks As Button
     Friend WithEvents btnWeatherBrowser As Button
