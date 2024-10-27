@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.10.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.10.27.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.10.27.2</ReleaseVersion>
+      <ReleaseTitle>Removed extra spaces in briefing</ReleaseTitle>
+      <ReleaseNotes>
+        Removed extra blank spaces from the event's briefing text.
+        Fixed a few typos.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.10.10.1</ReleaseVersion>
       <ReleaseTitle>Detect group event starting soon</ReleaseTitle>

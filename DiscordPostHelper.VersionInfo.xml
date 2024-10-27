@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.10.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.10.27.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.10.27.2</ReleaseVersion>
+      <ReleaseTitle>More emojies on Discord posts</ReleaseTitle>
+      <ReleaseNotes>
+        Added usage of new club emojies when posting to Discord.
+        Removed extra blank spaces from the event's briefing text.
+        Fixed a bug where the full workflow for task and event button is available when there is no group event.
+        Fixed a few typos.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.10.10.1</ReleaseVersion>
       <ReleaseTitle>WSG Integration and more!</ReleaseTitle>
