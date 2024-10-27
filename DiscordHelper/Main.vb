@@ -2671,7 +2671,7 @@ Public Class Main
 
         If _TBTaskEntrySeqID > 0 Then
             Dim msgWeSimGlideLink As String = String.Empty
-            msgWeSimGlideLink = $"## 🌐 WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+            msgWeSimGlideLink = $"## :wsg: WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
             Clipboard.SetText(msgWeSimGlideLink)
 
             CopyContent.ShowContent(Me,
