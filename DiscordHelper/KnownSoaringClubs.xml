@@ -5,6 +5,7 @@
     <ClubName>Custom Event</ClubName>
     <ClubFullName>Custom Club</ClubFullName>
     <TrackerGroup></TrackerGroup>
+    <Emoji></Emoji>
     <EventNewsID>CC</EventNewsID>
     <MSFSServer></MSFSServer>
     <VoiceChannel></VoiceChannel>
@@ -21,6 +22,7 @@
     <ClubName>Tuesday</ClubName>
     <ClubFullName>Soaring Diamonds Club</ClubFullName>
     <TrackerGroup>Diamonds</TrackerGroup>
+    <Emoji>soaringdiamonds</Emoji>
     <EventNewsID>DIAMTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
@@ -37,6 +39,7 @@
     <ClubName>Tuesday</ClubName>
     <ClubFullName>Soaring Diamonds Club</ClubFullName>
     <TrackerGroup>Diamonds</TrackerGroup>
+    <Emoji>soaringdiamonds</Emoji>
     <EventNewsID>DIAMTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)</VoiceChannel>
@@ -53,12 +56,13 @@
     <ClubName>Friday</ClubName>
     <ClubFullName>GotGravel's Friday Soaring Club</ClubFullName>
     <TrackerGroup>FSC</TrackerGroup>
+    <Emoji>gotgravel</Emoji>
     <EventNewsID>FSCFR</EventNewsID>
-    <MSFSServer>West USA</MSFSServer>
+    <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)</VoiceChannel>
     <ZuluDayOfWeek>Friday</ZuluDayOfWeek>
-    <ZuluTime>9:00 PM</ZuluTime>
-    <SyncFlyDelay>30</SyncFlyDelay>
+    <ZuluTime>8:45 PM</ZuluTime>
+    <SyncFlyDelay>15</SyncFlyDelay>
     <LaunchDelay>0</LaunchDelay>
     <StartTaskDelay>0</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
@@ -69,6 +73,7 @@
     <ClubName>Saturday</ClubName>
     <ClubFullName>Sim Soaring Club</ClubFullName>
     <TrackerGroup>SSC</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>SSCSA</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
@@ -85,6 +90,7 @@
     <ClubName>Wednesday</ClubName>
     <ClubFullName>Sim Soaring Club</ClubFullName>
     <TrackerGroup>SSC</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>SSCWE</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
@@ -101,6 +107,7 @@
     <ClubName>Saturday</ClubName>
     <ClubFullName>Sim Soaring Club</ClubFullName>
     <TrackerGroup>SSC</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>SSCSA</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
@@ -117,6 +124,7 @@
     <ClubName>Wednesday</ClubName>
     <ClubFullName>Sim Soaring Club</ClubFullName>
     <TrackerGroup>SSC</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>SSCWE</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/876397825934626836)</VoiceChannel>
@@ -133,6 +141,7 @@
     <ClubName>Tuesdays</ClubName>
     <ClubFullName>AusGlide Soaring</ClubFullName>
     <TrackerGroup>AusGlide</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>AUSTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>
@@ -149,6 +158,7 @@
     <ClubName>Tuesdays</ClubName>
     <ClubFullName>AusGlide Soaring</ClubFullName>
     <TrackerGroup>AusGlide</TrackerGroup>
+    <Emoji>SSC</Emoji>
     <EventNewsID>AUSTU</EventNewsID>
     <MSFSServer>Southeast Asia</MSFSServer>
     <VoiceChannel>[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)</VoiceChannel>
@@ -165,6 +175,7 @@
     <ClubName>Soaring Tuesdays</ClubName>
     <ClubFullName>UKVGA</ClubFullName>
     <TrackerGroup>UKVGA</TrackerGroup>
+    <Emoji>UKVGA</Emoji>
     <EventNewsID>UKVGATU</EventNewsID>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
@@ -181,6 +192,7 @@
     <ClubName>Soaring Thursdays</ClubName>
     <ClubFullName>UKVGA</ClubFullName>
     <TrackerGroup>UKVGA</TrackerGroup>
+    <Emoji>UKVGA</Emoji>
     <EventNewsID>UKVGATH</EventNewsID>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
@@ -197,6 +209,7 @@
     <ClubName>Soaring Tuesdays</ClubName>
     <ClubFullName>UKVGA</ClubFullName>
     <TrackerGroup>UKVGA</TrackerGroup>
+    <Emoji>UKVGA</Emoji>
     <EventNewsID>UKVGATU</EventNewsID>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
@@ -213,6 +226,7 @@
     <ClubName>Soaring Thursdays</ClubName>
     <ClubFullName>UKVGA</ClubFullName>
     <TrackerGroup>UKVGA</TrackerGroup>
+    <Emoji>UKVGA</Emoji>
     <EventNewsID>UKVGATH</EventNewsID>
     <MSFSServer>West Europe</MSFSServer>
     <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>

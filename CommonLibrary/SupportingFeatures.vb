@@ -107,6 +107,7 @@ Public Class SupportingFeatures
             Dim clubName As String = eventNode("ClubName").InnerText
             Dim clubFullName As String = eventNode("ClubFullName").InnerText
             Dim trackerGroup As String = eventNode("TrackerGroup").InnerText
+            Dim emoji As String = eventNode("Emoji").InnerText
             Dim eventNewsID As String = eventNode("EventNewsID").InnerText
             Dim msfsServer As String = eventNode("MSFSServer").InnerText
             Dim voiceChannel As String = eventNode("VoiceChannel").InnerText
@@ -118,7 +119,7 @@ Public Class SupportingFeatures
             Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
             Dim beginnerLink As String = eventNode("BeginnerLink").InnerText
 
-            Dim presetEvent As New PresetEvent(clubId, clubName, clubFullName, trackerGroup, eventNewsID, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward, beginnerLink)
+            Dim presetEvent As New PresetEvent(clubId, clubName, clubFullName, trackerGroup, emoji, eventNewsID, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward, beginnerLink)
             DefaultKnownClubEvents.Add(clubId, presetEvent)
         Next
     End Sub

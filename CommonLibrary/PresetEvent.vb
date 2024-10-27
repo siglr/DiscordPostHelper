@@ -15,11 +15,18 @@
     Public ReadOnly Property EligibleAward As Boolean
     Public ReadOnly Property BeginnerLink As String
 
+    Private _emoji As String
+    Public ReadOnly Property Emoji As String
+        Get
+            Return $":{_emoji}:"
+        End Get
+    End Property
 
     Public Sub New(pClubId As String,
                    pClubName As String,
                    pClubFullName As String,
                    pTrackerGroup As String,
+                   pEmoji As String,
                    pEventNewsID As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
@@ -36,6 +43,7 @@
         ClubFullName = pClubFullName
         TrackerGroup = pTrackerGroup
         EventNewsID = pEventNewsID
+        _emoji = pEmoji
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
         EventDayOfWeek = pZuluDayOfWeek

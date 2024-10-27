@@ -398,6 +398,7 @@ Public Class Main
         txtClubFullName.Text = String.Empty
         txtClubFullName.ReadOnly = True
         txtTrackerGroup.Text = String.Empty
+        lblGroupEmoji.Text = String.Empty
         cboMSFSServer.SelectedIndex = -1
         cboVoiceChannel.SelectedIndex = -1
         chkDateTimeUTC.Checked = True
@@ -2273,6 +2274,7 @@ Public Class Main
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
         txtClubFullName.Text = String.Empty
         txtTrackerGroup.Text = String.Empty
+        lblGroupEmoji.Text = String.Empty
 
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
@@ -2281,10 +2283,12 @@ Public Class Main
                 txtClubFullName.ReadOnly = False
                 txtClubFullName.Text = "Specify your own club name"
                 txtTrackerGroup.Text = String.Empty
+                lblGroupEmoji.Text = String.Empty
             Else
                 txtClubFullName.ReadOnly = True
                 cboGroupOrClubName.Text = _ClubPreset.ClubId
                 txtTrackerGroup.Text = _ClubPreset.TrackerGroup
+                lblGroupEmoji.Text = _ClubPreset.Emoji
                 If _ClubPreset.ClubFullName.Trim.ToUpper.Contains(_ClubPreset.ClubName.Trim.ToUpper) Then
                     txtClubFullName.Text = _ClubPreset.ClubFullName
                 Else
@@ -5511,6 +5515,7 @@ Public Class Main
                 .GroupClubName = String.Empty
             End If
             .TrackerGroup = txtTrackerGroup.Text
+            .GroupEmoji = lblGroupEmoji.Text
             .DiscordTaskID = txtDiscordTaskID.Text
             .TaskThreadFirstPostID = _taskThreadFirstPostID
             .EventTopic = txtEventTitle.Text
@@ -5672,6 +5677,7 @@ Public Class Main
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
                 txtTrackerGroup.Text = .TrackerGroup
+                lblGroupEmoji.Text = .GroupEmoji
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
                 cboVoiceChannel.Text = .VoiceChannel
@@ -5855,9 +5861,9 @@ Public Class Main
             If result Then
                 Dim msgForEventHunters As String = String.Empty
                 If _TBTaskEntrySeqID > 0 Then
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}) ({_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}){Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### :wsg: [Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
                 Else
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}[{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}) ({_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}){Environment.NewLine}Please monitor the original event as task has not been published yet."
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### Please monitor the original event as task has not been published yet."
                 End If
                 Clipboard.SetText(msgForEventHunters)
 

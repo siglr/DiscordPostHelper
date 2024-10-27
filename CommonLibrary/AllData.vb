@@ -154,6 +154,9 @@ Public Class AllData
     <XmlElement("TrackerGroup")>
     Public Property TrackerGroup As String
 
+    <XmlElement("GroupEmoji")>
+    Public Property GroupEmoji As String
+
     <XmlElement("EventTopic")>
     Public Property EventTopic As String
 
