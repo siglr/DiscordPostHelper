@@ -37,6 +37,13 @@ Public Class RecommendedAddOnsForm
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
+        If Not SupportingFeatures.IsValidURL(txtAddOnURL.Text.Trim) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"The add-on URL is invalid!{Environment.NewLine}{Environment.NewLine}{txtAddOnURL.Text.Trim}", "URL Validation", vbOKOnly, MsgBoxStyle.Exclamation)
+                Exit Sub
+            End Using
+        End If
+
         _addOn.Name = txtAddOnName.Text
         _addOn.URL = txtAddOnURL.Text
         If radioTypeFreeware.Checked Then

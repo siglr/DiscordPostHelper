@@ -2851,7 +2851,7 @@ Partial Class Main
         Me.GroupBox6.Size = New System.Drawing.Size(224, 342)
         Me.GroupBox6.TabIndex = 96
         Me.GroupBox6.TabStop = False
-        Me.GroupBox6.Text = "Task Browser"
+        Me.GroupBox6.Text = "WeSimGlide.org"
         '
         'txtLastUpdateDescription
         '

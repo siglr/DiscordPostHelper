@@ -2676,7 +2676,7 @@ Public Class Main
 
             CopyContent.ShowContent(Me,
                                 msgWeSimGlideLink,
-                                "Task uploaded and database updated successfully! You can now paste the content of the message in the task's thread to share the WSG link.",
+                                "Task uploaded to WeSimGlide.org! You can now paste the content of the message in the task's thread to share the WSG link.",
                                 "Sharing WeSimGlide.org Task link",
                                 New List(Of String) From {"^v"})
         End If
@@ -5869,7 +5869,7 @@ Public Class Main
 
                 CopyContent.ShowContent(Me,
                                 msgForEventHunters,
-                                "Event news published! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
+                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
                                 "Sharing WeSimGlide.org Task and Group Event links",
                                 New List(Of String) From {"^v"})
 
