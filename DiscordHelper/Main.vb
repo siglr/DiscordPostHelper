@@ -4132,7 +4132,7 @@ Public Class Main
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
-                                $"In the Discord app and on the proper channel for the club/group, make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link To that newly created message.",
+                                $"In the Discord app and on the proper channel for the club/group, make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link to that newly created message.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked,
