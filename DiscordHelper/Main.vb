@@ -4142,7 +4142,7 @@ Public Class Main
         If Not autoContinue Then Return autoContinue
 
         If txtGroupEventPostURL.Text = String.Empty Then
-            Dim message As String = "Please Get the link To the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim message As String = "Please Get the link to the group event's post in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As New WaitingForURLForm(message, False)
             Dim answer As DialogResult = waitingForm.ShowDialog()
 
