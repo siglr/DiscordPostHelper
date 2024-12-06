@@ -99,7 +99,7 @@ Public Class ATCWaypoint
         SetLatitudeAndLongitude(strWorldPosition, Latitude, Longitude, _wpelevation)
 
         If SupportingFeatures.ClientRunning = SupportingFeatures.ClientApp.DiscordPostHelper Then
-            Country = CountryGeo.GetCountryFromCoordinates(Latitude, Longitude)
+            Country = CountryGeo.GetCountryFromCoordinatesAzure(Latitude, Longitude)
         End If
 
         'Check if AAT waypoint and remove that bit if so

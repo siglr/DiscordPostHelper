@@ -3503,6 +3503,7 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
 
+        Clipboard.Clear()
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             Dim allFiles As New StringCollection
             If File.Exists(cboCoverImage.SelectedItem) Then
