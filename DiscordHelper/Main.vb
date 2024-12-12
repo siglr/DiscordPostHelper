@@ -2033,11 +2033,15 @@ Public Class Main
         txtDistanceTrack.Text = FormatNumber(_TaskTotalDistanceInKm, 0)
 
         'Build countries
+        Dim country As String
         If Not chkLockCountries.Checked Then
             lstAllCountries.Items.Clear()
             For Each waypoint As ATCWaypoint In _SF.AllWaypoints
-                If _SF.CountryFlagCodes.ContainsKey(waypoint.Country) AndAlso Not lstAllCountries.Items.Contains(waypoint.Country) Then
-                    lstAllCountries.Items.Add(waypoint.Country)
+                If _SF.CountryISO3166Codes.ContainsKey(waypoint.CountryISO3166Code) Then
+                    country = _SF.CountryISO3166Codes(waypoint.CountryISO3166Code)
+                    If _SF.CountryFlagCodes.ContainsKey(country) AndAlso Not lstAllCountries.Items.Contains(country) Then
+                        lstAllCountries.Items.Add(country)
+                    End If
                 End If
             Next
         End If

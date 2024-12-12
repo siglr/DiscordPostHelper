@@ -78,7 +78,7 @@ Public Class CountryGeo
         End If
 
         ' Update the URL for Azure Maps
-        Dim url As String = $"https://atlas.microsoft.com/search/address/reverse/xml?api-version=1.0&query={lat.ToString("G17", CultureInfo.InvariantCulture)},{lon.ToString("G17", CultureInfo.InvariantCulture)}&subscription-key=Dix0il8ZRv0cAL0hZdLi3yq8MZkXcvUyXlrNBeTHggmPSfqDHazHJQQJ99ALACYeBjFBpuWjAAAgAZMP1iFO"
+        Dim url As String = $"https://atlas.microsoft.com/search/address/reverse/xml?api-version=1.0&query={lat.ToString("G17", CultureInfo.InvariantCulture)},{lon.ToString("G17", CultureInfo.InvariantCulture)}&language=en-US&subscription-key=Dix0il8ZRv0cAL0hZdLi3yq8MZkXcvUyXlrNBeTHggmPSfqDHazHJQQJ99ALACYeBjFBpuWjAAAgAZMP1iFO"
         Dim client As New WebClient()
         Dim data As String = ""
         Dim attempts As Integer = 0
@@ -115,9 +115,10 @@ Public Class CountryGeo
 
         ' Extract the country from the XML response
         If xmlDoc.GetElementsByTagName("country").Count > 0 Then
-            Dim country As String = xmlDoc.GetElementsByTagName("country")(0).InnerText
-            CountriesCache.Add(key, country)
-            Return country
+            Dim countryISO3166Code As String = xmlDoc.GetElementsByTagName("countryCodeISO3")(0).InnerText
+
+            CountriesCache.Add(key, countryISO3166Code)
+            Return countryISO3166Code
         Else
             Return String.Empty
         End If
