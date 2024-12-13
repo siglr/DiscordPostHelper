@@ -25,6 +25,7 @@ Public Class DPHXUnpackAndLoad
     Private _filesCurrentlyUnpacked As New Dictionary(Of String, String)
     Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
     Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
+    Private _showingPrompt As Boolean = False
 
 #End Region
 
@@ -302,35 +303,42 @@ Public Class DPHXUnpackAndLoad
             RetrieveNewsList.Enabled = False
         End If
 
-        'Check if there is an group event that is within 2 hours and user has not provided an answer
-        Dim userParticipatingInEvent As Boolean = False
-        For Each groupEventNews As NewsEntry In _groupEventNewsEntries.Values
-            If groupEventNews.IsWithin2HoursOfEvent AndAlso Not groupEventNews.UserHasAnswered Then
-                'Ask user!
-                Dim msgPrompt As String = $"The following group event is starting soon. Will you be participating?{Environment.NewLine}{Environment.NewLine}{groupEventNews.Title}{Environment.NewLine}{groupEventNews.Subtitle}{Environment.NewLine}{_SF.GetFullEventDateTimeInLocal(groupEventNews.EventDate, groupEventNews.EventDate, True).ToString}"
-                Using New Centered_MessageBox()
-                    If MessageBox.Show(msgPrompt, "Group Event Starting Soon", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
-                        'User will be participating
-                        userParticipatingInEvent = True
-                    Else
-                        'User will not be participating - do nothing
-                    End If
-                    groupEventNews.UserHasAnswered = True
-                End Using
-            End If
-            If userParticipatingInEvent Then
-                SupportingFeatures.LaunchDiscordURL(groupEventNews.URLToGo)
-                If groupEventNews.EntrySeqID > 0 Then
-                    DownloadAndOpenTaskUsingNewsEntry(groupEventNews)
-                Else
+        If Not _showingPrompt Then
+            'Check if there is an group event that is within 2 hours and user has not provided an answer
+            Dim userParticipatingInEvent As Boolean = False
+            For Each groupEventNews As NewsEntry In _groupEventNewsEntries.Values
+                If groupEventNews.IsWithin2HoursOfEvent AndAlso Not groupEventNews.UserHasAnswered Then
+                    'Ask user!
+                    Dim msgPrompt As String = $"The following group event is starting soon. Will you be participating?{Environment.NewLine}{Environment.NewLine}{groupEventNews.Title}{Environment.NewLine}{groupEventNews.Subtitle}{Environment.NewLine}{_SF.GetFullEventDateTimeInLocal(groupEventNews.EventDate, groupEventNews.EventDate, True).ToString}"
+                    _showingPrompt = True
                     Using New Centered_MessageBox()
-                        MessageBox.Show("The task has not yet been published for the event!", "Group Event Starting Soon", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        If MessageBox.Show(msgPrompt, "Group Event Starting Soon", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
+                            'User will be participating
+                            userParticipatingInEvent = True
+                        Else
+                            'User will not be participating - do nothing
+                        End If
+                        groupEventNews.UserHasAnswered = True
                     End Using
+                    _showingPrompt = False
                 End If
-                Exit For
-            End If
+                If userParticipatingInEvent Then
+                    SupportingFeatures.LaunchDiscordURL(groupEventNews.URLToGo)
+                    If groupEventNews.EntrySeqID > 0 Then
+                        DownloadAndOpenTaskUsingNewsEntry(groupEventNews)
+                    Else
+                        _showingPrompt = True
+                        Using New Centered_MessageBox()
+                            MessageBox.Show("The task has not yet been published for the event!", "Group Event Starting Soon", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        End Using
+                        _showingPrompt = False
+                    End If
+                    Exit For
+                End If
 
-        Next
+            Next
+        End If
+
     End Sub
 
     Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
