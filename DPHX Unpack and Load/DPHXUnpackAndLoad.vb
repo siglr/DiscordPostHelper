@@ -861,8 +861,10 @@ Public Class DPHXUnpackAndLoad
                             ' Updated entry
                             newOrUpdatedEntries = True
                             If newsEntry.NewsType + 1 = TaskEventNews.NewsTypeEnum.Event Then
-                                newsEntry.UserHasAnswered = _groupEventNewsEntries(newsEntry.Key).UserHasAnswered
-                                _groupEventNewsEntries(newsEntry.Key) = newsEntry
+                                If _groupEventNewsEntries.ContainsKey(newsEntry.Key) Then
+                                    newsEntry.UserHasAnswered = _groupEventNewsEntries(newsEntry.Key).UserHasAnswered
+                                    _groupEventNewsEntries(newsEntry.Key) = newsEntry
+                                End If
                             End If
                         End If
                     Next
@@ -871,8 +873,10 @@ Public Class DPHXUnpackAndLoad
                     Dim deletions As Boolean = _currentNewsKeyPublished.Keys.Except(fetchedKeys.Keys).Any()
                     For Each deletedItem As String In _currentNewsKeyPublished.Keys.Except(fetchedKeys.Keys)
                         'Delete the news entry from the global dictionary
-                        If _groupEventNewsEntries(deletedItem).NewsType = TaskEventNews.NewsTypeEnum.Event Then
-                            _groupEventNewsEntries.Remove(deletedItem)
+                        If _groupEventNewsEntries.ContainsKey(deletedItem) Then
+                            If _groupEventNewsEntries(deletedItem).NewsType = TaskEventNews.NewsTypeEnum.Event Then
+                                _groupEventNewsEntries.Remove(deletedItem)
+                            End If
                         End If
                     Next
 
