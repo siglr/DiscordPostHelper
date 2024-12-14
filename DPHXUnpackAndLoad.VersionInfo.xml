@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.10.27.2</CurrentLatestVersion>
+  <CurrentLatestVersion>24.12.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.12.14.1</ReleaseVersion>
+      <ReleaseTitle>Just a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Prevented multiple group event prompt occuring one over the other.
+        Attempt to fix an error of a news entry not being in the dictionary.
+        Added a check in the settings for Packages and Unpack folders not to be the same.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.10.27.2</ReleaseVersion>
       <ReleaseTitle>Removed extra spaces in briefing</ReleaseTitle>

@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.10.27.2</CurrentLatestVersion>
+  <CurrentLatestVersion>24.12.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.12.14.1</ReleaseVersion>
+      <ReleaseTitle>Just a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check to validate the URL when adding or editing an add-on.
+        Renamed the "Task Browser" section on the Discord tab to "WeSimGlide.org".
+        Switched to Azure Maps service for country retrieval.
+        Updated countries and how to get them correctly using ISO3166 Alpha-3 codes.
+        Fixed several typos.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.10.27.2</ReleaseVersion>
       <ReleaseTitle>More emojies on Discord posts</ReleaseTitle>
