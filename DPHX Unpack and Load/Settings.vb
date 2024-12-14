@@ -30,6 +30,14 @@ Public Class Settings
             sbMsg.AppendLine("Invalid folder path for DPHX files")
         End If
 
+        'check that temporary and DPHX packages are not the same folder
+        If Directory.Exists(btnUnpackingFolder.Text) AndAlso Directory.Exists(btnPackagesFolder.Text) Then
+            If btnUnpackingFolder.Text.Trim = btnPackagesFolder.Text.Trim Then
+                validSettings = False
+                sbMsg.AppendLine("The unpacking and DPHX packages folders must not be the same")
+            End If
+        End If
+
         If Not validSettings Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
