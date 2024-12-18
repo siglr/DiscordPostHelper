@@ -1,6 +1,4 @@
-﻿Imports System.Configuration
-Imports System.IO
-Imports System.Linq.Expressions
+﻿Imports System.IO
 Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary
 
@@ -13,28 +11,67 @@ Public Class AllSettings
         AlwaysAsk = 2
     End Enum
 
-    Private _MSFSWeatherPresetsFolder As String
+    <XmlElement("MSFS2020Steam")>
+    Public Property MSFS2020Steam As Boolean
+
+    <XmlElement("MSFS2020Microsoft")>
+    Public Property MSFS2020Microsoft As Boolean
+
+
+    <XmlElement("MSFS2024Steam")>
+    Public Property MSFS2024Steam As Boolean
+
+    <XmlElement("MSFS2024Microsoft")>
+    Public Property MSFS2024Microsoft As Boolean
+
+    Private _MSFS2020WeatherPresetsFolder As String
     <XmlElement("MSFSWeatherPresetsFolder")>
-    Public Property MSFSWeatherPresetsFolder As String
+    Public Property MSFS2020WeatherPresetsFolder As String
         Get
-            Return _MSFSWeatherPresetsFolder
+            Return _MSFS2020WeatherPresetsFolder
         End Get
         Set(value As String)
             If Directory.Exists(value) Then
-                _MSFSWeatherPresetsFolder = value
+                _MSFS2020WeatherPresetsFolder = value
             End If
         End Set
     End Property
 
-    Private _FlightPlansFolder As String
+    Private _MSFS2020FlightPlansFolder As String
     <XmlElement("FlightPlansFolder")>
-    Public Property FlightPlansFolder As String
+    Public Property MSFS2020FlightPlansFolder As String
         Get
-            Return _FlightPlansFolder
+            Return _MSFS2020FlightPlansFolder
         End Get
         Set(value As String)
             If Directory.Exists(value) Then
-                _FlightPlansFolder = value
+                _MSFS2020FlightPlansFolder = value
+            End If
+        End Set
+    End Property
+
+    Private _MSFS2024WeatherPresetsFolder As String
+    <XmlElement("2024WeatherPresetsFolder")>
+    Public Property MSFS2024WeatherPresetsFolder As String
+        Get
+            Return _MSFS2024WeatherPresetsFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _MSFS2024WeatherPresetsFolder = value
+            End If
+        End Set
+    End Property
+
+    Private _MSFS2024FlightPlansFolder As String
+    <XmlElement("2024FlightPlansFolder")>
+    Public Property MSFS2024FlightPlansFolder As String
+        Get
+            Return _MSFS2024FlightPlansFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _MSFS2024FlightPlansFolder = value
             End If
         End Set
     End Property
@@ -120,10 +157,16 @@ Public Class AllSettings
     Public Property AutoUnpack As Boolean
 
     <XmlElement("ExcludeFlightPlanFromCleanup")>
-    Public Property ExcludeFlightPlanFromCleanup As Boolean
+    Public Property Exclude2020FlightPlanFromCleanup As Boolean
 
     <XmlElement("ExcludeWeatherFileFromCleanup")>
-    Public Property ExcludeWeatherFileFromCleanup As Boolean
+    Public Property Exclude2020WeatherFileFromCleanup As Boolean
+
+    <XmlElement("Exclude2024FlightPlanFromCleanup")>
+    Public Property Exclude2024FlightPlanFromCleanup As Boolean
+
+    <XmlElement("Exclude2024WeatherFileFromCleanup")>
+    Public Property Exclude2024WeatherFileFromCleanup As Boolean
 
     <XmlElement("ExcludeXCSoarTaskFileFromCleanup")>
     Public Property ExcludeXCSoarTaskFileFromCleanup As Boolean
@@ -186,8 +229,14 @@ Public Class AllSettings
                 settingsInFile = CType(serializer.Deserialize(stream), AllSettings)
             End Using
 
-            _MSFSWeatherPresetsFolder = settingsInFile.MSFSWeatherPresetsFolder
-            _FlightPlansFolder = settingsInFile.FlightPlansFolder
+            MSFS2020Microsoft = settingsInFile.MSFS2020Microsoft
+            MSFS2020Steam = settingsInFile.MSFS2020Steam
+            MSFS2024Microsoft = settingsInFile.MSFS2024Microsoft
+            MSFS2024Steam = settingsInFile.MSFS2024Steam
+            _MSFS2020WeatherPresetsFolder = settingsInFile.MSFS2020WeatherPresetsFolder
+            _MSFS2020FlightPlansFolder = settingsInFile.MSFS2020FlightPlansFolder
+            _MSFS2024WeatherPresetsFolder = settingsInFile.MSFS2024WeatherPresetsFolder
+            _MSFS2024FlightPlansFolder = settingsInFile.MSFS2024FlightPlansFolder
             _XCSoarTasksFolder = settingsInFile.XCSoarTasksFolder
             _XCSoarMapsFolder = settingsInFile.XCSoarMapsFolder
             _UnpackingFolder = settingsInFile.UnpackingFolder
@@ -198,8 +247,10 @@ Public Class AllSettings
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
             AutoUnpack = settingsInFile.AutoUnpack
             LastDPHXOpened = settingsInFile.LastDPHXOpened
-            ExcludeFlightPlanFromCleanup = settingsInFile.ExcludeFlightPlanFromCleanup
-            ExcludeWeatherFileFromCleanup = settingsInFile.ExcludeWeatherFileFromCleanup
+            Exclude2020FlightPlanFromCleanup = settingsInFile.Exclude2020FlightPlanFromCleanup
+            Exclude2020WeatherFileFromCleanup = settingsInFile.Exclude2020WeatherFileFromCleanup
+            Exclude2024FlightPlanFromCleanup = settingsInFile.Exclude2024FlightPlanFromCleanup
+            Exclude2024WeatherFileFromCleanup = settingsInFile.Exclude2024WeatherFileFromCleanup
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
             LocalDBTimestamp = settingsInFile.LocalDBTimestamp
@@ -239,12 +290,27 @@ Public Class AllSettings
                 End If
             Next
 
-            'Check if valid folder
-            If Not Directory.Exists(_FlightPlansFolder) Then
+            'Check if at least one installation
+            If Not (MSFS2020Microsoft OrElse MSFS2020Steam OrElse MSFS2024Microsoft OrElse MSFS2024Steam) Then
                 settingsFound = False
             End If
-            If Not Directory.Exists(_MSFSWeatherPresetsFolder) Then
-                settingsFound = False
+
+            'Check if valid folder
+            If MSFS2020Microsoft OrElse MSFS2020Steam Then
+                If Not Directory.Exists(_MSFS2020FlightPlansFolder) Then
+                    settingsFound = False
+                End If
+                If Not Directory.Exists(_MSFS2020WeatherPresetsFolder) Then
+                    settingsFound = False
+                End If
+            End If
+            If MSFS2024Microsoft OrElse MSFS2024Steam Then
+                If Not Directory.Exists(_MSFS2024FlightPlansFolder) Then
+                    settingsFound = False
+                End If
+                If Not Directory.Exists(_MSFS2024WeatherPresetsFolder) Then
+                    settingsFound = False
+                End If
             End If
             If Not Directory.Exists(_UnpackingFolder) Then
                 settingsFound = False
@@ -254,22 +320,7 @@ Public Class AllSettings
             End If
 
         Else
-                settingsFound = False
-
-            'No settings found - try to auto locate the MSFS default folders
-            Dim folderPathToCheck As String
-            'Weather Presets
-            folderPathToCheck = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalState\Weather\Presets"
-
-            If Directory.Exists(folderPathToCheck) Then
-                _MSFSWeatherPresetsFolder = folderPathToCheck
-            End If
-            'Flight plans
-            folderPathToCheck = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalState"
-            If Directory.Exists(folderPathToCheck) Then
-                _FlightPlansFolder = folderPathToCheck
-            End If
-
+            settingsFound = False
         End If
 
         Return settingsFound

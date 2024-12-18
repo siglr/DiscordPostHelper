@@ -21,10 +21,10 @@ Public Class CleaningTool
 
         Select Case tabPageSelected.Name
             Case tabFlights.Name
-                lblFlightsFolderPath.Text = Settings.SessionSettings.FlightPlansFolder
+                lblFlightsFolderPath.Text = Settings.SessionSettings.MSFS2020FlightPlansFolder
 
             Case tabWeather.Name
-                lblWeatherFolderPath.Text = Settings.SessionSettings.MSFSWeatherPresetsFolder
+                lblWeatherFolderPath.Text = Settings.SessionSettings.MSFS2020WeatherPresetsFolder
 
             Case tabPackages.Name
                 lblPackagesFolderPath.Text = Settings.SessionSettings.PackagesFolder

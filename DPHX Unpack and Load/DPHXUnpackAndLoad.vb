@@ -109,32 +109,35 @@ Public Class DPHXUnpackAndLoad
 
         End If
 
-        CheckForNewVersion()
+        If Not _abortingFirstRun Then
+            CheckForNewVersion()
 
-        lblAllFilesStatus.Text = String.Empty
+            lblAllFilesStatus.Text = String.Empty
 
-        SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+            SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
-        If My.Application.CommandLineArgs.Count > 0 Then
-            ' Open the file passed as an argument
-            _currentFile = My.Application.CommandLineArgs(0)
-        Else
-            ' Check the last file that was opened
-            If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
-                _currentFile = Settings.SessionSettings.LastDPHXOpened
+            If My.Application.CommandLineArgs.Count > 0 Then
+                ' Open the file passed as an argument
+                _currentFile = My.Application.CommandLineArgs(0)
+            Else
+                ' Check the last file that was opened
+                If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
+                    _currentFile = Settings.SessionSettings.LastDPHXOpened
+                End If
             End If
-        End If
 
-        If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
-            LoadDPHXPackage(_currentFile)
-            If Settings.SessionSettings.AutoUnpack Then
-                UnpackFiles()
+            If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
+                LoadDPHXPackage(_currentFile)
+                If Settings.SessionSettings.AutoUnpack Then
+                    UnpackFiles()
+                End If
             End If
+
+            DatabaseUpdate.CheckAndUpdateDatabase()
+
+            RetrieveNewsList_Tick(sender, e)
+
         End If
-
-        DatabaseUpdate.CheckAndUpdateDatabase()
-
-        RetrieveNewsList_Tick(sender, e)
 
     End Sub
 
@@ -507,7 +510,7 @@ Public Class DPHXUnpackAndLoad
         _filesToUnpack.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
         If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename)),
-                                                Path.Combine(Settings.SessionSettings.FlightPlansFolder,
+                                                Path.Combine(Settings.SessionSettings.MSFS2020FlightPlansFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
             _filesCurrentlyUnpacked.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
         End If
@@ -516,7 +519,7 @@ Public Class DPHXUnpackAndLoad
         _filesToUnpack.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
         If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename)),
-                                                Path.Combine(Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                                                Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename))) Then
             _filesCurrentlyUnpacked.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
         End If
@@ -672,14 +675,14 @@ Public Class DPHXUnpackAndLoad
         'Flight plan
         sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  TempDPHXUnpackFolder,
-                 Settings.SessionSettings.FlightPlansFolder,
+                 Settings.SessionSettings.MSFS2020FlightPlansFolder,
                  "Flight Plan"))
         sb.AppendLine()
 
         'Weather file
         sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                  "Weather Preset"))
 
         sb.AppendLine()
@@ -793,16 +796,16 @@ Public Class DPHXUnpackAndLoad
 
         'Flight plan
         sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 Settings.SessionSettings.FlightPlansFolder,
+                 Settings.SessionSettings.MSFS2020FlightPlansFolder,
                  "Flight Plan",
-                 Settings.SessionSettings.ExcludeFlightPlanFromCleanup))
+                 Settings.SessionSettings.Exclude2020FlightPlanFromCleanup))
         sb.AppendLine()
 
         'Weather file
         sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 Settings.SessionSettings.MSFSWeatherPresetsFolder,
+                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                  "Weather Preset",
-                 Settings.SessionSettings.ExcludeWeatherFileFromCleanup))
+                 Settings.SessionSettings.Exclude2020WeatherFileFromCleanup))
         sb.AppendLine()
 
         'Look in the other files for xcsoar file
