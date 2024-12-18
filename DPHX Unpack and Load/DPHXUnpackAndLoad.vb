@@ -21,8 +21,10 @@ Public Class DPHXUnpackAndLoad
     Private _currentFile As String = String.Empty
     Private _abortingFirstRun As Boolean = False
     Private _allDPHData As AllData
-    Private _filesToUnpack As New Dictionary(Of String, String)
-    Private _filesCurrentlyUnpacked As New Dictionary(Of String, String)
+    Private _filesToUnpack2020 As New Dictionary(Of String, String)
+    Private _filesCurrentlyUnpacked2020 As New Dictionary(Of String, String)
+    Private _filesToUnpack2024 As New Dictionary(Of String, String)
+    Private _filesCurrentlyUnpacked2024 As New Dictionary(Of String, String)
     Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
     Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
     Private _showingPrompt As Boolean = False
@@ -76,6 +78,9 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DPHXUnpackAndLoad_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        msfs2020ToolStrip.Visible = False
+        msfs2024ToolStrip.Visible = False
+
         If Not _SF.CheckRequiredNetFrameworkVersion Then
             MessageBox.Show("This application requires Microsoft .NET Framework 4.8 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
             _abortingFirstRun = True
@@ -112,7 +117,8 @@ Public Class DPHXUnpackAndLoad
         If Not _abortingFirstRun Then
             CheckForNewVersion()
 
-            lblAllFilesStatus.Text = String.Empty
+            lbl2020AllFilesStatus.Text = String.Empty
+            lbl2024AllFilesStatus.Text = String.Empty
 
             SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
@@ -132,6 +138,9 @@ Public Class DPHXUnpackAndLoad
                     UnpackFiles()
                 End If
             End If
+
+            msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
+            msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
 
             DatabaseUpdate.CheckAndUpdateDatabase()
 
@@ -176,6 +185,10 @@ Public Class DPHXUnpackAndLoad
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
 
         OpenSettingsWindow()
+
+        msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
+        msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
+
         'Recheck files
         If toolStripUnpack.Enabled Then
             EnableUnpackButton()
@@ -185,7 +198,7 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles toolStripOpen.Click
 
-        lblAllFilesStatus.Text = String.Empty
+        lbl2020AllFilesStatus.Text = String.Empty
 
         If txtPackageName.Text = String.Empty Then
             If Directory.Exists(Settings.SessionSettings.PackagesFolder) Then
@@ -502,26 +515,50 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub SetFilesToUnpack()
 
-        _filesToUnpack.Clear()
-        _filesCurrentlyUnpacked.Clear()
+        _filesToUnpack2020.Clear()
+        _filesCurrentlyUnpacked2020.Clear()
+        _filesToUnpack2024.Clear()
+        _filesCurrentlyUnpacked2024.Clear()
 
         'Check if files are already unpacked
-        'Flight plan
-        _filesToUnpack.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
-        If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+
+        If Settings.SessionSettings.Is2020Installed Then
+            'Flight plan
+            _filesToUnpack2020.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
+            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2020FlightPlansFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
-            _filesCurrentlyUnpacked.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
-        End If
+                _filesCurrentlyUnpacked2020.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
+            End If
 
-        'Weather file
-        _filesToUnpack.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
-        If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+            'Weather file
+            _filesToUnpack2020.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename))) Then
-            _filesCurrentlyUnpacked.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+                _filesCurrentlyUnpacked2020.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            End If
+        End If
+        If Settings.SessionSettings.Is2024Installed Then
+            'Flight plan
+            _filesToUnpack2024.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
+            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                                Path.Combine(Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                                                Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
+                _filesCurrentlyUnpacked2024.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
+            End If
+
+            'Weather file
+            _filesToUnpack2024.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                                                Path.GetFileName(_allDPHData.WeatherFilename)),
+                                                Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                                                Path.GetFileName(_allDPHData.WeatherFilename))) Then
+                _filesCurrentlyUnpacked2024.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            End If
         End If
 
         'XCSoar task
@@ -530,12 +567,14 @@ Public Class DPHXUnpackAndLoad
             For Each filepath As String In _allDPHData.ExtraFiles
                 If Path.GetExtension(filepath) = ".tsk" Then
                     'XCSoar task
-                    _filesToUnpack.Add("XCSoar Task", Path.GetFileName(filepath))
+                    _filesToUnpack2020.Add("XCSoar Task", Path.GetFileName(filepath))
+                    _filesToUnpack2024.Add("XCSoar Task", Path.GetFileName(filepath))
                     If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                             Path.GetFileName(filepath)),
                                                             Path.Combine(Settings.SessionSettings.XCSoarTasksFolder,
                                                             Path.GetFileName(filepath))) Then
-                        _filesCurrentlyUnpacked.Add("XCSoar Task", Path.GetFileName(filepath))
+                        _filesCurrentlyUnpacked2020.Add("XCSoar Task", Path.GetFileName(filepath))
+                        _filesCurrentlyUnpacked2024.Add("XCSoar Task", Path.GetFileName(filepath))
                     End If
                 End If
             Next
@@ -547,12 +586,14 @@ Public Class DPHXUnpackAndLoad
             For Each filepath As String In _allDPHData.ExtraFiles
                 If Path.GetExtension(filepath) = ".xcm" Then
                     'XCSoar map
-                    _filesToUnpack.Add("XCSoar Map", Path.GetFileName(filepath))
+                    _filesToUnpack2020.Add("XCSoar Map", Path.GetFileName(filepath))
+                    _filesToUnpack2024.Add("XCSoar Map", Path.GetFileName(filepath))
                     If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
                                                             Path.GetFileName(filepath)),
                                                             Path.Combine(Settings.SessionSettings.XCSoarMapsFolder,
                                                             Path.GetFileName(filepath))) Then
-                        _filesCurrentlyUnpacked.Add("XCSoar Map", Path.GetFileName(filepath))
+                        _filesCurrentlyUnpacked2020.Add("XCSoar Map", Path.GetFileName(filepath))
+                        _filesCurrentlyUnpacked2024.Add("XCSoar Map", Path.GetFileName(filepath))
                     End If
                 End If
             Next
@@ -567,33 +608,58 @@ Public Class DPHXUnpackAndLoad
 
         SetFilesToUnpack()
 
-        toolStatusOK.Visible = False
-        toolStatusWarning.Visible = False
-        toolStatusStop.Visible = False
+        tool2020StatusOK.Visible = False
+        tool2020StatusWarning.Visible = False
+        tool2020StatusStop.Visible = False
 
-        If _filesToUnpack.Count <> _filesCurrentlyUnpacked.Count Then
-            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
-            toolStripUnpack.ForeColor = Color.Red
-            If _filesCurrentlyUnpacked.Count = 0 Then
-                lblAllFilesStatus.Text = $"All files ({GetListOfFilesMissing()}) are MISSING from their respective folder."
-                toolStatusStop.Visible = True
+        tool2024StatusOK.Visible = False
+        tool2024StatusWarning.Visible = False
+        tool2024StatusStop.Visible = False
+
+        If Settings.SessionSettings.Is2020Installed Then
+            If _filesToUnpack2020.Count <> _filesCurrentlyUnpacked2020.Count Then
+                toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
+                toolStripUnpack.ForeColor = Color.Red
+                If _filesCurrentlyUnpacked2020.Count = 0 Then
+                    lbl2020AllFilesStatus.Text = $"All files ({GetListOfFilesMissing(_filesCurrentlyUnpacked2020, _filesToUnpack2020)}) are MISSING from their respective folder."
+                    tool2020StatusStop.Visible = True
+                Else
+                    lbl2020AllFilesStatus.Text = $"{_filesCurrentlyUnpacked2020.Count} out of {_filesToUnpack2020.Count} files are present: {GetListOfFilesPresent(_filesCurrentlyUnpacked2020)}. MISSING files: {GetListOfFilesMissing(_filesCurrentlyUnpacked2020, _filesToUnpack2020)}"
+                    tool2020StatusWarning.Visible = True
+                End If
             Else
-                lblAllFilesStatus.Text = $"{_filesCurrentlyUnpacked.Count} out of {_filesToUnpack.Count} files are present: {GetListOfFilesPresent()}. MISSING files: {GetListOfFilesMissing()}"
-                toolStatusWarning.Visible = True
+                toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+                toolStripUnpack.ForeColor = DefaultForeColor
+                lbl2020AllFilesStatus.Text = $"All the files ({GetListOfFilesPresent(_filesCurrentlyUnpacked2020)}) are present in their respective folder."
+                tool2020StatusOK.Visible = True
             End If
-        Else
-            toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
-            toolStripUnpack.ForeColor = DefaultForeColor
-            lblAllFilesStatus.Text = $"All the files ({GetListOfFilesPresent()}) are present in their respective folder."
-            toolStatusOK.Visible = True
         End If
+        If Settings.SessionSettings.Is2024Installed Then
+            If _filesToUnpack2024.Count <> _filesCurrentlyUnpacked2024.Count Then
+                toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Bold)
+                toolStripUnpack.ForeColor = Color.Red
+                If _filesCurrentlyUnpacked2024.Count = 0 Then
+                    lbl2024AllFilesStatus.Text = $"All files ({GetListOfFilesMissing(_filesCurrentlyUnpacked2024, _filesToUnpack2024)}) are MISSING from their respective folder."
+                    tool2024StatusStop.Visible = True
+                Else
+                    lbl2024AllFilesStatus.Text = $"{_filesCurrentlyUnpacked2024.Count} out of {_filesToUnpack2024.Count} files are present: {GetListOfFilesPresent(_filesCurrentlyUnpacked2024)}. MISSING files: {GetListOfFilesMissing(_filesCurrentlyUnpacked2024, _filesToUnpack2024)}"
+                    tool2024StatusWarning.Visible = True
+                End If
+            Else
+                toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+                toolStripUnpack.ForeColor = DefaultForeColor
+                lbl2024AllFilesStatus.Text = $"All the files ({GetListOfFilesPresent(_filesCurrentlyUnpacked2024)}) are present in their respective folder."
+                tool2024StatusOK.Visible = True
+            End If
+        End If
+
     End Sub
 
-    Private Function GetListOfFilesPresent() As String
+    Private Function GetListOfFilesPresent(fileCurrentlyUnpacked As Dictionary(Of String, String)) As String
 
         Dim result As String = String.Empty
 
-        For Each fileType In _filesCurrentlyUnpacked.Keys
+        For Each fileType In fileCurrentlyUnpacked.Keys
             If result = String.Empty Then
                 result = $"{fileType}"
             Else
@@ -605,12 +671,12 @@ Public Class DPHXUnpackAndLoad
 
     End Function
 
-    Private Function GetListOfFilesMissing() As String
+    Private Function GetListOfFilesMissing(fileCurrentlyUnpacked As Dictionary(Of String, String), filesToUnpack As Dictionary(Of String, String)) As String
 
         Dim result As String = String.Empty
 
-        For Each fileType In _filesToUnpack.Keys
-            If Not _filesCurrentlyUnpacked.Keys.Contains(fileType) Then
+        For Each fileType In filesToUnpack.Keys
+            If Not fileCurrentlyUnpacked.Keys.Contains(fileType) Then
                 If result = String.Empty Then
                     result = $"{fileType}"
                 Else
@@ -672,20 +738,38 @@ Public Class DPHXUnpackAndLoad
         sb.AppendLine("Unpacking Results:")
         sb.AppendLine()
 
-        'Flight plan
-        sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+        If Settings.SessionSettings.Is2020Installed Then
+            'Flight plan
+            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2020FlightPlansFolder,
-                 "Flight Plan"))
-        sb.AppendLine()
+                 "Flight Plan for MSFS 2020"))
+            sb.AppendLine()
 
-        'Weather file
-        sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+            'Weather file
+            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset"))
+                 "Weather Preset for MSFS 2020"))
 
-        sb.AppendLine()
+            sb.AppendLine()
+        End If
+        If Settings.SessionSettings.Is2024Installed Then
+            'Flight plan
+            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                 "Flight Plan for MSFS 2024"))
+            sb.AppendLine()
+
+            'Weather file
+            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                 "Weather Preset for MSFS 2024"))
+
+            sb.AppendLine()
+        End If
 
         'Look in the other files for xcsoar files
         For Each filepath As String In _allDPHData.ExtraFiles
@@ -794,19 +878,38 @@ Public Class DPHXUnpackAndLoad
         sb.AppendLine("Cleanup Results:")
         sb.AppendLine()
 
-        'Flight plan
-        sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+        If Settings.SessionSettings.Is2020Installed Then
+            'Flight plan
+            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  Settings.SessionSettings.MSFS2020FlightPlansFolder,
-                 "Flight Plan",
+                 "Flight Plan for MSFS 2020",
                  Settings.SessionSettings.Exclude2020FlightPlanFromCleanup))
-        sb.AppendLine()
+            sb.AppendLine()
 
-        'Weather file
-        sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
+            'Weather file
+            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset",
+                 "Weather Preset for MSFS 2020",
                  Settings.SessionSettings.Exclude2020WeatherFileFromCleanup))
-        sb.AppendLine()
+            sb.AppendLine()
+
+        End If
+        If Settings.SessionSettings.Is2024Installed Then
+            'Flight plan
+            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                 "Flight Plan for MSFS 2024",
+                 Settings.SessionSettings.Exclude2024FlightPlanFromCleanup))
+            sb.AppendLine()
+
+            'Weather file
+            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
+                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                 "Weather Preset for MSFS 2024",
+                 Settings.SessionSettings.Exclude2024WeatherFileFromCleanup))
+            sb.AppendLine()
+
+        End If
 
         'Look in the other files for xcsoar file
         For Each filepath As String In _allDPHData.ExtraFiles

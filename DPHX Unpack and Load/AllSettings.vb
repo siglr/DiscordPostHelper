@@ -200,6 +200,18 @@ Public Class AllSettings
     <XmlArrayItem("Column")>
     Public Property TBColumnsSettings As List(Of TBColumnSetting)
 
+    Public ReadOnly Property Is2020Installed As Boolean
+        Get
+            Return MSFS2020Microsoft OrElse MSFS2020Steam
+        End Get
+    End Property
+    Public ReadOnly Property Is2024Installed As Boolean
+        Get
+            Return MSFS2024Microsoft OrElse MSFS2024Steam
+        End Get
+    End Property
+
+
     Public Sub New()
 
         ' Initialize the list
