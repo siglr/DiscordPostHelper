@@ -6,8 +6,25 @@ Public Class CleaningTool
 
     Private Sub CleaningTool_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
-        tabCtrlCleaningTool.SelectTab(tabFlights)
-        TabSelected(tabFlights)
+        If Settings.SessionSettings.Is2024Installed Then
+            tabFlights2024.Enabled = True
+            tabWeather2024.Enabled = True
+            tabCtrlCleaningTool.SelectTab(tabFlights2024)
+            TabSelected(tabFlights2024)
+        Else
+            tabFlights2024.Enabled = False
+            tabWeather2024.Enabled = False
+        End If
+
+        If Settings.SessionSettings.Is2020Installed Then
+            tabFlights2020.Enabled = True
+            tabWeather2020.Enabled = True
+            tabCtrlCleaningTool.SelectTab(tabFlights2020)
+            TabSelected(tabFlights2020)
+        Else
+            tabFlights2020.Enabled = False
+            tabWeather2020.Enabled = False
+        End If
 
     End Sub
 
@@ -20,11 +37,17 @@ Public Class CleaningTool
     Private Sub TabSelected(tabPageSelected As TabPage)
 
         Select Case tabPageSelected.Name
-            Case tabFlights.Name
-                lblFlightsFolderPath.Text = Settings.SessionSettings.MSFS2020FlightPlansFolder
+            Case tabFlights2020.Name
+                lblFlights2020FolderPath.Text = Settings.SessionSettings.MSFS2020FlightPlansFolder
 
-            Case tabWeather.Name
-                lblWeatherFolderPath.Text = Settings.SessionSettings.MSFS2020WeatherPresetsFolder
+            Case tabFlights2024.Name
+                lblFlights2024FolderPath.Text = Settings.SessionSettings.MSFS2024FlightPlansFolder
+
+            Case tabWeather2020.Name
+                lblWeather2020FolderPath.Text = Settings.SessionSettings.MSFS2020WeatherPresetsFolder
+
+            Case tabWeather2024.Name
+                lblWeather2024FolderPath.Text = Settings.SessionSettings.MSFS2024WeatherPresetsFolder
 
             Case tabPackages.Name
                 lblPackagesFolderPath.Text = Settings.SessionSettings.PackagesFolder
@@ -67,11 +90,17 @@ Public Class CleaningTool
     Private Sub LoadListBox(tabPageSelected As TabPage)
 
         Select Case tabPageSelected.Name
-            Case tabFlights.Name
-                LoadFlightPlans()
+            Case tabFlights2020.Name
+                LoadFlightPlans2020()
 
-            Case tabWeather.Name
-                LoadWeatherProfiles()
+            Case tabFlights2024.Name
+                LoadFlightPlans2024()
+
+            Case tabWeather2020.Name
+                LoadWeatherProfiles2020()
+
+            Case tabWeather2024.Name
+                LoadWeatherProfiles2024()
 
             Case tabPackages.Name
                 LoadPackages()
@@ -89,20 +118,22 @@ Public Class CleaningTool
 
     End Sub
 
-    Private Sub btnSelectAll_Click(sender As Object, e As EventArgs) Handles btnFlightsSelectAll.Click,
-                                                                             btnWeatherSelectAll.Click,
+    Private Sub btnSelectAll_Click(sender As Object, e As EventArgs) Handles btnFlights2020SelectAll.Click,
+                                                                             btnWeather2020SelectAll.Click,
                                                                              btnPackagesSelectAll.Click,
                                                                              btnNB21LogsSelectAll.Click,
                                                                              btnXCSoarTasksSelectAll.Click,
-                                                                             btnXCSoarMapsSelectAll.Click
+                                                                             btnXCSoarMapsSelectAll.Click,
+                                                                             btnFlights2024SelectAll.Click,
+                                                                             btnWeather2024SelectAll.Click
 
         Dim theListBox As ListBox = Nothing
 
         Select Case sender.name
-            Case btnFlightsSelectAll.Name
-                theListBox = lstFlights
-            Case btnWeatherSelectAll.Name
-                theListBox = lstWeather
+            Case btnFlights2020SelectAll.Name
+                theListBox = lstFlights2020
+            Case btnWeather2020SelectAll.Name
+                theListBox = lstWeather2020
             Case btnPackagesSelectAll.Name
                 theListBox = lstPackages
             Case btnNB21LogsSelectAll.Name
@@ -131,18 +162,20 @@ Public Class CleaningTool
 
     End Sub
 
-    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnFlightsRefresh.Click,
-                                                                           btnWeatherRefresh.Click,
+    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnFlights2020Refresh.Click,
+                                                                           btnWeather2020Refresh.Click,
                                                                            btnPackagesRefresh.Click,
                                                                            btnNB21LogsRefresh.Click,
                                                                            btnXCSoarTasksRefresh.Click,
-                                                                           btnXCSoarMapsRefresh.Click
+                                                                           btnXCSoarMapsRefresh.Click,
+                                                                           btnFlights2024Refresh.Click,
+                                                                           btnWeather2024Refresh.Click
 
         Select Case sender.name
-            Case btnFlightsRefresh.Name
-                TabSelected(tabFlights)
-            Case btnWeatherRefresh.Name
-                TabSelected(tabFlights)
+            Case btnFlights2020Refresh.Name
+                TabSelected(tabFlights2020)
+            Case btnWeather2020Refresh.Name
+                TabSelected(tabFlights2020)
             Case btnPackagesRefresh.Name
                 TabSelected(tabPackages)
             Case btnNB21LogsRefresh.Name
@@ -155,21 +188,22 @@ Public Class CleaningTool
 
     End Sub
 
-    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnFlightsDelete.Click,
-                                                                          btnWeatherDelete.Click,
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnFlights2020Delete.Click,
+                                                                          btnWeather2020Delete.Click,
                                                                           btnPackagesDelete.Click,
                                                                           btnNB21LogsDelete.Click,
                                                                           btnXCSoarTasksDelete.Click,
-                                                                          btnXCSoarMapsDelete.Click
+                                                                          btnXCSoarMapsDelete.Click,
+                                                                          btnWeather2024Delete.Click
 
         Dim theList As ListBox = Nothing
 
         'Check if files are selected
         Select Case sender.name
-            Case btnFlightsDelete.Name
-                theList = lstFlights
-            Case btnWeatherDelete.Name
-                theList = lstWeather
+            Case btnFlights2020Delete.Name
+                theList = lstFlights2020
+            Case btnWeather2020Delete.Name
+                theList = lstWeather2020
             Case btnPackagesDelete.Name
                 theList = lstPackages
             Case btnNB21LogsDelete.Name
@@ -193,12 +227,12 @@ Public Class CleaningTool
         End Using
 
         Select Case sender.name
-            Case btnFlightsDelete.Name
-                DeleteSelectedFiles(lstFlights, lblFlightsFolderPath.Text)
-                TabSelected(tabFlights)
-            Case btnWeatherDelete.Name
-                DeleteSelectedFiles(lstWeather, lblWeatherFolderPath.Text)
-                TabSelected(tabWeather)
+            Case btnFlights2020Delete.Name
+                DeleteSelectedFiles(lstFlights2020, lblFlights2020FolderPath.Text)
+                TabSelected(tabFlights2020)
+            Case btnWeather2020Delete.Name
+                DeleteSelectedFiles(lstWeather2020, lblWeather2020FolderPath.Text)
+                TabSelected(tabWeather2020)
             Case btnPackagesDelete.Name
                 DeleteSelectedFiles(lstPackages, lblPackagesFolderPath.Text)
                 TabSelected(tabPackages)
@@ -247,8 +281,8 @@ Public Class CleaningTool
 
 #Region "Flights"
 
-    Private Sub LoadFlightPlans()
-        Dim folderPath As String = lblFlightsFolderPath.Text
+    Private Sub LoadFlightPlans2020()
+        Dim folderPath As String = lblFlights2020FolderPath.Text
 
         'Check if path is legal
         Try
@@ -265,7 +299,7 @@ Public Class CleaningTool
             Dim plnFiles As String() = Directory.GetFiles(folderPath, "*.pln")
 
             ' Clear existing items in the ListBox.
-            lstFlights.Items.Clear()
+            lstFlights2020.Items.Clear()
 
             ' Process each .pln file.
             For Each filePath In plnFiles
@@ -279,7 +313,49 @@ Public Class CleaningTool
                 Dim filename As String = Path.GetFileName(filePath)
 
                 ' Add the filename and title to the ListBox.
-                lstFlights.Items.Add($"{filename} : ""{title}""")
+                lstFlights2020.Items.Add($"{filename} : ""{title}""")
+            Next
+        Catch ex As Exception
+            ' Handle any errors that might occur.
+            Using New Centered_MessageBox()
+                MessageBox.Show($"An error occurred: {ex.Message}")
+            End Using
+        End Try
+    End Sub
+
+    Private Sub LoadFlightPlans2024()
+        Dim folderPath As String = lblFlights2024FolderPath.Text
+
+        'Check if path is legal
+        Try
+            If Not Directory.Exists(folderPath) Then
+                Return
+            End If
+
+        Catch ex As Exception
+            Return
+        End Try
+
+        Try
+            ' Get all .pln files from the specified folder.
+            Dim plnFiles As String() = Directory.GetFiles(folderPath, "*.pln")
+
+            ' Clear existing items in the ListBox.
+            lstFlights2024.Items.Clear()
+
+            ' Process each .pln file.
+            For Each filePath In plnFiles
+                ' Load the XML content of the .pln file.
+                Dim doc As XDocument = XDocument.Load(filePath)
+
+                ' Extract the <Title> element value.
+                Dim title As String = doc.Descendants("Title").First().Value
+
+                ' Get the filename without the path.
+                Dim filename As String = Path.GetFileName(filePath)
+
+                ' Add the filename and title to the ListBox.
+                lstFlights2024.Items.Add($"{filename} : ""{title}""")
             Next
         Catch ex As Exception
             ' Handle any errors that might occur.
@@ -292,8 +368,8 @@ Public Class CleaningTool
 #End Region
 
 #Region "Weather"
-    Private Sub LoadWeatherProfiles()
-        Dim folderPath As String = lblWeatherFolderPath.Text
+    Private Sub LoadWeatherProfiles2020()
+        Dim folderPath As String = lblWeather2020FolderPath.Text
 
         'Check if path is legal
         Try
@@ -310,7 +386,7 @@ Public Class CleaningTool
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
 
             ' Clear existing items in the ListBox.
-            lstWeather.Items.Clear()
+            lstWeather2020.Items.Clear()
 
             ' Process each .wpr file.
             For Each filePath In wprFiles
@@ -324,7 +400,49 @@ Public Class CleaningTool
                 Dim filename As String = Path.GetFileName(filePath)
 
                 ' Add the filename and name to the ListBox.
-                lstWeather.Items.Add($"{filename} : ""{name}""")
+                lstWeather2020.Items.Add($"{filename} : ""{name}""")
+            Next
+        Catch ex As Exception
+            ' Handle any errors that might occur.
+            Using New Centered_MessageBox()
+                MessageBox.Show($"An error occurred: {ex.Message}")
+            End Using
+        End Try
+    End Sub
+
+    Private Sub LoadWeatherProfiles2024()
+        Dim folderPath As String = lblWeather2024FolderPath.Text
+
+        'Check if path is legal
+        Try
+            If Not Directory.Exists(folderPath) Then
+                Return
+            End If
+
+        Catch ex As Exception
+            Return
+        End Try
+
+        Try
+            ' Get all .wpr files from the specified folder.
+            Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
+
+            ' Clear existing items in the ListBox.
+            lstWeather2024.Items.Clear()
+
+            ' Process each .wpr file.
+            For Each filePath In wprFiles
+                ' Load the XML content of the .wpr file.
+                Dim doc As XDocument = XDocument.Load(filePath)
+
+                ' Extract the <Name> element value.
+                Dim name As String = doc.Descendants("Name").First().Value
+
+                ' Get the filename without the path.
+                Dim filename As String = Path.GetFileName(filePath)
+
+                ' Add the filename and name to the ListBox.
+                lstWeather2024.Items.Add($"{filename} : ""{name}""")
             Next
         Catch ex As Exception
             ' Handle any errors that might occur.
