@@ -38,16 +38,16 @@ Public Class CleaningTool
 
         Select Case tabPageSelected.Name
             Case tabFlights2020.Name
-                lblFlights2020FolderPath.Text = Settings.SessionSettings.MSFS2020FlightPlansFolder
+                lblFlights2020FolderPath.Text = If(Settings.SessionSettings.Is2020Installed, Settings.SessionSettings.MSFS2020FlightPlansFolder, "Not installed")
 
             Case tabFlights2024.Name
-                lblFlights2024FolderPath.Text = Settings.SessionSettings.MSFS2024FlightPlansFolder
+                lblFlights2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, Settings.SessionSettings.MSFS2024FlightPlansFolder, "Not installed")
 
             Case tabWeather2020.Name
-                lblWeather2020FolderPath.Text = Settings.SessionSettings.MSFS2020WeatherPresetsFolder
+                lblWeather2020FolderPath.Text = If(Settings.SessionSettings.Is2020Installed, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Not installed")
 
             Case tabWeather2024.Name
-                lblWeather2024FolderPath.Text = Settings.SessionSettings.MSFS2024WeatherPresetsFolder
+                lblWeather2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Not installed")
 
             Case tabPackages.Name
                 lblPackagesFolderPath.Text = Settings.SessionSettings.PackagesFolder
@@ -91,16 +91,24 @@ Public Class CleaningTool
 
         Select Case tabPageSelected.Name
             Case tabFlights2020.Name
-                LoadFlightPlans2020()
+                If tabFlights2020.Enabled Then
+                    LoadFlightPlans2020()
+                End If
 
             Case tabFlights2024.Name
-                LoadFlightPlans2024()
+                If tabFlights2024.Enabled Then
+                    LoadFlightPlans2024()
+                End If
 
             Case tabWeather2020.Name
-                LoadWeatherProfiles2020()
+                If tabWeather2020.Enabled Then
+                    LoadWeatherProfiles2020()
+                End If
 
             Case tabWeather2024.Name
-                LoadWeatherProfiles2024()
+                If tabWeather2024.Enabled Then
+                    LoadWeatherProfiles2024()
+                End If
 
             Case tabPackages.Name
                 LoadPackages()

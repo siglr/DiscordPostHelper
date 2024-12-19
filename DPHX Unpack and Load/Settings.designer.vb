@@ -94,6 +94,8 @@ Partial Class Settings
         Me.pnl2024Options = New System.Windows.Forms.Panel()
         Me.pnl2020Options = New System.Windows.Forms.Panel()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -110,6 +112,8 @@ Partial Class Settings
         Me.pnlMSFSInstallations.SuspendLayout()
         Me.pnl2024Options.SuspendLayout()
         Me.pnl2020Options.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'okCancelPanel
@@ -566,7 +570,7 @@ Partial Class Settings
         'chkMSFS2020
         '
         Me.chkMSFS2020.AutoSize = True
-        Me.chkMSFS2020.Location = New System.Drawing.Point(194, 11)
+        Me.chkMSFS2020.Location = New System.Drawing.Point(4, 6)
         Me.chkMSFS2020.Name = "chkMSFS2020"
         Me.chkMSFS2020.Size = New System.Drawing.Size(60, 24)
         Me.chkMSFS2020.TabIndex = 4
@@ -577,7 +581,7 @@ Partial Class Settings
         'chkMSFS2024
         '
         Me.chkMSFS2024.AutoSize = True
-        Me.chkMSFS2024.Location = New System.Drawing.Point(403, 11)
+        Me.chkMSFS2024.Location = New System.Drawing.Point(4, 6)
         Me.chkMSFS2024.Name = "chkMSFS2024"
         Me.chkMSFS2024.Size = New System.Drawing.Size(60, 24)
         Me.chkMSFS2024.TabIndex = 5
@@ -589,9 +593,9 @@ Partial Class Settings
         '
         Me.btnDetectMSFSFolders.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDetectMSFSFolders.Enabled = False
-        Me.btnDetectMSFSFolders.Location = New System.Drawing.Point(600, 4)
+        Me.btnDetectMSFSFolders.Location = New System.Drawing.Point(616, 4)
         Me.btnDetectMSFSFolders.Name = "btnDetectMSFSFolders"
-        Me.btnDetectMSFSFolders.Size = New System.Drawing.Size(166, 37)
+        Me.btnDetectMSFSFolders.Size = New System.Drawing.Size(150, 37)
         Me.btnDetectMSFSFolders.TabIndex = 6
         Me.btnDetectMSFSFolders.Text = "Detect Folders"
         Me.ToolTip1.SetToolTip(Me.btnDetectMSFSFolders, "Click this button for the app to try and detect MSFS folders")
@@ -600,7 +604,7 @@ Partial Class Settings
         'opt2020Steam
         '
         Me.opt2020Steam.AutoSize = True
-        Me.opt2020Steam.Location = New System.Drawing.Point(3, 10)
+        Me.opt2020Steam.Location = New System.Drawing.Point(3, 0)
         Me.opt2020Steam.Name = "opt2020Steam"
         Me.opt2020Steam.Size = New System.Drawing.Size(68, 24)
         Me.opt2020Steam.TabIndex = 7
@@ -611,7 +615,7 @@ Partial Class Settings
         'opt2020Microsoft
         '
         Me.opt2020Microsoft.AutoSize = True
-        Me.opt2020Microsoft.Location = New System.Drawing.Point(77, 11)
+        Me.opt2020Microsoft.Location = New System.Drawing.Point(77, 0)
         Me.opt2020Microsoft.Name = "opt2020Microsoft"
         Me.opt2020Microsoft.Size = New System.Drawing.Size(48, 24)
         Me.opt2020Microsoft.TabIndex = 8
@@ -622,7 +626,7 @@ Partial Class Settings
         'opt2024Steam
         '
         Me.opt2024Steam.AutoSize = True
-        Me.opt2024Steam.Location = New System.Drawing.Point(3, 10)
+        Me.opt2024Steam.Location = New System.Drawing.Point(3, 0)
         Me.opt2024Steam.Name = "opt2024Steam"
         Me.opt2024Steam.Size = New System.Drawing.Size(68, 24)
         Me.opt2024Steam.TabIndex = 7
@@ -633,7 +637,7 @@ Partial Class Settings
         'opt2024Microsoft
         '
         Me.opt2024Microsoft.AutoSize = True
-        Me.opt2024Microsoft.Location = New System.Drawing.Point(76, 10)
+        Me.opt2024Microsoft.Location = New System.Drawing.Point(76, 0)
         Me.opt2024Microsoft.Name = "opt2024Microsoft"
         Me.opt2024Microsoft.Size = New System.Drawing.Size(48, 24)
         Me.opt2024Microsoft.TabIndex = 8
@@ -886,11 +890,9 @@ Partial Class Settings
         '
         'pnlMSFSInstallations
         '
-        Me.pnlMSFSInstallations.Controls.Add(Me.pnl2024Options)
-        Me.pnlMSFSInstallations.Controls.Add(Me.pnl2020Options)
+        Me.pnlMSFSInstallations.Controls.Add(Me.Panel2)
+        Me.pnlMSFSInstallations.Controls.Add(Me.Panel1)
         Me.pnlMSFSInstallations.Controls.Add(Me.btnDetectMSFSFolders)
-        Me.pnlMSFSInstallations.Controls.Add(Me.chkMSFS2024)
-        Me.pnlMSFSInstallations.Controls.Add(Me.chkMSFS2020)
         Me.pnlMSFSInstallations.Controls.Add(Me.Label13)
         Me.pnlMSFSInstallations.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlMSFSInstallations.Location = New System.Drawing.Point(0, 0)
@@ -904,9 +906,9 @@ Partial Class Settings
         Me.pnl2024Options.Controls.Add(Me.opt2024Steam)
         Me.pnl2024Options.Controls.Add(Me.opt2024Microsoft)
         Me.pnl2024Options.Enabled = False
-        Me.pnl2024Options.Location = New System.Drawing.Point(469, 0)
+        Me.pnl2024Options.Location = New System.Drawing.Point(70, 6)
         Me.pnl2024Options.Name = "pnl2024Options"
-        Me.pnl2024Options.Size = New System.Drawing.Size(127, 45)
+        Me.pnl2024Options.Size = New System.Drawing.Size(127, 25)
         Me.pnl2024Options.TabIndex = 10
         '
         'pnl2020Options
@@ -914,9 +916,9 @@ Partial Class Settings
         Me.pnl2020Options.Controls.Add(Me.opt2020Steam)
         Me.pnl2020Options.Controls.Add(Me.opt2020Microsoft)
         Me.pnl2020Options.Enabled = False
-        Me.pnl2020Options.Location = New System.Drawing.Point(260, 0)
+        Me.pnl2020Options.Location = New System.Drawing.Point(70, 6)
         Me.pnl2020Options.Name = "pnl2020Options"
-        Me.pnl2020Options.Size = New System.Drawing.Size(127, 45)
+        Me.pnl2020Options.Size = New System.Drawing.Size(127, 25)
         Me.pnl2020Options.TabIndex = 9
         '
         'Label13
@@ -927,6 +929,26 @@ Partial Class Settings
         Me.Label13.Size = New System.Drawing.Size(171, 20)
         Me.Label13.TabIndex = 1
         Me.Label13.Text = "Select MSFS installations:"
+        '
+        'Panel1
+        '
+        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel1.Controls.Add(Me.pnl2020Options)
+        Me.Panel1.Controls.Add(Me.chkMSFS2020)
+        Me.Panel1.Location = New System.Drawing.Point(195, 4)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(205, 37)
+        Me.Panel1.TabIndex = 7
+        '
+        'Panel2
+        '
+        Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel2.Controls.Add(Me.pnl2024Options)
+        Me.Panel2.Controls.Add(Me.chkMSFS2024)
+        Me.Panel2.Location = New System.Drawing.Point(406, 4)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(205, 37)
+        Me.Panel2.TabIndex = 8
         '
         'Settings
         '
@@ -992,6 +1014,10 @@ Partial Class Settings
         Me.pnl2024Options.PerformLayout()
         Me.pnl2020Options.ResumeLayout(False)
         Me.pnl2020Options.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1066,4 +1092,6 @@ Partial Class Settings
     Friend WithEvents opt2024Steam As RadioButton
     Friend WithEvents opt2024Microsoft As RadioButton
     Friend WithEvents pnl2020Options As Panel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents Panel1 As Panel
 End Class
