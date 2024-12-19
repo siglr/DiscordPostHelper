@@ -491,7 +491,7 @@ Partial Class Main
         Me.TabControl1.Controls.Add(Me.tabDiscord)
         Me.TabControl1.Controls.Add(Me.tabBriefing)
         Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControl1.ItemSize = New System.Drawing.Size(155, 25)
+        Me.TabControl1.ItemSize = New System.Drawing.Size(175, 25)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.MinimumSize = New System.Drawing.Size(1475, 892)
         Me.TabControl1.Name = "TabControl1"
@@ -2835,7 +2835,7 @@ Partial Class Main
         Me.tabDiscord.Name = "tabDiscord"
         Me.tabDiscord.Size = New System.Drawing.Size(1467, 860)
         Me.tabDiscord.TabIndex = 3
-        Me.tabDiscord.Text = "Discord and Browser"
+        Me.tabDiscord.Text = "Discord and WeSimGlide"
         Me.tabDiscord.UseVisualStyleBackColor = True
         '
         'GroupBox6
