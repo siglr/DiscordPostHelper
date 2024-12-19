@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.12.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>24.12.18.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>24.12.18.1</ReleaseVersion>
+      <ReleaseTitle>Full support for both MSFS 2020 and 2024 on the same installation</ReleaseTitle>
+      <ReleaseNotes>
+        Added MSFS folder detection based on 2020, 2024, Steam or Microsoft Store version.
+        Added folders selection to unpack to both 2020 and 2024.
+        Adjusted File Browser (cleaner) to support 2024.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.12.14.1</ReleaseVersion>
       <ReleaseTitle>Just a few fixes</ReleaseTitle>
