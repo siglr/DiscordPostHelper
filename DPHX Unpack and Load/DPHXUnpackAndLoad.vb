@@ -1,6 +1,7 @@
 ﻿Imports System.Configuration
 Imports System.IO
 Imports System.Net
+Imports System.Net.Http
 Imports System.Reflection
 Imports System.Text
 Imports System.Threading
@@ -779,6 +780,7 @@ Public Class DPHXUnpackAndLoad
                                     TempDPHXUnpackFolder,
                                     Settings.SessionSettings.XCSoarTasksFolder,
                                     "XCSoar Task"))
+                sb.AppendLine()
             End If
             If Path.GetExtension(filepath) = ".xcm" Then
                 'XCSoar map
@@ -786,14 +788,75 @@ Public Class DPHXUnpackAndLoad
                                     TempDPHXUnpackFolder,
                                     Settings.SessionSettings.XCSoarMapsFolder,
                                     "XCSoar Map"))
+                sb.AppendLine()
             End If
         Next
+
+        ' NB21 auto-start and PLN feeding
+        If Settings.SessionSettings.NB21StartAndFeed Then
+            Dim NB21LoggerRunning As Boolean
+            Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
+
+            NB21LoggerRunning = processList.Length > 0
+
+            If Not NB21LoggerRunning Then
+                ' NB21 logger not already running - attempt to start it
+                Dim loggerExePath As String = Path.Combine(Settings.SessionSettings.NB21EXEFolder, "NB21_logger.exe")
+                If File.Exists(loggerExePath) Then
+                    Try
+                        Process.Start(loggerExePath)
+                        NB21LoggerRunning = True
+                        sb.AppendLine("NB21 Logger successfully started.")
+                        'Wait just a bit
+                        Thread.Sleep(500)
+                    Catch ex As Exception
+                        sb.AppendLine($"An error occurred trying to launch NB21 Logger: {ex.Message}")
+                    End Try
+                Else
+                    sb.AppendLine($"The NB21 Logger's executable file was not found in {Settings.SessionSettings.NB21EXEFolder}")
+                End If
+            Else
+                sb.AppendLine("NB21 Logger is already running.")
+            End If
+
+            If NB21LoggerRunning Then
+                'Feed the PLN file to the logger
+                SendPLNFileToNB21Logger(sb, Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)))
+            End If
+            sb.AppendLine()
+        End If
 
         Using New Centered_MessageBox(Me)
             MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
 
         EnableUnpackButton()
+
+    End Sub
+
+    Private Sub SendPLNFileToNB21Logger(sb As StringBuilder, plnfilePath As String)
+
+        ' Define the API endpoint and the path to the PLN file
+        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.NB21LocalWSPort}/pln_set"
+
+        Try
+            ' Read the contents of the PLN file
+            Dim plnContent As String = File.ReadAllText(plnfilePath)
+
+            ' Use HttpClient to send the POST request
+            Using client As New HttpClient()
+                Dim content As New StringContent(plnContent, Encoding.UTF8, "application/xml")
+                Dim response As HttpResponseMessage = client.PostAsync(apiUrl, content).Result
+
+                If response.IsSuccessStatusCode Then
+                    sb.AppendLine("PLN file successfully sent to NB21 Logger.")
+                Else
+                    sb.AppendLine($"Failed to send PLN file to NB21 Logger. HTTP Status: {response.StatusCode}")
+                End If
+            End Using
+        Catch ex As Exception
+            sb.AppendLine($"An error occurred while sending the PLN file: {ex.Message}")
+        End Try
 
     End Sub
 
