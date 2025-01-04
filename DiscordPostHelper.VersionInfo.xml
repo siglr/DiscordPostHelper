@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.12.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.4.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.4.2</ReleaseVersion>
+      <ReleaseTitle>Small fixes for visibility</ReleaseTitle>
+      <ReleaseNotes>
+        Added check to restore visibility when app has been closed while minimized or on some other screen.
+        Renamed the Discord tab and adjusted tab size.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.12.14.1</ReleaseVersion>
       <ReleaseTitle>Just a few fixes</ReleaseTitle>

@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>24.12.18.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.4.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.4.2</ReleaseVersion>
+      <ReleaseTitle>Auto start and feed NB21 Logger with PLN file</ReleaseTitle>
+      <ReleaseNotes>
+        Added settings for the NB21 auto start and PLN feed.
+        Added code to start and feed NB21 with the PLN file.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>24.12.18.1</ReleaseVersion>
       <ReleaseTitle>Full support for both MSFS 2020 and 2024 on the same installation</ReleaseTitle>
