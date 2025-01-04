@@ -67,6 +67,12 @@ Partial Class Settings
         Me.opt2020Microsoft = New System.Windows.Forms.RadioButton()
         Me.opt2024Steam = New System.Windows.Forms.RadioButton()
         Me.opt2024Microsoft = New System.Windows.Forms.RadioButton()
+        Me.btnNB21EXEFolderClear = New System.Windows.Forms.Button()
+        Me.btnNB21EXEFolderPaste = New System.Windows.Forms.Button()
+        Me.btnNB21EXEFolder = New System.Windows.Forms.Button()
+        Me.txtNB21LocalWSPort = New System.Windows.Forms.TextBox()
+        Me.chkEnableNB21StartAndFeed = New System.Windows.Forms.CheckBox()
+        Me.btnNB21ResetPort = New System.Windows.Forms.Button()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -91,11 +97,15 @@ Partial Class Settings
         Me.pnlMSFS2024FlightPlanFilesFolder = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.pnlMSFSInstallations = New System.Windows.Forms.Panel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.pnl2024Options = New System.Windows.Forms.Panel()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.pnl2020Options = New System.Windows.Forms.Panel()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.pnlNB21LoggerExe = New System.Windows.Forms.Panel()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -110,10 +120,11 @@ Partial Class Settings
         Me.pnlMSFS2024WeatherPresetsFolder.SuspendLayout()
         Me.pnlMSFS2024FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFSInstallations.SuspendLayout()
-        Me.pnl2024Options.SuspendLayout()
-        Me.pnl2020Options.SuspendLayout()
-        Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.pnl2024Options.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.pnl2020Options.SuspendLayout()
+        Me.pnlNB21LoggerExe.SuspendLayout()
         Me.SuspendLayout()
         '
         'okCancelPanel
@@ -165,7 +176,7 @@ Partial Class Settings
         Me.pnlMSFS2020FlightPlanFilesFolder.Name = "pnlMSFS2020FlightPlanFilesFolder"
         Me.pnlMSFS2020FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlMSFS2020FlightPlanFilesFolder.TabIndex = 0
+        Me.pnlMSFS2020FlightPlanFilesFolder.TabIndex = 1
         '
         'chkExclude2020FlightPlanFromCleanup
         '
@@ -645,6 +656,77 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.opt2024Microsoft, "Files with the same names will be overwritten")
         Me.opt2024Microsoft.UseVisualStyleBackColor = True
         '
+        'btnNB21EXEFolderClear
+        '
+        Me.btnNB21EXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21EXEFolderClear.Location = New System.Drawing.Point(647, 33)
+        Me.btnNB21EXEFolderClear.Name = "btnNB21EXEFolderClear"
+        Me.btnNB21EXEFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnNB21EXEFolderClear.TabIndex = 7
+        Me.btnNB21EXEFolderClear.Text = "🗑️"
+        Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderClear, "Click this button to delete the optional NB21 Log Flights folder")
+        Me.btnNB21EXEFolderClear.UseVisualStyleBackColor = True
+        '
+        'btnNB21EXEFolderPaste
+        '
+        Me.btnNB21EXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21EXEFolderPaste.Location = New System.Drawing.Point(691, 33)
+        Me.btnNB21EXEFolderPaste.Name = "btnNB21EXEFolderPaste"
+        Me.btnNB21EXEFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnNB21EXEFolderPaste.TabIndex = 8
+        Me.btnNB21EXEFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btnNB21EXEFolderPaste.UseVisualStyleBackColor = True
+        '
+        'btnNB21EXEFolder
+        '
+        Me.btnNB21EXEFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21EXEFolder.AutoEllipsis = True
+        Me.btnNB21EXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnNB21EXEFolder.Location = New System.Drawing.Point(194, 33)
+        Me.btnNB21EXEFolder.Name = "btnNB21EXEFolder"
+        Me.btnNB21EXEFolder.Size = New System.Drawing.Size(447, 37)
+        Me.btnNB21EXEFolder.TabIndex = 6
+        Me.btnNB21EXEFolder.Text = "Select the folder containing the logger's EXE file (optional)"
+        Me.btnNB21EXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolder, "Select the folder containing the logger's EXE file")
+        Me.btnNB21EXEFolder.UseVisualStyleBackColor = True
+        '
+        'txtNB21LocalWSPort
+        '
+        Me.txtNB21LocalWSPort.Location = New System.Drawing.Point(447, 5)
+        Me.txtNB21LocalWSPort.MaxLength = 5
+        Me.txtNB21LocalWSPort.Name = "txtNB21LocalWSPort"
+        Me.txtNB21LocalWSPort.Size = New System.Drawing.Size(80, 27)
+        Me.txtNB21LocalWSPort.TabIndex = 3
+        Me.txtNB21LocalWSPort.Text = "54178"
+        Me.txtNB21LocalWSPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtNB21LocalWSPort, "This is the NB21's local web server port used to communicate with the app. The de" &
+        "fault value is 54178.")
+        '
+        'chkEnableNB21StartAndFeed
+        '
+        Me.chkEnableNB21StartAndFeed.AutoSize = True
+        Me.chkEnableNB21StartAndFeed.Location = New System.Drawing.Point(195, 7)
+        Me.chkEnableNB21StartAndFeed.Name = "chkEnableNB21StartAndFeed"
+        Me.chkEnableNB21StartAndFeed.Size = New System.Drawing.Size(70, 24)
+        Me.chkEnableNB21StartAndFeed.TabIndex = 1
+        Me.chkEnableNB21StartAndFeed.Text = "Enable"
+        Me.ToolTip1.SetToolTip(Me.chkEnableNB21StartAndFeed, "When enabled (checked), the NB21 logger will be started and fed with the PLN file" &
+        " when clicking when Unpacking.")
+        Me.chkEnableNB21StartAndFeed.UseVisualStyleBackColor = True
+        '
+        'btnNB21ResetPort
+        '
+        Me.btnNB21ResetPort.Location = New System.Drawing.Point(533, 3)
+        Me.btnNB21ResetPort.Name = "btnNB21ResetPort"
+        Me.btnNB21ResetPort.Size = New System.Drawing.Size(75, 31)
+        Me.btnNB21ResetPort.TabIndex = 4
+        Me.btnNB21ResetPort.Text = "Reset"
+        Me.ToolTip1.SetToolTip(Me.btnNB21ResetPort, "Click this button to reset the port to default.")
+        Me.btnNB21ResetPort.UseVisualStyleBackColor = True
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -657,7 +739,7 @@ Partial Class Settings
         Me.pnlMSFS2020WeatherPresetsFolder.Name = "pnlMSFS2020WeatherPresetsFolder"
         Me.pnlMSFS2020WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlMSFS2020WeatherPresetsFolder.TabIndex = 1
+        Me.pnlMSFS2020WeatherPresetsFolder.TabIndex = 2
         '
         'Label2
         '
@@ -680,7 +762,7 @@ Partial Class Settings
         Me.pnlXCSoarTasksFolder.Name = "pnlXCSoarTasksFolder"
         Me.pnlXCSoarTasksFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlXCSoarTasksFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlXCSoarTasksFolder.TabIndex = 2
+        Me.pnlXCSoarTasksFolder.TabIndex = 5
         '
         'Label8
         '
@@ -701,7 +783,7 @@ Partial Class Settings
         Me.pnlUnpackingFolder.Name = "pnlUnpackingFolder"
         Me.pnlUnpackingFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlUnpackingFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlUnpackingFolder.TabIndex = 3
+        Me.pnlUnpackingFolder.TabIndex = 7
         '
         'Label3
         '
@@ -722,7 +804,7 @@ Partial Class Settings
         Me.pnlPackagesFolder.Name = "pnlPackagesFolder"
         Me.pnlPackagesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlPackagesFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlPackagesFolder.TabIndex = 4
+        Me.pnlPackagesFolder.TabIndex = 8
         '
         'Label5
         '
@@ -744,7 +826,7 @@ Partial Class Settings
         Me.pnlNB21LoggerFlightsFolder.Name = "pnlNB21LoggerFlightsFolder"
         Me.pnlNB21LoggerFlightsFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlNB21LoggerFlightsFolder.TabIndex = 10
+        Me.pnlNB21LoggerFlightsFolder.TabIndex = 9
         '
         'Label10
         '
@@ -762,11 +844,11 @@ Partial Class Settings
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
         Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
         Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 450)
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 524)
         Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
         Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 45)
-        Me.pnlAutoOverwrite.TabIndex = 5
+        Me.pnlAutoOverwrite.TabIndex = 11
         '
         'Label4
         '
@@ -782,11 +864,11 @@ Partial Class Settings
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 495)
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 569)
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 45)
-        Me.pnlAutoUnpack.TabIndex = 6
+        Me.pnlAutoUnpack.TabIndex = 12
         '
         'Label6
         '
@@ -808,7 +890,7 @@ Partial Class Settings
         Me.pnlXCSoarMapsFolder.Location = New System.Drawing.Point(0, 270)
         Me.pnlXCSoarMapsFolder.Name = "pnlXCSoarMapsFolder"
         Me.pnlXCSoarMapsFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlXCSoarMapsFolder.TabIndex = 9
+        Me.pnlXCSoarMapsFolder.TabIndex = 6
         '
         'Label9
         '
@@ -824,11 +906,11 @@ Partial Class Settings
         Me.pnlNoticeAndButtons.Controls.Add(Me.Label7)
         Me.pnlNoticeAndButtons.Controls.Add(Me.okCancelPanel)
         Me.pnlNoticeAndButtons.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 540)
+        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 614)
         Me.pnlNoticeAndButtons.Name = "pnlNoticeAndButtons"
         Me.pnlNoticeAndButtons.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 68)
-        Me.pnlNoticeAndButtons.TabIndex = 11
+        Me.pnlNoticeAndButtons.TabIndex = 13
         '
         'Label7
         '
@@ -854,7 +936,7 @@ Partial Class Settings
         Me.pnlMSFS2024WeatherPresetsFolder.Name = "pnlMSFS2024WeatherPresetsFolder"
         Me.pnlMSFS2024WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlMSFS2024WeatherPresetsFolder.TabIndex = 12
+        Me.pnlMSFS2024WeatherPresetsFolder.TabIndex = 4
         '
         'Label11
         '
@@ -877,7 +959,7 @@ Partial Class Settings
         Me.pnlMSFS2024FlightPlanFilesFolder.Name = "pnlMSFS2024FlightPlanFilesFolder"
         Me.pnlMSFS2024FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
-        Me.pnlMSFS2024FlightPlanFilesFolder.TabIndex = 13
+        Me.pnlMSFS2024FlightPlanFilesFolder.TabIndex = 3
         '
         'Label12
         '
@@ -899,7 +981,17 @@ Partial Class Settings
         Me.pnlMSFSInstallations.Name = "pnlMSFSInstallations"
         Me.pnlMSFSInstallations.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFSInstallations.Size = New System.Drawing.Size(769, 45)
-        Me.pnlMSFSInstallations.TabIndex = 14
+        Me.pnlMSFSInstallations.TabIndex = 0
+        '
+        'Panel2
+        '
+        Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel2.Controls.Add(Me.pnl2024Options)
+        Me.Panel2.Controls.Add(Me.chkMSFS2024)
+        Me.Panel2.Location = New System.Drawing.Point(406, 4)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(205, 37)
+        Me.Panel2.TabIndex = 8
         '
         'pnl2024Options
         '
@@ -910,6 +1002,16 @@ Partial Class Settings
         Me.pnl2024Options.Name = "pnl2024Options"
         Me.pnl2024Options.Size = New System.Drawing.Size(127, 25)
         Me.pnl2024Options.TabIndex = 10
+        '
+        'Panel1
+        '
+        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel1.Controls.Add(Me.pnl2020Options)
+        Me.Panel1.Controls.Add(Me.chkMSFS2020)
+        Me.Panel1.Location = New System.Drawing.Point(195, 4)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(205, 37)
+        Me.Panel1.TabIndex = 7
         '
         'pnl2020Options
         '
@@ -930,25 +1032,50 @@ Partial Class Settings
         Me.Label13.TabIndex = 1
         Me.Label13.Text = "Select MSFS installations:"
         '
-        'Panel1
+        'pnlNB21LoggerExe
         '
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.pnl2020Options)
-        Me.Panel1.Controls.Add(Me.chkMSFS2020)
-        Me.Panel1.Location = New System.Drawing.Point(195, 4)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(205, 37)
-        Me.Panel1.TabIndex = 7
+        Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21ResetPort)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.Label16)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.chkEnableNB21StartAndFeed)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.txtNB21LocalWSPort)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.Label15)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21EXEFolderClear)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21EXEFolderPaste)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21EXEFolder)
+        Me.pnlNB21LoggerExe.Controls.Add(Me.Label14)
+        Me.pnlNB21LoggerExe.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlNB21LoggerExe.Location = New System.Drawing.Point(0, 450)
+        Me.pnlNB21LoggerExe.Name = "pnlNB21LoggerExe"
+        Me.pnlNB21LoggerExe.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlNB21LoggerExe.Size = New System.Drawing.Size(769, 74)
+        Me.pnlNB21LoggerExe.TabIndex = 10
         '
-        'Panel2
+        'Label16
         '
-        Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel2.Controls.Add(Me.pnl2024Options)
-        Me.Panel2.Controls.Add(Me.chkMSFS2024)
-        Me.Panel2.Location = New System.Drawing.Point(406, 4)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(205, 37)
-        Me.Panel2.TabIndex = 8
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(280, 8)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(154, 20)
+        Me.Label16.TabIndex = 2
+        Me.Label16.Text = "NB21 Web Server Port:"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(5, 8)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(171, 20)
+        Me.Label15.TabIndex = 0
+        Me.Label15.Text = "NB21 Start and PLN feed:"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(5, 41)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(146, 20)
+        Me.Label14.TabIndex = 5
+        Me.Label14.Text = "NB21 Log EXE Folder:"
         '
         'Settings
         '
@@ -956,11 +1083,12 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(769, 656)
+        Me.ClientSize = New System.Drawing.Size(769, 724)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnlNoticeAndButtons)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
+        Me.Controls.Add(Me.pnlNB21LoggerExe)
         Me.Controls.Add(Me.pnlNB21LoggerFlightsFolder)
         Me.Controls.Add(Me.pnlPackagesFolder)
         Me.Controls.Add(Me.pnlUnpackingFolder)
@@ -975,9 +1103,9 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 700)
+        Me.MaximumSize = New System.Drawing.Size(5000, 768)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(700, 700)
+        Me.MinimumSize = New System.Drawing.Size(700, 768)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
@@ -1010,14 +1138,16 @@ Partial Class Settings
         Me.pnlMSFS2024FlightPlanFilesFolder.PerformLayout()
         Me.pnlMSFSInstallations.ResumeLayout(False)
         Me.pnlMSFSInstallations.PerformLayout()
-        Me.pnl2024Options.ResumeLayout(False)
-        Me.pnl2024Options.PerformLayout()
-        Me.pnl2020Options.ResumeLayout(False)
-        Me.pnl2020Options.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.pnl2024Options.ResumeLayout(False)
+        Me.pnl2024Options.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.pnl2020Options.ResumeLayout(False)
+        Me.pnl2020Options.PerformLayout()
+        Me.pnlNB21LoggerExe.ResumeLayout(False)
+        Me.pnlNB21LoggerExe.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1094,4 +1224,14 @@ Partial Class Settings
     Friend WithEvents pnl2020Options As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents pnlNB21LoggerExe As Panel
+    Friend WithEvents btnNB21EXEFolderClear As Button
+    Friend WithEvents btnNB21EXEFolderPaste As Button
+    Friend WithEvents btnNB21EXEFolder As Button
+    Friend WithEvents Label14 As Label
+    Friend WithEvents txtNB21LocalWSPort As TextBox
+    Friend WithEvents Label15 As Label
+    Friend WithEvents Label16 As Label
+    Friend WithEvents chkEnableNB21StartAndFeed As CheckBox
+    Friend WithEvents btnNB21ResetPort As Button
 End Class

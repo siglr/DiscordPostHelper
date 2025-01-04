@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Windows.Forms
+Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class Settings
@@ -72,6 +73,20 @@ Public Class Settings
             End If
         End If
 
+        'If NB21StartAndFeed enabled, a valid path must be provided for the EXE
+        If chkEnableNB21StartAndFeed.Checked Then
+            If Not File.Exists(Path.Combine(btnNB21EXEFolder.Text, "NB21_logger.exe")) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for the NB21 Logger executable")
+            End If
+        End If
+
+        'Check for valid port
+        Dim port As Integer
+        If Not (Integer.TryParse(txtNB21LocalWSPort.Text, port) AndAlso port >= 0 AndAlso port <= 65535) Then
+            validSettings = False
+            sbMsg.AppendLine("Invalid port value for the NB21 Logger's local web server")
+        End If
         If Not validSettings Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -91,6 +106,9 @@ Public Class Settings
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
             SessionSettings.PackagesFolder = btnPackagesFolder.Text
             SessionSettings.NB21IGCFolder = btnNB21IGCFolder.Text
+            SessionSettings.NB21EXEFolder = btnNB21EXEFolder.Text
+            SessionSettings.NB21LocalWSPort = txtNB21LocalWSPort.Text
+            SessionSettings.NB21StartAndFeed = chkEnableNB21StartAndFeed.Checked
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
             SessionSettings.Exclude2020FlightPlanFromCleanup = chkExclude2020FlightPlanFromCleanup.Checked
             SessionSettings.Exclude2020WeatherFileFromCleanup = chkExclude2020WeatherFileFromCleanup.Checked
@@ -112,7 +130,6 @@ Public Class Settings
             Me.DialogResult = DialogResult.OK
             Me.Close()
         End If
-
     End Sub
 
     Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
@@ -123,7 +140,7 @@ Public Class Settings
             Me.Close()
         Else
             Using New Centered_MessageBox(Me)
-                If MessageBox.Show("You must select your MSFS installation and save valid paths. Click Cancel to exit app.", "Cannot cancel with invalid settings.", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then
+                If MessageBox.Show("You must select your MSFS installation And save valid paths. Click Cancel to exit app.", "Cannot cancel with invalid settings.", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then
                     Me.DialogResult = DialogResult.Abort
                     Me.Close()
                 End If
@@ -152,7 +169,7 @@ Public Class Settings
 
     Private Sub btn2024FlightPlanFilesFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024FlightPlanFilesFolder.Click
 
-        FolderBrowserDialog1.Description = "Please select a folder where to put flight plan files for MSFS 2024 (.pln)"
+        FolderBrowserDialog1.Description = "Please Select a folder where To put flight plan files For MSFS 2024 (.pln) Then"
         FolderBrowserDialog1.ShowNewFolderButton = True
 
         If Directory.Exists(btnMSFS2024FlightPlanFilesFolder.Text) Then
@@ -169,7 +186,7 @@ Public Class Settings
     End Sub
 
     Private Sub btn2020WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2020WeatherPresetsFolder.Click
-        FolderBrowserDialog1.Description = "Please select a folder where MSFS 2020 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2020 weather presets are located (.wpr)"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2020WeatherPresetsFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2020WeatherPresetsFolder.Text
@@ -186,7 +203,7 @@ Public Class Settings
     End Sub
 
     Private Sub btn2024WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024WeatherPresetsFolder.Click
-        FolderBrowserDialog1.Description = "Please select a folder where MSFS 2024 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2024 weather presets are located (.wpr)"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2024WeatherPresetsFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2024WeatherPresetsFolder.Text
@@ -203,7 +220,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnUnpackingFolder_Click(sender As Object, e As EventArgs) Handles btnUnpackingFolder.Click
-        FolderBrowserDialog1.Description = "Please select a temporary folder where to unpack the DPHX files"
+        FolderBrowserDialog1.Description = "Please Select a temporary folder where To unpack the DPHX files"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnUnpackingFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnUnpackingFolder.Text
@@ -220,7 +237,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnPackagesFolder_Click(sender As Object, e As EventArgs) Handles btnPackagesFolder.Click
-        FolderBrowserDialog1.Description = "Please select the folder where your DPHX packages are stored"
+        FolderBrowserDialog1.Description = "Please Select the folder where your DPHX packages are stored"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnPackagesFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnPackagesFolder.Text
@@ -237,7 +254,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnNB21IGCFolder_Click(sender As Object, e As EventArgs) Handles btnNB21IGCFolder.Click
-        FolderBrowserDialog1.Description = "Please select the folder where your NB21 Logger puts the IGC log files"
+        FolderBrowserDialog1.Description = "Please Select the folder where your NB21 Logger puts the IGC log files"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnNB21IGCFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnNB21IGCFolder.Text
@@ -253,8 +270,25 @@ Public Class Settings
 
     End Sub
 
+    Private Sub btnNB21EXEFolder_Click(sender As Object, e As EventArgs) Handles btnNB21EXEFolder.Click
+        FolderBrowserDialog1.Description = "Please Select the folder where your NB21 Logger executable (EXE) file Is"
+        FolderBrowserDialog1.ShowNewFolderButton = True
+        If Directory.Exists(btnNB21EXEFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnNB21EXEFolder.Text
+        Else
+            FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        End If
+
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+            ' User selected a folder and clicked OK
+            btnNB21EXEFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnNB21EXEFolder, FolderBrowserDialog1.SelectedPath)
+        End If
+
+    End Sub
+
     Private Sub btnXCSoarMapsFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarMapsFolder.Click
-        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .xcm files are located"
+        FolderBrowserDialog1.Description = "Please Select the XCSoar folder where the .xcm files are located"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnXCSoarMapsFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnXCSoarMapsFolder.Text
@@ -271,7 +305,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnXCSoarTasksFolder_Click(sender As Object, e As EventArgs) Handles btnXCSoarTasksFolder.Click
-        FolderBrowserDialog1.Description = "Please select the XCSoar folder where the .tsk files are located"
+        FolderBrowserDialog1.Description = "Please Select the XCSoar folder where the .tsk files are located"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnXCSoarTasksFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnXCSoarTasksFolder.Text
@@ -297,7 +331,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
     End Sub
@@ -312,7 +346,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
     End Sub
@@ -327,7 +361,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
     End Sub
@@ -342,7 +376,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
     End Sub
@@ -356,7 +390,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -371,7 +405,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -386,7 +420,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -401,7 +435,7 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -416,7 +450,22 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
+    Private Sub btnNB21EXEFolderPaste_Click(sender As Object, e As EventArgs) Handles btnNB21EXEFolderPaste.Click
+        Dim folderPath As String = Clipboard.GetText()
+        If Directory.Exists(folderPath) Then
+            ' folderPath is a valid folder
+            btnNB21EXEFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnNB21EXEFolder, folderPath)
+        Else
+            ' folderPath is not a valid folder
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -465,6 +514,10 @@ Public Class Settings
             btnNB21IGCFolder.Text = SessionSettings.NB21IGCFolder
             ToolTip1.SetToolTip(btnNB21IGCFolder, SessionSettings.NB21IGCFolder)
         End If
+        If Directory.Exists(SessionSettings.NB21EXEFolder) Then
+            btnNB21EXEFolder.Text = SessionSettings.NB21EXEFolder
+            ToolTip1.SetToolTip(btnNB21EXEFolder, SessionSettings.NB21EXEFolder)
+        End If
         If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
             btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
             ToolTip1.SetToolTip(btnXCSoarTasksFolder, SessionSettings.XCSoarTasksFolder)
@@ -473,6 +526,12 @@ Public Class Settings
             btnXCSoarMapsFolder.Text = SessionSettings.XCSoarMapsFolder
             ToolTip1.SetToolTip(btnXCSoarMapsFolder, SessionSettings.XCSoarMapsFolder)
         End If
+
+        Dim port As Integer
+        If Integer.TryParse(SessionSettings.NB21LocalWSPort, port) AndAlso port >= 0 AndAlso port <= 65535 Then
+            txtNB21LocalWSPort.Text = SessionSettings.NB21LocalWSPort
+        End If
+        chkEnableNB21StartAndFeed.Checked = SessionSettings.NB21StartAndFeed
 
         Select Case SessionSettings.AutoOverwriteFiles
             Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -493,7 +552,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)
@@ -510,18 +569,26 @@ Public Class Settings
 
     Private Sub btnXCSoarTasksFolderClear_Click(sender As Object, e As EventArgs) Handles btnXCSoarTasksFolderClear.Click
         Settings.SessionSettings.ClearXCSoarTasks()
-        btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
+        btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (Optional)"
     End Sub
 
     Private Sub btnXCSoarMapsFolderClear_Click(sender As Object, e As EventArgs) Handles btnXCSoarMapsFolderClear.Click
         Settings.SessionSettings.ClearXCSoarMaps()
-        btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
+        btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (Optional)"
     End Sub
 
     Private Sub btnNB21IGCFolderClear_Click(sender As Object, e As EventArgs) Handles btnNB21IGCFolderClear.Click
         Settings.SessionSettings.ClearNB21IGCFolder()
-        btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files (optional)"
+        btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files (Optional)"
+    End Sub
 
+    Private Sub btnNB21EXEFolderClear_Click(sender As Object, e As EventArgs) Handles btnNB21EXEFolderClear.Click
+        Settings.SessionSettings.ClearNB21EXEFolder()
+        btnNB21EXEFolder.Text = "Select the folder containing the logger's EXE file (optional)"
+    End Sub
+
+    Private Sub btnNB21ResetPort_Click(sender As Object, e As EventArgs) Handles btnNB21ResetPort.Click
+        txtNB21LocalWSPort.Text = "54178"
     End Sub
 
     Private Sub chkMSFS_CheckedChanged(sender As Object, e As EventArgs) Handles chkMSFS2020.CheckedChanged, chkMSFS2024.CheckedChanged

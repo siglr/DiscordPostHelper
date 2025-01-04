@@ -141,6 +141,36 @@ Public Class AllSettings
         End Set
     End Property
 
+    Private _NB21EXEFolder As String
+    <XmlElement("NB21EXEFolder")>
+    Public Property NB21EXEFolder As String
+        Get
+            Return _NB21EXEFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _NB21EXEFolder = value
+            End If
+        End Set
+    End Property
+
+    Private _NB21LocalWSPort As String
+    <XmlElement("NB21LocalWSPort")>
+    Public Property NB21LocalWSPort As String
+        Get
+            Return _NB21LocalWSPort
+        End Get
+        Set(value As String)
+            Dim port As Integer
+            If Integer.TryParse(value, port) AndAlso port >= 0 AndAlso port <= 65535 Then
+                _NB21LocalWSPort = value
+            End If
+        End Set
+    End Property
+
+    <XmlElement("NB21StartAndFeed")>
+    Public Property NB21StartAndFeed As Boolean
+
     <XmlElement("AutoOverwriteFiles")>
     Public Property AutoOverwriteFiles As AutoOverwriteOptions
 
@@ -254,6 +284,9 @@ Public Class AllSettings
             _UnpackingFolder = settingsInFile.UnpackingFolder
             _PackagesFolder = settingsInFile.PackagesFolder
             _NB21IGCFolder = settingsInFile.NB21IGCFolder
+            _NB21EXEFolder = settingsInFile.NB21EXEFolder
+            _NB21LocalWSPort = settingsInFile.NB21LocalWSPort
+            NB21StartAndFeed = settingsInFile.NB21StartAndFeed
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
@@ -349,6 +382,10 @@ Public Class AllSettings
 
     Public Sub ClearNB21IGCFolder()
         _NB21IGCFolder = Nothing
+    End Sub
+
+    Public Sub ClearNB21EXEFolder()
+        _NB21EXEFolder = Nothing
     End Sub
 
 End Class
