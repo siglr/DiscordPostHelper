@@ -11,10 +11,9 @@ Imports System.Collections.Specialized
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports System.Net
-Imports System.ComponentModel
-Imports System.Data.SqlTypes
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
+Imports System.Windows.Forms
 
 Public Class Main
 
@@ -276,6 +275,7 @@ Public Class Main
         Dim sizeString As String = SessionSettings.MainFormSize
         Dim locationString As String = SessionSettings.MainFormLocation
 
+        ' Restore form size
         If sizeString <> "" Then
             Dim sizeArray As String() = sizeString.TrimStart("{").TrimEnd("}").Split(",")
             Dim width As Integer = CInt(sizeArray(0).Split("=")(1))
@@ -283,6 +283,7 @@ Public Class Main
             Me.Size = New Size(width, height)
         End If
 
+        ' Restore form location
         If locationString <> "" Then
             Dim locationArray As String() = locationString.TrimStart("{").TrimEnd("}").Split(",")
             Dim x As Integer = CInt(locationArray(0).Split("=")(1))
@@ -290,8 +291,28 @@ Public Class Main
             Me.Location = New Point(x, y)
         End If
 
-        FlightPlanTabSplitter.SplitPosition = SessionSettings.FlightPlanTabSplitterLocation
+        ' Validate that the form is visible on at least one screen
+        Dim formBounds As New Rectangle(Me.Location, Me.Size)
+        Dim isVisibleOnAnyScreen As Boolean = False
 
+        For Each screen In Windows.Forms.Screen.AllScreens
+            If screen.WorkingArea.IntersectsWith(formBounds) AndAlso
+           screen.Bounds.Width > 0 AndAlso
+           screen.Bounds.Height > 0 Then
+                isVisibleOnAnyScreen = True
+                Exit For
+            End If
+        Next
+
+        ' If the form is not visible, reset to default position and size
+        If Not isVisibleOnAnyScreen Then
+            Me.Left = 0
+            Me.Top = 0
+            Me.WindowState = FormWindowState.Normal
+        End If
+
+        ' Restore splitter position
+        FlightPlanTabSplitter.SplitPosition = SessionSettings.FlightPlanTabSplitterLocation
     End Sub
 
     Private Sub SetTimePickerFormat()
