@@ -6055,6 +6055,17 @@ Public Class Main
             End If
         End If
 
+        'Set RecommendedAddOns list as JSON
+        Dim recommendedAddOnsList As String = "[]" ' Default empty JSON array
+        If taskInfo.RecommendedAddOns IsNot Nothing AndAlso taskInfo.RecommendedAddOns.Count > 0 Then
+            Dim addOns = taskInfo.RecommendedAddOns.Select(Function(addOn) New With {
+            Key .Name = addOn.Name,
+            Key .URL = addOn.URL,
+            Key .Type = addOn.Type
+        }).ToList()
+            recommendedAddOnsList = JsonConvert.SerializeObject(addOns)
+        End If
+
         ' Update the taskData dictionary to include WorldMapInfo fields
         Dim taskData As New Dictionary(Of String, Object) From {
         {"TaskID", taskInfo.DiscordTaskID},
@@ -6089,6 +6100,7 @@ Public Class Main
         {"Credits", taskInfo.Credits},
         {"Countries", String.Join(", ", taskInfo.Countries.Select(Function(country) country.Replace(", ", " - ")))},
         {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
+        {"RecommendedAddOnsList", recommendedAddOnsList},
         {"MapImage", theMapImage},
         {"CoverImage", theCoverImage},
         {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
@@ -6101,6 +6113,8 @@ Public Class Main
         {"WPRFilename", taskInfo.WeatherFilename},
         {"WPRXML", _XmlDocWeatherPreset.InnerXml},
         {"RepostText", repostText},
+        {"SuppressBaroPressureWarningSymbol", If(taskInfo.SuppressBaroPressureWarningSymbol, 1, 0)},
+        {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
         {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim}
     }
 

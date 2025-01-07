@@ -43,6 +43,20 @@ try {
     $checkStmt->execute([':TaskID' => $taskID]);
     $taskExists = $checkStmt->fetchColumn() > 0;
 
+    // Prepare BaroPressureExtraInfo
+    $baroPressureExtraInfo = isset($taskData['BaroPressureExtraInfo']) ? trim($taskData['BaroPressureExtraInfo']) : null;
+    if ($baroPressureExtraInfo === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 
+        $baroPressureExtraInfo === 'Non standard: Set your altimeter!' || 
+        $baroPressureExtraInfo === '') {
+        $baroPressureExtraInfo = null; // Set to NULL for default or empty values
+    }
+
+    // Prepare RecommendedAddOnsList
+    $recommendedAddOnsList = isset($taskData['RecommendedAddOnsList']) ? $taskData['RecommendedAddOnsList'] : '[]';
+
+    // Prepare SuppressBaroPressureWarningSymbol
+    $suppressBaroPressureWarningSymbol = isset($taskData['SuppressBaroPressureWarningSymbol']) ? (int)$taskData['SuppressBaroPressureWarningSymbol'] : 0;
+
     if (!$taskExists) {
         // Check if the user has CreateTask rights
         if (!checkUserPermission($userID, 'CreateTask')) {
@@ -58,8 +72,9 @@ try {
                 SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
                 TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
-                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, 
-                PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax, RepostText
+                RecommendedAddOns, RecommendedAddOnsList, MapImage, CoverImage, DBEntryUpdate, 
+                PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax, RepostText,
+                SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo
             ) VALUES (
                 :TaskID, :Title, :LastUpdate, :SimDateTime, :IncludeYear, :SimDateTimeExtraInfo,
                 :MainAreaPOI, :DepartureName, :DepartureICAO, :DepartureExtra, :ArrivalName,
@@ -67,12 +82,13 @@ try {
                 :SoaringDynamic, :SoaringExtraInfo, :DurationMin, :DurationMax, :DurationExtraInfo,
                 :TaskDistance, :TotalDistance, :RecommendedGliders, :DifficultyRating, :DifficultyExtraInfo,
                 :ShortDescription, :LongDescription, :WeatherSummary, :Credits, :Countries,
-                :RecommendedAddOns, :MapImage, :CoverImage, :DBEntryUpdate, 
-                :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax, :RepostText
+                :RecommendedAddOns, :RecommendedAddOnsList, :MapImage, :CoverImage, :DBEntryUpdate, 
+                :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax, :RepostText,
+                :SuppressBaroPressureWarningSymbol, :BaroPressureExtraInfo
             )
         ");
         logMessage("Insert statement prepared.");
-
+ 
         // Ensure datetime fields are properly formatted
         $taskData['LastUpdate'] = formatDatetime($taskData['LastUpdate']);
         $taskData['SimDateTime'] = formatDatetime($taskData['SimDateTime']);
@@ -116,6 +132,7 @@ try {
             ':Credits' => $taskData['Credits'],
             ':Countries' => $taskData['Countries'],
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
+            ':RecommendedAddOnsList' => $taskData['RecommendedAddOnsList'],
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
             ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
@@ -127,7 +144,9 @@ try {
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
-            ':RepostText' => $taskData['RepostText']
+            ':RepostText' => $taskData['RepostText'],
+            ':SuppressBaroPressureWarningSymbol' => $taskData['SuppressBaroPressureWarningSymbol'],
+            ':BaroPressureExtraInfo' => $taskData['BaroPressureExtraInfo']
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
@@ -155,9 +174,10 @@ try {
                 TaskDistance = :TaskDistance, TotalDistance = :TotalDistance, RecommendedGliders = :RecommendedGliders, DifficultyRating = :DifficultyRating,
                 DifficultyExtraInfo = :DifficultyExtraInfo, ShortDescription = :ShortDescription, LongDescription = :LongDescription,
                 WeatherSummary = :WeatherSummary, Credits = :Credits, Countries = :Countries, RecommendedAddOns = :RecommendedAddOns,
-                MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
+                RecommendedAddOnsList = :RecommendedAddOnsList, MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
                 PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, 
-                LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText, LastUpdateDescription = :LastUpdateDescription
+                LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText, 
+                SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo = :BaroPressureExtraInfo
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -205,6 +225,7 @@ try {
             ':Credits' => $taskData['Credits'],
             ':Countries' => $taskData['Countries'],
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
+            ':RecommendedAddOnsList' => $taskData['RecommendedAddOnsList'],
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
             ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
@@ -217,7 +238,8 @@ try {
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
             ':RepostText' => $taskData['RepostText'],
-            ':LastUpdateDescription' => $taskData['LastUpdateDescription']
+            ':SuppressBaroPressureWarningSymbol' => $taskData['SuppressBaroPressureWarningSymbol'],
+            ':BaroPressureExtraInfo' => $taskData['BaroPressureExtraInfo']
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 
