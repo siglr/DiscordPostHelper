@@ -45,14 +45,17 @@ try {
 
     // Prepare BaroPressureExtraInfo
     $baroPressureExtraInfo = isset($taskData['BaroPressureExtraInfo']) ? trim($taskData['BaroPressureExtraInfo']) : null;
-    if ($baroPressureExtraInfo === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 
-        $baroPressureExtraInfo === 'Non standard: Set your altimeter!' || 
-        $baroPressureExtraInfo === '') {
-        $baroPressureExtraInfo = null; // Set to NULL for default or empty values
+    if (trim($baroPressureExtraInfo) === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 
+        trim($baroPressureExtraInfo) === 'Non standard: Set your altimeter!') {
+        $baroPressureExtraInfo = null; // Set to NULL for default values
     }
 
     // Prepare RecommendedAddOnsList
     $recommendedAddOnsList = isset($taskData['RecommendedAddOnsList']) ? $taskData['RecommendedAddOnsList'] : '[]';
+    if (json_decode($recommendedAddOnsList) === null && $recommendedAddOnsList !== '[]') {
+        logMessage("Invalid JSON format for RecommendedAddOnsList. Resetting to an empty JSON array.");
+        $recommendedAddOnsList = '[]'; // Default to an empty JSON array
+    }
 
     // Prepare SuppressBaroPressureWarningSymbol
     $suppressBaroPressureWarningSymbol = isset($taskData['SuppressBaroPressureWarningSymbol']) ? (int)$taskData['SuppressBaroPressureWarningSymbol'] : 0;
@@ -132,7 +135,7 @@ try {
             ':Credits' => $taskData['Credits'],
             ':Countries' => $taskData['Countries'],
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
-            ':RecommendedAddOnsList' => $taskData['RecommendedAddOnsList'],
+            ':RecommendedAddOnsList' => $recommendedAddOnsList,
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
             ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
@@ -145,13 +148,16 @@ try {
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
             ':RepostText' => $taskData['RepostText'],
-            ':SuppressBaroPressureWarningSymbol' => $taskData['SuppressBaroPressureWarningSymbol'],
-            ':BaroPressureExtraInfo' => $taskData['BaroPressureExtraInfo']
+            ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
+            ':BaroPressureExtraInfo' => $baroPressureExtraInfo
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
         // Retrieve the EntrySeqID of the newly inserted task
         $taskData['EntrySeqID'] = $pdo->lastInsertId();
+        if (!$taskData['EntrySeqID']) {
+            throw new Exception("Failed to retrieve EntrySeqID for TaskID: " . $taskData['TaskID']);
+        }
 
         // Create corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, false);
@@ -225,7 +231,7 @@ try {
             ':Credits' => $taskData['Credits'],
             ':Countries' => $taskData['Countries'],
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
-            ':RecommendedAddOnsList' => $taskData['RecommendedAddOnsList'],
+            ':RecommendedAddOnsList' => $recommendedAddOnsList,
             ':MapImage' => $mapImage,
             ':CoverImage' => $coverImage,
             ':DBEntryUpdate' => $taskData['DBEntryUpdate'],
@@ -238,8 +244,8 @@ try {
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
             ':RepostText' => $taskData['RepostText'],
-            ':SuppressBaroPressureWarningSymbol' => $taskData['SuppressBaroPressureWarningSymbol'],
-            ':BaroPressureExtraInfo' => $taskData['BaroPressureExtraInfo']
+            ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
+            ':BaroPressureExtraInfo' => $baroPressureExtraInfo
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 
@@ -247,6 +253,9 @@ try {
         $stmt = $pdo->prepare("SELECT EntrySeqID FROM Tasks WHERE TaskID = :TaskID");
         $stmt->execute([':TaskID' => $taskData['TaskID']]);
         $taskData['EntrySeqID'] = $stmt->fetchColumn();
+        if (!$taskData['EntrySeqID']) {
+            throw new Exception("Failed to retrieve EntrySeqID for TaskID: " . $taskData['TaskID']);
+        }
 
         // Update corresponding news entry
         createOrUpdateTaskNewsEntry($taskData, true);
