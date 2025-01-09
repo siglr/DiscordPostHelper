@@ -57,6 +57,13 @@ try {
         $recommendedAddOnsList = '[]'; // Default to an empty JSON array
     }
 
+    // Prepare ExtraFilesList
+    $extraFilesList = isset($taskData['ExtraFilesList']) ? $taskData['ExtraFilesList'] : '[]';
+    if (json_decode($extraFilesList) === null && $extraFilesList !== '[]') {
+        logMessage("Invalid JSON format for ExtraFilesList. Resetting to an empty JSON array.");
+        $extraFilesList = '[]'; // Default to an empty JSON array
+    }
+
     // Prepare SuppressBaroPressureWarningSymbol
     $suppressBaroPressureWarningSymbol = isset($taskData['SuppressBaroPressureWarningSymbol']) ? (int)$taskData['SuppressBaroPressureWarningSymbol'] : 0;
 
@@ -77,7 +84,7 @@ try {
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
                 RecommendedAddOns, RecommendedAddOnsList, MapImage, CoverImage, DBEntryUpdate, 
                 PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax, RepostText,
-                SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo
+                SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo, ExtraFilesList
             ) VALUES (
                 :TaskID, :Title, :LastUpdate, :SimDateTime, :IncludeYear, :SimDateTimeExtraInfo,
                 :MainAreaPOI, :DepartureName, :DepartureICAO, :DepartureExtra, :ArrivalName,
@@ -87,7 +94,7 @@ try {
                 :ShortDescription, :LongDescription, :WeatherSummary, :Credits, :Countries,
                 :RecommendedAddOns, :RecommendedAddOnsList, :MapImage, :CoverImage, :DBEntryUpdate, 
                 :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax, :RepostText,
-                :SuppressBaroPressureWarningSymbol, :BaroPressureExtraInfo
+                :SuppressBaroPressureWarningSymbol, :BaroPressureExtraInfo, :ExtraFilesList
             )
         ");
         logMessage("Insert statement prepared.");
@@ -149,7 +156,8 @@ try {
             ':LongMax' => $taskData['LongMax'],
             ':RepostText' => $taskData['RepostText'],
             ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
-            ':BaroPressureExtraInfo' => $baroPressureExtraInfo
+            ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
+            ':ExtraFilesList' => $extraFilesList
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
@@ -183,7 +191,7 @@ try {
                 RecommendedAddOnsList = :RecommendedAddOnsList, MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
                 PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, 
                 LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText, 
-                SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo = :BaroPressureExtraInfo
+                SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo = :BaroPressureExtraInfo, ExtraFilesList = :ExtraFilesList
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -245,7 +253,9 @@ try {
             ':LongMax' => $taskData['LongMax'],
             ':RepostText' => $taskData['RepostText'],
             ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
-            ':BaroPressureExtraInfo' => $baroPressureExtraInfo
+            ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
+            ':ExtraFilesList' => $extraFilesList
+
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);
 

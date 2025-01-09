@@ -6066,6 +6066,17 @@ Public Class Main
             recommendedAddOnsList = JsonConvert.SerializeObject(addOns)
         End If
 
+        ' Create a new list to store filenames only
+        Dim filenames As New List(Of String)
+        ' Parse the ExtraFiles list and extract filenames
+        If taskInfo.ExtraFiles IsNot Nothing Then
+            For Each currentFilePath In taskInfo.ExtraFiles
+                filenames.Add(IO.Path.GetFileName(currentFilePath)) ' Extract and add only the filename
+            Next
+        End If
+        ' Serialize the filenames list into JSON
+        Dim extraFilesList As String = JsonConvert.SerializeObject(filenames)
+
         ' Update the taskData dictionary to include WorldMapInfo fields
         Dim taskData As New Dictionary(Of String, Object) From {
         {"TaskID", taskInfo.DiscordTaskID},
@@ -6101,6 +6112,7 @@ Public Class Main
         {"Countries", String.Join(", ", taskInfo.Countries.Select(Function(country) country.Replace(", ", " - ")))},
         {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
         {"RecommendedAddOnsList", recommendedAddOnsList},
+        {"ExtraFilesList", extraFilesList},
         {"MapImage", theMapImage},
         {"CoverImage", theCoverImage},
         {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
