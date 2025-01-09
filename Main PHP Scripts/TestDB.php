@@ -34,7 +34,7 @@ try {
     $tasks = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($tasks)) {
-        echo "<span class='error'>No tasks found with NULL or empty SuppressBaroPressureWarningSymbol.</span>";
+        echo "<span class='error'>No tasks found for processing.</span>";
         exit;
     }
 
@@ -92,50 +92,56 @@ try {
             continue;
         }
 
-    // Extract values from XML
-    $suppressBaro = (string)$xml->SuppressBaroPressureWarningSymbol === "true" ? 1 : 0;
-    
-    // Check and process BaroPressureExtraInfo
-    $baroExtraInfo = trim((string)$xml->BaroPressureExtraInfo);
-    
-    // If the value matches either of the default values, set it to NULL
-    if (
-        $baroExtraInfo === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 
-        $baroExtraInfo === 'Non standard: Set your altimeter!'
-    ) {
-        $baroExtraInfo = null;
-    }
-    
-    // Handle RecommendedAddOns
-    $recommendedAddOnsList = [];
-    if ((int)$xml->RecommendedAddOns->count() > 0) {
-        foreach ($xml->RecommendedAddOns as $addOn) {
-            $recommendedAddOnsList[] = [
-                'Name' => (string)$addOn->Name,
-                'URL' => (string)$addOn->URL,
-                'Type' => (string)$addOn->Type,
-            ];
+        // Extract ExtraFiles attribute
+        $extraFilesList = [];
+        if ((int)$xml->ExtraFiles->count() > 0) {
+            foreach ($xml->ExtraFiles as $filePath) {
+                $filename = basename((string)$filePath); // Extract only the filename and extension
+                $extraFilesList[] = $filename;
+            }
         }
-    }
-    $recommendedAddOnsJson = json_encode($recommendedAddOnsList);
-    
-    // Update the database
-    $updateQuery = "
-        UPDATE Tasks
-        SET SuppressBaroPressureWarningSymbol = :suppressBaro,
-            BaroPressureExtraInfo = :baroExtraInfo,
-            RecommendedAddOnsList = :recommendedAddOns
-        WHERE TaskID = :taskId;
-    ";
-    $stmt = $pdo->prepare($updateQuery);
-    $stmt->execute([
-        ':suppressBaro' => $suppressBaro,
-        ':baroExtraInfo' => $baroExtraInfo,
-        ':recommendedAddOns' => $recommendedAddOnsJson,
-        ':taskId' => $taskId,
-    ]);
-    
-    echo "TaskID $taskId updated successfully.\n";
+        $extraFilesJson = json_encode($extraFilesList);
+
+        // Handle other fields as needed (e.g., SuppressBaro, BaroPressureExtraInfo, RecommendedAddOns)
+        $suppressBaro = (string)$xml->SuppressBaroPressureWarningSymbol === "true" ? 1 : 0;
+        $baroExtraInfo = trim((string)$xml->BaroPressureExtraInfo);
+        if (
+            $baroExtraInfo === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 
+            $baroExtraInfo === 'Non standard: Set your altimeter!'
+        ) {
+            $baroExtraInfo = null;
+        }
+        $recommendedAddOnsList = [];
+        if ((int)$xml->RecommendedAddOns->count() > 0) {
+            foreach ($xml->RecommendedAddOns as $addOn) {
+                $recommendedAddOnsList[] = [
+                    'Name' => (string)$addOn->Name,
+                    'URL' => (string)$addOn->URL,
+                    'Type' => (string)$addOn->Type,
+                ];
+            }
+        }
+        $recommendedAddOnsJson = json_encode($recommendedAddOnsList);
+
+        // Update the database
+        $updateQuery = "
+            UPDATE Tasks
+            SET SuppressBaroPressureWarningSymbol = :suppressBaro,
+                BaroPressureExtraInfo = :baroExtraInfo,
+                RecommendedAddOnsList = :recommendedAddOns,
+                ExtraFilesList = :extraFiles
+            WHERE TaskID = :taskId;
+        ";
+        $stmt = $pdo->prepare($updateQuery);
+        $stmt->execute([
+            ':suppressBaro' => $suppressBaro,
+            ':baroExtraInfo' => $baroExtraInfo,
+            ':recommendedAddOns' => $recommendedAddOnsJson,
+            ':extraFiles' => $extraFilesJson,
+            ':taskId' => $taskId,
+        ]);
+
+        echo "TaskID $taskId updated successfully.\n";
 
         // Clean up
         unlink($tempZipFile); // Delete the downloaded zip file
