@@ -29,6 +29,7 @@ Public Class DPHXUnpackAndLoad
     Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
     Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
     Private _showingPrompt As Boolean = False
+    Private _lastLoadSuccess As Boolean = False
     Private WithEvents _DPHXWS As DPHXLocalWS
 
 #End Region
@@ -140,7 +141,7 @@ Public Class DPHXUnpackAndLoad
 
             If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
                 LoadDPHXPackage(_currentFile)
-                If Settings.SessionSettings.AutoUnpack AndAlso IsUnpackRed AndAlso doUnpack Then
+                If Settings.SessionSettings.AutoUnpack AndAlso IsUnpackRed AndAlso doUnpack AndAlso _lastLoadSuccess Then
                     UnpackFiles()
                 End If
             End If
@@ -233,7 +234,7 @@ Public Class DPHXUnpackAndLoad
 
         If result = DialogResult.OK Then
             LoadDPHXPackage(OpenFileDialog1.FileName)
-            If Settings.SessionSettings.AutoUnpack Then
+            If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
                 UnpackFiles()
             End If
         End If
@@ -427,18 +428,16 @@ Public Class DPHXUnpackAndLoad
 
             Dim DownloadedFilePath As String = SupportingFeatures.DownloadTaskFile(taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
             If DownloadedFilePath <> String.Empty Then
+                _DPHXWS.SendResponse(context, $"Task received: {taskId}, Title: {taskTitle}", 200)
                 ' Because LoadDPHXPackage likely does UI-related work,
                 ' we must call it via Invoke on the main form:
                 Me.Invoke(Sub()
                               LoadDPHXPackage(DownloadedFilePath)
-                              If Settings.SessionSettings.AutoUnpack Then
+                              If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
                                   UnpackFiles()
                               End If
                           End Sub)
             End If
-
-            ' Then respond:
-            _DPHXWS.SendResponse(context, $"Task received: {taskId}, Title: {taskTitle}", 200)
         Else
             ' Optional: handle other methods or return 405 (Method Not Allowed)
             context.Response.StatusCode = 405
@@ -462,7 +461,7 @@ Public Class DPHXUnpackAndLoad
             Dim selectedFile As String = taskBrowserForm.DownloadedFilePath
             If selectedFile <> String.Empty Then
                 LoadDPHXPackage(selectedFile)
-                If Settings.SessionSettings.AutoUnpack Then
+                If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
                     UnpackFiles()
                 End If
             End If
@@ -521,6 +520,8 @@ Public Class DPHXUnpackAndLoad
     Private Sub LoadDPHXPackage(dphxFilename As String)
 
         Dim newDPHFile As String
+        _lastLoadSuccess = False
+
         ctrlBriefing.FullReset()
         Me.Refresh()
         Application.DoEvents()
@@ -560,6 +561,7 @@ Public Class DPHXUnpackAndLoad
             Else
                 txtPackageName.Text = dphxFilename
                 _currentFile = dphxFilename
+                _lastLoadSuccess = True
                 EnableUnpackButton()
             End If
 
@@ -1325,7 +1327,7 @@ Public Class DPHXUnpackAndLoad
             Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, theNewsEntry.Subtitle, Settings.SessionSettings.PackagesFolder)
             If selectedFile <> String.Empty Then
                 LoadDPHXPackage(selectedFile)
-                If Settings.SessionSettings.AutoUnpack Then
+                If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
                     UnpackFiles()
                 End If
             End If
