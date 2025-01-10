@@ -47,7 +47,14 @@ Partial Class DPHXUnpackAndLoad
         Me.chkNewsRetrieval = New System.Windows.Forms.CheckBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
+        Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
+        Me.tool2024StatusOK = New System.Windows.Forms.ToolStripButton()
+        Me.tool2024StatusStop = New System.Windows.Forms.ToolStripButton()
+        Me.tool2024StatusWarning = New System.Windows.Forms.ToolStripButton()
+        Me.lbl2024AllFilesStatus = New System.Windows.Forms.ToolStripTextBox()
         Me.msfs2020ToolStrip = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.tool2020StatusOK = New System.Windows.Forms.ToolStripButton()
         Me.tool2020StatusStop = New System.Windows.Forms.ToolStripButton()
         Me.tool2020StatusWarning = New System.Windows.Forms.ToolStripButton()
@@ -67,16 +74,10 @@ Partial Class DPHXUnpackAndLoad
         Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
         Me.ctxtNewsViewTaskInLibraryVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
         Me.ctxtNewsVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
-        Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
-        Me.tool2024StatusOK = New System.Windows.Forms.ToolStripButton()
-        Me.tool2024StatusStop = New System.Windows.Forms.ToolStripButton()
-        Me.tool2024StatusWarning = New System.Windows.Forms.ToolStripButton()
-        Me.lbl2024AllFilesStatus = New System.Windows.Forms.ToolStripTextBox()
-        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
+        Me.msfs2024ToolStrip.SuspendLayout()
         Me.msfs2020ToolStrip.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -84,7 +85,6 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.SuspendLayout()
         Me.newsSplitContainer.SuspendLayout()
         Me.contextGroupEventNews.SuspendLayout()
-        Me.msfs2024ToolStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlToolbar
@@ -238,7 +238,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.chkNewsRetrieval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkNewsRetrieval.AutoSize = True
-        Me.chkNewsRetrieval.Location = New System.Drawing.Point(51, 6)
+        Me.chkNewsRetrieval.Location = New System.Drawing.Point(20, 6)
         Me.chkNewsRetrieval.Name = "chkNewsRetrieval"
         Me.chkNewsRetrieval.Size = New System.Drawing.Size(199, 24)
         Me.chkNewsRetrieval.TabIndex = 7
@@ -262,6 +262,71 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 60)
         Me.pnlDPHFile.TabIndex = 2
         '
+        'msfs2024ToolStrip
+        '
+        Me.msfs2024ToolStrip.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.msfs2024ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.msfs2024ToolStrip.ImageScalingSize = New System.Drawing.Size(18, 18)
+        Me.msfs2024ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.tool2024StatusOK, Me.tool2024StatusStop, Me.tool2024StatusWarning, Me.lbl2024AllFilesStatus})
+        Me.msfs2024ToolStrip.Location = New System.Drawing.Point(5, 30)
+        Me.msfs2024ToolStrip.Name = "msfs2024ToolStrip"
+        Me.msfs2024ToolStrip.Size = New System.Drawing.Size(996, 25)
+        Me.msfs2024ToolStrip.TabIndex = 1
+        Me.msfs2024ToolStrip.Text = "ToolStrip2"
+        '
+        'ToolStripLabel2
+        '
+        Me.ToolStripLabel2.Name = "ToolStripLabel2"
+        Me.ToolStripLabel2.Size = New System.Drawing.Size(82, 22)
+        Me.ToolStripLabel2.Text = "MSFS 2024:"
+        '
+        'tool2024StatusOK
+        '
+        Me.tool2024StatusOK.AutoToolTip = False
+        Me.tool2024StatusOK.BackgroundImage = CType(resources.GetObject("tool2024StatusOK.BackgroundImage"), System.Drawing.Image)
+        Me.tool2024StatusOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.tool2024StatusOK.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tool2024StatusOK.Enabled = False
+        Me.tool2024StatusOK.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tool2024StatusOK.Name = "tool2024StatusOK"
+        Me.tool2024StatusOK.Size = New System.Drawing.Size(26, 22)
+        Me.tool2024StatusOK.ToolTipText = "All ready to go!"
+        Me.tool2024StatusOK.Visible = False
+        '
+        'tool2024StatusStop
+        '
+        Me.tool2024StatusStop.AutoToolTip = False
+        Me.tool2024StatusStop.BackgroundImage = CType(resources.GetObject("tool2024StatusStop.BackgroundImage"), System.Drawing.Image)
+        Me.tool2024StatusStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.tool2024StatusStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tool2024StatusStop.Enabled = False
+        Me.tool2024StatusStop.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tool2024StatusStop.Name = "tool2024StatusStop"
+        Me.tool2024StatusStop.Size = New System.Drawing.Size(26, 22)
+        Me.tool2024StatusStop.ToolTipText = "Stop right there or you won't get far!"
+        Me.tool2024StatusStop.Visible = False
+        '
+        'tool2024StatusWarning
+        '
+        Me.tool2024StatusWarning.AutoToolTip = False
+        Me.tool2024StatusWarning.BackgroundImage = CType(resources.GetObject("tool2024StatusWarning.BackgroundImage"), System.Drawing.Image)
+        Me.tool2024StatusWarning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.tool2024StatusWarning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tool2024StatusWarning.Enabled = False
+        Me.tool2024StatusWarning.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tool2024StatusWarning.Name = "tool2024StatusWarning"
+        Me.tool2024StatusWarning.Size = New System.Drawing.Size(26, 22)
+        Me.tool2024StatusWarning.ToolTipText = "Warning! Check your files!"
+        Me.tool2024StatusWarning.Visible = False
+        '
+        'lbl2024AllFilesStatus
+        '
+        Me.lbl2024AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.lbl2024AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lbl2024AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
+        Me.lbl2024AllFilesStatus.Name = "lbl2024AllFilesStatus"
+        Me.lbl2024AllFilesStatus.Size = New System.Drawing.Size(700, 25)
+        '
         'msfs2020ToolStrip
         '
         Me.msfs2020ToolStrip.BackColor = System.Drawing.SystemColors.ButtonFace
@@ -273,6 +338,12 @@ Partial Class DPHXUnpackAndLoad
         Me.msfs2020ToolStrip.Size = New System.Drawing.Size(996, 25)
         Me.msfs2020ToolStrip.TabIndex = 0
         Me.msfs2020ToolStrip.Text = "ToolStrip2"
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(82, 22)
+        Me.ToolStripLabel1.Text = "MSFS 2020:"
         '
         'tool2020StatusOK
         '
@@ -363,7 +434,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(761, 597)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(747, 597)
         Me.ctrlBriefing.TabIndex = 3
         '
         'RetrieveNewsList
@@ -390,14 +461,14 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
         Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
         Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 595)
-        Me.newsSplitContainer.SplitterDistance = 764
+        Me.newsSplitContainer.SplitterDistance = 750
         Me.newsSplitContainer.SplitterWidth = 1
         Me.newsSplitContainer.TabIndex = 8
         '
         'btnNewsPanelCollapse
         '
         Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(749, 17)
+        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(735, 17)
         Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
         Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
         Me.btnNewsPanelCollapse.TabIndex = 4
@@ -413,7 +484,7 @@ Partial Class DPHXUnpackAndLoad
         Me.flowNewsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flowNewsPanel.Location = New System.Drawing.Point(0, 36)
         Me.flowNewsPanel.Name = "flowNewsPanel"
-        Me.flowNewsPanel.Size = New System.Drawing.Size(267, 559)
+        Me.flowNewsPanel.Size = New System.Drawing.Size(284, 559)
         Me.flowNewsPanel.TabIndex = 6
         Me.flowNewsPanel.WrapContents = False
         '
@@ -455,77 +526,6 @@ Partial Class DPHXUnpackAndLoad
         Me.ctxtNewsVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
         Me.ctxtNewsVisitGroupEvent.Text = "Open event"
         '
-        'msfs2024ToolStrip
-        '
-        Me.msfs2024ToolStrip.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.msfs2024ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.msfs2024ToolStrip.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.msfs2024ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.tool2024StatusOK, Me.tool2024StatusStop, Me.tool2024StatusWarning, Me.lbl2024AllFilesStatus})
-        Me.msfs2024ToolStrip.Location = New System.Drawing.Point(5, 30)
-        Me.msfs2024ToolStrip.Name = "msfs2024ToolStrip"
-        Me.msfs2024ToolStrip.Size = New System.Drawing.Size(996, 25)
-        Me.msfs2024ToolStrip.TabIndex = 1
-        Me.msfs2024ToolStrip.Text = "ToolStrip2"
-        '
-        'tool2024StatusOK
-        '
-        Me.tool2024StatusOK.AutoToolTip = False
-        Me.tool2024StatusOK.BackgroundImage = CType(resources.GetObject("tool2024StatusOK.BackgroundImage"), System.Drawing.Image)
-        Me.tool2024StatusOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.tool2024StatusOK.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tool2024StatusOK.Enabled = False
-        Me.tool2024StatusOK.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tool2024StatusOK.Name = "tool2024StatusOK"
-        Me.tool2024StatusOK.Size = New System.Drawing.Size(26, 22)
-        Me.tool2024StatusOK.ToolTipText = "All ready to go!"
-        Me.tool2024StatusOK.Visible = False
-        '
-        'tool2024StatusStop
-        '
-        Me.tool2024StatusStop.AutoToolTip = False
-        Me.tool2024StatusStop.BackgroundImage = CType(resources.GetObject("tool2024StatusStop.BackgroundImage"), System.Drawing.Image)
-        Me.tool2024StatusStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.tool2024StatusStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tool2024StatusStop.Enabled = False
-        Me.tool2024StatusStop.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tool2024StatusStop.Name = "tool2024StatusStop"
-        Me.tool2024StatusStop.Size = New System.Drawing.Size(26, 22)
-        Me.tool2024StatusStop.ToolTipText = "Stop right there or you won't get far!"
-        Me.tool2024StatusStop.Visible = False
-        '
-        'tool2024StatusWarning
-        '
-        Me.tool2024StatusWarning.AutoToolTip = False
-        Me.tool2024StatusWarning.BackgroundImage = CType(resources.GetObject("tool2024StatusWarning.BackgroundImage"), System.Drawing.Image)
-        Me.tool2024StatusWarning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.tool2024StatusWarning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tool2024StatusWarning.Enabled = False
-        Me.tool2024StatusWarning.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tool2024StatusWarning.Name = "tool2024StatusWarning"
-        Me.tool2024StatusWarning.Size = New System.Drawing.Size(26, 22)
-        Me.tool2024StatusWarning.ToolTipText = "Warning! Check your files!"
-        Me.tool2024StatusWarning.Visible = False
-        '
-        'lbl2024AllFilesStatus
-        '
-        Me.lbl2024AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.lbl2024AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lbl2024AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
-        Me.lbl2024AllFilesStatus.Name = "lbl2024AllFilesStatus"
-        Me.lbl2024AllFilesStatus.Size = New System.Drawing.Size(700, 25)
-        '
-        'ToolStripLabel1
-        '
-        Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(82, 22)
-        Me.ToolStripLabel1.Text = "MSFS 2020:"
-        '
-        'ToolStripLabel2
-        '
-        Me.ToolStripLabel2.Name = "ToolStripLabel2"
-        Me.ToolStripLabel2.Size = New System.Drawing.Size(82, 22)
-        Me.ToolStripLabel2.Text = "MSFS 2024:"
-        '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -550,6 +550,8 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.PerformLayout()
         Me.pnlDPHFile.ResumeLayout(False)
         Me.pnlDPHFile.PerformLayout()
+        Me.msfs2024ToolStrip.ResumeLayout(False)
+        Me.msfs2024ToolStrip.PerformLayout()
         Me.msfs2020ToolStrip.ResumeLayout(False)
         Me.msfs2020ToolStrip.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
@@ -560,8 +562,6 @@ Partial Class DPHXUnpackAndLoad
         CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.newsSplitContainer.ResumeLayout(False)
         Me.contextGroupEventNews.ResumeLayout(False)
-        Me.msfs2024ToolStrip.ResumeLayout(False)
-        Me.msfs2024ToolStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

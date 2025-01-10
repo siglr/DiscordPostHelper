@@ -29,6 +29,7 @@ Public Class DPHXUnpackAndLoad
     Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
     Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
     Private _showingPrompt As Boolean = False
+    Private WithEvents _DPHXWS As DPHXLocalWS
 
 #End Region
 
@@ -81,6 +82,8 @@ Public Class DPHXUnpackAndLoad
 
         msfs2020ToolStrip.Visible = False
         msfs2024ToolStrip.Visible = False
+        chkNewsRetrieval.Left = 3
+        newsSplitContainer.SplitterDistance = 750
 
         If Not _SF.CheckRequiredNetFrameworkVersion Then
             MessageBox.Show("This application requires Microsoft .NET Framework 4.8 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -123,9 +126,11 @@ Public Class DPHXUnpackAndLoad
 
             SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
+            Dim doUnpack As Boolean = False
             If My.Application.CommandLineArgs.Count > 0 Then
                 ' Open the file passed as an argument
                 _currentFile = My.Application.CommandLineArgs(0)
+                doUnpack = True
             Else
                 ' Check the last file that was opened
                 If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
@@ -135,7 +140,7 @@ Public Class DPHXUnpackAndLoad
 
             If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
                 LoadDPHXPackage(_currentFile)
-                If Settings.SessionSettings.AutoUnpack Then
+                If Settings.SessionSettings.AutoUnpack AndAlso IsUnpackRed AndAlso doUnpack Then
                     UnpackFiles()
                 End If
             End If
@@ -146,6 +151,10 @@ Public Class DPHXUnpackAndLoad
             DatabaseUpdate.CheckAndUpdateDatabase()
 
             RetrieveNewsList_Tick(sender, e)
+
+            ' Start the server
+            _DPHXWS = New DPHXLocalWS(Settings.SessionSettings.LocalWebServerPort)
+            _DPHXWS.Start()
 
         End If
 
@@ -165,6 +174,10 @@ Public Class DPHXUnpackAndLoad
                     Application.DoEvents()
                 End If
             Loop
+            If _DPHXWS IsNot Nothing Then
+                _DPHXWS.Stop()
+                _DPHXWS.Dispose()
+            End If
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()
             Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
             Settings.SessionSettings.Save()
@@ -220,6 +233,9 @@ Public Class DPHXUnpackAndLoad
 
         If result = DialogResult.OK Then
             LoadDPHXPackage(OpenFileDialog1.FileName)
+            If Settings.SessionSettings.AutoUnpack Then
+                UnpackFiles()
+            End If
         End If
 
     End Sub
@@ -386,6 +402,51 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Private Sub _DPHXWS_RequestReceived(sender As Object, e As RequestReceivedEventArgs) _
+    Handles _DPHXWS.RequestReceived
+
+        Dim context = e.Context
+        Dim request = context.Request
+
+        ' 1. Check if it's a preflight OPTIONS request
+        If request.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
+            ' Send an appropriate CORS response if needed
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*")  ' or specific domain
+            context.Response.AddHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+            context.Response.StatusCode = 204 ' No Content
+            context.Response.OutputStream.Close()
+            Return
+        End If
+
+        ' 2. If it's a GET, handle your logic
+        If request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
+            Dim taskId As String = request.QueryString("taskID")
+            Dim taskTitle As String = request.QueryString("title")
+
+            Console.WriteLine($"Incoming GET request for taskId = {taskId}, title = {taskTitle}")
+
+            Dim DownloadedFilePath As String = SupportingFeatures.DownloadTaskFile(taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
+            If DownloadedFilePath <> String.Empty Then
+                ' Because LoadDPHXPackage likely does UI-related work,
+                ' we must call it via Invoke on the main form:
+                Me.Invoke(Sub()
+                              LoadDPHXPackage(DownloadedFilePath)
+                              If Settings.SessionSettings.AutoUnpack Then
+                                  UnpackFiles()
+                              End If
+                          End Sub)
+            End If
+
+            ' Then respond:
+            _DPHXWS.SendResponse(context, $"Task received: {taskId}, Title: {taskTitle}", 200)
+        Else
+            ' Optional: handle other methods or return 405 (Method Not Allowed)
+            context.Response.StatusCode = 405
+            context.Response.OutputStream.Close()
+        End If
+
+    End Sub
+
 #End Region
 
 #Region "Subs and functions"
@@ -401,6 +462,9 @@ Public Class DPHXUnpackAndLoad
             Dim selectedFile As String = taskBrowserForm.DownloadedFilePath
             If selectedFile <> String.Empty Then
                 LoadDPHXPackage(selectedFile)
+                If Settings.SessionSettings.AutoUnpack Then
+                    UnpackFiles()
+                End If
             End If
         End Using
 
@@ -834,6 +898,11 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Private ReadOnly Property IsUnpackRed As Boolean
+        Get
+            Return toolStripUnpack.ForeColor = Color.Red
+        End Get
+    End Property
     Private Sub SendPLNFileToNB21Logger(sb As StringBuilder, plnfilePath As String)
 
         ' Define the API endpoint and the path to the PLN file
@@ -1256,6 +1325,9 @@ Public Class DPHXUnpackAndLoad
             Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, theNewsEntry.Subtitle, Settings.SessionSettings.PackagesFolder)
             If selectedFile <> String.Empty Then
                 LoadDPHXPackage(selectedFile)
+                If Settings.SessionSettings.AutoUnpack Then
+                    UnpackFiles()
+                End If
             End If
         End If
     End Sub

@@ -162,7 +162,7 @@ Public Class AllSettings
         End Get
         Set(value As String)
             Dim port As Integer
-            If Integer.TryParse(value, port) AndAlso port >= 0 AndAlso port <= 65535 Then
+            If Integer.TryParse(value, port) AndAlso port >= 0 AndAlso port <= 65535 AndAlso port <> _LocalWebServerPort Then
                 _NB21LocalWSPort = value
             End If
         End Set
@@ -221,6 +221,20 @@ Public Class AllSettings
 
     <XmlElement("TaskLibraryDetailsZoomLevel")>
     Public Property TaskLibraryDetailsZoomLevel As Single
+
+    Private _LocalWebServerPort As String
+    <XmlElement("LocalWebServerPort")>
+    Public Property LocalWebServerPort As String
+        Get
+            Return _LocalWebServerPort
+        End Get
+        Set(value As String)
+            Dim port As Integer
+            If Integer.TryParse(value, port) AndAlso port >= 0 AndAlso port <= 65535 AndAlso port <> _NB21LocalWSPort Then
+                _LocalWebServerPort = value
+            End If
+        End Set
+    End Property
 
     <XmlElement("FavoriteSearches")>
     Public Property FavoriteSearches As SerializableDictionary(Of String, List(Of String))
@@ -287,6 +301,10 @@ Public Class AllSettings
             _NB21EXEFolder = settingsInFile.NB21EXEFolder
             _NB21LocalWSPort = settingsInFile.NB21LocalWSPort
             NB21StartAndFeed = settingsInFile.NB21StartAndFeed
+            _LocalWebServerPort = settingsInFile.LocalWebServerPort
+            If _LocalWebServerPort = 0 Then
+                _LocalWebServerPort = 54513
+            End If
             MainFormLocation = settingsInFile.MainFormLocation
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles

@@ -116,6 +116,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DatabaseUpdate.vb" />
+    <Compile Include="DPHXLocalWS.vb" />
     <Compile Include="NewsEntry.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
