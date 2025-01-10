@@ -323,6 +323,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2024AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2024AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lbl2024AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2024AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2024AllFilesStatus.Name = "lbl2024AllFilesStatus"
         Me.lbl2024AllFilesStatus.Size = New System.Drawing.Size(700, 25)
@@ -388,6 +389,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2020AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2020AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lbl2020AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2020AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2020AllFilesStatus.Name = "lbl2020AllFilesStatus"
         Me.lbl2020AllFilesStatus.Size = New System.Drawing.Size(700, 25)
@@ -434,7 +436,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(747, 597)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(750, 597)
         Me.ctrlBriefing.TabIndex = 3
         '
         'RetrieveNewsList
@@ -461,14 +463,14 @@ Partial Class DPHXUnpackAndLoad
         Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
         Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
         Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 595)
-        Me.newsSplitContainer.SplitterDistance = 750
+        Me.newsSplitContainer.SplitterDistance = 753
         Me.newsSplitContainer.SplitterWidth = 1
         Me.newsSplitContainer.TabIndex = 8
         '
         'btnNewsPanelCollapse
         '
         Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(735, 17)
+        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(738, 17)
         Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
         Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
         Me.btnNewsPanelCollapse.TabIndex = 4

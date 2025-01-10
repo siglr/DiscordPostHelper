@@ -81,12 +81,22 @@ Public Class Settings
             End If
         End If
 
-        'Check for valid port
-        Dim port As Integer
-        If Not (Integer.TryParse(txtNB21LocalWSPort.Text, port) AndAlso port >= 0 AndAlso port <= 65535) Then
+        'Check for valid NB21 port value
+        Dim NB21Port As Integer
+        If Not (Integer.TryParse(txtNB21LocalWSPort.Text, NB21Port) AndAlso NB21Port >= 0 AndAlso NB21Port <= 65535) Then
             validSettings = False
             sbMsg.AppendLine("Invalid port value for the NB21 Logger's local web server")
         End If
+        Dim DPHXPort As Integer
+        If Not (Integer.TryParse(txtDPHXLocalPort.Text, DPHXPort) AndAlso DPHXPort >= 0 AndAlso DPHXPort <= 65535) Then
+            validSettings = False
+            sbMsg.AppendLine("Invalid port value for the DPHX local web server")
+        End If
+        If DPHXPort = NB21Port Then
+            validSettings = False
+            sbMsg.AppendLine("Both NB21 and DPHX cannot have the same port value")
+        End If
+
         If Not validSettings Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -109,6 +119,7 @@ Public Class Settings
             SessionSettings.NB21EXEFolder = btnNB21EXEFolder.Text
             SessionSettings.NB21LocalWSPort = txtNB21LocalWSPort.Text
             SessionSettings.NB21StartAndFeed = chkEnableNB21StartAndFeed.Checked
+            SessionSettings.LocalWebServerPort = txtDPHXLocalPort.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
             SessionSettings.Exclude2020FlightPlanFromCleanup = chkExclude2020FlightPlanFromCleanup.Checked
             SessionSettings.Exclude2020WeatherFileFromCleanup = chkExclude2020WeatherFileFromCleanup.Checked
@@ -527,11 +538,16 @@ Public Class Settings
             ToolTip1.SetToolTip(btnXCSoarMapsFolder, SessionSettings.XCSoarMapsFolder)
         End If
 
-        Dim port As Integer
-        If Integer.TryParse(SessionSettings.NB21LocalWSPort, port) AndAlso port >= 0 AndAlso port <= 65535 Then
+        Dim NB21port As Integer
+        If Integer.TryParse(SessionSettings.NB21LocalWSPort, NB21port) AndAlso NB21port >= 0 AndAlso NB21port <= 65535 Then
             txtNB21LocalWSPort.Text = SessionSettings.NB21LocalWSPort
         End If
         chkEnableNB21StartAndFeed.Checked = SessionSettings.NB21StartAndFeed
+
+        Dim DPHXport As Integer
+        If Integer.TryParse(SessionSettings.LocalWebServerPort, DPHXport) AndAlso DPHXport >= 0 AndAlso DPHXport <= 65535 Then
+            txtDPHXLocalPort.Text = SessionSettings.LocalWebServerPort
+        End If
 
         Select Case SessionSettings.AutoOverwriteFiles
             Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -589,6 +605,10 @@ Public Class Settings
 
     Private Sub btnNB21ResetPort_Click(sender As Object, e As EventArgs) Handles btnNB21ResetPort.Click
         txtNB21LocalWSPort.Text = "54178"
+    End Sub
+
+    Private Sub btnResetDPHXLocalPort_Click(sender As Object, e As EventArgs) Handles btnResetDPHXLocalPort.Click
+        txtDPHXLocalPort.Text = "54513"
     End Sub
 
     Private Sub chkMSFS_CheckedChanged(sender As Object, e As EventArgs) Handles chkMSFS2020.CheckedChanged, chkMSFS2024.CheckedChanged

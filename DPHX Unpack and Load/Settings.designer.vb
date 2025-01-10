@@ -73,6 +73,8 @@ Partial Class Settings
         Me.txtNB21LocalWSPort = New System.Windows.Forms.TextBox()
         Me.chkEnableNB21StartAndFeed = New System.Windows.Forms.CheckBox()
         Me.btnNB21ResetPort = New System.Windows.Forms.Button()
+        Me.btnResetDPHXLocalPort = New System.Windows.Forms.Button()
+        Me.txtDPHXLocalPort = New System.Windows.Forms.TextBox()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -106,6 +108,8 @@ Partial Class Settings
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
+        Me.pnlLocalWSPort = New System.Windows.Forms.Panel()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -125,6 +129,7 @@ Partial Class Settings
         Me.Panel1.SuspendLayout()
         Me.pnl2020Options.SuspendLayout()
         Me.pnlNB21LoggerExe.SuspendLayout()
+        Me.pnlLocalWSPort.SuspendLayout()
         Me.SuspendLayout()
         '
         'okCancelPanel
@@ -727,6 +732,27 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.btnNB21ResetPort, "Click this button to reset the port to default.")
         Me.btnNB21ResetPort.UseVisualStyleBackColor = True
         '
+        'btnResetDPHXLocalPort
+        '
+        Me.btnResetDPHXLocalPort.Location = New System.Drawing.Point(280, 7)
+        Me.btnResetDPHXLocalPort.Name = "btnResetDPHXLocalPort"
+        Me.btnResetDPHXLocalPort.Size = New System.Drawing.Size(75, 31)
+        Me.btnResetDPHXLocalPort.TabIndex = 6
+        Me.btnResetDPHXLocalPort.Text = "Reset"
+        Me.ToolTip1.SetToolTip(Me.btnResetDPHXLocalPort, "Click this button to reset the DPHX listening port to default.")
+        Me.btnResetDPHXLocalPort.UseVisualStyleBackColor = True
+        '
+        'txtDPHXLocalPort
+        '
+        Me.txtDPHXLocalPort.Location = New System.Drawing.Point(194, 9)
+        Me.txtDPHXLocalPort.MaxLength = 5
+        Me.txtDPHXLocalPort.Name = "txtDPHXLocalPort"
+        Me.txtDPHXLocalPort.Size = New System.Drawing.Size(80, 27)
+        Me.txtDPHXLocalPort.TabIndex = 5
+        Me.txtDPHXLocalPort.Text = "54513"
+        Me.txtDPHXLocalPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtDPHXLocalPort, "This is the port used by DPHX to receive files from WeSimGlide.org.")
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -875,9 +901,9 @@ Partial Class Settings
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(5, 12)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(94, 20)
+        Me.Label6.Size = New System.Drawing.Size(97, 20)
         Me.Label6.TabIndex = 0
-        Me.Label6.Text = "Auto Unpack"
+        Me.Label6.Text = "Auto Unpack:"
         '
         'pnlXCSoarMapsFolder
         '
@@ -906,7 +932,7 @@ Partial Class Settings
         Me.pnlNoticeAndButtons.Controls.Add(Me.Label7)
         Me.pnlNoticeAndButtons.Controls.Add(Me.okCancelPanel)
         Me.pnlNoticeAndButtons.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 614)
+        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 659)
         Me.pnlNoticeAndButtons.Name = "pnlNoticeAndButtons"
         Me.pnlNoticeAndButtons.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 68)
@@ -1077,6 +1103,27 @@ Partial Class Settings
         Me.Label14.TabIndex = 5
         Me.Label14.Text = "NB21 Log EXE Folder:"
         '
+        'pnlLocalWSPort
+        '
+        Me.pnlLocalWSPort.Controls.Add(Me.btnResetDPHXLocalPort)
+        Me.pnlLocalWSPort.Controls.Add(Me.txtDPHXLocalPort)
+        Me.pnlLocalWSPort.Controls.Add(Me.Label17)
+        Me.pnlLocalWSPort.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 614)
+        Me.pnlLocalWSPort.Name = "pnlLocalWSPort"
+        Me.pnlLocalWSPort.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlLocalWSPort.Size = New System.Drawing.Size(769, 45)
+        Me.pnlLocalWSPort.TabIndex = 14
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(5, 12)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(142, 20)
+        Me.Label17.TabIndex = 0
+        Me.Label17.Text = "DPHX Listening Port:"
+        '
         'Settings
         '
         Me.AcceptButton = Me.OK_Button
@@ -1086,6 +1133,7 @@ Partial Class Settings
         Me.ClientSize = New System.Drawing.Size(769, 724)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnlNoticeAndButtons)
+        Me.Controls.Add(Me.pnlLocalWSPort)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
         Me.Controls.Add(Me.pnlNB21LoggerExe)
@@ -1148,6 +1196,8 @@ Partial Class Settings
         Me.pnl2020Options.PerformLayout()
         Me.pnlNB21LoggerExe.ResumeLayout(False)
         Me.pnlNB21LoggerExe.PerformLayout()
+        Me.pnlLocalWSPort.ResumeLayout(False)
+        Me.pnlLocalWSPort.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1234,4 +1284,8 @@ Partial Class Settings
     Friend WithEvents Label16 As Label
     Friend WithEvents chkEnableNB21StartAndFeed As CheckBox
     Friend WithEvents btnNB21ResetPort As Button
+    Friend WithEvents pnlLocalWSPort As Panel
+    Friend WithEvents Label17 As Label
+    Friend WithEvents btnResetDPHXLocalPort As Button
+    Friend WithEvents txtDPHXLocalPort As TextBox
 End Class

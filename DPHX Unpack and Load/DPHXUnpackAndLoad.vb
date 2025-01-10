@@ -209,6 +209,11 @@ Public Class DPHXUnpackAndLoad
             EnableUnpackButton()
         End If
 
+        'Restart local web server
+        _DPHXWS.Stop()
+        _DPHXWS.Port = Settings.SessionSettings.LocalWebServerPort
+        _DPHXWS.Start()
+
     End Sub
 
     Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles toolStripOpen.Click
