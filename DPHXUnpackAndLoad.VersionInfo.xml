@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.4.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.11.1</ReleaseVersion>
+      <ReleaseTitle>More WeSimGlide.org integration</ReleaseTitle>
+      <ReleaseNotes>
+        Added a local web server to the tool to be able to receive a command from WeSimGlide.org to download a DPHX file.
+        Fixed some display problem for the news bar to the right.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.4.2</ReleaseVersion>
       <ReleaseTitle>Auto start and feed NB21 Logger with PLN file</ReleaseTitle>
