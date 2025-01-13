@@ -6191,30 +6191,11 @@ Public Class Main
         End If
     End Function
 
-    Private Function ResizeImageAndGetBytes(inputPath As String, maxWidth As Integer, maxHeight As Integer, quality As Long) As Byte()
+    Private Function ResizeImageAndGetBytes(inputPath As String, maxWidth As Integer, maxHeight As Integer, quality As Long, Optional keepSize As Boolean = False) As Byte()
         ' Load the original image
         Using image As Image = Image.FromFile(inputPath)
-            ' Calculate the new size maintaining aspect ratio
-            Dim ratioX As Double = maxWidth / image.Width
-            Dim ratioY As Double = maxHeight / image.Height
-            Dim ratio As Double = Math.Min(ratioX, ratioY)
-
-            Dim newWidth As Integer = CInt(image.Width * ratio)
-            Dim newHeight As Integer = CInt(image.Height * ratio)
-
-            ' Create a new Bitmap with the proper dimensions
-            Using thumbnail As New Bitmap(newWidth, newHeight)
-                Using graphics As Graphics = Graphics.FromImage(thumbnail)
-                    ' High quality settings for better output
-                    graphics.CompositingQuality = CompositingQuality.HighQuality
-                    graphics.SmoothingMode = SmoothingMode.HighQuality
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
-
-                    ' Draw the original image onto the thumbnail
-                    graphics.DrawImage(image, 0, 0, newWidth, newHeight)
-                End Using
-
-                ' Image quality settings
+            ' If keepSize is True, skip resizing and save the original size
+            If keepSize Then
                 Using ms As New MemoryStream()
                     Dim jpgEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
                     Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
@@ -6223,12 +6204,48 @@ Public Class Main
                     myEncoderParameters.Param(0) = myEncoderParameter
 
                     ' Save the image to a memory stream in JPEG format
-                    thumbnail.Save(ms, jpgEncoder, myEncoderParameters)
+                    image.Save(ms, jpgEncoder, myEncoderParameters)
 
                     ' Convert the image to a byte array
                     Return ms.ToArray()
                 End Using
-            End Using
+            Else
+                ' Calculate the new size maintaining aspect ratio
+                Dim ratioX As Double = maxWidth / image.Width
+                Dim ratioY As Double = maxHeight / image.Height
+                Dim ratio As Double = Math.Min(ratioX, ratioY)
+
+                Dim newWidth As Integer = CInt(image.Width * ratio)
+                Dim newHeight As Integer = CInt(image.Height * ratio)
+
+                ' Create a new Bitmap with the proper dimensions
+                Using thumbnail As New Bitmap(newWidth, newHeight)
+                    Using graphics As Graphics = Graphics.FromImage(thumbnail)
+                        ' High quality settings for better output
+                        graphics.CompositingQuality = CompositingQuality.HighQuality
+                        graphics.SmoothingMode = SmoothingMode.HighQuality
+                        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
+
+                        ' Draw the original image onto the thumbnail
+                        graphics.DrawImage(image, 0, 0, newWidth, newHeight)
+                    End Using
+
+                    ' Image quality settings
+                    Using ms As New MemoryStream()
+                        Dim jpgEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
+                        Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
+                        Dim myEncoderParameters As New EncoderParameters(1)
+                        Dim myEncoderParameter As New EncoderParameter(myEncoder, quality)
+                        myEncoderParameters.Param(0) = myEncoderParameter
+
+                        ' Save the image to a memory stream in JPEG format
+                        thumbnail.Save(ms, jpgEncoder, myEncoderParameters)
+
+                        ' Convert the image to a byte array
+                        Return ms.ToArray()
+                    End Using
+                End Using
+            End If
         End Using
     End Function
 
@@ -6527,7 +6544,7 @@ Public Class Main
                     Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
                     memStream.Write(headerBytes, 0, headerBytes.Length)
 
-                    Dim imageBytes As Byte() = ResizeImageAndGetBytes(groupEventTeaserImagePath, 800, 600, 80)
+                    Dim imageBytes As Byte() = ResizeImageAndGetBytes(groupEventTeaserImagePath, 1024, 768, 85, True)
                     Debug.WriteLine($"Image size (bytes): {imageBytes.Length}")
                     memStream.Write(imageBytes, 0, imageBytes.Length)
                 End If
