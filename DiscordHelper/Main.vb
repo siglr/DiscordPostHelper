@@ -5862,9 +5862,18 @@ Public Class Main
             Dim comments As String = String.Empty
 
             eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
-
             eventDate = eventDate.ToUniversalTime
             key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+
+            Dim eventSyncDate As Date
+            Dim eventLaunchDate As Date
+            Dim eventStartDate As Date
+            eventSyncDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventSyncFlyDate.Value, dtEventSyncFlyTime.Value, chkDateTimeUTC.Checked)
+            eventSyncDate = eventSyncDate.ToUniversalTime
+            eventLaunchDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventLaunchDate.Value, dtEventLaunchTime.Value, chkDateTimeUTC.Checked)
+            eventLaunchDate = eventLaunchDate.ToUniversalTime
+            eventStartDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventStartTaskDate.Value, dtEventStartTaskTime.Value, chkDateTimeUTC.Checked)
+            eventStartDate = eventStartDate.ToUniversalTime
 
             If chkEventTeaser.Checked AndAlso txtEventTeaserMessage.Text.Trim <> String.Empty Then
                 comments = txtEventTeaserMessage.Text.Trim
@@ -5873,6 +5882,20 @@ Public Class Main
             Else
                 comments = txtShortDescription.Text.Trim
             End If
+
+            Dim urlBeginnerGuide As String = String.Empty
+            Select Case cboBeginnersGuide.Text
+                Case "Other (provide link below)"
+                    If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
+                        urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
+                    End If
+                Case "The Beginner's Guide to Soaring Events (GotGravel)"
+                    urlBeginnerGuide = "[The Beginner's Guide to Soaring Events (GotGravel)](https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529)"
+                Case "How to join our Group Flights (Sim Soaring Club)"
+                    urlBeginnerGuide = "[How to join our Group Flights (Sim Soaring Club)](https://discord.com/channels/876123356385149009/1038819881396744285)"
+                Case Else
+            End Select
+
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
                                                     txtEventTitle.Text.Trim,
@@ -5882,7 +5905,22 @@ Public Class Main
                                                     _TBTaskEntrySeqID,
                                                     txtGroupEventPostURL.Text.Trim,
                                                     eventDate.AddHours(3),
-                                                    txtTrackerGroup.Text)
+                                                    txtTrackerGroup.Text,
+                                                    eventDate,
+                                                    chkUseSyncFly.Checked,
+                                                    eventSyncDate,
+                                                    chkUseLaunch.Checked,
+                                                    eventLaunchDate,
+                                                    chkUseStart.Checked,
+                                                    eventStartDate,
+                                                    txtEventDescription.Text.Trim,
+                                                    chkEventTeaser.Checked,
+                                                    txtEventTeaserMessage.Text.Trim,
+                                                    txtEventTeaserAreaMapImage.Text.Trim,
+                                                    cboVoiceChannel.Text.Trim,
+                                                    cboMSFSServer.Text.Trim,
+                                                    cboEligibleAward.Text.Trim,
+                                                    urlBeginnerGuide)
 
             If result Then
                 Dim msgForEventHunters As String = String.Empty
@@ -5901,7 +5939,7 @@ Public Class Main
 
             Else
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Failed publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show("Failed to publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Using
             End If
 
@@ -6406,55 +6444,118 @@ Public Class Main
 #Region "Events Subs"
 
     Public Function PublishEventNews(key As String,
-                                     title As String,
-                                     subtitle As String,
-                                     comments As String,
-                                     eventDate As DateTime,
-                                     published As DateTime,
-                                     entrySeqID As Integer,
-                                     urlToGo As String,
-                                     expiration As DateTime,
-                                     trackerGroup As String) As Boolean
+                                 title As String,
+                                 subtitle As String,
+                                 comments As String,
+                                 eventDate As DateTime,
+                                 published As DateTime,
+                                 entrySeqID As Integer,
+                                 urlToGo As String,
+                                 expiration As DateTime,
+                                 trackerGroup As String,
+                                 eventMeetDateTime As DateTime,
+                                 useEventSyncFly As Boolean,
+                                 syncFlyDateTime As DateTime,
+                                 useEventLaunch As Boolean,
+                                 eventLaunchDateTime As DateTime,
+                                 useEventStartTask As Boolean,
+                                 eventStartTaskDateTime As DateTime,
+                                 eventDescription As String,
+                                 groupEventTeaserEnabled As Boolean,
+                                 groupEventTeaserMessage As String,
+                                 groupEventTeaserImagePath As String,
+                                 voiceChannel As String,
+                                 msfsServer As String,
+                                 eligibleAward As String,
+                                 beginnersGuide As String) As Boolean
 
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNews.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
-        request.ContentType = "application/x-www-form-urlencoded"
 
-        Dim postData As String =
-            $"action=CreateEvent" &
-            $"&Key={Uri.EscapeDataString(key)}" &
-            $"&Credits={Uri.EscapeDataString(trackerGroup)}" &
-            $"&Title={Uri.EscapeDataString(title)}" &
-            $"&Subtitle={Uri.EscapeDataString(subtitle)}" &
-            $"&Comments={Uri.EscapeDataString(comments)}" &
-            $"&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}" &
-            $"&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}" &
-            $"&EntrySeqID={entrySeqID}" &
-            $"&URLToGo={Uri.EscapeDataString(urlToGo)}" &
-            $"&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
-
-        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
-        request.ContentLength = data.Length
+        ' Create boundary for multipart/form-data
+        Dim boundary As String = "----WebKitFormBoundary" & DateTime.Now.Ticks.ToString("x")
+        request.ContentType = "multipart/form-data; boundary=" & boundary
 
         Try
-            Using stream As Stream = request.GetRequestStream()
-                stream.Write(data, 0, data.Length)
+            Using memStream As New MemoryStream()
+                Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
+                Dim endBoundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & "--" & vbCrLf)
+
+                ' Add form fields
+                Dim fields As New Dictionary(Of String, String) From {
+                {"action", "CreateEvent"},
+                {"Key", key},
+                {"Credits", trackerGroup},
+                {"Title", title},
+                {"Subtitle", subtitle},
+                {"Comments", comments},
+                {"EventDate", eventDate.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"Published", published.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"EntrySeqID", entrySeqID.ToString()},
+                {"URLToGo", urlToGo},
+                {"Expiration", expiration.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"EventMeetDateTime", eventMeetDateTime.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"UseEventSyncFly", If(useEventSyncFly, "1", "0")},
+                {"SyncFlyDateTime", syncFlyDateTime.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"UseEventLaunch", If(useEventLaunch, "1", "0")},
+                {"EventLaunchDateTime", eventLaunchDateTime.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"UseEventStartTask", If(useEventStartTask, "1", "0")},
+                {"EventStartTaskDateTime", eventStartTaskDateTime.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"EventDescription", eventDescription},
+                {"GroupEventTeaserEnabled", If(groupEventTeaserEnabled, "1", "0")},
+                {"GroupEventTeaserMessage", groupEventTeaserMessage},
+                {"VoiceChannel", voiceChannel},
+                {"TrackerGroup", trackerGroup},
+                {"MSFSServer", msfsServer},
+                {"EligibleAward", eligibleAward},
+                {"BeginnersGuide", beginnersGuide}
+            }
+
+                For Each field In fields
+                    memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+                    Dim fieldData As String = $"Content-Disposition: form-data; name=""{field.Key}""" & vbCrLf & vbCrLf & field.Value
+                    Dim fieldBytes As Byte() = Encoding.UTF8.GetBytes(fieldData)
+                    memStream.Write(fieldBytes, 0, fieldBytes.Length)
+                Next
+
+                ' Add the teaser image file, if present
+                If Not String.IsNullOrEmpty(groupEventTeaserImagePath) AndAlso IO.File.Exists(groupEventTeaserImagePath) Then
+                    memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+                    Dim header As String = $"Content-Disposition: form-data; name=""GroupEventTeaserImage""; filename=""{Path.GetFileName(groupEventTeaserImagePath)}""" & vbCrLf &
+                                       "Content-Type: image/jpeg" & vbCrLf & vbCrLf
+                    Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
+                    memStream.Write(headerBytes, 0, headerBytes.Length)
+
+                    Dim imageBytes As Byte() = ResizeImageAndGetBytes(groupEventTeaserImagePath, 800, 600, 80)
+                    Debug.WriteLine($"Image size (bytes): {imageBytes.Length}")
+                    memStream.Write(imageBytes, 0, imageBytes.Length)
+                End If
+
+                ' Write the end boundary
+                memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
+                request.ContentLength = memStream.Length
+
+                ' Send the request
+                Using requestStream As Stream = request.GetRequestStream()
+                    memStream.Position = 0
+                    memStream.CopyTo(requestStream)
+                End Using
             End Using
 
+            ' Get the response
             Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
                 Using reader As New StreamReader(response.GetResponseStream())
                     Dim jsonResponse As String = reader.ReadToEnd()
-                    ' Assuming the response is a JSON object with a "status" field
+                    ' Parse response
                     Dim result As Dictionary(Of String, Object) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
                     Return result("status").ToString() = "success"
                 End Using
             End Using
         Catch ex As Exception
-            ' Handle the exception
-            ' Log the error or display a message
+            ' Handle exceptions
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, $"Error publishing news entry: {ex.Message}", "News publishing error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Me, $"Error publishing event news: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Return False
         End Try

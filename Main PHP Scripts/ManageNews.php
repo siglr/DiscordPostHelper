@@ -76,67 +76,6 @@ try {
             }
             $key = $_POST['Key'];
 
-            // Delete existing Event entry
-            $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
-            logMessage("Existing Event entry deleted for Key: $key.");
-
-            // Insert new Event entry
-            $stmt = $pdo->prepare("
-                INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
-                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, :News, 1, :TaskID, :EntrySeqID, :URLToGo, :Expiration)
-            ");
-            $stmt->execute([
-                ':Key' => $key,
-                ':Published' => formatDatetime($_POST['Published']),
-                ':Title' => $_POST['Title'],
-                ':Subtitle' => $_POST['Subtitle'],
-                ':Comments' => $_POST['Comments'],
-                ':Credits' => $_POST['Credits'],
-                ':EventDate' => formatDatetime($_POST['EventDate']),
-                ':News' => $_POST['News'],
-                ':TaskID' => $_POST['TaskID'],
-                ':EntrySeqID' => $_POST['EntrySeqID'],
-                ':URLToGo' => $_POST['URLToGo'],
-                ':Expiration' => formatDatetime($_POST['Expiration'])
-            ]);
-            logMessage("Event entry created for Key: $key.");
-            break;
-
-        case 'DeleteEvent':
-            if (!isset($_POST['Key'])) {
-                throw new Exception('Key missing.');
-            }
-            $key = $_POST['Key'];
-
-            // Begin a transaction for consistency
-            $pdo->beginTransaction();
-            try {
-                // Delete from the Events table
-                $stmt = $pdo->prepare("DELETE FROM Events WHERE EventKey = ?");
-                $stmt->execute([$key]);
-                logMessage("Event entry deleted from Events table for EventKey: $key.");
-
-                // Delete from the News table
-                $stmt = $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?");
-                $stmt->execute([$key]);
-                logMessage("Event entry deleted from News table for Key: $key.");
-
-                // Commit the transaction
-                $pdo->commit();
-            } catch (Exception $e) {
-                // Rollback the transaction on failure
-                $pdo->rollBack();
-                logMessage("Failed to delete Event entry: " . $e->getMessage());
-                throw $e;
-            }
-            break;
-
-        case 'CreateEvent':
-            if (!isset($_POST['Key'])) {
-                throw new Exception('Key missing.');
-            }
-            $key = $_POST['Key'];
-
             // Delete existing entries in both News and Events tables
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
             $pdo->prepare("DELETE FROM Events WHERE EventKey = ?")->execute([$key]);
@@ -167,23 +106,33 @@ try {
             if (isset($_POST['EventMeetDateTime']) && !empty($_POST['EventMeetDateTime'])) {
                 logMessage("EventMeetDateTime is present, creating an Events entry.");
 
+                if (isset($_FILES['GroupEventTeaserImage']) && is_uploaded_file($_FILES['GroupEventTeaserImage']['tmp_name'])) {
+                    logMessage("Teaser image uploaded. Name: " . $_FILES['GroupEventTeaserImage']['name']);
+                    $imageData = file_get_contents($_FILES['GroupEventTeaserImage']['tmp_name']);
+                    logMessage("Teaser image size: " . strlen($imageData));
+                    $teaserImage = $imageData; // Use the binary content for database insertion
+                } else {
+                    logMessage("No teaser image uploaded or file is invalid.");
+                    $teaserImage = null;
+                }
+
                 // Insert new entry into Events table
                 $stmt = $pdo->prepare("
                     INSERT INTO Events (
-                        EntrySeqID, EventKey, EventMeetDateTime, UseEventSyncFly, SyncFlyDateTime, UseEventLaunch,
+                        EventKey, EventMeetDateTime, UseEventSyncFly, SyncFlyDateTime, UseEventLaunch,
                         EventLaunchDateTime, UseEventStartTask, EventStartTaskDateTime, EventDescription, 
                         GroupEventTeaserEnabled, GroupEventTeaserMessage, GroupEventTeaserImage, VoiceChannel,
                         MSFSServer, TrackerGroup, EligibleAward, BeginnersGuide
                     )
                     VALUES (
-                        :EntrySeqID, :EventKey, :EventMeetDateTime, :UseEventSyncFly, :SyncFlyDateTime, :UseEventLaunch,
+                        :EventKey, :EventMeetDateTime, :UseEventSyncFly, :SyncFlyDateTime, :UseEventLaunch,
                         :EventLaunchDateTime, :UseEventStartTask, :EventStartTaskDateTime, :EventDescription, 
                         :GroupEventTeaserEnabled, :GroupEventTeaserMessage, :GroupEventTeaserImage, :VoiceChannel,
                         :MSFSServer, :TrackerGroup, :EligibleAward, :BeginnersGuide
                     )
                 ");
+
                 $stmt->execute([
-                    ':EntrySeqID' => $_POST['EntrySeqID'],
                     ':EventKey' => $key,
                     ':EventMeetDateTime' => formatDatetime($_POST['EventMeetDateTime']),
                     ':UseEventSyncFly' => isset($_POST['UseEventSyncFly']) ? (int)$_POST['UseEventSyncFly'] : 0,
@@ -195,7 +144,7 @@ try {
                     ':EventDescription' => $_POST['EventDescription'] ?? '',
                     ':GroupEventTeaserEnabled' => isset($_POST['GroupEventTeaserEnabled']) ? (int)$_POST['GroupEventTeaserEnabled'] : 0,
                     ':GroupEventTeaserMessage' => $_POST['GroupEventTeaserMessage'] ?? '',
-                    ':GroupEventTeaserImage' => $_POST['GroupEventTeaserImage'] ?? null, // Assume this is already base64-encoded
+                    ':GroupEventTeaserImage' => $teaserImage,
                     ':VoiceChannel' => $_POST['VoiceChannel'] ?? '',
                     ':MSFSServer' => $_POST['MSFSServer'] ?? '',
                     ':TrackerGroup' => $_POST['TrackerGroup'] ?? '',
