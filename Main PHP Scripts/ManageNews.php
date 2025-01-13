@@ -2,12 +2,10 @@
 require __DIR__ . '/CommonFunctions.php';
 
 try {
-    logMessage("--- Script running ManageNews ---");
 
     // Open the database connection
     $pdo = new PDO("sqlite:$newsDBPath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    logMessage("Database connection established.");
 
     // Call the cleanup function
     cleanUpNewsEntries($pdo);
@@ -36,7 +34,6 @@ try {
 
             // Delete existing Task entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 0 AND Key = ?")->execute([$key]);
-            logMessage("Existing Task entry deleted for TaskID: $taskID.");
 
             // Insert new Task entry
             $stmt = $pdo->prepare("
@@ -55,7 +52,6 @@ try {
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo' => $_POST['URLToGo']
             ]);
-            logMessage("Task entry created for TaskID: $taskID.");
             break;
 
         case 'DeleteTask':
@@ -67,7 +63,6 @@ try {
 
             // Delete existing Task entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 0 AND Key = ?")->execute([$key]);
-            logMessage("Task entry deleted for TaskID: $taskID.");
             break;
 
         case 'CreateEvent':
@@ -79,7 +74,6 @@ try {
             // Delete existing entries in both News and Events tables
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
             $pdo->prepare("DELETE FROM Events WHERE EventKey = ?")->execute([$key]);
-            logMessage("Existing entries deleted for Key: $key.");
 
             // Insert new Event entry into News table
             $stmt = $pdo->prepare("
@@ -100,19 +94,14 @@ try {
                 ':URLToGo' => $_POST['URLToGo'],
                 ':Expiration' => formatDatetime($_POST['Expiration'])
             ]);
-            logMessage("Event entry created in News table for Key: $key.");
 
             // Check if EventMeetDateTime is provided
             if (isset($_POST['EventMeetDateTime']) && !empty($_POST['EventMeetDateTime'])) {
-                logMessage("EventMeetDateTime is present, creating an Events entry.");
 
                 if (isset($_FILES['GroupEventTeaserImage']) && is_uploaded_file($_FILES['GroupEventTeaserImage']['tmp_name'])) {
-                    logMessage("Teaser image uploaded. Name: " . $_FILES['GroupEventTeaserImage']['name']);
                     $imageData = file_get_contents($_FILES['GroupEventTeaserImage']['tmp_name']);
-                    logMessage("Teaser image size: " . strlen($imageData));
                     $teaserImage = $imageData; // Use the binary content for database insertion
                 } else {
-                    logMessage("No teaser image uploaded or file is invalid.");
                     $teaserImage = null;
                 }
 
@@ -151,9 +140,6 @@ try {
                     ':EligibleAward' => $_POST['EligibleAward'] ?? '',
                     ':BeginnersGuide' => $_POST['BeginnersGuide'] ?? ''
                 ]);
-                logMessage("Event entry created in Events table for Key: $key.");
-            } else {
-                logMessage("EventMeetDateTime is missing or empty, skipping Events entry creation.");
             }
             break;
 
@@ -165,7 +151,6 @@ try {
 
             // Delete existing Event entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
-            logMessage("Event entry deleted for Key: $key.");
             break;
 
         case 'CreateNews':
@@ -176,7 +161,6 @@ try {
 
             // Delete existing News entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
-            logMessage("Existing News entry deleted for Key: $key.");
 
             // Insert new News entry
             $stmt = $pdo->prepare("
@@ -197,7 +181,6 @@ try {
                 ':URLToGo' => $_POST['URLToGo'],
                 ':Expiration' => formatDatetime($_POST['Expiration'])
             ]);
-            logMessage("News entry created for Key: $key.");
             break;
 
         case 'DeleteNews':
@@ -208,7 +191,6 @@ try {
 
             // Delete existing News entry
             $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
-            logMessage("News entry deleted for Key: $key.");
             break;
 
         default:
@@ -216,7 +198,6 @@ try {
     }
 
     echo json_encode(['status' => 'success', 'message' => 'Action processed successfully.']);
-    logMessage("--- End of script ManageNews ---");
 
 } catch (Exception $e) {
     logMessage("Error: " . $e->getMessage());
