@@ -85,19 +85,26 @@ function checkUserPermission($userID, $permission) {
 function cleanUpNewsEntries($pdo) {
     // Get the current UTC datetime
     $currentDatetime = $pdo->query("SELECT datetime('now')")->fetchColumn();
-    //logMessage("Current UTC datetime: $currentDatetime");
 
     // Get the datetime for 7 days ago
     $datetimeMinus7Days = $pdo->query("SELECT datetime('now', '-7 days')")->fetchColumn();
-    //logMessage("UTC datetime for 7 days ago: $datetimeMinus7Days");
 
     // Cleanup expired News and Event entries
-    $pdo->exec("DELETE FROM News WHERE NewsType IN (1, 2) AND Expiration < datetime('now')");
-    //logMessage("Expired News and Event entries deleted before: $currentDatetime");
+    // Step 1: Fetch Keys for expired News entries of NewsType 1 and 2
+    $expiredKeys = $pdo->query("SELECT DISTINCT Key FROM News WHERE NewsType IN (1, 2) AND Expiration < datetime('now')")->fetchAll(PDO::FETCH_COLUMN);
 
-    // Cleanup old Task entries
+    if (!empty($expiredKeys)) {
+        // Step 2: Delete corresponding entries in the Events table
+        $placeholders = implode(',', array_fill(0, count($expiredKeys), '?'));
+        $deleteEventsStmt = $pdo->prepare("DELETE FROM Events WHERE EventKey IN ($placeholders)");
+        $deleteEventsStmt->execute($expiredKeys);
+    }
+
+    // Step 3: Delete the expired News entries from the News table
+    $pdo->exec("DELETE FROM News WHERE NewsType IN (1, 2) AND Expiration < datetime('now')");
+
+    // Cleanup old Task entries (NewsType 0) older than 7 days
     $pdo->exec("DELETE FROM News WHERE NewsType = 0 AND Published < datetime('now', '-7 days')");
-    //logMessage("Old Task entries deleted before: $datetimeMinus7Days");
 }
 
 // Function to create or update a task news entry

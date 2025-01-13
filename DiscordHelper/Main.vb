@@ -6421,7 +6421,18 @@ Public Class Main
         request.Method = "POST"
         request.ContentType = "application/x-www-form-urlencoded"
 
-        Dim postData As String = $"action=CreateEvent&Key={Uri.EscapeDataString(key)}&Credits={Uri.EscapeDataString(trackerGroup)}&Title={Uri.EscapeDataString(title)}&Subtitle={Uri.EscapeDataString(subtitle)}&Comments={Uri.EscapeDataString(comments)}&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}&EntrySeqID={entrySeqID}&URLToGo={Uri.EscapeDataString(urlToGo)}&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
+        Dim postData As String =
+            $"action=CreateEvent" &
+            $"&Key={Uri.EscapeDataString(key)}" &
+            $"&Credits={Uri.EscapeDataString(trackerGroup)}" &
+            $"&Title={Uri.EscapeDataString(title)}" &
+            $"&Subtitle={Uri.EscapeDataString(subtitle)}" &
+            $"&Comments={Uri.EscapeDataString(comments)}" &
+            $"&EventDate={Uri.EscapeDataString(eventDate.ToString("yyyy-MM-dd HH:mm:ss"))}" &
+            $"&Published={Uri.EscapeDataString(published.ToString("yyyy-MM-dd HH:mm:ss"))}" &
+            $"&EntrySeqID={entrySeqID}" &
+            $"&URLToGo={Uri.EscapeDataString(urlToGo)}" &
+            $"&Expiration={Uri.EscapeDataString(expiration.ToString("yyyy-MM-dd HH:mm:ss"))}"
 
         Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
         request.ContentLength = data.Length
