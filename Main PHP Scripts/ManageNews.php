@@ -208,6 +208,67 @@ try {
             }
             break;
 
+        case 'DeleteEvent':
+            if (!isset($_POST['Key'])) {
+                throw new Exception('Key missing.');
+            }
+            $key = $_POST['Key'];
+
+            // Delete existing Event entry
+            $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
+            logMessage("Event entry deleted for Key: $key.");
+            break;
+
+        case 'CreateNews':
+            if (!isset($_POST['Key'])) {
+                throw new Exception('Key missing.');
+            }
+            $key = $_POST['Key'];
+
+            // Delete existing News entry
+            $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
+            logMessage("Existing News entry deleted for Key: $key.");
+
+            // Insert new News entry
+            $stmt = $pdo->prepare("
+                INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
+                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, :News, 2, :TaskID, :EntrySeqID, :URLToGo, :Expiration)
+            ");
+            $stmt->execute([
+                ':Key' => $key,
+                ':Published' => formatDatetime($_POST['Published']),
+                ':Title' => $_POST['Title'],
+                ':Subtitle' => $_POST['Subtitle'],
+                ':Comments' => $_POST['Comments'],
+                ':Credits' => $_POST['Credits'],
+                ':EventDate' => formatDatetime($_POST['EventDate']),
+                ':News' => $_POST['News'],
+                ':TaskID' => $_POST['TaskID'],
+                ':EntrySeqID' => $_POST['EntrySeqID'],
+                ':URLToGo' => $_POST['URLToGo'],
+                ':Expiration' => formatDatetime($_POST['Expiration'])
+            ]);
+            logMessage("News entry created for Key: $key.");
+            break;
+
+        case 'DeleteNews':
+            if (!isset($_POST['Key'])) {
+                throw new Exception('Key missing.');
+            }
+            $key = $_POST['Key'];
+
+            // Delete existing News entry
+            $pdo->prepare("DELETE FROM News WHERE NewsType = 2 AND Key = ?")->execute([$key]);
+            logMessage("News entry deleted for Key: $key.");
+            break;
+
+        default:
+            throw new Exception('Invalid action specified.');
+    }
+
+    echo json_encode(['status' => 'success', 'message' => 'Action processed successfully.']);
+    logMessage("--- End of script ManageNews ---");
+
 } catch (Exception $e) {
     logMessage("Error: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
