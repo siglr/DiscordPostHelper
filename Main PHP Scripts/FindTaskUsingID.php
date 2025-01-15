@@ -2,12 +2,10 @@
 require __DIR__ . '/CommonFunctions.php';
 
 try {
-    logMessage("--- Script running FetchTaskDetails ---");
 
     // Open the database connection
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    logMessage("Database connection established.");
 
     // Check if TaskID parameter is set
     if (!isset($_GET['TaskID'])) {
@@ -23,13 +21,9 @@ try {
 
     if ($taskDetails) {
         echo json_encode(['status' => 'success', 'taskDetails' => $taskDetails]);
-        logMessage("Task details fetched for TaskID: " . $taskID);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Task not found.']);
-        logMessage("Task not found for TaskID: " . $taskID);
     }
-
-    logMessage("--- End of script FetchTaskDetails ---");
 
 } catch (PDOException $e) {
     logMessage("Connection failed: " . $e->getMessage());
