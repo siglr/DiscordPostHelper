@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.15.1</ReleaseVersion>
+      <ReleaseTitle>More group event stuff sent to WeSimGlide.org</ReleaseTitle>
+      <ReleaseNotes>
+        Included all group event details when publishing the event news.
+        A few small fixes here and there.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.11.1</ReleaseVersion>
       <ReleaseTitle>More stuff sent to WeSimGlide.org</ReleaseTitle>
