@@ -149,8 +149,10 @@ try {
             }
             $key = $_POST['Key'];
 
-            // Delete existing Event entry
+            // Delete existing Event entry from News
             $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
+            // Delete corresponding Event entry from Entries
+            $pdo->prepare("DELETE FROM Events WHERE EventKey = ?")->execute([$key]);
             break;
 
         case 'CreateNews':
