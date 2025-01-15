@@ -5896,6 +5896,19 @@ Public Class Main
                 Case Else
             End Select
 
+            Dim notam As String = String.Empty
+
+            'Complete notam with notices like barometric pressure and altitude restrictions
+            If txtAltRestrictions.Text.Trim.Length > 0 Then
+                notam = $"This task contains altitude restrictions!<br>"
+            End If
+            If txtBaroPressureExtraInfo.Enabled AndAlso txtBaroPressureExtraInfo.Text.Trim <> String.Empty Then
+                notam = $"{notam}{txtBaroPressureExtraInfo.Text.Trim}<br>"
+            End If
+            If notam <> String.Empty Then
+                notam = $"<strong>NOTAMs:</strong><br>{notam}"
+            End If
+
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
                                                     txtEventTitle.Text.Trim,
@@ -5920,7 +5933,8 @@ Public Class Main
                                                     cboVoiceChannel.Text.Trim,
                                                     cboMSFSServer.Text.Trim,
                                                     cboEligibleAward.Text.Trim,
-                                                    urlBeginnerGuide)
+                                                    urlBeginnerGuide,
+                                                    notam)
 
             If result Then
                 Dim msgForEventHunters As String = String.Empty
@@ -6484,7 +6498,8 @@ Public Class Main
                                  voiceChannel As String,
                                  msfsServer As String,
                                  eligibleAward As String,
-                                 beginnersGuide As String) As Boolean
+                                 beginnersGuide As String,
+                                 notam As String) As Boolean
 
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNews.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
@@ -6526,7 +6541,8 @@ Public Class Main
                 {"TrackerGroup", trackerGroup},
                 {"MSFSServer", msfsServer},
                 {"EligibleAward", eligibleAward},
-                {"BeginnersGuide", beginnersGuide}
+                {"BeginnersGuide", beginnersGuide},
+                {"Notam", notam}
             }
 
                 For Each field In fields
