@@ -428,6 +428,10 @@ Public Class DPHXUnpackAndLoad
         If request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
             Dim taskId As String = request.QueryString("taskID")
             Dim taskTitle As String = request.QueryString("title")
+            Dim fromEventTab As Boolean = False
+            If request.QueryString("source") IsNot Nothing AndAlso request.QueryString("source") <> String.Empty Then
+                fromEventTab = (request.QueryString("source") = "event")
+            End If
 
             Console.WriteLine($"Incoming GET request for taskId = {taskId}, title = {taskTitle}")
 
@@ -439,7 +443,7 @@ Public Class DPHXUnpackAndLoad
                 Me.Invoke(Sub()
                               LoadDPHXPackage(DownloadedFilePath)
                               If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
-                                  UnpackFiles()
+                                  UnpackFiles(fromEventTab)
                               End If
                           End Sub)
             End If
@@ -803,7 +807,7 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Sub UnpackFiles()
+    Private Sub UnpackFiles(Optional fromEvent As Boolean = False)
 
         Dim sb As New StringBuilder
 
@@ -954,7 +958,7 @@ Public Class DPHXUnpackAndLoad
             If TrackerRunning Then
                 'Feed the data to the tracker
                 Dim groupToUse As String = String.Empty
-                If _allDPHData.IsFutureEvent Then
+                If _allDPHData.IsFutureEvent AndAlso fromEvent Then
                     groupToUse = _allDPHData.TrackerGroup
                 End If
                 SendDataToTracker(sb,
@@ -1073,6 +1077,11 @@ Public Class DPHXUnpackAndLoad
             Else
                 sb.AppendLine($"Failed to communicate with Tracker. HTTP Status: {response.StatusCode}")
                 Exit Sub ' Stop if the first call fails
+            End If
+
+            If trackerGroup = String.Empty Then
+                ' No group set, we don't need the second call
+                Exit Sub
             End If
 
             ' Wait for 5 seconds before the second call
