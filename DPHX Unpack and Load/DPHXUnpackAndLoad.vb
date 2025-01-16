@@ -30,6 +30,8 @@ Public Class DPHXUnpackAndLoad
     Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
     Private _showingPrompt As Boolean = False
     Private _lastLoadSuccess As Boolean = False
+    Private _status As New frmStatus()
+
     Private WithEvents _DPHXWS As DPHXLocalWS
 
 #End Region
@@ -182,6 +184,9 @@ Public Class DPHXUnpackAndLoad
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()
             Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
             Settings.SessionSettings.Save()
+            If _status IsNot Nothing Then
+                _status.Close()
+            End If
         End If
 
     End Sub
@@ -809,61 +814,55 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub UnpackFiles(Optional fromEvent As Boolean = False)
 
-        Dim sb As New StringBuilder
+        _status.StartPosition = FormStartPosition.CenterParent
+        _status.Start(Me)
 
-        sb.AppendLine("Unpacking Results:")
-        sb.AppendLine()
+        _status.AppendStatusLine("Unpacking Results:", True)
 
         If Settings.SessionSettings.Is2020Installed Then
             'Flight plan
-            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2020FlightPlansFolder,
-                 "Flight Plan for MSFS 2020"))
-            sb.AppendLine()
+                 "Flight Plan for MSFS 2020"), True)
 
             'Weather file
-            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2020"))
+                 "Weather Preset for MSFS 2020"), True)
 
-            sb.AppendLine()
         End If
         If Settings.SessionSettings.Is2024Installed Then
             'Flight plan
-            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2024FlightPlansFolder,
-                 "Flight Plan for MSFS 2024"))
-            sb.AppendLine()
+                 "Flight Plan for MSFS 2024"), True)
 
             'Weather file
-            sb.AppendLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  TempDPHXUnpackFolder,
                  Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2024"))
+                 "Weather Preset for MSFS 2024"), True)
 
-            sb.AppendLine()
         End If
 
         'Look in the other files for xcsoar files
         For Each filepath As String In _allDPHData.ExtraFiles
             If Path.GetExtension(filepath) = ".tsk" Then
                 'XCSoar task
-                sb.AppendLine(CopyFile(Path.GetFileName(filepath),
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
                                     TempDPHXUnpackFolder,
                                     Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task"))
-                sb.AppendLine()
+                                    "XCSoar Task"), True)
             End If
             If Path.GetExtension(filepath) = ".xcm" Then
                 'XCSoar map
-                sb.AppendLine(CopyFile(Path.GetFileName(filepath),
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
                                     TempDPHXUnpackFolder,
                                     Settings.SessionSettings.XCSoarMapsFolder,
-                                    "XCSoar Map"))
-                sb.AppendLine()
+                                    "XCSoar Map"), True)
             End If
         Next
 
@@ -887,7 +886,7 @@ Public Class DPHXUnpackAndLoad
                             For i As Integer = 1 To 10
                                 If IsPortOpen("localhost", Settings.SessionSettings.NB21LocalWSPort, 500) Then
                                     NB21LoggerRunning = True
-                                    sb.AppendLine("NB21 Logger successfully started.")
+                                    _status.AppendStatusLine("NB21 Logger successfully started.", False)
                                     Exit For
                                 End If
                                 Thread.Sleep(500) ' Check every 500ms
@@ -895,23 +894,22 @@ Public Class DPHXUnpackAndLoad
                         End If
 
                         If Not NB21LoggerRunning Then
-                            sb.AppendLine("NB21 Logger did not become ready within the timeout period.")
+                            _status.AppendStatusLine("NB21 Logger did not become ready within the timeout period.", True)
                         End If
                     Catch ex As Exception
-                        sb.AppendLine($"An error occurred trying to launch NB21 Logger: {ex.Message}")
+                        _status.AppendStatusLine($"An error occurred trying to launch NB21 Logger: {ex.Message}", True)
                     End Try
                 Else
-                    sb.AppendLine($"The NB21 Logger's executable file was not found in {Settings.SessionSettings.NB21EXEFolder}")
+                    _status.AppendStatusLine($"The NB21 Logger's executable file was not found in {Settings.SessionSettings.NB21EXEFolder}", True)
                 End If
             Else
-                sb.AppendLine("NB21 Logger is already running.")
+                _status.AppendStatusLine("NB21 Logger is already running.", False)
             End If
 
             If NB21LoggerRunning Then
                 'Feed the PLN file to the logger
-                SendPLNFileToNB21Logger(sb, Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)))
+                SendPLNFileToNB21Logger(Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)))
             End If
-            sb.AppendLine()
         End If
 
         ' Tracker auto-start and data feeding
@@ -934,7 +932,7 @@ Public Class DPHXUnpackAndLoad
                             For i As Integer = 1 To 10
                                 If IsPortOpen("localhost", Settings.SessionSettings.TrackerLocalWSPort, 500) Then
                                     TrackerRunning = True
-                                    sb.AppendLine("Tracker successfully started.")
+                                    _status.AppendStatusLine("Tracker successfully started.", False)
                                     Exit For
                                 End If
                                 Thread.Sleep(500) ' Check every 500ms
@@ -942,38 +940,35 @@ Public Class DPHXUnpackAndLoad
                         End If
 
                         If Not TrackerRunning Then
-                            sb.AppendLine("Tracker did not become ready within the timeout period.")
+                            _status.AppendStatusLine("Tracker did not become ready within the timeout period.", True)
                         End If
 
                     Catch ex As Exception
-                        sb.AppendLine($"An error occurred trying to launch the Tracker: {ex.Message}")
+                        _status.AppendStatusLine($"An error occurred trying to launch the Tracker: {ex.Message}", True)
                     End Try
                 Else
-                    sb.AppendLine($"The Tracker's executable file was not found in {Settings.SessionSettings.TrackerEXEFolder}")
+                    _status.AppendStatusLine($"The Tracker's executable file was not found in {Settings.SessionSettings.TrackerEXEFolder}", True)
                 End If
             Else
-                sb.AppendLine("Tracker is already running.")
+                _status.AppendStatusLine("Tracker is already running.", False)
             End If
 
             If TrackerRunning Then
                 'Feed the data to the tracker
                 Dim groupToUse As String = String.Empty
-                If _allDPHData.IsFutureEvent AndAlso fromEvent Then
+                If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
                     groupToUse = _allDPHData.TrackerGroup
                 End If
-                SendDataToTracker(sb,
-                                  groupToUse,
+                SendDataToTracker(groupToUse,
                                   Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                   Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
                                   _allDPHData.URLGroupEventPost
                                  )
             End If
-            sb.AppendLine()
         End If
 
-        Using New Centered_MessageBox(Me)
-            MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End Using
+        _status.AppendStatusLine("Unpack completed, you can click Close below.", False)
+        _status.Done()
 
         EnableUnpackButton()
 
@@ -1001,7 +996,7 @@ Public Class DPHXUnpackAndLoad
         End Get
     End Property
 
-    Private Sub SendPLNFileToNB21Logger(sb As StringBuilder, plnfilePath As String)
+    Private Sub SendPLNFileToNB21Logger(plnfilePath As String)
 
         ' Define the API endpoint and the path to the PLN file
         Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.NB21LocalWSPort}/pln_set"
@@ -1016,13 +1011,13 @@ Public Class DPHXUnpackAndLoad
                 Dim response As HttpResponseMessage = client.PostAsync(apiUrl, content).Result
 
                 If response.IsSuccessStatusCode Then
-                    sb.AppendLine("PLN file successfully sent to NB21 Logger.")
+                    _status.AppendStatusLine("PLN file successfully sent to NB21 Logger.", True)
                 Else
-                    sb.AppendLine($"Failed to send PLN file to NB21 Logger. HTTP Status: {response.StatusCode}")
+                    _status.AppendStatusLine($"Failed to send PLN file to NB21 Logger. HTTP Status: {response.StatusCode}", True)
                 End If
             End Using
         Catch ex As Exception
-            sb.AppendLine($"An error occurred while sending the PLN file: {ex.Message}")
+            _status.AppendStatusLine($"An error occurred while sending the PLN file: {ex.Message}", True)
         End Try
 
     End Sub
@@ -1035,7 +1030,7 @@ Public Class DPHXUnpackAndLoad
         End Using
     End Function
 
-    Private Sub SendDataToTracker(sb As StringBuilder, trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
+    Private Sub SendDataToTracker(trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
         ' Define the API endpoint
         Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
 
@@ -1069,35 +1064,33 @@ Public Class DPHXUnpackAndLoad
             ' Convert payload to JSON
             Dim jsonPayload As String = JsonConvert.SerializeObject(payload)
 
-            ' Perform the first call
+            Dim need2Calls As Boolean = (trackerGroup <> String.Empty)
             Dim response = SendPostRequest(apiUrl, jsonPayload)
 
-            If response.IsSuccessStatusCode Then
-                sb.AppendLine("First call to SSC Tracker was successful.")
-            Else
-                sb.AppendLine($"Failed to communicate with Tracker. HTTP Status: {response.StatusCode}")
-                Exit Sub ' Stop if the first call fails
+            If need2Calls Then
+                ' Perform the first call to set the group
+                If response.IsSuccessStatusCode Then
+                    _status.AppendStatusLine($"Call to SSC Tracker successful - Group name set to {trackerGroup}", False)
+                Else
+                    _status.AppendStatusLine($"Failed to communicate with Tracker. HTTP Status: {response.StatusCode}", True)
+                    Exit Sub ' Stop if the first call fails
+                End If
+                ' Wait a few seconds before the second call
+                _status.AppendStatusLine("Waiting 3 seconds before second call to set task and weather.", False)
+                Thread.Sleep(3000)
             End If
 
-            If trackerGroup = String.Empty Then
-                ' No group set, we don't need the second call
-                Exit Sub
-            End If
-
-            ' Wait for 5 seconds before the second call
-            Threading.Thread.Sleep(5000)
-
-            ' Perform the second call
+            ' Perform the call to set task and weather
             response = SendPostRequest(apiUrl, jsonPayload)
 
             If response.IsSuccessStatusCode Then
-                sb.AppendLine("Second call to SSC Tracker was successful.")
+                _status.AppendStatusLine($"Call to SSC Tracker successful - Task and weather set.", True)
             Else
-                sb.AppendLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}")
+                _status.AppendStatusLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}", True)
             End If
 
         Catch ex As Exception
-            sb.AppendLine($"An error occurred while communicating with Tracker: {ex.Message}")
+            _status.AppendStatusLine($"An error occurred while communicating with Tracker: {ex.Message}", True)
         End Try
     End Sub
 

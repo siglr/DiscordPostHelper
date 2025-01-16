@@ -117,6 +117,12 @@
     </Compile>
     <Compile Include="DatabaseUpdate.vb" />
     <Compile Include="DPHXLocalWS.vb" />
+    <Compile Include="frmStatus.Designer.vb">
+      <DependentUpon>frmStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmStatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NewsEntry.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
@@ -164,6 +170,9 @@
     <EmbeddedResource Include="CleaningTool.resx">
       <DependentUpon>CleaningTool.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStatus.resx">
+      <DependentUpon>frmStatus.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>

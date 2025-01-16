@@ -318,9 +318,9 @@ Public Class AllData
         End Get
     End Property
 
-    Public ReadOnly Property IsFutureEvent As Boolean
+    Public ReadOnly Property IsFutureOrActiveEvent As Boolean
         Get
-            Return EventEnabled AndAlso MeetLocalDateTime > Now()
+            Return EventEnabled AndAlso MeetLocalDateTime > Now().AddHours(-4)
         End Get
     End Property
 
