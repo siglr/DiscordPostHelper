@@ -141,6 +141,9 @@ Public Class AllSettings
         End Set
     End Property
 
+    <XmlElement("NB21StartAndFeed")>
+    Public Property NB21StartAndFeed As Boolean
+
     Private _NB21EXEFolder As String
     <XmlElement("NB21EXEFolder")>
     Public Property NB21EXEFolder As String
@@ -168,8 +171,35 @@ Public Class AllSettings
         End Set
     End Property
 
-    <XmlElement("NB21StartAndFeed")>
-    Public Property NB21StartAndFeed As Boolean
+    <XmlElement("TrackerStartAndFeed")>
+    Public Property TrackerStartAndFeed As Boolean
+
+    Private _TrackerEXEFolder As String
+    <XmlElement("TrackerEXEFolder")>
+    Public Property TrackerEXEFolder As String
+        Get
+            Return _TrackerEXEFolder
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _TrackerEXEFolder = value
+            End If
+        End Set
+    End Property
+
+    Private _TrackerLocalWSPort As String
+    <XmlElement("TrackerLocalWSPort")>
+    Public Property TrackerLocalWSPort As String
+        Get
+            Return _TrackerLocalWSPort
+        End Get
+        Set(value As String)
+            Dim port As Integer
+            If Integer.TryParse(value, port) AndAlso port >= 0 AndAlso port <= 65535 AndAlso port <> _LocalWebServerPort Then
+                _TrackerLocalWSPort = value
+            End If
+        End Set
+    End Property
 
     <XmlElement("AutoOverwriteFiles")>
     Public Property AutoOverwriteFiles As AutoOverwriteOptions
@@ -300,7 +330,16 @@ Public Class AllSettings
             _NB21IGCFolder = settingsInFile.NB21IGCFolder
             _NB21EXEFolder = settingsInFile.NB21EXEFolder
             _NB21LocalWSPort = settingsInFile.NB21LocalWSPort
+            If _NB21LocalWSPort = 0 Then
+                _NB21LocalWSPort = 54178
+            End If
             NB21StartAndFeed = settingsInFile.NB21StartAndFeed
+            _TrackerEXEFolder = settingsInFile.TrackerEXEFolder
+            _TrackerLocalWSPort = settingsInFile.TrackerLocalWSPort
+            If _TrackerLocalWSPort = 0 Then
+                _TrackerLocalWSPort = 55055
+            End If
+            TrackerStartAndFeed = settingsInFile.TrackerStartAndFeed
             _LocalWebServerPort = settingsInFile.LocalWebServerPort
             If _LocalWebServerPort = 0 Then
                 _LocalWebServerPort = 54513
@@ -406,6 +445,9 @@ Public Class AllSettings
         _NB21EXEFolder = Nothing
     End Sub
 
+    Public Sub ClearTrackerEXEFolder()
+        _TrackerEXEFolder = Nothing
+    End Sub
 End Class
 
 Public Class TBColumnSetting

@@ -875,11 +875,24 @@ Public Class DPHXUnpackAndLoad
                 Dim loggerExePath As String = Path.Combine(Settings.SessionSettings.NB21EXEFolder, "NB21_logger.exe")
                 If File.Exists(loggerExePath) Then
                     Try
-                        Process.Start(loggerExePath)
-                        NB21LoggerRunning = True
-                        sb.AppendLine("NB21 Logger successfully started.")
-                        'Wait just a bit
-                        Thread.Sleep(500)
+                        Dim loggerProcess As Process = Process.Start(loggerExePath)
+
+                        ' Wait for the process to be ready
+                        If loggerProcess.WaitForInputIdle(5000) Then
+                            ' Optionally check for network readiness (if applicable)
+                            For i As Integer = 1 To 10
+                                If IsPortOpen("localhost", Settings.SessionSettings.NB21LocalWSPort, 500) Then
+                                    NB21LoggerRunning = True
+                                    sb.AppendLine("NB21 Logger successfully started.")
+                                    Exit For
+                                End If
+                                Thread.Sleep(500) ' Check every 500ms
+                            Next
+                        End If
+
+                        If Not NB21LoggerRunning Then
+                            sb.AppendLine("NB21 Logger did not become ready within the timeout period.")
+                        End If
                     Catch ex As Exception
                         sb.AppendLine($"An error occurred trying to launch NB21 Logger: {ex.Message}")
                     End Try
@@ -897,6 +910,63 @@ Public Class DPHXUnpackAndLoad
             sb.AppendLine()
         End If
 
+        ' Tracker auto-start and data feeding
+        If Settings.SessionSettings.TrackerStartAndFeed Then
+            Dim TrackerRunning As Boolean
+            Dim processList As Process() = Process.GetProcessesByName("SSC-Tracker")
+
+            TrackerRunning = processList.Length > 0
+
+            If Not TrackerRunning Then
+                ' Tracker not already running - attempt to start it
+                Dim trackerExePath As String = Path.Combine(Settings.SessionSettings.TrackerEXEFolder, "SSC-Tracker.exe")
+                If File.Exists(trackerExePath) Then
+                    Try
+                        Dim trackerProcess As Process = Process.Start(trackerExePath)
+
+                        ' Wait for the process to be ready
+                        If trackerProcess.WaitForInputIdle(5000) Then
+                            ' Optionally check for network readiness (if applicable)
+                            For i As Integer = 1 To 10
+                                If IsPortOpen("localhost", Settings.SessionSettings.TrackerLocalWSPort, 500) Then
+                                    TrackerRunning = True
+                                    sb.AppendLine("Tracker successfully started.")
+                                    Exit For
+                                End If
+                                Thread.Sleep(500) ' Check every 500ms
+                            Next
+                        End If
+
+                        If Not TrackerRunning Then
+                            sb.AppendLine("Tracker did not become ready within the timeout period.")
+                        End If
+
+                    Catch ex As Exception
+                        sb.AppendLine($"An error occurred trying to launch the Tracker: {ex.Message}")
+                    End Try
+                Else
+                    sb.AppendLine($"The Tracker's executable file was not found in {Settings.SessionSettings.TrackerEXEFolder}")
+                End If
+            Else
+                sb.AppendLine("Tracker is already running.")
+            End If
+
+            If TrackerRunning Then
+                'Feed the data to the tracker
+                Dim groupToUse As String = String.Empty
+                If _allDPHData.IsFutureEvent Then
+                    groupToUse = _allDPHData.TrackerGroup
+                End If
+                SendDataToTracker(sb,
+                                  groupToUse,
+                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                                  _allDPHData.URLGroupEventPost
+                                 )
+            End If
+            sb.AppendLine()
+        End If
+
         Using New Centered_MessageBox(Me)
             MessageBox.Show(sb.ToString, "Unpacking results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
@@ -905,11 +975,28 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Private Function IsPortOpen(host As String, port As Integer, timeout As Integer) As Boolean
+        Try
+            Using client As New Net.Sockets.TcpClient()
+                Dim result = client.BeginConnect(host, port, Nothing, Nothing)
+                Dim success = result.AsyncWaitHandle.WaitOne(timeout)
+                If success Then
+                    client.EndConnect(result)
+                    Return True
+                End If
+            End Using
+        Catch ex As Exception
+            ' Ignore exceptions (e.g., port not open)
+        End Try
+        Return False
+    End Function
+
     Private ReadOnly Property IsUnpackRed As Boolean
         Get
             Return toolStripUnpack.ForeColor = Color.Red
         End Get
     End Property
+
     Private Sub SendPLNFileToNB21Logger(sb As StringBuilder, plnfilePath As String)
 
         ' Define the API endpoint and the path to the PLN file
@@ -934,6 +1021,75 @@ Public Class DPHXUnpackAndLoad
             sb.AppendLine($"An error occurred while sending the PLN file: {ex.Message}")
         End Try
 
+    End Sub
+
+    ' Function to send a POST request
+    Private Function SendPostRequest(apiUrl As String, jsonPayload As String) As HttpResponseMessage
+        Using client As New HttpClient()
+            Dim content As New StringContent(jsonPayload, Encoding.UTF8, "application/json")
+            Return client.PostAsync(apiUrl, content).Result
+        End Using
+    End Function
+
+    Private Sub SendDataToTracker(sb As StringBuilder, trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
+        ' Define the API endpoint
+        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
+
+        Try
+            ' Read the contents of the PLN and WPR files
+            Dim plnContent As String = If(File.Exists(plnfilePath), File.ReadAllText(plnfilePath), "")
+            Dim wprContent As String = If(File.Exists(wprfilePath), File.ReadAllText(wprfilePath), "")
+
+            ' Extract filenames without extensions
+            Dim extractFilename As Func(Of String, String) =
+            Function(filePath)
+                If String.IsNullOrEmpty(filePath) Then Return ""
+                Dim fullFilename = Path.GetFileName(filePath) ' Get the filename with extension
+                Return Path.GetFileNameWithoutExtension(fullFilename) ' Remove the extension
+            End Function
+
+            Dim plnFilename As String = extractFilename(plnfilePath)
+            Dim wprFilename As String = extractFilename(wprfilePath)
+
+            ' Build the payload as JSON
+            Dim payload As New With {
+            .CMD = "SET",
+            .GN = trackerGroup,
+            .TASK = plnFilename,
+            .TASKDATA = plnContent,
+            .WEATHER = wprFilename,
+            .WEATHERDATA = wprContent,
+            .TASKINFO = infoURL
+            }
+
+            ' Convert payload to JSON
+            Dim jsonPayload As String = JsonConvert.SerializeObject(payload)
+
+            ' Perform the first call
+            Dim response = SendPostRequest(apiUrl, jsonPayload)
+
+            If response.IsSuccessStatusCode Then
+                sb.AppendLine("First call to SSC Tracker was successful.")
+            Else
+                sb.AppendLine($"Failed to communicate with Tracker. HTTP Status: {response.StatusCode}")
+                Exit Sub ' Stop if the first call fails
+            End If
+
+            ' Wait for 5 seconds before the second call
+            Threading.Thread.Sleep(5000)
+
+            ' Perform the second call
+            response = SendPostRequest(apiUrl, jsonPayload)
+
+            If response.IsSuccessStatusCode Then
+                sb.AppendLine("Second call to SSC Tracker was successful.")
+            Else
+                sb.AppendLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}")
+            End If
+
+        Catch ex As Exception
+            sb.AppendLine($"An error occurred while communicating with Tracker: {ex.Message}")
+        End Try
     End Sub
 
     Private Function CopyFile(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String

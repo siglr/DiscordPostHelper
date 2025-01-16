@@ -81,20 +81,36 @@ Public Class Settings
             End If
         End If
 
+        'If TrackerStartAndFeed enabled, a valid path must be provided for the EXE
+        If chkEnableTrackerStartAndFeed.Checked Then
+            If Not File.Exists(Path.Combine(btnTrackerEXEFolder.Text, "SSC-Tracker.exe")) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for the Tracker executable")
+            End If
+        End If
+
         'Check for valid NB21 port value
         Dim NB21Port As Integer
         If Not (Integer.TryParse(txtNB21LocalWSPort.Text, NB21Port) AndAlso NB21Port >= 0 AndAlso NB21Port <= 65535) Then
             validSettings = False
             sbMsg.AppendLine("Invalid port value for the NB21 Logger's local web server")
         End If
+
+        'Check for valid Tracker port value
+        Dim TrackerPort As Integer
+        If Not (Integer.TryParse(txtTrackerLocalWSPort.Text, TrackerPort) AndAlso TrackerPort >= 0 AndAlso TrackerPort <= 65535) Then
+            validSettings = False
+            sbMsg.AppendLine("Invalid port value for the Tracker's local web server")
+        End If
+
         Dim DPHXPort As Integer
         If Not (Integer.TryParse(txtDPHXLocalPort.Text, DPHXPort) AndAlso DPHXPort >= 0 AndAlso DPHXPort <= 65535) Then
             validSettings = False
             sbMsg.AppendLine("Invalid port value for the DPHX local web server")
         End If
-        If DPHXPort = NB21Port Then
+        If (DPHXPort = NB21Port) OrElse (DPHXPort = TrackerPort) OrElse (NB21Port = TrackerPort) Then
             validSettings = False
-            sbMsg.AppendLine("Both NB21 and DPHX cannot have the same port value")
+            sbMsg.AppendLine("Ports for DPHX, NB21 and Tracker must be different")
         End If
 
         If Not validSettings Then
@@ -119,6 +135,9 @@ Public Class Settings
             SessionSettings.NB21EXEFolder = btnNB21EXEFolder.Text
             SessionSettings.NB21LocalWSPort = txtNB21LocalWSPort.Text
             SessionSettings.NB21StartAndFeed = chkEnableNB21StartAndFeed.Checked
+            SessionSettings.TrackerEXEFolder = btnTrackerEXEFolder.Text
+            SessionSettings.TrackerLocalWSPort = txtTrackerLocalWSPort.Text
+            SessionSettings.TrackerStartAndFeed = chkEnableTrackerStartAndFeed.Checked
             SessionSettings.LocalWebServerPort = txtDPHXLocalPort.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
             SessionSettings.Exclude2020FlightPlanFromCleanup = chkExclude2020FlightPlanFromCleanup.Checked
@@ -282,7 +301,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnNB21EXEFolder_Click(sender As Object, e As EventArgs) Handles btnNB21EXEFolder.Click
-        FolderBrowserDialog1.Description = "Please Select the folder where your NB21 Logger executable (EXE) file Is"
+        FolderBrowserDialog1.Description = "Please Select the folder where your NB21 Logger executable (EXE) file is"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnNB21EXEFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnNB21EXEFolder.Text
@@ -294,6 +313,23 @@ Public Class Settings
             ' User selected a folder and clicked OK
             btnNB21EXEFolder.Text = FolderBrowserDialog1.SelectedPath
             ToolTip1.SetToolTip(btnNB21EXEFolder, FolderBrowserDialog1.SelectedPath)
+        End If
+
+    End Sub
+
+    Private Sub btnTrackerEXEFolder_Click(sender As Object, e As EventArgs) Handles btnTrackerEXEFolder.Click
+        FolderBrowserDialog1.Description = "Please Select the folder where your Tracker executable (EXE) file is"
+        FolderBrowserDialog1.ShowNewFolderButton = True
+        If Directory.Exists(btnTrackerEXEFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnTrackerEXEFolder.Text
+        Else
+            FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        End If
+
+        If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
+            ' User selected a folder and clicked OK
+            btnTrackerEXEFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnTrackerEXEFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
     End Sub
@@ -476,7 +512,22 @@ Public Class Settings
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Invalid folder path In the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
+    Private Sub btnTrackerEXEFolderPaste_Click(sender As Object, e As EventArgs) Handles btnTrackerEXEFolderPaste.Click
+        Dim folderPath As String = Clipboard.GetText()
+        If Directory.Exists(folderPath) Then
+            ' folderPath is a valid folder
+            btnTrackerEXEFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnTrackerEXEFolder, folderPath)
+        Else
+            ' folderPath is not a valid folder
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
@@ -529,6 +580,10 @@ Public Class Settings
             btnNB21EXEFolder.Text = SessionSettings.NB21EXEFolder
             ToolTip1.SetToolTip(btnNB21EXEFolder, SessionSettings.NB21EXEFolder)
         End If
+        If Directory.Exists(SessionSettings.TrackerEXEFolder) Then
+            btnTrackerEXEFolder.Text = SessionSettings.TrackerEXEFolder
+            ToolTip1.SetToolTip(btnTrackerEXEFolder, SessionSettings.TrackerEXEFolder)
+        End If
         If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
             btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
             ToolTip1.SetToolTip(btnXCSoarTasksFolder, SessionSettings.XCSoarTasksFolder)
@@ -543,6 +598,12 @@ Public Class Settings
             txtNB21LocalWSPort.Text = SessionSettings.NB21LocalWSPort
         End If
         chkEnableNB21StartAndFeed.Checked = SessionSettings.NB21StartAndFeed
+
+        Dim Trackerport As Integer
+        If Integer.TryParse(SessionSettings.TrackerLocalWSPort, Trackerport) AndAlso Trackerport >= 0 AndAlso Trackerport <= 65535 Then
+            txtTrackerLocalWSPort.Text = SessionSettings.TrackerLocalWSPort
+        End If
+        chkEnableTrackerStartAndFeed.Checked = SessionSettings.TrackerStartAndFeed
 
         Dim DPHXport As Integer
         If Integer.TryParse(SessionSettings.LocalWebServerPort, DPHXport) AndAlso DPHXport >= 0 AndAlso DPHXport <= 65535 Then
@@ -568,7 +629,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp, btnTrackerEXEFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)
@@ -605,6 +666,15 @@ Public Class Settings
 
     Private Sub btnNB21ResetPort_Click(sender As Object, e As EventArgs) Handles btnNB21ResetPort.Click
         txtNB21LocalWSPort.Text = "54178"
+    End Sub
+
+    Private Sub btnTrackerEXEFolderClear_Click(sender As Object, e As EventArgs) Handles btnTrackerEXEFolderClear.Click
+        Settings.SessionSettings.ClearTrackerEXEFolder()
+        btnTrackerEXEFolder.Text = "Select the folder containing the Tracker's EXE file (optional)"
+    End Sub
+
+    Private Sub btnTrackerResetPort_Click(sender As Object, e As EventArgs) Handles btnTrackerResetPort.Click
+        txtTrackerLocalWSPort.Text = "55055"
     End Sub
 
     Private Sub btnResetDPHXLocalPort_Click(sender As Object, e As EventArgs) Handles btnResetDPHXLocalPort.Click

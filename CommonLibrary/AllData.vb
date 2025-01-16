@@ -318,4 +318,10 @@ Public Class AllData
         End Get
     End Property
 
+    Public ReadOnly Property IsFutureEvent As Boolean
+        Get
+            Return EventEnabled AndAlso MeetLocalDateTime > Now()
+        End Get
+    End Property
+
 End Class

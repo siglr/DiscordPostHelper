@@ -27,6 +27,7 @@ Partial Class Settings
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.pnlMSFS2020FlightPlanFilesFolder = New System.Windows.Forms.Panel()
+        Me.separator1 = New System.Windows.Forms.Panel()
         Me.chkExclude2020FlightPlanFromCleanup = New System.Windows.Forms.CheckBox()
         Me.btn2020FlightPlansFolderPaste = New System.Windows.Forms.Button()
         Me.btnMSFS2020FlightPlanFilesFolder = New System.Windows.Forms.Button()
@@ -75,6 +76,12 @@ Partial Class Settings
         Me.btnNB21ResetPort = New System.Windows.Forms.Button()
         Me.btnResetDPHXLocalPort = New System.Windows.Forms.Button()
         Me.txtDPHXLocalPort = New System.Windows.Forms.TextBox()
+        Me.btnTrackerResetPort = New System.Windows.Forms.Button()
+        Me.chkEnableTrackerStartAndFeed = New System.Windows.Forms.CheckBox()
+        Me.txtTrackerLocalWSPort = New System.Windows.Forms.TextBox()
+        Me.btnTrackerEXEFolderClear = New System.Windows.Forms.Button()
+        Me.btnTrackerEXEFolderPaste = New System.Windows.Forms.Button()
+        Me.btnTrackerEXEFolder = New System.Windows.Forms.Button()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -110,6 +117,17 @@ Partial Class Settings
         Me.Label14 = New System.Windows.Forms.Label()
         Me.pnlLocalWSPort = New System.Windows.Forms.Panel()
         Me.Label17 = New System.Windows.Forms.Label()
+        Me.pnlTrackerExe = New System.Windows.Forms.Panel()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.separator2 = New System.Windows.Forms.Panel()
+        Me.separator3 = New System.Windows.Forms.Panel()
+        Me.separator4 = New System.Windows.Forms.Panel()
+        Me.separator5 = New System.Windows.Forms.Panel()
+        Me.separator6 = New System.Windows.Forms.Panel()
+        Me.separator7 = New System.Windows.Forms.Panel()
+        Me.separator8 = New System.Windows.Forms.Panel()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -130,6 +148,7 @@ Partial Class Settings
         Me.pnl2020Options.SuspendLayout()
         Me.pnlNB21LoggerExe.SuspendLayout()
         Me.pnlLocalWSPort.SuspendLayout()
+        Me.pnlTrackerExe.SuspendLayout()
         Me.SuspendLayout()
         '
         'okCancelPanel
@@ -171,6 +190,7 @@ Partial Class Settings
         '
         'pnlMSFS2020FlightPlanFilesFolder
         '
+        Me.pnlMSFS2020FlightPlanFilesFolder.Controls.Add(Me.separator1)
         Me.pnlMSFS2020FlightPlanFilesFolder.Controls.Add(Me.chkExclude2020FlightPlanFromCleanup)
         Me.pnlMSFS2020FlightPlanFilesFolder.Controls.Add(Me.btn2020FlightPlansFolderPaste)
         Me.pnlMSFS2020FlightPlanFilesFolder.Controls.Add(Me.btnMSFS2020FlightPlanFilesFolder)
@@ -182,6 +202,14 @@ Partial Class Settings
         Me.pnlMSFS2020FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
         Me.pnlMSFS2020FlightPlanFilesFolder.TabIndex = 1
+        '
+        'separator1
+        '
+        Me.separator1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator1.Location = New System.Drawing.Point(0, 0)
+        Me.separator1.Name = "separator1"
+        Me.separator1.Size = New System.Drawing.Size(787, 1)
+        Me.separator1.TabIndex = 10
         '
         'chkExclude2020FlightPlanFromCleanup
         '
@@ -265,7 +293,7 @@ Partial Class Settings
         'optOverwriteAlwaysOverwrite
         '
         Me.optOverwriteAlwaysOverwrite.AutoSize = True
-        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 10)
+        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 6)
         Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
         Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
         Me.optOverwriteAlwaysOverwrite.TabIndex = 1
@@ -276,7 +304,7 @@ Partial Class Settings
         'optOverwriteAlwaysSkip
         '
         Me.optOverwriteAlwaysSkip.AutoSize = True
-        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 10)
+        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 6)
         Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
         Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
         Me.optOverwriteAlwaysSkip.TabIndex = 2
@@ -288,7 +316,7 @@ Partial Class Settings
         '
         Me.optOverwriteAlwaysAsk.AutoSize = True
         Me.optOverwriteAlwaysAsk.Checked = True
-        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 10)
+        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 6)
         Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
         Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
         Me.optOverwriteAlwaysAsk.TabIndex = 3
@@ -351,7 +379,7 @@ Partial Class Settings
         Me.chkEnableAutoUnpack.AutoSize = True
         Me.chkEnableAutoUnpack.Checked = True
         Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(194, 11)
+        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(194, 7)
         Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
         Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
         Me.chkEnableAutoUnpack.TabIndex = 1
@@ -669,7 +697,7 @@ Partial Class Settings
         Me.btnNB21EXEFolderClear.Size = New System.Drawing.Size(38, 37)
         Me.btnNB21EXEFolderClear.TabIndex = 7
         Me.btnNB21EXEFolderClear.Text = "🗑️"
-        Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderClear, "Click this button to delete the optional NB21 Log Flights folder")
+        Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderClear, "Click this button to delete the optional NB21 EXE folder")
         Me.btnNB21EXEFolderClear.UseVisualStyleBackColor = True
         '
         'btnNB21EXEFolderPaste
@@ -719,7 +747,7 @@ Partial Class Settings
         Me.chkEnableNB21StartAndFeed.TabIndex = 1
         Me.chkEnableNB21StartAndFeed.Text = "Enable"
         Me.ToolTip1.SetToolTip(Me.chkEnableNB21StartAndFeed, "When enabled (checked), the NB21 logger will be started and fed with the PLN file" &
-        " when clicking when Unpacking.")
+        " when Unpacking.")
         Me.chkEnableNB21StartAndFeed.UseVisualStyleBackColor = True
         '
         'btnNB21ResetPort
@@ -753,6 +781,77 @@ Partial Class Settings
         Me.txtDPHXLocalPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.txtDPHXLocalPort, "This is the port used by DPHX to receive files from WeSimGlide.org.")
         '
+        'btnTrackerResetPort
+        '
+        Me.btnTrackerResetPort.Location = New System.Drawing.Point(533, 3)
+        Me.btnTrackerResetPort.Name = "btnTrackerResetPort"
+        Me.btnTrackerResetPort.Size = New System.Drawing.Size(75, 31)
+        Me.btnTrackerResetPort.TabIndex = 4
+        Me.btnTrackerResetPort.Text = "Reset"
+        Me.ToolTip1.SetToolTip(Me.btnTrackerResetPort, "Click this button to reset the port to default.")
+        Me.btnTrackerResetPort.UseVisualStyleBackColor = True
+        '
+        'chkEnableTrackerStartAndFeed
+        '
+        Me.chkEnableTrackerStartAndFeed.AutoSize = True
+        Me.chkEnableTrackerStartAndFeed.Location = New System.Drawing.Point(195, 7)
+        Me.chkEnableTrackerStartAndFeed.Name = "chkEnableTrackerStartAndFeed"
+        Me.chkEnableTrackerStartAndFeed.Size = New System.Drawing.Size(70, 24)
+        Me.chkEnableTrackerStartAndFeed.TabIndex = 1
+        Me.chkEnableTrackerStartAndFeed.Text = "Enable"
+        Me.ToolTip1.SetToolTip(Me.chkEnableTrackerStartAndFeed, "When enabled (checked), the Tracker will be started and fed with task/event when " &
+        "Unpacking.")
+        Me.chkEnableTrackerStartAndFeed.UseVisualStyleBackColor = True
+        '
+        'txtTrackerLocalWSPort
+        '
+        Me.txtTrackerLocalWSPort.Location = New System.Drawing.Point(447, 5)
+        Me.txtTrackerLocalWSPort.MaxLength = 5
+        Me.txtTrackerLocalWSPort.Name = "txtTrackerLocalWSPort"
+        Me.txtTrackerLocalWSPort.Size = New System.Drawing.Size(80, 27)
+        Me.txtTrackerLocalWSPort.TabIndex = 3
+        Me.txtTrackerLocalWSPort.Text = "55055"
+        Me.txtTrackerLocalWSPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtTrackerLocalWSPort, "This is the Tracker's local web server port used to communicate with the app. The" &
+        " default value is 55055.")
+        '
+        'btnTrackerEXEFolderClear
+        '
+        Me.btnTrackerEXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTrackerEXEFolderClear.Location = New System.Drawing.Point(647, 33)
+        Me.btnTrackerEXEFolderClear.Name = "btnTrackerEXEFolderClear"
+        Me.btnTrackerEXEFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnTrackerEXEFolderClear.TabIndex = 7
+        Me.btnTrackerEXEFolderClear.Text = "🗑️"
+        Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderClear, "Click this button to delete the optional Tracker EXE folder")
+        Me.btnTrackerEXEFolderClear.UseVisualStyleBackColor = True
+        '
+        'btnTrackerEXEFolderPaste
+        '
+        Me.btnTrackerEXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTrackerEXEFolderPaste.Location = New System.Drawing.Point(691, 33)
+        Me.btnTrackerEXEFolderPaste.Name = "btnTrackerEXEFolderPaste"
+        Me.btnTrackerEXEFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnTrackerEXEFolderPaste.TabIndex = 8
+        Me.btnTrackerEXEFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btnTrackerEXEFolderPaste.UseVisualStyleBackColor = True
+        '
+        'btnTrackerEXEFolder
+        '
+        Me.btnTrackerEXEFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTrackerEXEFolder.AutoEllipsis = True
+        Me.btnTrackerEXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTrackerEXEFolder.Location = New System.Drawing.Point(194, 33)
+        Me.btnTrackerEXEFolder.Name = "btnTrackerEXEFolder"
+        Me.btnTrackerEXEFolder.Size = New System.Drawing.Size(447, 37)
+        Me.btnTrackerEXEFolder.TabIndex = 6
+        Me.btnTrackerEXEFolder.Text = "Select the folder containing the tracker's EXE file (optional)"
+        Me.btnTrackerEXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolder, "Select the folder containing the tracker's EXE file")
+        Me.btnTrackerEXEFolder.UseVisualStyleBackColor = True
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -778,6 +877,7 @@ Partial Class Settings
         '
         'pnlXCSoarTasksFolder
         '
+        Me.pnlXCSoarTasksFolder.Controls.Add(Me.separator3)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.btnXCSoarTasksFolderClear)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.chkExcludeXCSoarTaskFileFromCleanup)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.btnXCSoarTasksFolderPaste)
@@ -801,6 +901,7 @@ Partial Class Settings
         '
         'pnlUnpackingFolder
         '
+        Me.pnlUnpackingFolder.Controls.Add(Me.separator4)
         Me.pnlUnpackingFolder.Controls.Add(Me.btnTempFolderPaste)
         Me.pnlUnpackingFolder.Controls.Add(Me.btnUnpackingFolder)
         Me.pnlUnpackingFolder.Controls.Add(Me.Label3)
@@ -843,6 +944,7 @@ Partial Class Settings
         '
         'pnlNB21LoggerFlightsFolder
         '
+        Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.separator5)
         Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolderClear)
         Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolderPaste)
         Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolder)
@@ -865,21 +967,22 @@ Partial Class Settings
         '
         'pnlAutoOverwrite
         '
+        Me.pnlAutoOverwrite.Controls.Add(Me.separator7)
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysAsk)
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysSkip)
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
         Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
         Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 524)
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 598)
         Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
         Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 45)
+        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 39)
         Me.pnlAutoOverwrite.TabIndex = 11
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(5, 12)
+        Me.Label4.Location = New System.Drawing.Point(5, 8)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(147, 20)
         Me.Label4.TabIndex = 0
@@ -890,16 +993,16 @@ Partial Class Settings
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 569)
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 637)
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 45)
+        Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 39)
         Me.pnlAutoUnpack.TabIndex = 12
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(5, 12)
+        Me.Label6.Location = New System.Drawing.Point(5, 8)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(97, 20)
         Me.Label6.TabIndex = 0
@@ -929,10 +1032,11 @@ Partial Class Settings
         '
         'pnlNoticeAndButtons
         '
+        Me.pnlNoticeAndButtons.Controls.Add(Me.separator8)
         Me.pnlNoticeAndButtons.Controls.Add(Me.Label7)
         Me.pnlNoticeAndButtons.Controls.Add(Me.okCancelPanel)
         Me.pnlNoticeAndButtons.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 659)
+        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 721)
         Me.pnlNoticeAndButtons.Name = "pnlNoticeAndButtons"
         Me.pnlNoticeAndButtons.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 68)
@@ -975,6 +1079,7 @@ Partial Class Settings
         '
         'pnlMSFS2024FlightPlanFilesFolder
         '
+        Me.pnlMSFS2024FlightPlanFilesFolder.Controls.Add(Me.separator2)
         Me.pnlMSFS2024FlightPlanFilesFolder.Controls.Add(Me.chkExclude2024FlightPlanFromCleanup)
         Me.pnlMSFS2024FlightPlanFilesFolder.Controls.Add(Me.btn2024FlightPlansFolderPaste)
         Me.pnlMSFS2024FlightPlanFilesFolder.Controls.Add(Me.btnMSFS2024FlightPlanFilesFolder)
@@ -1109,7 +1214,7 @@ Partial Class Settings
         Me.pnlLocalWSPort.Controls.Add(Me.txtDPHXLocalPort)
         Me.pnlLocalWSPort.Controls.Add(Me.Label17)
         Me.pnlLocalWSPort.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 614)
+        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 676)
         Me.pnlLocalWSPort.Name = "pnlLocalWSPort"
         Me.pnlLocalWSPort.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlLocalWSPort.Size = New System.Drawing.Size(769, 45)
@@ -1124,18 +1229,121 @@ Partial Class Settings
         Me.Label17.TabIndex = 0
         Me.Label17.Text = "DPHX Listening Port:"
         '
+        'pnlTrackerExe
+        '
+        Me.pnlTrackerExe.Controls.Add(Me.separator6)
+        Me.pnlTrackerExe.Controls.Add(Me.btnTrackerResetPort)
+        Me.pnlTrackerExe.Controls.Add(Me.Label18)
+        Me.pnlTrackerExe.Controls.Add(Me.chkEnableTrackerStartAndFeed)
+        Me.pnlTrackerExe.Controls.Add(Me.txtTrackerLocalWSPort)
+        Me.pnlTrackerExe.Controls.Add(Me.Label19)
+        Me.pnlTrackerExe.Controls.Add(Me.btnTrackerEXEFolderClear)
+        Me.pnlTrackerExe.Controls.Add(Me.btnTrackerEXEFolderPaste)
+        Me.pnlTrackerExe.Controls.Add(Me.btnTrackerEXEFolder)
+        Me.pnlTrackerExe.Controls.Add(Me.Label20)
+        Me.pnlTrackerExe.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlTrackerExe.Location = New System.Drawing.Point(0, 524)
+        Me.pnlTrackerExe.Name = "pnlTrackerExe"
+        Me.pnlTrackerExe.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlTrackerExe.Size = New System.Drawing.Size(769, 74)
+        Me.pnlTrackerExe.TabIndex = 15
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(280, 8)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(168, 20)
+        Me.Label18.TabIndex = 2
+        Me.Label18.Text = "Tracker Web Server Port:"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(5, 8)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(127, 20)
+        Me.Label19.TabIndex = 0
+        Me.Label19.Text = "Tracker Start feed:"
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(5, 41)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(131, 20)
+        Me.Label20.TabIndex = 5
+        Me.Label20.Text = "Tracker EXE Folder:"
+        '
+        'separator2
+        '
+        Me.separator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator2.Location = New System.Drawing.Point(0, 0)
+        Me.separator2.Name = "separator2"
+        Me.separator2.Size = New System.Drawing.Size(787, 1)
+        Me.separator2.TabIndex = 11
+        '
+        'separator3
+        '
+        Me.separator3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator3.Location = New System.Drawing.Point(0, 0)
+        Me.separator3.Name = "separator3"
+        Me.separator3.Size = New System.Drawing.Size(787, 1)
+        Me.separator3.TabIndex = 11
+        '
+        'separator4
+        '
+        Me.separator4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator4.Location = New System.Drawing.Point(0, 0)
+        Me.separator4.Name = "separator4"
+        Me.separator4.Size = New System.Drawing.Size(787, 1)
+        Me.separator4.TabIndex = 11
+        '
+        'separator5
+        '
+        Me.separator5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator5.Location = New System.Drawing.Point(0, 0)
+        Me.separator5.Name = "separator5"
+        Me.separator5.Size = New System.Drawing.Size(787, 1)
+        Me.separator5.TabIndex = 11
+        '
+        'separator6
+        '
+        Me.separator6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator6.Location = New System.Drawing.Point(0, 0)
+        Me.separator6.Name = "separator6"
+        Me.separator6.Size = New System.Drawing.Size(787, 1)
+        Me.separator6.TabIndex = 11
+        '
+        'separator7
+        '
+        Me.separator7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator7.Location = New System.Drawing.Point(0, 0)
+        Me.separator7.Name = "separator7"
+        Me.separator7.Size = New System.Drawing.Size(787, 1)
+        Me.separator7.TabIndex = 11
+        '
+        'separator8
+        '
+        Me.separator8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator8.Location = New System.Drawing.Point(0, 0)
+        Me.separator8.Name = "separator8"
+        Me.separator8.Size = New System.Drawing.Size(787, 1)
+        Me.separator8.TabIndex = 11
+        '
         'Settings
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(769, 724)
+        Me.ClientSize = New System.Drawing.Size(769, 799)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnlNoticeAndButtons)
         Me.Controls.Add(Me.pnlLocalWSPort)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
+        Me.Controls.Add(Me.pnlTrackerExe)
         Me.Controls.Add(Me.pnlNB21LoggerExe)
         Me.Controls.Add(Me.pnlNB21LoggerFlightsFolder)
         Me.Controls.Add(Me.pnlPackagesFolder)
@@ -1151,9 +1359,9 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 768)
+        Me.MaximumSize = New System.Drawing.Size(5000, 843)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(700, 768)
+        Me.MinimumSize = New System.Drawing.Size(700, 843)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
@@ -1198,6 +1406,8 @@ Partial Class Settings
         Me.pnlNB21LoggerExe.PerformLayout()
         Me.pnlLocalWSPort.ResumeLayout(False)
         Me.pnlLocalWSPort.PerformLayout()
+        Me.pnlTrackerExe.ResumeLayout(False)
+        Me.pnlTrackerExe.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1288,4 +1498,22 @@ Partial Class Settings
     Friend WithEvents Label17 As Label
     Friend WithEvents btnResetDPHXLocalPort As Button
     Friend WithEvents txtDPHXLocalPort As TextBox
+    Friend WithEvents pnlTrackerExe As Panel
+    Friend WithEvents btnTrackerResetPort As Button
+    Friend WithEvents Label18 As Label
+    Friend WithEvents chkEnableTrackerStartAndFeed As CheckBox
+    Friend WithEvents txtTrackerLocalWSPort As TextBox
+    Friend WithEvents Label19 As Label
+    Friend WithEvents btnTrackerEXEFolderClear As Button
+    Friend WithEvents btnTrackerEXEFolderPaste As Button
+    Friend WithEvents btnTrackerEXEFolder As Button
+    Friend WithEvents Label20 As Label
+    Friend WithEvents separator1 As Panel
+    Friend WithEvents separator2 As Panel
+    Friend WithEvents separator3 As Panel
+    Friend WithEvents separator4 As Panel
+    Friend WithEvents separator5 As Panel
+    Friend WithEvents separator6 As Panel
+    Friend WithEvents separator7 As Panel
+    Friend WithEvents separator8 As Panel
 End Class
