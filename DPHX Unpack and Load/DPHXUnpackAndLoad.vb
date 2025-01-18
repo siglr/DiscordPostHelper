@@ -1064,27 +1064,13 @@ Public Class DPHXUnpackAndLoad
             ' Convert payload to JSON
             Dim jsonPayload As String = JsonConvert.SerializeObject(payload)
 
-            Dim need2Calls As Boolean = (trackerGroup <> String.Empty)
             Dim response = SendPostRequest(apiUrl, jsonPayload)
 
-            If need2Calls Then
-                ' Perform the first call to set the group
-                If response.IsSuccessStatusCode Then
-                    _status.AppendStatusLine($"Call to SSC Tracker successful - Group name set to {trackerGroup}", False)
-                Else
-                    _status.AppendStatusLine($"Failed to communicate with Tracker. HTTP Status: {response.StatusCode}", True)
-                    Exit Sub ' Stop if the first call fails
-                End If
-                ' Wait a few seconds before the second call
-                _status.AppendStatusLine("Waiting 3 seconds before second call to set task and weather.", False)
-                Thread.Sleep(3000)
-            End If
-
-            ' Perform the call to set task and weather
+            ' Perform the call to tracker
             response = SendPostRequest(apiUrl, jsonPayload)
 
             If response.IsSuccessStatusCode Then
-                _status.AppendStatusLine($"Call to SSC Tracker successful - Task and weather set.", True)
+                _status.AppendStatusLine($"Call to SSC Tracker successful.", True)
             Else
                 _status.AppendStatusLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}", True)
             End If
