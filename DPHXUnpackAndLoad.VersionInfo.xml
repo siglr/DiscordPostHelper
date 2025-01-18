@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.18.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.18.1</ReleaseVersion>
+      <ReleaseTitle>Tracker integration</ReleaseTitle>
+      <ReleaseNotes>
+        Added support to start and set SSC-Tracker directly from the tool.
+        Improved unpacking log messages.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.11.1</ReleaseVersion>
       <ReleaseTitle>More WeSimGlide.org integration</ReleaseTitle>
