@@ -3398,7 +3398,7 @@ Partial Class Main
         Me.chkDPOMainPost.TabIndex = 0
         Me.chkDPOMainPost.Tag = "41"
         Me.chkDPOMainPost.Text = "Post on WSG and Discord's flights channel"
-        Me.ToolTip1.SetToolTip(Me.chkDPOMainPost, "Select to publish on WSG and on Discord's flights channel.")
+        Me.ToolTip1.SetToolTip(Me.chkDPOMainPost, "Select to publish on WeSimGlide.org and on Discord's flights channel.")
         Me.chkDPOMainPost.UseVisualStyleBackColor = True
         '
         'lblNbrCarsMainFP
