@@ -29,9 +29,6 @@ Public Class AllSettings
     <XmlElement("WaitSecondsForFiles")>
     Public Property WaitSecondsForFiles As Integer
 
-    <XmlElement("AutomaticPostingProgression")>
-    Public Property AutomaticPostingProgression As Boolean
-
     <XmlElement("DPO_DPOUseCustomSettings")>
     Public Property DPO_DPOUseCustomSettings As Boolean
 
@@ -134,7 +131,6 @@ Public Class AllSettings
             MainFormSize = settingsInFile.MainFormSize
             FlightPlanTabSplitterLocation = settingsInFile.FlightPlanTabSplitterLocation
             WaitSecondsForFiles = settingsInFile.WaitSecondsForFiles
-            AutomaticPostingProgression = settingsInFile.AutomaticPostingProgression
             DPO_DPOUseCustomSettings = settingsInFile.DPO_DPOUseCustomSettings
             DPO_chkDPOMainPost = settingsInFile.DPO_chkDPOMainPost
             DPO_chkDPOThreadCreation = settingsInFile.DPO_chkDPOThreadCreation

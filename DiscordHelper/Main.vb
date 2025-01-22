@@ -114,7 +114,6 @@ Public Class Main
         If SessionSettings.WaitSecondsForFiles >= 1 AndAlso SessionSettings.WaitSecondsForFiles <= 10 Then
             numWaitSecondsForFiles.Value = SessionSettings.WaitSecondsForFiles
         End If
-        chkDPOExpertMode.Checked = SessionSettings.AutomaticPostingProgression
 
         LoadDPOptions()
         LoadDGPOptions()
@@ -502,7 +501,6 @@ Public Class Main
             SessionSettings.WaitSecondsForFiles = numWaitSecondsForFiles.Value
             SessionSettings.LastFileLoaded = _CurrentSessionFile
             SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
-            SessionSettings.AutomaticPostingProgression = chkDPOExpertMode.Checked
             SessionSettings.Save()
             BriefingControl1.Closing()
         End If
@@ -2643,20 +2641,6 @@ Public Class Main
             End Select
         Loop
 
-        If chkDPOExpertMode.Checked Then
-            Using New Centered_MessageBox(Me)
-                dlgResult = MessageBox.Show(Me, $"Automatic progression is enabled!{Environment.NewLine}{Environment.NewLine}This is still an experimental feature, several post actions will happen in succession without the possibility to stop them.{Environment.NewLine}{Environment.NewLine}Do you want to keep it enabled?", "Automatic progression confirmation request", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-            End Using
-            Select Case dlgResult
-                Case DialogResult.Yes
-                    'Nothing to do
-                Case DialogResult.No
-                    chkDPOExpertMode.Checked = False
-                Case DialogResult.Cancel
-                    Return False
-            End Select
-        End If
-
         If Not fromGroupOnly Then
             BuildFPResults()
             If HighlightExpectedFields(True) Then
@@ -2706,8 +2690,7 @@ Public Class Main
                             msg,
                             "Paste the first message in the thread and post it.",
                             "Pasting first message in group event thread",
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
+                            New List(Of String) From {"^v"})
 
         If Not autoContinue Then Return False
 
@@ -2764,8 +2747,7 @@ Public Class Main
                                 msg,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
                                 "Creating altitude restrictions and weather details post in the thread.",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
+                                New List(Of String) From {"^v"})
             If Not autoContinue Then
                 Return False
             End If
@@ -2776,7 +2758,6 @@ Public Class Main
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the group event's thread.",
                                 "Creating weather chart post in the thread.",
                                 New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked,
                                 True,
                                 numWaitSecondsForFiles.Value / 2 * 1000,
                                 chartImage)
@@ -2797,8 +2778,7 @@ Public Class Main
                             msg,
                             $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
                             "Creating remaining details up to add-ons to post in the thread.",
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
+                            New List(Of String) From {"^v"})
             If Not autoContinue Then
                 Return False
             End If
@@ -2819,8 +2799,7 @@ Public Class Main
                             msg,
                             $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
                             "Creating all remaining details post in the thread.",
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
+                            New List(Of String) From {"^v"})
         End If
         If Not autoContinue Then
             Return False
@@ -2892,8 +2871,7 @@ Public Class Main
                             msg,
                             $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
                             "Creating all remaining details post in the thread.",
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
+                            New List(Of String) From {"^v"})
         End If
         If Not autoContinue Then
             Return False
@@ -3122,8 +3100,7 @@ Public Class Main
                             txtFPResults.Text,
                             $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
                             titleMsg,
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
+                            New List(Of String) From {"^v"})
 
         If Not autoContinue OrElse fromGroup Then
             Return autoContinue
@@ -3194,8 +3171,7 @@ Public Class Main
                                 msg,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread anchor as the very first message in the thread.",
                                 "Creating thread anchor post.",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
+                                New List(Of String) From {"^v"})
 
         End If
 
@@ -3218,7 +3194,6 @@ Public Class Main
                                     $"On the Discord app, make sure you are on the proper channel and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Posting the cover image for the task.",
                                     New List(Of String) From {"^v"},
-                                    chkDPOExpertMode.Checked,
                                     postAfterPasting,
                                     If(postAfterPasting, numWaitSecondsForFiles.Value / 2 * 1000, 0),
                                     Drawing.Image.FromFile(allFiles(0)))
@@ -3249,8 +3224,7 @@ Public Class Main
                                 txtFullDescriptionResults.Text.Trim,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the full description as the next message in the {origin}'s thread.",
                                 "Creating full description post in the thread.",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
+                                New List(Of String) From {"^v"})
         If fromGroup Then
             Return autoContinue
         End If
@@ -3292,7 +3266,6 @@ Public Class Main
                                     $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the copied files as the next message in the thread WITHOUT posting it and come back for the text for this message.",
                                     "Creating the files post in the thread - actual files first",
                                     New List(Of String) From {"^v"},
-                                    chkDPOExpertMode.Checked,
                                     False)
         Else
             Using New Centered_MessageBox(Me)
@@ -3357,7 +3330,6 @@ Public Class Main
                                 "Now enter the file info in the current message in the thread and post it.",
                                 "Creating the files post in the thread - file info",
                                 New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked,
                                 True,
                                 numWaitSecondsForFiles.Value * 1000)
 
@@ -3819,7 +3791,6 @@ Public Class Main
                                 $"In the Discord app and on the proper channel for the club/group, make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link to that newly created message.",
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked,
                                 True,
                                 If(withCover, numWaitSecondsForFiles.Value / 2 * 1000, 0))
 
@@ -3891,7 +3862,6 @@ Public Class Main
                                     $"Position the cursor on the message field in the group event thread and paste the copied teaser image for your first message.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Pasting teaser area map image",
                                     New List(Of String) From {"^v"},
-                                    chkDPOExpertMode.Checked,
                                     txtEventTeaserMessage.Text.Trim.Length = 0,
                                     If(txtEventTeaserMessage.Text.Trim.Length = 0, numWaitSecondsForFiles.Value / 2 * 1000, 0),
                                     Drawing.Image.FromFile(allFiles(0)))
@@ -3913,7 +3883,6 @@ Public Class Main
                             $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the teaser message as the first message in the event's thread.",
                             "Posting teaser with text.",
                             New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked,
                             True,
                             If(imagePasted, numWaitSecondsForFiles.Value / 2 * 1000, 0))
         End If
@@ -4721,7 +4690,8 @@ Public Class Main
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 27
                 lblDiscordGuideInstructions.Text = "When you enable this, the workflow will try to progress automatically step after step when possible."
-                SetFocusOnField(chkDPOExpertMode, fromF1Key)
+                'SetFocusOnField(chkDPOExpertMode, fromF1Key)
+                'TODO: REORDER WIZARD
 
             Case 86 'Start full workflow
                 SetDiscordGuidePanelToRight()

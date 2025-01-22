@@ -332,7 +332,6 @@ Partial Class Main
         Me.Label38 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label15 = New System.Windows.Forms.Label()
-        Me.chkDPOExpertMode = New System.Windows.Forms.CheckBox()
         Me.numWaitSecondsForFiles = New System.Windows.Forms.NumericUpDown()
         Me.tabBriefing = New System.Windows.Forms.TabPage()
         Me.pnlBriefing = New System.Windows.Forms.Panel()
@@ -4282,7 +4281,6 @@ Partial Class Main
         'GroupBox4
         '
         Me.GroupBox4.Controls.Add(Me.Label15)
-        Me.GroupBox4.Controls.Add(Me.chkDPOExpertMode)
         Me.GroupBox4.Controls.Add(Me.numWaitSecondsForFiles)
         Me.GroupBox4.Location = New System.Drawing.Point(841, 3)
         Me.GroupBox4.Name = "GroupBox4"
@@ -4301,19 +4299,6 @@ Partial Class Main
         Me.Label15.Size = New System.Drawing.Size(191, 22)
         Me.Label15.TabIndex = 0
         Me.Label15.Text = "Seconds to wait for files:"
-        '
-        'chkDPOExpertMode
-        '
-        Me.chkDPOExpertMode.AutoSize = True
-        Me.chkDPOExpertMode.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDPOExpertMode.Location = New System.Drawing.Point(6, 55)
-        Me.chkDPOExpertMode.Name = "chkDPOExpertMode"
-        Me.chkDPOExpertMode.Size = New System.Drawing.Size(310, 26)
-        Me.chkDPOExpertMode.TabIndex = 2
-        Me.chkDPOExpertMode.Tag = "85"
-        Me.chkDPOExpertMode.Text = "Automatic progression (experimental)"
-        Me.ToolTip1.SetToolTip(Me.chkDPOExpertMode, "Select if you want the workflow to progress automatically whenever possible.")
-        Me.chkDPOExpertMode.UseVisualStyleBackColor = True
         '
         'numWaitSecondsForFiles
         '
@@ -4991,7 +4976,6 @@ Partial Class Main
     Friend WithEvents Label3 As Label
     Friend WithEvents FlowLayoutPanel13 As FlowLayoutPanel
     Friend WithEvents chkDPOFeaturedOnGroupFlight As CheckBox
-    Friend WithEvents chkDPOExpertMode As CheckBox
     Friend WithEvents Label15 As Label
     Friend WithEvents numWaitSecondsForFiles As NumericUpDown
     Friend WithEvents flpDiscordGroupPostOptions As FlowLayoutPanel

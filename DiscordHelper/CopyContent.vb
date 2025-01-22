@@ -59,7 +59,6 @@ Public Class CopyContent
                                 message As String,
                                 title As String,
                                 Optional keySequences As List(Of String) = Nothing,
-                                Optional expertMode As Boolean = False,
                                 Optional autoPastePost As Boolean = True,
                                 Optional msToWaitAfterPost As Integer = 500,
                                 Optional imageToDisplay As Image = Nothing) As Boolean
@@ -68,7 +67,6 @@ Public Class CopyContent
         _AutoPost = autoPastePost
         _keySequences = keySequences
         _msToWaitAfterPost = msToWaitAfterPost
-        _expertMode = expertMode
 
         Me.Text = title
         lblMessage.Text = message
