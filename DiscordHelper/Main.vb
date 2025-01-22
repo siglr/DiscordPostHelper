@@ -235,15 +235,6 @@ Public Class Main
             chkDPOMainPost.Checked = SessionSettings.DPO_chkDPOMainPost
             chkDPOThreadCreation.Checked = SessionSettings.DPO_chkDPOThreadCreation
             chkDPOIncludeCoverImage.Checked = SessionSettings.DPO_chkDPOIncludeCoverImage
-            chkDPOFullDescription.Checked = SessionSettings.DPO_chkDPOFullDescription
-            chkDPOFilesWithDescription.Checked = SessionSettings.DPO_chkDPOFilesWithDescription
-            chkDPOFilesAlone.Checked = SessionSettings.DPO_chkDPOFilesAlone
-            chkDPOAltRestrictions.Checked = SessionSettings.DPO_chkDPOAltRestrictions
-            chkDPOWeatherInfo.Checked = SessionSettings.DPO_chkDPOWeatherInfo
-            chkDPOWeatherChart.Checked = SessionSettings.DPO_chkDPOWeatherChart
-            chkDPOWaypoints.Checked = SessionSettings.DPO_chkDPOWaypoints
-            chkDPOAddOns.Checked = SessionSettings.DPO_chkDPOAddOns
-            chkDPOResultsInvitation.Checked = SessionSettings.DPO_chkDPOResultsInvitation
             chkDPOFeaturedOnGroupFlight.Checked = SessionSettings.DPO_chkDPOFeaturedOnGroupFlight
         End If
 
@@ -342,9 +333,6 @@ Public Class Main
         _CurrentSessionFile = String.Empty
 
         BriefingControl1.FullReset()
-
-        lblThread1stMsgIDNotAcquired.Visible = True
-        lblThread1stMsgIDAcquired.Visible = False
 
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
@@ -1014,8 +1002,6 @@ Public Class Main
                 If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     txtDiscordTaskID.Text = String.Empty
                     _taskThreadFirstPostID = String.Empty
-                    lblThread1stMsgIDNotAcquired.Visible = True
-                    lblThread1stMsgIDAcquired.Visible = False
                 End If
             End Using
         End If
@@ -1248,30 +1234,9 @@ Public Class Main
         lblNbrCarsMainFP.Text = $"{txtFPResults.Text.Length} chars"
     End Sub
 
-    Private Sub txtAltRestrictions_TextChanged(sender As Object, e As EventArgs) Handles txtAltRestrictions.TextChanged
-        lblNbrCarsRestrictions.Text = $"{txtAltRestrictions.Text.Length} chars"
-    End Sub
-
-    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblNbrCarsMainFP.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsFullDescResults.TextChanged, lblNbrCarsWeather.TextChanged, lblNbrCarsRestrictions.TextChanged, lblNbrCarsWaypoints.TextChanged
+    Private Sub NbrCarsCheckDiscordLimitEvent(sender As Object, e As EventArgs) Handles lblNbrCarsMainFP.TextChanged
 
         NbrCarsCheckDiscordLimit(DirectCast(sender, Windows.Forms.Label))
-
-    End Sub
-
-    Private Sub NbrCarsChangedOnWeatherDetails(sender As Object, e As EventArgs) Handles lblNbrCarsWeatherInfo.TextChanged,
-                                                                                         lblNbrCarsWeatherWinds.TextChanged,
-                                                                                         lblNbrCarsWeatherClouds.TextChanged
-
-        Dim totalCars As Integer = 0
-        Try
-            totalCars += CInt(lblNbrCarsWeatherInfo.Text)
-            totalCars += CInt(lblNbrCarsWeatherWinds.Text)
-            totalCars += CInt(lblNbrCarsWeatherClouds.Text)
-
-        Catch ex As Exception
-        End Try
-
-        lblNbrCarsWeather.Text = $"{totalCars.ToString} chars"
 
     End Sub
 
@@ -1308,18 +1273,6 @@ Public Class Main
 
     Private Sub txtFilesText_TextChanged(sender As Object, e As EventArgs) Handles txtFilesText.TextChanged
         lblNbrCarsFilesText.Text = txtFilesText.Text.Length
-    End Sub
-
-    Private Sub txtFullDescriptionResults_TextChanged(sender As Object, e As EventArgs) Handles txtFullDescriptionResults.TextChanged
-        lblNbrCarsFullDescResults.Text = $"{txtFullDescriptionResults.Text.Length} chars"
-    End Sub
-
-    Private Sub txtWaypointsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtWaypointsDetails.TextChanged
-        lblNbrCarsWaypoints.Text = $"{txtWaypointsDetails.Text.Length} chars"
-    End Sub
-
-    Private Sub txtAddOnsDetails_TextChanged(sender As Object, e As EventArgs) Handles txtAddOnsDetails.TextChanged
-        lblNbrCarsAddOns.Text = $"{txtAddOnsDetails.Text.Length} chars"
     End Sub
 
     Private Sub CopyToEventFields(sender As Object, e As EventArgs)
@@ -2611,32 +2564,7 @@ Public Class Main
         SessionSettings.DPO_chkDPOMainPost = chkDPOMainPost.Checked
         SessionSettings.DPO_chkDPOThreadCreation = chkDPOThreadCreation.Checked
         SessionSettings.DPO_chkDPOIncludeCoverImage = chkDPOIncludeCoverImage.Checked
-        SessionSettings.DPO_chkDPOFullDescription = chkDPOFullDescription.Checked
-        SessionSettings.DPO_chkDPOFilesWithDescription = chkDPOFilesWithDescription.Checked
-        SessionSettings.DPO_chkDPOFilesAlone = chkDPOFilesAlone.Checked
-        SessionSettings.DPO_chkDPOAltRestrictions = chkDPOAltRestrictions.Checked
-        SessionSettings.DPO_chkDPOWeatherInfo = chkDPOWeatherInfo.Checked
-        SessionSettings.DPO_chkDPOWeatherChart = chkDPOWeatherChart.Checked
-        SessionSettings.DPO_chkDPOWaypoints = chkDPOWaypoints.Checked
-        SessionSettings.DPO_chkDPOAddOns = chkDPOAddOns.Checked
-        SessionSettings.DPO_chkDPOResultsInvitation = chkDPOResultsInvitation.Checked
         SessionSettings.DPO_chkDPOFeaturedOnGroupFlight = chkDPOFeaturedOnGroupFlight.Checked
-    End Sub
-
-    Private Sub chkDPOFilesWithDescription_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOFilesWithDescription.CheckedChanged
-
-        If chkDPOFilesWithDescription.Checked Then
-            chkDPOFilesAlone.Checked = False
-        End If
-
-    End Sub
-
-    Private Sub chkDPOFilesAlone_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOFilesAlone.CheckedChanged
-
-        If chkDPOFilesAlone.Checked Then
-            chkDPOFilesWithDescription.Checked = False
-        End If
-
     End Sub
 
     Private Sub chkRepost_CheckedChanged(sender As Object, e As EventArgs) Handles chkRepost.CheckedChanged
@@ -2658,15 +2586,6 @@ Public Class Main
         chkDPOMainPost.Checked = True
         chkDPOThreadCreation.Checked = True
         chkDPOIncludeCoverImage.Checked = True
-        chkDPOFullDescription.Checked = True
-        chkDPOFilesWithDescription.Checked = True
-        chkDPOFilesAlone.Checked = False
-        chkDPOAltRestrictions.Checked = True
-        chkDPOWeatherInfo.Checked = True
-        chkDPOWeatherChart.Checked = True
-        chkDPOWaypoints.Checked = True
-        chkDPOAddOns.Checked = True
-        chkDPOResultsInvitation.Checked = True
         chkDPOFeaturedOnGroupFlight.Checked = True
 
         CheckWhichOptionsCanBeEnabled()
@@ -2946,76 +2865,12 @@ Public Class Main
             Return False
         End If
 
-        'Do we have both IDs before we can continue?
-        If lblThread1stMsgIDNotAcquired.Visible Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "ID of the task thread or first message in the thread is missing - You must post the task to the Task Library!", "Thread ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
-            Return False
-        End If
-
         'Cover Image
         If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked Then
             autoContinue = CoverImage()
         End If
         If Not autoContinue Then
             Return False
-        End If
-
-        'Full Description
-        If Not PostTaskFullDescription(autoContinue, chkDPOFullDescription, False) Then
-            Return False
-        End If
-
-        'Files
-        If (chkDPOFilesWithDescription.Enabled AndAlso chkDPOFilesWithDescription.Checked) OrElse (chkDPOFilesAlone.Enabled AndAlso chkDPOFilesAlone.Checked) Then
-            autoContinue = FilesCopy()
-            If autoContinue Then
-                'Files text (description or simple Files heading)
-                autoContinue = FilesTextCopy(chkDPOFilesWithDescription.Checked)
-            Else
-                Return False
-            End If
-        End If
-
-        Dim altRestrictions As String = String.Empty
-        If chkDPOAltRestrictions.Enabled AndAlso chkDPOAltRestrictions.Checked Then
-            altRestrictions = txtAltRestrictions.Text.Trim
-        End If
-        If altRestrictions.Length > 0 Then
-            altRestrictions = $"{altRestrictions}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim completeWeather As String = String.Empty
-        If chkDPOWeatherInfo.Enabled AndAlso chkDPOWeatherInfo.Checked Then
-            completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
-        End If
-        If completeWeather.Length > 0 Then
-            completeWeather = $"{completeWeather}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim waypoints As String = String.Empty
-        If chkDPOWaypoints.Enabled AndAlso chkDPOWaypoints.Checked Then
-            waypoints = txtWaypointsDetails.Text.Trim
-        End If
-        If waypoints.Length > 0 Then
-            waypoints = $"{waypoints}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim addOns As String = String.Empty
-        If chkDPOAddOns.Enabled AndAlso chkDPOAddOns.Checked Then
-            addOns = txtAddOnsDetails.Text.Trim
-        End If
-        If addOns.Length > 0 Then
-            addOns = $"{addOns}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim invitation As String = String.Empty
-        If chkDPOResultsInvitation.Enabled AndAlso chkDPOResultsInvitation.Checked Then
-            invitation = ResultsCopy()
-        End If
-        If invitation.Length > 0 Then
-            invitation = $"{invitation}{Environment.NewLine}{Environment.NewLine}"
         End If
 
         Dim taskFeatured As String = String.Empty
@@ -3027,64 +2882,8 @@ Public Class Main
         End If
 
         Dim msg As String = String.Empty
-        'If the weather chart is included, do Restrictions and Weather together then chart, then rest of details together.
-        'If weather chart is not included, do everything together.
-        If (chkDPOWeatherChart.Enabled AndAlso chkDPOWeatherChart.Checked) Then
-            If (altRestrictions.Length + completeWeather.Length > 0) Then
-                msg = $"{altRestrictions}{completeWeather}"
-                Clipboard.SetText(msg)
-                autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
-                                "Creating altitude restrictions and weather details post in the thread.",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked)
-                If Not autoContinue Then
-                    Return False
-                End If
-            End If
-            'Weather Chart
-            Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
-            autoContinue = CopyContent.ShowContent(Me,
-                                "Weather chart",
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the task's thread.",
-                                "Creating weather chart post in the thread.",
-                                New List(Of String) From {"^v"},
-                                chkDPOExpertMode.Checked,
-                                True,
-                                numWaitSecondsForFiles.Value / 2 * 1000,
-                                chartImage)
-            If Not autoContinue Then
-                Return False
-            End If
-        End If
-
-        If addOns.Trim.Length > 0 Then
-            'There are add-ons, we must post them without the rest so the embeds are created right under
-            If msg.Trim.Length = 0 Then
-                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
-            Else
-                msg = $"{waypoints}{addOns}"
-            End If
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                            msg,
-                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
-                            "Creating remaining details up to add-ons to post in the thread.",
-                            New List(Of String) From {"^v"},
-                            chkDPOExpertMode.Checked)
-            If Not autoContinue Then
-                Return False
-            End If
-            msg = $"{invitation}{taskFeatured}"
-        Else
-            'No add-ons, we can post everything remaining all at once
-            If msg.Trim.Length = 0 Then
-                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}{invitation}{taskFeatured}"
-            Else
-                msg = $"{waypoints}{addOns}{invitation}{taskFeatured}"
-            End If
-        End If
+        'No add-ons, we can post everything remaining all at once
+        msg = $"{taskFeatured}"
 
         'Remaining details
         If msg.Trim.Length > 0 Then
@@ -3125,69 +2924,25 @@ Public Class Main
         If lblTaskLibraryIDAcquired.Visible Then
             listOfControlsRemove.Add(chkDPOThreadCreation)
             listOfControlsRemove.Add(chkDPOIncludeCoverImage)
-            listOfControlsRemove.Add(chkDPOFullDescription)
-            If lblThread1stMsgIDAcquired.Visible Then
-                'Task
-                listOfControlsRemove.Add(chkDPOFilesWithDescription)
-                listOfControlsRemove.Add(chkDPOFilesAlone)
-                listOfControlsRemove.Add(chkDPOAltRestrictions)
-                listOfControlsRemove.Add(chkDPOWeatherInfo)
-                listOfControlsRemove.Add(chkDPOWeatherChart)
-                listOfControlsRemove.Add(chkDPOWaypoints)
-                listOfControlsRemove.Add(chkDPOAddOns)
-                listOfControlsRemove.Add(chkDPOResultsInvitation)
-                listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
-                'Group
-                listOfControlsRemove.Add(chkDGPOMainPost)
-                listOfControlsRemove.Add(chkDGPOFullDescription)
-                listOfControlsRemove.Add(chkDGPOFilesWithFullLegend)
-                listOfControlsRemove.Add(chkDGPODPHXOnly)
-                listOfControlsRemove.Add(chkDGPOFilesWithoutLegend)
-                listOfControlsRemove.Add(chkDGPOAltRestrictions)
-                listOfControlsRemove.Add(chkDGPOWeatherInfo)
-                listOfControlsRemove.Add(chkDGPOWeatherChart)
-                listOfControlsRemove.Add(chkDGPOWaypoints)
-                listOfControlsRemove.Add(chkDGPOAddOns)
-                listOfControlsRemove.Add(chkDGPORelevantTaskDetails)
-                listOfControlsRemove.Add(chkDGPOEventLogistics)
-            Else
-                'Task
-                listOfControlsAdd.Add(chkDPOFilesWithDescription)
-                listOfControlsAdd.Add(chkDPOFilesAlone)
-                listOfControlsAdd.Add(chkDPOAltRestrictions)
-                listOfControlsAdd.Add(chkDPOWeatherInfo)
-                listOfControlsAdd.Add(chkDPOWeatherChart)
-                listOfControlsAdd.Add(chkDPOWaypoints)
-                listOfControlsAdd.Add(chkDPOAddOns)
-                listOfControlsAdd.Add(chkDPOResultsInvitation)
-                listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
-                'Group
-                listOfControlsAdd.Add(chkDGPOMainPost)
-                listOfControlsAdd.Add(chkDGPOFullDescription)
-                listOfControlsAdd.Add(chkDGPOFilesWithFullLegend)
-                listOfControlsAdd.Add(chkDGPODPHXOnly)
-                listOfControlsAdd.Add(chkDGPOFilesWithoutLegend)
-                listOfControlsAdd.Add(chkDGPOAltRestrictions)
-                listOfControlsAdd.Add(chkDGPOWeatherInfo)
-                listOfControlsAdd.Add(chkDGPOWeatherChart)
-                listOfControlsAdd.Add(chkDGPOWaypoints)
-                listOfControlsAdd.Add(chkDGPOAddOns)
-                listOfControlsAdd.Add(chkDGPORelevantTaskDetails)
-                listOfControlsAdd.Add(chkDGPOEventLogistics)
-            End If
+            'Task
+            listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
+            'Group
+            listOfControlsRemove.Add(chkDGPOMainPost)
+            listOfControlsRemove.Add(chkDGPOFullDescription)
+            listOfControlsRemove.Add(chkDGPOFilesWithFullLegend)
+            listOfControlsRemove.Add(chkDGPODPHXOnly)
+            listOfControlsRemove.Add(chkDGPOFilesWithoutLegend)
+            listOfControlsRemove.Add(chkDGPOAltRestrictions)
+            listOfControlsRemove.Add(chkDGPOWeatherInfo)
+            listOfControlsRemove.Add(chkDGPOWeatherChart)
+            listOfControlsRemove.Add(chkDGPOWaypoints)
+            listOfControlsRemove.Add(chkDGPOAddOns)
+            listOfControlsRemove.Add(chkDGPORelevantTaskDetails)
+            listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
             'Task
             listOfControlsAdd.Add(chkDPOThreadCreation)
             listOfControlsAdd.Add(chkDPOIncludeCoverImage)
-            listOfControlsAdd.Add(chkDPOFullDescription)
-            listOfControlsAdd.Add(chkDPOFilesWithDescription)
-            listOfControlsAdd.Add(chkDPOFilesAlone)
-            listOfControlsAdd.Add(chkDPOAltRestrictions)
-            listOfControlsAdd.Add(chkDPOWeatherInfo)
-            listOfControlsAdd.Add(chkDPOWeatherChart)
-            listOfControlsAdd.Add(chkDPOWaypoints)
-            listOfControlsAdd.Add(chkDPOAddOns)
-            listOfControlsAdd.Add(chkDPOResultsInvitation)
             listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
             'Group
             listOfControlsAdd.Add(chkDGPOMainPost)
@@ -3253,9 +3008,9 @@ Public Class Main
 
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
         chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
-        chkDPOFilesAlone.Enabled = grbTaskInfo.Enabled
-        chkDPOFilesWithDescription.Enabled = grbTaskInfo.Enabled
-        chkDPOWaypoints.Enabled = grbTaskInfo.Enabled
+        chkDGPOFilesWithoutLegend.Enabled = grbTaskInfo.Enabled
+        chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
+        chkDGPOWaypoints.Enabled = grbTaskInfo.Enabled
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             chkDPOIncludeCoverImage.Enabled = True
@@ -3266,42 +3021,36 @@ Public Class Main
         End If
 
         If txtLongDescription.Text.Trim.Length = 0 Then
-            chkDPOFullDescription.Enabled = False
+            chkDGPOFullDescription.Enabled = False
         Else
-            chkDPOFullDescription.Enabled = True
+            chkDGPOFullDescription.Enabled = True
         End If
 
         If txtAltRestrictions.Text.Trim.Length = 0 Then
-            chkDPOAltRestrictions.Enabled = False
+            chkDGPOAltRestrictions.Enabled = False
         Else
-            chkDPOAltRestrictions.Enabled = True AndAlso grbTaskInfo.Enabled
+            chkDGPOAltRestrictions.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtWeatherFile.Text.Trim.Length + txtWeatherSummary.Text.Trim.Length = 0 Then
-            chkDPOWeatherInfo.Enabled = False
+            chkDGPOWeatherInfo.Enabled = False
         Else
-            chkDPOWeatherInfo.Enabled = True AndAlso grbTaskInfo.Enabled
+            chkDGPOWeatherInfo.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtWeatherFile.Text.Trim.Length = 0 Then
-            chkDPOWeatherChart.Enabled = False
+            chkDGPOWeatherChart.Enabled = False
         Else
-            chkDPOWeatherChart.Enabled = True AndAlso grbTaskInfo.Enabled
+            chkDGPOWeatherChart.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If txtAddOnsDetails.Text.Trim.Length = 0 Then
-            chkDPOAddOns.Enabled = False
+            chkDGPOAddOns.Enabled = False
         Else
-            chkDPOAddOns.Enabled = True AndAlso grbTaskInfo.Enabled
+            chkDGPOAddOns.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
-        If txtDiscordTaskID.Text.Trim = String.Empty Then
-            chkDPOResultsInvitation.Enabled = False
-        Else
-            chkDPOResultsInvitation.Enabled = True AndAlso grbTaskInfo.Enabled
-        End If
-
-        If _ClubPreset IsNot Nothing AndAlso
+        If _ClubPreset IsNot Nothing AndAlso chkActivateEvent.Checked AndAlso
             txtDiscordEventShareURL.Text.Trim.Length + txtGroupEventPostURL.Text.Trim.Length > 0 Then
             chkDPOFeaturedOnGroupFlight.Enabled = True AndAlso grbTaskInfo.Enabled
         Else
@@ -3315,15 +3064,7 @@ Public Class Main
             chkDGPOTeaser.Checked = False
             chkDGPOTeaser.Enabled = False
         End If
-        chkDGPOFilesWithoutLegend.Enabled = chkDPOFilesAlone.Enabled
-        chkDGPOFilesWithFullLegend.Enabled = chkDPOFilesWithDescription.Enabled
         chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
-        chkDGPOFullDescription.Enabled = chkDPOFullDescription.Enabled
-        chkDGPOAltRestrictions.Enabled = chkDPOAltRestrictions.Enabled
-        chkDGPOWeatherInfo.Enabled = chkDPOWeatherInfo.Enabled
-        chkDGPOWeatherChart.Enabled = chkDPOWeatherChart.Enabled
-        chkDGPOAddOns.Enabled = chkDPOAddOns.Enabled
-        chkDGPOWaypoints.Enabled = chkDPOWaypoints.Enabled
 
         chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
 
@@ -3433,61 +3174,6 @@ Public Class Main
 
     End Function
 
-    Private Sub GetTaskThreadFirstPostID()
-
-        If txtDiscordTaskID.Text = String.Empty Then
-            Exit Sub
-        End If
-
-        If _taskThreadFirstPostID = String.Empty Then
-            Dim message As String = "Please get the link to the anchor message from the task thread in Discord (""...More menu"" and ""Copy Message Link"")"
-            Dim waitingForm As WaitingForURLForm
-            Dim answer As DialogResult
-            Dim validTaskThreadFirstPostIDOrCancel As Boolean = False
-
-            Do Until validTaskThreadFirstPostIDOrCancel
-                Clipboard.Clear()
-                waitingForm = New WaitingForURLForm(message)
-                answer = waitingForm.ShowDialog()
-
-                SupportingFeatures.BringDPHToolToTop(Me.Handle)
-                'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
-                If answer = DialogResult.OK Then
-                    Dim threadFirstPostID As String
-                    threadFirstPostID = Clipboard.GetText
-                    _taskThreadFirstPostID = SupportingFeatures.ExtractMessageIDFromDiscordURL(threadFirstPostID, False, txtDiscordTaskID.Text)
-                    If _taskThreadFirstPostID.Trim.Length = 0 Then
-                        Using New Centered_MessageBox(Me)
-                            If MessageBox.Show(Me, $"Invalid message ID - You must get the ID to a message inside the task's thread! To skip and link to the thread instead, click Cancel.", "Message ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
-                                _taskThreadFirstPostID = txtDiscordTaskID.Text
-                                validTaskThreadFirstPostIDOrCancel = True
-                            End If
-                        End Using
-                    Else
-                        validTaskThreadFirstPostIDOrCancel = True
-                        SaveSession()
-                    End If
-                Else
-                    validTaskThreadFirstPostIDOrCancel = True
-                    Using New Centered_MessageBox(Me)
-                        _taskThreadFirstPostID = txtDiscordTaskID.Text
-                        MessageBox.Show(Me, $"Thread anchor message ID is missing - Redirection will be done directly to the thread instead!", "Thread anchor message ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End Using
-                End If
-            Loop
-        End If
-
-        If _taskThreadFirstPostID = String.Empty Then
-            lblThread1stMsgIDNotAcquired.Visible = True
-            lblThread1stMsgIDAcquired.Visible = False
-        Else
-            lblThread1stMsgIDAcquired.Visible = True
-            lblThread1stMsgIDNotAcquired.Visible = False
-        End If
-        CheckWhichOptionsCanBeEnabled()
-
-    End Sub
-
     Private Function CreateTaskThread() As Boolean
 
         Dim autoContinue As Boolean = True
@@ -3510,13 +3196,6 @@ Public Class Main
                                 "Creating thread anchor post.",
                                 New List(Of String) From {"^v"},
                                 chkDPOExpertMode.Checked)
-
-            If autoContinue Then
-                _taskThreadFirstPostID = String.Empty
-                lblThread1stMsgIDNotAcquired.Visible = True
-                lblThread1stMsgIDAcquired.Visible = False
-                GetTaskThreadFirstPostID()
-            End If
 
         End If
 
@@ -3741,19 +3420,6 @@ Public Class Main
         txtFilesText.Text = sb.ToString.Trim
         sb.Clear()
     End Sub
-
-    Private Function ResultsCopy() As String
-
-        Dim msg As String = String.Empty
-
-        'Results
-        If Not txtDiscordTaskID.Text.Trim = String.Empty Then
-            msg = $"{msg}## 🏁 Results{Environment.NewLine}Feel free to share your task results in this thread, creating a central spot for everyone's achievements."
-        End If
-
-        Return msg
-
-    End Function
 
     Private Function TaskFeatureOnGroupFlight() As String
 
@@ -4105,14 +3771,6 @@ Public Class Main
             End If
             autoContinue = GroupFlightEventTeaser()
             Return autoContinue
-        End If
-
-        'We must have both Discord IDs for the task to continue
-        If lblThread1stMsgIDNotAcquired.Visible Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "The task must be fully posted to the Task Library first before continuing.", "Task not fully posted to library", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-            End Using
-            Return False
         End If
 
         'Thread
@@ -5768,14 +5426,6 @@ Public Class Main
 
             FixForDropDownCombos()
 
-            If _taskThreadFirstPostID = String.Empty Then
-                lblThread1stMsgIDNotAcquired.Visible = True
-                lblThread1stMsgIDAcquired.Visible = False
-            Else
-                lblThread1stMsgIDAcquired.Visible = True
-                lblThread1stMsgIDNotAcquired.Visible = False
-            End If
-
             _sessionModified = False
 
         End If
@@ -6435,12 +6085,6 @@ Public Class Main
         txtLastUpdateDescription.Enabled = False
         btnDeleteFromTaskBrowser.Enabled = False
 
-        If txtDiscordTaskID.Text.Trim = String.Empty Then
-            lblTaskBrowserIDAndDate.Visible = False
-            Exit Sub
-        End If
-        lblTaskBrowserIDAndDate.Visible = True
-
         If _TBTaskEntrySeqID > 0 Then
             'Verify if local DPH has been changed
             Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
@@ -6459,7 +6103,7 @@ Public Class Main
                 btnDeleteFromTaskBrowser.Enabled = True
             End If
         Else
-            labelString = "Task does not exist for the task browser yet"
+            labelString = "Task does not exist on WeSimGlide.org"
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             If UserCanCreateTask Then
                 btnCreateInTaskBrowser.Enabled = True

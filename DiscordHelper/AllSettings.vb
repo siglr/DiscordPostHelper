@@ -44,33 +44,6 @@ Public Class AllSettings
     <XmlElement("DPO_chkDPOIncludeCoverImage")>
     Public Property DPO_chkDPOIncludeCoverImage As Boolean
 
-    <XmlElement("DPO_chkDPOFullDescription")>
-    Public Property DPO_chkDPOFullDescription As Boolean
-
-    <XmlElement("DPO_chkDPOFilesWithDescription")>
-    Public Property DPO_chkDPOFilesWithDescription As Boolean
-
-    <XmlElement("DPO_chkDPOFilesAlone")>
-    Public Property DPO_chkDPOFilesAlone As Boolean
-
-    <XmlElement("DPO_chkDPOAltRestrictions")>
-    Public Property DPO_chkDPOAltRestrictions As Boolean
-
-    <XmlElement("DPO_chkDPOWeatherInfo")>
-    Public Property DPO_chkDPOWeatherInfo As Boolean
-
-    <XmlElement("DPO_chkDPOWeatherChart")>
-    Public Property DPO_chkDPOWeatherChart As Boolean
-
-    <XmlElement("DPO_chkDPOWaypoints")>
-    Public Property DPO_chkDPOWaypoints As Boolean
-
-    <XmlElement("DPO_chkDPOAddOns")>
-    Public Property DPO_chkDPOAddOns As Boolean
-
-    <XmlElement("DPO_chkDPOResultsInvitation")>
-    Public Property DPO_chkDPOResultsInvitation As Boolean
-
     <XmlElement("DPO_chkDPOFeaturedOnGroupFlight")>
     Public Property DPO_chkDPOFeaturedOnGroupFlight As Boolean
 
@@ -166,15 +139,6 @@ Public Class AllSettings
             DPO_chkDPOMainPost = settingsInFile.DPO_chkDPOMainPost
             DPO_chkDPOThreadCreation = settingsInFile.DPO_chkDPOThreadCreation
             DPO_chkDPOIncludeCoverImage = settingsInFile.DPO_chkDPOIncludeCoverImage
-            DPO_chkDPOFullDescription = settingsInFile.DPO_chkDPOFullDescription
-            DPO_chkDPOFilesWithDescription = settingsInFile.DPO_chkDPOFilesWithDescription
-            DPO_chkDPOFilesAlone = settingsInFile.DPO_chkDPOFilesAlone
-            DPO_chkDPOAltRestrictions = settingsInFile.DPO_chkDPOAltRestrictions
-            DPO_chkDPOWeatherInfo = settingsInFile.DPO_chkDPOWeatherInfo
-            DPO_chkDPOWeatherChart = settingsInFile.DPO_chkDPOWeatherChart
-            DPO_chkDPOWaypoints = settingsInFile.DPO_chkDPOWaypoints
-            DPO_chkDPOAddOns = settingsInFile.DPO_chkDPOAddOns
-            DPO_chkDPOResultsInvitation = settingsInFile.DPO_chkDPOResultsInvitation
             DPO_chkDPOFeaturedOnGroupFlight = settingsInFile.DPO_chkDPOFeaturedOnGroupFlight
             DPO_DGPOUseCustomSettings = settingsInFile.DPO_DGPOUseCustomSettings
             DPO_chkDGPOCoverImage = settingsInFile.DPO_chkDGPOCoverImage
