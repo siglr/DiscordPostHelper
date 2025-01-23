@@ -5965,14 +5965,44 @@ Public Class Main
         })
 
             ' Prepare the request
-            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
+            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateNewTaskFromDPH.php"), HttpWebRequest)
             request.Method = "POST"
-            request.ContentType = "application/json"
-            request.Accept = "application/json"
 
-            ' Write the serialized JSON to the request body
-            Using streamWriter As New StreamWriter(request.GetRequestStream())
-                streamWriter.Write(json)
+            ' Create boundary for multipart form-data
+            Dim boundary As String = "----WebKitFormBoundary" & DateTime.Now.Ticks.ToString("x")
+            request.ContentType = "multipart/form-data; boundary=" & boundary
+            request.KeepAlive = True
+            request.Credentials = CredentialCache.DefaultCredentials
+
+            Using memStream As New MemoryStream()
+                Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
+                Dim endBoundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & "--" & vbCrLf)
+
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
+                ' Add task data
+                Dim taskDataHeader As String = "Content-Disposition: form-data; name=""task_data""" & vbCrLf & vbCrLf
+                Dim taskDataBytes As Byte() = Encoding.UTF8.GetBytes(taskDataHeader & json)
+                memStream.Write(taskDataBytes, 0, taskDataBytes.Length)
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
+                ' Add UserID
+                Dim userIDHeader As String = "Content-Disposition: form-data; name=""UserID""" & vbCrLf & vbCrLf
+                Dim userIDBytes As Byte() = Encoding.UTF8.GetBytes(userIDHeader & _userPermissionID)
+                memStream.Write(userIDBytes, 0, userIDBytes.Length)
+                memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+
+                ' Write the final boundary
+                memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
+                request.ContentLength = memStream.Length
+
+                ' Send the request
+                Using requestStream As Stream = request.GetRequestStream()
+                    memStream.Position = 0
+                    Dim tempBuffer As Byte() = New Byte(memStream.Length - 1) {}
+                    memStream.Read(tempBuffer, 0, tempBuffer.Length)
+                    requestStream.Write(tempBuffer, 0, tempBuffer.Length)
+                End Using
             End Using
 
             ' Get the response
@@ -6000,9 +6030,8 @@ Public Class Main
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, $"Error publishing task to WSG (Step 1): {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
-            Return False
+            Return False ' Return False to indicate failure
         End Try
-
     End Function
 
     Private Function UploadTaskToServer(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
