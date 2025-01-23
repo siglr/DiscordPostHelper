@@ -37,7 +37,7 @@ try {
         logMessage("Creating new temporary task...");
 
         // Validate required fields
-        $requiredFields = ['TemporaryTaskID', 'Title', 'LastUpdate', 'SimDateTime', 'IncludeYear', 'TaskDistance', 'TotalDistance', 'LatMin', 'LatMax', 'LongMin', 'LongMax'];
+        $requiredFields = ['TemporaryTaskID', 'Title', 'LastUpdate'];
         foreach ($requiredFields as $field) {
             if (empty($taskData[$field])) {
                 throw new Exception("Missing required field: $field");
