@@ -5722,8 +5722,8 @@ Public Class Main
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
-        Dim theMapImage As Byte()
-        Dim theCoverImage As Byte()
+        Dim theMapImage As Byte() = Nothing
+        Dim theCoverImage As Byte() = Nothing
 
         ' Cover and map image
         If taskInfo.MapImageSelected <> String.Empty Then

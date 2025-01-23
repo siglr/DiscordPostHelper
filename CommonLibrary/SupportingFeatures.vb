@@ -49,7 +49,6 @@ Public Class SupportingFeatures
         NotCreated = 0
         PendingCreation = 10
         Inactive = 20
-        TimeDelayed = 30
         Active = 99
     End Enum
 
