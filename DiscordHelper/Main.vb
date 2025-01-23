@@ -1011,7 +1011,11 @@ Public Class Main
             lblTaskLibraryIDNotAcquired.Visible = False
             'Try to retrieve the task EntrySeqID online
             Try
-                GetTaskDetails(txtDiscordTaskID.Text.Trim)
+                If txtTemporaryTaskID.Text.Trim.Length > 0 Then
+                    GetTaskDetails(txtTemporaryTaskID.Text.Trim)
+                Else
+                    GetTaskDetails(txtDiscordTaskID.Text.Trim)
+                End If
             Catch ex As Exception
                 'Do nothing - it means the task has not been pushed to the online database
             End Try
@@ -1872,7 +1876,18 @@ Public Class Main
             End If
         End If
         sb.AppendLine()
-        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 2))
+        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
+        sb.AppendLine("## :wsg:WeSimGlide.org")
+        sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](https://wesimglide.org/index.html?task={_TaskEntrySeqID})")
+        sb.AppendLine("## 📁 Files")
+        sb.AppendLine($"DPHX : [{txtTitle.Text.Trim}.dphx](https://wesimglide.org/download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"ZIP : [{txtTitle.Text.Trim}.zip](https://wesimglide.org/download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"PLN : [{Path.GetFileName(txtFlightPlanFile.Text)}](https://wesimglide.org/download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"WPR : [{Path.GetFileName(txtWeatherFile.Text)}](https://wesimglide.org/download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}) - Weather preset only, for manual interaction.")
+        If _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
+            sb.AppendLine($" 👉 * Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
+        End If
+        sb.AppendLine()
         If txtMainArea.Text.Trim.Length > 0 Then
             sb.AppendLine("> 🗺 " & SupportingFeatures.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
@@ -1888,10 +1903,22 @@ Public Class Main
         sb.AppendLine($"> ✈️ {SupportingFeatures.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
         sb.AppendLine($"> 🎚 {SupportingFeatures.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
 
+        Dim altRestrictions As String = String.Empty
+        If txtAltRestrictions.Text.Trim.Length > 0 Then
+            altRestrictions = "This task contains altitude restrictions"
+        End If
+        Dim baroWarning As String = String.Empty
+        If Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked) Then
+            baroWarning = txtBaroPressureExtraInfo.Text.Trim
+        End If
+        If Not String.IsNullOrEmpty(altRestrictions) OrElse Not String.IsNullOrEmpty(baroWarning) Then
+            sb.AppendLine($"> ⚠️ {altRestrictions}{If(Not String.IsNullOrEmpty(altRestrictions) AndAlso Not String.IsNullOrEmpty(baroWarning), " & ", "")}{baroWarning}")
+        End If
+
         If Not fromGroup Then
             sb.AppendLine()
             sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
-            sb.Append("### See inside thread for most up-to-date files and more information.")
+            sb.Append("### Use thread for discussions, pictures, results.")
         End If
 
         txtFPResults.Text = sb.ToString.Trim
@@ -2828,16 +2855,29 @@ Public Class Main
                 'If NO, then we go with CREATE.
                 'We need a temporary inactive TaskID (because we don't have the Discord post yet) and a reserved EntrySeqID
                 Dim taskInfo As AllData = SetAndRetrieveSessionData()
-                txtDiscordTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
+                txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
+                txtDiscordTaskID.Text = String.Empty
                 _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
-                taskInfo.DiscordTaskID = txtDiscordTaskID.Text
+                taskInfo.TemporaryTaskID = txtTemporaryTaskID.Text
                 taskInfo.TaskStatus = _TaskStatus
                 CreateWSGTaskPart1()
-                GetTaskDetails(taskInfo.DiscordTaskID)
-                ' These will allow us to post the task on Discord with proper links.
+                GetTaskDetails(taskInfo.TemporaryTaskID)
+                'Save file
+                taskInfo = SetAndRetrieveSessionData()
+                SaveSession()
+                'This will now allow us to post the task on Discord with proper links.
                 autoContinue = FlightPlanMainInfoCopy()
-
-                ' Then we need to complete the entry on WSG with the files and correct TaskID
+                If txtDiscordTaskID.Text.Trim.Length > 0 Then
+                    'Then we can complete the entry on WSG with the files and correct TaskID
+                    _TaskStatus = SupportingFeatures.WSGTaskStatus.Active
+                    CreateWSGTaskPart2()
+                    GetTaskDetails(txtDiscordTaskID.Text.Trim)
+                Else
+                    'Pending creation?
+                End If
+                If Not autoContinue Then
+                    'Where did it stop? If we don't have a true DiscordTaskID, then we're stuck in pending creation!
+                End If
 
             End If
 
@@ -5193,6 +5233,7 @@ Public Class Main
             .TrackerGroup = txtTrackerGroup.Text
             .GroupEmoji = lblGroupEmoji.Text
             .DiscordTaskID = txtDiscordTaskID.Text
+            .TemporaryTaskID = txtTemporaryTaskID.Text
             .EntrySeqID = _TaskEntrySeqID
             .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
@@ -5349,6 +5390,7 @@ Public Class Main
                     .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
                 txtDiscordTaskID.Text = .DiscordTaskID
+                txtTemporaryTaskID.Text = .TemporaryTaskID
                 _TaskEntrySeqID = .EntrySeqID
                 _TaskStatus = .TaskStatus
                 chkActivateEvent.Checked = .EventEnabled
@@ -5470,7 +5512,7 @@ Public Class Main
 #Region "Event Handlers"
     Private Sub btnCreateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnCreateInTaskBrowser.Click
         If UserCanCreateTask Then
-            UploadToTaskBrowser()
+            'UploadToTaskBrowser()
             GetTaskDetails(txtDiscordTaskID.Text.Trim)
             SetTBTaskDetailsLabel()
             WeSimGlideTaskLinkPosting()
@@ -5486,7 +5528,7 @@ Public Class Main
                     Exit Sub
                 End Using
             End If
-            UploadToTaskBrowser()
+            'UploadToTaskBrowser()
             GetTaskDetails(txtDiscordTaskID.Text.Trim)
             SetTBTaskDetailsLabel()
         End If
@@ -5718,127 +5760,6 @@ Public Class Main
         End Try
     End Function
 
-    Private Sub UploadToTaskBrowser()
-
-        Dim taskInfo As AllData = SetAndRetrieveSessionData()
-
-        Dim theMapImage As Byte() = Nothing
-        Dim theCoverImage As Byte() = Nothing
-
-        ' Cover and map image
-        If taskInfo.MapImageSelected <> String.Empty Then
-            theMapImage = ResizeImageAndGetBytes(taskInfo.MapImageSelected, 400, 400, 25)
-        End If
-
-        If taskInfo.CoverImageSelected <> String.Empty Then
-            theCoverImage = ResizeImageAndGetBytes(taskInfo.CoverImageSelected, 400, 400, 25)
-        End If
-
-        ' Assume these values are computed or retrieved as part of the taskInfo
-        Dim latitudeMin As Double
-        Dim latitudeMax As Double
-        Dim longitudeMin As Double
-        Dim longitudeMax As Double
-        _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
-
-        'Set RepostText
-        Dim repostText As String = String.Empty
-        If chkRepost.Checked Then
-            If txtRepostOriginalURL.TextLength > 0 Then
-                repostText = $"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}]({txtRepostOriginalURL.Text}) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
-            Else
-                repostText = $"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
-            End If
-        End If
-
-        'Set RecommendedAddOns list as JSON
-        Dim recommendedAddOnsList As String = "[]" ' Default empty JSON array
-        If taskInfo.RecommendedAddOns IsNot Nothing AndAlso taskInfo.RecommendedAddOns.Count > 0 Then
-            Dim addOns = taskInfo.RecommendedAddOns.Select(Function(addOn) New With {
-            Key .Name = addOn.Name,
-            Key .URL = addOn.URL,
-            Key .Type = addOn.Type
-        }).ToList()
-            recommendedAddOnsList = JsonConvert.SerializeObject(addOns)
-        End If
-
-        ' Create a new list to store filenames only
-        Dim filenames As New List(Of String)
-        ' Parse the ExtraFiles list and extract filenames
-        If taskInfo.ExtraFiles IsNot Nothing Then
-            For Each currentFilePath In taskInfo.ExtraFiles
-                filenames.Add(IO.Path.GetFileName(currentFilePath)) ' Extract and add only the filename
-            Next
-        End If
-        ' Serialize the filenames list into JSON
-        Dim extraFilesList As String = JsonConvert.SerializeObject(filenames)
-
-        ' Update the taskData dictionary to include WorldMapInfo fields
-        Dim taskData As New Dictionary(Of String, Object) From {
-        {"TaskID", taskInfo.DiscordTaskID},
-        {"Title", taskInfo.Title},
-        {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
-        {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
-        {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
-        {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
-        {"MainAreaPOI", taskInfo.MainAreaPOI},
-        {"DepartureName", taskInfo.DepartureName},
-        {"DepartureICAO", taskInfo.DepartureICAO},
-        {"DepartureExtra", taskInfo.DepartureExtra},
-        {"ArrivalName", taskInfo.ArrivalName},
-        {"ArrivalICAO", taskInfo.ArrivalICAO},
-        {"ArrivalExtra", taskInfo.ArrivalExtra},
-        {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
-        {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
-        {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
-        {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
-        {"SoaringExtraInfo", taskInfo.SoaringExtraInfo},
-        {"DurationMin", taskInfo.DurationMin},
-        {"DurationMax", taskInfo.DurationMax},
-        {"DurationExtraInfo", taskInfo.DurationExtraInfo},
-        {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
-        {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
-        {"RecommendedGliders", taskInfo.RecommendedGliders},
-        {"DifficultyRating", taskInfo.DifficultyRating},
-        {"DifficultyExtraInfo", taskInfo.DifficultyExtraInfo},
-        {"ShortDescription", taskInfo.ShortDescription},
-        {"LongDescription", taskInfo.LongDescription},
-        {"WeatherSummary", taskInfo.WeatherSummary},
-        {"Credits", taskInfo.Credits},
-        {"Countries", String.Join(", ", taskInfo.Countries.Select(Function(country) country.Replace(", ", " - ")))},
-        {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
-        {"RecommendedAddOnsList", recommendedAddOnsList},
-        {"ExtraFilesList", extraFilesList},
-        {"MapImage", theMapImage},
-        {"CoverImage", theCoverImage},
-        {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
-        {"LatMin", latitudeMin},
-        {"LatMax", latitudeMax},
-        {"LongMin", longitudeMin},
-        {"LongMax", longitudeMax},
-        {"PLNFilename", taskInfo.FlightPlanFilename},
-        {"PLNXML", _XmlDocFlightPlan.InnerXml},
-        {"WPRFilename", taskInfo.WeatherFilename},
-        {"WPRXML", _XmlDocWeatherPreset.InnerXml},
-        {"RepostText", repostText},
-        {"SuppressBaroPressureWarningSymbol", If(taskInfo.SuppressBaroPressureWarningSymbol, 1, 0)},
-        {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
-        {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim}
-    }
-
-        Dim filePath As String = taskInfo.DPHXPackageFilename
-        Dim result As Boolean = UploadTaskToServer(taskData, filePath)
-
-        If result Then
-            'Nothing to do
-        Else
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
-        End If
-
-    End Sub
-
     Private Function GetFileUpdateUTCDateTime(filePath As String, Optional inUTC As Boolean = True) As DateTime
         Dim fileInfo As New FileInfo(filePath)
         Dim localDateTime As DateTime = fileInfo.LastWriteTime
@@ -5930,7 +5851,7 @@ Public Class Main
 
         ' Update the taskData dictionary with minimal fields for creation
         Dim taskData As New Dictionary(Of String, Object) From {
-            {"TemporaryTaskID", taskInfo.DiscordTaskID},
+            {"TemporaryTaskID", taskInfo.TemporaryTaskID},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
@@ -6038,7 +5959,143 @@ Public Class Main
         End Try
     End Function
 
-    Private Function UploadTaskToServer(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
+    Private Sub CreateWSGTaskPart2()
+
+        Dim taskInfo As AllData = SetAndRetrieveSessionData()
+
+        Dim theMapImage As Byte() = Nothing
+        Dim theCoverImage As Byte() = Nothing
+
+        ' Cover and map image
+        If taskInfo.MapImageSelected <> String.Empty Then
+            theMapImage = ResizeImageAndGetBytes(taskInfo.MapImageSelected, 400, 400, 25)
+        End If
+
+        If taskInfo.CoverImageSelected <> String.Empty Then
+            theCoverImage = ResizeImageAndGetBytes(taskInfo.CoverImageSelected, 400, 400, 25)
+        End If
+
+        ' Assume these values are computed or retrieved as part of the taskInfo
+        Dim latitudeMin As Double
+        Dim latitudeMax As Double
+        Dim longitudeMin As Double
+        Dim longitudeMax As Double
+        _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
+
+        'Set RepostText
+        Dim repostText As String = String.Empty
+        If chkRepost.Checked Then
+            If txtRepostOriginalURL.TextLength > 0 Then
+                repostText = $"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}]({txtRepostOriginalURL.Text}) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
+            Else
+                repostText = $"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
+            End If
+        End If
+
+        'Set RecommendedAddOns list as JSON
+        Dim recommendedAddOnsList As String = "[]" ' Default empty JSON array
+        If taskInfo.RecommendedAddOns IsNot Nothing AndAlso taskInfo.RecommendedAddOns.Count > 0 Then
+            Dim addOns = taskInfo.RecommendedAddOns.Select(Function(addOn) New With {
+            Key .Name = addOn.Name,
+            Key .URL = addOn.URL,
+            Key .Type = addOn.Type
+        }).ToList()
+            recommendedAddOnsList = JsonConvert.SerializeObject(addOns)
+        End If
+
+        ' Create a new list to store filenames only
+        Dim filenames As New List(Of String)
+        ' Parse the ExtraFiles list and extract filenames
+        If taskInfo.ExtraFiles IsNot Nothing Then
+            For Each currentFilePath In taskInfo.ExtraFiles
+                filenames.Add(IO.Path.GetFileName(currentFilePath)) ' Extract and add only the filename
+            Next
+        End If
+        ' Serialize the filenames list into JSON
+        Dim extraFilesList As String = JsonConvert.SerializeObject(filenames)
+
+        Dim taskData As New Dictionary(Of String, Object) From {
+            {"RealTaskID", taskInfo.DiscordTaskID},
+            {"TemporaryTaskID", taskInfo.TemporaryTaskID},
+            {"Title", taskInfo.Title},
+            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
+            {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
+            {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
+            {"MainAreaPOI", taskInfo.MainAreaPOI},
+            {"DepartureName", taskInfo.DepartureName},
+            {"DepartureICAO", taskInfo.DepartureICAO},
+            {"DepartureExtra", taskInfo.DepartureExtra},
+            {"ArrivalName", taskInfo.ArrivalName},
+            {"ArrivalICAO", taskInfo.ArrivalICAO},
+            {"ArrivalExtra", taskInfo.ArrivalExtra},
+            {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
+            {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
+            {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
+            {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
+            {"SoaringExtraInfo", taskInfo.SoaringExtraInfo},
+            {"DurationMin", taskInfo.DurationMin},
+            {"DurationMax", taskInfo.DurationMax},
+            {"DurationExtraInfo", taskInfo.DurationExtraInfo},
+            {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
+            {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
+            {"RecommendedGliders", taskInfo.RecommendedGliders},
+            {"DifficultyRating", taskInfo.DifficultyRating},
+            {"DifficultyExtraInfo", taskInfo.DifficultyExtraInfo},
+            {"ShortDescription", taskInfo.ShortDescription},
+            {"LongDescription", taskInfo.LongDescription},
+            {"WeatherSummary", taskInfo.WeatherSummary},
+            {"Credits", taskInfo.Credits},
+            {"Countries", String.Join(", ", taskInfo.Countries.Select(Function(country) country.Replace(", ", " - ")))},
+            {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
+            {"RecommendedAddOnsList", recommendedAddOnsList},
+            {"ExtraFilesList", extraFilesList},
+            {"MapImage", theMapImage},
+            {"CoverImage", theCoverImage},
+            {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
+            {"LatMin", latitudeMin},
+            {"LatMax", latitudeMax},
+            {"LongMin", longitudeMin},
+            {"LongMax", longitudeMax},
+            {"PLNFilename", taskInfo.FlightPlanFilename},
+            {"PLNXML", _XmlDocFlightPlan.InnerXml},
+            {"WPRFilename", taskInfo.WeatherFilename},
+            {"WPRXML", _XmlDocWeatherPreset.InnerXml},
+            {"RepostText", repostText},
+            {"SuppressBaroPressureWarningSymbol", If(taskInfo.SuppressBaroPressureWarningSymbol, 1, 0)},
+            {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
+            {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim},
+            {"Status", taskInfo.TaskStatus}
+        }
+
+        Dim filePath As String = taskInfo.DPHXPackageFilename
+
+        'keep the TemporaryTaskID in case of an error
+        Dim oldTemporaryTaskID As String = taskInfo.TemporaryTaskID
+        txtTemporaryTaskID.Text = String.Empty
+        taskInfo.TemporaryTaskID = String.Empty
+
+        'One last save of the DPHX that will be published
+        SaveSession()
+
+        Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath)
+
+        If result Then
+            'Nothing to do
+        Else
+            'Put back the pending values
+            taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            txtTemporaryTaskID.Text = oldTemporaryTaskID
+            taskInfo.TemporaryTaskID = oldTemporaryTaskID
+            SaveSession()
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
+    Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
         Try
             ' Serialize the task to JSON
             Dim json As String = JsonConvert.SerializeObject(task, New JsonSerializerSettings() With {
@@ -6046,7 +6103,7 @@ Public Class Main
         })
 
             ' Prepare the request
-            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
+            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateNewTaskFromDPH.php"), HttpWebRequest)
             request.Method = "POST"
             request.ContentType = "multipart/form-data"
 
