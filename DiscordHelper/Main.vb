@@ -2832,6 +2832,7 @@ Public Class Main
                 _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
                 taskInfo.DiscordTaskID = txtDiscordTaskID.Text
                 taskInfo.TaskStatus = _TaskStatus
+                CreateWSGTaskPart1()
 
                 ' These will allow us to post the task on Discord with proper links.
 
@@ -5915,6 +5916,93 @@ Public Class Main
             End If
         Next
         Return Nothing
+    End Function
+
+    Private Sub CreateWSGTaskPart1()
+
+        Dim taskInfo As AllData = SetAndRetrieveSessionData()
+
+        ' Assume these values are computed or retrieved as part of the taskInfo
+        Dim latitudeMin As Double
+        Dim latitudeMax As Double
+        Dim longitudeMin As Double
+        Dim longitudeMax As Double
+        _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
+
+        ' Update the taskData dictionary with minimal fields for creation
+        Dim taskData As New Dictionary(Of String, Object) From {
+            {"TemporaryTaskID", taskInfo.DiscordTaskID},
+            {"Title", taskInfo.Title},
+            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
+            {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
+            {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
+            {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
+            {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
+            {"LatMin", latitudeMin},
+            {"LatMax", latitudeMax},
+            {"LongMin", longitudeMin},
+            {"LongMax", longitudeMax}
+        }
+
+        Dim result As Boolean = CallScriptToCreateWSGTaskPart1(taskData)
+
+        If result Then
+            'Nothing to do
+        Else
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+
+    End Sub
+
+    Private Function CallScriptToCreateWSGTaskPart1(taskData As Dictionary(Of String, Object)) As Integer
+        Try
+            ' Serialize the task data to JSON
+            Dim json As String = JsonConvert.SerializeObject(taskData, New JsonSerializerSettings() With {
+            .NullValueHandling = NullValueHandling.Ignore
+        })
+
+            ' Prepare the request
+            Dim request As HttpWebRequest = CType(WebRequest.Create($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}CreateUpdateTaskFromDPHTool.php"), HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "application/json"
+            request.Accept = "application/json"
+
+            ' Write the serialized JSON to the request body
+            Using streamWriter As New StreamWriter(request.GetRequestStream())
+                streamWriter.Write(json)
+            End Using
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                If response.StatusCode = HttpStatusCode.OK Then
+                    Using reader As New StreamReader(response.GetResponseStream())
+                        Dim result As String = reader.ReadToEnd()
+                        ' Parse the response JSON
+                        Dim responseJson As JObject = JObject.Parse(result)
+
+                        ' Check if the server returned success
+                        If responseJson("status").ToString() = "success" Then
+                            ' Return the EntrySeqID from the response
+                            Return Convert.ToInt32(responseJson("EntrySeqID"))
+                        Else
+                            Throw New Exception($"Server error: {responseJson("message")}")
+                        End If
+                    End Using
+                Else
+                    Throw New Exception($"Server returned status code: {response.StatusCode}")
+                End If
+            End Using
+        Catch ex As Exception
+            ' Show error message
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error publishing task to WSG (Step 1): {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+
     End Function
 
     Private Function UploadTaskToServer(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
