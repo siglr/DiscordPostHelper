@@ -2833,9 +2833,8 @@ Public Class Main
                 taskInfo.DiscordTaskID = txtDiscordTaskID.Text
                 taskInfo.TaskStatus = _TaskStatus
                 CreateWSGTaskPart1()
-
+                GetTaskDetails(taskInfo.DiscordTaskID)
                 ' These will allow us to post the task on Discord with proper links.
-
                 autoContinue = FlightPlanMainInfoCopy()
 
                 ' Then we need to complete the entry on WSG with the files and correct TaskID
@@ -5936,9 +5935,14 @@ Public Class Main
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
             {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
+            {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
+            {"SoaringThermals", If(taskInfo.SoaringThermals, 1, 0)},
+            {"SoaringWaves", If(taskInfo.SoaringWaves, 1, 0)},
+            {"SoaringDynamic", If(taskInfo.SoaringDynamic, 1, 0)},
             {"TaskDistance", CInt(_TaskTotalDistanceInKm)},
             {"TotalDistance", CInt(_FlightTotalDistanceInKm)},
             {"DBEntryUpdate", Now.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")},
+            {"RecommendedAddOns", If(taskInfo.RecommendedAddOns Is Nothing OrElse taskInfo.RecommendedAddOns.Count = 0, 0, 1)},
             {"LatMin", latitudeMin},
             {"LatMax", latitudeMax},
             {"LongMin", longitudeMin},
