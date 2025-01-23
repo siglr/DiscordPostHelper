@@ -91,7 +91,7 @@ try {
 
         // Validate that required files are present
         if (!isset($_FILES['file']) || !isset($_FILES['image'])) {
-            throw new Exception("DPHX file and Weather image is required for task creation.");
+            throw new Exception("DPHX file and Weather image are required for task creation.");
         }
 
         // Ensure the DPHX file is uploaded
@@ -101,6 +101,15 @@ try {
         $target_file = $dphxPath . basename($taskID . '.dphx');
         if (!move_uploaded_file($file['tmp_name'], $target_file)) {
             throw new Exception('Failed to upload the DPHX file.');
+        }
+
+        // Ensure the weather image file is uploaded
+        $image = $_FILES['image'];
+        $target_image_dir = $fileRootPath . 'TaskBrowser/WeatherCharts/';
+        $target_image_file = $target_image_dir . basename($taskData['EntrySeqID'] . '.jpg');
+
+        if (!move_uploaded_file($image['tmp_name'], $target_image_file)) {
+            throw new Exception('Failed to upload the weather image file.');
         }
 
         // Prepare BaroPressureExtraInfo
@@ -210,15 +219,6 @@ try {
             ':Status' => $status,
             ':TemporaryTaskID' => $taskData['TemporaryTaskID']
         ]);
-
-        // Ensure the image file is uploaded
-        $image = $_FILES['image'];
-        $target_image_dir = '/home2/siglr3/public_html/DiscordPostHelper/TaskBrowser/WeatherCharts/';
-        $target_image_file = $target_image_dir . basename($taskData['EntrySeqID'] . '.jpg'); // Assuming the image is a JPG
-
-        if (!move_uploaded_file($image['tmp_name'], $target_image_file)) {
-            throw new Exception('Failed to upload the image file.');
-        }
 
         // Call createOrUpdateTaskNewsEntry if Status = 99
         if ($taskData['Status'] === 99) {
