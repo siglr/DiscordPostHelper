@@ -45,6 +45,14 @@ Public Class SupportingFeatures
         TaskBrowserAdmin = 4
     End Enum
 
+    Public Enum WSGTaskStatus As Integer
+        NotCreated = 0
+        PendingCreation = 10
+        Inactive = 20
+        TimeDelayed = 30
+        Active = 99
+    End Enum
+
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Public ReadOnly KnownDesigners As New List(Of String)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)

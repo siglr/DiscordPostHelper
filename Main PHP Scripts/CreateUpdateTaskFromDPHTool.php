@@ -67,6 +67,9 @@ try {
     // Prepare SuppressBaroPressureWarningSymbol
     $suppressBaroPressureWarningSymbol = isset($taskData['SuppressBaroPressureWarningSymbol']) ? (int)$taskData['SuppressBaroPressureWarningSymbol'] : 0;
 
+    // Determine the Status value
+    $status = isset($taskData['Status']) ? (int)$taskData['Status'] : 99;
+
     if (!$taskExists) {
         // Check if the user has CreateTask rights
         if (!checkUserPermission($userID, 'CreateTask')) {
@@ -84,7 +87,7 @@ try {
                 ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
                 RecommendedAddOns, RecommendedAddOnsList, MapImage, CoverImage, DBEntryUpdate, 
                 PLNFilename, PLNXML, WPRFilename, WPRXML, LatMin, LatMax, LongMin, LongMax, RepostText,
-                SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo, ExtraFilesList
+                SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo, ExtraFilesList, Status
             ) VALUES (
                 :TaskID, :Title, :LastUpdate, :SimDateTime, :IncludeYear, :SimDateTimeExtraInfo,
                 :MainAreaPOI, :DepartureName, :DepartureICAO, :DepartureExtra, :ArrivalName,
@@ -94,7 +97,7 @@ try {
                 :ShortDescription, :LongDescription, :WeatherSummary, :Credits, :Countries,
                 :RecommendedAddOns, :RecommendedAddOnsList, :MapImage, :CoverImage, :DBEntryUpdate, 
                 :PLNFilename, :PLNXML, :WPRFilename, :WPRXML, :LatMin, :LatMax, :LongMin, :LongMax, :RepostText,
-                :SuppressBaroPressureWarningSymbol, :BaroPressureExtraInfo, :ExtraFilesList
+                :SuppressBaroPressureWarningSymbol, :BaroPressureExtraInfo, :ExtraFilesList, :Status
             )
         ");
         logMessage("Insert statement prepared.");
@@ -157,7 +160,8 @@ try {
             ':RepostText' => $taskData['RepostText'],
             ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
             ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
-            ':ExtraFilesList' => $extraFilesList
+            ':ExtraFilesList' => $extraFilesList,
+            ':Status' => $status
         ]);
         logMessage("Inserted task with TaskID: " . $taskData['TaskID']);
         
@@ -191,7 +195,8 @@ try {
                 RecommendedAddOnsList = :RecommendedAddOnsList, MapImage = :MapImage, CoverImage = :CoverImage, DBEntryUpdate = :DBEntryUpdate,
                 PLNFilename = :PLNFilename, PLNXML = :PLNXML, WPRFilename = :WPRFilename, WPRXML = :WPRXML, 
                 LatMin = :LatMin, LatMax = :LatMax, LongMin = :LongMin, LongMax = :LongMax, RepostText = :RepostText, 
-                SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo = :BaroPressureExtraInfo, ExtraFilesList = :ExtraFilesList
+                SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol, BaroPressureExtraInfo = :BaroPressureExtraInfo, 
+                ExtraFilesList = :ExtraFilesList, Status = :Status
             WHERE TaskID = :TaskID
         ");
         logMessage("Update statement prepared.");
@@ -254,7 +259,8 @@ try {
             ':RepostText' => $taskData['RepostText'],
             ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
             ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
-            ':ExtraFilesList' => $extraFilesList
+            ':ExtraFilesList' => $extraFilesList,
+            ':Status' => $status
 
         ]);
         logMessage("Updated task with TaskID: " . $taskData['TaskID']);

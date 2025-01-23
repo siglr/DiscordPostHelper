@@ -269,8 +269,11 @@ Public Class AllData
     <XmlElement("DiscordTaskID")>
     Public Property DiscordTaskID As String
 
-    <XmlElement("TaskThreadFirstPostID")>
-    Public Property TaskThreadFirstPostID As String
+    <XmlElement("TaskStatus")>
+    Public Property TaskStatus As Integer
+
+    <XmlElement("EntrySeqID")>
+    Public Property EntrySeqID As Integer
 
     <XmlElement("DiscordEventThreadURL")>
     Public Property DiscordEventThreadURL As String

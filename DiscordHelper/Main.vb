@@ -44,7 +44,8 @@ Public Class Main
     Private _timeStampContextualMenuDateTime As DateTime
     Private _userPermissionID As String
     Private _userPermissions As New Dictionary(Of String, Boolean)
-    Private _TBTaskEntrySeqID As Integer
+    Private _TaskEntrySeqID As Integer = 0
+    Private _TaskStatus As SupportingFeatures.WSGTaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
     Private _TBTaskDBEntryUpdate As DateTime
     Private _TBTaskLastUpdate As DateTime
 
@@ -53,8 +54,6 @@ Public Class Main
     Private _OriginalFlightPlanDepRwy As String = String.Empty
     Private _OriginalFlightPlanArrival As String = String.Empty
     Private _OriginalFlightPlanShortDesc As String = String.Empty
-
-    Private _taskThreadFirstPostID As String = String.Empty
 
 #End Region
 
@@ -431,7 +430,6 @@ Public Class Main
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
         txtDiscordTaskID.Text = String.Empty
-        _taskThreadFirstPostID = String.Empty
         txtEventTeaserAreaMapImage.Text = String.Empty
         txtEventTeaserMessage.Text = String.Empty
         chkEventTeaser.Checked = False
@@ -448,7 +446,7 @@ Public Class Main
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
         _SF.AllWaypoints.Clear()
-        _TBTaskEntrySeqID = 0
+        _TaskEntrySeqID = 0
 
         'BuildFPResults()
         'BuildGroupFlightPost()
@@ -982,7 +980,6 @@ Public Class Main
             Dim extractedID As String = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
             If extractedID <> String.Empty Then
                 txtDiscordTaskID.Text = extractedID
-                _taskThreadFirstPostID = String.Empty
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "The URL you copied does not contain a valid ID for the task. The URL must come from a task published in the Task Library on Discord.", "Error extracting task ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -999,7 +996,6 @@ Public Class Main
             Using New Centered_MessageBox(Me)
                 If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     txtDiscordTaskID.Text = String.Empty
-                    _taskThreadFirstPostID = String.Empty
                 End If
             End Using
         End If
@@ -2592,6 +2588,13 @@ Public Class Main
 
     Private Sub btnStartTaskPost_Click(sender As Object, e As EventArgs) Handles btnStartTaskPost.Click
 
+        If Not UserCanCreateTask Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You currently don't have the access rights to create a task on WeSimGlide.org", "Missing rights", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
         Dim enforceTaskLibrary As Boolean = True
         Dim autoContinue As Boolean = True
 
@@ -2611,9 +2614,9 @@ Public Class Main
 
     Private Sub WeSimGlideTaskLinkPosting()
 
-        If _TBTaskEntrySeqID > 0 Then
+        If _TaskEntrySeqID > 0 Then
             Dim msgWeSimGlideLink As String = String.Empty
-            msgWeSimGlideLink = $"## :wsg: WeSimGlide.org {Environment.NewLine}[Task #{_TBTaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+            msgWeSimGlideLink = $"## :wsg: WeSimGlide.org {Environment.NewLine}[Task #{_TaskEntrySeqID.ToString.Trim} on WeSimGlide.org]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)})"
             Clipboard.SetText(msgWeSimGlideLink)
 
             CopyContent.ShowContent(Me,
@@ -2811,9 +2814,33 @@ Public Class Main
 
     Private Function PostTaskInLibrary(autoContinue As Boolean, Optional enforceTaskLibrary As Boolean = True) As Boolean
 
-        'Task Main Post
+        'Task Main Post on WeSimGlide.org and Discord
         If chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
-            autoContinue = FlightPlanMainInfoCopy()
+
+            'Is there an EntrySeqID already?
+            If _TaskEntrySeqID > 0 Then
+                'Is it an inactive one or an active one (the TaskID is temporary or full one from Discord) ?
+                'If inactive: then we were in the process of creating it, so we can reuse and proceed.
+                'If YES and Active, we need to ask for an UPDATE, not a create. - Check User rights for UPDATE!
+                '   If user wants to update, then we'll do a normal update.
+                '   If not.. then we cancel out.
+            Else
+                'If NO, then we go with CREATE.
+                'We need a temporary inactive TaskID (because we don't have the Discord post yet) and a reserved EntrySeqID
+                Dim taskInfo As AllData = SetAndRetrieveSessionData()
+                txtDiscordTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
+                _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+                taskInfo.DiscordTaskID = txtDiscordTaskID.Text
+                taskInfo.TaskStatus = _TaskStatus
+
+                ' These will allow us to post the task on Discord with proper links.
+
+                autoContinue = FlightPlanMainInfoCopy()
+
+                ' Then we need to complete the entry on WSG with the files and correct TaskID
+
+            End If
+
         End If
         If Not autoContinue Then
             Return False
@@ -3131,7 +3158,6 @@ Public Class Main
                             End If
                         End Using
                     Else
-                        _taskThreadFirstPostID = String.Empty
                         validTaskIDOrCancel = True
                         SaveSession()
                     End If
@@ -3280,11 +3306,7 @@ Public Class Main
 
     Private Function GetDiscordLinkToTaskThread() As String
         Dim urlToTaskThread As String = String.Empty
-        If _taskThreadFirstPostID = String.Empty OrElse _taskThreadFirstPostID = txtDiscordTaskID.Text Then
-            urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}"
-        Else
-            urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}/{_taskThreadFirstPostID}"
-        End If
+        urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}"
         Return urlToTaskThread
     End Function
 
@@ -3628,9 +3650,9 @@ Public Class Main
 
         If Not autoContinue Then Exit Sub
 
-        If _TBTaskEntrySeqID > 0 Then
+        If _TaskEntrySeqID > 0 Then
             txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})" &
-                            $"{Environment.NewLine}[Task #{_TBTaskEntrySeqID}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)}) and event have been published to WeSimGlide.org so are also directly accessible through the tool."
+                            $"{Environment.NewLine}[Task #{_TaskEntrySeqID}]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}) and event have been published to WeSimGlide.org so are also directly accessible through the tool."
         Else
             txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})"
         End If
@@ -5171,7 +5193,8 @@ Public Class Main
             .TrackerGroup = txtTrackerGroup.Text
             .GroupEmoji = lblGroupEmoji.Text
             .DiscordTaskID = txtDiscordTaskID.Text
-            .TaskThreadFirstPostID = _taskThreadFirstPostID
+            .EntrySeqID = _TaskEntrySeqID
+            .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
             .VoiceChannel = cboVoiceChannel.Text
@@ -5326,7 +5349,8 @@ Public Class Main
                     .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
                 txtDiscordTaskID.Text = .DiscordTaskID
-                _taskThreadFirstPostID = .TaskThreadFirstPostID
+                _TaskEntrySeqID = .EntrySeqID
+                _TaskStatus = .TaskStatus
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
@@ -5535,7 +5559,7 @@ Public Class Main
                                                     comments,
                                                     eventDate,
                                                     Now.ToUniversalTime,
-                                                    _TBTaskEntrySeqID,
+                                                    _TaskEntrySeqID,
                                                     txtGroupEventPostURL.Text.Trim,
                                                     eventDate.AddHours(3),
                                                     txtTrackerGroup.Text,
@@ -5558,8 +5582,8 @@ Public Class Main
 
             If result Then
                 Dim msgForEventHunters As String = String.Empty
-                If _TBTaskEntrySeqID > 0 Then
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### :wsg: [Task #{_TBTaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TBTaskEntrySeqID)})"
+                If _TaskEntrySeqID > 0 Then
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)})"
                 Else
                     msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### Please monitor the original event as task has not been published yet."
                 End If
@@ -6026,7 +6050,7 @@ Public Class Main
 
                     ' Check the status
                     If result("status").ToString() = "success" Then
-                        _TBTaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                        _TaskEntrySeqID = result("taskDetails")("EntrySeqID")
                         ' Specify the format of the datetime string
                         Dim utcFormat As String = "yyyy-MM-dd HH:mm:ss"
                         Dim cultureInfo As CultureInfo = CultureInfo.InvariantCulture
@@ -6034,7 +6058,7 @@ Public Class Main
                         _TBTaskDBEntryUpdate = DateTime.ParseExact(result("taskDetails")("DBEntryUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
                         _TBTaskLastUpdate = DateTime.ParseExact(result("taskDetails")("LastUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
                     Else
-                        _TBTaskEntrySeqID = 0
+                        _TaskEntrySeqID = 0
                         Throw New Exception("Error retrieving task details: " & result("message").ToString())
                     End If
                 End Using
@@ -6055,10 +6079,10 @@ Public Class Main
         txtLastUpdateDescription.Enabled = False
         btnDeleteFromTaskBrowser.Enabled = False
 
-        If _TBTaskEntrySeqID > 0 Then
+        If _TaskEntrySeqID > 0 Then
             'Verify if local DPH has been changed
             Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
-            labelString = $"#{_TBTaskEntrySeqID.ToString} - Online ({_TBTaskLastUpdate}) - Local ({localDPHTime})"
+            labelString = $"#{_TaskEntrySeqID.ToString} - Online ({_TBTaskLastUpdate}) - Local ({localDPHTime})"
             If _TBTaskLastUpdate.ToString(dateFormat) < localDPHTime.ToString(dateFormat) Then
                 'Local file is more recent - allow change
                 If UserCanUpdateTask Then
