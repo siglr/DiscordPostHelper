@@ -35,9 +35,6 @@ Public Class AllSettings
     <XmlElement("DPO_chkDPOMainPost")>
     Public Property DPO_chkDPOMainPost As Boolean
 
-    <XmlElement("DPO_chkDPOThreadCreation")>
-    Public Property DPO_chkDPOThreadCreation As Boolean
-
     <XmlElement("DPO_chkDPOIncludeCoverImage")>
     Public Property DPO_chkDPOIncludeCoverImage As Boolean
 
@@ -133,7 +130,6 @@ Public Class AllSettings
             WaitSecondsForFiles = settingsInFile.WaitSecondsForFiles
             DPO_DPOUseCustomSettings = settingsInFile.DPO_DPOUseCustomSettings
             DPO_chkDPOMainPost = settingsInFile.DPO_chkDPOMainPost
-            DPO_chkDPOThreadCreation = settingsInFile.DPO_chkDPOThreadCreation
             DPO_chkDPOIncludeCoverImage = settingsInFile.DPO_chkDPOIncludeCoverImage
             DPO_chkDPOFeaturedOnGroupFlight = settingsInFile.DPO_chkDPOFeaturedOnGroupFlight
             DPO_DGPOUseCustomSettings = settingsInFile.DPO_DGPOUseCustomSettings

@@ -24,7 +24,6 @@ Imports System.Web.UI.HtmlControls
 Public Class SupportingFeatures
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
-    Private Const WeSimGlide As String = "https://wesimglide.org/"
     Private Const SW_RESTORE As Integer = 9
     Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
@@ -2550,16 +2549,20 @@ Public Class SupportingFeatures
 
     Private Shared _useTestServer As Boolean = False
     Private Shared _testServerAskedOnce As Boolean = False
+
+    Private Shared Sub AskTestServer()
+        If Not _testServerAskedOnce Then
+            If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
+                _useTestServer = True
+            Else
+                _useTestServer = False
+            End If
+            _testServerAskedOnce = True
+        End If
+    End Sub
     Public Shared Function SIGLRDiscordPostHelperFolder() As String
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
+            AskTestServer()
             If _useTestServer Then
                 Return "https://siglr.com/DiscordPostHelperTest/"
             Else
@@ -2571,14 +2574,7 @@ Public Class SupportingFeatures
     Public Shared Function TasksDatabase() As String
 
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
+            AskTestServer()
             If _useTestServer Then
                 Return "TasksDatabaseTest.db"
             Else
@@ -2590,21 +2586,10 @@ Public Class SupportingFeatures
 
     Public Shared Function WeSimGlideView() As String
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
-            If _useTestServer Then
-                Return "https://soaring.siglr.com/integrated.html?appContext=true"
-            Else
-                Return "https://wesimglide.org/integrated.html?appContext=true"
-            End If
+            AskTestServer()
+            Return $"{WeSimGlide}/integrated.html?appContext=true"
         End If
-        Return "https://wesimglide.org/integrated.html?appContext=true"
+        Return $"{WeSimGlide}integrated.html?appContext=true"
 
     End Function
 
@@ -2642,6 +2627,15 @@ Public Class SupportingFeatures
         End Try
     End Function
 
+    Public Shared ReadOnly Property WeSimGlide As String
+        Get
+            If _useTestServer Then
+                Return "https://soaring.siglr.com/"
+            Else
+                Return "https://wesimglide.org/"
+            End If
+        End Get
+    End Property
 End Class
 
 

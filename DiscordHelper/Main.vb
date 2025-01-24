@@ -102,6 +102,9 @@ Public Class Main
 
         _SF.FillCountryFlagList(cboCountryFlag.Items)
 
+        'Get the permission ID
+        _userPermissionID = GetUserIDFromPermissionsFile()
+
         ResetForm()
 
         SetTimePickerFormat()
@@ -116,9 +119,6 @@ Public Class Main
 
         LoadDPOptions()
         LoadDGPOptions()
-
-        'Get the permission ID
-        _userPermissionID = GetUserIDFromPermissionsFile()
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
@@ -231,7 +231,6 @@ Public Class Main
 
         If SessionSettings.DPO_DPOUseCustomSettings Then
             chkDPOMainPost.Checked = SessionSettings.DPO_chkDPOMainPost
-            chkDPOThreadCreation.Checked = SessionSettings.DPO_chkDPOThreadCreation
             chkDPOIncludeCoverImage.Checked = SessionSettings.DPO_chkDPOIncludeCoverImage
             chkDPOFeaturedOnGroupFlight.Checked = SessionSettings.DPO_chkDPOFeaturedOnGroupFlight
         End If
@@ -338,6 +337,7 @@ Public Class Main
         _FlightTotalDistanceInKm = 0
         _TaskTotalDistanceInKm = 0
         _PossibleElevationUpdateRequired = False
+        _TaskEntrySeqID = 0
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
 
         cboDifficulty.SelectedIndex = 0
@@ -446,15 +446,14 @@ Public Class Main
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
         _SF.AllWaypoints.Clear()
-        _TaskEntrySeqID = 0
 
         'BuildFPResults()
         'BuildGroupFlightPost()
         SetFormCaption(String.Empty)
         FixForDropDownCombos()
+        SetTBTaskDetailsLabel()
 
         _loadingFile = False
-
         SessionUntouched()
 
     End Sub
@@ -1012,15 +1011,14 @@ Public Class Main
             'Try to retrieve the task EntrySeqID online
             Try
                 If txtTemporaryTaskID.Text.Trim.Length > 0 Then
-                    GetTaskDetails(txtTemporaryTaskID.Text.Trim)
+                    GetTaskDetails(txtTemporaryTaskID.Text.Trim, _TaskEntrySeqID)
                 Else
-                    GetTaskDetails(txtDiscordTaskID.Text.Trim)
+                    GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
                 End If
             Catch ex As Exception
                 'Do nothing - it means the task has not been pushed to the online database
             End Try
         End If
-        SetTBTaskDetailsLabel()
         AllFieldChanges(sender, e)
     End Sub
 
@@ -1878,13 +1876,13 @@ Public Class Main
         sb.AppendLine()
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
         sb.AppendLine("## :wsg:WeSimGlide.org")
-        sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](https://wesimglide.org/index.html?task={_TaskEntrySeqID})")
+        sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
         sb.AppendLine("## 📁 Files")
-        sb.AppendLine($"DPHX : [{txtTitle.Text.Trim}.dphx](https://wesimglide.org/download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"ZIP : [{txtTitle.Text.Trim}.zip](https://wesimglide.org/download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"PLN : [{Path.GetFileName(txtFlightPlanFile.Text)}](https://wesimglide.org/download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"WPR : [{Path.GetFileName(txtWeatherFile.Text)}](https://wesimglide.org/download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}) - Weather preset only, for manual interaction.")
-        If _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
+        sb.AppendLine($"DPHX : [{txtTitle.Text.Trim}.dphx](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"ZIP : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"PLN : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"WPR : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
             sb.AppendLine($" 👉 * Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
         End If
         sb.AppendLine()
@@ -1908,7 +1906,7 @@ Public Class Main
             altRestrictions = "This task contains altitude restrictions"
         End If
         Dim baroWarning As String = String.Empty
-        If Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked) Then
+        If _WeatherDetails IsNot Nothing AndAlso (Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked)) Then
             baroWarning = txtBaroPressureExtraInfo.Text.Trim
         End If
         If Not String.IsNullOrEmpty(altRestrictions) OrElse Not String.IsNullOrEmpty(baroWarning) Then
@@ -2547,6 +2545,14 @@ Public Class Main
 
 #Region "Discord - Flight Plan event handlers"
 
+    Private Sub chkDPOMainPost_EnabledChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.EnabledChanged
+        btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+    End Sub
+
+    Private Sub txtLastUpdateDescription_EnabledChanged(sender As Object, e As EventArgs) Handles txtLastUpdateDescription.EnabledChanged
+        lblUpdateDescription.Enabled = txtLastUpdateDescription.Enabled
+    End Sub
+
     Private Sub lblTaskBrowserIDAndDate_DoubleClick(sender As Object, e As EventArgs) Handles lblTaskBrowserIDAndDate.DoubleClick
 
         WeSimGlideTaskLinkPosting()
@@ -2583,7 +2589,6 @@ Public Class Main
     Private Sub btnDPORememberSettings_Click(sender As Object, e As EventArgs) Handles btnDPORememberSettings.Click
         SessionSettings.DPO_DPOUseCustomSettings = True
         SessionSettings.DPO_chkDPOMainPost = chkDPOMainPost.Checked
-        SessionSettings.DPO_chkDPOThreadCreation = chkDPOThreadCreation.Checked
         SessionSettings.DPO_chkDPOIncludeCoverImage = chkDPOIncludeCoverImage.Checked
         SessionSettings.DPO_chkDPOFeaturedOnGroupFlight = chkDPOFeaturedOnGroupFlight.Checked
     End Sub
@@ -2605,7 +2610,6 @@ Public Class Main
     Private Sub btnDPOResetToDefault_Click(sender As Object, e As EventArgs) Handles btnDPOResetToDefault.Click
 
         chkDPOMainPost.Checked = True
-        chkDPOThreadCreation.Checked = True
         chkDPOIncludeCoverImage.Checked = True
         chkDPOFeaturedOnGroupFlight.Checked = True
 
@@ -2625,8 +2629,10 @@ Public Class Main
         Dim enforceTaskLibrary As Boolean = True
         Dim autoContinue As Boolean = True
 
-        If Not ValidPostingRequirements() Then
-            Exit Sub
+        If txtDiscordTaskID.Text.Length = 0 Then
+            If Not ValidPostingRequirements() Then
+                Exit Sub
+            End If
         End If
 
         If Not PostTaskInLibrary(autoContinue) Then
@@ -2839,77 +2845,105 @@ Public Class Main
 
     End Function
 
-    Private Function PostTaskInLibrary(autoContinue As Boolean, Optional enforceTaskLibrary As Boolean = True) As Boolean
+    Private Function PostTaskInLibrary(autoContinue As Boolean) As Boolean
 
         'Task Main Post on WeSimGlide.org and Discord
         If chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
 
             'Is there an EntrySeqID already?
             If _TaskEntrySeqID > 0 Then
-                'Is it an inactive one or an active one (the TaskID is temporary or full one from Discord) ?
-                'If inactive: then we were in the process of creating it, so we can reuse and proceed.
-                'If YES and Active, we need to ask for an UPDATE, not a create. - Check User rights for UPDATE!
-                '   If user wants to update, then we'll do a normal update.
-                '   If not.. then we cancel out.
+
+                If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
+                    txtDiscordTaskID.Text.Trim.Length = 0 AndAlso
+                    txtTemporaryTaskID.Text.Trim.Length > 0 Then
+                    'Scenario 1 - The task is pending creation and has only a temporary TaskID (no DiscordTaskID)
+                    '             We need to resume at posting task on Discord.
+                    autoContinue = PostTaskOnDiscord()
+
+                ElseIf _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
+                    txtDiscordTaskID.Text.Trim.Length > 0 Then
+                    'Scenario 2 - The task is pending creation and has a DiscordTaskID (the task has been published to Discord but is still incomplete on WSG)
+                    '             We need to resume at trying to complete the publishing on WSG.
+                    autoContinue = PrepareCreateWSGTaskPart2()
+
+                ElseIf _TaskStatus > SupportingFeatures.WSGTaskStatus.PendingCreation Then
+                    'Scenario 3 - The task status is > 10 (it's neither PendingCreation (10) or NotCreated (0))
+                    '             This is a true Update of an existing active task. - Check User rights for UPDATE!
+                    If UserCanUpdateTask Then
+                        If txtLastUpdateDescription.TextLength = 0 Then
+                            Using New Centered_MessageBox(Me)
+                                MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                Return False
+                            End Using
+                        End If
+                        autoContinue = PrepareUpdateWSGTask()
+                        If autoContinue Then
+                            'Update task on Discord ?
+                            Dim dlgResult As DialogResult
+                            Using New Centered_MessageBox(Me)
+                                dlgResult = MessageBox.Show(Me, "Do you need to update Discord too?", "Publishing task update", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                            End Using
+                            If dlgResult = DialogResult.Yes Then
+                                autoContinue = FlightPlanMainInfoCopy(False, True)
+                                If autoContinue Then
+                                    autoContinue = PostTaskThreadContent()
+                                End If
+                            End If
+                        End If
+
+                        Return autoContinue
+                    End If
+
+                Else
+                    'Unplanned scenario! We have an EntrySeqID but the status is NotCreated ?!
+                    'This is a mistake and should never occur
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, "Error! Task exists on WSG but has invalid status of NotCreated. Cannot proceed.", "Incoherent status", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Using
+                    Return False
+                End If
             Else
-                'If NO, then we go with CREATE.
-                'We need a temporary inactive TaskID (because we don't have the Discord post yet) and a reserved EntrySeqID
+                'NO EntrySeqID, then we go with full CREATE from the start.
+                'We first need a temporary inactive TaskID (because we don't have the Discord post yet) to retreive our reserved EntrySeqID on WSG
                 Dim taskInfo As AllData = SetAndRetrieveSessionData()
                 txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
                 txtDiscordTaskID.Text = String.Empty
                 _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
                 taskInfo.TemporaryTaskID = txtTemporaryTaskID.Text
                 taskInfo.TaskStatus = _TaskStatus
-                CreateWSGTaskPart1()
-                GetTaskDetails(taskInfo.TemporaryTaskID)
-                'Save file
-                taskInfo = SetAndRetrieveSessionData()
-                SaveSession()
-                'This will now allow us to post the task on Discord with proper links.
-                autoContinue = FlightPlanMainInfoCopy()
-                If txtDiscordTaskID.Text.Trim.Length > 0 Then
-                    'Then we can complete the entry on WSG with the files and correct TaskID
-                    _TaskStatus = SupportingFeatures.WSGTaskStatus.Active
-                    CreateWSGTaskPart2()
-                    GetTaskDetails(txtDiscordTaskID.Text.Trim)
+                autoContinue = CreateWSGTaskPart1()
+
+                If autoContinue Then
+                    'We can now post the task on Discord
+                    autoContinue = PostTaskOnDiscord()
                 Else
-                    'Pending creation?
+                    'Something went wrong - we cannot continue
+                    txtTemporaryTaskID.Text = String.Empty
+                    txtDiscordTaskID.Text = String.Empty
+                    _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                 End If
-                If Not autoContinue Then
-                    'Where did it stop? If we don't have a true DiscordTaskID, then we're stuck in pending creation!
-                End If
-
             End If
-
         End If
+
         If Not autoContinue Then
-            Return False
+            Return autoContinue
         End If
 
         'Are we enforcing the posting on the Task Library only?
         If txtDiscordTaskID.Text = String.Empty Then
-            If enforceTaskLibrary Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, "Task ID is missing - You must post the task to the Task Library!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-                Return False
-            Else
-                Using New Centered_MessageBox(Me)
-                    If MessageBox.Show(Me, "Task ID is missing - Are you sure you want to proceed?", "Task ID missing", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    Else
-                        Return False
-                    End If
-                End Using
-            End If
-        End If
-
-        'Thread Creation
-        If chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked Then
-            autoContinue = CreateTaskThread()
-        End If
-        If Not autoContinue Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "Task ID is missing - You must post the task to the Task Library!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
             Return False
         End If
+
+        Return PostTaskThreadContent()
+
+    End Function
+
+    Private Function PostTaskThreadContent() As Boolean
+
+        Dim autoContinue As Boolean = False
 
         'Cover Image
         If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked Then
@@ -2928,7 +2962,6 @@ Public Class Main
         End If
 
         Dim msg As String = String.Empty
-        'No add-ons, we can post everything remaining all at once
         msg = $"{taskFeatured}"
 
         'Remaining details
@@ -2945,6 +2978,67 @@ Public Class Main
         End If
 
         Return True
+    End Function
+
+    Private Function PostTaskOnDiscord() As Boolean
+        Dim taskInfo As AllData = SetAndRetrieveSessionData()
+        Dim autoContinue As Boolean = False
+
+        'Retrieve the task details after first step of task creation
+        GetTaskDetails(taskInfo.TemporaryTaskID, taskInfo.EntrySeqID)
+        'Update taskInfo and save file with latest details
+        taskInfo = SetAndRetrieveSessionData()
+        SaveSession()
+
+        'This will now allow us to post the task on Discord with proper links.
+        autoContinue = FlightPlanMainInfoCopy()
+        If txtDiscordTaskID.Text.Trim.Length > 0 Then
+            autoContinue = PrepareCreateWSGTaskPart2()
+        Else
+            'We don't have the official Discord task ID, so the task should stay in Pending creation?
+            _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            SaveSession()
+            autoContinue = False
+        End If
+
+        If autoContinue Then
+            'Thread Creation
+            autoContinue = CreateTaskThread()
+        End If
+
+        Return autoContinue
+
+    End Function
+
+    Private Function PrepareUpdateWSGTask() As Boolean
+        'Update the WSG task
+        SetAndRetrieveSessionData()
+        SaveSession()
+        Dim autoContinue As Boolean = CreateWSGTaskPart2()
+        If Not autoContinue Then
+            'Something went wrong on the second part!! This is really bad. TODO: What do we do?
+        End If
+        'Retrieve the updated task details
+        GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+        Return autoContinue
+
+    End Function
+
+    Private Function PrepareCreateWSGTaskPart2() As Boolean
+        'Then we can complete the entry on WSG with the files and correct TaskID
+        _TaskStatus = SupportingFeatures.WSGTaskStatus.Active
+        SetAndRetrieveSessionData()
+        SaveSession()
+        Dim autoContinue As Boolean = CreateWSGTaskPart2()
+        If Not autoContinue Then
+            'Something went wrong on the second part!! This is really bad. TODO: What do we do?
+            _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            SaveSession()
+            Return False
+        End If
+        'Retrieve the updated task details
+        GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+        Return autoContinue
 
     End Function
 
@@ -2967,7 +3061,6 @@ Public Class Main
         Dim listOfControlsAdd As New List(Of Windows.Forms.CheckBox)
 
         If lblTaskLibraryIDAcquired.Visible Then
-            listOfControlsRemove.Add(chkDPOThreadCreation)
             listOfControlsRemove.Add(chkDPOIncludeCoverImage)
             'Task
             listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
@@ -2986,7 +3079,6 @@ Public Class Main
             listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
             'Task
-            listOfControlsAdd.Add(chkDPOThreadCreation)
             listOfControlsAdd.Add(chkDPOIncludeCoverImage)
             listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
             'Group
@@ -3052,7 +3144,6 @@ Public Class Main
         End If
 
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
-        chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
         chkDGPOFilesWithoutLegend.Enabled = grbTaskInfo.Enabled
         chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
         chkDGPOWaypoints.Enabled = grbTaskInfo.Enabled
@@ -3136,7 +3227,7 @@ Public Class Main
 
     End Sub
 
-    Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False) As Boolean
+    Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False, Optional isUpdate As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
         Dim origin As String = String.Empty
@@ -3145,17 +3236,22 @@ Public Class Main
         BuildFPResults(fromGroup)
 
         If Not fromGroup Then
-            autoContinue = MsgBoxWithPicture.ShowContent(Me,
+            If isUpdate Then
+                origin = "You can now EDIT the corresponding task message directly in the FLIGHTS channel under TASK LIBRARY."
+                titleMsg = "Updating main FP post"
+            Else
+                autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "StartTaskWorkflow.gif",
                                                      "Please open the Discord app and position your cursor as shown below",
                                                      "Once your cursor is in the right field, you can click OK and start posting.",
                                                      "Instructions to read before starting the post!")
 
-            If Not autoContinue Then
-                Return autoContinue
+                If Not autoContinue Then
+                    Return autoContinue
+                End If
+                origin = "You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY."
+                titleMsg = "Creating main FP post"
             End If
-            origin = "You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY."
-            titleMsg = "Creating main FP post"
         Else
             origin = "You can now post the main flight plan message under the group event's thread."
             titleMsg = "Creating FP post for group"
@@ -3231,7 +3327,7 @@ Public Class Main
                                                      "Instructions for the creation of the task's thread!")
 
         If autoContinue Then
-            Dim msg As String = $"## 🧵 Task Details Thread{Environment.NewLine}Refer to this thread for comprehensive information, resources, and updates related to this task. This first message serves as your anchor point for all details in this thread."
+            Dim msg As String = $"## 🧵 Use this thread for discussions, pictures, results."
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                                 msg,
@@ -5454,6 +5550,10 @@ Public Class Main
                 LoadPossibleImagesInCoverDropdown(.CoverImageSelected)
             End With
 
+            If _TaskEntrySeqID > 0 Then
+                GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+                SetTBTaskDetailsLabel()
+            End If
             'BuildFPResults()
             BuildWeatherInfoResults()
             BuildRecAddOnsText()
@@ -5510,29 +5610,6 @@ Public Class Main
 #Region "Task Browser Code"
 
 #Region "Event Handlers"
-    Private Sub btnCreateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnCreateInTaskBrowser.Click
-        If UserCanCreateTask Then
-            'UploadToTaskBrowser()
-            GetTaskDetails(txtDiscordTaskID.Text.Trim)
-            SetTBTaskDetailsLabel()
-            WeSimGlideTaskLinkPosting()
-        End If
-    End Sub
-
-    Private Sub btnUpdateInTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnUpdateInTaskBrowser.Click
-        If UserCanUpdateTask Then
-            'Check if an update description is present
-            If txtLastUpdateDescription.TextLength = 0 Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Exit Sub
-                End Using
-            End If
-            'UploadToTaskBrowser()
-            GetTaskDetails(txtDiscordTaskID.Text.Trim)
-            SetTBTaskDetailsLabel()
-        End If
-    End Sub
 
     Private Sub btnDeleteFromTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnDeleteFromTaskBrowser.Click
         If UserCanDeleteTask Then
@@ -5838,7 +5915,7 @@ Public Class Main
         Return Nothing
     End Function
 
-    Private Sub CreateWSGTaskPart1()
+    Private Function CreateWSGTaskPart1() As Boolean
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
@@ -5880,7 +5957,9 @@ Public Class Main
             End Using
         End If
 
-    End Sub
+        Return result
+
+    End Function
 
     Private Function CallScriptToCreateWSGTaskPart1(taskData As Dictionary(Of String, Object)) As Integer
         Try
@@ -5959,7 +6038,7 @@ Public Class Main
         End Try
     End Function
 
-    Private Sub CreateWSGTaskPart2()
+    Private Function CreateWSGTaskPart2() As Boolean
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
@@ -6014,9 +6093,15 @@ Public Class Main
         ' Serialize the filenames list into JSON
         Dim extraFilesList As String = JsonConvert.SerializeObject(filenames)
 
+        Dim taskIDToUse As String = String.Empty
+        If taskInfo.TemporaryTaskID = String.Empty Then
+            taskIDToUse = taskInfo.DiscordTaskID
+        Else
+            taskIDToUse = taskInfo.TemporaryTaskID
+        End If
         Dim taskData As New Dictionary(Of String, Object) From {
             {"RealTaskID", taskInfo.DiscordTaskID},
-            {"TemporaryTaskID", taskInfo.TemporaryTaskID},
+            {"TemporaryTaskID", taskIDToUse},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
@@ -6093,7 +6178,9 @@ Public Class Main
             End Using
         End If
 
-    End Sub
+        Return result
+
+    End Function
 
     Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
         Try
@@ -6211,12 +6298,22 @@ Public Class Main
         Return Nothing
     End Function
 
-    Private Sub GetTaskDetails(taskID As String)
+    Private Sub GetTaskDetails(taskID As String, entrySeqID As Integer)
         Try
-            Dim taskDetailsUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingID.php"
+
+            Dim taskDetailsUrl As String = String.Empty
+            Dim request As HttpWebRequest = Nothing
+
+            If entrySeqID > 0 Then
+                'Use EntrySeqID
+                taskDetailsUrl = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php"
+                request = CType(WebRequest.Create(taskDetailsUrl & "?EntrySeqID=" & entrySeqID.ToString), HttpWebRequest)
+            Else
+                taskDetailsUrl = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingID.php"
+                request = CType(WebRequest.Create(taskDetailsUrl & "?TaskID=" & taskID), HttpWebRequest)
+            End If
 
             ' Create the web request
-            Dim request As HttpWebRequest = CType(WebRequest.Create(taskDetailsUrl & "?TaskID=" & taskID), HttpWebRequest)
             request.Method = "GET"
             request.ContentType = "application/json"
 
@@ -6228,7 +6325,9 @@ Public Class Main
 
                     ' Check the status
                     If result("status").ToString() = "success" Then
-                        _TaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                        If entrySeqID = 0 Then
+                            _TaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                        End If
                         ' Specify the format of the datetime string
                         Dim utcFormat As String = "yyyy-MM-dd HH:mm:ss"
                         Dim cultureInfo As CultureInfo = CultureInfo.InvariantCulture
@@ -6242,6 +6341,8 @@ Public Class Main
                 End Using
             End Using
 
+            SetTBTaskDetailsLabel()
+
         Catch ex As Exception
             Throw New Exception("Error: " & ex.Message)
         End Try
@@ -6252,33 +6353,63 @@ Public Class Main
         Dim labelString As String = String.Empty
         Dim dateFormat As String = "yyyy-MM-dd HH:mm:ss"
 
-        btnCreateInTaskBrowser.Enabled = False
-        btnUpdateInTaskBrowser.Enabled = False
         txtLastUpdateDescription.Enabled = False
         btnDeleteFromTaskBrowser.Enabled = False
+        btnStartTaskPost.Enabled = False
 
         If _TaskEntrySeqID > 0 Then
             'Verify if local DPH has been changed
+            btnStartTaskPost.Text = "Start Task Update Workflow"
             Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
-            labelString = $"#{_TaskEntrySeqID.ToString} - Online ({_TBTaskLastUpdate}) - Local ({localDPHTime})"
-            If _TBTaskLastUpdate.ToString(dateFormat) < localDPHTime.ToString(dateFormat) Then
-                'Local file is more recent - allow change
-                If UserCanUpdateTask Then
-                    btnUpdateInTaskBrowser.Enabled = True
-                    txtLastUpdateDescription.Enabled = True
-                End If
-                lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
-            Else
-                lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(0, 192, 0)
-            End If
+            Dim statusMsg As String = String.Empty
+            Select Case _TaskStatus
+                Case SupportingFeatures.WSGTaskStatus.Active
+                    'Nothing
+                Case SupportingFeatures.WSGTaskStatus.Inactive
+                    statusMsg = "⚠️Inactive: "
+                Case SupportingFeatures.WSGTaskStatus.NotCreated
+                    'Not possible
+                Case SupportingFeatures.WSGTaskStatus.PendingCreation
+                    btnStartTaskPost.Text = "Resume Task Creation Workflow"
+                    statusMsg = "⚠️Incomplete: "
+            End Select
+            labelString = $"{statusMsg}#{_TaskEntrySeqID.ToString} - Online ({_TBTaskLastUpdate}) - Local ({localDPHTime})"
+            Select Case _TaskStatus
+                Case SupportingFeatures.WSGTaskStatus.Active, SupportingFeatures.WSGTaskStatus.Inactive
+                    Dim timeDifference As TimeSpan = _TBTaskLastUpdate.Subtract(localDPHTime)
+                    If timeDifference.TotalSeconds < -2 Then
+                        'Local file is more recent (by more than 2 seconds) - allow change
+                        If UserCanUpdateTask Then
+                            btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+                            txtLastUpdateDescription.Enabled = chkDPOMainPost.Enabled
+                        Else
+                            btnStartTaskPost.Enabled = False
+                            txtLastUpdateDescription.Enabled = False
+                        End If
+                        lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
+                    Else
+                        lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(0, 192, 0)
+                    End If
+                Case SupportingFeatures.WSGTaskStatus.PendingCreation
+                    If UserCanCreateTask Then
+                        btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+                    Else
+                        btnStartTaskPost.Enabled = False
+                    End If
+                    lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
+            End Select
+
             If UserCanDeleteTask Then
                 btnDeleteFromTaskBrowser.Enabled = True
             End If
         Else
+            btnStartTaskPost.Text = "Start Task Creation Workflow"
             labelString = "Task does not exist on WeSimGlide.org"
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             If UserCanCreateTask Then
-                btnCreateInTaskBrowser.Enabled = True
+                btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+            Else
+                btnStartTaskPost.Enabled = False
             End If
         End If
 
