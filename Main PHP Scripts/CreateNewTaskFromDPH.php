@@ -22,9 +22,9 @@ try {
         throw new Exception('Missing task data or UserID.');
     }
 
-    // Check if the user has CreateTask rights
-    if (!checkUserPermission($userID, 'CreateTask')) {
-        throw new Exception('User ' . $userID . ' does not have permission to create tasks.');
+    // Check if the user has the proper rights
+    if (!checkUserPermission($userID, $taskData['Mode'])) {
+        throw new Exception('User ' . $userID . ' does not have permission for ' . $taskData['Mode']);
     }
 
     // Check if the task already exists
@@ -297,6 +297,7 @@ try {
             $taskData['TaskID'] = $taskData['RealTaskID'];
             // Call the function with updated $taskData
             createOrUpdateTaskNewsEntry($taskData, false);
+            cleanUpPendingTasks($pdo);
         }
 
         echo json_encode(['status' => 'success', 'message' => 'Task updated successfully.']);

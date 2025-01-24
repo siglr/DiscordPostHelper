@@ -5,7 +5,14 @@ $config = include 'config.php';
 // Assign paths from the configuration array
 $databasePath = $config['databasePath'];
 $newsDBPath = $config['newsDBPath'];
-$logFile = $config['logFile'];
+
+// Dynamically insert the date into the log file name
+$logFile = preg_replace(
+    '/(error_log)(\.txt)$/i',
+    '${1}_' . date('Ymd') . '${2}',
+    $config['logFile']
+);
+
 $userPermissionsPath = $config['userPermissionsPath'];
 $fileRootPath = $config['fileRootPath'];
 
@@ -106,7 +113,28 @@ function cleanUpNewsEntries($pdo) {
     // Cleanup old Task entries (NewsType 0) older than 7 days
     $pdo->exec("DELETE FROM News WHERE NewsType = 0 AND Published < datetime('now', '-7 days')");
 }
+function cleanUpPendingTasks($pdo) {
+    try {
+        logMessage("Cleaning up old pending tasks of more than 5 days");
+        // Get the datetime for 5 days ago
+        $datetimeMinus5Days = $pdo->query("SELECT datetime('now', '-5 days')")->fetchColumn();
 
+        // Delete tasks with Status = 10 and LastUpdate older than 5 days
+        $deleteStmt = $pdo->prepare("
+            DELETE FROM Tasks
+            WHERE Status = 10
+            AND LastUpdate < :datetimeMinus5Days
+        ");
+        $deleteStmt->execute([':datetimeMinus5Days' => $datetimeMinus5Days]);
+
+        // Get the count of rows affected
+        $rowsDeleted = $deleteStmt->rowCount();
+        logMessage("Deleted $rowsDeleted pending tasks with Status = 10 and LastUpdate < 5 days ago.");
+
+    } catch (Exception $e) {
+        logMessage("Error during clean-up of pending tasks: " . $e->getMessage());
+    }
+}
 // Function to create or update a task news entry
 function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
     global $newsDBPath;
@@ -118,7 +146,7 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
         logMessage("News database connection established.");
 
         cleanUpNewsEntries($newsPdo);
-        
+
         $action = $isUpdate ? 'UpdateTask' : 'CreateTask';
         $title = $isUpdate ? "Updated task #" . $taskData['EntrySeqID'] : "New task #" . $taskData['EntrySeqID'];
 

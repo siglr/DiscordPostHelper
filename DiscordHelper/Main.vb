@@ -3014,7 +3014,7 @@ Public Class Main
         'Update the WSG task
         SetAndRetrieveSessionData()
         SaveSession()
-        Dim autoContinue As Boolean = CreateWSGTaskPart2()
+        Dim autoContinue As Boolean = CreateWSGTaskPart2(True)
         If Not autoContinue Then
             'Something went wrong on the second part!! This is really bad. TODO: What do we do?
         End If
@@ -5613,8 +5613,15 @@ Public Class Main
 
     Private Sub btnDeleteFromTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnDeleteFromTaskBrowser.Click
         If UserCanDeleteTask Then
-            DeleteTaskFromBrowser()
-            SetTBTaskDetailsLabel()
+            'Ask confirmation
+            Dim result As DialogResult
+            Using New Centered_MessageBox(Me)
+                result = MessageBox.Show($"Are you sure you want to delete this task from WeSimGlide.org?", "Removing a task from WeSimGlide.org", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            End Using
+            If result = DialogResult.Yes Then
+                DeleteTaskFromWSG()
+                SetTBTaskDetailsLabel()
+            End If
         End If
     End Sub
 
@@ -5786,16 +5793,36 @@ Public Class Main
 
 #Region "Tasks Subs"
 
-    Private Sub DeleteTaskFromBrowser()
+    Private Sub DeleteTaskFromWSG()
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
-        Dim result As Boolean = DeleteTaskFromServer(taskInfo.DiscordTaskID)
+        Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID)
 
         If result Then
+            Dim discordTaskIDToRemove As String = txtDiscordTaskID.Text.Trim
+            _TaskEntrySeqID = 0
+            txtDiscordTaskID.Text = String.Empty
+            txtTemporaryTaskID.Text = String.Empty
+            SetAndRetrieveSessionData()
+            SaveSession()
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Task removed from database successfully.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
+            'Bring user to Discord to delete task!
+            If discordTaskIDToRemove.Length > 0 Then
+                'There is a Discord ID
+                If SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{discordTaskIDToRemove}") Then
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show("I have opened Discord on the correct task. You should now delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                Else
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show("You should now go into Discord, find the task and delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                End If
+            End If
+
         Else
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Failed to remove the task.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -5804,13 +5831,13 @@ Public Class Main
 
     End Sub
 
-    Public Function DeleteTaskFromServer(taskID As String) As Boolean
+    Public Function DeleteTaskFromServer(entrySeqID As Integer) As Boolean
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}DeleteTask.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/x-www-form-urlencoded"
 
-        Dim postData As String = $"TaskID={Uri.EscapeDataString(taskID)}&UserID={Uri.EscapeDataString(_userPermissionID)}"
+        Dim postData As String = $"EntrySeqID={Uri.EscapeDataString(entrySeqID.ToString)}&UserID={Uri.EscapeDataString(_userPermissionID)}"
         Dim data As Byte() = Encoding.UTF8.GetBytes(postData)
         request.ContentLength = data.Length
 
@@ -5944,7 +5971,8 @@ Public Class Main
             {"LatMin", latitudeMin},
             {"LatMax", latitudeMax},
             {"LongMin", longitudeMin},
-            {"LongMax", longitudeMax}
+            {"LongMax", longitudeMax},
+            {"Mode", "CreateTask"}
         }
 
         Dim result As Boolean = CallScriptToCreateWSGTaskPart1(taskData)
@@ -6038,7 +6066,7 @@ Public Class Main
         End Try
     End Function
 
-    Private Function CreateWSGTaskPart2() As Boolean
+    Private Function CreateWSGTaskPart2(Optional isUpdate As Boolean = False) As Boolean
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
@@ -6099,6 +6127,12 @@ Public Class Main
         Else
             taskIDToUse = taskInfo.TemporaryTaskID
         End If
+        Dim modeRights As String = String.Empty
+        If isUpdate Then
+            modeRights = "UpdateTask"
+        Else
+            modeRights = "CreateTask"
+        End If
         Dim taskData As New Dictionary(Of String, Object) From {
             {"RealTaskID", taskInfo.DiscordTaskID},
             {"EntrySeqID", taskInfo.EntrySeqID},
@@ -6151,7 +6185,8 @@ Public Class Main
             {"SuppressBaroPressureWarningSymbol", If(taskInfo.SuppressBaroPressureWarningSymbol, 1, 0)},
             {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
             {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim},
-            {"Status", taskInfo.TaskStatus}
+            {"Status", taskInfo.TaskStatus},
+            {"Mode", modeRights}
         }
 
         Dim filePath As String = taskInfo.DPHXPackageFilename
