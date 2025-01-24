@@ -6101,6 +6101,7 @@ Public Class Main
         End If
         Dim taskData As New Dictionary(Of String, Object) From {
             {"RealTaskID", taskInfo.DiscordTaskID},
+            {"EntrySeqID", taskInfo.EntrySeqID},
             {"TemporaryTaskID", taskIDToUse},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
