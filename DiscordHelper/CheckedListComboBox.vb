@@ -140,9 +140,9 @@ Public Class CheckedListComboBox
     End Sub
 
     ' Method to retrieve all selected items
-    Public Function GetSelectedItems() As List(Of Object)
-        Dim selectedItems As New List(Of Object)
-        For Each item In TheCheckedListBox.CheckedItems
+    Public Function GetSelectedItems() As List(Of String)
+        Dim selectedItems As New List(Of String)
+        For Each item As String In TheCheckedListBox.CheckedItems
             selectedItems.Add(item)
         Next
         Return selectedItems

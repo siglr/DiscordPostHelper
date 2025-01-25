@@ -27,6 +27,10 @@ try {
         throw new Exception('User ' . $userID . ' does not have permission for ' . $taskData['Mode']);
     }
 
+    // Set default values for OwnerName and SharedWith
+    $ownerName = isset($taskData['OwnerName']) ? $taskData['OwnerName'] : 'MajorDad';
+    $sharedWith = isset($taskData['SharedWith']) ? $taskData['SharedWith'] : json_encode([]);
+
     // Check if the task already exists
     $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM Tasks WHERE TaskID = :TemporaryTaskID");
     $checkStmt->execute([':TemporaryTaskID' => $taskData['TemporaryTaskID']]);
@@ -64,7 +68,8 @@ try {
                 LatMax, 
                 LongMin, 
                 LongMax, 
-                Status
+                Status,
+                OwnerName
             ) VALUES (
                 :TemporaryTaskID, 
                 :Title, 
@@ -83,7 +88,8 @@ try {
                 :LatMax, 
                 :LongMin, 
                 :LongMax, 
-                :Status
+                :Status,
+                :OwnerName
             )
         ");
 
@@ -110,6 +116,7 @@ try {
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
             ':LongMax' => $taskData['LongMax'],
+            ':OwnerName' => $ownerName,
             ':Status' => 10 // PendingCreation
         ]);
 
@@ -224,7 +231,9 @@ try {
                 SuppressBaroPressureWarningSymbol = :SuppressBaroPressureWarningSymbol,
                 BaroPressureExtraInfo = :BaroPressureExtraInfo, 
                 ExtraFilesList = :ExtraFilesList, 
-                Status = :Status
+                Status = :Status,
+                OwnerName = :OwnerName, 
+                SharedWith = :SharedWith
             WHERE TaskID = :TemporaryTaskID
         ");
 
@@ -287,8 +296,11 @@ try {
             ':SuppressBaroPressureWarningSymbol' => $suppressBaroPressureWarningSymbol,
             ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
             ':ExtraFilesList' => $extraFilesList,
-            ':Status' => $status,
-            ':TemporaryTaskID' => $taskData['TemporaryTaskID']
+            ':Status' => $taskData['Status'],
+            ':TemporaryTaskID' => $taskData['TemporaryTaskID'],
+            ':OwnerName' => $ownerName,
+            ':SharedWith' => $sharedWith
+
         ]);
 
         // Call createOrUpdateTaskNewsEntry if Status = 99

@@ -191,7 +191,7 @@ Public Class Main
                             End If
                         Next
                         cboTaskOwner.SelectedItem = _userName
-                        chkcboSharedWithUsers.IsReadOnly = True
+                        chkcboSharedWithUsers.IsReadOnly = False
                         Return result("rights")
                     Else
                         Throw New Exception("Error retrieving user rights: " & result("message").ToString())
@@ -5992,6 +5992,7 @@ Public Class Main
             {"LatMax", latitudeMax},
             {"LongMin", longitudeMin},
             {"LongMax", longitudeMax},
+            {"OwnerName", cboTaskOwner.Text.Trim},
             {"Mode", "CreateTask"}
         }
 
@@ -6141,6 +6142,8 @@ Public Class Main
         ' Serialize the filenames list into JSON
         Dim extraFilesList As String = JsonConvert.SerializeObject(filenames)
 
+        Dim sharedWithList As String = JsonConvert.SerializeObject(chkcboSharedWithUsers.GetSelectedItems)
+
         Dim taskIDToUse As String = String.Empty
         If taskInfo.TemporaryTaskID = String.Empty Then
             taskIDToUse = taskInfo.DiscordTaskID
@@ -6206,6 +6209,8 @@ Public Class Main
             {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
             {"LastUpdateDescription", txtLastUpdateDescription.Text.Trim},
             {"Status", taskInfo.TaskStatus},
+            {"OwnerName", cboTaskOwner.Text.Trim},
+            {"SharedWith", sharedWithList},
             {"Mode", modeRights}
         }
 
