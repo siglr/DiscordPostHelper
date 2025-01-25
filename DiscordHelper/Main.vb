@@ -44,6 +44,8 @@ Public Class Main
     Private _timeStampContextualMenuDateTime As DateTime
     Private _userPermissionID As String
     Private _userPermissions As New Dictionary(Of String, Boolean)
+    Private _userName As String = String.Empty
+    Private _allAvailableUsers As New List(Of String)
     Private _TaskEntrySeqID As Integer = 0
     Private _TaskStatus As SupportingFeatures.WSGTaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
     Private _TBTaskDBEntryUpdate As DateTime
@@ -175,6 +177,21 @@ Public Class Main
 
                     ' Check the status
                     If result("status").ToString() = "success" Then
+                        _userName = result("name")
+
+                        lblWSGUserName.Text = _userName
+                        _allAvailableUsers = result("allUserNames") _
+                            .Select(Function(user) user.ToString()) _
+                            .ToList()
+
+                        For Each username As String In _allAvailableUsers
+                            cboTaskOwner.Items.Add(username)
+                            If username <> _userName Then
+                                chkcboSharedWithUsers.AddItem(username, False)
+                            End If
+                        Next
+                        cboTaskOwner.SelectedItem = _userName
+                        chkcboSharedWithUsers.IsReadOnly = True
                         Return result("rights")
                     Else
                         Throw New Exception("Error retrieving user rights: " & result("message").ToString())
@@ -442,6 +459,9 @@ Public Class Main
         lblNonStdBaroPressure.Enabled = False
         chkRepost.Checked = False
         txtLastUpdateDescription.Text = String.Empty
+
+        cboTaskOwner.SelectedItem = _userName
+        chkcboSharedWithUsers.SelectNone()
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)

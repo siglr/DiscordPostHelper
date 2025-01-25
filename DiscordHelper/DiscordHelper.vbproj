@@ -88,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllSettings.vb" />
+    <Compile Include="CheckedListComboBox.Designer.vb">
+      <DependentUpon>CheckedListComboBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CheckedListComboBox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CopyContent.Designer.vb">
       <DependentUpon>CopyContent.vb</DependentUpon>
     </Compile>
@@ -155,6 +161,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CheckedListComboBox.resx">
+      <DependentUpon>CheckedListComboBox.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CopyContent.resx">
       <DependentUpon>CopyContent.vb</DependentUpon>
     </EmbeddedResource>
