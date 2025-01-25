@@ -3357,6 +3357,7 @@ Partial Class Main
         Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsReadOnly = False
         Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 178)
         Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.chkcboSharedWithUsers.MaxVisibleItems = 8

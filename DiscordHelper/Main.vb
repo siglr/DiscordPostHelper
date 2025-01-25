@@ -6597,6 +6597,10 @@ Public Class Main
         End Try
     End Function
 
+    Private Sub cboTaskOwner_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboTaskOwner.SelectedIndexChanged
+
+    End Sub
+
 #End Region
 
 #End Region
