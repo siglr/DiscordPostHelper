@@ -15,7 +15,7 @@ try {
     $taskID = $_GET['TaskID'];
 
     // Prepare the SQL statement
-    $stmt = $pdo->prepare("SELECT EntrySeqID, LastUpdate, DBEntryUpdate FROM Tasks WHERE TaskID = :TaskID");
+    $stmt = $pdo->prepare("SELECT EntrySeqID, LastUpdate, DBEntryUpdate, OwnerName, SharedWith FROM Tasks WHERE TaskID = :TaskID");
     $stmt->execute([':TaskID' => $taskID]);
     $taskDetails = $stmt->fetch(PDO::FETCH_ASSOC);
 

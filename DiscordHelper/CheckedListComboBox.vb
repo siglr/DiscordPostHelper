@@ -9,7 +9,10 @@ Public Class CheckedListComboBox
     Private _maxVisibleItems As Integer = 5
     Private _selectedItemsTextFormat As String = "{0} item(s) selected"
     Private _isReadOnly As Boolean = False
+    Private _fromUserChange As Boolean = True
     Private Shared _shownOnce As Boolean = False
+
+    Public Property LockedValueFromUser As String
 
     Public Sub New()
         InitializeComponent()
@@ -47,8 +50,10 @@ Public Class CheckedListComboBox
 
         TheCheckedListBox = New CheckedListBox With {
             .Dock = DockStyle.Fill,
-            .IntegralHeight = False
+            .IntegralHeight = False,
+            .Sorted = True
         }
+        ' Handle ItemCheck event for TheCheckedListBox to update txtDisplay
         AddHandler TheCheckedListBox.ItemCheck, AddressOf PreventUserInteraction
 
         _dropDownForm.Controls.Add(TheCheckedListBox)
@@ -63,8 +68,6 @@ Public Class CheckedListComboBox
         AddHandler txtDisplay.KeyDown, AddressOf HandleControlKeyDown
         AddHandler btnDropdown.KeyDown, AddressOf HandleControlKeyDown
 
-        ' Handle ItemCheck event for TheCheckedListBox to update txtDisplay
-        AddHandler TheCheckedListBox.ItemCheck, AddressOf UpdateCheckedItemsDisplay
     End Sub
 
     ' Property to lock the CheckedListBox from user interaction
@@ -79,9 +82,10 @@ Public Class CheckedListComboBox
 
     ' Prevent user from interacting with CheckedListBox if IsReadOnly is true
     Private Sub PreventUserInteraction(sender As Object, e As ItemCheckEventArgs)
-        If _isReadOnly Then
+        If _fromUserChange AndAlso (_isReadOnly OrElse TheCheckedListBox.Items(e.Index).ToString = LockedValueFromUser) Then
             e.NewValue = e.CurrentValue
         End If
+        UpdateCheckedItemsDisplayDirect()
     End Sub
 
     ' Property to set the maximum number of visible items in the dropdown
@@ -94,6 +98,18 @@ Public Class CheckedListComboBox
             UpdateDropDownFormHeight()
         End Set
     End Property
+
+    ' Method to select items by a list of strings
+    Public Sub SelectItemsByNames(itemNames As List(Of String))
+        _fromUserChange = False
+        For i As Integer = 0 To TheCheckedListBox.Items.Count - 1
+            If itemNames.Contains(TheCheckedListBox.Items(i).ToString()) Then
+                TheCheckedListBox.SetItemChecked(i, True)
+            End If
+        Next
+        _fromUserChange = True
+        UpdateCheckedItemsDisplayDirect()
+    End Sub
 
     ' Property to set the format of the selected items text
     <Browsable(True), DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)>
@@ -117,7 +133,9 @@ Public Class CheckedListComboBox
 
     ' Add methods for runtime item management
     Public Sub AddItem(item As Object, Optional isChecked As Boolean = False)
+        _fromUserChange = False
         TheCheckedListBox.Items.Add(item, isChecked)
+        _fromUserChange = True
         UpdateCheckedItemsDisplayDirect()
     End Sub
 
@@ -233,24 +251,6 @@ Public Class CheckedListComboBox
         UpdateCheckedItemsDisplayDirect()
     End Sub
 
-    ' Update txtDisplay to show the number of checked items dynamically
-    Private Sub UpdateCheckedItemsDisplay(sender As Object, e As ItemCheckEventArgs)
-        Dim checkedCount As Integer = TheCheckedListBox.CheckedItems.Count
-        If e.NewValue = CheckState.Checked Then
-            checkedCount += 1
-            If checkedCount > TheCheckedListBox.Items.Count Then
-                checkedCount = TheCheckedListBox.Items.Count
-            End If
-        ElseIf e.NewValue = CheckState.Unchecked Then
-            checkedCount -= 1
-            If checkedCount < 0 Then
-                checkedCount = 0
-            End If
-        End If
-
-        txtDisplay.Text = String.Format(_selectedItemsTextFormat, checkedCount)
-    End Sub
-
     ' Update txtDisplay directly for Add/Remove/Clear actions
     Private Sub UpdateCheckedItemsDisplayDirect()
         txtDisplay.Text = String.Format(_selectedItemsTextFormat, TheCheckedListBox.CheckedItems.Count)
@@ -258,5 +258,6 @@ Public Class CheckedListComboBox
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         btnDropdown.Enabled = Not _dropDownForm.Visible
+        UpdateCheckedItemsDisplayDirect()
     End Sub
 End Class

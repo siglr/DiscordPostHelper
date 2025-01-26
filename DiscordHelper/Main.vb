@@ -50,6 +50,9 @@ Public Class Main
     Private _TaskStatus As SupportingFeatures.WSGTaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
     Private _TBTaskDBEntryUpdate As DateTime
     Private _TBTaskLastUpdate As DateTime
+    Private _isSuperUser As Boolean = False
+    Private _userInteraction As Boolean = False
+    Private _previousOwner As String = String.Empty
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -180,6 +183,13 @@ Public Class Main
                         _userName = result("name")
 
                         lblWSGUserName.Text = _userName
+                        chkcboSharedWithUsers.LockedValueFromUser = _userName 'User will not be able to uncheck himself from shared owners
+                        If _userName = "MajorDad" Then
+                            _isSuperUser = True
+                        Else
+                            _isSuperUser = False
+                        End If
+
                         _allAvailableUsers = result("allUserNames") _
                             .Select(Function(user) user.ToString()) _
                             .ToList()
@@ -6395,6 +6405,30 @@ Public Class Main
                         ' Convert UTC datetime to local time before assigning to variables
                         _TBTaskDBEntryUpdate = DateTime.ParseExact(result("taskDetails")("DBEntryUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
                         _TBTaskLastUpdate = DateTime.ParseExact(result("taskDetails")("LastUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
+                        ' Retrieve OwnerName and SharedWith info
+                        cboTaskOwner.SelectedItem = result("taskDetails")("OwnerName").ToString()
+                        Dim sharedWithList As New List(Of String)
+                        ' Check if SharedWith is a JSON string that represents an array
+                        Dim sharedWithRaw As String = result("taskDetails")("SharedWith").ToString()
+                        If sharedWithRaw.StartsWith("[") AndAlso sharedWithRaw.EndsWith("]") Then
+                            ' Parse the string as a JSON array and convert it to a list of strings
+                            sharedWithList = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of String))(sharedWithRaw)
+                        Else
+                            ' If it's not a JSON array, treat it as a plain string
+                            sharedWithList.Add(sharedWithRaw)
+                        End If
+                        ' Pass the list to the SelectItemsByNames method
+                        chkcboSharedWithUsers.SelectItemsByNames(sharedWithList)
+
+                        ' If Owner is the same as current user, then enable changing the owner. If not, then it must be locked.
+                        If cboTaskOwner.Text = _userName OrElse _isSuperUser Then
+                            cboTaskOwner.Enabled = True
+                            chkcboSharedWithUsers.IsReadOnly = False
+                        Else
+                            cboTaskOwner.Enabled = False
+                            chkcboSharedWithUsers.IsReadOnly = True
+                        End If
+
                     Else
                         _TaskEntrySeqID = 0
                         Throw New Exception("Error retrieving task details: " & result("message").ToString())
@@ -6603,7 +6637,29 @@ Public Class Main
     End Function
 
     Private Sub cboTaskOwner_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboTaskOwner.SelectedIndexChanged
+        If _userInteraction Then
+            ' Remove the new selected owner from the checked list
+            If cboTaskOwner.Text <> String.Empty Then
+                chkcboSharedWithUsers.RemoveItem(cboTaskOwner.Text)
+            End If
 
+            ' Add the previous owner back to the checked list if it was valid
+            If Not String.IsNullOrEmpty(_previousOwner) AndAlso _previousOwner <> cboTaskOwner.Text Then
+                chkcboSharedWithUsers.AddItem(_previousOwner, True)
+            End If
+        End If
+
+        ' Update the previous owner
+        _previousOwner = cboTaskOwner.Text
+    End Sub
+
+    Private Sub cboTaskOwner_Enter(sender As Object, e As EventArgs) Handles cboTaskOwner.Enter
+        _userInteraction = True
+        _previousOwner = cboTaskOwner.Text
+    End Sub
+
+    Private Sub cboTaskOwner_Leave(sender As Object, e As EventArgs) Handles cboTaskOwner.Leave
+        _userInteraction = False
     End Sub
 
 #End Region
