@@ -1015,32 +1015,6 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnDiscordTaskThreadURLPaste_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskThreadURLPaste.Click
-        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
-            Dim extractedID As String = SupportingFeatures.ExtractMessageIDFromDiscordURL(Clipboard.GetText)
-            If extractedID <> String.Empty Then
-                txtDiscordTaskID.Text = extractedID
-            Else
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, "The URL you copied does not contain a valid ID for the task. The URL must come from a task published in the Task Library on Discord.", "Error extracting task ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-            End If
-        End If
-    End Sub
-
-    Private Sub btnDeleteDiscordID_Click(sender As Object, e As EventArgs) Handles btnDeleteDiscordID.Click
-
-        If txtDiscordTaskID.Text.Trim <> String.Empty Then
-            'TODO: If the task exists online - do you want to delete it?
-
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, "Are you sure you want to clear the Discord ID from this task ?", "Please confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    txtDiscordTaskID.Text = String.Empty
-                End If
-            End Using
-        End If
-    End Sub
-
     Private Sub txtDiscordTaskID_TextChanged(sender As Object, e As EventArgs) Handles txtDiscordTaskID.TextChanged
         If txtDiscordTaskID.Text.Trim = String.Empty Then
             lblTaskLibraryIDNotAcquired.Visible = True

@@ -37,6 +37,11 @@ Partial Class Main
         Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
         Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
+        Me.grpRepost = New System.Windows.Forms.GroupBox()
+        Me.btnRepostOriginalURLPaste = New System.Windows.Forms.Button()
+        Me.txtRepostOriginalURL = New System.Windows.Forms.TextBox()
+        Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
+        Me.chkRepost = New System.Windows.Forms.CheckBox()
         Me.txtBaroPressureExtraInfo = New System.Windows.Forms.TextBox()
         Me.lblNonStdBaroPressure = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -70,12 +75,6 @@ Partial Class Main
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
-        Me.txtTemporaryTaskID = New System.Windows.Forms.TextBox()
-        Me.btnDeleteDiscordID = New System.Windows.Forms.Button()
-        Me.btnDiscordTaskThreadURLPaste = New System.Windows.Forms.Button()
-        Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
-        Me.Label31 = New System.Windows.Forms.Label()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -149,6 +148,9 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.grpGroupEventURL = New System.Windows.Forms.GroupBox()
+        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
+        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
         Me.lblGroupEmoji = New System.Windows.Forms.Label()
         Me.txtTrackerGroup = New System.Windows.Forms.TextBox()
         Me.Label14 = New System.Windows.Forms.Label()
@@ -249,11 +251,6 @@ Partial Class Main
         Me.txtWaypointsDetails = New System.Windows.Forms.TextBox()
         Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
-        Me.grpRepost = New System.Windows.Forms.GroupBox()
-        Me.btnRepostOriginalURLPaste = New System.Windows.Forms.Button()
-        Me.txtRepostOriginalURL = New System.Windows.Forms.TextBox()
-        Me.dtRepostOriginalDate = New System.Windows.Forms.DateTimePicker()
-        Me.chkRepost = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
@@ -274,6 +271,10 @@ Partial Class Main
         Me.btnStartTaskPost = New System.Windows.Forms.Button()
         Me.lblTaskLibraryIDNotAcquired = New System.Windows.Forms.Label()
         Me.lblTaskLibraryIDAcquired = New System.Windows.Forms.Label()
+        Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
+        Me.txtTemporaryTaskID = New System.Windows.Forms.TextBox()
+        Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
         Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
         Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
@@ -329,9 +330,6 @@ Partial Class Main
         Me.chkDGPOWaypoints = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel30 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOAddOns = New System.Windows.Forms.CheckBox()
-        Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
-        Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
-        Me.Label38 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.numWaitSecondsForFiles = New System.Windows.Forms.NumericUpDown()
@@ -378,15 +376,16 @@ Partial Class Main
         Me.Panel3.SuspendLayout()
         Me.pnlFlightPlanRightSide.SuspendLayout()
         Me.grbTaskPart2.SuspendLayout()
+        Me.grpRepost.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        Me.grbTaskDiscord.SuspendLayout()
         Me.pnlFlightPlanLeftSide.SuspendLayout()
         Me.grbTaskInfo.SuspendLayout()
         Me.tabEvent.SuspendLayout()
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
+        Me.grpGroupEventURL.SuspendLayout()
         Me.grpEventTeaser.SuspendLayout()
         Me.pnlEventDateTimeControls.SuspendLayout()
         Me.TimeStampContextualMenu.SuspendLayout()
@@ -398,12 +397,12 @@ Partial Class Main
         Me.grpDiscordEvent.SuspendLayout()
         Me.grpDiscordOthers.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
-        Me.grpRepost.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.flpDiscordPostOptions.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.FlowLayoutPanel4.SuspendLayout()
         Me.FlowLayoutPanel13.SuspendLayout()
+        Me.grbTaskDiscord.SuspendLayout()
         Me.grpDiscordGroupFlight.SuspendLayout()
         Me.grpGroupFlightEvent.SuspendLayout()
         Me.flpDiscordGroupPostOptions.SuspendLayout()
@@ -538,7 +537,6 @@ Partial Class Main
         '
         Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskPart2)
         Me.pnlFlightPlanRightSide.Controls.Add(Me.FileDropZone1)
-        Me.pnlFlightPlanRightSide.Controls.Add(Me.grbTaskDiscord)
         Me.pnlFlightPlanRightSide.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlFlightPlanRightSide.Location = New System.Drawing.Point(753, 3)
         Me.pnlFlightPlanRightSide.MinimumSize = New System.Drawing.Size(715, 854)
@@ -551,6 +549,7 @@ Partial Class Main
         Me.grbTaskPart2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTaskPart2.Controls.Add(Me.chkSuppressWarningForBaroPressure)
+        Me.grbTaskPart2.Controls.Add(Me.grpRepost)
         Me.grbTaskPart2.Controls.Add(Me.txtBaroPressureExtraInfo)
         Me.grbTaskPart2.Controls.Add(Me.lblNonStdBaroPressure)
         Me.grbTaskPart2.Controls.Add(Me.GroupBox3)
@@ -569,7 +568,7 @@ Partial Class Main
         Me.grbTaskPart2.Enabled = False
         Me.grbTaskPart2.Location = New System.Drawing.Point(4, -5)
         Me.grbTaskPart2.Name = "grbTaskPart2"
-        Me.grbTaskPart2.Size = New System.Drawing.Size(711, 613)
+        Me.grbTaskPart2.Size = New System.Drawing.Size(711, 681)
         Me.grbTaskPart2.TabIndex = 3
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
@@ -586,6 +585,73 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkSuppressWarningForBaroPressure, "When checked, the warning symbol will not be added next to a non-standard baromet" &
         "ric pressure.")
         Me.chkSuppressWarningForBaroPressure.UseVisualStyleBackColor = True
+        '
+        'grpRepost
+        '
+        Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpRepost.Controls.Add(Me.btnRepostOriginalURLPaste)
+        Me.grpRepost.Controls.Add(Me.txtRepostOriginalURL)
+        Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
+        Me.grpRepost.Controls.Add(Me.chkRepost)
+        Me.grpRepost.Location = New System.Drawing.Point(6, 611)
+        Me.grpRepost.Name = "grpRepost"
+        Me.grpRepost.Size = New System.Drawing.Size(699, 63)
+        Me.grpRepost.TabIndex = 0
+        Me.grpRepost.TabStop = False
+        '
+        'btnRepostOriginalURLPaste
+        '
+        Me.btnRepostOriginalURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRepostOriginalURLPaste.Enabled = False
+        Me.btnRepostOriginalURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRepostOriginalURLPaste.Location = New System.Drawing.Point(618, 24)
+        Me.btnRepostOriginalURLPaste.Name = "btnRepostOriginalURLPaste"
+        Me.btnRepostOriginalURLPaste.Size = New System.Drawing.Size(74, 29)
+        Me.btnRepostOriginalURLPaste.TabIndex = 3
+        Me.btnRepostOriginalURLPaste.Tag = "40"
+        Me.btnRepostOriginalURLPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnRepostOriginalURLPaste, "Click this button to paste the original task post URL from your clipboard")
+        Me.btnRepostOriginalURLPaste.UseVisualStyleBackColor = True
+        '
+        'txtRepostOriginalURL
+        '
+        Me.txtRepostOriginalURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtRepostOriginalURL.Enabled = False
+        Me.txtRepostOriginalURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.txtRepostOriginalURL.Location = New System.Drawing.Point(214, 24)
+        Me.txtRepostOriginalURL.Name = "txtRepostOriginalURL"
+        Me.txtRepostOriginalURL.Size = New System.Drawing.Size(398, 30)
+        Me.txtRepostOriginalURL.TabIndex = 2
+        Me.txtRepostOriginalURL.Tag = "40"
+        Me.ToolTip1.SetToolTip(Me.txtRepostOriginalURL, "Enter the URL to the original task post.")
+        '
+        'dtRepostOriginalDate
+        '
+        Me.dtRepostOriginalDate.Enabled = False
+        Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 23)
+        Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
+        Me.dtRepostOriginalDate.Size = New System.Drawing.Size(202, 31)
+        Me.dtRepostOriginalDate.TabIndex = 1
+        Me.dtRepostOriginalDate.Tag = "40"
+        Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date of original posting (source)")
+        '
+        'chkRepost
+        '
+        Me.chkRepost.AutoSize = True
+        Me.chkRepost.BackColor = System.Drawing.SystemColors.Control
+        Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.chkRepost.Location = New System.Drawing.Point(8, -3)
+        Me.chkRepost.Name = "chkRepost"
+        Me.chkRepost.Size = New System.Drawing.Size(299, 24)
+        Me.chkRepost.TabIndex = 0
+        Me.chkRepost.Tag = "40"
+        Me.chkRepost.Text = "External task original date and source URL"
+        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a previous task published somewhere else (not the" &
+        " Task Library)")
+        Me.chkRepost.UseVisualStyleBackColor = False
         '
         'txtBaroPressureExtraInfo
         '
@@ -1008,91 +1074,12 @@ Partial Class Main
         Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 690)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
         Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
         Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 161)
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
         Me.FileDropZone1.TabIndex = 5
         Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'grbTaskDiscord
-        '
-        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grbTaskDiscord.Controls.Add(Me.txtTemporaryTaskID)
-        Me.grbTaskDiscord.Controls.Add(Me.btnDeleteDiscordID)
-        Me.grbTaskDiscord.Controls.Add(Me.btnDiscordTaskThreadURLPaste)
-        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
-        Me.grbTaskDiscord.Controls.Add(Me.Label31)
-        Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(4, 614)
-        Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(711, 72)
-        Me.grbTaskDiscord.TabIndex = 4
-        Me.grbTaskDiscord.TabStop = False
-        Me.grbTaskDiscord.Text = "Discord / Task ID"
-        '
-        'txtTemporaryTaskID
-        '
-        Me.txtTemporaryTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTemporaryTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTemporaryTaskID.Location = New System.Drawing.Point(133, 27)
-        Me.txtTemporaryTaskID.Name = "txtTemporaryTaskID"
-        Me.txtTemporaryTaskID.ReadOnly = True
-        Me.txtTemporaryTaskID.Size = New System.Drawing.Size(50, 32)
-        Me.txtTemporaryTaskID.TabIndex = 4
-        Me.txtTemporaryTaskID.Tag = "24"
-        Me.txtTemporaryTaskID.Visible = False
-        '
-        'btnDeleteDiscordID
-        '
-        Me.btnDeleteDiscordID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDeleteDiscordID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteDiscordID.Location = New System.Drawing.Point(629, 27)
-        Me.btnDeleteDiscordID.Name = "btnDeleteDiscordID"
-        Me.btnDeleteDiscordID.Size = New System.Drawing.Size(79, 29)
-        Me.btnDeleteDiscordID.TabIndex = 3
-        Me.btnDeleteDiscordID.Tag = "24"
-        Me.btnDeleteDiscordID.Text = "Clear"
-        Me.ToolTip1.SetToolTip(Me.btnDeleteDiscordID, "Click this button to clear the Discord ID linked with this task")
-        Me.btnDeleteDiscordID.UseVisualStyleBackColor = True
-        '
-        'btnDiscordTaskThreadURLPaste
-        '
-        Me.btnDiscordTaskThreadURLPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDiscordTaskThreadURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordTaskThreadURLPaste.Location = New System.Drawing.Point(544, 27)
-        Me.btnDiscordTaskThreadURLPaste.Name = "btnDiscordTaskThreadURLPaste"
-        Me.btnDiscordTaskThreadURLPaste.Size = New System.Drawing.Size(79, 29)
-        Me.btnDiscordTaskThreadURLPaste.TabIndex = 2
-        Me.btnDiscordTaskThreadURLPaste.Tag = "24"
-        Me.btnDiscordTaskThreadURLPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordTaskThreadURLPaste, "Click this button to paste the task ID from your clipboard")
-        Me.btnDiscordTaskThreadURLPaste.UseVisualStyleBackColor = True
-        '
-        'txtDiscordTaskID
-        '
-        Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordTaskID.Location = New System.Drawing.Point(189, 27)
-        Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
-        Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(349, 32)
-        Me.txtDiscordTaskID.TabIndex = 1
-        Me.txtDiscordTaskID.Tag = "24"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.Location = New System.Drawing.Point(6, 30)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(109, 26)
-        Me.Label31.TabIndex = 0
-        Me.Label31.Text = "Task Post ID"
         '
         'FlightPlanTabSplitter
         '
@@ -2006,6 +1993,7 @@ Partial Class Main
         Me.grpGroupEventPost.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupEventPost.Controls.Add(Me.grpGroupEventURL)
         Me.grpGroupEventPost.Controls.Add(Me.lblGroupEmoji)
         Me.grpGroupEventPost.Controls.Add(Me.txtTrackerGroup)
         Me.grpGroupEventPost.Controls.Add(Me.Label14)
@@ -2052,13 +2040,51 @@ Partial Class Main
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
         '
+        'grpGroupEventURL
+        '
+        Me.grpGroupEventURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupEventURL.Controls.Add(Me.txtGroupEventPostURL)
+        Me.grpGroupEventURL.Controls.Add(Me.btnDiscordGroupEventURL)
+        Me.grpGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.grpGroupEventURL.Location = New System.Drawing.Point(896, 79)
+        Me.grpGroupEventURL.Name = "grpGroupEventURL"
+        Me.grpGroupEventURL.Size = New System.Drawing.Size(553, 79)
+        Me.grpGroupEventURL.TabIndex = 98
+        Me.grpGroupEventURL.TabStop = False
+        Me.grpGroupEventURL.Text = "Group Event URL"
+        '
+        'txtGroupEventPostURL
+        '
+        Me.txtGroupEventPostURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(6, 26)
+        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
+        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(462, 30)
+        Me.txtGroupEventPostURL.TabIndex = 2
+        Me.txtGroupEventPostURL.Tag = "81"
+        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
+        '
+        'btnDiscordGroupEventURL
+        '
+        Me.btnDiscordGroupEventURL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(474, 27)
+        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
+        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(74, 29)
+        Me.btnDiscordGroupEventURL.TabIndex = 3
+        Me.btnDiscordGroupEventURL.Tag = "81"
+        Me.btnDiscordGroupEventURL.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
+        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
+        '
         'lblGroupEmoji
         '
-        Me.lblGroupEmoji.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblGroupEmoji.AutoSize = True
         Me.lblGroupEmoji.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblGroupEmoji.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGroupEmoji.Location = New System.Drawing.Point(871, 92)
+        Me.lblGroupEmoji.Location = New System.Drawing.Point(847, 58)
         Me.lblGroupEmoji.Name = "lblGroupEmoji"
         Me.lblGroupEmoji.Size = New System.Drawing.Size(18, 28)
         Me.lblGroupEmoji.TabIndex = 88
@@ -2067,12 +2093,10 @@ Partial Class Main
         '
         'txtTrackerGroup
         '
-        Me.txtTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTrackerGroup.Location = New System.Drawing.Point(655, 89)
         Me.txtTrackerGroup.Name = "txtTrackerGroup"
-        Me.txtTrackerGroup.Size = New System.Drawing.Size(210, 32)
+        Me.txtTrackerGroup.Size = New System.Drawing.Size(235, 32)
         Me.txtTrackerGroup.TabIndex = 87
         Me.txtTrackerGroup.Tag = "61"
         Me.ToolTip1.SetToolTip(Me.txtTrackerGroup, "You can specify the club's group name used in the tracker utility.")
@@ -2114,13 +2138,11 @@ Partial Class Main
         '
         'txtClubFullName
         '
-        Me.txtClubFullName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtClubFullName.Location = New System.Drawing.Point(192, 125)
         Me.txtClubFullName.Name = "txtClubFullName"
         Me.txtClubFullName.ReadOnly = True
-        Me.txtClubFullName.Size = New System.Drawing.Size(1257, 32)
+        Me.txtClubFullName.Size = New System.Drawing.Size(698, 32)
         Me.txtClubFullName.TabIndex = 4
         Me.txtClubFullName.Tag = "61"
         Me.ToolTip1.SetToolTip(Me.txtClubFullName, "The soaring club event's full ""official"" name.")
@@ -2824,7 +2846,7 @@ Partial Class Main
         Me.GroupBox6.Controls.Add(Me.btnDeleteFromTaskBrowser)
         Me.GroupBox6.Location = New System.Drawing.Point(1240, 3)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Size = New System.Drawing.Size(224, 240)
+        Me.GroupBox6.Size = New System.Drawing.Size(224, 228)
         Me.GroupBox6.TabIndex = 96
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "WeSimGlide.org Extras"
@@ -2857,7 +2879,7 @@ Partial Class Main
         Me.btnDeleteEventNews.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteEventNews.Enabled = False
         Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 189)
+        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 177)
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteEventNews.TabIndex = 99
@@ -2871,7 +2893,7 @@ Partial Class Main
         Me.btnPublishEventNews.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPublishEventNews.Enabled = False
         Me.btnPublishEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 146)
+        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 134)
         Me.btnPublishEventNews.Name = "btnPublishEventNews"
         Me.btnPublishEventNews.Size = New System.Drawing.Size(212, 37)
         Me.btnPublishEventNews.TabIndex = 98
@@ -2885,7 +2907,7 @@ Partial Class Main
         Me.btnDeleteFromTaskBrowser.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteFromTaskBrowser.Enabled = False
         Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 103)
+        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 91)
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteFromTaskBrowser.TabIndex = 97
@@ -2952,7 +2974,7 @@ Partial Class Main
         'pnlFullWorkflowTaskGroupFlight
         '
         Me.pnlFullWorkflowTaskGroupFlight.Controls.Add(Me.btnStartFullPostingWorkflow)
-        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(841, 104)
+        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(841, 71)
         Me.pnlFullWorkflowTaskGroupFlight.Name = "pnlFullWorkflowTaskGroupFlight"
         Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(393, 72)
         Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 3
@@ -2989,9 +3011,9 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label42)
         Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(841, 351)
+        Me.grpDiscordEvent.Location = New System.Drawing.Point(841, 318)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(623, 329)
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(623, 320)
         Me.grpDiscordEvent.TabIndex = 5
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Official Discord Event (if applicable)"
@@ -3159,7 +3181,7 @@ Partial Class Main
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskAndGroupEventLinks)
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
         Me.grpDiscordOthers.Controls.Add(Me.btnEventDPHXAndLinkOnly)
-        Me.grpDiscordOthers.Location = New System.Drawing.Point(841, 182)
+        Me.grpDiscordOthers.Location = New System.Drawing.Point(841, 149)
         Me.grpDiscordOthers.Name = "grpDiscordOthers"
         Me.grpDiscordOthers.Size = New System.Drawing.Size(393, 163)
         Me.grpDiscordOthers.TabIndex = 4
@@ -3244,83 +3266,18 @@ Partial Class Main
         '
         'grpDiscordTask
         '
-        Me.grpDiscordTask.Controls.Add(Me.grpRepost)
         Me.grpDiscordTask.Controls.Add(Me.GroupBox1)
+        Me.grpDiscordTask.Controls.Add(Me.grbTaskDiscord)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 569)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 561)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
         '
-        'grpRepost
-        '
-        Me.grpRepost.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpRepost.Controls.Add(Me.btnRepostOriginalURLPaste)
-        Me.grpRepost.Controls.Add(Me.txtRepostOriginalURL)
-        Me.grpRepost.Controls.Add(Me.dtRepostOriginalDate)
-        Me.grpRepost.Controls.Add(Me.chkRepost)
-        Me.grpRepost.Location = New System.Drawing.Point(6, 23)
-        Me.grpRepost.Name = "grpRepost"
-        Me.grpRepost.Size = New System.Drawing.Size(393, 92)
-        Me.grpRepost.TabIndex = 0
-        Me.grpRepost.TabStop = False
-        '
-        'btnRepostOriginalURLPaste
-        '
-        Me.btnRepostOriginalURLPaste.Enabled = False
-        Me.btnRepostOriginalURLPaste.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRepostOriginalURLPaste.Location = New System.Drawing.Point(313, 57)
-        Me.btnRepostOriginalURLPaste.Name = "btnRepostOriginalURLPaste"
-        Me.btnRepostOriginalURLPaste.Size = New System.Drawing.Size(74, 29)
-        Me.btnRepostOriginalURLPaste.TabIndex = 3
-        Me.btnRepostOriginalURLPaste.Tag = "40"
-        Me.btnRepostOriginalURLPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnRepostOriginalURLPaste, "Click this button to paste the original task post URL from your clipboard")
-        Me.btnRepostOriginalURLPaste.UseVisualStyleBackColor = True
-        '
-        'txtRepostOriginalURL
-        '
-        Me.txtRepostOriginalURL.Enabled = False
-        Me.txtRepostOriginalURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtRepostOriginalURL.Location = New System.Drawing.Point(6, 55)
-        Me.txtRepostOriginalURL.Name = "txtRepostOriginalURL"
-        Me.txtRepostOriginalURL.Size = New System.Drawing.Size(301, 30)
-        Me.txtRepostOriginalURL.TabIndex = 2
-        Me.txtRepostOriginalURL.Tag = "40"
-        Me.ToolTip1.SetToolTip(Me.txtRepostOriginalURL, "Enter the URL to the original task post.")
-        '
-        'dtRepostOriginalDate
-        '
-        Me.dtRepostOriginalDate.Enabled = False
-        Me.dtRepostOriginalDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtRepostOriginalDate.Location = New System.Drawing.Point(6, 23)
-        Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
-        Me.dtRepostOriginalDate.Size = New System.Drawing.Size(381, 31)
-        Me.dtRepostOriginalDate.TabIndex = 1
-        Me.dtRepostOriginalDate.Tag = "40"
-        Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date of original posting (source)")
-        '
-        'chkRepost
-        '
-        Me.chkRepost.AutoSize = True
-        Me.chkRepost.BackColor = System.Drawing.SystemColors.Control
-        Me.chkRepost.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.chkRepost.Location = New System.Drawing.Point(8, -3)
-        Me.chkRepost.Name = "chkRepost"
-        Me.chkRepost.Size = New System.Drawing.Size(299, 24)
-        Me.chkRepost.TabIndex = 0
-        Me.chkRepost.Tag = "40"
-        Me.chkRepost.Text = "External task original date and source URL"
-        Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a previous task published somewhere else (not the" &
-        " Task Library)")
-        Me.chkRepost.UseVisualStyleBackColor = False
-        '
         'GroupBox1
         '
-        Me.GroupBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.chkcboSharedWithUsers)
@@ -3334,7 +3291,7 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.btnStartTaskPost)
         Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
         Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDAcquired)
-        Me.GroupBox1.Location = New System.Drawing.Point(6, 116)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(393, 445)
         Me.GroupBox1.TabIndex = 1
@@ -3590,6 +3547,56 @@ Partial Class Main
         Me.lblTaskLibraryIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblTaskLibraryIDAcquired.Visible = False
         '
+        'grbTaskDiscord
+        '
+        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskDiscord.Controls.Add(Me.txtTemporaryTaskID)
+        Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
+        Me.grbTaskDiscord.Controls.Add(Me.Label31)
+        Me.grbTaskDiscord.Enabled = False
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 481)
+        Me.grbTaskDiscord.Name = "grbTaskDiscord"
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 75)
+        Me.grbTaskDiscord.TabIndex = 4
+        Me.grbTaskDiscord.TabStop = False
+        Me.grbTaskDiscord.Text = "Discord / Task ID"
+        '
+        'txtTemporaryTaskID
+        '
+        Me.txtTemporaryTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTemporaryTaskID.Location = New System.Drawing.Point(150, 1)
+        Me.txtTemporaryTaskID.Name = "txtTemporaryTaskID"
+        Me.txtTemporaryTaskID.ReadOnly = True
+        Me.txtTemporaryTaskID.Size = New System.Drawing.Size(61, 32)
+        Me.txtTemporaryTaskID.TabIndex = 4
+        Me.txtTemporaryTaskID.Tag = "24"
+        Me.txtTemporaryTaskID.Visible = False
+        '
+        'txtDiscordTaskID
+        '
+        Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDiscordTaskID.Location = New System.Drawing.Point(121, 27)
+        Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
+        Me.txtDiscordTaskID.ReadOnly = True
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(266, 32)
+        Me.txtDiscordTaskID.TabIndex = 1
+        Me.txtDiscordTaskID.Tag = "24"
+        Me.txtDiscordTaskID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.Location = New System.Drawing.Point(6, 30)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(109, 26)
+        Me.Label31.TabIndex = 0
+        Me.Label31.Text = "Task Post ID"
+        '
         'txtDiscordEventDescription
         '
         Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3757,32 +3764,32 @@ Partial Class Main
         Me.grpDiscordGroupFlight.Controls.Add(Me.grpGroupFlightEvent)
         Me.grpDiscordGroupFlight.Location = New System.Drawing.Point(424, 3)
         Me.grpDiscordGroupFlight.Name = "grpDiscordGroupFlight"
-        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(405, 719)
+        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(405, 635)
         Me.grpDiscordGroupFlight.TabIndex = 1
         Me.grpDiscordGroupFlight.TabStop = False
         Me.grpDiscordGroupFlight.Text = "Group Flight Event"
         '
         'grpGroupFlightEvent
         '
+        Me.grpGroupFlightEvent.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPORecallSettings)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPORememberSettings)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnStartGroupEventPost)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPOResetToDefault)
         Me.grpGroupFlightEvent.Controls.Add(Me.flpDiscordGroupPostOptions)
-        Me.grpGroupFlightEvent.Controls.Add(Me.btnDiscordGroupEventURL)
-        Me.grpGroupFlightEvent.Controls.Add(Me.txtGroupEventPostURL)
-        Me.grpGroupFlightEvent.Controls.Add(Me.Label38)
         Me.grpGroupFlightEvent.Location = New System.Drawing.Point(6, 27)
         Me.grpGroupFlightEvent.Name = "grpGroupFlightEvent"
-        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(393, 684)
+        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(393, 600)
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Group Event Publishing Options"
         '
         'btnDGPORecallSettings
         '
+        Me.btnDGPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 599)
+        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 515)
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORecallSettings.TabIndex = 4
@@ -3793,8 +3800,9 @@ Partial Class Main
         '
         'btnDGPORememberSettings
         '
+        Me.btnDGPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 599)
+        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 515)
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORememberSettings.TabIndex = 5
@@ -3805,8 +3813,9 @@ Partial Class Main
         '
         'btnStartGroupEventPost
         '
+        Me.btnStartGroupEventPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartGroupEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 640)
+        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 556)
         Me.btnStartGroupEventPost.Name = "btnStartGroupEventPost"
         Me.btnStartGroupEventPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartGroupEventPost.TabIndex = 7
@@ -3817,8 +3826,9 @@ Partial Class Main
         '
         'btnDGPOResetToDefault
         '
+        Me.btnDGPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 597)
+        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 513)
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPOResetToDefault.TabIndex = 6
@@ -3829,8 +3839,7 @@ Partial Class Main
         '
         'flpDiscordGroupPostOptions
         '
-        Me.flpDiscordGroupPostOptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.flpDiscordGroupPostOptions.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel16)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel17)
@@ -3854,7 +3863,7 @@ Partial Class Main
         Me.flpDiscordGroupPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordGroupPostOptions.Location = New System.Drawing.Point(6, 25)
         Me.flpDiscordGroupPostOptions.Name = "flpDiscordGroupPostOptions"
-        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(379, 504)
+        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(379, 485)
         Me.flpDiscordGroupPostOptions.TabIndex = 0
         '
         'FlowLayoutPanel16
@@ -4281,45 +4290,13 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkDGPOAddOns, "Select if you want to include the recommended add-ons.")
         Me.chkDGPOAddOns.UseVisualStyleBackColor = True
         '
-        'btnDiscordGroupEventURL
-        '
-        Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(314, 562)
-        Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
-        Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(74, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 3
-        Me.btnDiscordGroupEventURL.Tag = "81"
-        Me.btnDiscordGroupEventURL.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
-        Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
-        '
-        'txtGroupEventPostURL
-        '
-        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(4, 561)
-        Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
-        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(304, 30)
-        Me.txtGroupEventPostURL.TabIndex = 2
-        Me.txtGroupEventPostURL.Tag = "81"
-        Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
-        '
-        'Label38
-        '
-        Me.Label38.AutoSize = True
-        Me.Label38.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label38.Location = New System.Drawing.Point(0, 534)
-        Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(158, 22)
-        Me.Label38.TabIndex = 1
-        Me.Label38.Text = "URL to group event:"
-        '
         'GroupBox4
         '
         Me.GroupBox4.Controls.Add(Me.Label15)
         Me.GroupBox4.Controls.Add(Me.numWaitSecondsForFiles)
         Me.GroupBox4.Location = New System.Drawing.Point(841, 3)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(393, 92)
+        Me.GroupBox4.Size = New System.Drawing.Size(393, 62)
         Me.GroupBox4.TabIndex = 2
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "General options"
@@ -4668,11 +4645,11 @@ Partial Class Main
         Me.pnlFlightPlanRightSide.ResumeLayout(False)
         Me.grbTaskPart2.ResumeLayout(False)
         Me.grbTaskPart2.PerformLayout()
+        Me.grpRepost.ResumeLayout(False)
+        Me.grpRepost.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
-        Me.grbTaskDiscord.ResumeLayout(False)
-        Me.grbTaskDiscord.PerformLayout()
         Me.pnlFlightPlanLeftSide.ResumeLayout(False)
         Me.pnlFlightPlanLeftSide.PerformLayout()
         Me.grbTaskInfo.ResumeLayout(False)
@@ -4683,6 +4660,8 @@ Partial Class Main
         Me.Panel2.ResumeLayout(False)
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
+        Me.grpGroupEventURL.ResumeLayout(False)
+        Me.grpGroupEventURL.PerformLayout()
         Me.grpEventTeaser.ResumeLayout(False)
         Me.grpEventTeaser.PerformLayout()
         Me.pnlEventDateTimeControls.ResumeLayout(False)
@@ -4698,8 +4677,6 @@ Partial Class Main
         Me.grpDiscordEvent.PerformLayout()
         Me.grpDiscordOthers.ResumeLayout(False)
         Me.grpDiscordTask.ResumeLayout(False)
-        Me.grpRepost.ResumeLayout(False)
-        Me.grpRepost.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.flpDiscordPostOptions.ResumeLayout(False)
@@ -4709,9 +4686,10 @@ Partial Class Main
         Me.FlowLayoutPanel4.PerformLayout()
         Me.FlowLayoutPanel13.ResumeLayout(False)
         Me.FlowLayoutPanel13.PerformLayout()
+        Me.grbTaskDiscord.ResumeLayout(False)
+        Me.grbTaskDiscord.PerformLayout()
         Me.grpDiscordGroupFlight.ResumeLayout(False)
         Me.grpGroupFlightEvent.ResumeLayout(False)
-        Me.grpGroupFlightEvent.PerformLayout()
         Me.flpDiscordGroupPostOptions.ResumeLayout(False)
         Me.FlowLayoutPanel16.ResumeLayout(False)
         Me.FlowLayoutPanel16.PerformLayout()
@@ -4945,7 +4923,6 @@ Partial Class Main
     Friend WithEvents btnTaskFeaturedOnGroupFlight As Button
     Friend WithEvents btnDiscordGroupEventURL As Button
     Friend WithEvents txtGroupEventPostURL As TextBox
-    Friend WithEvents Label38 As Label
     Friend WithEvents Label30 As Label
     Friend WithEvents txtOtherBeginnerLink As TextBox
     Friend WithEvents cboBeginnersGuide As ComboBox
@@ -4953,7 +4930,6 @@ Partial Class Main
     Friend WithEvents grbTaskDiscord As GroupBox
     Friend WithEvents txtDiscordTaskID As TextBox
     Friend WithEvents Label31 As Label
-    Friend WithEvents btnDiscordTaskThreadURLPaste As Button
     Friend WithEvents btnPasteUsernameCredits As Button
     Friend WithEvents FileDropZone1 As CommonLibrary.FileDropZone
     Friend WithEvents chkSoaringTypeWave As CheckBox
@@ -4967,7 +4943,6 @@ Partial Class Main
     Friend WithEvents chkRepost As CheckBox
     Friend WithEvents dtRepostOriginalDate As DateTimePicker
     Friend WithEvents chkSoaringTypeDynamic As CheckBox
-    Friend WithEvents btnDeleteDiscordID As Button
     Friend WithEvents grpEventTeaser As GroupBox
     Friend WithEvents btnSelectEventTeaserAreaMap As Button
     Friend WithEvents btnClearEventTeaserAreaMap As Button
@@ -5101,4 +5076,5 @@ Partial Class Main
     Friend WithEvents cboTaskOwner As ComboBox
     Friend WithEvents chkcboSharedWithUsers As CheckedListComboBox
     Friend WithEvents Label12 As Label
+    Friend WithEvents grpGroupEventURL As GroupBox
 End Class
