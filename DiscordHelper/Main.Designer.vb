@@ -259,6 +259,8 @@ Partial Class Main
         Me.btnDPORecallSettings = New System.Windows.Forms.Button()
         Me.btnDPORememberSettings = New System.Windows.Forms.Button()
         Me.flpDiscordPostOptions = New System.Windows.Forms.FlowLayoutPanel()
+        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOWSGTaskPost = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOMainPost = New System.Windows.Forms.CheckBox()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
@@ -269,12 +271,12 @@ Partial Class Main
         Me.chkDPOFeaturedOnGroupFlight = New System.Windows.Forms.CheckBox()
         Me.btnDPOResetToDefault = New System.Windows.Forms.Button()
         Me.btnStartTaskPost = New System.Windows.Forms.Button()
-        Me.lblTaskLibraryIDNotAcquired = New System.Windows.Forms.Label()
-        Me.lblTaskLibraryIDAcquired = New System.Windows.Forms.Label()
         Me.grbTaskDiscord = New System.Windows.Forms.GroupBox()
         Me.txtTemporaryTaskID = New System.Windows.Forms.TextBox()
         Me.txtDiscordTaskID = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
+        Me.lblTaskLibraryIDNotAcquired = New System.Windows.Forms.Label()
+        Me.lblTaskLibraryIDAcquired = New System.Windows.Forms.Label()
         Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
         Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
         Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
@@ -399,6 +401,7 @@ Partial Class Main
         Me.grpDiscordTask.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.flpDiscordPostOptions.SuspendLayout()
+        Me.FlowLayoutPanel2.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.FlowLayoutPanel4.SuspendLayout()
         Me.FlowLayoutPanel13.SuspendLayout()
@@ -3270,14 +3273,15 @@ Partial Class Main
         Me.grpDiscordTask.Controls.Add(Me.grbTaskDiscord)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 561)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 635)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
         '
         'GroupBox1
         '
-        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.GroupBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.chkcboSharedWithUsers)
@@ -3289,20 +3293,19 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.flpDiscordPostOptions)
         Me.GroupBox1.Controls.Add(Me.btnDPOResetToDefault)
         Me.GroupBox1.Controls.Add(Me.btnStartTaskPost)
-        Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
-        Me.GroupBox1.Controls.Add(Me.lblTaskLibraryIDAcquired)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 445)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 486)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Task Publishing Options"
         '
         'Label12
         '
+        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.Label12.Location = New System.Drawing.Point(6, 141)
+        Me.Label12.Location = New System.Drawing.Point(6, 215)
         Me.Label12.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(82, 22)
@@ -3311,12 +3314,12 @@ Partial Class Main
         '
         'cboTaskOwner
         '
-        Me.cboTaskOwner.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.cboTaskOwner.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboTaskOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboTaskOwner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.cboTaskOwner.FormattingEnabled = True
-        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 138)
+        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 212)
         Me.cboTaskOwner.Name = "cboTaskOwner"
         Me.cboTaskOwner.Size = New System.Drawing.Size(293, 30)
         Me.cboTaskOwner.Sorted = True
@@ -3329,7 +3332,7 @@ Partial Class Main
         Me.lblUpdateDescription.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblUpdateDescription.AutoSize = True
         Me.lblUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 232)
+        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 306)
         Me.lblUpdateDescription.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.lblUpdateDescription.Name = "lblUpdateDescription"
         Me.lblUpdateDescription.Size = New System.Drawing.Size(158, 22)
@@ -3341,7 +3344,7 @@ Partial Class Main
         Me.txtLastUpdateDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLastUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 257)
+        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 331)
         Me.txtLastUpdateDescription.Multiline = True
         Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
         Me.txtLastUpdateDescription.Size = New System.Drawing.Size(381, 64)
@@ -3353,7 +3356,7 @@ Partial Class Main
         '
         Me.btnDPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 360)
+        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 401)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORecallSettings.TabIndex = 2
@@ -3366,7 +3369,7 @@ Partial Class Main
         '
         Me.btnDPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 360)
+        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 401)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORememberSettings.TabIndex = 3
@@ -3379,6 +3382,7 @@ Partial Class Main
         '
         Me.flpDiscordPostOptions.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel2)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel1)
         Me.flpDiscordPostOptions.Controls.Add(Me.Label3)
         Me.flpDiscordPostOptions.Controls.Add(Me.FlowLayoutPanel4)
@@ -3386,8 +3390,35 @@ Partial Class Main
         Me.flpDiscordPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordPostOptions.Location = New System.Drawing.Point(0, 26)
         Me.flpDiscordPostOptions.Name = "flpDiscordPostOptions"
-        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 106)
+        Me.flpDiscordPostOptions.Size = New System.Drawing.Size(393, 149)
         Me.flpDiscordPostOptions.TabIndex = 0
+        '
+        'FlowLayoutPanel2
+        '
+        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel2.Controls.Add(Me.chkDPOWSGTaskPost)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 0)
+        Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(393, 26)
+        Me.FlowLayoutPanel2.TabIndex = 14
+        '
+        'chkDPOWSGTaskPost
+        '
+        Me.chkDPOWSGTaskPost.AutoSize = True
+        Me.chkDPOWSGTaskPost.Checked = True
+        Me.chkDPOWSGTaskPost.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOWSGTaskPost.Enabled = False
+        Me.chkDPOWSGTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOWSGTaskPost.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOWSGTaskPost.Name = "chkDPOWSGTaskPost"
+        Me.chkDPOWSGTaskPost.Size = New System.Drawing.Size(238, 26)
+        Me.chkDPOWSGTaskPost.TabIndex = 0
+        Me.chkDPOWSGTaskPost.Tag = "41"
+        Me.chkDPOWSGTaskPost.Text = "Create/Update task on WSG"
+        Me.ToolTip1.SetToolTip(Me.chkDPOWSGTaskPost, "This option cannot be changed.")
+        Me.chkDPOWSGTaskPost.UseVisualStyleBackColor = True
         '
         'FlowLayoutPanel1
         '
@@ -3395,7 +3426,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel1.Controls.Add(Me.chkDPOMainPost)
         Me.FlowLayoutPanel1.Controls.Add(Me.lblNbrCarsMainFP)
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 0)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 26)
         Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(393, 26)
@@ -3436,7 +3467,7 @@ Partial Class Main
         'Label3
         '
         Me.Label3.Enabled = False
-        Me.Label3.Location = New System.Drawing.Point(3, 26)
+        Me.Label3.Location = New System.Drawing.Point(3, 52)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(390, 20)
         Me.Label3.TabIndex = 0
@@ -3447,7 +3478,7 @@ Partial Class Main
         Me.FlowLayoutPanel4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel4.Controls.Add(Me.chkDPOIncludeCoverImage)
-        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 46)
+        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 72)
         Me.FlowLayoutPanel4.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
         Me.FlowLayoutPanel4.Size = New System.Drawing.Size(393, 26)
@@ -3473,7 +3504,7 @@ Partial Class Main
         Me.FlowLayoutPanel13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel13.Controls.Add(Me.chkDPOFeaturedOnGroupFlight)
-        Me.FlowLayoutPanel13.Location = New System.Drawing.Point(3, 72)
+        Me.FlowLayoutPanel13.Location = New System.Drawing.Point(3, 98)
         Me.FlowLayoutPanel13.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel13.Name = "FlowLayoutPanel13"
         Me.FlowLayoutPanel13.Size = New System.Drawing.Size(393, 26)
@@ -3499,7 +3530,7 @@ Partial Class Main
         '
         Me.btnDPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 360)
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 401)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDPOResetToDefault.TabIndex = 4
@@ -3512,7 +3543,7 @@ Partial Class Main
         '
         Me.btnStartTaskPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 401)
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 442)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartTaskPost.TabIndex = 5
@@ -3521,43 +3552,19 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnStartTaskPost, "Click this button to begin posting the task's details.")
         Me.btnStartTaskPost.UseVisualStyleBackColor = True
         '
-        'lblTaskLibraryIDNotAcquired
-        '
-        Me.lblTaskLibraryIDNotAcquired.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTaskLibraryIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTaskLibraryIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskLibraryIDNotAcquired.Location = New System.Drawing.Point(6, 324)
-        Me.lblTaskLibraryIDNotAcquired.Name = "lblTaskLibraryIDNotAcquired"
-        Me.lblTaskLibraryIDNotAcquired.Size = New System.Drawing.Size(381, 33)
-        Me.lblTaskLibraryIDNotAcquired.TabIndex = 0
-        Me.lblTaskLibraryIDNotAcquired.Text = "⚠️ = TASK LIBRARY ID NOT ACQUIRED"
-        Me.lblTaskLibraryIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTaskLibraryIDAcquired
-        '
-        Me.lblTaskLibraryIDAcquired.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblTaskLibraryIDAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTaskLibraryIDAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskLibraryIDAcquired.Location = New System.Drawing.Point(6, 324)
-        Me.lblTaskLibraryIDAcquired.Name = "lblTaskLibraryIDAcquired"
-        Me.lblTaskLibraryIDAcquired.Size = New System.Drawing.Size(381, 33)
-        Me.lblTaskLibraryIDAcquired.TabIndex = 17
-        Me.lblTaskLibraryIDAcquired.Text = "TASK LIBRARY ID ACQUIRED"
-        Me.lblTaskLibraryIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.lblTaskLibraryIDAcquired.Visible = False
-        '
         'grbTaskDiscord
         '
-        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTaskDiscord.Controls.Add(Me.txtTemporaryTaskID)
         Me.grbTaskDiscord.Controls.Add(Me.txtDiscordTaskID)
         Me.grbTaskDiscord.Controls.Add(Me.Label31)
+        Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
+        Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDAcquired)
         Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 481)
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 518)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
-        Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 75)
+        Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 112)
         Me.grbTaskDiscord.TabIndex = 4
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord / Task ID"
@@ -3596,6 +3603,32 @@ Partial Class Main
         Me.Label31.Size = New System.Drawing.Size(109, 26)
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task Post ID"
+        '
+        'lblTaskLibraryIDNotAcquired
+        '
+        Me.lblTaskLibraryIDNotAcquired.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblTaskLibraryIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTaskLibraryIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblTaskLibraryIDNotAcquired.Location = New System.Drawing.Point(6, 67)
+        Me.lblTaskLibraryIDNotAcquired.Name = "lblTaskLibraryIDNotAcquired"
+        Me.lblTaskLibraryIDNotAcquired.Size = New System.Drawing.Size(381, 33)
+        Me.lblTaskLibraryIDNotAcquired.TabIndex = 0
+        Me.lblTaskLibraryIDNotAcquired.Text = "⚠️ = TASK LIBRARY ID NOT ACQUIRED"
+        Me.lblTaskLibraryIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblTaskLibraryIDAcquired
+        '
+        Me.lblTaskLibraryIDAcquired.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblTaskLibraryIDAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTaskLibraryIDAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblTaskLibraryIDAcquired.Location = New System.Drawing.Point(6, 67)
+        Me.lblTaskLibraryIDAcquired.Name = "lblTaskLibraryIDAcquired"
+        Me.lblTaskLibraryIDAcquired.Size = New System.Drawing.Size(381, 33)
+        Me.lblTaskLibraryIDAcquired.TabIndex = 17
+        Me.lblTaskLibraryIDAcquired.Text = "TASK LIBRARY ID ACQUIRED"
+        Me.lblTaskLibraryIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblTaskLibraryIDAcquired.Visible = False
         '
         'txtDiscordEventDescription
         '
@@ -4608,11 +4641,11 @@ Partial Class Main
         '
         'chkcboSharedWithUsers
         '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 178)
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 252)
         Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
         Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.chkcboSharedWithUsers.MaxVisibleItems = 8
@@ -4680,6 +4713,8 @@ Partial Class Main
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.flpDiscordPostOptions.ResumeLayout(False)
+        Me.FlowLayoutPanel2.ResumeLayout(False)
+        Me.FlowLayoutPanel2.PerformLayout()
         Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.FlowLayoutPanel1.PerformLayout()
         Me.FlowLayoutPanel4.ResumeLayout(False)
@@ -5077,4 +5112,6 @@ Partial Class Main
     Friend WithEvents chkcboSharedWithUsers As CheckedListComboBox
     Friend WithEvents Label12 As Label
     Friend WithEvents grpGroupEventURL As GroupBox
+    Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
+    Friend WithEvents chkDPOWSGTaskPost As CheckBox
 End Class

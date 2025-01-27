@@ -51,18 +51,22 @@ Public Class Main
     Private _discordModified As Boolean = False
     Private _PossibleElevationUpdateRequired As Boolean = False
     Private _timeStampContextualMenuDateTime As DateTime
-    Private _userPermissionID As String
-    Private _userPermissions As New Dictionary(Of String, Boolean)
-    Private _userName As String = String.Empty
-    Private _allAvailableUsers As New List(Of String)
     Private _TaskEntrySeqID As Integer = 0
     Private _TaskStatus As SupportingFeatures.WSGTaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
     Private _TBTaskDBEntryUpdate As DateTime
     Private _TBTaskLastUpdate As DateTime
+    Private _isInitiatizing As Boolean = True
+
+    ' User related variables
+    Private _userPermissionID As String
+    Private _userPermissions As New Dictionary(Of String, Boolean)
+    Private _userName As String = String.Empty
+    Private _allAvailableUsers As New List(Of String)
     Private _isSuperUser As Boolean = False
     Private _userInteraction As Boolean = False
     Private _previousOwner As String = String.Empty
-    Private _isInitiatizing As Boolean = True
+    Private _currentWSGTaskOwner As String = String.Empty
+    Private _currentWSGSharedWith As New List(Of String)
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -81,7 +85,6 @@ Public Class Main
 
         ' Initialize the form and other components
         InitializeComponent()
-        _isInitiatizing = False
     End Sub
 
     Private Sub Application_ThreadException(ByVal sender As Object, ByVal e As ThreadExceptionEventArgs)
@@ -161,6 +164,8 @@ Public Class Main
         LoadSessionData(_CurrentSessionFile)
         _loadingFile = False
         CheckForNewVersion()
+
+        _isInitiatizing = False
 
     End Sub
 
@@ -482,7 +487,10 @@ Public Class Main
         txtLastUpdateDescription.Text = String.Empty
 
         cboTaskOwner.SelectedItem = _userName
+        _currentWSGSharedWith.Clear()
+        _currentWSGTaskOwner = _userName
         chkcboSharedWithUsers.SelectNone()
+        btnStartTaskPost.Enabled = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -2565,7 +2573,19 @@ Public Class Main
 #Region "Discord - Flight Plan event handlers"
 
     Private Sub chkDPOMainPost_EnabledChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.EnabledChanged
-        btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+        If _sessionModified Then
+            btnStartTaskPost.Enabled = _sessionModified
+        Else
+            btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+        End If
+    End Sub
+
+    Private Sub chkDPOMainPost_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.CheckedChanged
+        If _TaskStatus <= SupportingFeatures.WSGTaskStatus.PendingCreation Then
+            chkDPOMainPost.Checked = True
+        End If
+        chkDPOIncludeCoverImage.Checked = chkDPOMainPost.Checked
+        chkDPOFeaturedOnGroupFlight.Checked = chkDPOMainPost.Checked
     End Sub
 
     Private Sub txtLastUpdateDescription_EnabledChanged(sender As Object, e As EventArgs) Handles txtLastUpdateDescription.EnabledChanged
@@ -2867,7 +2887,7 @@ Public Class Main
     Private Function PostTaskInLibrary(autoContinue As Boolean) As Boolean
 
         'Task Main Post on WeSimGlide.org and Discord
-        If chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
+        If chkDPOWSGTaskPost.Checked Then
 
             'Is there an EntrySeqID already?
             If _TaskEntrySeqID > 0 Then
@@ -2896,18 +2916,11 @@ Public Class Main
                             End Using
                         End If
                         autoContinue = PrepareUpdateWSGTask()
+                        If autoContinue AndAlso chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
+                            autoContinue = FlightPlanMainInfoCopy(False, True)
+                        End If
                         If autoContinue Then
-                            'Update task on Discord ?
-                            Dim dlgResult As DialogResult
-                            Using New Centered_MessageBox(Me)
-                                dlgResult = MessageBox.Show(Me, "Do you need to update Discord too?", "Publishing task update", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                            End Using
-                            If dlgResult = DialogResult.Yes Then
-                                autoContinue = FlightPlanMainInfoCopy(False, True)
-                                If autoContinue Then
-                                    autoContinue = PostTaskThreadContent()
-                                End If
-                            End If
+                            autoContinue = PostTaskThreadContent(autoContinue)
                         End If
 
                         Return autoContinue
@@ -2956,13 +2969,11 @@ Public Class Main
             Return False
         End If
 
-        Return PostTaskThreadContent()
+        Return PostTaskThreadContent(autoContinue)
 
     End Function
 
-    Private Function PostTaskThreadContent() As Boolean
-
-        Dim autoContinue As Boolean = False
+    Private Function PostTaskThreadContent(autoContinue As Boolean) As Boolean
 
         'Cover Image
         If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked Then
@@ -6451,6 +6462,7 @@ Public Class Main
                         If entrySeqID = 0 Then
                             _TaskEntrySeqID = result("taskDetails")("EntrySeqID")
                         End If
+                        Integer.TryParse(result("taskDetails")("Status"), _TaskStatus)
                         ' Specify the format of the datetime string
                         Dim utcFormat As String = "yyyy-MM-dd HH:mm:ss"
                         Dim cultureInfo As CultureInfo = CultureInfo.InvariantCulture
@@ -6458,19 +6470,21 @@ Public Class Main
                         _TBTaskDBEntryUpdate = DateTime.ParseExact(result("taskDetails")("DBEntryUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
                         _TBTaskLastUpdate = DateTime.ParseExact(result("taskDetails")("LastUpdate").ToString(), utcFormat, cultureInfo, DateTimeStyles.AssumeUniversal).ToLocalTime()
                         ' Retrieve OwnerName and SharedWith info
-                        cboTaskOwner.SelectedItem = result("taskDetails")("OwnerName").ToString()
-                        Dim sharedWithList As New List(Of String)
+                        _currentWSGTaskOwner = result("taskDetails")("OwnerName").ToString()
+                        cboTaskOwner.SelectedItem = _currentWSGTaskOwner
+
                         ' Check if SharedWith is a JSON string that represents an array
                         Dim sharedWithRaw As String = result("taskDetails")("SharedWith").ToString()
                         If sharedWithRaw.StartsWith("[") AndAlso sharedWithRaw.EndsWith("]") Then
                             ' Parse the string as a JSON array and convert it to a list of strings
-                            sharedWithList = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of String))(sharedWithRaw)
+                            _currentWSGSharedWith = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of String))(sharedWithRaw)
                         Else
                             ' If it's not a JSON array, treat it as a plain string
-                            sharedWithList.Add(sharedWithRaw)
+                            _currentWSGSharedWith.Add(sharedWithRaw)
                         End If
                         ' Pass the list to the SelectItemsByNames method
-                        chkcboSharedWithUsers.SelectItemsByNames(sharedWithList)
+                        chkcboSharedWithUsers.SelectItemsByNames(_currentWSGSharedWith)
+                        _currentWSGSharedWith.Sort()
 
                         ' If Owner is the same as current user, then enable changing the owner. If not, then it must be locked.
                         If cboTaskOwner.Text = _userName OrElse _isSuperUser Then
@@ -6527,8 +6541,8 @@ Public Class Main
                     If timeDifference.TotalSeconds < -2 Then
                         'Local file is more recent (by more than 2 seconds) - allow change
                         If UserCanUpdateTask Then
-                            btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
-                            txtLastUpdateDescription.Enabled = chkDPOMainPost.Enabled
+                            btnStartTaskPost.Enabled = True
+                            txtLastUpdateDescription.Enabled = True
                         Else
                             btnStartTaskPost.Enabled = False
                             txtLastUpdateDescription.Enabled = False
@@ -6539,7 +6553,7 @@ Public Class Main
                     End If
                 Case SupportingFeatures.WSGTaskStatus.PendingCreation
                     If UserCanCreateTask Then
-                        btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+                        btnStartTaskPost.Enabled = True
                     Else
                         btnStartTaskPost.Enabled = False
                     End If
@@ -6554,7 +6568,8 @@ Public Class Main
             labelString = "Task does not exist on WeSimGlide.org"
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             If UserCanCreateTask Then
-                btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+                btnStartTaskPost.Enabled = grbTaskInfo.Enabled
+                chkDPOMainPost.Checked = True
             Else
                 btnStartTaskPost.Enabled = False
             End If
@@ -6718,11 +6733,28 @@ Public Class Main
     End Sub
 
     Private Sub CheckOwnerOrUsersHaveChanged()
+        If _isInitiatizing OrElse _loadingFile Then
+            Exit Sub
+        End If
+        If (Not _discordModified) AndAlso cboTaskOwner.Text <> _currentWSGTaskOwner OrElse (Not AreListsEqual(chkcboSharedWithUsers.GetSelectedItems, _currentWSGSharedWith)) Then
+            SessionModified(SourceOfChange.DiscordTab)
+        End If
     End Sub
+
+    Public Function AreListsEqual(list1 As List(Of String), list2 As List(Of String)) As Boolean
+        ' Check if both lists are the same size
+        If list1.Count <> list2.Count Then
+            Return False
+        End If
+
+        ' Sort and compare the lists
+        Return list1.OrderBy(Function(x) x).SequenceEqual(list2.OrderBy(Function(x) x))
+    End Function
 
     Private Sub chkcboSharedWithUsers_SelectedItemsChanged(sender As Object, e As EventArgs) Handles chkcboSharedWithUsers.SelectedItemsChanged
         CheckOwnerOrUsersHaveChanged()
     End Sub
+
 
 #End Region
 
