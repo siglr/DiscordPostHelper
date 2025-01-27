@@ -15,6 +15,7 @@ Public Class CheckedListComboBox
     Public Event SelectedItemsChanged As EventHandler
 
     Public Property LockedValueFromUser As String
+    Public Property IsInitializing As Boolean = False
 
     Public Sub New()
         InitializeComponent()
@@ -84,6 +85,10 @@ Public Class CheckedListComboBox
 
     ' Prevent user from interacting with CheckedListBox if IsReadOnly is true
     Private Sub PreventUserInteraction(sender As Object, e As ItemCheckEventArgs)
+        If IsInitializing Then
+            Exit Sub
+        End If
+
         ' Prevent changes if read-only or locked value
         If _fromUserChange AndAlso (_isReadOnly OrElse TheCheckedListBox.Items(e.Index).ToString = LockedValueFromUser) Then
             e.NewValue = e.CurrentValue
@@ -150,6 +155,9 @@ Public Class CheckedListComboBox
 
     ' Add methods for runtime item management
     Public Sub AddItem(item As Object, Optional isChecked As Boolean = False)
+        If TheCheckedListBox.Items.Contains(item) Then
+            Exit Sub
+        End If
         _fromUserChange = False
         TheCheckedListBox.Items.Add(item, isChecked)
         _fromUserChange = True

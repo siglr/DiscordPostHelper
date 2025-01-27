@@ -489,8 +489,13 @@ Public Class Main
         cboTaskOwner.SelectedItem = _userName
         _currentWSGSharedWith.Clear()
         _currentWSGTaskOwner = _userName
+        chkcboSharedWithUsers.IsInitializing = True
+        chkcboSharedWithUsers.IsReadOnly = False
+        chkcboSharedWithUsers.RemoveItem(_userName)
         chkcboSharedWithUsers.SelectNone()
+        chkcboSharedWithUsers.IsInitializing = False
         btnStartTaskPost.Enabled = False
+        tabFlightPlan.Enabled = True
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -3184,7 +3189,7 @@ Public Class Main
         chkDGPOWaypoints.Enabled = grbTaskInfo.Enabled
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
-            chkDPOIncludeCoverImage.Enabled = True
+            chkDPOIncludeCoverImage.Enabled = True AndAlso grbTaskInfo.Enabled
             chkDGPOCoverImage.Enabled = True
         Else
             chkDPOIncludeCoverImage.Enabled = False
@@ -5832,6 +5837,11 @@ Public Class Main
 #End Region
 
 #Region "Permissions"
+    Private ReadOnly Property IsOwnerOrShared As Boolean
+        Get
+            Return _currentWSGTaskOwner = _userName OrElse _currentWSGSharedWith.Contains(_userName) OrElse _isSuperUser
+        End Get
+    End Property
     Private ReadOnly Property UserCanCreateTask As Boolean
         Get
             If _userPermissions.ContainsKey("CreateTask") Then
@@ -5843,7 +5853,7 @@ Public Class Main
     End Property
     Private ReadOnly Property UserCanUpdateTask As Boolean
         Get
-            If _userPermissions.ContainsKey("UpdateTask") Then
+            If _userPermissions.ContainsKey("UpdateTask") AndAlso IsOwnerOrShared() Then
                 Return _userPermissions("UpdateTask")
             Else
                 Return False
@@ -5852,7 +5862,7 @@ Public Class Main
     End Property
     Private ReadOnly Property UserCanDeleteTask As Boolean
         Get
-            If _userPermissions.ContainsKey("DeleteTask") Then
+            If _userPermissions.ContainsKey("DeleteTask") AndAlso IsOwnerOrShared() Then
                 Return _userPermissions("DeleteTask")
             Else
                 Return False
@@ -6488,6 +6498,10 @@ Public Class Main
                             _currentWSGSharedWith.Add(sharedWithRaw)
                         End If
                         ' Pass the list to the SelectItemsByNames method
+                        ' If the Owner is not the user but the user is in the shared list, we must add him to the choices
+                        If _currentWSGTaskOwner <> _userName AndAlso _currentWSGSharedWith.Contains(_userName) Then
+                            chkcboSharedWithUsers.AddItem(_userName, True)
+                        End If
                         chkcboSharedWithUsers.SelectItemsByNames(_currentWSGSharedWith)
                         _currentWSGSharedWith.Sort()
 
@@ -6564,6 +6578,7 @@ Public Class Main
                     End If
                     lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             End Select
+            tabFlightPlan.Enabled = IsOwnerOrShared
 
             If UserCanDeleteTask Then
                 btnDeleteFromTaskBrowser.Enabled = True
@@ -6758,6 +6773,12 @@ Public Class Main
 
     Private Sub chkcboSharedWithUsers_SelectedItemsChanged(sender As Object, e As EventArgs) Handles chkcboSharedWithUsers.SelectedItemsChanged
         CheckOwnerOrUsersHaveChanged()
+    End Sub
+
+    Private Sub btnStartTaskPost_EnabledChanged(sender As Object, e As EventArgs) Handles btnStartTaskPost.EnabledChanged
+        If btnStartTaskPost.Enabled Then
+            btnStartTaskPost.Enabled = IsOwnerOrShared
+        End If
     End Sub
 
 
