@@ -27,7 +27,7 @@ Partial Class Main
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.mainTabControl = New System.Windows.Forms.TabControl()
         Me.tabFlightPlan = New System.Windows.Forms.TabPage()
         Me.pnlGuide = New System.Windows.Forms.Panel()
         Me.btnGuideNext = New System.Windows.Forms.Button()
@@ -372,7 +372,7 @@ Partial Class Main
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
+        Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
         Me.pnlGuide.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -438,31 +438,31 @@ Partial Class Main
         Me.pnlScrollableSurface.AutoScroll = True
         Me.pnlScrollableSurface.AutoScrollMargin = New System.Drawing.Size(0, 15)
         Me.pnlScrollableSurface.AutoScrollMinSize = New System.Drawing.Size(1490, 878)
-        Me.pnlScrollableSurface.Controls.Add(Me.TabControl1)
+        Me.pnlScrollableSurface.Controls.Add(Me.mainTabControl)
         Me.pnlScrollableSurface.Location = New System.Drawing.Point(0, 28)
         Me.pnlScrollableSurface.MinimumSize = New System.Drawing.Size(1490, 650)
         Me.pnlScrollableSurface.Name = "pnlScrollableSurface"
         Me.pnlScrollableSurface.Size = New System.Drawing.Size(1490, 893)
         Me.pnlScrollableSurface.TabIndex = 0
         '
-        'TabControl1
+        'mainTabControl
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.mainTabControl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.tabFlightPlan)
-        Me.TabControl1.Controls.Add(Me.tabEvent)
-        Me.TabControl1.Controls.Add(Me.tabDiscord)
-        Me.TabControl1.Controls.Add(Me.tabBriefing)
-        Me.TabControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControl1.ItemSize = New System.Drawing.Size(175, 25)
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.MinimumSize = New System.Drawing.Size(1475, 892)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1475, 893)
-        Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
-        Me.TabControl1.TabIndex = 0
+        Me.mainTabControl.Controls.Add(Me.tabFlightPlan)
+        Me.mainTabControl.Controls.Add(Me.tabEvent)
+        Me.mainTabControl.Controls.Add(Me.tabDiscord)
+        Me.mainTabControl.Controls.Add(Me.tabBriefing)
+        Me.mainTabControl.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mainTabControl.ItemSize = New System.Drawing.Size(175, 25)
+        Me.mainTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.mainTabControl.MinimumSize = New System.Drawing.Size(1475, 892)
+        Me.mainTabControl.Name = "mainTabControl"
+        Me.mainTabControl.SelectedIndex = 0
+        Me.mainTabControl.Size = New System.Drawing.Size(1475, 893)
+        Me.mainTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
+        Me.mainTabControl.TabIndex = 0
         '
         'tabFlightPlan
         '
@@ -4661,7 +4661,7 @@ Partial Class Main
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Discord Post Helper"
         Me.pnlScrollableSurface.ResumeLayout(False)
-        Me.TabControl1.ResumeLayout(False)
+        Me.mainTabControl.ResumeLayout(False)
         Me.tabFlightPlan.ResumeLayout(False)
         Me.pnlGuide.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
@@ -4756,7 +4756,7 @@ Partial Class Main
 
     End Sub
 
-    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents mainTabControl As TabControl
     Friend WithEvents tabFlightPlan As TabPage
     Friend WithEvents grbTaskInfo As GroupBox
     Friend WithEvents Label9 As Label

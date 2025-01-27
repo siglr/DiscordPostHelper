@@ -21,6 +21,12 @@ Public Class Main
 
     Public Shared SessionSettings As New AllSettings
 
+    Private Enum SourceOfChange
+        TaskTab
+        EventTab
+        DiscordTab
+    End Enum
+
     Private Const DiscordLimit As Integer = 2000
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
     Private Const DefaultMapImageWidth As Integer = 1647
@@ -40,6 +46,9 @@ Public Class Main
     Private _CurrentSessionFile As String = String.Empty
     Private _loadingFile As Boolean = False
     Private _sessionModified As Boolean = False
+    Private _taskModified As Boolean = False
+    Private _eventModified As Boolean = False
+    Private _discordModified As Boolean = False
     Private _PossibleElevationUpdateRequired As Boolean = False
     Private _timeStampContextualMenuDateTime As DateTime
     Private _userPermissionID As String
@@ -53,6 +62,7 @@ Public Class Main
     Private _isSuperUser As Boolean = False
     Private _userInteraction As Boolean = False
     Private _previousOwner As String = String.Empty
+    Private _isInitiatizing As Boolean = True
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -71,6 +81,7 @@ Public Class Main
 
         ' Initialize the form and other components
         InitializeComponent()
+        _isInitiatizing = False
     End Sub
 
     Private Sub Application_ThreadException(ByVal sender As Object, ByVal e As ThreadExceptionEventArgs)
@@ -537,8 +548,8 @@ Public Class Main
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles toolStripResetAll.Click
         If CheckUnsavedAndConfirmAction("reset all") Then
             ResetForm()
-            TabControl1.SelectTab(0)
-            Select Case TabControl1.SelectedTab.Name
+            mainTabControl.SelectTab(0)
+            Select Case mainTabControl.SelectedTab.Name
                 Case "tabDiscord"
                     BuildFPResults()
                     BuildWeatherCloudLayers()
@@ -561,9 +572,9 @@ Public Class Main
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
-    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles mainTabControl.SelectedIndexChanged
         FixForDropDownCombos()
-        Select Case TabControl1.SelectedTab.Name
+        Select Case mainTabControl.SelectedTab.Name
             Case "tabBriefing"
                 GenerateBriefing()
             Case "tabDiscord"
@@ -626,8 +637,8 @@ Public Class Main
             Dim currentFile As String = _CurrentSessionFile
             ResetForm()
             LoadFile(currentFile)
-            TabControl1.SelectTab(0)
-            Select Case TabControl1.SelectedTab.Name
+            mainTabControl.SelectTab(0)
+            Select Case mainTabControl.SelectedTab.Name
                 Case "tabDiscord"
                     BuildFPResults()
                     BuildWeatherCloudLayers()
@@ -885,7 +896,7 @@ Public Class Main
         If _SF.ExtraFileExtensionIsValid(otherFile) Then
             If Not lstAllFiles.Items.Contains(otherFile) Then
                 lstAllFiles.Items.Add(otherFile)
-                SessionModified()
+                SessionModified(SourceOfChange.TaskTab)
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show(Me, "File already exists in the list.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -1096,6 +1107,10 @@ Public Class Main
                                                                           dtRepostOriginalDate.ValueChanged,
                                                                           txtTrackerGroup.TextChanged
 
+        If _isInitiatizing Then
+            Exit Sub
+        End If
+
         'Check specific fields colateral actions
         If sender Is txtTitle AndAlso chkTitleLock.Checked = False AndAlso txtTitle.Text <> _OriginalFlightPlanTitle Then
             chkTitleLock.Checked = True
@@ -1117,7 +1132,7 @@ Public Class Main
         End If
 
         CheckWhichOptionsCanBeEnabled()
-        SessionModified()
+        SessionModified(sender)
 
         If TypeOf sender IsNot Windows.Forms.TextBox Then
             GeneralFPTabFieldLeaveDetection(sender, e)
@@ -1505,7 +1520,7 @@ Public Class Main
 
         For i As Integer = lstAllFiles.SelectedIndices.Count - 1 To 0 Step -1
             lstAllFiles.Items.RemoveAt(lstAllFiles.SelectedIndices(i))
-            SessionModified()
+            SessionModified(SourceOfChange.TaskTab)
         Next
 
         If lstAllFiles.SelectedIndex > -1 AndAlso lstAllFiles.SelectedItems.Count < lstAllFiles.Items.Count Then
@@ -1525,7 +1540,7 @@ Public Class Main
 
         MoveExtraFilesSelectedItems(-1, lstAllFiles)
         btnExtraFileUp.Focus()
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -1533,7 +1548,7 @@ Public Class Main
 
         MoveExtraFilesSelectedItems(1, lstAllFiles)
         btnExtraFileDown.Focus()
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -1598,7 +1613,7 @@ Public Class Main
 
         If RecommendedAddOnsForm.ShowForm(Me, addOn, False) = DialogResult.OK Then
             lstAllRecommendedAddOns.Items.Add(addOn)
-            SessionModified()
+            SessionModified(SourceOfChange.TaskTab)
         End If
 
         If lstAllRecommendedAddOns.SelectedIndex > -1 AndAlso lstAllRecommendedAddOns.SelectedItems.Count < lstAllRecommendedAddOns.Items.Count Then
@@ -1626,7 +1641,7 @@ Public Class Main
                 ' Re-insert the modified item at the same index
                 lstAllRecommendedAddOns.Items.Insert(index, addOn)
                 lstAllRecommendedAddOns.SelectedIndex = index
-                SessionModified()
+                SessionModified(SourceOfChange.TaskTab)
             Case DialogResult.Cancel
                 'Cancel
         End Select
@@ -1640,7 +1655,7 @@ Public Class Main
 
         For i As Integer = lstAllRecommendedAddOns.SelectedIndices.Count - 1 To 0 Step -1
             lstAllRecommendedAddOns.Items.RemoveAt(lstAllRecommendedAddOns.SelectedIndices(i))
-            SessionModified()
+            SessionModified(SourceOfChange.TaskTab)
         Next
 
         If lstAllRecommendedAddOns.SelectedIndex > -1 AndAlso lstAllRecommendedAddOns.SelectedItems.Count < lstAllRecommendedAddOns.Items.Count Then
@@ -1664,7 +1679,7 @@ Public Class Main
         'Update recommended add-ons textbox
         BuildRecAddOnsText()
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -1676,7 +1691,7 @@ Public Class Main
         'Update recommended add-ons textbox
         BuildRecAddOnsText()
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -1688,7 +1703,7 @@ Public Class Main
         If cboCountryFlag.SelectedIndex > 0 AndAlso Not lstAllCountries.Items.Contains(cboCountryFlag.Text) Then
             lstAllCountries.Items.Add(cboCountryFlag.Text)
             'BuildFPResults()
-            SessionModified()
+            SessionModified(SourceOfChange.TaskTab)
             If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
                 btnMoveCountryDown.Enabled = True
                 btnMoveCountryUp.Enabled = True
@@ -1703,7 +1718,7 @@ Public Class Main
     Private Sub btnRemoveCountry_Click(sender As Object, e As EventArgs) Handles btnRemoveCountry.Click
         For i As Integer = lstAllCountries.SelectedIndices.Count - 1 To 0 Step -1
             lstAllCountries.Items.RemoveAt(lstAllCountries.SelectedIndices(i))
-            SessionModified()
+            SessionModified(SourceOfChange.TaskTab)
         Next
         If lstAllCountries.SelectedIndex > -1 AndAlso lstAllCountries.SelectedItems.Count < lstAllCountries.Items.Count Then
             btnMoveCountryDown.Enabled = True
@@ -1719,13 +1734,13 @@ Public Class Main
     Private Sub btnMoveCountryUp_Click(sender As Object, e As EventArgs) Handles btnMoveCountryUp.Click
         MoveExtraFilesSelectedItems(-1, lstAllCountries)
         'BuildFPResults()
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
     End Sub
 
     Private Sub btnMoveCountryDown_Click(sender As Object, e As EventArgs) Handles btnMoveCountryDown.Click
         MoveExtraFilesSelectedItems(1, lstAllCountries)
         'BuildFPResults()
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
     End Sub
 
 #End Region
@@ -2073,7 +2088,7 @@ Public Class Main
         'BuildFPResults()
         'BuildGroupFlightPost()
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -2121,7 +2136,7 @@ Public Class Main
             lblNonStdBaroPressure.Enabled = True
         End If
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
@@ -2345,7 +2360,7 @@ Public Class Main
 
         'BuildGroupFlightPost()
 
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
 
     End Sub
 
@@ -2366,7 +2381,7 @@ Public Class Main
         End Select
 
         BuildEventDatesTimes()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub EventTimeChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyTime.ValueChanged, dtEventStartTaskTime.ValueChanged, dtEventMeetTime.ValueChanged, dtEventLaunchTime.ValueChanged
@@ -2399,18 +2414,18 @@ Public Class Main
         End Select
 
         BuildEventDatesTimes()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
 
     End Sub
 
     Private Sub chkDateTimeUTC_CheckedChanged(sender As Object, e As EventArgs) Handles chkDateTimeUTC.CheckedChanged
         BuildEventDatesTimes()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub GroupFlightFieldLeave(sender As Object, e As EventArgs) Handles chkUseSyncFly.CheckedChanged, chkUseStart.CheckedChanged, chkUseLaunch.CheckedChanged, cboVoiceChannel.SelectedIndexChanged, cboMSFSServer.SelectedIndexChanged, cboEligibleAward.SelectedIndexChanged
         'BuildGroupFlightPost()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub cboBeginnersGuide_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBeginnersGuide.SelectedIndexChanged
@@ -2423,7 +2438,7 @@ Public Class Main
             txtOtherBeginnerLink.Text = String.Empty
         End If
         'BuildGroupFlightPost()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub btnPasteBeginnerLink_Click(sender As Object, e As EventArgs) Handles btnPasteBeginnerLink.Click
@@ -2435,7 +2450,7 @@ Public Class Main
 
     Private Sub chkIncludeBeginnersHelpLink_CheckedChanged(sender As Object, e As EventArgs)
         'BuildGroupFlightPost()
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
@@ -2465,7 +2480,7 @@ Public Class Main
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub chkEventTeaser_CheckedChanged(sender As Object, e As EventArgs) Handles chkEventTeaser.CheckedChanged
@@ -2473,12 +2488,12 @@ Public Class Main
         If chkEventTeaser.Checked AndAlso (txtEventTeaserAreaMapImage.Text.Trim.Length > 0 OrElse txtEventTeaserMessage.Text.Trim.Length > 0) Then
             chkDGPOTeaser.Checked = True
         End If
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub btnClearEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnClearEventTeaserAreaMap.Click
         txtEventTeaserAreaMapImage.Text = String.Empty
-        SessionModified()
+        SessionModified(SourceOfChange.EventTab)
     End Sub
 
     Private Sub btnSelectEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnSelectEventTeaserAreaMap.Click
@@ -2498,7 +2513,7 @@ Public Class Main
         If result = DialogResult.OK Then
             txtEventTeaserAreaMapImage.Text = OpenFileDialog1.FileName
             chkDGPOTeaser.Checked = True
-            SessionModified()
+            SessionModified(SourceOfChange.EventTab)
         End If
 
     End Sub
@@ -4331,13 +4346,13 @@ Public Class Main
 
     Private Sub cboCoverImage_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCoverImage.SelectedIndexChanged
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
     End Sub
 
     Private Sub cboBriefingMap_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBriefingMap.SelectedIndexChanged
 
-        SessionModified()
+        SessionModified(SourceOfChange.TaskTab)
 
         'Load image
         BriefingControl1.ChangeImage(cboBriefingMap.SelectedItem.ToString)
@@ -4449,7 +4464,7 @@ Public Class Main
 
         Dim activateGuide As Boolean = False
 
-        Select Case TabControl1.SelectedTab.TabIndex
+        Select Case mainTabControl.SelectedTab.TabIndex
             Case tabFlightPlan.TabIndex
                 Using New Centered_MessageBox(Me)
                     If MessageBox.Show(Me, "Do you want to start by resetting everything?", "Starting the Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
@@ -4491,7 +4506,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub Main_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles TabControl1.KeyDown, Me.KeyDown
+    Private Sub Main_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles mainTabControl.KeyDown, Me.KeyDown
 
         ' Handle F1 for help
         If e.KeyCode = Keys.F1 Then
@@ -4588,7 +4603,7 @@ Public Class Main
                 FixForDropDownCombos()
 
             Case 1 'Select flight plan
-                TabControl1.SelectedTab = TabControl1.TabPages("tabFlightPlan")
+                mainTabControl.SelectedTab = mainTabControl.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
                 pnlGuide.Top = -3
                 lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
@@ -4714,7 +4729,7 @@ Public Class Main
                 ShowGuide()
 
             Case 34 'Briefing review
-                TabControl1.SelectedIndex = 3
+                mainTabControl.SelectedIndex = 3
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
@@ -4723,13 +4738,13 @@ Public Class Main
                 ShowGuide()
 
             Case 40 'Repost checkbox and date
-                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = 26
                 lblDiscordGuideInstructions.Text = "If you'd like to specify where and when this task has been published first, enable this to set the original date the task was published and its URL."
                 SetFocusOnField(chkRepost, fromF1Key)
             Case 41 'Discord Post Options for task
-                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = 220
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
@@ -4751,7 +4766,7 @@ Public Class Main
 
             Case 60 'Event
                 'Resume wizard on the Event tab
-                TabControl1.SelectedTab = TabControl1.TabPages("tabEvent")
+                mainTabControl.SelectedTab = mainTabControl.TabPages("tabEvent")
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 69
                 lblEventGuideInstructions.Text = "Start by selecting the soaring club or known group for which you want to create a new event, if this applies to you."
@@ -4830,7 +4845,7 @@ Public Class Main
                 SetFocusOnField(chkEventTeaser, fromF1Key)
 
             Case 73 'Briefing review
-                TabControl1.SelectedIndex = 3
+                mainTabControl.SelectedIndex = 3
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
@@ -4840,7 +4855,7 @@ Public Class Main
                 ShowGuide()
 
             Case 80 'Discord Post Options
-                TabControl1.SelectedTab = TabControl1.TabPages("tabDiscord")
+                mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 591
                 pnlWizardDiscord.Top = 557
@@ -5186,7 +5201,7 @@ Public Class Main
         If CheckUnsavedAndConfirmAction("load a file") Then
             LoadFileDialog()
         End If
-        Select Case TabControl1.SelectedTab.Name
+        Select Case mainTabControl.SelectedTab.Name
             Case "tabBriefing"
                 GenerateBriefing()
             Case "tabDiscord"
@@ -5604,19 +5619,82 @@ Public Class Main
         cboVoiceChannel.SelectionStart = cboVoiceChannel.Text.Length
     End Sub
 
-    Public Sub SessionModified()
+    Private Sub SessionModified(source As SourceOfChange)
 
-        If (Not _sessionModified) AndAlso (Not _loadingFile) Then
+        If _loadingFile Or _isInitiatizing Then
+            Exit Sub
+        End If
+
+        If source = SourceOfChange.TaskTab AndAlso Not _taskModified Then
+            _taskModified = True
+        ElseIf source = SourceOfChange.EventTab AndAlso Not _eventModified Then
+            _eventModified = True
+        ElseIf source = SourceOfChange.DiscordTab AndAlso Not _discordModified Then
+            _discordModified = True
+        End If
+
+        If (Not _sessionModified) Then
             _sessionModified = True
             SetSaveButtonFont()
         End If
 
     End Sub
 
+    Private Sub SessionModified(sourceObject As Object)
+        If (Not _loadingFile) AndAlso (Not _isInitiatizing) Then
+            Select Case FindControlParentTab(sourceObject)
+                Case "tabFlightPlan"
+                    SessionModified(SourceOfChange.TaskTab)
+                Case "tabEvent"
+                    SessionModified(SourceOfChange.EventTab)
+                Case "tabDiscord"
+                    SessionModified(SourceOfChange.DiscordTab)
+                Case Else
+                    SessionModified(SourceOfChange.TaskTab)
+            End Select
+        End If
+    End Sub
+
+    Private Function FindControlParentTab(obj As Object) As String
+        ' Check if the object is a Control
+        If TypeOf obj IsNot Control Then
+            Return String.Empty
+        End If
+
+        ' Cast the object to a Control
+        Dim control As Control = DirectCast(obj, Control)
+
+        ' Traverse up the control hierarchy to find the TabControl with the name "mainTabControl"
+        While control IsNot Nothing
+            ' Check if the parent is a TabPage
+            If TypeOf control.Parent Is TabPage Then
+                Dim parentTabPage As TabPage = DirectCast(control.Parent, TabPage)
+
+                ' Check if the TabPage belongs to a TabControl named "mainTabControl"
+                If TypeOf parentTabPage.Parent Is TabControl Then
+                    Dim parentTabControl As TabControl = DirectCast(parentTabPage.Parent, TabControl)
+                    If parentTabControl.Name = "mainTabControl" Then
+                        ' Return the name of the TabPage (the previous parent)
+                        Return parentTabPage.Name
+                    End If
+                End If
+            End If
+
+            ' Move up to the parent control
+            control = control.Parent
+        End While
+
+        ' If no matching TabControl is found, return Nothing or throw an exception
+        Return Nothing
+    End Function
+
     Public Sub SessionUntouched()
 
         If _sessionModified Then
             _sessionModified = False
+            _taskModified = False
+            _eventModified = False
+            _discordModified = False
             SetSaveButtonFont()
         End If
     End Sub
@@ -6651,6 +6729,9 @@ Public Class Main
 
         ' Update the previous owner
         _previousOwner = cboTaskOwner.Text
+
+        CheckOwnerOrUsersHaveChanged()
+
     End Sub
 
     Private Sub cboTaskOwner_Enter(sender As Object, e As EventArgs) Handles cboTaskOwner.Enter
@@ -6660,6 +6741,13 @@ Public Class Main
 
     Private Sub cboTaskOwner_Leave(sender As Object, e As EventArgs) Handles cboTaskOwner.Leave
         _userInteraction = False
+    End Sub
+
+    Private Sub CheckOwnerOrUsersHaveChanged()
+    End Sub
+
+    Private Sub chkcboSharedWithUsers_SelectedItemsChanged(sender As Object, e As EventArgs) Handles chkcboSharedWithUsers.SelectedItemsChanged
+        CheckOwnerOrUsersHaveChanged()
     End Sub
 
 #End Region

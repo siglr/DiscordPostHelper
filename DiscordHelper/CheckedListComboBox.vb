@@ -12,6 +12,8 @@ Public Class CheckedListComboBox
     Private _fromUserChange As Boolean = True
     Private Shared _shownOnce As Boolean = False
 
+    Public Event SelectedItemsChanged As EventHandler
+
     Public Property LockedValueFromUser As String
 
     Public Sub New()
@@ -82,10 +84,25 @@ Public Class CheckedListComboBox
 
     ' Prevent user from interacting with CheckedListBox if IsReadOnly is true
     Private Sub PreventUserInteraction(sender As Object, e As ItemCheckEventArgs)
+        ' Prevent changes if read-only or locked value
         If _fromUserChange AndAlso (_isReadOnly OrElse TheCheckedListBox.Items(e.Index).ToString = LockedValueFromUser) Then
             e.NewValue = e.CurrentValue
         End If
-        UpdateCheckedItemsDisplayDirect()
+
+        If _fromUserChange Then
+            Me.BeginInvoke(New Action(Sub()
+                                          UpdateCheckedItemsDisplayDirect()
+                                          ' Raise the SelectedItemsChanged event only after user interaction
+                                          If _fromUserChange Then
+                                              RaiseEvent SelectedItemsChanged(Me, EventArgs.Empty)
+                                          End If
+                                      End Sub))
+        Else
+            Me.BeginInvoke(New Action(Sub()
+                                          UpdateCheckedItemsDisplayDirect()
+                                      End Sub))
+        End If
+
     End Sub
 
     ' Property to set the maximum number of visible items in the dropdown
@@ -258,6 +275,5 @@ Public Class CheckedListComboBox
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         btnDropdown.Enabled = Not _dropDownForm.Visible
-        UpdateCheckedItemsDisplayDirect()
     End Sub
 End Class
