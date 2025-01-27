@@ -1027,7 +1027,6 @@ Public Class Main
         If txtDiscordTaskID.Text.Trim = String.Empty Then
             lblTaskLibraryIDNotAcquired.Visible = True
             lblTaskLibraryIDAcquired.Visible = False
-            'TODO: TaskID got deleted - do we need to do something?
         Else
             lblTaskLibraryIDAcquired.Visible = True
             lblTaskLibraryIDNotAcquired.Visible = False
@@ -3046,7 +3045,10 @@ Public Class Main
         SaveSession()
         Dim autoContinue As Boolean = CreateWSGTaskPart2(True)
         If Not autoContinue Then
-            'Something went wrong on the second part!! This is really bad. TODO: What do we do?
+            'Something went wrong trying to updated the task!!
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "An error occured trying to update the task. Task was not updated on WeSimGlide.ord", "Task update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
         'Retrieve the updated task details
         GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
@@ -3061,9 +3063,12 @@ Public Class Main
         SaveSession()
         Dim autoContinue As Boolean = CreateWSGTaskPart2()
         If Not autoContinue Then
-            'Something went wrong on the second part!! This is really bad. TODO: What do we do?
+            'Something went wrong on the second part!!
             _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
             SaveSession()
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "An error occured trying to perform the second part of task creation.", "Task creation error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
             Return False
         End If
         'Retrieve the updated task details
