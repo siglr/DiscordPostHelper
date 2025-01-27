@@ -155,6 +155,20 @@ Public Class SupportingFeatures
         Next
     End Sub
 
+    Public Function ListOfAllTrackerGroups() As List(Of String)
+
+        Dim theList As New List(Of String)
+
+        For Each club As PresetEvent In DefaultKnownClubEvents.Values
+            If Not theList.Contains(club.TrackerGroup) Then
+                theList.Add(club.TrackerGroup)
+            End If
+        Next
+
+        Return theList
+
+    End Function
+
     Public Sub PopulateSoaringClubList(ByVal ctlControl As IList)
 
         ctlControl.Clear()

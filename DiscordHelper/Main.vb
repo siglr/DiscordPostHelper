@@ -1304,11 +1304,43 @@ Public Class Main
 
     Private Sub CopyToEventFields(sender As Object, e As EventArgs)
 
-        If sender Is txtTitle Then
-            txtEventTitle.Text = txtTitle.Text
+        If sender Is txtTitle AndAlso txtEventTitle.Text.Trim = String.Empty Then
+            txtEventTitle.Text = TaskTitleMinusClubName()
         End If
 
     End Sub
+
+    Private Function TaskTitleMinusClubName() As String
+
+        Dim taskTitle As String = txtTitle.Text.Trim()
+        Dim eventTitle As String = String.Empty
+
+        For Each groupName As String In _SF.ListOfAllTrackerGroups
+            ' Normalize casing for comparison
+            Dim taskTitleLower As String = taskTitle.ToLower()
+            Dim groupNameLower As String = groupName.ToLower()
+
+            ' Check if the task title starts with the group name followed by a common delimiter
+            If taskTitleLower.StartsWith(groupNameLower) Then
+                ' Define delimiters with optional spaces
+                Dim delimiters As String() = {" - ", "-", " :", ":", " -", "- ", " "}
+                For Each delimiter In delimiters
+                    Dim prefix As String = groupNameLower & delimiter
+                    If taskTitleLower.StartsWith(prefix) Then
+                        ' Remove the prefix and trim any extra whitespace
+                        eventTitle = taskTitle.Substring(prefix.Length).Trim()
+                        Exit For
+                    End If
+                Next
+            End If
+            If eventTitle <> String.Empty Then
+                Exit For
+            End If
+        Next
+
+        Return eventTitle
+
+    End Function
 
     Private Sub txtFlightPlanFile_TextChanged(sender As Object, e As EventArgs) Handles txtFlightPlanFile.TextChanged
 
@@ -2351,6 +2383,9 @@ Public Class Main
             dtEventStartTaskTime.Value = dtEventLaunchTime.Value.AddMinutes(_ClubPreset.StartTaskDelay)
 
             cboBeginnersGuide.Text = _ClubPreset.BeginnerLink
+            If txtEventTitle.Text.Trim = String.Empty Then
+                txtEventTitle.Text = TaskTitleMinusClubName()
+            End If
 
         Else
             _ClubPreset = Nothing
@@ -4226,14 +4261,9 @@ Public Class Main
         txtGroupFlightEventPost.Text = String.Empty
 
         If txtEventTitle.Text = String.Empty Then
-            txtEventTitle.Text = txtTitle.Text
+            txtEventTitle.Text = TaskTitleMinusClubName()
         End If
         If txtEventTitle.Text <> String.Empty Then
-            'If cboGroupOrClubName.SelectedIndex > -1 Then
-            'sb.Append($"# {_ClubPreset.ClubName} - ")
-            'Else
-            'sb.Append($"# ")
-            'End If
             sb.AppendLine($"# {txtEventTitle.Text & AddFlagsToTitle()}")
         End If
 
