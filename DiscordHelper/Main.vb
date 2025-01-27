@@ -2332,10 +2332,22 @@ Public Class Main
             dtEventMeetDate.Value = _SF.FindNextDate(Now, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
             dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value)
             Application.DoEvents()
+
+            If _ClubPreset.ForceSyncFly AndAlso Not chkUseSyncFly.Checked Then
+                chkUseSyncFly.Checked = True
+            End If
             dtEventSyncFlyTime.Value = dtEventMeetTime.Value.AddMinutes(_ClubPreset.SyncFlyDelay)
             Application.DoEvents()
+
+            If _ClubPreset.ForceLaunch AndAlso Not chkUseLaunch.Checked Then
+                chkUseLaunch.Checked = True
+            End If
             dtEventLaunchTime.Value = dtEventSyncFlyTime.Value.AddMinutes(_ClubPreset.LaunchDelay)
             Application.DoEvents()
+
+            If _ClubPreset.ForceStartTask AndAlso Not chkUseStart.Checked Then
+                chkUseStart.Checked = True
+            End If
             dtEventStartTaskTime.Value = dtEventLaunchTime.Value.AddMinutes(_ClubPreset.StartTaskDelay)
 
             cboBeginnersGuide.Text = _ClubPreset.BeginnerLink

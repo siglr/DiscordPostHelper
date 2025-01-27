@@ -16,6 +16,9 @@
     <StartTaskDelay>0</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EDT)</ClubId>
@@ -33,6 +36,9 @@
     <StartTaskDelay>10</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EST)</ClubId>
@@ -50,6 +56,9 @@
     <StartTaskDelay>10</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>GG-FSC</ClubId>
@@ -67,6 +76,9 @@
     <StartTaskDelay>0</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CEDT)</ClubId>
@@ -84,6 +96,9 @@
     <StartTaskDelay>20</StartTaskDelay>
     <EligibleAward>True</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CEDT)</ClubId>
@@ -101,6 +116,9 @@
     <StartTaskDelay>20</StartTaskDelay>
     <EligibleAward>True</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CET)</ClubId>
@@ -118,6 +136,9 @@
     <StartTaskDelay>20</StartTaskDelay>
     <EligibleAward>True</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CET)</ClubId>
@@ -135,6 +156,9 @@
     <StartTaskDelay>20</StartTaskDelay>
     <EligibleAward>True</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>AUSGLIDE</ClubId>
@@ -152,6 +176,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>AUSGLIDE SUMMER TIME</ClubId>
@@ -169,6 +196,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>How to join our Group Flights (Sim Soaring Club)</BeginnerLink>
+    <ForceSyncFly>False</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>False</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA TUE</ClubId>
@@ -186,6 +216,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA THU</ClubId>
@@ -203,6 +236,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA SUN</ClubId>
@@ -220,6 +256,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA TUE (BST)</ClubId>
@@ -237,6 +276,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA THU (BST)</ClubId>
@@ -254,6 +296,9 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA SUN (BST)</ClubId>
@@ -271,5 +316,8 @@
     <StartTaskDelay>15</StartTaskDelay>
     <EligibleAward>False</EligibleAward>
     <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
+    <ForceSyncFly>True</ForceSyncFly>
+    <ForceLaunch>False</ForceLaunch>
+    <ForceStartTask>True</ForceStartTask>
   </KnownSoaringClub>
 </KnownSoaringClubs>

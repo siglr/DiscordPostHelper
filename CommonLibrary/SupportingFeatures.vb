@@ -128,8 +128,29 @@ Public Class SupportingFeatures
             Dim startTaskDelay As Integer = Integer.Parse(eventNode("StartTaskDelay").InnerText)
             Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
             Dim beginnerLink As String = eventNode("BeginnerLink").InnerText
+            Dim forceSyncFly As Boolean = Boolean.Parse(eventNode("ForceSyncFly").InnerText)
+            Dim forceLaunch As Boolean = Boolean.Parse(eventNode("ForceLaunch").InnerText)
+            Dim forceStartTask As Boolean = Boolean.Parse(eventNode("ForceStartTask").InnerText)
 
-            Dim presetEvent As New PresetEvent(clubId, clubName, clubFullName, trackerGroup, emoji, eventNewsID, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward, beginnerLink)
+            Dim presetEvent As New PresetEvent(clubId,
+                                               clubName,
+                                               clubFullName,
+                                               trackerGroup,
+                                               emoji,
+                                               eventNewsID,
+                                               msfsServer,
+                                               voiceChannel,
+                                               dayOfWeek,
+                                               zuluTime,
+                                               syncFlyDelay,
+                                               launchDelay,
+                                               startTaskDelay,
+                                               eligibleAward,
+                                               beginnerLink,
+                                               forceSyncFly,
+                                               forceLaunch,
+                                               forceStartTask)
+
             DefaultKnownClubEvents.Add(clubId, presetEvent)
         Next
     End Sub
