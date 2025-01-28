@@ -27,6 +27,7 @@ Public Class SupportingFeatures
     Private Const SW_RESTORE As Integer = 9
     Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
+    Private Const MSFSWSGAnnouncementsDiscordID As String = "1266809849266831390"
     Private Const MSFSSoaringToolsPrivateTestingID As String = "1067288937527246868"
 
     Public Enum DiscordTimeStampFormat As Integer
@@ -77,8 +78,34 @@ Public Class SupportingFeatures
         End Get
     End Property
 
+    Public Shared ReadOnly Property WSGAnnouncementsDiscordURL As String
+        Get
+            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSWSGAnnouncementsDiscordID}"
+        End Get
+    End Property
+
     Public Shared Function TaskThreadDiscordURL(taskID As String) As String
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{taskID}"
+    End Function
+
+    Public Shared Function GetTaskThreadURLFromGroupURL(discordMessageUrl As String) As String
+        Try
+            ' Split the URL by slashes
+            Dim urlParts As String() = discordMessageUrl.Split("/"c)
+
+            ' Ensure the URL has the expected structure
+            If urlParts.Length >= 7 Then
+                ' Reconstruct the URL without the second ID (6th part is the thread ID)
+                Dim baseUrl As String = $"{urlParts(0)}//{urlParts(2)}/channels/{urlParts(4)}/{urlParts(6)}"
+                Return baseUrl
+            Else
+                ' Return the original URL if the structure is not as expected
+                Return discordMessageUrl
+            End If
+        Catch ex As Exception
+            ' Handle any errors gracefully and return the original URL
+            Return discordMessageUrl
+        End Try
     End Function
 
     Public Shared ReadOnly Property ClientRunning As ClientApp

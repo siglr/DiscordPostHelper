@@ -2811,7 +2811,8 @@ Public Class Main
                             msg,
                             "Paste the first message in the thread and post it.",
                             "Pasting first message in group event thread",
-                            New List(Of String) From {"^v"})
+                            New List(Of String) From {"^v"},,,,
+                            SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
             msg = String.Empty
         End If
 
@@ -2831,7 +2832,8 @@ Public Class Main
                             msg,
                             "Paste the first message in the thread and post it.",
                             "Pasting first message in group event thread",
-                            New List(Of String) From {"^v"})
+                            New List(Of String) From {"^v"},,,,
+                            SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
         End If
 
         Return autoContinue
@@ -3339,7 +3341,8 @@ Public Class Main
                                     $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the map image as the next message in the thread WITHOUT posting it and come back for the text for this message.",
                                     "Posting the map image in the thread - actual map image first",
                                     New List(Of String) From {"^v"},
-                                    False)
+                                    False,,,
+                                    SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
         End If
 
         Return autoContinue
@@ -3528,9 +3531,6 @@ Public Class Main
             Exit Sub
         End If
 
-        'TODO: Complete
-        SupportingFeatures.LaunchDiscordURL(_ClubPreset.DiscordURL)
-
         If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
 
         If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
@@ -3684,7 +3684,7 @@ Public Class Main
 
         'Cover
         If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
-            autoContinue = CoverImage(String.Empty) 'TODO: Group event URL ?
+            autoContinue = CoverImage(_ClubPreset.DiscordURL)
         End If
         If Not autoContinue Then Return False
 
@@ -3744,7 +3744,8 @@ Public Class Main
                                 "Creating group flight post",
                                 New List(Of String) From {"^v"},
                                 True,
-                                If(withCover, numWaitSecondsForFiles.Value / 2 * 1000, 0))
+                                If(withCover, numWaitSecondsForFiles.Value / 2 * 1000, 0),,
+                                _ClubPreset.DiscordURL)
 
         If Not autoContinue Then Return autoContinue
 
@@ -3788,7 +3789,8 @@ Public Class Main
                                                      "CreateTaskThread.gif",
                                                      "Follow the instructions as shown below to create the group event's thread.",
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
-                                                     "Instructions for the creation of the group event's thread!")
+                                                     "Instructions for the creation of the group event's thread!",
+                                                     txtGroupEventPostURL.Text.Trim)
         Else
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "There is no event title so the thread cannot be created!", "Creating group event thread", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -3816,7 +3818,7 @@ Public Class Main
                                     New List(Of String) From {"^v"},
                                     txtEventTeaserMessage.Text.Trim.Length = 0,
                                     If(txtEventTeaserMessage.Text.Trim.Length = 0, numWaitSecondsForFiles.Value / 2 * 1000, 0),
-                                    Drawing.Image.FromFile(allFiles(0)))
+                                    Drawing.Image.FromFile(allFiles(0)), SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
             imagePasted = True
         End If
 
@@ -3836,7 +3838,7 @@ Public Class Main
                             "Posting teaser with text.",
                             New List(Of String) From {"^v"},
                             True,
-                            If(imagePasted, numWaitSecondsForFiles.Value / 2 * 1000, 0))
+                            If(imagePasted, numWaitSecondsForFiles.Value / 2 * 1000, 0),, SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
         End If
 
         Return autoContinue
@@ -6632,7 +6634,8 @@ Public Class Main
                                 msgForEventHunters,
                                 "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
                                 "Sharing WeSimGlide.org Task and Group Event links",
-                                New List(Of String) From {"^v"})
+                                New List(Of String) From {"^v"},,,,
+                                SupportingFeatures.WSGAnnouncementsDiscordURL)
 
             Else
                 Using New Centered_MessageBox(Me)
