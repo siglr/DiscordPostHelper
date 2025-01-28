@@ -274,23 +274,6 @@
     <DiscordURL>325227457445625856/1332655847029080097</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
-    <ClubId>UKVGA SUN</ClubId>
-    <ClubName>Soaring Sundays</ClubName>
-    <ClubFullName>UKVGA</ClubFullName>
-    <TrackerGroup>UKVGA</TrackerGroup>
-    <Emoji>UKVGA</Emoji>
-    <EventNewsID>UKVGASU</EventNewsID>
-    <MSFSServer>West Europe</MSFSServer>
-    <VoiceChannel>[General](https://discord.com/channels/325227457445625856/448551355712274435)</VoiceChannel>
-    <ZuluDayOfWeek>Sunday</ZuluDayOfWeek>
-    <ZuluTime>7:15 PM</ZuluTime>
-    <SyncFlyDelay>15</SyncFlyDelay>
-    <LaunchDelay>0</LaunchDelay>
-    <StartTaskDelay>15</StartTaskDelay>
-    <EligibleAward>False</EligibleAward>
-    <BeginnerLink>The Beginner's Guide to Soaring Events (GotGravel)</BeginnerLink>
-  </KnownSoaringClub>
-  <KnownSoaringClub>
     <ClubId>UKVGA TUE (BST)</ClubId>
     <ClubName>Soaring Tuesdays</ClubName>
     <ClubFullName>UKVGA</ClubFullName>
