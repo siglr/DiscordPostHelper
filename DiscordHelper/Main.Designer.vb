@@ -4113,7 +4113,7 @@ Partial Class Main
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.Label15.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.Label15.Location = New System.Drawing.Point(6, 27)
         Me.Label15.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label15.Name = "Label15"
@@ -4123,7 +4123,7 @@ Partial Class Main
         '
         'numWaitSecondsForFiles
         '
-        Me.numWaitSecondsForFiles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.numWaitSecondsForFiles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.numWaitSecondsForFiles.Location = New System.Drawing.Point(121, 25)
         Me.numWaitSecondsForFiles.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.numWaitSecondsForFiles.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
@@ -4462,7 +4462,7 @@ Partial Class Main
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.Label18.Location = New System.Drawing.Point(182, 28)
         Me.Label18.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label18.Name = "Label18"
