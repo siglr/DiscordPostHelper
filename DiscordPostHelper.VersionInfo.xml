@@ -1,6 +1,20 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Biggest release since first launch!</ReleaseTitle>
+      <ReleaseNotes>
+        Major shift to make WeSimGlide.org the primary source of data.
+        Completely redesigned task and group event posts format on Discord.
+        Redesigned WSG-Discord tab layout.
+        New publisher and sharing management.
+        New "Take me there" button when posting to navigate quickly to the correct Discord channel.
+        Less steps in the posting workflows.
+        Known clubs can now "force enable" the event time checkboxes.
+        Lots of fixes here and there.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.15.1</ReleaseVersion>
       <ReleaseTitle>More group event stuff sent to WeSimGlide.org</ReleaseTitle>
