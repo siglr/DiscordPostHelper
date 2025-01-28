@@ -2647,8 +2647,6 @@ Public Class Main
 
     Private Sub btnStartFullPostingWorkflow_Click(sender As Object, e As EventArgs) Handles btnStartFullPostingWorkflow.Click
 
-        'TODO: Review the full posting workflow
-
         Dim enforceTaskLibrary As Boolean = True
         Dim autoContinue As Boolean = True
 
