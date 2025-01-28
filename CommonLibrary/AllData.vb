@@ -220,9 +220,6 @@ Public Class AllData
     <XmlElement("URLGroupEventPost")>
     Public Property URLGroupEventPost As String
 
-    <XmlElement("URLDiscordEventInvite")>
-    Public Property URLDiscordEventInvite As String
-
     <XmlElement("IncludeServerInvite")>
     Public Property IncludeServerInvite As Boolean
 

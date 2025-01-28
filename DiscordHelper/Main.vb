@@ -453,7 +453,6 @@ Public Class Main
         cboEligibleAward.SelectedIndex = -1
         txtGroupEventPostURL.Text = String.Empty
         txtRepostOriginalURL.Text = String.Empty
-        txtDiscordEventShareURL.Text = String.Empty
         txtDPHXPackageFilename.Text = String.Empty
         txtAddOnsDetails.Text = String.Empty
         txtWaypointsDetails.Text = String.Empty
@@ -490,6 +489,7 @@ Public Class Main
         chkcboSharedWithUsers.IsInitializing = False
         btnStartTaskPost.Enabled = False
         tabFlightPlan.Enabled = True
+        btnStartFullPostingWorkflow.Enabled = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -1073,7 +1073,6 @@ Public Class Main
                                                                           txtSoaringTypeExtraInfo.TextChanged,
                                                                           txtDifficultyExtraInfo.TextChanged,
                                                                           txtGroupEventPostURL.TextChanged,
-                                                                          txtDiscordEventShareURL.TextChanged,
                                                                           txtBaroPressureExtraInfo.TextChanged,
                                                                           dtSimDate.ValueChanged,
                                                                           dtSimLocalTime.ValueChanged,
@@ -1141,7 +1140,6 @@ Public Class Main
                                                                                            txtWeatherSummary.Leave,
                                                                                            txtBaroPressureExtraInfo.Leave,
                                                                                            txtGroupEventPostURL.Leave,
-                                                                                           txtDiscordEventShareURL.Leave,
                                                                                            txtRepostOriginalURL.Leave,
                                                                                            txtLastUpdateDescription.Leave,
                                                                                            cboRecommendedGliders.Leave, cboCountryFlag.Leave
@@ -2668,6 +2666,16 @@ Public Class Main
 
         If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
 
+        'Publish event to WSG
+        If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
+            'Update WSG task
+            If Not PrepareUpdateWSGTask() Then Exit Sub
+        End If
+
+        If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
+            PublishEventNews()
+        End If
+
     End Sub
 
     Private Sub btnDPORecallSettings_Click(sender As Object, e As EventArgs) Handles btnDPORecallSettings.Click
@@ -2933,8 +2941,14 @@ Public Class Main
             Return autoContinue
         End If
 
-        Dim firstThreadMessage As String = $"## 🧵 Use this thread for discussions, pictures, results."
+        Dim firstThreadMessage As String = String.Empty
         Dim msg As String = String.Empty
+
+        If (chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked) _
+            OrElse (chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked) _
+            OrElse (chkDPOFeaturedOnGroupFlight.Enabled AndAlso chkDPOFeaturedOnGroupFlight.Checked) Then
+            firstThreadMessage = $"## 🧵 Use this thread for discussions, pictures, results."
+        End If
 
         'Thread Creation
         If chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked Then
@@ -3137,8 +3151,7 @@ Public Class Main
             chkDGPOFullDescription.Enabled = True
         End If
 
-        If _ClubPreset IsNot Nothing AndAlso chkActivateEvent.Checked AndAlso
-            txtDiscordEventShareURL.Text.Trim.Length + txtGroupEventPostURL.Text.Trim.Length > 0 Then
+        If _ClubPreset IsNot Nothing AndAlso chkActivateEvent.Checked AndAlso txtGroupEventPostURL.Text.Trim.Length > 0 Then
             chkDPOFeaturedOnGroupFlight.Enabled = True AndAlso grbTaskInfo.Enabled
         Else
             chkDPOFeaturedOnGroupFlight.Enabled = False
@@ -3294,7 +3307,7 @@ Public Class Main
 
     End Function
 
-    Private Function CoverImage(takeMeThereURL As String) As Boolean
+    Private Function CoverImage(takeMeThereURL As String, Optional fromGroup As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
 
@@ -3307,7 +3320,7 @@ Public Class Main
                 autoContinue = CopyContent.ShowContent(Me,
                                     cboCoverImage.SelectedItem,
                                     $"On the Discord app, make sure you are on the proper channel and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
-                                    "Posting the cover image for the task.",
+                                    $"Posting the cover image for the {If(fromGroup, "group event", "task")}.",
                                     New List(Of String) From {"^v"},
                                     False,,
                                     Drawing.Image.FromFile(allFiles(0)),
@@ -3443,9 +3456,7 @@ Public Class Main
         sb.AppendLine($"This flight will be featured on the {txtClubFullName.Text} group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
 
         'check which shared link is available
-        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
-            sb.AppendLine($"{txtDiscordEventShareURL.Text}")
-        ElseIf txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
+        If txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
             sb.AppendLine($"[{txtClubFullName.Text} - {txtEventTitle.Text} - Group Event Link]({txtGroupEventPostURL.Text})")
         End If
 
@@ -3514,15 +3525,6 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub btnDiscordSharedEventURL_Click(sender As Object, e As EventArgs) Handles btnDiscordSharedEventURL.Click
-
-        If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
-            txtDiscordEventShareURL.Text = Clipboard.GetText
-        End If
-
-    End Sub
-
-
     Private Sub btnStartGroupEventPost_Click(sender As Object, e As EventArgs) Handles btnStartGroupEventPost.Click
 
         Dim autoContinue As Boolean = True
@@ -3551,43 +3553,6 @@ Public Class Main
 
     End Sub
 
-
-    Private Sub btnEventTopicClipboard_Click(sender As Object, e As EventArgs) Handles btnEventTopicClipboard.Click
-        BuildDiscordEventDescription()
-        If txtDiscordEventTopic.Text <> String.Empty Then
-            Clipboard.SetText(txtDiscordEventTopic.Text)
-            CopyContent.ShowContent(Me,
-                                txtDiscordEventTopic.Text,
-                                "Paste the topic into the Event Topic field on Discord.",
-                                "Creating Discord Event",
-                                New List(Of String) From {"^v"})
-
-        End If
-        If _GuideCurrentStep <> 0 Then
-            _GuideCurrentStep += 1
-            ShowGuide()
-        End If
-
-    End Sub
-
-    Private Sub btnEventDescriptionToClipboard_Click(sender As Object, e As EventArgs) Handles btnEventDescriptionToClipboard.Click
-        BuildDiscordEventDescription()
-        If txtDiscordEventDescription.Text <> String.Empty Then
-            Clipboard.SetText(txtDiscordEventDescription.Text)
-            CopyContent.ShowContent(Me,
-                                txtDiscordEventDescription.Text,
-                                "Paste the description into the Event Description field on Discord.",
-                                "Creating Discord Event",
-                                New List(Of String) From {"^v"})
-
-        End If
-        If _GuideCurrentStep <> 0 Then
-            _GuideCurrentStep += 1
-            ShowGuide()
-        End If
-
-    End Sub
-
     Private Sub btnTaskAndGroupEventLinks_Click(sender As Object, e As EventArgs) Handles btnTaskAndGroupEventLinks.Click
 
         Dim clubName As String = String.Empty
@@ -3610,12 +3575,6 @@ Public Class Main
         'Group Event link
         If txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
             sb.AppendLine($"Group event link: [{txtClubFullName.Text} - {txtEventTitle.Text}]({txtGroupEventPostURL.Text})")
-        End If
-
-        'Discord Event link
-        If txtDiscordEventShareURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text.Trim) Then
-            sb.AppendLine()
-            sb.AppendLine($"Discord event link: {txtDiscordEventShareURL.Text}")
         End If
 
         Dim msg As String = sb.ToString
@@ -3684,7 +3643,7 @@ Public Class Main
 
         'Cover
         If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
-            autoContinue = CoverImage(_ClubPreset.DiscordURL)
+            autoContinue = CoverImage(_ClubPreset.DiscordURL, True)
         End If
         If Not autoContinue Then Return False
 
@@ -3956,9 +3915,6 @@ Public Class Main
 
         Dim sb As New StringBuilder
 
-        lblDiscordPostDateTime.Text = $"{fullMeetDateTimeLocal:dddd, MMMM dd}, {fullMeetDateTimeLocal:hh:mm tt}"
-        lblDiscordEventVoice.Text = SupportingFeatures.ReturnTextFromURLMarkdown(cboVoiceChannel.Text)
-
         txtGroupFlightEventPost.Text = String.Empty
 
         If txtEventTitle.Text = String.Empty Then
@@ -4041,10 +3997,6 @@ Public Class Main
         If Not urlBeginnerGuide = String.Empty Then
             sb.AppendLine($"‍:student: If it's your first time flying with us, please make sure to read the following guide: {urlBeginnerGuide}")
             sb.AppendLine()
-        End If
-
-        If SupportingFeatures.IsValidURL(txtDiscordEventShareURL.Text) Then
-            sb.AppendLine(txtDiscordEventShareURL.Text)
         End If
 
         txtGroupFlightEventPost.Text = sb.ToString.Trim
@@ -4681,23 +4633,12 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 93 'Topic name
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 410
-                lblDiscordGuideInstructions.Text = "Click this button to copy the event topic and receive instructions to paste it in the Discord event window."
-                SetFocusOnField(btnEventTopicClipboard, fromF1Key)
-
             Case 94 'Event date & time
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 445
                 lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
                 SetFocusOnField(btnEventGuideNext, fromF1Key)
 
-            Case 95 'Event description
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 476
-                lblDiscordGuideInstructions.Text = "Click this button to copy the event description and receive instructions to paste it in the Discord event window."
-                SetFocusOnField(btnEventDescriptionToClipboard, fromF1Key)
 
             Case 96 'Cover image
                 SetDiscordGuidePanelToRight()
@@ -5137,7 +5078,6 @@ Public Class Main
             .RepostOriginalDate = dtRepostOriginalDate.Value
             .RepostOriginalURL = txtRepostOriginalURL.Text
             .URLGroupEventPost = txtGroupEventPostURL.Text
-            .URLDiscordEventInvite = txtDiscordEventShareURL.Text
             .MapImageSelected = cboBriefingMap.Text
             .LockMapImage = chkLockMapImage.Checked
             .CoverImageSelected = cboCoverImage.Text
@@ -5302,7 +5242,6 @@ Public Class Main
                 dtRepostOriginalDate.Value = .RepostOriginalDate
                 txtRepostOriginalURL.Text = .RepostOriginalURL
                 txtGroupEventPostURL.Text = .URLGroupEventPost
-                txtDiscordEventShareURL.Text = .URLDiscordEventInvite
                 cboBeginnersGuide.Text = .BeginnersGuide
                 If cboBeginnersGuide.Text = String.Empty Then
                     cboBeginnersGuide.Text = "None"
@@ -6516,6 +6455,7 @@ Public Class Main
     Private Sub btnStartTaskPost_EnabledChanged(sender As Object, e As EventArgs) Handles btnStartTaskPost.EnabledChanged
         If btnStartTaskPost.Enabled Then
             btnStartTaskPost.Enabled = IsOwnerOrShared
+            btnStartFullPostingWorkflow.Enabled = IsOwnerOrShared
         End If
     End Sub
 

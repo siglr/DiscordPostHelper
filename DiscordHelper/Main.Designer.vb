@@ -74,6 +74,7 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -226,22 +227,6 @@ Partial Class Main
         Me.pnlDiscordArrow = New System.Windows.Forms.Panel()
         Me.pnlFullWorkflowTaskGroupFlight = New System.Windows.Forms.GroupBox()
         Me.btnStartFullPostingWorkflow = New System.Windows.Forms.Button()
-        Me.grpDiscordEvent = New System.Windows.Forms.GroupBox()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.btnDiscordSharedEventURL = New System.Windows.Forms.Button()
-        Me.txtDiscordEventShareURL = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label46 = New System.Windows.Forms.Label()
-        Me.Label45 = New System.Windows.Forms.Label()
-        Me.btnEventDescriptionToClipboard = New System.Windows.Forms.Button()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.lblDiscordPostDateTime = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.btnEventTopicClipboard = New System.Windows.Forms.Button()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.lblDiscordEventVoice = New System.Windows.Forms.Label()
-        Me.Label39 = New System.Windows.Forms.Label()
         Me.grpDiscordOthers = New System.Windows.Forms.GroupBox()
         Me.btnTaskAndGroupEventLinks = New System.Windows.Forms.Button()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
@@ -251,6 +236,7 @@ Partial Class Main
         Me.grpDiscordTask = New System.Windows.Forms.GroupBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
         Me.lblUpdateDescription = New System.Windows.Forms.Label()
         Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
@@ -260,6 +246,8 @@ Partial Class Main
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOMainPost = New System.Windows.Forms.CheckBox()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
+        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDPOThreadCreation = New System.Windows.Forms.CheckBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel4 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDPOIncludeCoverImage = New System.Windows.Forms.CheckBox()
@@ -324,13 +312,12 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.OneMinuteTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDPOThreadCreation = New System.Windows.Forms.CheckBox()
         Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripSave = New System.Windows.Forms.ToolStripButton()
@@ -355,9 +342,6 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -383,12 +367,12 @@ Partial Class Main
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.pnlFullWorkflowTaskGroupFlight.SuspendLayout()
-        Me.grpDiscordEvent.SuspendLayout()
         Me.grpDiscordOthers.SuspendLayout()
         Me.grpDiscordTask.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.flpDiscordPostOptions.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
+        Me.FlowLayoutPanel2.SuspendLayout()
         Me.FlowLayoutPanel4.SuspendLayout()
         Me.FlowLayoutPanel13.SuspendLayout()
         Me.grbTaskDiscord.SuspendLayout()
@@ -409,7 +393,6 @@ Partial Class Main
         Me.tabBriefing.SuspendLayout()
         Me.pnlBriefing.SuspendLayout()
         Me.pnlWizardBriefing.SuspendLayout()
-        Me.FlowLayoutPanel2.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -1051,6 +1034,19 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'FlightPlanTabSplitter
         '
@@ -2791,7 +2787,6 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.pnlFullWorkflowTaskGroupFlight)
-        Me.tabDiscord.Controls.Add(Me.grpDiscordEvent)
         Me.tabDiscord.Controls.Add(Me.grpDiscordOthers)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
         Me.tabDiscord.Controls.Add(Me.txtWaypointsDetails)
@@ -2961,188 +2956,6 @@ Partial Class Main
         "sk.")
         Me.btnStartFullPostingWorkflow.UseVisualStyleBackColor = True
         '
-        'grpDiscordEvent
-        '
-        Me.grpDiscordEvent.Controls.Add(Me.Label19)
-        Me.grpDiscordEvent.Controls.Add(Me.btnDiscordSharedEventURL)
-        Me.grpDiscordEvent.Controls.Add(Me.txtDiscordEventShareURL)
-        Me.grpDiscordEvent.Controls.Add(Me.Label20)
-        Me.grpDiscordEvent.Controls.Add(Me.Label6)
-        Me.grpDiscordEvent.Controls.Add(Me.Label46)
-        Me.grpDiscordEvent.Controls.Add(Me.Label45)
-        Me.grpDiscordEvent.Controls.Add(Me.btnEventDescriptionToClipboard)
-        Me.grpDiscordEvent.Controls.Add(Me.Label44)
-        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordPostDateTime)
-        Me.grpDiscordEvent.Controls.Add(Me.Label43)
-        Me.grpDiscordEvent.Controls.Add(Me.btnEventTopicClipboard)
-        Me.grpDiscordEvent.Controls.Add(Me.Label42)
-        Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
-        Me.grpDiscordEvent.Controls.Add(Me.Label39)
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(838, 81)
-        Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(393, 385)
-        Me.grpDiscordEvent.TabIndex = 5
-        Me.grpDiscordEvent.TabStop = False
-        Me.grpDiscordEvent.Text = "Official Discord Event (if applicable)"
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(21, 259)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(237, 22)
-        Me.Label19.TabIndex = 10
-        Me.Label19.Text = "(min. 800px wide by 320px tall)"
-        '
-        'btnDiscordSharedEventURL
-        '
-        Me.btnDiscordSharedEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(305, 345)
-        Me.btnDiscordSharedEventURL.Name = "btnDiscordSharedEventURL"
-        Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(81, 29)
-        Me.btnDiscordSharedEventURL.TabIndex = 14
-        Me.btnDiscordSharedEventURL.Tag = "98"
-        Me.btnDiscordSharedEventURL.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordSharedEventURL, "Click this button to paste the group event's post URL from your clipboard")
-        Me.btnDiscordSharedEventURL.UseVisualStyleBackColor = True
-        '
-        'txtDiscordEventShareURL
-        '
-        Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(22, 345)
-        Me.txtDiscordEventShareURL.Name = "txtDiscordEventShareURL"
-        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(277, 30)
-        Me.txtDiscordEventShareURL.TabIndex = 13
-        Me.txtDiscordEventShareURL.Tag = "98"
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventShareURL, "Enter the URL to the Discord post created above in step 1.")
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(18, 313)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(252, 22)
-        Me.Label20.TabIndex = 12
-        Me.Label20.Text = "Copy and paste the link to share:"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(1, 26)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(227, 22)
-        Me.Label6.TabIndex = 0
-        Me.Label6.Text = "1. Create a new Discord Event"
-        '
-        'Label46
-        '
-        Me.Label46.AutoSize = True
-        Me.Label46.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label46.Location = New System.Drawing.Point(1, 287)
-        Me.Label46.Name = "Label46"
-        Me.Label46.Size = New System.Drawing.Size(303, 22)
-        Me.Label46.TabIndex = 11
-        Me.Label46.Text = "7. Preview and post your Discord Event!"
-        '
-        'Label45
-        '
-        Me.Label45.AutoSize = True
-        Me.Label45.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label45.Location = New System.Drawing.Point(2, 237)
-        Me.Label45.Name = "Label45"
-        Me.Label45.Size = New System.Drawing.Size(241, 22)
-        Me.Label45.TabIndex = 9
-        Me.Label45.Text = "6. Upload optional cover image"
-        '
-        'btnEventDescriptionToClipboard
-        '
-        Me.btnEventDescriptionToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventDescriptionToClipboard.Location = New System.Drawing.Point(203, 205)
-        Me.btnEventDescriptionToClipboard.Name = "btnEventDescriptionToClipboard"
-        Me.btnEventDescriptionToClipboard.Size = New System.Drawing.Size(173, 29)
-        Me.btnEventDescriptionToClipboard.TabIndex = 8
-        Me.btnEventDescriptionToClipboard.Tag = "95"
-        Me.btnEventDescriptionToClipboard.Text = "Copy to Clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnEventDescriptionToClipboard, "Click this button to copy the event's full description for the Discord Event post" &
-        " into the clipboard.")
-        Me.btnEventDescriptionToClipboard.UseVisualStyleBackColor = True
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = True
-        Me.Label44.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label44.Location = New System.Drawing.Point(1, 208)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(200, 22)
-        Me.Label44.TabIndex = 7
-        Me.Label44.Text = "5. Enter Event Description"
-        '
-        'lblDiscordPostDateTime
-        '
-        Me.lblDiscordPostDateTime.AutoSize = True
-        Me.lblDiscordPostDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordPostDateTime.Location = New System.Drawing.Point(21, 178)
-        Me.lblDiscordPostDateTime.Name = "lblDiscordPostDateTime"
-        Me.lblDiscordPostDateTime.Size = New System.Drawing.Size(139, 22)
-        Me.lblDiscordPostDateTime.TabIndex = 6
-        Me.lblDiscordPostDateTime.Text = "meet time results"
-        '
-        'Label43
-        '
-        Me.Label43.AutoSize = True
-        Me.Label43.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label43.Location = New System.Drawing.Point(2, 154)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(268, 22)
-        Me.Label43.TabIndex = 5
-        Me.Label43.Text = "4. Specify local start date and time:"
-        '
-        'btnEventTopicClipboard
-        '
-        Me.btnEventTopicClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventTopicClipboard.Location = New System.Drawing.Point(203, 118)
-        Me.btnEventTopicClipboard.Name = "btnEventTopicClipboard"
-        Me.btnEventTopicClipboard.Size = New System.Drawing.Size(173, 29)
-        Me.btnEventTopicClipboard.TabIndex = 4
-        Me.btnEventTopicClipboard.Tag = "93"
-        Me.btnEventTopicClipboard.Text = "Copy to Clipboard"
-        Me.ToolTip1.SetToolTip(Me.btnEventTopicClipboard, "Click this button to copy the event's topic for the Discord Event post into the c" &
-        "lipboard.")
-        Me.btnEventTopicClipboard.UseVisualStyleBackColor = True
-        '
-        'Label42
-        '
-        Me.Label42.AutoSize = True
-        Me.Label42.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label42.Location = New System.Drawing.Point(1, 121)
-        Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(153, 22)
-        Me.Label42.TabIndex = 3
-        Me.Label42.Text = "3. Enter Event Topic"
-        '
-        'lblDiscordEventVoice
-        '
-        Me.lblDiscordEventVoice.AutoSize = True
-        Me.lblDiscordEventVoice.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordEventVoice.Location = New System.Drawing.Point(21, 82)
-        Me.lblDiscordEventVoice.Name = "lblDiscordEventVoice"
-        Me.lblDiscordEventVoice.Size = New System.Drawing.Size(111, 22)
-        Me.lblDiscordEventVoice.TabIndex = 2
-        Me.lblDiscordEventVoice.Text = "voice channel"
-        '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label39.Location = New System.Drawing.Point(1, 59)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(187, 22)
-        Me.Label39.TabIndex = 1
-        Me.Label39.Text = "2. Select Voice Channel:"
-        '
         'grpDiscordOthers
         '
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskAndGroupEventLinks)
@@ -3266,6 +3079,22 @@ Partial Class Main
         Me.Label12.Size = New System.Drawing.Size(82, 22)
         Me.Label12.TabIndex = 103
         Me.Label12.Text = "Publisher:"
+        '
+        'chkcboSharedWithUsers
+        '
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsInitializing = False
+        Me.chkcboSharedWithUsers.IsReadOnly = False
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 217)
+        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
+        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
+        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
+        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
+        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
+        Me.chkcboSharedWithUsers.TabIndex = 97
         '
         'cboTaskOwner
         '
@@ -3391,6 +3220,32 @@ Partial Class Main
         Me.lblNbrCarsMainFP.Text = "0"
         Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Number of characters for the task's main information post.")
+        '
+        'FlowLayoutPanel2
+        '
+        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel2.Controls.Add(Me.chkDPOThreadCreation)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 26)
+        Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(393, 26)
+        Me.FlowLayoutPanel2.TabIndex = 14
+        '
+        'chkDPOThreadCreation
+        '
+        Me.chkDPOThreadCreation.AutoSize = True
+        Me.chkDPOThreadCreation.Checked = True
+        Me.chkDPOThreadCreation.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDPOThreadCreation.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDPOThreadCreation.Location = New System.Drawing.Point(3, 3)
+        Me.chkDPOThreadCreation.Name = "chkDPOThreadCreation"
+        Me.chkDPOThreadCreation.Size = New System.Drawing.Size(145, 26)
+        Me.chkDPOThreadCreation.TabIndex = 0
+        Me.chkDPOThreadCreation.Tag = "41"
+        Me.chkDPOThreadCreation.Text = "Thread creation"
+        Me.ToolTip1.SetToolTip(Me.chkDPOThreadCreation, "Select if you want to include the creation of the task's thread.")
+        Me.chkDPOThreadCreation.UseVisualStyleBackColor = True
         '
         'Label3
         '
@@ -4204,6 +4059,19 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'lblTaskBrowserIDAndDate
         '
         Me.lblTaskBrowserIDAndDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4226,32 +4094,6 @@ Partial Class Main
         Me.OneMinuteTimer.Enabled = True
         Me.OneMinuteTimer.Interval = 1000
         '
-        'FlowLayoutPanel2
-        '
-        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel2.Controls.Add(Me.chkDPOThreadCreation)
-        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 26)
-        Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(393, 26)
-        Me.FlowLayoutPanel2.TabIndex = 14
-        '
-        'chkDPOThreadCreation
-        '
-        Me.chkDPOThreadCreation.AutoSize = True
-        Me.chkDPOThreadCreation.Checked = True
-        Me.chkDPOThreadCreation.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDPOThreadCreation.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDPOThreadCreation.Location = New System.Drawing.Point(3, 3)
-        Me.chkDPOThreadCreation.Name = "chkDPOThreadCreation"
-        Me.chkDPOThreadCreation.Size = New System.Drawing.Size(145, 26)
-        Me.chkDPOThreadCreation.TabIndex = 0
-        Me.chkDPOThreadCreation.Tag = "41"
-        Me.chkDPOThreadCreation.Text = "Thread creation"
-        Me.ToolTip1.SetToolTip(Me.chkDPOThreadCreation, "Select if you want to include the creation of the task's thread.")
-        Me.chkDPOThreadCreation.UseVisualStyleBackColor = True
-        '
         'ToolStrip1
         '
         Me.ToolStrip1.ClickThrough = True
@@ -4261,7 +4103,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -4271,7 +4113,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -4280,7 +4122,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4289,7 +4131,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4298,7 +4140,7 @@ Partial Class Main
         Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
         Me.toolStripReload.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripReload.Name = "toolStripReload"
-        Me.toolStripReload.Size = New System.Drawing.Size(84, 26)
+        Me.toolStripReload.Size = New System.Drawing.Size(84, 25)
         Me.toolStripReload.Text = "Discard"
         Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
         Me.toolStripReload.Visible = False
@@ -4306,56 +4148,56 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4364,7 +4206,7 @@ Partial Class Main
         Me.toolStripStopGuide.Image = CType(resources.GetObject("toolStripStopGuide.Image"), System.Drawing.Image)
         Me.toolStripStopGuide.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripStopGuide.Name = "toolStripStopGuide"
-        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 26)
+        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 25)
         Me.toolStripStopGuide.Text = "&Turn guide off"
         Me.toolStripStopGuide.ToolTipText = "Click to disable wizard"
         Me.toolStripStopGuide.Visible = False
@@ -4376,7 +4218,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4406,7 +4248,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4439,48 +4281,6 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Name = "GetNowTimeStampOnly"
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'chkcboSharedWithUsers
-        '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkcboSharedWithUsers.IsInitializing = False
-        Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 217)
-        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
-        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
-        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
-        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
-        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 97
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -4534,8 +4334,6 @@ Partial Class Main
         Me.pnlWizardDiscord.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.pnlFullWorkflowTaskGroupFlight.ResumeLayout(False)
-        Me.grpDiscordEvent.ResumeLayout(False)
-        Me.grpDiscordEvent.PerformLayout()
         Me.grpDiscordOthers.ResumeLayout(False)
         Me.grpDiscordTask.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
@@ -4543,6 +4341,8 @@ Partial Class Main
         Me.flpDiscordPostOptions.ResumeLayout(False)
         Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.FlowLayoutPanel1.PerformLayout()
+        Me.FlowLayoutPanel2.ResumeLayout(False)
+        Me.FlowLayoutPanel2.PerformLayout()
         Me.FlowLayoutPanel4.ResumeLayout(False)
         Me.FlowLayoutPanel4.PerformLayout()
         Me.FlowLayoutPanel13.ResumeLayout(False)
@@ -4576,8 +4376,6 @@ Partial Class Main
         Me.tabBriefing.ResumeLayout(False)
         Me.pnlBriefing.ResumeLayout(False)
         Me.pnlWizardBriefing.ResumeLayout(False)
-        Me.FlowLayoutPanel2.ResumeLayout(False)
-        Me.FlowLayoutPanel2.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -4673,24 +4471,12 @@ Partial Class Main
     Friend WithEvents Label35 As Label
     Friend WithEvents cboEligibleAward As ComboBox
     Friend WithEvents Label36 As Label
-    Friend WithEvents grpDiscordEvent As GroupBox
-    Friend WithEvents lblDiscordEventVoice As Label
-    Friend WithEvents Label39 As Label
     Friend WithEvents txtEventTitle As TextBox
     Friend WithEvents Label41 As Label
     Friend WithEvents cboGroupOrClubName As ComboBox
-    Friend WithEvents Label42 As Label
-    Friend WithEvents Label43 As Label
-    Friend WithEvents btnEventTopicClipboard As Button
-    Friend WithEvents btnEventDescriptionToClipboard As Button
-    Friend WithEvents Label44 As Label
-    Friend WithEvents lblDiscordPostDateTime As Label
-    Friend WithEvents Label45 As Label
-    Friend WithEvents Label46 As Label
     Friend WithEvents txtGroupFlightEventPost As TextBox
     Friend WithEvents lblEventTaskDistance As Label
     Friend WithEvents Label48 As Label
-    Friend WithEvents Label6 As Label
     Friend WithEvents txtDiscordEventDescription As TextBox
     Friend WithEvents txtDiscordEventTopic As TextBox
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
@@ -4768,9 +4554,6 @@ Partial Class Main
     Friend WithEvents cboBriefingMap As ComboBox
     Friend WithEvents lblMap As Label
     Friend WithEvents lblBriefingGuideInstructions As Label
-    Friend WithEvents btnDiscordSharedEventURL As Button
-    Friend WithEvents txtDiscordEventShareURL As TextBox
-    Friend WithEvents Label20 As Label
     Friend WithEvents btnTaskFeaturedOnGroupFlight As Button
     Friend WithEvents btnDiscordGroupEventURL As Button
     Friend WithEvents txtGroupEventPostURL As TextBox
@@ -4868,7 +4651,6 @@ Partial Class Main
     Friend WithEvents grpDiscordOthers As GroupBox
     Friend WithEvents btnSyncTitles As Button
     Friend WithEvents txtClubFullName As TextBox
-    Friend WithEvents Label19 As Label
     Friend WithEvents FlowLayoutPanel24 As FlowLayoutPanel
     Friend WithEvents chkDGPOMainPost As CheckBox
     Friend WithEvents FlowLayoutPanel25 As FlowLayoutPanel
