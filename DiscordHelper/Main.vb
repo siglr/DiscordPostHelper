@@ -4584,42 +4584,41 @@ Public Class Main
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
                 SetFocusOnField(btnStartGroupEventPost, fromF1Key)
 
-            Case 83 'Start workflow full workflow
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 585
-                pnlWizardDiscord.Top = 532
-                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post both the task and group flight event full details."
-                SetFocusOnField(btnStartFullPostingWorkflow, fromF1Key)
-
-            Case 84 'Delete task from WSG
+            Case 83 'Delete task from WSG
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 68
                 lblDiscordGuideInstructions.Text = "Click this button to delete the task from WeSimGlide.org."
                 SetFocusOnField(btnDeleteFromTaskBrowser, fromF1Key)
 
-            Case 85 'Delete event
+            Case 84 'Delete event
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 110
                 lblDiscordGuideInstructions.Text = "Click this button to remove the group event from WeSimGlide.org."
                 SetFocusOnField(btnDeleteEventNews, fromF1Key)
 
-            Case 86 'Task featured on group flight - share
+            Case 85 'Task featured on group flight - share
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 192
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to share the group event for the task."
                 SetFocusOnField(btnTaskFeaturedOnGroupFlight, fromF1Key)
 
-            Case 87 'Task and Group Event Links
+            Case 86 'Task and Group Event Links
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 243
                 lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with both links to task and group event."
                 SetFocusOnField(btnTaskAndGroupEventLinks, fromF1Key)
 
-            Case 88 'Seconds to wait for files
+            Case 87 'Seconds to wait for files
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 312
                 lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
                 SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
+
+            Case 88 'Start workflow full workflow
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 413
+                lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post both the task and group flight event full details."
+                SetFocusOnField(btnStartFullPostingWorkflow, fromF1Key)
 
             Case 89 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
@@ -5172,13 +5171,13 @@ Public Class Main
                 If .DiscordTaskID = String.Empty AndAlso .DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(.DiscordTaskThreadURL) Then
                     .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
-                txtDiscordTaskID.Text = .DiscordTaskID
-                txtTemporaryTaskID.Text = .TemporaryTaskID
                 _TaskEntrySeqID = .EntrySeqID
                 _TaskStatus = .TaskStatus
                 If _TaskEntrySeqID = 0 Then
                     _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                 End If
+                txtDiscordTaskID.Text = .DiscordTaskID
+                txtTemporaryTaskID.Text = .TemporaryTaskID
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
