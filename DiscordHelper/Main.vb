@@ -4408,13 +4408,18 @@ Public Class Main
                 pnlGuide.Top = 531
                 lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord. Any image you add named ""Cover"" will be automatically selected."
                 SetFocusOnField(txtDiscordTaskID, fromF1Key)
-            Case 24 'Task ID
+            Case 24 'External source of task
                 SetGuidePanelToRight()
-                pnlGuide.Top = 615
-                lblGuideInstructions.Text = "Once you've posted the task on Discord and before posting the files, copy the task URL and paste it here."
-                SetFocusOnField(txtDiscordTaskID, fromF1Key)
+                pnlGuide.Top = 597
+                lblGuideInstructions.Text = "If you'd like to specify where and when this task has been published first, enable this to set the original date the task was published and its URL."
+                SetFocusOnField(chkRepost, fromF1Key)
+            Case 25 'File drop zone
+                SetGuidePanelToRight()
+                pnlGuide.Top = 699
+                lblGuideInstructions.Text = "This is the file drop zone. You can drag and drop any supported files over this area."
+                SetFocusOnField(FileDropZone1, fromF1Key)
 
-            Case 25 To 29 'End of flight plan data
+            Case 26 To 29 'End of flight plan data
                 _GuideCurrentStep = 34
                 ShowGuide()
 
@@ -4423,34 +4428,43 @@ Public Class Main
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
-            Case 35 To 39 'We're done with the briefing
+            Case 35 To 40 'We're done with the briefing
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
-            Case 40 'Repost checkbox and date
-                mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
-                SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 26
-                lblDiscordGuideInstructions.Text = "If you'd like to specify where and when this task has been published first, enable this to set the original date the task was published and its URL."
-                SetFocusOnField(chkRepost, fromF1Key)
             Case 41 'Discord Post Options for task
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 220
+                pnlWizardDiscord.Top = 73
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDPOMainPost, fromF1Key)
-            Case 42 'Reset all options to default
+            Case 42 'Publisher
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 601
+                pnlWizardDiscord.Top = 179
+                lblDiscordGuideInstructions.Text = "This is the primary task publisher. Only the publishers can update task information on WeSimGlide.org."
+                SetFocusOnField(cboTaskOwner, fromF1Key)
+            Case 43 'Shared users
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 218
+                lblDiscordGuideInstructions.Text = "The primary publisher can select other publishers to share the edit rights of the task information."
+                SetFocusOnField(chkcboSharedWithUsers, fromF1Key)
+            Case 44 'Update description
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 298
+                lblDiscordGuideInstructions.Text = "All updates to the task on WeSimGlide.org require a brief update description."
+                SetFocusOnField(txtLastUpdateDescription, fromF1Key)
+            Case 45 'Reset all options to default
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 369
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDPOResetToDefault, fromF1Key)
-            Case 43 'Start Task Posting Workflow
+            Case 46 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 644
+                pnlWizardDiscord.Top = 411
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
                 SetFocusOnField(btnStartTaskPost, fromF1Key)
 
-            Case 44 To 59 'Next section
+            Case 47 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -4458,207 +4472,158 @@ Public Class Main
                 'Resume wizard on the Event tab
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabEvent")
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 69
+                pnlWizardEvent.Top = 39
                 lblEventGuideInstructions.Text = "Start by selecting the soaring club or known group for which you want to create a new event, if this applies to you."
                 SetFocusOnField(cboGroupOrClubName, fromF1Key)
 
-            Case 61 'Group flight title / topic
+            Case 61 'Group flight URL
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 141
+                pnlWizardEvent.Top = 112
+                lblEventGuideInstructions.Text = "This should contain the link to the Discord group flight post. It is auto-populated when using the group event post workflow."
+                SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
+
+            Case 62 'Group flight title / topic
+                SetEventGuidePanelToLeft()
+                pnlWizardEvent.Top = 156
                 lblEventGuideInstructions.Text = "If you would like to specify a different title for the group flight, you can do so now. Otherwise, this is the same as the task's title."
                 SetFocusOnField(txtEventTitle, fromF1Key)
 
-            Case 62 'MSFS Server
+            Case 63 'MSFS Server
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 176
+                pnlWizardEvent.Top = 189
                 lblEventGuideInstructions.Text = "Specify the MSFS Server to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboMSFSServer, fromF1Key)
 
-            Case 63 'Voice channel
+            Case 64 'Voice channel
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 212
+                pnlWizardEvent.Top = 223
                 lblEventGuideInstructions.Text = "Specify the Discord Voice channel to use during the group flight. If you specified a known club, then you should not change this, unless it is incorrect."
                 SetFocusOnField(cboVoiceChannel, fromF1Key)
 
-            Case 64 'UTC Zulu
+            Case 65 'UTC Zulu
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 251
+                pnlWizardEvent.Top = 259
                 lblEventGuideInstructions.Text = "For the sake of simplicity, leave this checkbox ticked to use UTC (Zulu) entries. Local times are still displayed to the right."
                 SetFocusOnField(chkDateTimeUTC, fromF1Key)
 
-            Case 65 'Meet time
+            Case 66 'Meet time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 280
+                pnlWizardEvent.Top = 292
                 lblEventGuideInstructions.Text = "Specify the meet date and time. This is the time when people will start gathering for the group flight and briefing."
                 SetFocusOnField(dtEventMeetDate, fromF1Key)
 
-            Case 66 'Sync Fly
+            Case 67 'Sync Fly
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 315
+                pnlWizardEvent.Top = 323
                 lblEventGuideInstructions.Text = "Only if the flight's conditions require a synchronized click ""Fly"", then tick the ""Yes"" checkbox and specify when it will happen."
                 SetFocusOnField(chkUseSyncFly, fromF1Key)
 
-            Case 67 'Launch Time
+            Case 68 'Launch Time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 349
+                pnlWizardEvent.Top = 362
                 lblEventGuideInstructions.Text = "If you want to specify the time when people should start to launch from the airfield, tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseLaunch, fromF1Key)
 
-            Case 68 'Start Task Time
+            Case 69 'Start Task Time
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 394
+                pnlWizardEvent.Top = 396
                 lblEventGuideInstructions.Text = "If you want to specify a time for the start of the task (going through the start gate), tick the ""Yes"" checkbox and specify when it should happen."
                 SetFocusOnField(chkUseStart, fromF1Key)
 
-            Case 69 'Group flight description
+            Case 70 'Group flight description
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 470
+                pnlWizardEvent.Top = 490
                 lblEventGuideInstructions.Text = "If you would like to specify a description for the group flight, you can do so now."
                 SetFocusOnField(txtEventDescription, fromF1Key)
 
-            Case 70 'SSC Award
+            Case 71 'SSC Award
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 563
+                pnlWizardEvent.Top = 584
                 lblEventGuideInstructions.Text = "This is usually set automatically if the club is SSC Saturday and depending on the task's distance. You should leave it alone, unless it's incorrect."
                 SetFocusOnField(cboEligibleAward, fromF1Key)
 
-            Case 71 'Beginner's link
+            Case 72 'Beginner's link
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 622
                 lblEventGuideInstructions.Text = "You can select from different beginner's guide (or specify a link to a custom one) to include with the group event post."
                 SetFocusOnField(cboBeginnersGuide, fromF1Key)
 
-            Case 72 'Teaser section
+            Case 73 'Teaser section
                 SetEventGuidePanelToLeft()
-                pnlWizardEvent.Top = 702
+                pnlWizardEvent.Top = 720
                 lblEventGuideInstructions.Text = "You can opt to first post a teaser only for your group event. Check this box, select a teaser image and message."
                 SetFocusOnField(chkEventTeaser, fromF1Key)
 
-            Case 73 'Briefing review
+            Case 74 'Briefing review
                 mainTabControl.SelectedIndex = 3
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
-            Case 74 To 79 'Next section
+            Case 75 To 79 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
             Case 80 'Discord Post Options
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 591
-                pnlWizardDiscord.Top = 557
+                pnlWizardDiscord.Left = 486
+                pnlWizardDiscord.Top = 316
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDGPOCoverImage, fromF1Key)
 
-            Case 81 'Group flight URL
+            Case 81 'Reset all options
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 591
-                pnlWizardDiscord.Top = 624
-                lblDiscordGuideInstructions.Text = "From Discord, copy the link to the group flight post you just created above, and click ""Paste"" here."
-                SetFocusOnField(btnDiscordGroupEventURL, fromF1Key)
-
-            Case 82 'Reset all options
-                SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 591
-                pnlWizardDiscord.Top = 664
+                pnlWizardDiscord.Left = 585
+                pnlWizardDiscord.Top = 366
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDGPOResetToDefault, fromF1Key)
 
-            Case 83 'Start workflow
+            Case 82 'Start workflow
                 SetDiscordGuidePanelToTopArrowLeftSide()
-                pnlWizardDiscord.Left = 591
-                pnlWizardDiscord.Top = 707
+                pnlWizardDiscord.Left = 585
+                pnlWizardDiscord.Top = 402
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
                 SetFocusOnField(btnStartGroupEventPost, fromF1Key)
 
-            Case 84 'Seconds to wait for files
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 0
-                lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
-                SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
-
-            Case 85 'Automatic workflow progression
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 27
-                lblDiscordGuideInstructions.Text = "When you enable this, the workflow will try to progress automatically step after step when possible."
-                'SetFocusOnField(chkDPOExpertMode, fromF1Key)
-                'TODO: REORDER WIZARD
-
-            Case 86 'Start full workflow
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 105
+            Case 83 'Start workflow full workflow
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Left = 585
+                pnlWizardDiscord.Top = 532
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post both the task and group flight event full details."
                 SetFocusOnField(btnStartFullPostingWorkflow, fromF1Key)
 
-            Case 87 'Share the Discord Event on the task
+            Case 84 'Delete task from WSG
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 183
+                pnlWizardDiscord.Top = 68
+                lblDiscordGuideInstructions.Text = "Click this button to delete the task from WeSimGlide.org."
+                SetFocusOnField(btnDeleteFromTaskBrowser, fromF1Key)
+
+            Case 85 'Delete event
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 110
+                lblDiscordGuideInstructions.Text = "Click this button to remove the group event from WeSimGlide.org."
+                SetFocusOnField(btnDeleteEventNews, fromF1Key)
+
+            Case 86 'Task featured on group flight - share
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 192
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to share the group event for the task."
                 SetFocusOnField(btnTaskFeaturedOnGroupFlight, fromF1Key)
 
-            Case 88 'DPHX only
+            Case 87 'Task and Group Event Links
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 225
-                lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with only the DPHX file and link to task post."
-                'SetFocusOnField(btnEventDPHXAndLinkOnly, fromF1Key)
-                'TODO: REORDER WIZARD
-
-            Case 89 'Task and Group Event Links
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 269
+                pnlWizardDiscord.Top = 243
                 lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with both links to task and group event."
                 SetFocusOnField(btnTaskAndGroupEventLinks, fromF1Key)
 
-            Case 90 'Discord Event
-                Using New Centered_MessageBox(Me)
-                    If MessageBox.Show("Do you have the access rights to create Discord Event on the target Discord Server? Click No if you don't know.", "Discord Post Helper Wizard", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                        _GuideCurrentStep += 1
-                    Else
-                        _GuideCurrentStep = AskWhereToGoNext()
-                    End If
-                End Using
-                ShowGuide()
-
-            Case 91 'Create Discord Event
+            Case 88 'Seconds to wait for files
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 345
-                lblDiscordGuideInstructions.Text = "In Discord and in the proper Discord Server, start the creation of a new Event (Create Event). If you don't know how to do this, ask for help!"
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
+                pnlWizardDiscord.Top = 312
+                lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
+                SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
 
-            Case 92 'Select voice channel for event
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 377
-                lblDiscordGuideInstructions.Text = "On the new event window, under ""Where is your event"", choose ""Voice Channel"" and select this voice channel. Then click ""Next"" on the event window."
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
-
-            Case 94 'Event date & time
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 445
-                lblDiscordGuideInstructions.Text = "On the Discord event window, specify the date and time displayed here - these are all local times you have to use!"
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
-
-
-            Case 96 'Cover image
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 509
-                lblDiscordGuideInstructions.Text = "In the Discord event window, you can also upload a cover image for your event. This is optional."
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
-
-            Case 97 'Preview and publish
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 541
-                lblDiscordGuideInstructions.Text = "In the Discord event window, click Next to review your event information and publish it."
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
-
-            Case 98 'Paste link to Discord Event
-                SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 604
-                lblDiscordGuideInstructions.Text = "From the Discord Event published window, copy the URL to share to and invite participants and click ""Paste"" here."
-                SetFocusOnField(btnEventGuideNext, fromF1Key)
-
-            Case 99 To 99
+            Case 89 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
@@ -4696,7 +4661,7 @@ Public Class Main
                 End If
                 Return 60
             Case WizardNextChoice.WhereToGoNext.DiscordTask
-                Return 40
+                Return 41
             Case WizardNextChoice.WhereToGoNext.DiscordEvent
                 Return 80
             Case Else

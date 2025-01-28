@@ -148,7 +148,6 @@ Partial Class Main
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
         Me.lblClubDiscordURL = New System.Windows.Forms.Label()
-        Me.grpGroupEventURL = New System.Windows.Forms.GroupBox()
         Me.txtGroupEventPostURL = New System.Windows.Forms.TextBox()
         Me.btnDiscordGroupEventURL = New System.Windows.Forms.Button()
         Me.lblGroupEmoji = New System.Windows.Forms.Label()
@@ -341,6 +340,7 @@ Partial Class Main
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
@@ -358,7 +358,6 @@ Partial Class Main
         Me.pnlWizardEvent.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.grpGroupEventPost.SuspendLayout()
-        Me.grpGroupEventURL.SuspendLayout()
         Me.grpEventTeaser.SuspendLayout()
         Me.pnlEventDateTimeControls.SuspendLayout()
         Me.TimeStampContextualMenu.SuspendLayout()
@@ -452,7 +451,7 @@ Partial Class Main
         Me.pnlGuide.Controls.Add(Me.btnGuideNext)
         Me.pnlGuide.Controls.Add(Me.Panel3)
         Me.pnlGuide.Controls.Add(Me.pnlArrow)
-        Me.pnlGuide.Location = New System.Drawing.Point(19, 760)
+        Me.pnlGuide.Location = New System.Drawing.Point(19, 699)
         Me.pnlGuide.Name = "pnlGuide"
         Me.pnlGuide.Size = New System.Drawing.Size(750, 89)
         Me.pnlGuide.TabIndex = 82
@@ -576,7 +575,7 @@ Partial Class Main
         Me.btnRepostOriginalURLPaste.Name = "btnRepostOriginalURLPaste"
         Me.btnRepostOriginalURLPaste.Size = New System.Drawing.Size(74, 29)
         Me.btnRepostOriginalURLPaste.TabIndex = 3
-        Me.btnRepostOriginalURLPaste.Tag = "40"
+        Me.btnRepostOriginalURLPaste.Tag = "24"
         Me.btnRepostOriginalURLPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnRepostOriginalURLPaste, "Click this button to paste the original task post URL from your clipboard")
         Me.btnRepostOriginalURLPaste.UseVisualStyleBackColor = True
@@ -591,7 +590,7 @@ Partial Class Main
         Me.txtRepostOriginalURL.Name = "txtRepostOriginalURL"
         Me.txtRepostOriginalURL.Size = New System.Drawing.Size(398, 30)
         Me.txtRepostOriginalURL.TabIndex = 2
-        Me.txtRepostOriginalURL.Tag = "40"
+        Me.txtRepostOriginalURL.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.txtRepostOriginalURL, "Enter the URL to the original task post.")
         '
         'dtRepostOriginalDate
@@ -602,7 +601,7 @@ Partial Class Main
         Me.dtRepostOriginalDate.Name = "dtRepostOriginalDate"
         Me.dtRepostOriginalDate.Size = New System.Drawing.Size(202, 31)
         Me.dtRepostOriginalDate.TabIndex = 1
-        Me.dtRepostOriginalDate.Tag = "40"
+        Me.dtRepostOriginalDate.Tag = "24"
         Me.ToolTip1.SetToolTip(Me.dtRepostOriginalDate, "Date of original posting (source)")
         '
         'chkRepost
@@ -614,7 +613,7 @@ Partial Class Main
         Me.chkRepost.Name = "chkRepost"
         Me.chkRepost.Size = New System.Drawing.Size(299, 24)
         Me.chkRepost.TabIndex = 0
-        Me.chkRepost.Tag = "40"
+        Me.chkRepost.Tag = "24"
         Me.chkRepost.Text = "External task original date and source URL"
         Me.ToolTip1.SetToolTip(Me.chkRepost, "Check this if you are reposting a previous task published somewhere else (not the" &
         " Task Library)")
@@ -1882,7 +1881,7 @@ Partial Class Main
         Me.chkActivateEvent.Location = New System.Drawing.Point(13, 6)
         Me.chkActivateEvent.Name = "chkActivateEvent"
         Me.chkActivateEvent.Size = New System.Drawing.Size(232, 25)
-        Me.chkActivateEvent.TabIndex = 0
+        Me.chkActivateEvent.TabIndex = 1
         Me.chkActivateEvent.Text = "Enable Group Event Details"
         Me.ToolTip1.SetToolTip(Me.chkActivateEvent, "Check this to enable the event fields.")
         Me.chkActivateEvent.UseVisualStyleBackColor = True
@@ -1894,7 +1893,7 @@ Partial Class Main
         Me.pnlWizardEvent.Controls.Add(Me.btnEventGuideNext)
         Me.pnlWizardEvent.Controls.Add(Me.Panel2)
         Me.pnlWizardEvent.Controls.Add(Me.pnlEventArrow)
-        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 546)
+        Me.pnlWizardEvent.Location = New System.Drawing.Point(849, 800)
         Me.pnlWizardEvent.Name = "pnlWizardEvent"
         Me.pnlWizardEvent.Size = New System.Drawing.Size(627, 89)
         Me.pnlWizardEvent.TabIndex = 83
@@ -1947,8 +1946,10 @@ Partial Class Main
         Me.grpGroupEventPost.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupEventPost.Controls.Add(Me.Label6)
+        Me.grpGroupEventPost.Controls.Add(Me.txtGroupEventPostURL)
+        Me.grpGroupEventPost.Controls.Add(Me.btnDiscordGroupEventURL)
         Me.grpGroupEventPost.Controls.Add(Me.lblClubDiscordURL)
-        Me.grpGroupEventPost.Controls.Add(Me.grpGroupEventURL)
         Me.grpGroupEventPost.Controls.Add(Me.lblGroupEmoji)
         Me.grpGroupEventPost.Controls.Add(Me.txtTrackerGroup)
         Me.grpGroupEventPost.Controls.Add(Me.Label14)
@@ -2006,41 +2007,24 @@ Partial Class Main
         Me.lblClubDiscordURL.TabIndex = 99
         Me.lblClubDiscordURL.Visible = False
         '
-        'grpGroupEventURL
-        '
-        Me.grpGroupEventURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpGroupEventURL.Controls.Add(Me.txtGroupEventPostURL)
-        Me.grpGroupEventURL.Controls.Add(Me.btnDiscordGroupEventURL)
-        Me.grpGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.grpGroupEventURL.Location = New System.Drawing.Point(896, 79)
-        Me.grpGroupEventURL.Name = "grpGroupEventURL"
-        Me.grpGroupEventURL.Size = New System.Drawing.Size(553, 79)
-        Me.grpGroupEventURL.TabIndex = 98
-        Me.grpGroupEventURL.TabStop = False
-        Me.grpGroupEventURL.Text = "Group Event URL"
-        '
         'txtGroupEventPostURL
         '
-        Me.txtGroupEventPostURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(6, 26)
+        Me.txtGroupEventPostURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!)
+        Me.txtGroupEventPostURL.Location = New System.Drawing.Point(192, 135)
         Me.txtGroupEventPostURL.Name = "txtGroupEventPostURL"
-        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(462, 30)
-        Me.txtGroupEventPostURL.TabIndex = 2
-        Me.txtGroupEventPostURL.Tag = "81"
+        Me.txtGroupEventPostURL.Size = New System.Drawing.Size(567, 32)
+        Me.txtGroupEventPostURL.TabIndex = 8
+        Me.txtGroupEventPostURL.Tag = "61"
         Me.ToolTip1.SetToolTip(Me.txtGroupEventPostURL, "Enter the URL to the Discord post created above in step 1.")
         '
         'btnDiscordGroupEventURL
         '
-        Me.btnDiscordGroupEventURL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDiscordGroupEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(474, 27)
+        Me.btnDiscordGroupEventURL.Location = New System.Drawing.Point(765, 136)
         Me.btnDiscordGroupEventURL.Name = "btnDiscordGroupEventURL"
         Me.btnDiscordGroupEventURL.Size = New System.Drawing.Size(74, 29)
-        Me.btnDiscordGroupEventURL.TabIndex = 3
-        Me.btnDiscordGroupEventURL.Tag = "81"
+        Me.btnDiscordGroupEventURL.TabIndex = 9
+        Me.btnDiscordGroupEventURL.Tag = "61"
         Me.btnDiscordGroupEventURL.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnDiscordGroupEventURL, "Click this button to paste the group event's post URL from your clipboard")
         Me.btnDiscordGroupEventURL.UseVisualStyleBackColor = True
@@ -2060,31 +2044,31 @@ Partial Class Main
         'txtTrackerGroup
         '
         Me.txtTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTrackerGroup.Location = New System.Drawing.Point(655, 89)
+        Me.txtTrackerGroup.Location = New System.Drawing.Point(655, 61)
         Me.txtTrackerGroup.Name = "txtTrackerGroup"
-        Me.txtTrackerGroup.Size = New System.Drawing.Size(235, 32)
-        Me.txtTrackerGroup.TabIndex = 87
-        Me.txtTrackerGroup.Tag = "61"
+        Me.txtTrackerGroup.Size = New System.Drawing.Size(184, 32)
+        Me.txtTrackerGroup.TabIndex = 5
+        Me.txtTrackerGroup.Tag = "60"
         Me.ToolTip1.SetToolTip(Me.txtTrackerGroup, "You can specify the club's group name used in the tracker utility.")
         '
         'Label14
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(520, 92)
+        Me.Label14.Location = New System.Drawing.Point(520, 64)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(129, 26)
-        Me.Label14.TabIndex = 86
+        Me.Label14.TabIndex = 4
         Me.Label14.Text = "Tracker Group"
         '
         'btnLoadEventDescriptionTemplate
         '
         Me.btnLoadEventDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLoadEventDescriptionTemplate.Location = New System.Drawing.Point(12, 515)
+        Me.btnLoadEventDescriptionTemplate.Location = New System.Drawing.Point(12, 534)
         Me.btnLoadEventDescriptionTemplate.Name = "btnLoadEventDescriptionTemplate"
         Me.btnLoadEventDescriptionTemplate.Size = New System.Drawing.Size(172, 37)
-        Me.btnLoadEventDescriptionTemplate.TabIndex = 25
-        Me.btnLoadEventDescriptionTemplate.Tag = "22"
+        Me.btnLoadEventDescriptionTemplate.TabIndex = 30
+        Me.btnLoadEventDescriptionTemplate.Tag = "70"
         Me.btnLoadEventDescriptionTemplate.Text = "Load template"
         Me.ToolTip1.SetToolTip(Me.btnLoadEventDescriptionTemplate, "Click this button to replace the current description with your saved template.")
         Me.btnLoadEventDescriptionTemplate.UseVisualStyleBackColor = True
@@ -2092,11 +2076,11 @@ Partial Class Main
         'btnSaveEventDescriptionTemplate
         '
         Me.btnSaveEventDescriptionTemplate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveEventDescriptionTemplate.Location = New System.Drawing.Point(12, 472)
+        Me.btnSaveEventDescriptionTemplate.Location = New System.Drawing.Point(12, 491)
         Me.btnSaveEventDescriptionTemplate.Name = "btnSaveEventDescriptionTemplate"
         Me.btnSaveEventDescriptionTemplate.Size = New System.Drawing.Size(174, 37)
-        Me.btnSaveEventDescriptionTemplate.TabIndex = 24
-        Me.btnSaveEventDescriptionTemplate.Tag = "22"
+        Me.btnSaveEventDescriptionTemplate.TabIndex = 29
+        Me.btnSaveEventDescriptionTemplate.Tag = "70"
         Me.btnSaveEventDescriptionTemplate.Text = "Save template"
         Me.ToolTip1.SetToolTip(Me.btnSaveEventDescriptionTemplate, "Click this button to save the current description to be used by default as templa" &
         "te.")
@@ -2105,12 +2089,12 @@ Partial Class Main
         'txtClubFullName
         '
         Me.txtClubFullName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtClubFullName.Location = New System.Drawing.Point(192, 125)
+        Me.txtClubFullName.Location = New System.Drawing.Point(192, 97)
         Me.txtClubFullName.Name = "txtClubFullName"
         Me.txtClubFullName.ReadOnly = True
-        Me.txtClubFullName.Size = New System.Drawing.Size(698, 32)
-        Me.txtClubFullName.TabIndex = 4
-        Me.txtClubFullName.Tag = "61"
+        Me.txtClubFullName.Size = New System.Drawing.Size(647, 32)
+        Me.txtClubFullName.TabIndex = 6
+        Me.txtClubFullName.Tag = "60"
         Me.ToolTip1.SetToolTip(Me.txtClubFullName, "The soaring club event's full ""official"" name.")
         '
         'chkEventTeaser
@@ -2118,11 +2102,11 @@ Partial Class Main
         Me.chkEventTeaser.AutoSize = True
         Me.chkEventTeaser.BackColor = System.Drawing.SystemColors.Control
         Me.chkEventTeaser.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.chkEventTeaser.Location = New System.Drawing.Point(15, 697)
+        Me.chkEventTeaser.Location = New System.Drawing.Point(15, 712)
         Me.chkEventTeaser.Name = "chkEventTeaser"
         Me.chkEventTeaser.Size = New System.Drawing.Size(109, 24)
-        Me.chkEventTeaser.TabIndex = 85
-        Me.chkEventTeaser.Tag = "72"
+        Me.chkEventTeaser.TabIndex = 39
+        Me.chkEventTeaser.Tag = "73"
         Me.chkEventTeaser.Text = "Event Teaser"
         Me.ToolTip1.SetToolTip(Me.chkEventTeaser, "Check this if you will be posting a group event teaser")
         Me.chkEventTeaser.UseVisualStyleBackColor = False
@@ -2138,10 +2122,10 @@ Partial Class Main
         Me.grpEventTeaser.Controls.Add(Me.btnClearEventTeaserAreaMap)
         Me.grpEventTeaser.Controls.Add(Me.txtEventTeaserAreaMapImage)
         Me.grpEventTeaser.Controls.Add(Me.Label1)
-        Me.grpEventTeaser.Location = New System.Drawing.Point(7, 698)
+        Me.grpEventTeaser.Location = New System.Drawing.Point(7, 715)
         Me.grpEventTeaser.Name = "grpEventTeaser"
-        Me.grpEventTeaser.Size = New System.Drawing.Size(1443, 146)
-        Me.grpEventTeaser.TabIndex = 50
+        Me.grpEventTeaser.Size = New System.Drawing.Size(1443, 129)
+        Me.grpEventTeaser.TabIndex = 38
         Me.grpEventTeaser.TabStop = False
         '
         'Label2
@@ -2164,9 +2148,9 @@ Partial Class Main
         Me.txtEventTeaserMessage.Multiline = True
         Me.txtEventTeaserMessage.Name = "txtEventTeaserMessage"
         Me.txtEventTeaserMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1252, 76)
+        Me.txtEventTeaserMessage.Size = New System.Drawing.Size(1252, 57)
         Me.txtEventTeaserMessage.TabIndex = 5
-        Me.txtEventTeaserMessage.Tag = "72"
+        Me.txtEventTeaserMessage.Tag = "73"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserMessage, "Specify any message you want to be posted with the teaser")
         '
         'btnSelectEventTeaserAreaMap
@@ -2177,7 +2161,7 @@ Partial Class Main
         Me.btnSelectEventTeaserAreaMap.Name = "btnSelectEventTeaserAreaMap"
         Me.btnSelectEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnSelectEventTeaserAreaMap.TabIndex = 2
-        Me.btnSelectEventTeaserAreaMap.Tag = "72"
+        Me.btnSelectEventTeaserAreaMap.Tag = "73"
         Me.btnSelectEventTeaserAreaMap.Text = "Select"
         Me.ToolTip1.SetToolTip(Me.btnSelectEventTeaserAreaMap, "Click this button to browse and select the teaser area map")
         Me.btnSelectEventTeaserAreaMap.UseVisualStyleBackColor = True
@@ -2190,7 +2174,7 @@ Partial Class Main
         Me.btnClearEventTeaserAreaMap.Name = "btnClearEventTeaserAreaMap"
         Me.btnClearEventTeaserAreaMap.Size = New System.Drawing.Size(79, 29)
         Me.btnClearEventTeaserAreaMap.TabIndex = 3
-        Me.btnClearEventTeaserAreaMap.Tag = "72"
+        Me.btnClearEventTeaserAreaMap.Tag = "73"
         Me.btnClearEventTeaserAreaMap.Text = "Clear"
         Me.ToolTip1.SetToolTip(Me.btnClearEventTeaserAreaMap, "Click this button to clear the teaser area map")
         Me.btnClearEventTeaserAreaMap.UseVisualStyleBackColor = True
@@ -2205,7 +2189,7 @@ Partial Class Main
         Me.txtEventTeaserAreaMapImage.ReadOnly = True
         Me.txtEventTeaserAreaMapImage.Size = New System.Drawing.Size(1082, 32)
         Me.txtEventTeaserAreaMapImage.TabIndex = 1
-        Me.txtEventTeaserAreaMapImage.Tag = "72"
+        Me.txtEventTeaserAreaMapImage.Tag = "73"
         Me.ToolTip1.SetToolTip(Me.txtEventTeaserAreaMapImage, "Select an image to use in the Teaser post for the group event.")
         '
         'Label1
@@ -2222,11 +2206,11 @@ Partial Class Main
         '
         Me.btnPasteBeginnerLink.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPasteBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1370, 663)
+        Me.btnPasteBeginnerLink.Location = New System.Drawing.Point(1370, 685)
         Me.btnPasteBeginnerLink.Name = "btnPasteBeginnerLink"
         Me.btnPasteBeginnerLink.Size = New System.Drawing.Size(79, 29)
-        Me.btnPasteBeginnerLink.TabIndex = 44
-        Me.btnPasteBeginnerLink.Tag = "71"
+        Me.btnPasteBeginnerLink.TabIndex = 37
+        Me.btnPasteBeginnerLink.Tag = "72"
         Me.btnPasteBeginnerLink.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnPasteBeginnerLink, "Click this button to paste the beginner's link from your clipboard")
         Me.btnPasteBeginnerLink.UseVisualStyleBackColor = True
@@ -2236,11 +2220,11 @@ Partial Class Main
         Me.txtOtherBeginnerLink.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtOtherBeginnerLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 660)
+        Me.txtOtherBeginnerLink.Location = New System.Drawing.Point(192, 683)
         Me.txtOtherBeginnerLink.Name = "txtOtherBeginnerLink"
         Me.txtOtherBeginnerLink.Size = New System.Drawing.Size(1172, 32)
-        Me.txtOtherBeginnerLink.TabIndex = 43
-        Me.txtOtherBeginnerLink.Tag = "71"
+        Me.txtOtherBeginnerLink.TabIndex = 36
+        Me.txtOtherBeginnerLink.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.txtOtherBeginnerLink, "Specify the URL (link) to the guide you want to include")
         '
         'cboBeginnersGuide
@@ -2251,41 +2235,41 @@ Partial Class Main
         Me.cboBeginnersGuide.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboBeginnersGuide.FormattingEnabled = True
         Me.cboBeginnersGuide.Items.AddRange(New Object() {"None", "The Beginner's Guide to Soaring Events (GotGravel)", "How to join our Group Flights (Sim Soaring Club)", "Other (provide link below)"})
-        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 622)
+        Me.cboBeginnersGuide.Location = New System.Drawing.Point(192, 645)
         Me.cboBeginnersGuide.Name = "cboBeginnersGuide"
         Me.cboBeginnersGuide.Size = New System.Drawing.Size(1257, 32)
-        Me.cboBeginnersGuide.TabIndex = 42
-        Me.cboBeginnersGuide.Tag = "71"
+        Me.cboBeginnersGuide.TabIndex = 35
+        Me.cboBeginnersGuide.Tag = "72"
         Me.ToolTip1.SetToolTip(Me.cboBeginnersGuide, "You can select a link to guide beginners into soaring group flights")
         '
         'Label30
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(7, 625)
+        Me.Label30.Location = New System.Drawing.Point(7, 648)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(127, 26)
-        Me.Label30.TabIndex = 41
+        Me.Label30.TabIndex = 34
         Me.Label30.Text = "For beginners"
         '
         'lblLocalDSTWarning
         '
         Me.lblLocalDSTWarning.AutoSize = True
         Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(553, 271)
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(553, 284)
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
         Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
-        Me.lblLocalDSTWarning.TabIndex = 13
+        Me.lblLocalDSTWarning.TabIndex = 18
         Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
         Me.lblLocalDSTWarning.Visible = False
         '
         'Label48
         '
         Me.Label48.AutoSize = True
-        Me.Label48.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label48.Location = New System.Drawing.Point(7, 28)
+        Me.Label48.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.163636!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label48.Location = New System.Drawing.Point(7, 22)
         Me.Label48.Name = "Label48"
-        Me.Label48.Size = New System.Drawing.Size(609, 26)
+        Me.Label48.Size = New System.Drawing.Size(445, 19)
         Me.Label48.TabIndex = 0
         Me.Label48.Text = "On the Flight Plan tab, please load the event's flight plan and weather file."
         '
@@ -2293,10 +2277,10 @@ Partial Class Main
         '
         Me.lblEventTaskDistance.AutoSize = True
         Me.lblEventTaskDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTaskDistance.Location = New System.Drawing.Point(481, 587)
+        Me.lblEventTaskDistance.Location = New System.Drawing.Point(481, 610)
         Me.lblEventTaskDistance.Name = "lblEventTaskDistance"
         Me.lblEventTaskDistance.Size = New System.Drawing.Size(53, 26)
-        Me.lblEventTaskDistance.TabIndex = 36
+        Me.lblEventTaskDistance.TabIndex = 33
         Me.lblEventTaskDistance.Text = "0 Km"
         Me.lblEventTaskDistance.Visible = False
         '
@@ -2305,7 +2289,7 @@ Partial Class Main
         Me.cboGroupOrClubName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboGroupOrClubName.FormattingEnabled = True
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
-        Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 89)
+        Me.cboGroupOrClubName.Location = New System.Drawing.Point(192, 61)
         Me.cboGroupOrClubName.Name = "cboGroupOrClubName"
         Me.cboGroupOrClubName.Size = New System.Drawing.Size(322, 32)
         Me.cboGroupOrClubName.TabIndex = 3
@@ -2318,11 +2302,11 @@ Partial Class Main
         Me.txtEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventTitle.Location = New System.Drawing.Point(192, 163)
+        Me.txtEventTitle.Location = New System.Drawing.Point(192, 176)
         Me.txtEventTitle.Name = "txtEventTitle"
         Me.txtEventTitle.Size = New System.Drawing.Size(1257, 32)
-        Me.txtEventTitle.TabIndex = 6
-        Me.txtEventTitle.Tag = "61"
+        Me.txtEventTitle.TabIndex = 11
+        Me.txtEventTitle.Tag = "62"
         Me.ToolTip1.SetToolTip(Me.txtEventTitle, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
         ") tab if created in the same session.")
         '
@@ -2330,10 +2314,10 @@ Partial Class Main
         '
         Me.Label41.AutoSize = True
         Me.Label41.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label41.Location = New System.Drawing.Point(7, 167)
+        Me.Label41.Location = New System.Drawing.Point(7, 180)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(157, 26)
-        Me.Label41.TabIndex = 5
+        Me.Label41.TabIndex = 10
         Me.Label41.Text = "Event Title / Topic"
         '
         'cboEligibleAward
@@ -2342,30 +2326,30 @@ Partial Class Main
         Me.cboEligibleAward.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboEligibleAward.FormattingEnabled = True
         Me.cboEligibleAward.Items.AddRange(New Object() {"None", "Bronze", "Silver", "Gold", "Diamond", "Cloud Surfer"})
-        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 584)
+        Me.cboEligibleAward.Location = New System.Drawing.Point(192, 607)
         Me.cboEligibleAward.Name = "cboEligibleAward"
         Me.cboEligibleAward.Size = New System.Drawing.Size(283, 32)
-        Me.cboEligibleAward.TabIndex = 35
-        Me.cboEligibleAward.Tag = "70"
+        Me.cboEligibleAward.TabIndex = 32
+        Me.cboEligibleAward.Tag = "71"
         Me.ToolTip1.SetToolTip(Me.cboEligibleAward, "Select any eligible award for completing this task succesfully during the event.")
         '
         'Label36
         '
         Me.Label36.AutoSize = True
         Me.Label36.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label36.Location = New System.Drawing.Point(7, 587)
+        Me.Label36.Location = New System.Drawing.Point(7, 610)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(177, 26)
-        Me.Label36.TabIndex = 34
+        Me.Label36.TabIndex = 31
         Me.Label36.Text = "Eligible Award (SSC)"
         '
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label35.Location = New System.Drawing.Point(7, 52)
+        Me.Label35.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.163636!)
+        Me.Label35.Location = New System.Drawing.Point(7, 39)
         Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(670, 26)
+        Me.Label35.Size = New System.Drawing.Size(489, 19)
         Me.Label35.TabIndex = 1
         Me.Label35.Text = "Then also fill out the Sim local Date and Time, Duration fields and Credits (if a" &
     "ny)."
@@ -2374,10 +2358,10 @@ Partial Class Main
         '
         Me.Label34.AutoSize = True
         Me.Label34.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label34.Location = New System.Drawing.Point(7, 236)
+        Me.Label34.Location = New System.Drawing.Point(7, 249)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(128, 26)
-        Me.Label34.TabIndex = 9
+        Me.Label34.TabIndex = 14
         Me.Label34.Text = "Voice channel"
         '
         'cboVoiceChannel
@@ -2388,11 +2372,11 @@ Partial Class Main
         Me.cboVoiceChannel.FormattingEnabled = True
         Me.cboVoiceChannel.Items.AddRange(New Object() {"[Unicom 1](https://discord.com/channels/793376245915189268/793378730750771210)", "[Unicom 2](https://discord.com/channels/793376245915189268/793379061237284874)", "[Unicom 3](https://discord.com/channels/793376245915189268/793437043861487626)", "[Sim Soaring Club (PTT)](https://discord.com/channels/876123356385149009/87639782" &
                 "5934626836)", "[Flight 01](https://discord.com/channels/876123356385149009/876123356385149015)", "[Flight 02](https://discord.com/channels/876123356385149009/876130658513203230)", "[General](https://discord.com/channels/325227457445625856/448551355712274435)"})
-        Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 233)
+        Me.cboVoiceChannel.Location = New System.Drawing.Point(192, 246)
         Me.cboVoiceChannel.Name = "cboVoiceChannel"
         Me.cboVoiceChannel.Size = New System.Drawing.Size(1257, 32)
-        Me.cboVoiceChannel.TabIndex = 10
-        Me.cboVoiceChannel.Tag = "63"
+        Me.cboVoiceChannel.TabIndex = 15
+        Me.cboVoiceChannel.Tag = "64"
         Me.ToolTip1.SetToolTip(Me.cboVoiceChannel, "Select the voice channel to use for the event (from the list or enter your own).")
         '
         'cboMSFSServer
@@ -2401,31 +2385,31 @@ Partial Class Main
         Me.cboMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboMSFSServer.FormattingEnabled = True
         Me.cboMSFSServer.Items.AddRange(New Object() {"West Europe", "North Europe", "West USA", "East USA", "Southeast Asia"})
-        Me.cboMSFSServer.Location = New System.Drawing.Point(192, 197)
+        Me.cboMSFSServer.Location = New System.Drawing.Point(192, 210)
         Me.cboMSFSServer.Name = "cboMSFSServer"
         Me.cboMSFSServer.Size = New System.Drawing.Size(234, 32)
-        Me.cboMSFSServer.TabIndex = 8
-        Me.cboMSFSServer.Tag = "62"
+        Me.cboMSFSServer.TabIndex = 13
+        Me.cboMSFSServer.Tag = "63"
         Me.ToolTip1.SetToolTip(Me.cboMSFSServer, "Select the MSFS Server to use for the event.")
         '
         'Label33
         '
         Me.Label33.AutoSize = True
         Me.Label33.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label33.Location = New System.Drawing.Point(7, 200)
+        Me.Label33.Location = New System.Drawing.Point(7, 213)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(174, 26)
-        Me.Label33.TabIndex = 7
+        Me.Label33.TabIndex = 12
         Me.Label33.Text = "MSFS Server to use"
         '
         'Label32
         '
         Me.Label32.AutoSize = True
         Me.Label32.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label32.Location = New System.Drawing.Point(7, 443)
+        Me.Label32.Location = New System.Drawing.Point(7, 462)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(159, 26)
-        Me.Label32.TabIndex = 22
+        Me.Label32.TabIndex = 27
         Me.Label32.Text = "Event Description"
         '
         'txtEventDescription
@@ -2433,24 +2417,24 @@ Partial Class Main
         Me.txtEventDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEventDescription.Location = New System.Drawing.Point(192, 439)
+        Me.txtEventDescription.Location = New System.Drawing.Point(192, 458)
         Me.txtEventDescription.Multiline = True
         Me.txtEventDescription.Name = "txtEventDescription"
         Me.txtEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtEventDescription.Size = New System.Drawing.Size(1257, 139)
-        Me.txtEventDescription.TabIndex = 23
-        Me.txtEventDescription.Tag = "69"
+        Me.txtEventDescription.Size = New System.Drawing.Size(1257, 143)
+        Me.txtEventDescription.TabIndex = 28
+        Me.txtEventDescription.Tag = "70"
         Me.ToolTip1.SetToolTip(Me.txtEventDescription, "Short description of the event")
         '
         'chkUseStart
         '
         Me.chkUseStart.AutoSize = True
         Me.chkUseStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseStart.Location = New System.Drawing.Point(125, 408)
+        Me.chkUseStart.Location = New System.Drawing.Point(125, 421)
         Me.chkUseStart.Name = "chkUseStart"
         Me.chkUseStart.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseStart.TabIndex = 21
-        Me.chkUseStart.Tag = "68"
+        Me.chkUseStart.TabIndex = 26
+        Me.chkUseStart.Tag = "69"
         Me.chkUseStart.Text = "Yes"
         Me.ToolTip1.SetToolTip(Me.chkUseStart, "When checked, a task start time will be specified.")
         Me.chkUseStart.UseVisualStyleBackColor = True
@@ -2459,21 +2443,21 @@ Partial Class Main
         '
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(7, 410)
+        Me.Label29.Location = New System.Drawing.Point(7, 423)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(90, 26)
-        Me.Label29.TabIndex = 20
+        Me.Label29.TabIndex = 25
         Me.Label29.Text = "Start task"
         '
         'chkUseLaunch
         '
         Me.chkUseLaunch.AutoSize = True
         Me.chkUseLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 374)
+        Me.chkUseLaunch.Location = New System.Drawing.Point(125, 387)
         Me.chkUseLaunch.Name = "chkUseLaunch"
         Me.chkUseLaunch.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseLaunch.TabIndex = 19
-        Me.chkUseLaunch.Tag = "67"
+        Me.chkUseLaunch.TabIndex = 24
+        Me.chkUseLaunch.Tag = "68"
         Me.chkUseLaunch.Text = "Yes"
         Me.ToolTip1.SetToolTip(Me.chkUseLaunch, "When checked, a launch time will be specified.")
         Me.chkUseLaunch.UseVisualStyleBackColor = True
@@ -2482,21 +2466,21 @@ Partial Class Main
         '
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label28.Location = New System.Drawing.Point(7, 376)
+        Me.Label28.Location = New System.Drawing.Point(7, 389)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(73, 26)
-        Me.Label28.TabIndex = 18
+        Me.Label28.TabIndex = 23
         Me.Label28.Text = "Launch"
         '
         'chkUseSyncFly
         '
         Me.chkUseSyncFly.AutoSize = True
         Me.chkUseSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 340)
+        Me.chkUseSyncFly.Location = New System.Drawing.Point(125, 353)
         Me.chkUseSyncFly.Name = "chkUseSyncFly"
         Me.chkUseSyncFly.Size = New System.Drawing.Size(59, 30)
-        Me.chkUseSyncFly.TabIndex = 17
-        Me.chkUseSyncFly.Tag = "66"
+        Me.chkUseSyncFly.TabIndex = 22
+        Me.chkUseSyncFly.Tag = "67"
         Me.chkUseSyncFly.Text = "Yes"
         Me.ToolTip1.SetToolTip(Me.chkUseSyncFly, "When checked, a synchronized ""Click Fly"" will be specified.")
         Me.chkUseSyncFly.UseVisualStyleBackColor = True
@@ -2505,20 +2489,20 @@ Partial Class Main
         '
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label27.Location = New System.Drawing.Point(7, 342)
+        Me.Label27.Location = New System.Drawing.Point(7, 355)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(80, 26)
-        Me.Label27.TabIndex = 16
+        Me.Label27.TabIndex = 21
         Me.Label27.Text = "Sync Fly"
         '
         'Label25
         '
         Me.Label25.AutoSize = True
         Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label25.Location = New System.Drawing.Point(7, 271)
+        Me.Label25.Location = New System.Drawing.Point(7, 284)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(155, 26)
-        Me.Label25.TabIndex = 11
+        Me.Label25.TabIndex = 16
         Me.Label25.Text = "UTC/Zulu or local"
         '
         'chkDateTimeUTC
@@ -2527,11 +2511,11 @@ Partial Class Main
         Me.chkDateTimeUTC.Checked = True
         Me.chkDateTimeUTC.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDateTimeUTC.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 269)
+        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 282)
         Me.chkDateTimeUTC.Name = "chkDateTimeUTC"
         Me.chkDateTimeUTC.Size = New System.Drawing.Size(355, 30)
-        Me.chkDateTimeUTC.TabIndex = 12
-        Me.chkDateTimeUTC.Tag = "64"
+        Me.chkDateTimeUTC.TabIndex = 17
+        Me.chkDateTimeUTC.Tag = "65"
         Me.chkDateTimeUTC.Text = "UTC / Zulu (local time if left unchecked)"
         Me.ToolTip1.SetToolTip(Me.chkDateTimeUTC, "When checked, the specified date and time are considered as UTC or Zulu.")
         Me.chkDateTimeUTC.UseVisualStyleBackColor = True
@@ -2540,17 +2524,17 @@ Partial Class Main
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(7, 308)
+        Me.Label26.Location = New System.Drawing.Point(7, 321)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(136, 26)
-        Me.Label26.TabIndex = 14
+        Me.Label26.TabIndex = 19
         Me.Label26.Text = "Meet / Briefing"
         '
         'Label24
         '
         Me.Label24.AutoSize = True
         Me.Label24.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label24.Location = New System.Drawing.Point(7, 92)
+        Me.Label24.Location = New System.Drawing.Point(7, 64)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(183, 26)
         Me.Label24.TabIndex = 2
@@ -2570,11 +2554,11 @@ Partial Class Main
         Me.pnlEventDateTimeControls.Controls.Add(Me.lblSyncTimeResult)
         Me.pnlEventDateTimeControls.Controls.Add(Me.lblLaunchTimeResult)
         Me.pnlEventDateTimeControls.Controls.Add(Me.lblStartTimeResult)
-        Me.pnlEventDateTimeControls.Location = New System.Drawing.Point(190, 299)
+        Me.pnlEventDateTimeControls.Location = New System.Drawing.Point(190, 312)
         Me.pnlEventDateTimeControls.MinimumSize = New System.Drawing.Size(663, 139)
         Me.pnlEventDateTimeControls.Name = "pnlEventDateTimeControls"
         Me.pnlEventDateTimeControls.Size = New System.Drawing.Size(799, 139)
-        Me.pnlEventDateTimeControls.TabIndex = 15
+        Me.pnlEventDateTimeControls.TabIndex = 20
         '
         'dtEventMeetDate
         '
@@ -2584,8 +2568,8 @@ Partial Class Main
         Me.dtEventMeetDate.Location = New System.Drawing.Point(3, 4)
         Me.dtEventMeetDate.Name = "dtEventMeetDate"
         Me.dtEventMeetDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventMeetDate.TabIndex = 14
-        Me.dtEventMeetDate.Tag = "65"
+        Me.dtEventMeetDate.TabIndex = 0
+        Me.dtEventMeetDate.Tag = "66"
         Me.ToolTip1.SetToolTip(Me.dtEventMeetDate, "This is the event's meet date in the specified time zone above.")
         '
         'dtEventMeetTime
@@ -2598,8 +2582,8 @@ Partial Class Main
         Me.dtEventMeetTime.Name = "dtEventMeetTime"
         Me.dtEventMeetTime.ShowUpDown = True
         Me.dtEventMeetTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventMeetTime.TabIndex = 15
-        Me.dtEventMeetTime.Tag = "65"
+        Me.dtEventMeetTime.TabIndex = 1
+        Me.dtEventMeetTime.Tag = "66"
         Me.ToolTip1.SetToolTip(Me.dtEventMeetTime, "This is the event's meet time in the specified time zone above.")
         '
         'dtEventSyncFlyDate
@@ -2610,8 +2594,8 @@ Partial Class Main
         Me.dtEventSyncFlyDate.Location = New System.Drawing.Point(3, 38)
         Me.dtEventSyncFlyDate.Name = "dtEventSyncFlyDate"
         Me.dtEventSyncFlyDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventSyncFlyDate.TabIndex = 19
-        Me.dtEventSyncFlyDate.Tag = "66"
+        Me.dtEventSyncFlyDate.TabIndex = 3
+        Me.dtEventSyncFlyDate.Tag = "67"
         Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyDate, "This is the event's synchronized ""Click Fly"" date in the specified time zone abov" &
         "e.")
         '
@@ -2625,8 +2609,8 @@ Partial Class Main
         Me.dtEventSyncFlyTime.Name = "dtEventSyncFlyTime"
         Me.dtEventSyncFlyTime.ShowUpDown = True
         Me.dtEventSyncFlyTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventSyncFlyTime.TabIndex = 20
-        Me.dtEventSyncFlyTime.Tag = "66"
+        Me.dtEventSyncFlyTime.TabIndex = 4
+        Me.dtEventSyncFlyTime.Tag = "67"
         Me.ToolTip1.SetToolTip(Me.dtEventSyncFlyTime, "This is the event's synchronized ""Click Fly"" time in the specified time zone abov" &
         "e.")
         '
@@ -2638,8 +2622,8 @@ Partial Class Main
         Me.dtEventLaunchDate.Location = New System.Drawing.Point(3, 72)
         Me.dtEventLaunchDate.Name = "dtEventLaunchDate"
         Me.dtEventLaunchDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventLaunchDate.TabIndex = 24
-        Me.dtEventLaunchDate.Tag = "67"
+        Me.dtEventLaunchDate.TabIndex = 6
+        Me.dtEventLaunchDate.Tag = "68"
         Me.ToolTip1.SetToolTip(Me.dtEventLaunchDate, "This is the event's glider launch date in the specified time zone above.")
         '
         'dtEventLaunchTime
@@ -2653,8 +2637,8 @@ Partial Class Main
         Me.dtEventLaunchTime.Name = "dtEventLaunchTime"
         Me.dtEventLaunchTime.ShowUpDown = True
         Me.dtEventLaunchTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventLaunchTime.TabIndex = 25
-        Me.dtEventLaunchTime.Tag = "67"
+        Me.dtEventLaunchTime.TabIndex = 7
+        Me.dtEventLaunchTime.Tag = "68"
         Me.ToolTip1.SetToolTip(Me.dtEventLaunchTime, "This is the event's glider launch time in the specified time zone above.")
         '
         'dtEventStartTaskDate
@@ -2665,8 +2649,8 @@ Partial Class Main
         Me.dtEventStartTaskDate.Location = New System.Drawing.Point(3, 106)
         Me.dtEventStartTaskDate.Name = "dtEventStartTaskDate"
         Me.dtEventStartTaskDate.Size = New System.Drawing.Size(211, 31)
-        Me.dtEventStartTaskDate.TabIndex = 29
-        Me.dtEventStartTaskDate.Tag = "68"
+        Me.dtEventStartTaskDate.TabIndex = 9
+        Me.dtEventStartTaskDate.Tag = "69"
         Me.ToolTip1.SetToolTip(Me.dtEventStartTaskDate, "This is the event's task start date in the specified time zone above.")
         '
         'dtEventStartTaskTime
@@ -2679,8 +2663,8 @@ Partial Class Main
         Me.dtEventStartTaskTime.Name = "dtEventStartTaskTime"
         Me.dtEventStartTaskTime.ShowUpDown = True
         Me.dtEventStartTaskTime.Size = New System.Drawing.Size(104, 31)
-        Me.dtEventStartTaskTime.TabIndex = 30
-        Me.dtEventStartTaskTime.Tag = "68"
+        Me.dtEventStartTaskTime.TabIndex = 10
+        Me.dtEventStartTaskTime.Tag = "69"
         Me.ToolTip1.SetToolTip(Me.dtEventStartTaskTime, "This is the event's task start time in the specified time zone above.")
         '
         'lblMeetTimeResult
@@ -2692,7 +2676,7 @@ Partial Class Main
         Me.lblMeetTimeResult.Location = New System.Drawing.Point(338, 9)
         Me.lblMeetTimeResult.Name = "lblMeetTimeResult"
         Me.lblMeetTimeResult.Size = New System.Drawing.Size(157, 26)
-        Me.lblMeetTimeResult.TabIndex = 16
+        Me.lblMeetTimeResult.TabIndex = 2
         Me.lblMeetTimeResult.Text = "meet time results"
         '
         'TimeStampContextualMenu
@@ -2742,7 +2726,7 @@ Partial Class Main
         Me.lblSyncTimeResult.Location = New System.Drawing.Point(338, 43)
         Me.lblSyncTimeResult.Name = "lblSyncTimeResult"
         Me.lblSyncTimeResult.Size = New System.Drawing.Size(154, 26)
-        Me.lblSyncTimeResult.TabIndex = 21
+        Me.lblSyncTimeResult.TabIndex = 5
         Me.lblSyncTimeResult.Text = "sync time results"
         '
         'lblLaunchTimeResult
@@ -2754,7 +2738,7 @@ Partial Class Main
         Me.lblLaunchTimeResult.Location = New System.Drawing.Point(338, 77)
         Me.lblLaunchTimeResult.Name = "lblLaunchTimeResult"
         Me.lblLaunchTimeResult.Size = New System.Drawing.Size(170, 26)
-        Me.lblLaunchTimeResult.TabIndex = 26
+        Me.lblLaunchTimeResult.TabIndex = 8
         Me.lblLaunchTimeResult.Text = "launch time results"
         '
         'lblStartTimeResult
@@ -2766,13 +2750,13 @@ Partial Class Main
         Me.lblStartTimeResult.Location = New System.Drawing.Point(338, 111)
         Me.lblStartTimeResult.Name = "lblStartTimeResult"
         Me.lblStartTimeResult.Size = New System.Drawing.Size(153, 26)
-        Me.lblStartTimeResult.TabIndex = 31
+        Me.lblStartTimeResult.TabIndex = 11
         Me.lblStartTimeResult.Text = "start time results"
         '
         'tabDiscord
         '
-        Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
+        Me.tabDiscord.Controls.Add(Me.GroupBox6)
         Me.tabDiscord.Controls.Add(Me.pnlFullWorkflowTaskGroupFlight)
         Me.tabDiscord.Controls.Add(Me.grpDiscordOthers)
         Me.tabDiscord.Controls.Add(Me.txtAddOnsDetails)
@@ -2847,7 +2831,7 @@ Partial Class Main
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(249, 37)
         Me.btnDeleteEventNews.TabIndex = 3
-        Me.btnDeleteEventNews.Tag = "87"
+        Me.btnDeleteEventNews.Tag = "85"
         Me.btnDeleteEventNews.Text = "Remove event from WSG"
         Me.ToolTip1.SetToolTip(Me.btnDeleteEventNews, "Click this button to remove this group event's news entry.")
         Me.btnDeleteEventNews.UseVisualStyleBackColor = True
@@ -2862,7 +2846,7 @@ Partial Class Main
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(249, 37)
         Me.btnDeleteFromTaskBrowser.TabIndex = 2
-        Me.btnDeleteFromTaskBrowser.Tag = "87"
+        Me.btnDeleteFromTaskBrowser.Tag = "84"
         Me.btnDeleteFromTaskBrowser.Text = "Delete task from WSG"
         Me.ToolTip1.SetToolTip(Me.btnDeleteFromTaskBrowser, "Click this button to remove this task from WeSimGlide.org.")
         Me.btnDeleteFromTaskBrowser.UseVisualStyleBackColor = True
@@ -2874,7 +2858,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(90, 726)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(90, 312)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2939,7 +2923,7 @@ Partial Class Main
         Me.btnStartFullPostingWorkflow.Name = "btnStartFullPostingWorkflow"
         Me.btnStartFullPostingWorkflow.Size = New System.Drawing.Size(393, 37)
         Me.btnStartFullPostingWorkflow.TabIndex = 0
-        Me.btnStartFullPostingWorkflow.Tag = "86"
+        Me.btnStartFullPostingWorkflow.Tag = "83"
         Me.btnStartFullPostingWorkflow.Text = "Start Full Workflow for Group Flight and Task"
         Me.ToolTip1.SetToolTip(Me.btnStartFullPostingWorkflow, "Click this button to begin posting the entire details for the group flight and ta" &
         "sk.")
@@ -2965,7 +2949,7 @@ Partial Class Main
         Me.btnTaskAndGroupEventLinks.Name = "btnTaskAndGroupEventLinks"
         Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(249, 37)
         Me.btnTaskAndGroupEventLinks.TabIndex = 1
-        Me.btnTaskAndGroupEventLinks.Tag = "89"
+        Me.btnTaskAndGroupEventLinks.Tag = "87"
         Me.btnTaskAndGroupEventLinks.Text = "Task and Group Event links"
         Me.ToolTip1.SetToolTip(Me.btnTaskAndGroupEventLinks, "Click here to get a message with links to the task and group flight event posts.")
         Me.btnTaskAndGroupEventLinks.UseVisualStyleBackColor = True
@@ -2979,7 +2963,7 @@ Partial Class Main
         Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
         Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(249, 55)
         Me.btnTaskFeaturedOnGroupFlight.TabIndex = 0
-        Me.btnTaskFeaturedOnGroupFlight.Tag = "87"
+        Me.btnTaskFeaturedOnGroupFlight.Tag = "86"
         Me.btnTaskFeaturedOnGroupFlight.Text = "Task featured on group flight"
         Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
         "s to paste it in the Discord.")
@@ -3081,7 +3065,7 @@ Partial Class Main
         Me.cboTaskOwner.Size = New System.Drawing.Size(293, 30)
         Me.cboTaskOwner.Sorted = True
         Me.cboTaskOwner.TabIndex = 1
-        Me.cboTaskOwner.Tag = "62"
+        Me.cboTaskOwner.Tag = "42"
         Me.ToolTip1.SetToolTip(Me.cboTaskOwner, "Select the MSFS Server to use for the event.")
         '
         'lblUpdateDescription
@@ -3106,7 +3090,7 @@ Partial Class Main
         Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
         Me.txtLastUpdateDescription.Size = New System.Drawing.Size(381, 64)
         Me.txtLastUpdateDescription.TabIndex = 4
-        Me.txtLastUpdateDescription.Tag = "87"
+        Me.txtLastUpdateDescription.Tag = "44"
         Me.ToolTip1.SetToolTip(Me.txtLastUpdateDescription, "Enter a description for this task update")
         '
         'btnDPORecallSettings
@@ -3117,7 +3101,7 @@ Partial Class Main
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORecallSettings.TabIndex = 5
-        Me.btnDPORecallSettings.Tag = "42"
+        Me.btnDPORecallSettings.Tag = "45"
         Me.btnDPORecallSettings.Text = "Recall"
         Me.ToolTip1.SetToolTip(Me.btnDPORecallSettings, "Click to recall the remembered set of options.")
         Me.btnDPORecallSettings.UseVisualStyleBackColor = True
@@ -3130,7 +3114,7 @@ Partial Class Main
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORememberSettings.TabIndex = 6
-        Me.btnDPORememberSettings.Tag = "42"
+        Me.btnDPORememberSettings.Tag = "45"
         Me.btnDPORememberSettings.Text = "Remember"
         Me.ToolTip1.SetToolTip(Me.btnDPORememberSettings, "Click to remember (save) this set of options for future posts.")
         Me.btnDPORememberSettings.UseVisualStyleBackColor = True
@@ -3290,7 +3274,7 @@ Partial Class Main
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDPOResetToDefault.TabIndex = 7
-        Me.btnDPOResetToDefault.Tag = "42"
+        Me.btnDPOResetToDefault.Tag = "45"
         Me.btnDPOResetToDefault.Text = "Reset all"
         Me.ToolTip1.SetToolTip(Me.btnDPOResetToDefault, "Click to reset all options to the default values.")
         Me.btnDPOResetToDefault.UseVisualStyleBackColor = True
@@ -3303,7 +3287,7 @@ Partial Class Main
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartTaskPost.TabIndex = 8
-        Me.btnStartTaskPost.Tag = "43"
+        Me.btnStartTaskPost.Tag = "46"
         Me.btnStartTaskPost.Text = "Start Task Creation Workflow"
         Me.ToolTip1.SetToolTip(Me.btnStartTaskPost, "Click this button to begin posting the task's details.")
         Me.btnStartTaskPost.UseVisualStyleBackColor = True
@@ -3346,7 +3330,7 @@ Partial Class Main
         Me.txtDiscordTaskID.ReadOnly = True
         Me.txtDiscordTaskID.Size = New System.Drawing.Size(278, 30)
         Me.txtDiscordTaskID.TabIndex = 1
-        Me.txtDiscordTaskID.Tag = "24"
+        Me.txtDiscordTaskID.Tag = ""
         Me.txtDiscordTaskID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.txtDiscordTaskID, "The ID of the task on Discord, i.e., where to post results among other things")
         '
@@ -3597,7 +3581,7 @@ Partial Class Main
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORecallSettings.TabIndex = 1
-        Me.btnDGPORecallSettings.Tag = "82"
+        Me.btnDGPORecallSettings.Tag = "81"
         Me.btnDGPORecallSettings.Text = "Recall"
         Me.ToolTip1.SetToolTip(Me.btnDGPORecallSettings, "Click to recall the remembered set of options.")
         Me.btnDGPORecallSettings.UseVisualStyleBackColor = True
@@ -3610,7 +3594,7 @@ Partial Class Main
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORememberSettings.TabIndex = 2
-        Me.btnDGPORememberSettings.Tag = "82"
+        Me.btnDGPORememberSettings.Tag = "81"
         Me.btnDGPORememberSettings.Text = "Remember"
         Me.ToolTip1.SetToolTip(Me.btnDGPORememberSettings, "Click to remember (save) this set of options for future posts.")
         Me.btnDGPORememberSettings.UseVisualStyleBackColor = True
@@ -3623,7 +3607,7 @@ Partial Class Main
         Me.btnStartGroupEventPost.Name = "btnStartGroupEventPost"
         Me.btnStartGroupEventPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartGroupEventPost.TabIndex = 4
-        Me.btnStartGroupEventPost.Tag = "83"
+        Me.btnStartGroupEventPost.Tag = "82"
         Me.btnStartGroupEventPost.Text = "Start Group Flight Event Post Workflow"
         Me.ToolTip1.SetToolTip(Me.btnStartGroupEventPost, "Click this button to begin posting the group flight event's details.")
         Me.btnStartGroupEventPost.UseVisualStyleBackColor = True
@@ -3636,7 +3620,7 @@ Partial Class Main
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPOResetToDefault.TabIndex = 3
-        Me.btnDGPOResetToDefault.Tag = "82"
+        Me.btnDGPOResetToDefault.Tag = "81"
         Me.btnDGPOResetToDefault.Text = "Reset all"
         Me.ToolTip1.SetToolTip(Me.btnDGPOResetToDefault, "Click to reset all options to the default values.")
         Me.btnDGPOResetToDefault.UseVisualStyleBackColor = True
@@ -3968,7 +3952,7 @@ Partial Class Main
         Me.numWaitSecondsForFiles.Name = "numWaitSecondsForFiles"
         Me.numWaitSecondsForFiles.Size = New System.Drawing.Size(55, 30)
         Me.numWaitSecondsForFiles.TabIndex = 1
-        Me.numWaitSecondsForFiles.Tag = "84"
+        Me.numWaitSecondsForFiles.Tag = "88"
         Me.numWaitSecondsForFiles.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.numWaitSecondsForFiles, "Number of seconds to wait for Discord to process files and images (half for image" &
         "s).")
@@ -4253,6 +4237,7 @@ Partial Class Main
         Me.FileDropZone1.Name = "FileDropZone1"
         Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
         Me.FileDropZone1.TabIndex = 5
+        Me.FileDropZone1.Tag = "25"
         Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'BriefingControl1
@@ -4267,6 +4252,16 @@ Partial Class Main
         Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(7, 138)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(152, 26)
+        Me.Label6.TabIndex = 7
+        Me.Label6.Text = "Group Event URL"
         '
         'chkcboSharedWithUsers
         '
@@ -4283,6 +4278,7 @@ Partial Class Main
         Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
         Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
         Me.chkcboSharedWithUsers.TabIndex = 2
+        Me.chkcboSharedWithUsers.Tag = "43"
         '
         'Main
         '
@@ -4323,8 +4319,6 @@ Partial Class Main
         Me.Panel2.ResumeLayout(False)
         Me.grpGroupEventPost.ResumeLayout(False)
         Me.grpGroupEventPost.PerformLayout()
-        Me.grpGroupEventURL.ResumeLayout(False)
-        Me.grpGroupEventURL.PerformLayout()
         Me.grpEventTeaser.ResumeLayout(False)
         Me.grpEventTeaser.PerformLayout()
         Me.pnlEventDateTimeControls.ResumeLayout(False)
@@ -4691,7 +4685,6 @@ Partial Class Main
     Friend WithEvents cboTaskOwner As ComboBox
     Friend WithEvents chkcboSharedWithUsers As CheckedListComboBox
     Friend WithEvents Label12 As Label
-    Friend WithEvents grpGroupEventURL As GroupBox
     Friend WithEvents FlowLayoutPanel3 As FlowLayoutPanel
     Friend WithEvents FlowLayoutPanel5 As FlowLayoutPanel
     Friend WithEvents chkDGPOPublishWSGEventNews As CheckBox
@@ -4701,4 +4694,5 @@ Partial Class Main
     Friend WithEvents lblClubDiscordURL As Label
     Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
     Friend WithEvents chkDPOThreadCreation As CheckBox
+    Friend WithEvents Label6 As Label
 End Class
