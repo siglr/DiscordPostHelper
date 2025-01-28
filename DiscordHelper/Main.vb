@@ -3035,7 +3035,7 @@ Public Class Main
         If Not autoContinue Then
             'Something went wrong trying to updated the task!!
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "An error occured trying to update the task. Task was not updated on WeSimGlide.ord", "Task update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Me, "An error occured trying to update the task. Task was not updated on WeSimGlide.org", "Task update error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
         'Retrieve the updated task details
@@ -3124,6 +3124,11 @@ Public Class Main
     End Sub
 
     Private Sub CheckWhichOptionsCanBeEnabled()
+
+        If _userPermissionID = String.Empty Then
+            tabDiscord.Enabled = False
+            Exit Sub
+        End If
 
         'Is there a group selected for event news buttons
         btnDeleteEventNews.Enabled = False
