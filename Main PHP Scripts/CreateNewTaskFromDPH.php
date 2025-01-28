@@ -232,6 +232,7 @@ try {
                 BaroPressureExtraInfo = :BaroPressureExtraInfo, 
                 ExtraFilesList = :ExtraFilesList, 
                 Status = :Status,
+                LastUpdateDescription = :LastUpdateDescription,
                 OwnerName = :OwnerName, 
                 SharedWith = :SharedWith
             WHERE TaskID = :TemporaryTaskID
@@ -298,6 +299,7 @@ try {
             ':ExtraFilesList' => $extraFilesList,
             ':Status' => $taskData['Status'],
             ':TemporaryTaskID' => $taskData['TemporaryTaskID'],
+            ':LastUpdateDescription' => $taskData['LastUpdateDescription'],
             ':OwnerName' => $ownerName,
             ':SharedWith' => $sharedWith
 
