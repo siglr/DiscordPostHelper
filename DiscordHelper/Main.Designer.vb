@@ -74,6 +74,7 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -217,7 +218,6 @@ Partial Class Main
         Me.lblWSGUserName = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.btnDeleteEventNews = New System.Windows.Forms.Button()
-        Me.btnPublishEventNews = New System.Windows.Forms.Button()
         Me.btnDeleteFromTaskBrowser = New System.Windows.Forms.Button()
         Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
         Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
@@ -245,7 +245,6 @@ Partial Class Main
         Me.grpDiscordOthers = New System.Windows.Forms.GroupBox()
         Me.btnTaskAndGroupEventLinks = New System.Windows.Forms.Button()
         Me.btnTaskFeaturedOnGroupFlight = New System.Windows.Forms.Button()
-        Me.btnEventDPHXAndLinkOnly = New System.Windows.Forms.Button()
         Me.txtAddOnsDetails = New System.Windows.Forms.TextBox()
         Me.txtWaypointsDetails = New System.Windows.Forms.TextBox()
         Me.txtGroupFlightEventPost = New System.Windows.Forms.TextBox()
@@ -302,35 +301,20 @@ Partial Class Main
         Me.chkDGPOMainGroupPost = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel18 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOThreadCreation = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
         Me.FlowLayoutPanel19 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOTeaser = New System.Windows.Forms.CheckBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel23 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOEventLogistics = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel22 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPORelevantTaskDetails = New System.Windows.Forms.CheckBox()
-        Me.Label49 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel24 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOMainPost = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel20 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDGPOMapImage = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel25 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOFullDescription = New System.Windows.Forms.CheckBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.FlowLayoutPanel20 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOFilesWithFullLegend = New System.Windows.Forms.CheckBox()
-        Me.chkDGPODPHXOnly = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel21 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOFilesWithoutLegend = New System.Windows.Forms.CheckBox()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.FlowLayoutPanel26 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOAltRestrictions = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel27 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOWeatherInfo = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel28 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOWeatherChart = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel29 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOWaypoints = New System.Windows.Forms.CheckBox()
-        Me.FlowLayoutPanel30 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.chkDGPOAddOns = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel5 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDGPOPublishWSGEventNews = New System.Windows.Forms.CheckBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.numWaitSecondsForFiles = New System.Windows.Forms.NumericUpDown()
@@ -339,6 +323,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -368,9 +353,10 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.lblWSGEventAbsent = New System.Windows.Forms.Label()
+        Me.lblWSGEventExists = New System.Windows.Forms.Label()
         Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -414,16 +400,10 @@ Partial Class Main
         Me.FlowLayoutPanel18.SuspendLayout()
         Me.FlowLayoutPanel19.SuspendLayout()
         Me.FlowLayoutPanel23.SuspendLayout()
-        Me.FlowLayoutPanel22.SuspendLayout()
         Me.FlowLayoutPanel24.SuspendLayout()
-        Me.FlowLayoutPanel25.SuspendLayout()
         Me.FlowLayoutPanel20.SuspendLayout()
-        Me.FlowLayoutPanel21.SuspendLayout()
-        Me.FlowLayoutPanel26.SuspendLayout()
-        Me.FlowLayoutPanel27.SuspendLayout()
-        Me.FlowLayoutPanel28.SuspendLayout()
-        Me.FlowLayoutPanel29.SuspendLayout()
-        Me.FlowLayoutPanel30.SuspendLayout()
+        Me.FlowLayoutPanel25.SuspendLayout()
+        Me.FlowLayoutPanel5.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         CType(Me.numWaitSecondsForFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabBriefing.SuspendLayout()
@@ -1070,6 +1050,19 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'FlightPlanTabSplitter
         '
@@ -2831,11 +2824,10 @@ Partial Class Main
         Me.GroupBox6.Controls.Add(Me.lblWSGUserName)
         Me.GroupBox6.Controls.Add(Me.Label8)
         Me.GroupBox6.Controls.Add(Me.btnDeleteEventNews)
-        Me.GroupBox6.Controls.Add(Me.btnPublishEventNews)
         Me.GroupBox6.Controls.Add(Me.btnDeleteFromTaskBrowser)
         Me.GroupBox6.Location = New System.Drawing.Point(1240, 3)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Size = New System.Drawing.Size(224, 228)
+        Me.GroupBox6.Size = New System.Drawing.Size(224, 176)
         Me.GroupBox6.TabIndex = 96
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "WeSimGlide.org Extras"
@@ -2868,41 +2860,27 @@ Partial Class Main
         Me.btnDeleteEventNews.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteEventNews.Enabled = False
         Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 177)
+        Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 133)
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteEventNews.TabIndex = 99
         Me.btnDeleteEventNews.Tag = "87"
-        Me.btnDeleteEventNews.Text = "Remove event News"
+        Me.btnDeleteEventNews.Text = "Remove event from WSG"
         Me.ToolTip1.SetToolTip(Me.btnDeleteEventNews, "Click this button to remove this group event's news entry.")
         Me.btnDeleteEventNews.UseVisualStyleBackColor = True
-        '
-        'btnPublishEventNews
-        '
-        Me.btnPublishEventNews.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnPublishEventNews.Enabled = False
-        Me.btnPublishEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPublishEventNews.Location = New System.Drawing.Point(6, 134)
-        Me.btnPublishEventNews.Name = "btnPublishEventNews"
-        Me.btnPublishEventNews.Size = New System.Drawing.Size(212, 37)
-        Me.btnPublishEventNews.TabIndex = 98
-        Me.btnPublishEventNews.Tag = "87"
-        Me.btnPublishEventNews.Text = "Publish event News"
-        Me.ToolTip1.SetToolTip(Me.btnPublishEventNews, "Click this button to create or update this group event's news entry.")
-        Me.btnPublishEventNews.UseVisualStyleBackColor = True
         '
         'btnDeleteFromTaskBrowser
         '
         Me.btnDeleteFromTaskBrowser.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteFromTaskBrowser.Enabled = False
         Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 91)
+        Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 90)
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(212, 37)
         Me.btnDeleteFromTaskBrowser.TabIndex = 97
         Me.btnDeleteFromTaskBrowser.Tag = "87"
-        Me.btnDeleteFromTaskBrowser.Text = "Remove task"
-        Me.ToolTip1.SetToolTip(Me.btnDeleteFromTaskBrowser, "Click this button to remove this task for the online task browser.")
+        Me.btnDeleteFromTaskBrowser.Text = "Delete task from WSG"
+        Me.ToolTip1.SetToolTip(Me.btnDeleteFromTaskBrowser, "Click this button to remove this task from WeSimGlide.org.")
         Me.btnDeleteFromTaskBrowser.UseVisualStyleBackColor = True
         '
         'pnlWizardDiscord
@@ -2963,7 +2941,7 @@ Partial Class Main
         'pnlFullWorkflowTaskGroupFlight
         '
         Me.pnlFullWorkflowTaskGroupFlight.Controls.Add(Me.btnStartFullPostingWorkflow)
-        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(841, 71)
+        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(838, 3)
         Me.pnlFullWorkflowTaskGroupFlight.Name = "pnlFullWorkflowTaskGroupFlight"
         Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(393, 72)
         Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 3
@@ -3000,9 +2978,9 @@ Partial Class Main
         Me.grpDiscordEvent.Controls.Add(Me.Label42)
         Me.grpDiscordEvent.Controls.Add(Me.lblDiscordEventVoice)
         Me.grpDiscordEvent.Controls.Add(Me.Label39)
-        Me.grpDiscordEvent.Location = New System.Drawing.Point(841, 318)
+        Me.grpDiscordEvent.Location = New System.Drawing.Point(838, 81)
         Me.grpDiscordEvent.Name = "grpDiscordEvent"
-        Me.grpDiscordEvent.Size = New System.Drawing.Size(623, 320)
+        Me.grpDiscordEvent.Size = New System.Drawing.Size(393, 385)
         Me.grpDiscordEvent.TabIndex = 5
         Me.grpDiscordEvent.TabStop = False
         Me.grpDiscordEvent.Text = "Official Discord Event (if applicable)"
@@ -3011,7 +2989,7 @@ Partial Class Main
         '
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(239, 191)
+        Me.Label19.Location = New System.Drawing.Point(21, 259)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(237, 22)
         Me.Label19.TabIndex = 10
@@ -3020,7 +2998,7 @@ Partial Class Main
         'btnDiscordSharedEventURL
         '
         Me.btnDiscordSharedEventURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(536, 282)
+        Me.btnDiscordSharedEventURL.Location = New System.Drawing.Point(305, 345)
         Me.btnDiscordSharedEventURL.Name = "btnDiscordSharedEventURL"
         Me.btnDiscordSharedEventURL.Size = New System.Drawing.Size(81, 29)
         Me.btnDiscordSharedEventURL.TabIndex = 14
@@ -3032,9 +3010,9 @@ Partial Class Main
         'txtDiscordEventShareURL
         '
         Me.txtDiscordEventShareURL.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(23, 281)
+        Me.txtDiscordEventShareURL.Location = New System.Drawing.Point(22, 345)
         Me.txtDiscordEventShareURL.Name = "txtDiscordEventShareURL"
-        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(507, 30)
+        Me.txtDiscordEventShareURL.Size = New System.Drawing.Size(277, 30)
         Me.txtDiscordEventShareURL.TabIndex = 13
         Me.txtDiscordEventShareURL.Tag = "98"
         Me.ToolTip1.SetToolTip(Me.txtDiscordEventShareURL, "Enter the URL to the Discord post created above in step 1.")
@@ -3043,7 +3021,7 @@ Partial Class Main
         '
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(19, 249)
+        Me.Label20.Location = New System.Drawing.Point(18, 313)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(252, 22)
         Me.Label20.TabIndex = 12
@@ -3063,7 +3041,7 @@ Partial Class Main
         '
         Me.Label46.AutoSize = True
         Me.Label46.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label46.Location = New System.Drawing.Point(2, 223)
+        Me.Label46.Location = New System.Drawing.Point(1, 287)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(303, 22)
         Me.Label46.TabIndex = 11
@@ -3073,7 +3051,7 @@ Partial Class Main
         '
         Me.Label45.AutoSize = True
         Me.Label45.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label45.Location = New System.Drawing.Point(2, 191)
+        Me.Label45.Location = New System.Drawing.Point(2, 237)
         Me.Label45.Name = "Label45"
         Me.Label45.Size = New System.Drawing.Size(241, 22)
         Me.Label45.TabIndex = 9
@@ -3082,12 +3060,12 @@ Partial Class Main
         'btnEventDescriptionToClipboard
         '
         Me.btnEventDescriptionToClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventDescriptionToClipboard.Location = New System.Drawing.Point(203, 155)
+        Me.btnEventDescriptionToClipboard.Location = New System.Drawing.Point(203, 205)
         Me.btnEventDescriptionToClipboard.Name = "btnEventDescriptionToClipboard"
-        Me.btnEventDescriptionToClipboard.Size = New System.Drawing.Size(302, 29)
+        Me.btnEventDescriptionToClipboard.Size = New System.Drawing.Size(173, 29)
         Me.btnEventDescriptionToClipboard.TabIndex = 8
         Me.btnEventDescriptionToClipboard.Tag = "95"
-        Me.btnEventDescriptionToClipboard.Text = "Event Description to Clipboard"
+        Me.btnEventDescriptionToClipboard.Text = "Copy to Clipboard"
         Me.ToolTip1.SetToolTip(Me.btnEventDescriptionToClipboard, "Click this button to copy the event's full description for the Discord Event post" &
         " into the clipboard.")
         Me.btnEventDescriptionToClipboard.UseVisualStyleBackColor = True
@@ -3096,7 +3074,7 @@ Partial Class Main
         '
         Me.Label44.AutoSize = True
         Me.Label44.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label44.Location = New System.Drawing.Point(1, 158)
+        Me.Label44.Location = New System.Drawing.Point(1, 208)
         Me.Label44.Name = "Label44"
         Me.Label44.Size = New System.Drawing.Size(200, 22)
         Me.Label44.TabIndex = 7
@@ -3106,7 +3084,7 @@ Partial Class Main
         '
         Me.lblDiscordPostDateTime.AutoSize = True
         Me.lblDiscordPostDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordPostDateTime.Location = New System.Drawing.Point(276, 126)
+        Me.lblDiscordPostDateTime.Location = New System.Drawing.Point(21, 178)
         Me.lblDiscordPostDateTime.Name = "lblDiscordPostDateTime"
         Me.lblDiscordPostDateTime.Size = New System.Drawing.Size(139, 22)
         Me.lblDiscordPostDateTime.TabIndex = 6
@@ -3116,7 +3094,7 @@ Partial Class Main
         '
         Me.Label43.AutoSize = True
         Me.Label43.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label43.Location = New System.Drawing.Point(2, 126)
+        Me.Label43.Location = New System.Drawing.Point(2, 154)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(268, 22)
         Me.Label43.TabIndex = 5
@@ -3125,12 +3103,12 @@ Partial Class Main
         'btnEventTopicClipboard
         '
         Me.btnEventTopicClipboard.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventTopicClipboard.Location = New System.Drawing.Point(203, 90)
+        Me.btnEventTopicClipboard.Location = New System.Drawing.Point(203, 118)
         Me.btnEventTopicClipboard.Name = "btnEventTopicClipboard"
-        Me.btnEventTopicClipboard.Size = New System.Drawing.Size(302, 29)
+        Me.btnEventTopicClipboard.Size = New System.Drawing.Size(173, 29)
         Me.btnEventTopicClipboard.TabIndex = 4
         Me.btnEventTopicClipboard.Tag = "93"
-        Me.btnEventTopicClipboard.Text = "Event Topic to Clipboard"
+        Me.btnEventTopicClipboard.Text = "Copy to Clipboard"
         Me.ToolTip1.SetToolTip(Me.btnEventTopicClipboard, "Click this button to copy the event's topic for the Discord Event post into the c" &
         "lipboard.")
         Me.btnEventTopicClipboard.UseVisualStyleBackColor = True
@@ -3139,7 +3117,7 @@ Partial Class Main
         '
         Me.Label42.AutoSize = True
         Me.Label42.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label42.Location = New System.Drawing.Point(1, 93)
+        Me.Label42.Location = New System.Drawing.Point(1, 121)
         Me.Label42.Name = "Label42"
         Me.Label42.Size = New System.Drawing.Size(153, 22)
         Me.Label42.TabIndex = 3
@@ -3149,7 +3127,7 @@ Partial Class Main
         '
         Me.lblDiscordEventVoice.AutoSize = True
         Me.lblDiscordEventVoice.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordEventVoice.Location = New System.Drawing.Point(193, 59)
+        Me.lblDiscordEventVoice.Location = New System.Drawing.Point(21, 82)
         Me.lblDiscordEventVoice.Name = "lblDiscordEventVoice"
         Me.lblDiscordEventVoice.Size = New System.Drawing.Size(111, 22)
         Me.lblDiscordEventVoice.TabIndex = 2
@@ -3169,20 +3147,21 @@ Partial Class Main
         '
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskAndGroupEventLinks)
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
-        Me.grpDiscordOthers.Controls.Add(Me.btnEventDPHXAndLinkOnly)
-        Me.grpDiscordOthers.Location = New System.Drawing.Point(841, 149)
+        Me.grpDiscordOthers.Location = New System.Drawing.Point(1240, 182)
         Me.grpDiscordOthers.Name = "grpDiscordOthers"
-        Me.grpDiscordOthers.Size = New System.Drawing.Size(393, 163)
+        Me.grpDiscordOthers.Size = New System.Drawing.Size(224, 130)
         Me.grpDiscordOthers.TabIndex = 4
         Me.grpDiscordOthers.TabStop = False
         Me.grpDiscordOthers.Text = "Other individual posts"
         '
         'btnTaskAndGroupEventLinks
         '
+        Me.btnTaskAndGroupEventLinks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTaskAndGroupEventLinks.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 112)
+        Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 87)
         Me.btnTaskAndGroupEventLinks.Name = "btnTaskAndGroupEventLinks"
-        Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(381, 37)
+        Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(212, 37)
         Me.btnTaskAndGroupEventLinks.TabIndex = 2
         Me.btnTaskAndGroupEventLinks.Tag = "89"
         Me.btnTaskAndGroupEventLinks.Text = "Task and Group Event links"
@@ -3191,28 +3170,18 @@ Partial Class Main
         '
         'btnTaskFeaturedOnGroupFlight
         '
+        Me.btnTaskFeaturedOnGroupFlight.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnTaskFeaturedOnGroupFlight.Location = New System.Drawing.Point(6, 26)
         Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
-        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(381, 37)
+        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(212, 55)
         Me.btnTaskFeaturedOnGroupFlight.TabIndex = 0
         Me.btnTaskFeaturedOnGroupFlight.Tag = "87"
         Me.btnTaskFeaturedOnGroupFlight.Text = "Task featured on group flight"
         Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
         "s to paste it in the Discord.")
         Me.btnTaskFeaturedOnGroupFlight.UseVisualStyleBackColor = True
-        '
-        'btnEventDPHXAndLinkOnly
-        '
-        Me.btnEventDPHXAndLinkOnly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEventDPHXAndLinkOnly.Location = New System.Drawing.Point(6, 69)
-        Me.btnEventDPHXAndLinkOnly.Name = "btnEventDPHXAndLinkOnly"
-        Me.btnEventDPHXAndLinkOnly.Size = New System.Drawing.Size(381, 37)
-        Me.btnEventDPHXAndLinkOnly.TabIndex = 1
-        Me.btnEventDPHXAndLinkOnly.Tag = "88"
-        Me.btnEventDPHXAndLinkOnly.Text = "DPHX and link only"
-        Me.ToolTip1.SetToolTip(Me.btnEventDPHXAndLinkOnly, "Click this button to only include the DPHX file and link to task post.")
-        Me.btnEventDPHXAndLinkOnly.UseVisualStyleBackColor = True
         '
         'txtAddOnsDetails
         '
@@ -3259,7 +3228,7 @@ Partial Class Main
         Me.grpDiscordTask.Controls.Add(Me.grbTaskDiscord)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 635)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 613)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task"
@@ -3281,7 +3250,7 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.btnStartTaskPost)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 486)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 464)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Task Publishing Options"
@@ -3291,7 +3260,7 @@ Partial Class Main
         Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.Label12.Location = New System.Drawing.Point(6, 215)
+        Me.Label12.Location = New System.Drawing.Point(6, 193)
         Me.Label12.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(82, 22)
@@ -3305,7 +3274,7 @@ Partial Class Main
         Me.cboTaskOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboTaskOwner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.cboTaskOwner.FormattingEnabled = True
-        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 212)
+        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 190)
         Me.cboTaskOwner.Name = "cboTaskOwner"
         Me.cboTaskOwner.Size = New System.Drawing.Size(293, 30)
         Me.cboTaskOwner.Sorted = True
@@ -3318,7 +3287,7 @@ Partial Class Main
         Me.lblUpdateDescription.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblUpdateDescription.AutoSize = True
         Me.lblUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 306)
+        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 284)
         Me.lblUpdateDescription.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.lblUpdateDescription.Name = "lblUpdateDescription"
         Me.lblUpdateDescription.Size = New System.Drawing.Size(158, 22)
@@ -3330,7 +3299,7 @@ Partial Class Main
         Me.txtLastUpdateDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLastUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 331)
+        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 309)
         Me.txtLastUpdateDescription.Multiline = True
         Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
         Me.txtLastUpdateDescription.Size = New System.Drawing.Size(381, 64)
@@ -3342,7 +3311,7 @@ Partial Class Main
         '
         Me.btnDPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 401)
+        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 379)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORecallSettings.TabIndex = 2
@@ -3355,7 +3324,7 @@ Partial Class Main
         '
         Me.btnDPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 401)
+        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 379)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORememberSettings.TabIndex = 3
@@ -3516,7 +3485,7 @@ Partial Class Main
         '
         Me.btnDPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 401)
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 379)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDPOResetToDefault.TabIndex = 4
@@ -3529,7 +3498,7 @@ Partial Class Main
         '
         Me.btnStartTaskPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 442)
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 420)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartTaskPost.TabIndex = 5
@@ -3548,7 +3517,7 @@ Partial Class Main
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDAcquired)
         Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 518)
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 496)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
         Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 112)
         Me.grbTaskDiscord.TabIndex = 4
@@ -3781,9 +3750,9 @@ Partial Class Main
         'grpDiscordGroupFlight
         '
         Me.grpDiscordGroupFlight.Controls.Add(Me.grpGroupFlightEvent)
-        Me.grpDiscordGroupFlight.Location = New System.Drawing.Point(424, 3)
+        Me.grpDiscordGroupFlight.Location = New System.Drawing.Point(423, 3)
         Me.grpDiscordGroupFlight.Name = "grpDiscordGroupFlight"
-        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(405, 635)
+        Me.grpDiscordGroupFlight.Size = New System.Drawing.Size(405, 463)
         Me.grpDiscordGroupFlight.TabIndex = 1
         Me.grpDiscordGroupFlight.TabStop = False
         Me.grpDiscordGroupFlight.Text = "Group Flight Event"
@@ -3792,14 +3761,16 @@ Partial Class Main
         '
         Me.grpGroupFlightEvent.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupFlightEvent.Controls.Add(Me.lblWSGEventAbsent)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPORecallSettings)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPORememberSettings)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnStartGroupEventPost)
         Me.grpGroupFlightEvent.Controls.Add(Me.btnDGPOResetToDefault)
         Me.grpGroupFlightEvent.Controls.Add(Me.flpDiscordGroupPostOptions)
+        Me.grpGroupFlightEvent.Controls.Add(Me.lblWSGEventExists)
         Me.grpGroupFlightEvent.Location = New System.Drawing.Point(6, 27)
         Me.grpGroupFlightEvent.Name = "grpGroupFlightEvent"
-        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(393, 600)
+        Me.grpGroupFlightEvent.Size = New System.Drawing.Size(393, 428)
         Me.grpGroupFlightEvent.TabIndex = 0
         Me.grpGroupFlightEvent.TabStop = False
         Me.grpGroupFlightEvent.Text = "Group Event Publishing Options"
@@ -3808,7 +3779,7 @@ Partial Class Main
         '
         Me.btnDGPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 515)
+        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 297)
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORecallSettings.TabIndex = 4
@@ -3821,7 +3792,7 @@ Partial Class Main
         '
         Me.btnDGPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 515)
+        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 297)
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORememberSettings.TabIndex = 5
@@ -3834,7 +3805,7 @@ Partial Class Main
         '
         Me.btnStartGroupEventPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartGroupEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 556)
+        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 338)
         Me.btnStartGroupEventPost.Name = "btnStartGroupEventPost"
         Me.btnStartGroupEventPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartGroupEventPost.TabIndex = 7
@@ -3847,7 +3818,7 @@ Partial Class Main
         '
         Me.btnDGPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 513)
+        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 295)
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPOResetToDefault.TabIndex = 6
@@ -3866,23 +3837,14 @@ Partial Class Main
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel19)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.Label11)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel23)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel22)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.Label49)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel24)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel25)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.Label23)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel20)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel21)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.Label18)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel26)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel27)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel28)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel29)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel30)
+        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel25)
+        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel5)
         Me.flpDiscordGroupPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordGroupPostOptions.Location = New System.Drawing.Point(6, 25)
         Me.flpDiscordGroupPostOptions.Name = "flpDiscordGroupPostOptions"
-        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(379, 485)
+        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(379, 266)
         Me.flpDiscordGroupPostOptions.TabIndex = 0
         '
         'FlowLayoutPanel16
@@ -3942,6 +3904,7 @@ Partial Class Main
         Me.FlowLayoutPanel18.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel18.Controls.Add(Me.chkDGPOThreadCreation)
+        Me.FlowLayoutPanel18.Controls.Add(Me.FlowLayoutPanel3)
         Me.FlowLayoutPanel18.Location = New System.Drawing.Point(3, 52)
         Me.FlowLayoutPanel18.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel18.Name = "FlowLayoutPanel18"
@@ -3962,6 +3925,16 @@ Partial Class Main
         Me.chkDGPOThreadCreation.Text = "Thread creation"
         Me.ToolTip1.SetToolTip(Me.chkDGPOThreadCreation, "Select if you want to include the creation of the group event's thread.")
         Me.chkDGPOThreadCreation.UseVisualStyleBackColor = True
+        '
+        'FlowLayoutPanel3
+        '
+        Me.FlowLayoutPanel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 32)
+        Me.FlowLayoutPanel3.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
+        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(373, 26)
+        Me.FlowLayoutPanel3.TabIndex = 13
         '
         'FlowLayoutPanel19
         '
@@ -4021,48 +3994,12 @@ Partial Class Main
         "t thread.")
         Me.chkDGPOEventLogistics.UseVisualStyleBackColor = True
         '
-        'FlowLayoutPanel22
-        '
-        Me.FlowLayoutPanel22.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel22.Controls.Add(Me.chkDGPORelevantTaskDetails)
-        Me.FlowLayoutPanel22.Location = New System.Drawing.Point(3, 150)
-        Me.FlowLayoutPanel22.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel22.Name = "FlowLayoutPanel22"
-        Me.FlowLayoutPanel22.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel22.TabIndex = 6
-        '
-        'chkDGPORelevantTaskDetails
-        '
-        Me.chkDGPORelevantTaskDetails.AutoSize = True
-        Me.chkDGPORelevantTaskDetails.Checked = True
-        Me.chkDGPORelevantTaskDetails.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDGPORelevantTaskDetails.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPORelevantTaskDetails.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPORelevantTaskDetails.Name = "chkDGPORelevantTaskDetails"
-        Me.chkDGPORelevantTaskDetails.Size = New System.Drawing.Size(179, 26)
-        Me.chkDGPORelevantTaskDetails.TabIndex = 0
-        Me.chkDGPORelevantTaskDetails.Tag = "80"
-        Me.chkDGPORelevantTaskDetails.Text = "Relevant task details"
-        Me.ToolTip1.SetToolTip(Me.chkDGPORelevantTaskDetails, "Select if you want to include the relevant information about the task in the grou" &
-        "p event thread.")
-        Me.chkDGPORelevantTaskDetails.UseVisualStyleBackColor = True
-        '
-        'Label49
-        '
-        Me.Label49.Enabled = False
-        Me.Label49.Location = New System.Drawing.Point(3, 176)
-        Me.Label49.Name = "Label49"
-        Me.Label49.Size = New System.Drawing.Size(227, 20)
-        Me.Label49.TabIndex = 7
-        Me.Label49.Text = " "
-        '
         'FlowLayoutPanel24
         '
         Me.FlowLayoutPanel24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel24.Controls.Add(Me.chkDGPOMainPost)
-        Me.FlowLayoutPanel24.Location = New System.Drawing.Point(3, 196)
+        Me.FlowLayoutPanel24.Location = New System.Drawing.Point(3, 150)
         Me.FlowLayoutPanel24.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel24.Name = "FlowLayoutPanel24"
         Me.FlowLayoutPanel24.Size = New System.Drawing.Size(376, 26)
@@ -4071,6 +4008,8 @@ Partial Class Main
         'chkDGPOMainPost
         '
         Me.chkDGPOMainPost.AutoSize = True
+        Me.chkDGPOMainPost.Checked = True
+        Me.chkDGPOMainPost.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDGPOMainPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkDGPOMainPost.Location = New System.Drawing.Point(3, 3)
         Me.chkDGPOMainPost.Name = "chkDGPOMainPost"
@@ -4081,12 +4020,38 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkDGPOMainPost, "Select if you want to include the task's main information.")
         Me.chkDGPOMainPost.UseVisualStyleBackColor = True
         '
+        'FlowLayoutPanel20
+        '
+        Me.FlowLayoutPanel20.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPOMapImage)
+        Me.FlowLayoutPanel20.Location = New System.Drawing.Point(3, 176)
+        Me.FlowLayoutPanel20.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel20.Name = "FlowLayoutPanel20"
+        Me.FlowLayoutPanel20.Size = New System.Drawing.Size(376, 26)
+        Me.FlowLayoutPanel20.TabIndex = 11
+        '
+        'chkDGPOMapImage
+        '
+        Me.chkDGPOMapImage.AutoSize = True
+        Me.chkDGPOMapImage.Checked = True
+        Me.chkDGPOMapImage.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDGPOMapImage.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDGPOMapImage.Location = New System.Drawing.Point(3, 3)
+        Me.chkDGPOMapImage.Name = "chkDGPOMapImage"
+        Me.chkDGPOMapImage.Size = New System.Drawing.Size(111, 26)
+        Me.chkDGPOMapImage.TabIndex = 0
+        Me.chkDGPOMapImage.Tag = "80"
+        Me.chkDGPOMapImage.Text = "Map image"
+        Me.ToolTip1.SetToolTip(Me.chkDGPOMapImage, "Select if you want to include the file description along with the files.")
+        Me.chkDGPOMapImage.UseVisualStyleBackColor = True
+        '
         'FlowLayoutPanel25
         '
         Me.FlowLayoutPanel25.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel25.Controls.Add(Me.chkDGPOFullDescription)
-        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 222)
+        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 202)
         Me.FlowLayoutPanel25.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel25.Name = "FlowLayoutPanel25"
         Me.FlowLayoutPanel25.Size = New System.Drawing.Size(376, 26)
@@ -4095,227 +4060,52 @@ Partial Class Main
         'chkDGPOFullDescription
         '
         Me.chkDGPOFullDescription.AutoSize = True
+        Me.chkDGPOFullDescription.Checked = True
+        Me.chkDGPOFullDescription.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDGPOFullDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkDGPOFullDescription.Location = New System.Drawing.Point(3, 3)
         Me.chkDGPOFullDescription.Name = "chkDGPOFullDescription"
-        Me.chkDGPOFullDescription.Size = New System.Drawing.Size(143, 26)
+        Me.chkDGPOFullDescription.Size = New System.Drawing.Size(186, 26)
         Me.chkDGPOFullDescription.TabIndex = 0
         Me.chkDGPOFullDescription.Tag = "80"
-        Me.chkDGPOFullDescription.Text = "Full description"
+        Me.chkDGPOFullDescription.Text = "Task long description"
         Me.ToolTip1.SetToolTip(Me.chkDGPOFullDescription, "Select if you want to include the full description.")
         Me.chkDGPOFullDescription.UseVisualStyleBackColor = True
         '
-        'Label23
+        'FlowLayoutPanel5
         '
-        Me.Label23.Enabled = False
-        Me.Label23.Location = New System.Drawing.Point(3, 248)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(227, 20)
-        Me.Label23.TabIndex = 10
-        Me.Label23.Text = " "
-        '
-        'FlowLayoutPanel20
-        '
-        Me.FlowLayoutPanel20.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.FlowLayoutPanel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPOFilesWithFullLegend)
-        Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPODPHXOnly)
-        Me.FlowLayoutPanel20.Location = New System.Drawing.Point(3, 268)
-        Me.FlowLayoutPanel20.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel20.Name = "FlowLayoutPanel20"
-        Me.FlowLayoutPanel20.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel20.TabIndex = 11
+        Me.FlowLayoutPanel5.Controls.Add(Me.chkDGPOPublishWSGEventNews)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 228)
+        Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
+        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(376, 26)
+        Me.FlowLayoutPanel5.TabIndex = 12
         '
-        'chkDGPOFilesWithFullLegend
+        'chkDGPOPublishWSGEventNews
         '
-        Me.chkDGPOFilesWithFullLegend.AutoSize = True
-        Me.chkDGPOFilesWithFullLegend.Checked = True
-        Me.chkDGPOFilesWithFullLegend.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDGPOFilesWithFullLegend.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOFilesWithFullLegend.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOFilesWithFullLegend.Name = "chkDGPOFilesWithFullLegend"
-        Me.chkDGPOFilesWithFullLegend.Size = New System.Drawing.Size(148, 26)
-        Me.chkDGPOFilesWithFullLegend.TabIndex = 0
-        Me.chkDGPOFilesWithFullLegend.Tag = "80"
-        Me.chkDGPOFilesWithFullLegend.Text = "Files and legend"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOFilesWithFullLegend, "Select if you want to include the file description along with the files.")
-        Me.chkDGPOFilesWithFullLegend.UseVisualStyleBackColor = True
-        '
-        'chkDGPODPHXOnly
-        '
-        Me.chkDGPODPHXOnly.AutoSize = True
-        Me.chkDGPODPHXOnly.Checked = True
-        Me.chkDGPODPHXOnly.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkDGPODPHXOnly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPODPHXOnly.Location = New System.Drawing.Point(157, 3)
-        Me.chkDGPODPHXOnly.Name = "chkDGPODPHXOnly"
-        Me.chkDGPODPHXOnly.Size = New System.Drawing.Size(111, 26)
-        Me.chkDGPODPHXOnly.TabIndex = 1
-        Me.chkDGPODPHXOnly.Tag = "80"
-        Me.chkDGPODPHXOnly.Text = "DPHX Only"
-        Me.ToolTip1.SetToolTip(Me.chkDGPODPHXOnly, "Select if you want to include the file description along with the files.")
-        Me.chkDGPODPHXOnly.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel21
-        '
-        Me.FlowLayoutPanel21.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel21.Controls.Add(Me.chkDGPOFilesWithoutLegend)
-        Me.FlowLayoutPanel21.Location = New System.Drawing.Point(3, 294)
-        Me.FlowLayoutPanel21.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel21.Name = "FlowLayoutPanel21"
-        Me.FlowLayoutPanel21.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel21.TabIndex = 12
-        '
-        'chkDGPOFilesWithoutLegend
-        '
-        Me.chkDGPOFilesWithoutLegend.AutoSize = True
-        Me.chkDGPOFilesWithoutLegend.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOFilesWithoutLegend.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOFilesWithoutLegend.Name = "chkDGPOFilesWithoutLegend"
-        Me.chkDGPOFilesWithoutLegend.Size = New System.Drawing.Size(177, 26)
-        Me.chkDGPOFilesWithoutLegend.TabIndex = 0
-        Me.chkDGPOFilesWithoutLegend.Tag = "80"
-        Me.chkDGPOFilesWithoutLegend.Text = "Files without legend"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOFilesWithoutLegend, "Select if you want to post only the files without their description.")
-        Me.chkDGPOFilesWithoutLegend.UseVisualStyleBackColor = True
-        '
-        'Label18
-        '
-        Me.Label18.Enabled = False
-        Me.Label18.Location = New System.Drawing.Point(3, 320)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(227, 20)
-        Me.Label18.TabIndex = 13
-        Me.Label18.Text = " "
-        '
-        'FlowLayoutPanel26
-        '
-        Me.FlowLayoutPanel26.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel26.Controls.Add(Me.chkDGPOAltRestrictions)
-        Me.FlowLayoutPanel26.Location = New System.Drawing.Point(3, 340)
-        Me.FlowLayoutPanel26.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel26.Name = "FlowLayoutPanel26"
-        Me.FlowLayoutPanel26.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel26.TabIndex = 14
-        '
-        'chkDGPOAltRestrictions
-        '
-        Me.chkDGPOAltRestrictions.AutoSize = True
-        Me.chkDGPOAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOAltRestrictions.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOAltRestrictions.Name = "chkDGPOAltRestrictions"
-        Me.chkDGPOAltRestrictions.Size = New System.Drawing.Size(177, 26)
-        Me.chkDGPOAltRestrictions.TabIndex = 0
-        Me.chkDGPOAltRestrictions.Tag = "80"
-        Me.chkDGPOAltRestrictions.Text = "Altitude restrictions"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOAltRestrictions, "Select if you want to include the altitude restrictions.")
-        Me.chkDGPOAltRestrictions.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel27
-        '
-        Me.FlowLayoutPanel27.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel27.Controls.Add(Me.chkDGPOWeatherInfo)
-        Me.FlowLayoutPanel27.Location = New System.Drawing.Point(3, 366)
-        Me.FlowLayoutPanel27.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel27.Name = "FlowLayoutPanel27"
-        Me.FlowLayoutPanel27.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel27.TabIndex = 15
-        '
-        'chkDGPOWeatherInfo
-        '
-        Me.chkDGPOWeatherInfo.AutoSize = True
-        Me.chkDGPOWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOWeatherInfo.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOWeatherInfo.Name = "chkDGPOWeatherInfo"
-        Me.chkDGPOWeatherInfo.Size = New System.Drawing.Size(143, 26)
-        Me.chkDGPOWeatherInfo.TabIndex = 0
-        Me.chkDGPOWeatherInfo.Tag = "80"
-        Me.chkDGPOWeatherInfo.Text = "Weather details"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOWeatherInfo, "Select if you want to include the weather details.")
-        Me.chkDGPOWeatherInfo.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel28
-        '
-        Me.FlowLayoutPanel28.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel28.Controls.Add(Me.chkDGPOWeatherChart)
-        Me.FlowLayoutPanel28.Location = New System.Drawing.Point(3, 392)
-        Me.FlowLayoutPanel28.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel28.Name = "FlowLayoutPanel28"
-        Me.FlowLayoutPanel28.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel28.TabIndex = 16
-        '
-        'chkDGPOWeatherChart
-        '
-        Me.chkDGPOWeatherChart.AutoSize = True
-        Me.chkDGPOWeatherChart.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOWeatherChart.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOWeatherChart.Name = "chkDGPOWeatherChart"
-        Me.chkDGPOWeatherChart.Size = New System.Drawing.Size(132, 26)
-        Me.chkDGPOWeatherChart.TabIndex = 0
-        Me.chkDGPOWeatherChart.Tag = "80"
-        Me.chkDGPOWeatherChart.Text = "Weather chart"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOWeatherChart, "Select if you want to include the weather chart.")
-        Me.chkDGPOWeatherChart.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel29
-        '
-        Me.FlowLayoutPanel29.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel29.Controls.Add(Me.chkDGPOWaypoints)
-        Me.FlowLayoutPanel29.Location = New System.Drawing.Point(3, 418)
-        Me.FlowLayoutPanel29.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel29.Name = "FlowLayoutPanel29"
-        Me.FlowLayoutPanel29.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel29.TabIndex = 17
-        '
-        'chkDGPOWaypoints
-        '
-        Me.chkDGPOWaypoints.AutoSize = True
-        Me.chkDGPOWaypoints.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOWaypoints.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOWaypoints.Name = "chkDGPOWaypoints"
-        Me.chkDGPOWaypoints.Size = New System.Drawing.Size(107, 26)
-        Me.chkDGPOWaypoints.TabIndex = 0
-        Me.chkDGPOWaypoints.Tag = "80"
-        Me.chkDGPOWaypoints.Text = "Waypoints"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOWaypoints, "Select if you want to include the waypoints details.")
-        Me.chkDGPOWaypoints.UseVisualStyleBackColor = True
-        '
-        'FlowLayoutPanel30
-        '
-        Me.FlowLayoutPanel30.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel30.Controls.Add(Me.chkDGPOAddOns)
-        Me.FlowLayoutPanel30.Location = New System.Drawing.Point(3, 444)
-        Me.FlowLayoutPanel30.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.FlowLayoutPanel30.Name = "FlowLayoutPanel30"
-        Me.FlowLayoutPanel30.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel30.TabIndex = 18
-        '
-        'chkDGPOAddOns
-        '
-        Me.chkDGPOAddOns.AutoSize = True
-        Me.chkDGPOAddOns.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDGPOAddOns.Location = New System.Drawing.Point(3, 3)
-        Me.chkDGPOAddOns.Name = "chkDGPOAddOns"
-        Me.chkDGPOAddOns.Size = New System.Drawing.Size(208, 26)
-        Me.chkDGPOAddOns.TabIndex = 0
-        Me.chkDGPOAddOns.Tag = "80"
-        Me.chkDGPOAddOns.Text = "Recommended add-ons"
-        Me.ToolTip1.SetToolTip(Me.chkDGPOAddOns, "Select if you want to include the recommended add-ons.")
-        Me.chkDGPOAddOns.UseVisualStyleBackColor = True
+        Me.chkDGPOPublishWSGEventNews.AutoSize = True
+        Me.chkDGPOPublishWSGEventNews.Checked = True
+        Me.chkDGPOPublishWSGEventNews.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDGPOPublishWSGEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDGPOPublishWSGEventNews.Location = New System.Drawing.Point(3, 3)
+        Me.chkDGPOPublishWSGEventNews.Name = "chkDGPOPublishWSGEventNews"
+        Me.chkDGPOPublishWSGEventNews.Size = New System.Drawing.Size(212, 26)
+        Me.chkDGPOPublishWSGEventNews.TabIndex = 0
+        Me.chkDGPOPublishWSGEventNews.Tag = "80"
+        Me.chkDGPOPublishWSGEventNews.Text = "Publish WSG Event News"
+        Me.ToolTip1.SetToolTip(Me.chkDGPOPublishWSGEventNews, "Select if you want to include the full description.")
+        Me.chkDGPOPublishWSGEventNews.UseVisualStyleBackColor = True
         '
         'GroupBox4
         '
+        Me.GroupBox4.Controls.Add(Me.Label18)
         Me.GroupBox4.Controls.Add(Me.Label15)
         Me.GroupBox4.Controls.Add(Me.numWaitSecondsForFiles)
-        Me.GroupBox4.Location = New System.Drawing.Point(841, 3)
+        Me.GroupBox4.Location = New System.Drawing.Point(1240, 318)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(393, 62)
+        Me.GroupBox4.Size = New System.Drawing.Size(224, 62)
         Me.GroupBox4.TabIndex = 2
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "General options"
@@ -4327,14 +4117,14 @@ Partial Class Main
         Me.Label15.Location = New System.Drawing.Point(6, 27)
         Me.Label15.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(191, 22)
+        Me.Label15.Size = New System.Drawing.Size(115, 22)
         Me.Label15.TabIndex = 0
-        Me.Label15.Text = "Seconds to wait for files:"
+        Me.Label15.Text = "Delay for files:"
         '
         'numWaitSecondsForFiles
         '
         Me.numWaitSecondsForFiles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.numWaitSecondsForFiles.Location = New System.Drawing.Point(203, 25)
+        Me.numWaitSecondsForFiles.Location = New System.Drawing.Point(121, 25)
         Me.numWaitSecondsForFiles.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.numWaitSecondsForFiles.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.numWaitSecondsForFiles.Name = "numWaitSecondsForFiles"
@@ -4342,6 +4132,8 @@ Partial Class Main
         Me.numWaitSecondsForFiles.TabIndex = 1
         Me.numWaitSecondsForFiles.Tag = "84"
         Me.numWaitSecondsForFiles.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.numWaitSecondsForFiles, "Number of seconds to wait for Discord to process files and images (half for image" &
+        "s).")
         Me.numWaitSecondsForFiles.Value = New Decimal(New Integer() {5, 0, 0, 0})
         '
         'tabBriefing
@@ -4402,6 +4194,19 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'lblTaskBrowserIDAndDate
         '
         Me.lblTaskBrowserIDAndDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4452,7 +4257,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4461,7 +4266,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4478,56 +4283,56 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4548,7 +4353,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4578,7 +4383,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4612,18 +4417,31 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
-        'FileDropZone1
+        'lblWSGEventAbsent
         '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblWSGEventAbsent.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        Me.lblWSGEventAbsent.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWSGEventAbsent.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblWSGEventAbsent.Location = New System.Drawing.Point(6, 382)
+        Me.lblWSGEventAbsent.Name = "lblWSGEventAbsent"
+        Me.lblWSGEventAbsent.Size = New System.Drawing.Size(381, 33)
+        Me.lblWSGEventAbsent.TabIndex = 97
+        Me.lblWSGEventAbsent.Text = "EVENT DOES NOT EXIST ON WSG"
+        Me.lblWSGEventAbsent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblWSGEventExists
+        '
+        Me.lblWSGEventExists.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblWSGEventExists.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWSGEventExists.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblWSGEventExists.Location = New System.Drawing.Point(6, 382)
+        Me.lblWSGEventExists.Name = "lblWSGEventExists"
+        Me.lblWSGEventExists.Size = New System.Drawing.Size(381, 33)
+        Me.lblWSGEventExists.TabIndex = 97
+        Me.lblWSGEventExists.Text = "EVENT EXISTS ON WSG"
+        Me.lblWSGEventExists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblWSGEventExists.Visible = False
         '
         'chkcboSharedWithUsers
         '
@@ -4632,7 +4450,7 @@ Partial Class Main
         Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkcboSharedWithUsers.IsInitializing = False
         Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 252)
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 230)
         Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
         Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.chkcboSharedWithUsers.MaxVisibleItems = 8
@@ -4641,18 +4459,16 @@ Partial Class Main
         Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
         Me.chkcboSharedWithUsers.TabIndex = 97
         '
-        'BriefingControl1
+        'Label18
         '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
+        Me.Label18.AutoSize = True
+        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.Label18.Location = New System.Drawing.Point(182, 28)
+        Me.Label18.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(36, 22)
+        Me.Label18.TabIndex = 2
+        Me.Label18.Text = "sec"
         '
         'Main
         '
@@ -4736,26 +4552,14 @@ Partial Class Main
         Me.FlowLayoutPanel19.PerformLayout()
         Me.FlowLayoutPanel23.ResumeLayout(False)
         Me.FlowLayoutPanel23.PerformLayout()
-        Me.FlowLayoutPanel22.ResumeLayout(False)
-        Me.FlowLayoutPanel22.PerformLayout()
         Me.FlowLayoutPanel24.ResumeLayout(False)
         Me.FlowLayoutPanel24.PerformLayout()
-        Me.FlowLayoutPanel25.ResumeLayout(False)
-        Me.FlowLayoutPanel25.PerformLayout()
         Me.FlowLayoutPanel20.ResumeLayout(False)
         Me.FlowLayoutPanel20.PerformLayout()
-        Me.FlowLayoutPanel21.ResumeLayout(False)
-        Me.FlowLayoutPanel21.PerformLayout()
-        Me.FlowLayoutPanel26.ResumeLayout(False)
-        Me.FlowLayoutPanel26.PerformLayout()
-        Me.FlowLayoutPanel27.ResumeLayout(False)
-        Me.FlowLayoutPanel27.PerformLayout()
-        Me.FlowLayoutPanel28.ResumeLayout(False)
-        Me.FlowLayoutPanel28.PerformLayout()
-        Me.FlowLayoutPanel29.ResumeLayout(False)
-        Me.FlowLayoutPanel29.PerformLayout()
-        Me.FlowLayoutPanel30.ResumeLayout(False)
-        Me.FlowLayoutPanel30.PerformLayout()
+        Me.FlowLayoutPanel25.ResumeLayout(False)
+        Me.FlowLayoutPanel25.PerformLayout()
+        Me.FlowLayoutPanel5.ResumeLayout(False)
+        Me.FlowLayoutPanel5.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
         CType(Me.numWaitSecondsForFiles, System.ComponentModel.ISupportInitialize).EndInit()
@@ -5004,7 +4808,6 @@ Partial Class Main
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents toolStripReload As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
-    Friend WithEvents btnEventDPHXAndLinkOnly As Button
     Friend WithEvents lblElevationUpdateWarning As Label
     Friend WithEvents TimeStampContextualMenu As ContextMenuStrip
     Friend WithEvents GetTimeStampTimeOnlyWithoutSeconds As ToolStripMenuItem
@@ -5047,35 +4850,17 @@ Partial Class Main
     Friend WithEvents FlowLayoutPanel19 As FlowLayoutPanel
     Friend WithEvents chkDGPOTeaser As CheckBox
     Friend WithEvents FlowLayoutPanel20 As FlowLayoutPanel
-    Friend WithEvents chkDGPOFilesWithFullLegend As CheckBox
-    Friend WithEvents FlowLayoutPanel21 As FlowLayoutPanel
-    Friend WithEvents chkDGPOFilesWithoutLegend As CheckBox
-    Friend WithEvents FlowLayoutPanel22 As FlowLayoutPanel
-    Friend WithEvents chkDGPORelevantTaskDetails As CheckBox
+    Friend WithEvents chkDGPOMapImage As CheckBox
     Friend WithEvents FlowLayoutPanel23 As FlowLayoutPanel
     Friend WithEvents chkDGPOEventLogistics As CheckBox
-    Friend WithEvents Label18 As Label
     Friend WithEvents grpDiscordOthers As GroupBox
     Friend WithEvents btnSyncTitles As Button
     Friend WithEvents txtClubFullName As TextBox
-    Friend WithEvents chkDGPODPHXOnly As CheckBox
     Friend WithEvents Label19 As Label
     Friend WithEvents FlowLayoutPanel24 As FlowLayoutPanel
     Friend WithEvents chkDGPOMainPost As CheckBox
     Friend WithEvents FlowLayoutPanel25 As FlowLayoutPanel
     Friend WithEvents chkDGPOFullDescription As CheckBox
-    Friend WithEvents Label23 As Label
-    Friend WithEvents FlowLayoutPanel26 As FlowLayoutPanel
-    Friend WithEvents chkDGPOAltRestrictions As CheckBox
-    Friend WithEvents FlowLayoutPanel27 As FlowLayoutPanel
-    Friend WithEvents chkDGPOWeatherInfo As CheckBox
-    Friend WithEvents FlowLayoutPanel28 As FlowLayoutPanel
-    Friend WithEvents chkDGPOWeatherChart As CheckBox
-    Friend WithEvents FlowLayoutPanel29 As FlowLayoutPanel
-    Friend WithEvents chkDGPOWaypoints As CheckBox
-    Friend WithEvents FlowLayoutPanel30 As FlowLayoutPanel
-    Friend WithEvents chkDGPOAddOns As CheckBox
-    Friend WithEvents Label49 As Label
     Friend WithEvents lblTaskLibraryIDNotAcquired As Label
     Friend WithEvents lblTaskLibraryIDAcquired As Label
     Friend WithEvents btnDPORecallSettings As Button
@@ -5095,7 +4880,6 @@ Partial Class Main
     Friend WithEvents btnDeleteFromTaskBrowser As Button
     Friend WithEvents lblTaskBrowserIDAndDate As Label
     Friend WithEvents btnDeleteEventNews As Button
-    Friend WithEvents btnPublishEventNews As Button
     Friend WithEvents btnRepostOriginalURLPaste As Button
     Friend WithEvents txtRepostOriginalURL As TextBox
     Friend WithEvents txtLastUpdateDescription As TextBox
@@ -5114,4 +4898,10 @@ Partial Class Main
     Friend WithEvents grpGroupEventURL As GroupBox
     Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
     Friend WithEvents chkDPOWSGTaskPost As CheckBox
+    Friend WithEvents FlowLayoutPanel3 As FlowLayoutPanel
+    Friend WithEvents FlowLayoutPanel5 As FlowLayoutPanel
+    Friend WithEvents chkDGPOPublishWSGEventNews As CheckBox
+    Friend WithEvents lblWSGEventAbsent As Label
+    Friend WithEvents lblWSGEventExists As Label
+    Friend WithEvents Label18 As Label
 End Class

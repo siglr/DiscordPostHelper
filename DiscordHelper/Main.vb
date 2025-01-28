@@ -286,17 +286,10 @@ Public Class Main
             chkDGPOMainGroupPost.Checked = SessionSettings.DPO_chkDGPOMainGroupPost
             chkDGPOThreadCreation.Checked = SessionSettings.DPO_chkDGPOThreadCreation
             chkDGPOTeaser.Checked = SessionSettings.DPO_chkDGPOTeaser
-            chkDGPOFilesWithFullLegend.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
-            chkDGPOFilesWithoutLegend.Checked = SessionSettings.DPO_chkDGPOFilesWithoutLegend
-            chkDGPODPHXOnly.Checked = SessionSettings.DPO_chkDGPODPHXOnly
+            chkDGPOMapImage.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
             chkDGPOMainPost.Checked = SessionSettings.DPO_chkDGPOMainPost
             chkDGPOFullDescription.Checked = SessionSettings.DPO_chkDGPOFullDescription
-            chkDGPOAltRestrictions.Checked = SessionSettings.DPO_chkDGPOAltRestrictions
-            chkDGPOWeatherInfo.Checked = SessionSettings.DPO_chkDGPOWeatherInfo
-            chkDGPOWeatherChart.Checked = SessionSettings.DPO_chkDGPOWeatherChart
-            chkDGPOWaypoints.Checked = SessionSettings.DPO_chkDGPOWaypoints
-            chkDGPOAddOns.Checked = SessionSettings.DPO_chkDGPOAddOns
-            chkDGPORelevantTaskDetails.Checked = SessionSettings.DPO_chkDGPORelevantTaskDetails
+            chkDGPOPublishWSGEventNews.Checked = SessionSettings.DPO_chkDGPOPublishWSGEventNews
             chkDGPOEventLogistics.Checked = SessionSettings.DPO_chkDGPOEventLogistics
         End If
 
@@ -596,6 +589,7 @@ Public Class Main
                 BuildWeatherWindLayers()
                 BuildWeatherInfoResults()
                 BuildGroupFlightPost()
+                SetEventLabelAndButtons()
                 CheckWhichOptionsCanBeEnabled()
         End Select
     End Sub
@@ -1337,6 +1331,9 @@ Public Class Main
                 Exit For
             End If
         Next
+        If eventTitle = String.Empty Then
+            eventTitle = taskTitle
+        End If
 
         Return eventTitle
 
@@ -1941,10 +1938,10 @@ Public Class Main
         sb.AppendLine("## :wsg:WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
         sb.AppendLine("## 📁 Files")
-        sb.AppendLine($"DPHX : [{txtTitle.Text.Trim}.dphx](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"ZIP : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"PLN : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"WPR : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        sb.AppendLine($"**DPHX** : [{txtTitle.Text.Trim}.dphx](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"**ZIP** : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"**PLN** : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"**WPR** : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
             sb.AppendLine($" 👉 * Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
         End If
@@ -1985,9 +1982,9 @@ Public Class Main
         txtFPResults.Text = sb.ToString.Trim
 
         If txtLongDescription.Text.Trim.Length > 0 Then
-            txtFullDescriptionResults.Text = $"## 📖 Full Description{Environment.NewLine}{txtLongDescription.Text.Trim}"
+            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}{txtLongDescription.Text.Trim}"
         Else
-            txtFullDescriptionResults.Text = $"## 📖 Full Description{Environment.NewLine}None provided"
+            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}None provided"
         End If
 
         txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
@@ -2782,27 +2779,17 @@ Public Class Main
 
         Dim msg As String = String.Empty
 
+        'Map image
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty) Then
+            autoContinue = MapImageCopy(True)
+            If Not autoContinue Then
+                Return False
+            End If
+        End If
+
         'Event Logistics
         If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
             msg = $"{GroupFlightEventThreadLogistics()}"
-        End If
-
-        If chkDGPORelevantTaskDetails.Enabled AndAlso chkDGPORelevantTaskDetails.Checked Then
-
-            'Other task options after files
-            Dim altRestrictions As String = String.Empty
-            If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked Then
-                altRestrictions = txtAltRestrictions.Text.Trim
-            End If
-            Dim addOns As String = String.Empty
-            If chkDGPOAddOns.Enabled AndAlso chkDGPOAddOns.Checked Then
-                addOns = txtAddOnsDetails.Text.Trim
-            End If
-
-            msg = $"{msg}{BuildLightTaskDetailsForEventPost(altRestrictions.Length = 0,
-                                                    addOns.Length = 0,
-                                                    chkDGPOFilesWithFullLegend.Checked AndAlso (Not chkDGPODPHXOnly.Checked),
-                                                    chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked)}{Environment.NewLine}"
         End If
 
         'Main post
@@ -2811,127 +2798,38 @@ Public Class Main
             msg = $"{msg}{txtFPResults.Text.Trim}"
         End If
 
-        Clipboard.SetText(msg)
-        autoContinue = CopyContent.ShowContent(Me,
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty) Then
+            'There is a map
+            msg = $"{msg}{Environment.NewLine}## 🗺️ Map"
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
                             msg,
                             "Paste the first message in the thread and post it.",
                             "Pasting first message in group event thread",
                             New List(Of String) From {"^v"})
+            msg = String.Empty
+        End If
 
         If Not autoContinue Then Return False
 
         'Full Description
-        autoContinue = PostTaskFullDescription(autoContinue, chkDGPOFullDescription, True)
-        If Not autoContinue Then Return False
-
-        Return True
-
-    End Function
-
-    Private Function PostTaskInGroupEventPartTwo(autoContinue As Boolean) As Boolean
-
-        'Other task options after files
-        Dim altRestrictions As String = String.Empty
-        If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked Then
-            altRestrictions = txtAltRestrictions.Text.Trim
-        End If
-        If altRestrictions.Length > 0 Then
-            altRestrictions = $"{altRestrictions}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim completeWeather As String = String.Empty
-        If chkDGPOWeatherInfo.Enabled AndAlso chkDGPOWeatherInfo.Checked Then
-            completeWeather = txtWeatherFirstPart.Text.Trim & vbCrLf & vbCrLf & txtWeatherWinds.Text.Trim & vbCrLf & vbCrLf & txtWeatherClouds.Text.Trim
-        End If
-        If completeWeather.Length > 0 Then
-            completeWeather = $"{completeWeather}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim waypoints As String = String.Empty
-        If chkDGPOWaypoints.Enabled AndAlso chkDGPOWaypoints.Checked Then
-            waypoints = txtWaypointsDetails.Text.Trim
-        End If
-        If waypoints.Length > 0 Then
-            waypoints = $"{waypoints}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim addOns As String = String.Empty
-        If chkDGPOAddOns.Enabled AndAlso chkDGPOAddOns.Checked Then
-            addOns = txtAddOnsDetails.Text.Trim
-        End If
-        If addOns.Length > 0 Then
-            addOns = $"{addOns}{Environment.NewLine}{Environment.NewLine}"
-        End If
-
-        Dim msg As String = String.Empty
-        'If the weather chart is included, do Restrictions and Weather together then chart, then rest of details together.
-        'If weather chart is not included, do everything together.
-        If chkDGPOWeatherChart.Enabled AndAlso chkDGPOWeatherChart.Checked Then
-            msg = $"{altRestrictions}{completeWeather}"
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
-                                "Creating altitude restrictions and weather details post in the thread.",
-                                New List(Of String) From {"^v"})
-            If Not autoContinue Then
-                Return False
+        If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked Then
+            If msg.Trim.Length > 0 Then
+                msg = $"{msg}{Environment.NewLine}"
             End If
-            'Weather Chart
-            Dim chartImage As Drawing.Image = CopyWeatherGraphToClipboard()
-            autoContinue = CopyContent.ShowContent(Me,
-                                "Weather chart",
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the image of the weather chart as the next message in the group event's thread.",
-                                "Creating weather chart post in the thread.",
-                                New List(Of String) From {"^v"},
-                                True,
-                                numWaitSecondsForFiles.Value / 2 * 1000,
-                                chartImage)
-            If Not autoContinue Then
-                Return False
-            End If
+            msg = $"{msg}{txtFullDescriptionResults.Text.Trim}"
         End If
 
-        If addOns.Trim.Length > 0 Then
-            'There are add-ons, we must post them without the rest so the embeds are created right under
-            If msg.Trim.Length = 0 Then
-                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
-            Else
-                msg = $"{waypoints}{addOns}"
-            End If
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                            msg,
-                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
-                            "Creating remaining details up to add-ons to post in the thread.",
-                            New List(Of String) From {"^v"})
-            If Not autoContinue Then
-                Return False
-            End If
-            msg = String.Empty
-        Else
-            'No add-ons, we can post everything remaining all at once
-            If msg.Trim.Length = 0 Then
-                msg = $"{altRestrictions}{completeWeather}{waypoints}{addOns}"
-            Else
-                msg = $"{waypoints}{addOns}"
-            End If
-        End If
-
-        'Remaining details
         If msg.Trim.Length > 0 Then
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                             msg,
-                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the group event's thread.",
-                            "Creating all remaining details post in the thread.",
+                            "Paste the first message in the thread and post it.",
+                            "Pasting first message in group event thread",
                             New List(Of String) From {"^v"})
         End If
-        If Not autoContinue Then
-            Return False
-        End If
 
-        Return True
+        Return autoContinue
 
     End Function
 
@@ -3129,19 +3027,6 @@ Public Class Main
 
     End Function
 
-    Private Function PostTaskFullDescription(autoContinue As Boolean, checkOptionFullDescription As Windows.Forms.CheckBox, fromGroup As Boolean) As Boolean
-
-        If checkOptionFullDescription.Enabled AndAlso checkOptionFullDescription.Checked Then
-            autoContinue = FullDescriptionCopy(fromGroup)
-        End If
-        If Not autoContinue Then
-            Return False
-        End If
-
-        Return True
-
-    End Function
-
     Private Sub SetWarningIconOnPostOptions()
 
         Dim listOfControlsRemove As New List(Of Windows.Forms.CheckBox)
@@ -3154,15 +3039,7 @@ Public Class Main
             'Group
             listOfControlsRemove.Add(chkDGPOMainPost)
             listOfControlsRemove.Add(chkDGPOFullDescription)
-            listOfControlsRemove.Add(chkDGPOFilesWithFullLegend)
-            listOfControlsRemove.Add(chkDGPODPHXOnly)
-            listOfControlsRemove.Add(chkDGPOFilesWithoutLegend)
-            listOfControlsRemove.Add(chkDGPOAltRestrictions)
-            listOfControlsRemove.Add(chkDGPOWeatherInfo)
-            listOfControlsRemove.Add(chkDGPOWeatherChart)
-            listOfControlsRemove.Add(chkDGPOWaypoints)
-            listOfControlsRemove.Add(chkDGPOAddOns)
-            listOfControlsRemove.Add(chkDGPORelevantTaskDetails)
+            listOfControlsRemove.Add(chkDGPOMapImage)
             listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
             'Task
@@ -3171,15 +3048,7 @@ Public Class Main
             'Group
             listOfControlsAdd.Add(chkDGPOMainPost)
             listOfControlsAdd.Add(chkDGPOFullDescription)
-            listOfControlsAdd.Add(chkDGPOFilesWithFullLegend)
-            listOfControlsAdd.Add(chkDGPODPHXOnly)
-            listOfControlsAdd.Add(chkDGPOFilesWithoutLegend)
-            listOfControlsAdd.Add(chkDGPOAltRestrictions)
-            listOfControlsAdd.Add(chkDGPOWeatherInfo)
-            listOfControlsAdd.Add(chkDGPOWeatherChart)
-            listOfControlsAdd.Add(chkDGPOWaypoints)
-            listOfControlsAdd.Add(chkDGPOAddOns)
-            listOfControlsAdd.Add(chkDGPORelevantTaskDetails)
+            listOfControlsAdd.Add(chkDGPOMapImage)
             listOfControlsAdd.Add(chkDGPOEventLogistics)
         End If
 
@@ -3217,23 +3086,13 @@ Public Class Main
     Private Sub CheckWhichOptionsCanBeEnabled()
 
         'Is there a group selected for event news buttons
-        btnPublishEventNews.Enabled = False
         btnDeleteEventNews.Enabled = False
         If txtClubFullName.Text.Trim <> String.Empty Then
-            btnPublishEventNews.Enabled = UserCanCreateEvent
             btnDeleteEventNews.Enabled = UserCanDeleteEvent
         End If
 
-        If txtTitle.Text.Trim.Length > 0 Then
-            btnEventDPHXAndLinkOnly.Enabled = True
-        Else
-            btnEventDPHXAndLinkOnly.Enabled = False
-        End If
-
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
-        chkDGPOFilesWithoutLegend.Enabled = grbTaskInfo.Enabled
-        chkDGPOFilesWithFullLegend.Enabled = grbTaskInfo.Enabled
-        chkDGPOWaypoints.Enabled = grbTaskInfo.Enabled
+        chkDGPOMapImage.Enabled = grbTaskInfo.Enabled AndAlso cboBriefingMap.Text.Trim.Length > 0
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             chkDPOIncludeCoverImage.Enabled = True AndAlso grbTaskInfo.Enabled
@@ -3247,30 +3106,6 @@ Public Class Main
             chkDGPOFullDescription.Enabled = False
         Else
             chkDGPOFullDescription.Enabled = True
-        End If
-
-        If txtAltRestrictions.Text.Trim.Length = 0 Then
-            chkDGPOAltRestrictions.Enabled = False
-        Else
-            chkDGPOAltRestrictions.Enabled = True AndAlso grbTaskInfo.Enabled
-        End If
-
-        If txtWeatherFile.Text.Trim.Length + txtWeatherSummary.Text.Trim.Length = 0 Then
-            chkDGPOWeatherInfo.Enabled = False
-        Else
-            chkDGPOWeatherInfo.Enabled = True AndAlso grbTaskInfo.Enabled
-        End If
-
-        If txtWeatherFile.Text.Trim.Length = 0 Then
-            chkDGPOWeatherChart.Enabled = False
-        Else
-            chkDGPOWeatherChart.Enabled = True AndAlso grbTaskInfo.Enabled
-        End If
-
-        If txtAddOnsDetails.Text.Trim.Length = 0 Then
-            chkDGPOAddOns.Enabled = False
-        Else
-            chkDGPOAddOns.Enabled = True AndAlso grbTaskInfo.Enabled
         End If
 
         If _ClubPreset IsNot Nothing AndAlso chkActivateEvent.Checked AndAlso
@@ -3289,21 +3124,10 @@ Public Class Main
         End If
         chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
 
-        chkDGPORelevantTaskDetails.Enabled = grbTaskInfo.Enabled
-
-        chkDGPODPHXOnly.Enabled = (chkDGPOFilesWithoutLegend.Checked Or chkDGPOFilesWithFullLegend.Checked)
-
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOMainPost.Checked AndAlso
            Not chkDGPOFullDescription.Checked AndAlso
-           Not chkDGPOAltRestrictions.Checked AndAlso
-           Not chkDGPOWeatherInfo.Checked AndAlso
-           Not chkDGPOWeatherChart.Checked AndAlso
-           Not chkDGPOAddOns.Checked AndAlso
-           Not chkDGPOWaypoints.Checked AndAlso
-           Not chkDGPOFilesWithFullLegend.Checked AndAlso
-           Not chkDGPOFilesWithoutLegend.Checked AndAlso
-           Not chkDGPORelevantTaskDetails.Checked AndAlso
+           Not chkDGPOMapImage.Checked AndAlso
            Not chkDGPOEventLogistics.Checked Then
             chkDGPOThreadCreation.Enabled = False
         Else
@@ -3314,6 +3138,28 @@ Public Class Main
 
     End Sub
 
+    Private Sub SetEventLabelAndButtons()
+
+        If chkActivateEvent.Checked Then
+            Dim key As String = String.Empty
+            Dim eventDate As Date
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+
+            If VerifyNewsExists(key) = "success" Then
+                lblWSGEventExists.Visible = True
+                lblWSGEventAbsent.Visible = False
+                btnDeleteEventNews.Enabled = UserCanDeleteEvent
+            Else
+                lblWSGEventExists.Visible = False
+                lblWSGEventAbsent.Visible = True
+                btnDeleteEventNews.Enabled = False
+            End If
+        Else
+        End If
+
+    End Sub
     Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False, Optional isUpdate As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
@@ -3457,70 +3303,25 @@ Public Class Main
 
     End Function
 
-    Private Function FullDescriptionCopy(fromGroup As Boolean) As Boolean
+    Private Function MapImageCopy(Optional postingGroupEvent As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
-
-        Dim origin As String
-        If fromGroup Then
-            origin = "group event"
-        Else
-            origin = "task"
-        End If
-
-        Clipboard.SetText(txtFullDescriptionResults.Text.Trim)
-        autoContinue = CopyContent.ShowContent(Me,
-                                txtFullDescriptionResults.Text.Trim,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the full description as the next message in the {origin}'s thread.",
-                                "Creating full description post in the thread.",
-                                New List(Of String) From {"^v"})
-        If fromGroup Then
-            Return autoContinue
-        End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function FilesCopy(Optional postingGroupEvent As Boolean = False) As Boolean
-
-        Dim autoContinue As Boolean = True
-        Dim dlgResult As DialogResult
-
-        Do While _sessionModified
-            Using New Centered_MessageBox(Me)
-                dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
-            End Using
-            Select Case dlgResult
-                Case DialogResult.OK
-                    Dim e As New EventArgs
-                    btnSaveConfig_Click(Nothing, e)
-                Case DialogResult.Cancel
-                    Return False
-            End Select
-        Loop
 
         Dim allFiles As New Specialized.StringCollection
         Dim contentForMessage As New StringBuilder
-        If postingGroupEvent Then
-            GetAllFilesForMessage(allFiles, contentForMessage, chkDGPODPHXOnly.Checked)
-        Else
-            GetAllFilesForMessage(allFiles, contentForMessage)
-        End If
 
+        If cboBriefingMap.Text.Trim <> String.Empty Then
+            allFiles.Add(cboBriefingMap.Text)
+            contentForMessage.AppendLine(cboBriefingMap.Text)
+        End If
         If allFiles.Count > 0 Then
             Clipboard.SetFileDropList(allFiles)
             autoContinue = CopyContent.ShowContent(Me,
                                     contentForMessage.ToString,
-                                    $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the copied files as the next message in the thread WITHOUT posting it and come back for the text for this message.",
-                                    "Creating the files post in the thread - actual files first",
+                                    $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the map image as the next message in the thread WITHOUT posting it and come back for the text for this message.",
+                                    "Posting the map image in the thread - actual map image first",
                                     New List(Of String) From {"^v"},
                                     False)
-        Else
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "No files to copy!", "Creating the files post in the thread - actual files first", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            End Using
-            autoContinue = False
         End If
 
         Return autoContinue
@@ -3533,39 +3334,12 @@ Public Class Main
         Return urlToTaskThread
     End Function
 
-    Private Sub GetAllFilesForMessage(allFiles As StringCollection, contentForMessage As StringBuilder, Optional DPHXOnly As Boolean = False)
-        contentForMessage.AppendLine("FILES")
-        If File.Exists(txtDPHXPackageFilename.Text) Then
-            allFiles.Add(txtDPHXPackageFilename.Text)
-            contentForMessage.AppendLine(txtDPHXPackageFilename.Text)
-        End If
-        If Not DPHXOnly Then
-
-            If File.Exists(txtFlightPlanFile.Text) Then
-                allFiles.Add(txtFlightPlanFile.Text)
-                contentForMessage.AppendLine(txtFlightPlanFile.Text)
-            End If
-            If File.Exists(txtWeatherFile.Text) Then
-                allFiles.Add(txtWeatherFile.Text)
-                contentForMessage.AppendLine(txtWeatherFile.Text)
-            End If
-
-            For i = 0 To lstAllFiles.Items.Count() - 1
-                If File.Exists(lstAllFiles.Items(i)) AndAlso lstAllFiles.Items(i) <> cboCoverImage.Text Then
-                    allFiles.Add(lstAllFiles.Items(i))
-                    contentForMessage.AppendLine(lstAllFiles.Items(i))
-                End If
-            Next
-        End If
-
-    End Sub
-
     Private Function FilesTextCopy(fullLegend As Boolean, Optional postingGroupEvent As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
 
         If postingGroupEvent Then
-            BuildFileInfoText(fullLegend, chkDGPODPHXOnly.Checked)
+            BuildFileInfoText(fullLegend)
         Else
             BuildFileInfoText(fullLegend)
         End If
@@ -3675,17 +3449,10 @@ Public Class Main
         SessionSettings.DPO_chkDGPOMainGroupPost = chkDGPOMainGroupPost.Checked
         SessionSettings.DPO_chkDGPOThreadCreation = chkDGPOThreadCreation.Checked
         SessionSettings.DPO_chkDGPOTeaser = chkDGPOTeaser.Checked
-        SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOFilesWithFullLegend.Checked
-        SessionSettings.DPO_chkDGPOFilesWithoutLegend = chkDGPOFilesWithoutLegend.Checked
-        SessionSettings.DPO_chkDGPODPHXOnly = chkDGPODPHXOnly.Checked
+        SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOMapImage.Checked
         SessionSettings.DPO_chkDGPOMainPost = chkDGPOMainPost.Checked
         SessionSettings.DPO_chkDGPOFullDescription = chkDGPOFullDescription.Checked
-        SessionSettings.DPO_chkDGPOAltRestrictions = chkDGPOAltRestrictions.Checked
-        SessionSettings.DPO_chkDGPOWeatherInfo = chkDGPOWeatherInfo.Checked
-        SessionSettings.DPO_chkDGPOWeatherChart = chkDGPOWeatherChart.Checked
-        SessionSettings.DPO_chkDGPOWaypoints = chkDGPOWaypoints.Checked
-        SessionSettings.DPO_chkDGPOAddOns = chkDGPOAddOns.Checked
-        SessionSettings.DPO_chkDGPORelevantTaskDetails = chkDGPORelevantTaskDetails.Checked
+        SessionSettings.DPO_chkDGPOPublishWSGEventNews = chkDGPOPublishWSGEventNews.Checked
         SessionSettings.DPO_chkDGPOEventLogistics = chkDGPOEventLogistics.Checked
 
     End Sub
@@ -3703,18 +3470,11 @@ Public Class Main
         chkDGPOMainGroupPost.Checked = True
         chkDGPOThreadCreation.Checked = True
         chkDGPOTeaser.Checked = False
-        chkDGPOFilesWithFullLegend.Checked = True
-        chkDGPOFilesWithoutLegend.Checked = False
+        chkDGPOMapImage.Checked = True
 
-        chkDGPOMainPost.Checked = False
-        chkDGPOFullDescription.Checked = False
-        chkDGPOAltRestrictions.Checked = False
-        chkDGPOWeatherInfo.Checked = False
-        chkDGPOWeatherChart.Checked = False
-        chkDGPOWaypoints.Checked = False
-        chkDGPOAddOns.Checked = False
-
-        chkDGPORelevantTaskDetails.Checked = True
+        chkDGPOMainPost.Checked = True
+        chkDGPOFullDescription.Checked = True
+        chkDGPOPublishWSGEventNews.Checked = True
         chkDGPOEventLogistics.Checked = True
 
         CheckWhichOptionsCanBeEnabled()
@@ -3752,7 +3512,21 @@ Public Class Main
 
         If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
 
-        If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
+        If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
+           (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked) OrElse
+           (chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked) OrElse
+           (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked) Then
+            If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
+        End If
+
+        If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
+            'Update WSG task
+            If Not PrepareUpdateWSGTask() Then Exit Sub
+        End If
+
+        If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
+            PublishEventNews()
+        End If
 
     End Sub
 
@@ -3833,61 +3607,6 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnEventDPHXAndLinkOnly_Click(sender As Object, e As EventArgs) Handles btnEventDPHXAndLinkOnly.Click
-
-        If txtDiscordTaskID.Text.Trim.Length = 0 Then
-            Exit Sub
-        End If
-
-        Dim autoContinue As Boolean = True
-
-        Dim dlgResult As DialogResult
-
-        Do While _sessionModified
-            Using New Centered_MessageBox(Me)
-                dlgResult = MessageBox.Show(Me, "Latest changes have not been saved! You first need to save the session.", "Unsaved changes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
-            End Using
-            Select Case dlgResult
-                Case DialogResult.OK
-                    btnSaveConfig_Click(btnEventDPHXAndLinkOnly, e)
-                Case DialogResult.Cancel
-                    Return
-            End Select
-        Loop
-
-        Dim allFiles As New Specialized.StringCollection
-        Dim contentForMessage As New StringBuilder
-
-        GetAllFilesForMessage(allFiles, contentForMessage, True)
-
-        If allFiles.Count > 0 Then
-            Clipboard.SetFileDropList(allFiles)
-            autoContinue = CopyContent.ShowContent(Me,
-                                    contentForMessage.ToString,
-                                    "Now paste the copied files in a new post under the group event's thread and come back for the text info (coming next).",
-                                    "Posting the DPHX file only",
-                                    New List(Of String) From {"^v"},
-                                    True,
-                                    False)
-        End If
-
-        If Not autoContinue Then Exit Sub
-
-        If _TaskEntrySeqID > 0 Then
-            txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})" &
-                            $"{Environment.NewLine}[Task #{_TaskEntrySeqID}]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}) and event have been published to WeSimGlide.org so are also directly accessible through the tool."
-        Else
-            txtFilesText.Text = $"**DPHX file** for people using it and [complete task and weather details here]({GetDiscordLinkToTaskThread()})"
-        End If
-        Clipboard.SetText(txtFilesText.Text)
-        autoContinue = CopyContent.ShowContent(Me,
-                                txtFilesText.Text,
-                                "Now enter the file info In the second message In the thread And post it.",
-                                "Posting the DPHX file only",
-                                New List(Of String) From {"^v"})
-
-    End Sub
-
     Private Sub btnTaskFeaturedOnGroupFlight_Click(sender As Object, e As EventArgs) Handles btnTaskFeaturedOnGroupFlight.Click
 
         If _ClubPreset Is Nothing Then
@@ -3912,14 +3631,7 @@ Public Class Main
         If chkDGPOTeaser.Checked Then
             chkDGPOMainPost.Checked = False
             chkDGPOFullDescription.Checked = False
-            chkDGPOFilesWithoutLegend.Checked = False
-            chkDGPOFilesWithFullLegend.Checked = False
-            chkDGPOAltRestrictions.Checked = False
-            chkDGPOWeatherInfo.Checked = False
-            chkDGPOWeatherChart.Checked = False
-            chkDGPOWaypoints.Checked = False
-            chkDGPOAddOns.Checked = False
-            chkDGPORelevantTaskDetails.Checked = False
+            chkDGPOMapImage.Checked = False
             chkDGPOEventLogistics.Checked = False
         End If
 
@@ -3927,24 +3639,13 @@ Public Class Main
 
     End Sub
 
-    Private Sub chkDGPOFilesWithFullLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithFullLegend.CheckedChanged
-        If chkDGPOFilesWithFullLegend.Checked Then
-            chkDGPOFilesWithoutLegend.Checked = False
-        End If
-        chkDGPOAll_CheckedChanged(sender, e)
-    End Sub
-
-    Private Sub chkDGPOFilesWithoutLegend_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOFilesWithoutLegend.CheckedChanged
-        If chkDGPOFilesWithoutLegend.Checked Then
-            chkDGPOFilesWithFullLegend.Checked = False
-        End If
-        chkDGPOAll_CheckedChanged(sender, e)
-    End Sub
-
     Private Sub chkDGPOAll_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOEventLogistics.CheckedChanged,
-                                                                                    chkDGPORelevantTaskDetails.CheckedChanged,
                                                                                     chkDGPOFullDescription.CheckedChanged,
-                                                                                    chkDGPOMainPost.CheckedChanged, chkDGPOWeatherInfo.CheckedChanged, chkDGPOWeatherChart.CheckedChanged, chkDGPOWaypoints.CheckedChanged, chkDGPOAltRestrictions.CheckedChanged, chkDGPOAddOns.CheckedChanged
+                                                                                    chkDGPOMainPost.CheckedChanged
+
+        If _isInitiatizing Then
+            Exit Sub
+        End If
 
         If CType(sender, Windows.Forms.CheckBox).Checked Then
             chkDGPOTeaser.Checked = False
@@ -3972,14 +3673,6 @@ Public Class Main
         End If
         If Not autoContinue Then Return False
 
-        Return True
-
-    End Function
-
-    Private Function SecondPartOfGroupPost(autoContinue As Boolean) As Boolean
-
-        Dim msg As String = String.Empty
-
         'Teaser
         If chkDGPOTeaser.Enabled AndAlso chkDGPOTeaser.Checked Then
             If chkDGPOThreadCreation.Enabled AndAlso chkDGPOThreadCreation.Checked Then
@@ -3988,6 +3681,20 @@ Public Class Main
             End If
             autoContinue = GroupFlightEventTeaser()
             Return autoContinue
+        End If
+
+        Return True
+
+    End Function
+
+    Private Function SecondPartOfGroupPost(autoContinue As Boolean) As Boolean
+
+        'Must check if task is created on WSG before continuing
+        If Not (_TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The task must be published on WeSimGlide.org before continuing group event posting.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+            Return True
         End If
 
         'Thread
@@ -3999,27 +3706,6 @@ Public Class Main
         'Second part of Group Flight Event - task part one
         autoContinue = PostTaskInGroupEventPartOne(autoContinue)
         If Not autoContinue Then Return False
-
-        'Files
-        If (chkDGPOFilesWithFullLegend.Enabled AndAlso chkDGPOFilesWithFullLegend.Checked) OrElse (chkDGPOFilesWithoutLegend.Enabled AndAlso chkDGPOFilesWithoutLegend.Checked) Then
-            autoContinue = FilesCopy(True)
-            If autoContinue Then
-                'Files text (description or simple Files heading)
-                autoContinue = FilesTextCopy(chkDGPOFilesWithFullLegend.Checked, True)
-                If Not autoContinue Then
-                    Return False
-                End If
-            Else
-                Return False
-            End If
-        End If
-
-        If Not autoContinue Then Return False
-
-        'Second part of Group Flight Event - task part two
-        autoContinue = PostTaskInGroupEventPartTwo(autoContinue)
-        If Not autoContinue Then Return False
-
 
         Return True
 
@@ -4057,7 +3743,7 @@ Public Class Main
             End If
             If txtGroupEventPostURL.Text = String.Empty Then
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it below in the URL field.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show(Me, "Take a minute to copy the Discord link to the group flight event you've just created and paste it in the URL field on the Event's tab.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Using
                 autoContinue = False
             End If
@@ -4169,15 +3855,7 @@ Public Class Main
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
         logisticInstructions.AppendLine()
-        logisticInstructions.AppendLine($"*Don't forget to review the details for this group flight event (first post of the thread).*")
-        logisticInstructions.AppendLine()
-        logisticInstructions.AppendLine("**Use this thread only to discuss logistics for this event!**")
-        logisticInstructions.AppendLine("> Please focus on:")
-        logisticInstructions.AppendLine("> - Event logistics, such as meet-up times and locations")
-        logisticInstructions.AppendLine("> - Asking for help to join and participate to this event")
-        logisticInstructions.AppendLine("> - Providing feedback on the **event's** organization and coordination")
         If Not txtDiscordTaskID.Text = String.Empty Then
-            logisticInstructions.AppendLine("### 🏁 For posting results, screenshots, and task feedback, please head over to the task's thread!")
             logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
         End If
 
@@ -4317,7 +3995,7 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        If chkDGPOFilesWithFullLegend.Checked OrElse chkDGPOFilesWithoutLegend.Checked Then
+        If chkDGPOMapImage.Checked Then
             sb.AppendLine($"📁 All files are shared inside the thread below")
             sb.AppendLine()
         Else
@@ -4949,7 +4627,8 @@ Public Class Main
                 SetDiscordGuidePanelToRight()
                 pnlWizardDiscord.Top = 225
                 lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with only the DPHX file and link to task post."
-                SetFocusOnField(btnEventDPHXAndLinkOnly, fromF1Key)
+                'SetFocusOnField(btnEventDPHXAndLinkOnly, fromF1Key)
+                'TODO: REORDER WIZARD
 
             Case 89 'Task and Group Event Links
                 SetDiscordGuidePanelToRight()
@@ -5634,6 +5313,7 @@ Public Class Main
 
             If _TaskEntrySeqID > 0 Then
                 GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+            Else
                 SetTBTaskDetailsLabel()
             End If
             'BuildFPResults()
@@ -5770,111 +5450,6 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub btnPublishEventNews_Click(sender As Object, e As EventArgs) Handles btnPublishEventNews.Click
-        If UserCanCreateEvent Then
-            Dim key As String
-            Dim eventDate As Date
-            Dim comments As String = String.Empty
-
-            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
-            eventDate = eventDate.ToUniversalTime
-            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
-
-            Dim eventSyncDate As Date
-            Dim eventLaunchDate As Date
-            Dim eventStartDate As Date
-            eventSyncDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventSyncFlyDate.Value, dtEventSyncFlyTime.Value, chkDateTimeUTC.Checked)
-            eventSyncDate = eventSyncDate.ToUniversalTime
-            eventLaunchDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventLaunchDate.Value, dtEventLaunchTime.Value, chkDateTimeUTC.Checked)
-            eventLaunchDate = eventLaunchDate.ToUniversalTime
-            eventStartDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventStartTaskDate.Value, dtEventStartTaskTime.Value, chkDateTimeUTC.Checked)
-            eventStartDate = eventStartDate.ToUniversalTime
-
-            If chkEventTeaser.Checked AndAlso txtEventTeaserMessage.Text.Trim <> String.Empty Then
-                comments = txtEventTeaserMessage.Text.Trim
-            ElseIf txtEventDescription.Text.Trim <> String.Empty Then
-                comments = txtEventDescription.Text.Trim
-            Else
-                comments = txtShortDescription.Text.Trim
-            End If
-
-            Dim urlBeginnerGuide As String = String.Empty
-            Select Case cboBeginnersGuide.Text
-                Case "Other (provide link below)"
-                    If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
-                        urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
-                    End If
-                Case "The Beginner's Guide to Soaring Events (GotGravel)"
-                    urlBeginnerGuide = "[The Beginner's Guide to Soaring Events (GotGravel)](https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529)"
-                Case "How to join our Group Flights (Sim Soaring Club)"
-                    urlBeginnerGuide = "[How to join our Group Flights (Sim Soaring Club)](https://discord.com/channels/876123356385149009/1038819881396744285)"
-                Case Else
-            End Select
-
-            Dim notam As String = String.Empty
-
-            'Complete notam with notices like barometric pressure and altitude restrictions
-            If txtAltRestrictions.Text.Trim.Length > 0 Then
-                notam = $"This task contains altitude restrictions!<br>"
-            End If
-            If txtBaroPressureExtraInfo.Enabled AndAlso txtBaroPressureExtraInfo.Text.Trim <> String.Empty Then
-                notam = $"{notam}{txtBaroPressureExtraInfo.Text.Trim}<br>"
-            End If
-            If notam <> String.Empty Then
-                notam = $"<strong>NOTAMs:</strong><br>{notam}"
-            End If
-
-            Dim result As Boolean = PublishEventNews(key,
-                                                    txtClubFullName.Text.Trim,
-                                                    txtEventTitle.Text.Trim,
-                                                    comments,
-                                                    eventDate,
-                                                    Now.ToUniversalTime,
-                                                    _TaskEntrySeqID,
-                                                    txtGroupEventPostURL.Text.Trim,
-                                                    eventDate.AddHours(3),
-                                                    txtTrackerGroup.Text,
-                                                    eventDate,
-                                                    chkUseSyncFly.Checked,
-                                                    eventSyncDate,
-                                                    chkUseLaunch.Checked,
-                                                    eventLaunchDate,
-                                                    chkUseStart.Checked,
-                                                    eventStartDate,
-                                                    txtEventDescription.Text.Trim,
-                                                    chkEventTeaser.Checked,
-                                                    txtEventTeaserMessage.Text.Trim,
-                                                    txtEventTeaserAreaMapImage.Text.Trim,
-                                                    cboVoiceChannel.Text.Trim,
-                                                    cboMSFSServer.Text.Trim,
-                                                    cboEligibleAward.Text.Trim,
-                                                    urlBeginnerGuide,
-                                                    notam)
-
-            If result Then
-                Dim msgForEventHunters As String = String.Empty
-                If _TaskEntrySeqID > 0 Then
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)})"
-                Else
-                    msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### Please monitor the original event as task has not been published yet."
-                End If
-                Clipboard.SetText(msgForEventHunters)
-
-                CopyContent.ShowContent(Me,
-                                msgForEventHunters,
-                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
-                                "Sharing WeSimGlide.org Task and Group Event links",
-                                New List(Of String) From {"^v"})
-
-            Else
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Failed to publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-            End If
-
-        End If
-
-    End Sub
 
 #End Region
 
@@ -6672,7 +6247,7 @@ Public Class Main
                                  beginnersGuide As String,
                                  notam As String) As Boolean
 
-        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNews.php"
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNewsWithRights.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
 
@@ -6713,7 +6288,8 @@ Public Class Main
                 {"MSFSServer", msfsServer},
                 {"EligibleAward", eligibleAward},
                 {"BeginnersGuide", beginnersGuide},
-                {"Notam", notam}
+                {"Notam", notam},
+                {"UserID", _userPermissionID}
             }
 
                 For Each field In fields
@@ -6762,6 +6338,98 @@ Public Class Main
                 MessageBox.Show(Me, $"Error publishing event news: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Return False
+        End Try
+    End Function
+
+    Public Function DeleteEventNews(key As String) As Boolean
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNewsWithRights.php"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "POST"
+
+        ' Create boundary for multipart/form-data
+        Dim boundary As String = "----WebKitFormBoundary" & DateTime.Now.Ticks.ToString("x")
+        request.ContentType = "multipart/form-data; boundary=" & boundary
+
+        Try
+            Using memStream As New MemoryStream()
+                Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
+                Dim endBoundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & "--" & vbCrLf)
+
+                ' Add form fields
+                Dim fields As New Dictionary(Of String, String) From {
+                {"action", "DeleteEvent"},
+                {"Key", key},
+                {"UserID", _userPermissionID}
+            }
+
+                For Each field In fields
+                    memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
+                    Dim fieldData As String = $"Content-Disposition: form-data; name=""{field.Key}""" & vbCrLf & vbCrLf & field.Value
+                    Dim fieldBytes As Byte() = Encoding.UTF8.GetBytes(fieldData)
+                    memStream.Write(fieldBytes, 0, fieldBytes.Length)
+                Next
+
+                ' Write the end boundary
+                memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
+                request.ContentLength = memStream.Length
+
+                ' Send the request
+                Using requestStream As Stream = request.GetRequestStream()
+                    memStream.Position = 0
+                    memStream.CopyTo(requestStream)
+                End Using
+            End Using
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    ' Parse response
+                    Dim result As Dictionary(Of String, Object) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+                    If result("status").ToString = "success" Then
+                        Return True
+                    Else
+                        Throw New Exception(result("message".ToString))
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle exceptions
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error deleting event news: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
+
+    Private Function VerifyNewsExists(key As String) As String
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}VerifyNewsExists.php?key={key}"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "GET"
+
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+
+                    ' Parse the JSON response to extract the status
+                    Dim json As JObject = JObject.Parse(jsonResponse)
+
+                    ' Check if the status is "success" or "notfound"
+                    If json("status").ToString() = "success" Then
+                        Return "success" ' Key exists
+                    ElseIf json("status").ToString() = "notfound" Then
+                        Return "notfound" ' Key does not exist
+                    Else
+                        ' Unexpected response
+                        Return "error"
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle the exception (log the error, show a message, etc.)
+            ' Return "error" if an exception occurs
+            Return "error"
         End Try
     End Function
 
@@ -6823,6 +6491,135 @@ Public Class Main
         End If
     End Sub
 
+    Private Sub PrepareDeleteEventNews()
+        If UserCanDeleteEvent Then
+            Dim key As String = String.Empty
+            Dim eventDate As Date
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+            Dim result As Boolean = DeleteEventNews(key)
+            If result Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("The event news was deleted.", "Deleting event news entry", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
+            End If
+            SetEventLabelAndButtons()
+        Else
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Sorry, you are not allowed to delete an event news.", "Deleting event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End If
+    End Sub
+    Private Sub PublishEventNews()
+        If UserCanCreateEvent Then
+            Dim key As String
+            Dim eventDate As Date
+            Dim comments As String = String.Empty
+
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+
+            Dim eventSyncDate As Date
+            Dim eventLaunchDate As Date
+            Dim eventStartDate As Date
+            eventSyncDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventSyncFlyDate.Value, dtEventSyncFlyTime.Value, chkDateTimeUTC.Checked)
+            eventSyncDate = eventSyncDate.ToUniversalTime
+            eventLaunchDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventLaunchDate.Value, dtEventLaunchTime.Value, chkDateTimeUTC.Checked)
+            eventLaunchDate = eventLaunchDate.ToUniversalTime
+            eventStartDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventStartTaskDate.Value, dtEventStartTaskTime.Value, chkDateTimeUTC.Checked)
+            eventStartDate = eventStartDate.ToUniversalTime
+
+            If chkEventTeaser.Checked AndAlso txtEventTeaserMessage.Text.Trim <> String.Empty Then
+                comments = txtEventTeaserMessage.Text.Trim
+            ElseIf txtEventDescription.Text.Trim <> String.Empty Then
+                comments = txtEventDescription.Text.Trim
+            Else
+                comments = txtShortDescription.Text.Trim
+            End If
+
+            Dim urlBeginnerGuide As String = String.Empty
+            Select Case cboBeginnersGuide.Text
+                Case "Other (provide link below)"
+                    If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
+                        urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
+                    End If
+                Case "The Beginner's Guide to Soaring Events (GotGravel)"
+                    urlBeginnerGuide = "[The Beginner's Guide to Soaring Events (GotGravel)](https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529)"
+                Case "How to join our Group Flights (Sim Soaring Club)"
+                    urlBeginnerGuide = "[How to join our Group Flights (Sim Soaring Club)](https://discord.com/channels/876123356385149009/1038819881396744285)"
+                Case Else
+            End Select
+
+            Dim notam As String = String.Empty
+
+            'Complete notam with notices like barometric pressure and altitude restrictions
+            If txtAltRestrictions.Text.Trim.Length > 0 Then
+                notam = $"This task contains altitude restrictions!<br>"
+            End If
+            If txtBaroPressureExtraInfo.Enabled AndAlso txtBaroPressureExtraInfo.Text.Trim <> String.Empty Then
+                notam = $"{notam}{txtBaroPressureExtraInfo.Text.Trim}<br>"
+            End If
+            If notam <> String.Empty Then
+                notam = $"<strong>NOTAMs:</strong><br>{notam}"
+            End If
+
+            Dim result As Boolean = PublishEventNews(key,
+                                                    txtClubFullName.Text.Trim,
+                                                    txtEventTitle.Text.Trim,
+                                                    comments,
+                                                    eventDate,
+                                                    Now.ToUniversalTime,
+                                                    _TaskEntrySeqID,
+                                                    txtGroupEventPostURL.Text.Trim,
+                                                    eventDate.AddHours(3),
+                                                    txtTrackerGroup.Text,
+                                                    eventDate,
+                                                    chkUseSyncFly.Checked,
+                                                    eventSyncDate,
+                                                    chkUseLaunch.Checked,
+                                                    eventLaunchDate,
+                                                    chkUseStart.Checked,
+                                                    eventStartDate,
+                                                    txtEventDescription.Text.Trim,
+                                                    chkEventTeaser.Checked,
+                                                    txtEventTeaserMessage.Text.Trim,
+                                                    txtEventTeaserAreaMapImage.Text.Trim,
+                                                    cboVoiceChannel.Text.Trim,
+                                                    cboMSFSServer.Text.Trim,
+                                                    cboEligibleAward.Text.Trim,
+                                                    urlBeginnerGuide,
+                                                    notam)
+
+            If result Then
+                SetEventLabelAndButtons()
+                Dim msgForEventHunters As String = String.Empty
+                If _TaskEntrySeqID > 0 Then
+                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}]({SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)})"
+                Else
+                    msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}]({SupportingFeatures.GetWeSimGlideEventURL(key)}){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+                End If
+                Clipboard.SetText(msgForEventHunters)
+
+                CopyContent.ShowContent(Me,
+                                msgForEventHunters,
+                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
+                                "Sharing WeSimGlide.org Task and Group Event links",
+                                New List(Of String) From {"^v"})
+
+            Else
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("Failed to publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnDeleteEventNews_Click(sender As Object, e As EventArgs) Handles btnDeleteEventNews.Click
+        PrepareDeleteEventNews()
+    End Sub
 
 #End Region
 
