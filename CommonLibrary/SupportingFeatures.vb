@@ -24,10 +24,10 @@ Imports System.Web.UI.HtmlControls
 Public Class SupportingFeatures
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
-    Private Const WeSimGlide As String = "https://wesimglide.org/"
     Private Const SW_RESTORE As Integer = 9
     Private Const MSFSSoaringToolsDiscordID As String = "1022705603489042472"
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
+    Private Const MSFSWSGAnnouncementsDiscordID As String = "1266809849266831390"
     Private Const MSFSSoaringToolsPrivateTestingID As String = "1067288937527246868"
 
     Public Enum DiscordTimeStampFormat As Integer
@@ -45,6 +45,13 @@ Public Class SupportingFeatures
         TaskBrowserAdmin = 4
     End Enum
 
+    Public Enum WSGTaskStatus As Integer
+        NotCreated = 0
+        PendingCreation = 10
+        Inactive = 20
+        Active = 99
+    End Enum
+
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
     Public ReadOnly KnownDesigners As New List(Of String)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
@@ -60,6 +67,46 @@ Public Class SupportingFeatures
     Public Const GWL_STYLE As Integer = (-16)
     Public Const WS_VSCROLL As Integer = &H200000
     Public Const WS_HSCROLL As Integer = &H100000
+
+    Public Shared ReadOnly Property TaskLibraryDiscordURL As String
+        Get
+            If Not _useTestServer Then
+                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsLibraryID}"
+            Else
+                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsPrivateTestingID}"
+            End If
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property WSGAnnouncementsDiscordURL As String
+        Get
+            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSWSGAnnouncementsDiscordID}"
+        End Get
+    End Property
+
+    Public Shared Function TaskThreadDiscordURL(taskID As String) As String
+        Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{taskID}"
+    End Function
+
+    Public Shared Function GetTaskThreadURLFromGroupURL(discordMessageUrl As String) As String
+        Try
+            ' Split the URL by slashes
+            Dim urlParts As String() = discordMessageUrl.Split("/"c)
+
+            ' Ensure the URL has the expected structure
+            If urlParts.Length >= 7 Then
+                ' Reconstruct the URL without the second ID (6th part is the thread ID)
+                Dim baseUrl As String = $"{urlParts(0)}//{urlParts(2)}/channels/{urlParts(4)}/{urlParts(6)}"
+                Return baseUrl
+            Else
+                ' Return the original URL if the structure is not as expected
+                Return discordMessageUrl
+            End If
+        Catch ex As Exception
+            ' Handle any errors gracefully and return the original URL
+            Return discordMessageUrl
+        End Try
+    End Function
 
     Public Shared ReadOnly Property ClientRunning As ClientApp
         Get
@@ -122,11 +169,48 @@ Public Class SupportingFeatures
             Dim startTaskDelay As Integer = Integer.Parse(eventNode("StartTaskDelay").InnerText)
             Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
             Dim beginnerLink As String = eventNode("BeginnerLink").InnerText
+            Dim forceSyncFly As Boolean = Boolean.Parse(eventNode("ForceSyncFly").InnerText)
+            Dim forceLaunch As Boolean = Boolean.Parse(eventNode("ForceLaunch").InnerText)
+            Dim forceStartTask As Boolean = Boolean.Parse(eventNode("ForceStartTask").InnerText)
+            Dim discordURL As String = eventNode("DiscordURL").InnerText
 
-            Dim presetEvent As New PresetEvent(clubId, clubName, clubFullName, trackerGroup, emoji, eventNewsID, msfsServer, voiceChannel, dayOfWeek, zuluTime, syncFlyDelay, launchDelay, startTaskDelay, eligibleAward, beginnerLink)
+            Dim presetEvent As New PresetEvent(clubId,
+                                               clubName,
+                                               clubFullName,
+                                               trackerGroup,
+                                               emoji,
+                                               eventNewsID,
+                                               msfsServer,
+                                               voiceChannel,
+                                               dayOfWeek,
+                                               zuluTime,
+                                               syncFlyDelay,
+                                               launchDelay,
+                                               startTaskDelay,
+                                               eligibleAward,
+                                               beginnerLink,
+                                               forceSyncFly,
+                                               forceLaunch,
+                                               forceStartTask,
+                                               discordURL)
+
             DefaultKnownClubEvents.Add(clubId, presetEvent)
         Next
     End Sub
+
+    Public Function ListOfAllTrackerGroups() As List(Of String)
+
+        Dim theList As New List(Of String)
+
+        For Each club As PresetEvent In DefaultKnownClubEvents.Values
+            If Not theList.Contains(club.TrackerGroup) Then
+                theList.Add(club.TrackerGroup)
+            End If
+        Next
+
+        Return theList
+
+    End Function
 
     Public Sub PopulateSoaringClubList(ByVal ctlControl As IList)
 
@@ -2230,6 +2314,10 @@ Public Class SupportingFeatures
 
         Return targetHandle
     End Function
+    Public Shared Function BringDiscordToTop() As IntPtr
+        Return SupportingFeatures.BringWindowToTopWithPartialTitle(" - Discord")
+    End Function
+
     Public Shared Sub BringDPHToolToTop(handle As IntPtr)
         NativeMethods.SetForegroundWindow(handle)
     End Sub
@@ -2543,16 +2631,20 @@ Public Class SupportingFeatures
 
     Private Shared _useTestServer As Boolean = False
     Private Shared _testServerAskedOnce As Boolean = False
+
+    Private Shared Sub AskTestServer()
+        If Not _testServerAskedOnce Then
+            If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
+                _useTestServer = True
+            Else
+                _useTestServer = False
+            End If
+            _testServerAskedOnce = True
+        End If
+    End Sub
     Public Shared Function SIGLRDiscordPostHelperFolder() As String
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
+            AskTestServer()
             If _useTestServer Then
                 Return "https://siglr.com/DiscordPostHelperTest/"
             Else
@@ -2564,14 +2656,7 @@ Public Class SupportingFeatures
     Public Shared Function TasksDatabase() As String
 
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
+            AskTestServer()
             If _useTestServer Then
                 Return "TasksDatabaseTest.db"
             Else
@@ -2583,21 +2668,10 @@ Public Class SupportingFeatures
 
     Public Shared Function WeSimGlideView() As String
         If Debugger.IsAttached Then
-            If Not _testServerAskedOnce Then
-                If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                    _useTestServer = True
-                Else
-                    _useTestServer = False
-                End If
-                _testServerAskedOnce = True
-            End If
-            If _useTestServer Then
-                Return "https://soaring.siglr.com/integrated.html?appContext=true"
-            Else
-                Return "https://wesimglide.org/integrated.html?appContext=true"
-            End If
+            AskTestServer()
+            Return $"{WeSimGlide}/integrated.html?appContext=true"
         End If
-        Return "https://wesimglide.org/integrated.html?appContext=true"
+        Return $"{WeSimGlide}integrated.html?appContext=true"
 
     End Function
 
@@ -2635,6 +2709,15 @@ Public Class SupportingFeatures
         End Try
     End Function
 
+    Public Shared ReadOnly Property WeSimGlide As String
+        Get
+            If _useTestServer Then
+                Return "https://soaring.siglr.com/"
+            Else
+                Return "https://wesimglide.org/"
+            End If
+        End Get
+    End Property
 End Class
 
 

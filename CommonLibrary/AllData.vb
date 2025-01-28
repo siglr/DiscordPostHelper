@@ -220,9 +220,6 @@ Public Class AllData
     <XmlElement("URLGroupEventPost")>
     Public Property URLGroupEventPost As String
 
-    <XmlElement("URLDiscordEventInvite")>
-    Public Property URLDiscordEventInvite As String
-
     <XmlElement("IncludeServerInvite")>
     Public Property IncludeServerInvite As Boolean
 
@@ -269,8 +266,14 @@ Public Class AllData
     <XmlElement("DiscordTaskID")>
     Public Property DiscordTaskID As String
 
-    <XmlElement("TaskThreadFirstPostID")>
-    Public Property TaskThreadFirstPostID As String
+    <XmlElement("TemporaryTaskID")>
+    Public Property TemporaryTaskID As String
+
+    <XmlElement("TaskStatus")>
+    Public Property TaskStatus As Integer
+
+    <XmlElement("EntrySeqID")>
+    Public Property EntrySeqID As Integer
 
     <XmlElement("DiscordEventThreadURL")>
     Public Property DiscordEventThreadURL As String

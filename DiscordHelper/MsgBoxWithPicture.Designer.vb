@@ -27,6 +27,7 @@ Partial Class MsgBoxWithPicture
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnStopExpert = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.btnGoURL = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -78,6 +79,16 @@ Partial Class MsgBoxWithPicture
         Me.PictureBox1.TabIndex = 5
         Me.PictureBox1.TabStop = False
         '
+        'btnGoURL
+        '
+        Me.btnGoURL.Location = New System.Drawing.Point(16, 570)
+        Me.btnGoURL.Name = "btnGoURL"
+        Me.btnGoURL.Size = New System.Drawing.Size(120, 34)
+        Me.btnGoURL.TabIndex = 6
+        Me.btnGoURL.Text = "Take me there!"
+        Me.btnGoURL.UseVisualStyleBackColor = True
+        Me.btnGoURL.Visible = False
+        '
         'MsgBoxWithPicture
         '
         Me.AcceptButton = Me.btnOk
@@ -86,6 +97,7 @@ Partial Class MsgBoxWithPicture
         Me.CancelButton = Me.btnStopExpert
         Me.ClientSize = New System.Drawing.Size(687, 624)
         Me.ControlBox = False
+        Me.Controls.Add(Me.btnGoURL)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.btnStopExpert)
         Me.Controls.Add(Me.btnOk)
@@ -109,4 +121,5 @@ Partial Class MsgBoxWithPicture
     Friend WithEvents btnOk As Button
     Friend WithEvents btnStopExpert As Button
     Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents btnGoURL As Button
 End Class

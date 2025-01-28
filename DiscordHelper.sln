@@ -30,7 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\CommonFunctions.php = Main PHP Scripts\CommonFunctions.php
 		config.php = config.php
 		Main PHP Scripts\CreateNewTaskFromDPH.php = Main PHP Scripts\CreateNewTaskFromDPH.php
-		Main PHP Scripts\CreateUpdateTaskFromDPHTool.php = Main PHP Scripts\CreateUpdateTaskFromDPHTool.php
 		Main PHP Scripts\DeleteTask.php = Main PHP Scripts\DeleteTask.php
 		Main PHP Scripts\DeleteTempFolder.php = Main PHP Scripts\DeleteTempFolder.php
 		Main PHP Scripts\DPHGetVersion.txt = Main PHP Scripts\DPHGetVersion.txt
@@ -43,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\IncrementDownloadForTask.php = Main PHP Scripts\IncrementDownloadForTask.php
 		Main PHP Scripts\IncrementThreadAccessForTask.php = Main PHP Scripts\IncrementThreadAccessForTask.php
 		Main PHP Scripts\ManageNews.php = Main PHP Scripts\ManageNews.php
+		Main PHP Scripts\ManageNewsWithRights.php = Main PHP Scripts\ManageNewsWithRights.php
 		Main PHP Scripts\ResetDownloadsForTask.php = Main PHP Scripts\ResetDownloadsForTask.php
 		Main PHP Scripts\ResetThreadAccessForTask.php = Main PHP Scripts\ResetThreadAccessForTask.php
 		Main PHP Scripts\RetrieveDeletedTasks.php = Main PHP Scripts\RetrieveDeletedTasks.php
@@ -54,6 +54,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\TestDB.php = Main PHP Scripts\TestDB.php
 		Main PHP Scripts\UpdateTasks.php = Main PHP Scripts\UpdateTasks.php
 		UpdateWorldMapInfo.php = UpdateWorldMapInfo.php
+		Main PHP Scripts\VerifyNewsExists.php = Main PHP Scripts\VerifyNewsExists.php
 	EndProjectSection
 EndProject
 Global

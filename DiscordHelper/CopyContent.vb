@@ -4,15 +4,12 @@ Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class CopyContent
 
-    <DllImport("user32.dll")>
-    Private Shared Function SetForegroundWindow(hWnd As IntPtr) As Boolean
-    End Function
-
     Private _Continue As Boolean = True
     Private _AutoPost As Boolean = True
     Private _keySequences As List(Of String) = Nothing
     Private _msToWaitAfterPost As Integer
     Private _expertMode As Boolean
+    Private _takeMeThereURL As String
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         Me.Close()
@@ -31,7 +28,7 @@ Public Class CopyContent
             Application.DoEvents()
         End If
 
-        Dim discordProcess As IntPtr = SupportingFeatures.BringWindowToTopWithPartialTitle(" - Discord")
+        Dim discordProcess As IntPtr = SupportingFeatures.BringDiscordToTop()
         If Not discordProcess = IntPtr.Zero Then
             For Each keySequence As String In _keySequences
                 My.Computer.Keyboard.SendKeys(keySequence, True)
@@ -54,21 +51,33 @@ Public Class CopyContent
 
     End Sub
 
+    Private Sub btnGoURL_Click(sender As Object, e As EventArgs) Handles btnGoURL.Click
+        SupportingFeatures.LaunchDiscordURL(_takeMeThereURL)
+        SupportingFeatures.BringDPHToolToTop(Me.Handle)
+    End Sub
+
     Public Function ShowContent(parent As Form,
                                 contentCopied As String,
                                 message As String,
                                 title As String,
                                 Optional keySequences As List(Of String) = Nothing,
-                                Optional expertMode As Boolean = False,
                                 Optional autoPastePost As Boolean = True,
                                 Optional msToWaitAfterPost As Integer = 500,
-                                Optional imageToDisplay As Image = Nothing) As Boolean
+                                Optional imageToDisplay As Image = Nothing,
+                                Optional takeMeThereURL As String = "") As Boolean
 
         _Continue = True
         _AutoPost = autoPastePost
         _keySequences = keySequences
         _msToWaitAfterPost = msToWaitAfterPost
-        _expertMode = expertMode
+
+        If takeMeThereURL.Trim.Length > 0 Then
+            btnGoURL.Visible = True
+            _takeMeThereURL = takeMeThereURL
+        Else
+            btnGoURL.Visible = False
+            _takeMeThereURL = String.Empty
+        End If
 
         Me.Text = title
         lblMessage.Text = message

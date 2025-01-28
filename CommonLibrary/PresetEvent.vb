@@ -15,6 +15,11 @@
     Public ReadOnly Property EligibleAward As Boolean
     Public ReadOnly Property BeginnerLink As String
 
+    Public ReadOnly Property ForceSyncFly As Boolean
+    Public ReadOnly Property ForceLaunch As Boolean
+    Public ReadOnly Property ForceStartTask As Boolean
+    Public ReadOnly Property DiscordURL As String
+
     Private _emoji As String
     Public ReadOnly Property Emoji As String
         Get
@@ -36,7 +41,11 @@
                    pLaunchTDelay As Integer,
                    pStartTaskDelay As Integer,
                    pEligibleAward As Boolean,
-                   pBeginnerLink As String)
+                   pBeginnerLink As String,
+                   pForceSyncFly As Boolean,
+                   pForceLaunch As Boolean,
+                   pForceStartTask As Boolean,
+                   pDiscordURL As String)
 
         ClubId = pClubId
         ClubName = pClubName
@@ -53,6 +62,10 @@
         StartTaskDelay = pStartTaskDelay
         EligibleAward = pEligibleAward
         BeginnerLink = pBeginnerLink
+        ForceSyncFly = pForceSyncFly
+        ForceLaunch = pForceLaunch
+        ForceStartTask = pForceStartTask
+        DiscordURL = $"https://discord.com/channels/{pDiscordURL}"
 
     End Sub
 

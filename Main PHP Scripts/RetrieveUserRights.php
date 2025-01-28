@@ -15,17 +15,37 @@ try {
     // Get the user ID
     $userID = $_POST['user_id'];
 
-    // Get user permissions
+    // Get user permissions for the specified user
     $userPermissions = getUserPermissions($userID);
-    $userRights = getUserRights($userPermissions);
 
-    if ($userRights === null) {
+    if ($userPermissions === null) {
         throw new Exception('User not found.');
     }
 
-    // Return the user rights
-    echo json_encode(['status' => 'success', 'rights' => $userRights]);
+    // Extract user rights
+    $userRights = getUserRights($userPermissions);
+
+    // Extract the specified user's name
+    $userName = (string)$userPermissions->Name;
+
+    // Extract all user names from the XML
+    $allUserNames = [];
+    $xml = simplexml_load_file($userPermissionsPath);
+    if ($xml !== false) {
+        foreach ($xml->User as $user) {
+            $allUserNames[] = (string)$user->Name;
+        }
+    } else {
+        throw new Exception('Failed to load user permissions file.');
+    }
+
+    // Return the user rights, user's name, and all user names
+    echo json_encode([
+        'status' => 'success',
+        'name' => $userName,
+        'rights' => $userRights,
+        'allUserNames' => $allUserNames
+    ]);
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
-?>

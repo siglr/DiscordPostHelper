@@ -23,9 +23,9 @@ Partial Class WizardNextChoice
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.btnCreateTask = New System.Windows.Forms.Button()
         Me.btnCreateGroupFlight = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.btnPostTask = New System.Windows.Forms.Button()
         Me.btnPostGroupFlight = New System.Windows.Forms.Button()
         Me.btnStopWizard = New System.Windows.Forms.Button()
@@ -45,6 +45,18 @@ Partial Class WizardNextChoice
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(712, 276)
         Me.FlowLayoutPanel1.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.Label1.Location = New System.Drawing.Point(3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(707, 35)
+        Me.Label1.TabIndex = 3
+        Me.Label1.Text = "Select where the wizard should guide you next"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnCreateTask
         '
@@ -69,18 +81,6 @@ Partial Class WizardNextChoice
     "posting the task)"
         Me.btnCreateGroupFlight.UseVisualStyleBackColor = True
         '
-        'Label1
-        '
-        Me.Label1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.Label1.Location = New System.Drawing.Point(3, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(707, 35)
-        Me.Label1.TabIndex = 3
-        Me.Label1.Text = "Select where the wizard should guide you next"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'btnPostTask
         '
         Me.btnPostTask.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -89,7 +89,8 @@ Partial Class WizardNextChoice
         Me.btnPostTask.Name = "btnPostTask"
         Me.btnPostTask.Size = New System.Drawing.Size(707, 41)
         Me.btnPostTask.TabIndex = 4
-        Me.btnPostTask.Text = "3. I want help to post the task on Discord (when the previous steps are done)"
+        Me.btnPostTask.Text = "3. I want help to post the task on WSG and Discord (when the previous steps are d" &
+    "one)"
         Me.btnPostTask.UseVisualStyleBackColor = True
         '
         'btnPostGroupFlight
@@ -100,8 +101,8 @@ Partial Class WizardNextChoice
         Me.btnPostGroupFlight.Name = "btnPostGroupFlight"
         Me.btnPostGroupFlight.Size = New System.Drawing.Size(707, 41)
         Me.btnPostGroupFlight.TabIndex = 5
-        Me.btnPostGroupFlight.Text = "4. I want help to post the group flight on Discord (when everything else is done)" &
-    ""
+        Me.btnPostGroupFlight.Text = "4. I want help to post the group flight on WSG and Discord (when everything else " &
+    "is done)"
         Me.btnPostGroupFlight.UseVisualStyleBackColor = True
         '
         'btnStopWizard

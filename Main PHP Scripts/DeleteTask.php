@@ -14,12 +14,12 @@ try {
         throw new Exception('Invalid request method.');
     }
 
-    // Check if TaskID and UserID are set
-    if (!isset($_POST['TaskID']) || !isset($_POST['UserID'])) {
-        throw new Exception('TaskID or UserID is missing.');
+    // Check if EntrySeqID and UserID are set
+    if (!isset($_POST['EntrySeqID']) || !isset($_POST['UserID'])) {
+        throw new Exception('EntrySeqID or UserID is missing.');
     }
 
-    $taskID = $_POST['TaskID'];
+    $entrySeqID = $_POST['EntrySeqID'];
     $userID = $_POST['UserID'];
 
     // Check if the user has DeleteTask rights
@@ -27,20 +27,20 @@ try {
         throw new Exception('User does not have permission to delete tasks.');
     }
 
-    // Retrieve EntrySeqID using TaskID
-    $stmt = $pdo->prepare("SELECT EntrySeqID FROM Tasks WHERE TaskID = :TaskID");
-    $stmt->execute([':TaskID' => $taskID]);
+    // Retrieve TaskID using EntrySeqID
+    $stmt = $pdo->prepare("SELECT TaskID FROM Tasks WHERE EntrySeqID = :EntrySeqID");
+    $stmt->execute([':EntrySeqID' => $entrySeqID]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
         throw new Exception('Task not found.');
     }
 
-    $entrySeqID = $result['EntrySeqID'];
+    $taskID = $result['TaskID'];
 
     // Delete the task from the main Tasks table
-    $stmt = $pdo->prepare("DELETE FROM Tasks WHERE TaskID = :TaskID");
-    $stmt->execute([':TaskID' => $taskID]);
+    $stmt = $pdo->prepare("DELETE FROM Tasks WHERE EntrySeqID = :EntrySeqID");
+    $stmt->execute([':EntrySeqID' => $entrySeqID]);
 
     // Delete the associated news entries
     deleteTaskNewsEntries($taskID);
@@ -56,21 +56,33 @@ try {
         ':DeletionDate' => $nowFormatted
     ]);
 
-    // Delete the associated file
-    $target_dir = '/home2/siglr3/public_html/DiscordPostHelper/TaskBrowser/Tasks/';
+    // Delete the associated DPHX file
+    $target_dir = $fileRootPath . 'TaskBrowser/Tasks/';
     $target_file = $target_dir . basename($taskID . '.dphx');
-
     if (file_exists($target_file)) {
         if (!unlink($target_file)) {
-            throw new Exception('Failed to delete the associated file.');
+            throw new Exception('Failed to delete the DPHX file.');
         } else {
-            logMessage("Associated file deleted: " . $target_file);
+            logMessage("DPHX file deleted: " . $target_file);
         }
     } else {
-        logMessage("Associated file not found: " . $target_file);
+        logMessage("DPHX file not found: " . $target_file);
     }
 
-    logMessage("Deleted task with TaskID: " . $taskID . " by UserID: " . $userID);
+    // Delete the associated Weather chart
+    $target_dir = $fileRootPath . 'TaskBrowser/WeatherCharts/';
+    $target_file = $target_dir . basename($entrySeqID . '.jpg');
+    if (file_exists($target_file)) {
+        if (!unlink($target_file)) {
+            throw new Exception('Failed to delete the weather chart file.');
+        } else {
+            logMessage("Weather chart file deleted: " . $target_file);
+        }
+    } else {
+        logMessage("Weather chart file not found: " . $target_file);
+    }
+
+    logMessage("Deleted task with EntrySeqID: " . $entrySeqID . " by UserID: " . $userID);
     echo json_encode(['status' => 'success', 'message' => 'Task, associated news, and file deleted successfully.']);
     logMessage("--- End of script DeleteTask ---");
 

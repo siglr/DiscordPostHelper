@@ -29,6 +29,7 @@ Partial Class CopyContent
         Me.btnStopExpert = New System.Windows.Forms.Button()
         Me.btnAutoPaste = New System.Windows.Forms.Button()
         Me.imgImageInClipboard = New System.Windows.Forms.PictureBox()
+        Me.btnGoURL = New System.Windows.Forms.Button()
         CType(Me.imgImageInClipboard, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -105,6 +106,15 @@ Partial Class CopyContent
         Me.imgImageInClipboard.TabStop = False
         Me.imgImageInClipboard.Visible = False
         '
+        'btnGoURL
+        '
+        Me.btnGoURL.Location = New System.Drawing.Point(12, 612)
+        Me.btnGoURL.Name = "btnGoURL"
+        Me.btnGoURL.Size = New System.Drawing.Size(130, 34)
+        Me.btnGoURL.TabIndex = 7
+        Me.btnGoURL.Text = "Take me there!"
+        Me.btnGoURL.UseVisualStyleBackColor = True
+        '
         'CopyContent
         '
         Me.AcceptButton = Me.btnOk
@@ -113,6 +123,7 @@ Partial Class CopyContent
         Me.CancelButton = Me.btnOk
         Me.ClientSize = New System.Drawing.Size(687, 658)
         Me.ControlBox = False
+        Me.Controls.Add(Me.btnGoURL)
         Me.Controls.Add(Me.imgImageInClipboard)
         Me.Controls.Add(Me.btnAutoPaste)
         Me.Controls.Add(Me.btnStopExpert)
@@ -142,4 +153,5 @@ Partial Class CopyContent
     Friend WithEvents btnStopExpert As Button
     Friend WithEvents btnAutoPaste As Button
     Friend WithEvents imgImageInClipboard As PictureBox
+    Friend WithEvents btnGoURL As Button
 End Class
