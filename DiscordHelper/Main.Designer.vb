@@ -564,7 +564,7 @@ Partial Class Main
         Me.grpRepost.Location = New System.Drawing.Point(6, 611)
         Me.grpRepost.Name = "grpRepost"
         Me.grpRepost.Size = New System.Drawing.Size(699, 63)
-        Me.grpRepost.TabIndex = 0
+        Me.grpRepost.TabIndex = 16
         Me.grpRepost.TabStop = False
         '
         'btnRepostOriginalURLPaste
@@ -2810,7 +2810,7 @@ Partial Class Main
         Me.GroupBox6.Location = New System.Drawing.Point(837, 3)
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Size = New System.Drawing.Size(261, 176)
-        Me.GroupBox6.TabIndex = 96
+        Me.GroupBox6.TabIndex = 3
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "WeSimGlide.org Extras"
         '
@@ -2822,7 +2822,7 @@ Partial Class Main
         Me.lblWSGUserName.Location = New System.Drawing.Point(6, 44)
         Me.lblWSGUserName.Name = "lblWSGUserName"
         Me.lblWSGUserName.Size = New System.Drawing.Size(255, 32)
-        Me.lblWSGUserName.TabIndex = 101
+        Me.lblWSGUserName.TabIndex = 1
         Me.lblWSGUserName.Text = "UNKNOWN"
         Me.lblWSGUserName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -2833,7 +2833,7 @@ Partial Class Main
         Me.Label8.Location = New System.Drawing.Point(6, 23)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(255, 21)
-        Me.Label8.TabIndex = 100
+        Me.Label8.TabIndex = 0
         Me.Label8.Text = "You are:"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -2846,7 +2846,7 @@ Partial Class Main
         Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 133)
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(249, 37)
-        Me.btnDeleteEventNews.TabIndex = 99
+        Me.btnDeleteEventNews.TabIndex = 3
         Me.btnDeleteEventNews.Tag = "87"
         Me.btnDeleteEventNews.Text = "Remove event from WSG"
         Me.ToolTip1.SetToolTip(Me.btnDeleteEventNews, "Click this button to remove this group event's news entry.")
@@ -2861,7 +2861,7 @@ Partial Class Main
         Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 90)
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(249, 37)
-        Me.btnDeleteFromTaskBrowser.TabIndex = 97
+        Me.btnDeleteFromTaskBrowser.TabIndex = 2
         Me.btnDeleteFromTaskBrowser.Tag = "87"
         Me.btnDeleteFromTaskBrowser.Text = "Delete task from WSG"
         Me.ToolTip1.SetToolTip(Me.btnDeleteFromTaskBrowser, "Click this button to remove this task from WeSimGlide.org.")
@@ -2928,7 +2928,7 @@ Partial Class Main
         Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(423, 472)
         Me.pnlFullWorkflowTaskGroupFlight.Name = "pnlFullWorkflowTaskGroupFlight"
         Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(405, 131)
-        Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 3
+        Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 2
         Me.pnlFullWorkflowTaskGroupFlight.TabStop = False
         Me.pnlFullWorkflowTaskGroupFlight.Text = "Full Task and Group Flight Event"
         '
@@ -2964,7 +2964,7 @@ Partial Class Main
         Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 87)
         Me.btnTaskAndGroupEventLinks.Name = "btnTaskAndGroupEventLinks"
         Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(249, 37)
-        Me.btnTaskAndGroupEventLinks.TabIndex = 2
+        Me.btnTaskAndGroupEventLinks.TabIndex = 1
         Me.btnTaskAndGroupEventLinks.Tag = "89"
         Me.btnTaskAndGroupEventLinks.Text = "Task and Group Event links"
         Me.ToolTip1.SetToolTip(Me.btnTaskAndGroupEventLinks, "Click here to get a message with links to the task and group flight event posts.")
@@ -3053,7 +3053,7 @@ Partial Class Main
         Me.GroupBox1.Location = New System.Drawing.Point(6, 27)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(393, 451)
-        Me.GroupBox1.TabIndex = 1
+        Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Task Publishing Options"
         '
@@ -3066,7 +3066,7 @@ Partial Class Main
         Me.Label12.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(82, 22)
-        Me.Label12.TabIndex = 103
+        Me.Label12.TabIndex = 0
         Me.Label12.Text = "Publisher:"
         '
         'cboTaskOwner
@@ -3080,7 +3080,7 @@ Partial Class Main
         Me.cboTaskOwner.Name = "cboTaskOwner"
         Me.cboTaskOwner.Size = New System.Drawing.Size(293, 30)
         Me.cboTaskOwner.Sorted = True
-        Me.cboTaskOwner.TabIndex = 102
+        Me.cboTaskOwner.TabIndex = 1
         Me.cboTaskOwner.Tag = "62"
         Me.ToolTip1.SetToolTip(Me.cboTaskOwner, "Select the MSFS Server to use for the event.")
         '
@@ -3093,7 +3093,7 @@ Partial Class Main
         Me.lblUpdateDescription.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.lblUpdateDescription.Name = "lblUpdateDescription"
         Me.lblUpdateDescription.Size = New System.Drawing.Size(158, 22)
-        Me.lblUpdateDescription.TabIndex = 101
+        Me.lblUpdateDescription.TabIndex = 3
         Me.lblUpdateDescription.Text = "Update description:"
         '
         'txtLastUpdateDescription
@@ -3105,7 +3105,7 @@ Partial Class Main
         Me.txtLastUpdateDescription.Multiline = True
         Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
         Me.txtLastUpdateDescription.Size = New System.Drawing.Size(381, 64)
-        Me.txtLastUpdateDescription.TabIndex = 100
+        Me.txtLastUpdateDescription.TabIndex = 4
         Me.txtLastUpdateDescription.Tag = "87"
         Me.ToolTip1.SetToolTip(Me.txtLastUpdateDescription, "Enter a description for this task update")
         '
@@ -3116,7 +3116,7 @@ Partial Class Main
         Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 366)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
-        Me.btnDPORecallSettings.TabIndex = 2
+        Me.btnDPORecallSettings.TabIndex = 5
         Me.btnDPORecallSettings.Tag = "42"
         Me.btnDPORecallSettings.Text = "Recall"
         Me.ToolTip1.SetToolTip(Me.btnDPORecallSettings, "Click to recall the remembered set of options.")
@@ -3129,7 +3129,7 @@ Partial Class Main
         Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 366)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
-        Me.btnDPORememberSettings.TabIndex = 3
+        Me.btnDPORememberSettings.TabIndex = 6
         Me.btnDPORememberSettings.Tag = "42"
         Me.btnDPORememberSettings.Text = "Remember"
         Me.ToolTip1.SetToolTip(Me.btnDPORememberSettings, "Click to remember (save) this set of options for future posts.")
@@ -3203,7 +3203,7 @@ Partial Class Main
         Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
         Me.FlowLayoutPanel2.Size = New System.Drawing.Size(393, 26)
-        Me.FlowLayoutPanel2.TabIndex = 14
+        Me.FlowLayoutPanel2.TabIndex = 1
         '
         'chkDPOThreadCreation
         '
@@ -3226,7 +3226,7 @@ Partial Class Main
         Me.Label3.Location = New System.Drawing.Point(3, 52)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(390, 20)
-        Me.Label3.TabIndex = 0
+        Me.Label3.TabIndex = 2
         Me.Label3.Text = " "
         '
         'FlowLayoutPanel4
@@ -3238,7 +3238,7 @@ Partial Class Main
         Me.FlowLayoutPanel4.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
         Me.FlowLayoutPanel4.Size = New System.Drawing.Size(393, 26)
-        Me.FlowLayoutPanel4.TabIndex = 2
+        Me.FlowLayoutPanel4.TabIndex = 3
         '
         'chkDPOIncludeCoverImage
         '
@@ -3264,7 +3264,7 @@ Partial Class Main
         Me.FlowLayoutPanel13.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel13.Name = "FlowLayoutPanel13"
         Me.FlowLayoutPanel13.Size = New System.Drawing.Size(393, 26)
-        Me.FlowLayoutPanel13.TabIndex = 13
+        Me.FlowLayoutPanel13.TabIndex = 4
         '
         'chkDPOFeaturedOnGroupFlight
         '
@@ -3289,7 +3289,7 @@ Partial Class Main
         Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 366)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
-        Me.btnDPOResetToDefault.TabIndex = 4
+        Me.btnDPOResetToDefault.TabIndex = 7
         Me.btnDPOResetToDefault.Tag = "42"
         Me.btnDPOResetToDefault.Text = "Reset all"
         Me.ToolTip1.SetToolTip(Me.btnDPOResetToDefault, "Click to reset all options to the default values.")
@@ -3302,7 +3302,7 @@ Partial Class Main
         Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 407)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
-        Me.btnStartTaskPost.TabIndex = 5
+        Me.btnStartTaskPost.TabIndex = 8
         Me.btnStartTaskPost.Tag = "43"
         Me.btnStartTaskPost.Text = "Start Task Creation Workflow"
         Me.ToolTip1.SetToolTip(Me.btnStartTaskPost, "Click this button to begin posting the task's details.")
@@ -3321,7 +3321,7 @@ Partial Class Main
         Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 483)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
         Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 112)
-        Me.grbTaskDiscord.TabIndex = 4
+        Me.grbTaskDiscord.TabIndex = 1
         Me.grbTaskDiscord.TabStop = False
         Me.grbTaskDiscord.Text = "Discord / Task ID"
         '
@@ -3332,7 +3332,7 @@ Partial Class Main
         Me.txtTemporaryTaskID.Name = "txtTemporaryTaskID"
         Me.txtTemporaryTaskID.ReadOnly = True
         Me.txtTemporaryTaskID.Size = New System.Drawing.Size(61, 32)
-        Me.txtTemporaryTaskID.TabIndex = 4
+        Me.txtTemporaryTaskID.TabIndex = 2
         Me.txtTemporaryTaskID.Tag = "24"
         Me.txtTemporaryTaskID.Visible = False
         '
@@ -3369,7 +3369,7 @@ Partial Class Main
         Me.lblTaskLibraryIDNotAcquired.Location = New System.Drawing.Point(6, 67)
         Me.lblTaskLibraryIDNotAcquired.Name = "lblTaskLibraryIDNotAcquired"
         Me.lblTaskLibraryIDNotAcquired.Size = New System.Drawing.Size(381, 33)
-        Me.lblTaskLibraryIDNotAcquired.TabIndex = 0
+        Me.lblTaskLibraryIDNotAcquired.TabIndex = 3
         Me.lblTaskLibraryIDNotAcquired.Text = "⚠️ = TASK LIBRARY ID NOT ACQUIRED"
         Me.lblTaskLibraryIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -3381,7 +3381,7 @@ Partial Class Main
         Me.lblTaskLibraryIDAcquired.Location = New System.Drawing.Point(6, 67)
         Me.lblTaskLibraryIDAcquired.Name = "lblTaskLibraryIDAcquired"
         Me.lblTaskLibraryIDAcquired.Size = New System.Drawing.Size(381, 33)
-        Me.lblTaskLibraryIDAcquired.TabIndex = 17
+        Me.lblTaskLibraryIDAcquired.TabIndex = 4
         Me.lblTaskLibraryIDAcquired.Text = "TASK LIBRARY ID ACQUIRED"
         Me.lblTaskLibraryIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblTaskLibraryIDAcquired.Visible = False
@@ -3585,7 +3585,7 @@ Partial Class Main
         Me.lblWSGEventAbsent.Location = New System.Drawing.Point(6, 382)
         Me.lblWSGEventAbsent.Name = "lblWSGEventAbsent"
         Me.lblWSGEventAbsent.Size = New System.Drawing.Size(381, 33)
-        Me.lblWSGEventAbsent.TabIndex = 97
+        Me.lblWSGEventAbsent.TabIndex = 5
         Me.lblWSGEventAbsent.Text = "EVENT DOES NOT EXIST ON WSG"
         Me.lblWSGEventAbsent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -3596,7 +3596,7 @@ Partial Class Main
         Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 297)
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
-        Me.btnDGPORecallSettings.TabIndex = 4
+        Me.btnDGPORecallSettings.TabIndex = 1
         Me.btnDGPORecallSettings.Tag = "82"
         Me.btnDGPORecallSettings.Text = "Recall"
         Me.ToolTip1.SetToolTip(Me.btnDGPORecallSettings, "Click to recall the remembered set of options.")
@@ -3609,7 +3609,7 @@ Partial Class Main
         Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 297)
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
-        Me.btnDGPORememberSettings.TabIndex = 5
+        Me.btnDGPORememberSettings.TabIndex = 2
         Me.btnDGPORememberSettings.Tag = "82"
         Me.btnDGPORememberSettings.Text = "Remember"
         Me.ToolTip1.SetToolTip(Me.btnDGPORememberSettings, "Click to remember (save) this set of options for future posts.")
@@ -3622,7 +3622,7 @@ Partial Class Main
         Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 338)
         Me.btnStartGroupEventPost.Name = "btnStartGroupEventPost"
         Me.btnStartGroupEventPost.Size = New System.Drawing.Size(384, 37)
-        Me.btnStartGroupEventPost.TabIndex = 7
+        Me.btnStartGroupEventPost.TabIndex = 4
         Me.btnStartGroupEventPost.Tag = "83"
         Me.btnStartGroupEventPost.Text = "Start Group Flight Event Post Workflow"
         Me.ToolTip1.SetToolTip(Me.btnStartGroupEventPost, "Click this button to begin posting the group flight event's details.")
@@ -3635,7 +3635,7 @@ Partial Class Main
         Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 295)
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
-        Me.btnDGPOResetToDefault.TabIndex = 6
+        Me.btnDGPOResetToDefault.TabIndex = 3
         Me.btnDGPOResetToDefault.Tag = "82"
         Me.btnDGPOResetToDefault.Text = "Reset all"
         Me.ToolTip1.SetToolTip(Me.btnDGPOResetToDefault, "Click to reset all options to the default values.")
@@ -3748,7 +3748,7 @@ Partial Class Main
         Me.FlowLayoutPanel3.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
         Me.FlowLayoutPanel3.Size = New System.Drawing.Size(373, 26)
-        Me.FlowLayoutPanel3.TabIndex = 13
+        Me.FlowLayoutPanel3.TabIndex = 1
         '
         'FlowLayoutPanel19
         '
@@ -3778,7 +3778,7 @@ Partial Class Main
         Me.Label11.Location = New System.Drawing.Point(3, 104)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(227, 20)
-        Me.Label11.TabIndex = 4
+        Me.Label11.TabIndex = 3
         Me.Label11.Text = " "
         '
         'FlowLayoutPanel23
@@ -3790,7 +3790,7 @@ Partial Class Main
         Me.FlowLayoutPanel23.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel23.Name = "FlowLayoutPanel23"
         Me.FlowLayoutPanel23.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel23.TabIndex = 5
+        Me.FlowLayoutPanel23.TabIndex = 4
         '
         'chkDGPOEventLogistics
         '
@@ -3817,7 +3817,7 @@ Partial Class Main
         Me.FlowLayoutPanel24.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel24.Name = "FlowLayoutPanel24"
         Me.FlowLayoutPanel24.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel24.TabIndex = 8
+        Me.FlowLayoutPanel24.TabIndex = 5
         '
         'chkDGPOMainPost
         '
@@ -3843,7 +3843,7 @@ Partial Class Main
         Me.FlowLayoutPanel20.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel20.Name = "FlowLayoutPanel20"
         Me.FlowLayoutPanel20.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel20.TabIndex = 11
+        Me.FlowLayoutPanel20.TabIndex = 6
         '
         'chkDGPOMapImage
         '
@@ -3869,7 +3869,7 @@ Partial Class Main
         Me.FlowLayoutPanel25.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel25.Name = "FlowLayoutPanel25"
         Me.FlowLayoutPanel25.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel25.TabIndex = 9
+        Me.FlowLayoutPanel25.TabIndex = 7
         '
         'chkDGPOFullDescription
         '
@@ -3895,7 +3895,7 @@ Partial Class Main
         Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(376, 26)
-        Me.FlowLayoutPanel5.TabIndex = 12
+        Me.FlowLayoutPanel5.TabIndex = 8
         '
         'chkDGPOPublishWSGEventNews
         '
@@ -3920,7 +3920,7 @@ Partial Class Main
         Me.lblWSGEventExists.Location = New System.Drawing.Point(6, 382)
         Me.lblWSGEventExists.Name = "lblWSGEventExists"
         Me.lblWSGEventExists.Size = New System.Drawing.Size(381, 33)
-        Me.lblWSGEventExists.TabIndex = 97
+        Me.lblWSGEventExists.TabIndex = 6
         Me.lblWSGEventExists.Text = "EVENT EXISTS ON WSG"
         Me.lblWSGEventExists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblWSGEventExists.Visible = False
@@ -3933,7 +3933,7 @@ Partial Class Main
         Me.GroupBox4.Location = New System.Drawing.Point(837, 318)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(261, 62)
-        Me.GroupBox4.TabIndex = 2
+        Me.GroupBox4.TabIndex = 5
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "General options"
         '
@@ -4063,7 +4063,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -4073,7 +4073,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
         '
@@ -4082,7 +4082,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4091,7 +4091,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4108,56 +4108,56 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4178,7 +4178,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4208,7 +4208,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4282,7 +4282,7 @@ Partial Class Main
         Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
         Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
         Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 97
+        Me.chkcboSharedWithUsers.TabIndex = 2
         '
         'Main
         '
