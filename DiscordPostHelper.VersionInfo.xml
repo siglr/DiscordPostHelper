@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.1.28.4</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.1.28.4</ReleaseVersion>
+      <ReleaseTitle>Small fix post previous release</ReleaseTitle>
+      <ReleaseNotes>
+        Disabled the whole WSG-Discord tab when user is unidentified.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.28.1</ReleaseVersion>
       <ReleaseTitle>Biggest release since first launch!</ReleaseTitle>
