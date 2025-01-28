@@ -67,6 +67,20 @@ Public Class SupportingFeatures
     Public Const WS_VSCROLL As Integer = &H200000
     Public Const WS_HSCROLL As Integer = &H100000
 
+    Public Shared ReadOnly Property TaskLibraryDiscordURL As String
+        Get
+            If Not _useTestServer Then
+                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsLibraryID}"
+            Else
+                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsPrivateTestingID}"
+            End If
+        End Get
+    End Property
+
+    Public Shared Function TaskThreadDiscordURL(taskID As String) As String
+        Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{taskID}"
+    End Function
+
     Public Shared ReadOnly Property ClientRunning As ClientApp
         Get
             Return _ClientRunning
@@ -131,6 +145,7 @@ Public Class SupportingFeatures
             Dim forceSyncFly As Boolean = Boolean.Parse(eventNode("ForceSyncFly").InnerText)
             Dim forceLaunch As Boolean = Boolean.Parse(eventNode("ForceLaunch").InnerText)
             Dim forceStartTask As Boolean = Boolean.Parse(eventNode("ForceStartTask").InnerText)
+            Dim discordURL As String = eventNode("DiscordURL").InnerText
 
             Dim presetEvent As New PresetEvent(clubId,
                                                clubName,
@@ -149,7 +164,8 @@ Public Class SupportingFeatures
                                                beginnerLink,
                                                forceSyncFly,
                                                forceLaunch,
-                                               forceStartTask)
+                                               forceStartTask,
+                                               discordURL)
 
             DefaultKnownClubEvents.Add(clubId, presetEvent)
         Next
@@ -2271,6 +2287,10 @@ Public Class SupportingFeatures
 
         Return targetHandle
     End Function
+    Public Shared Function BringDiscordToTop() As IntPtr
+        Return SupportingFeatures.BringWindowToTopWithPartialTitle(" - Discord")
+    End Function
+
     Public Shared Sub BringDPHToolToTop(handle As IntPtr)
         NativeMethods.SetForegroundWindow(handle)
     End Sub

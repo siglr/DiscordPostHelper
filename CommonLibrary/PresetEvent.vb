@@ -18,7 +18,7 @@
     Public ReadOnly Property ForceSyncFly As Boolean
     Public ReadOnly Property ForceLaunch As Boolean
     Public ReadOnly Property ForceStartTask As Boolean
-
+    Public ReadOnly Property DiscordURL As String
 
     Private _emoji As String
     Public ReadOnly Property Emoji As String
@@ -44,7 +44,8 @@
                    pBeginnerLink As String,
                    pForceSyncFly As Boolean,
                    pForceLaunch As Boolean,
-                   pForceStartTask As Boolean)
+                   pForceStartTask As Boolean,
+                   pDiscordURL As String)
 
         ClubId = pClubId
         ClubName = pClubName
@@ -64,6 +65,7 @@
         ForceSyncFly = pForceSyncFly
         ForceLaunch = pForceLaunch
         ForceStartTask = pForceStartTask
+        DiscordURL = $"https://discord.com/channels/{pDiscordURL}"
 
     End Sub
 

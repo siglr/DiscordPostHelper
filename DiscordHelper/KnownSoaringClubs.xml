@@ -19,6 +19,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL></DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EDT)</ClubId>
@@ -39,6 +40,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL>793376245915189268/1097353400015921252</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>💎 TUESDAY (EST)</ClubId>
@@ -59,6 +61,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL>793376245915189268/1097353400015921252</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>GG-FSC</ClubId>
@@ -79,6 +82,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL>793376245915189268/1097354088892596234</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CEDT)</ClubId>
@@ -99,6 +103,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>876123356385149009/987611111509590087</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CEDT)</ClubId>
@@ -119,6 +124,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>876123356385149009/1128345453063327835</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC SATURDAY (CET)</ClubId>
@@ -139,6 +145,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>876123356385149009/987611111509590087</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>SSC WEDNESDAY (CET)</ClubId>
@@ -159,6 +166,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>876123356385149009/1128345453063327835</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>AUSGLIDE</ClubId>
@@ -179,6 +187,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL>876123356385149009/1066655140733517844</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>AUSGLIDE SUMMER TIME</ClubId>
@@ -199,6 +208,7 @@
     <ForceSyncFly>False</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>False</ForceStartTask>
+    <DiscordURL>876123356385149009/1066655140733517844</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA TUE</ClubId>
@@ -219,6 +229,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1166042887084048515</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA THU</ClubId>
@@ -239,6 +250,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1166042920869175357</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA SUN</ClubId>
@@ -259,6 +271,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1332655847029080097</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA TUE (BST)</ClubId>
@@ -279,6 +292,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1166042887084048515</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA THU (BST)</ClubId>
@@ -299,6 +313,7 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1166042920869175357</DiscordURL>
   </KnownSoaringClub>
   <KnownSoaringClub>
     <ClubId>UKVGA SUN (BST)</ClubId>
@@ -319,5 +334,6 @@
     <ForceSyncFly>True</ForceSyncFly>
     <ForceLaunch>False</ForceLaunch>
     <ForceStartTask>True</ForceStartTask>
+    <DiscordURL>325227457445625856/1332655847029080097</DiscordURL>
   </KnownSoaringClub>
 </KnownSoaringClubs>

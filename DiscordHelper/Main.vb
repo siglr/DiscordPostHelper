@@ -274,6 +274,7 @@ Public Class Main
 
         If SessionSettings.DPO_DPOUseCustomSettings Then
             chkDPOMainPost.Checked = SessionSettings.DPO_chkDPOMainPost
+            chkDPOThreadCreation.Checked = SessionSettings.DPO_chkDPOThreadCreation
             chkDPOIncludeCoverImage.Checked = SessionSettings.DPO_chkDPOIncludeCoverImage
             chkDPOFeaturedOnGroupFlight.Checked = SessionSettings.DPO_chkDPOFeaturedOnGroupFlight
         End If
@@ -2632,8 +2633,8 @@ Public Class Main
         If _TaskStatus <= SupportingFeatures.WSGTaskStatus.PendingCreation Then
             chkDPOMainPost.Checked = True
         End If
-        chkDPOIncludeCoverImage.Checked = chkDPOMainPost.Checked
-        chkDPOFeaturedOnGroupFlight.Checked = chkDPOMainPost.Checked
+        'chkDPOIncludeCoverImage.Checked = chkDPOMainPost.Checked
+        'chkDPOFeaturedOnGroupFlight.Checked = chkDPOMainPost.Checked
     End Sub
 
     Private Sub txtLastUpdateDescription_EnabledChanged(sender As Object, e As EventArgs) Handles txtLastUpdateDescription.EnabledChanged
@@ -2678,6 +2679,7 @@ Public Class Main
     Private Sub btnDPORememberSettings_Click(sender As Object, e As EventArgs) Handles btnDPORememberSettings.Click
         SessionSettings.DPO_DPOUseCustomSettings = True
         SessionSettings.DPO_chkDPOMainPost = chkDPOMainPost.Checked
+        SessionSettings.DPO_chkDPOThreadCreation = chkDPOThreadCreation.Checked
         SessionSettings.DPO_chkDPOIncludeCoverImage = chkDPOIncludeCoverImage.Checked
         SessionSettings.DPO_chkDPOFeaturedOnGroupFlight = chkDPOFeaturedOnGroupFlight.Checked
     End Sub
@@ -2699,6 +2701,7 @@ Public Class Main
     Private Sub btnDPOResetToDefault_Click(sender As Object, e As EventArgs) Handles btnDPOResetToDefault.Click
 
         chkDPOMainPost.Checked = True
+        chkDPOThreadCreation.Checked = True
         chkDPOIncludeCoverImage.Checked = True
         chkDPOFeaturedOnGroupFlight.Checked = True
 
@@ -2838,73 +2841,71 @@ Public Class Main
     Private Function PostTaskInLibrary(autoContinue As Boolean) As Boolean
 
         'Task Main Post on WeSimGlide.org and Discord
-        If chkDPOWSGTaskPost.Checked Then
+        'Is there an EntrySeqID already?
+        If _TaskEntrySeqID > 0 Then
 
-            'Is there an EntrySeqID already?
-            If _TaskEntrySeqID > 0 Then
+            If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
+                txtDiscordTaskID.Text.Trim.Length = 0 AndAlso
+                txtTemporaryTaskID.Text.Trim.Length > 0 Then
+                'Scenario 1 - The task is pending creation and has only a temporary TaskID (no DiscordTaskID)
+                '             We need to resume at posting task on Discord.
+                autoContinue = PostTaskOnDiscord()
 
-                If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
-                    txtDiscordTaskID.Text.Trim.Length = 0 AndAlso
-                    txtTemporaryTaskID.Text.Trim.Length > 0 Then
-                    'Scenario 1 - The task is pending creation and has only a temporary TaskID (no DiscordTaskID)
-                    '             We need to resume at posting task on Discord.
-                    autoContinue = PostTaskOnDiscord()
+            ElseIf _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
+                txtDiscordTaskID.Text.Trim.Length > 0 Then
+                'Scenario 2 - The task is pending creation and has a DiscordTaskID (the task has been published to Discord but is still incomplete on WSG)
+                '             We need to resume at trying to complete the publishing on WSG.
+                autoContinue = PrepareCreateWSGTaskPart2()
 
-                ElseIf _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
-                    txtDiscordTaskID.Text.Trim.Length > 0 Then
-                    'Scenario 2 - The task is pending creation and has a DiscordTaskID (the task has been published to Discord but is still incomplete on WSG)
-                    '             We need to resume at trying to complete the publishing on WSG.
-                    autoContinue = PrepareCreateWSGTaskPart2()
-
-                ElseIf _TaskStatus > SupportingFeatures.WSGTaskStatus.PendingCreation Then
-                    'Scenario 3 - The task status is > 10 (it's neither PendingCreation (10) or NotCreated (0))
-                    '             This is a true Update of an existing active task. - Check User rights for UPDATE!
-                    If UserCanUpdateTask Then
-                        If txtLastUpdateDescription.TextLength = 0 Then
-                            Using New Centered_MessageBox(Me)
-                                MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                                Return False
-                            End Using
-                        End If
-                        autoContinue = PrepareUpdateWSGTask()
-                        If autoContinue AndAlso chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
-                            autoContinue = FlightPlanMainInfoCopy(False, True)
-                        End If
-                        If autoContinue Then
-                            autoContinue = PostTaskThreadContent(autoContinue)
-                        End If
-
-                        Return autoContinue
+            ElseIf _TaskStatus > SupportingFeatures.WSGTaskStatus.PendingCreation Then
+                'Scenario 3 - The task status is > 10 (it's neither PendingCreation (10) or NotCreated (0))
+                '             This is a true Update of an existing active task. - Check User rights for UPDATE!
+                If UserCanUpdateTask Then
+                    If txtLastUpdateDescription.TextLength = 0 Then
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Return False
+                        End Using
+                    End If
+                    autoContinue = PrepareUpdateWSGTask()
+                    If autoContinue AndAlso chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
+                        autoContinue = FlightPlanMainInfoCopy(False, True)
+                    End If
+                    If autoContinue Then
+                        autoContinue = PostTaskThreadContent(autoContinue)
                     End If
 
-                Else
-                    'Unplanned scenario! We have an EntrySeqID but the status is NotCreated ?!
-                    'This is a mistake and should never occur
-                    Using New Centered_MessageBox(Me)
-                        MessageBox.Show(Me, "Error! Task exists on WSG but has invalid status of NotCreated. Cannot proceed.", "Incoherent status", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End Using
-                    Return False
+                    'WE'RE DONE - EXIT!
+                    Return autoContinue
                 End If
-            Else
-                'NO EntrySeqID, then we go with full CREATE from the start.
-                'We first need a temporary inactive TaskID (because we don't have the Discord post yet) to retreive our reserved EntrySeqID on WSG
-                Dim taskInfo As AllData = SetAndRetrieveSessionData()
-                txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
-                txtDiscordTaskID.Text = String.Empty
-                _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
-                taskInfo.TemporaryTaskID = txtTemporaryTaskID.Text
-                taskInfo.TaskStatus = _TaskStatus
-                autoContinue = CreateWSGTaskPart1()
 
-                If autoContinue Then
-                    'We can now post the task on Discord
-                    autoContinue = PostTaskOnDiscord()
-                Else
-                    'Something went wrong - we cannot continue
-                    txtTemporaryTaskID.Text = String.Empty
-                    txtDiscordTaskID.Text = String.Empty
-                    _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
-                End If
+            Else
+                'Unplanned scenario! We have an EntrySeqID but the status is NotCreated ?!
+                'This is a mistake and should never occur
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "Error! Task exists on WSG but has invalid status of NotCreated. Cannot proceed.", "Incoherent status", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return False
+            End If
+        Else
+            'NO EntrySeqID, then we go with full CREATE from the start.
+            'We first need a temporary inactive TaskID (because we don't have the Discord post yet) to retreive our reserved EntrySeqID on WSG
+            Dim taskInfo As AllData = SetAndRetrieveSessionData()
+            txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
+            txtDiscordTaskID.Text = String.Empty
+            _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            taskInfo.TemporaryTaskID = txtTemporaryTaskID.Text
+            taskInfo.TaskStatus = _TaskStatus
+            autoContinue = CreateWSGTaskPart1()
+
+            If autoContinue Then
+                'We can now post the task on Discord
+                autoContinue = PostTaskOnDiscord()
+            Else
+                'Something went wrong - we cannot continue
+                txtTemporaryTaskID.Text = String.Empty
+                txtDiscordTaskID.Text = String.Empty
+                _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
             End If
         End If
 
@@ -2926,9 +2927,35 @@ Public Class Main
 
     Private Function PostTaskThreadContent(autoContinue As Boolean) As Boolean
 
+        If Not autoContinue Then
+            Return autoContinue
+        End If
+
+        Dim firstThreadMessage As String = $"## 🧵 Use this thread for discussions, pictures, results."
+        Dim msg As String = String.Empty
+
+        'Thread Creation
+        If chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked Then
+            autoContinue = CreateTaskThread()
+            If Not autoContinue Then Return autoContinue
+        End If
+
         'Cover Image
         If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked Then
-            autoContinue = CoverImage()
+            ' We need to post the cover image together with the first thread message
+            autoContinue = CoverImage(SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
+            If Not autoContinue Then Return autoContinue
+
+            Clipboard.SetText(firstThreadMessage)
+            autoContinue = CopyContent.ShowContent(Me,
+                                firstThreadMessage,
+                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread's top message along with the cover image.",
+                                "Posting cover and first message in thread.",
+                                New List(Of String) From {"^v"},, numWaitSecondsForFiles.Value / 2 * 1000,,
+                                SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
+        Else
+            ' We need to post the first thread message along with the featured in group if selected
+            msg = $"{firstThreadMessage}{Environment.NewLine}"
         End If
         If Not autoContinue Then
             Return False
@@ -2939,11 +2966,10 @@ Public Class Main
             taskFeatured = TaskFeatureOnGroupFlight()
         End If
         If taskFeatured.Length > 0 Then
-            taskFeatured = $"{taskFeatured}{Environment.NewLine}{Environment.NewLine}"
+            taskFeatured = $"{taskFeatured}"
         End If
 
-        Dim msg As String = String.Empty
-        msg = $"{taskFeatured}"
+        msg = $"{msg}{taskFeatured}"
 
         'Remaining details
         If msg.Trim.Length > 0 Then
@@ -2952,7 +2978,7 @@ Public Class Main
                             msg,
                             $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
                             "Creating all remaining details post in the thread.",
-                            New List(Of String) From {"^v"})
+                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
         End If
         If Not autoContinue Then
             Return False
@@ -2973,6 +2999,7 @@ Public Class Main
 
         'This will now allow us to post the task on Discord with proper links.
         autoContinue = FlightPlanMainInfoCopy()
+
         If txtDiscordTaskID.Text.Trim.Length > 0 Then
             autoContinue = PrepareCreateWSGTaskPart2()
         Else
@@ -2980,11 +3007,6 @@ Public Class Main
             _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
             SaveSession()
             autoContinue = False
-        End If
-
-        If autoContinue Then
-            'Thread Creation
-            autoContinue = CreateTaskThread()
         End If
 
         Return autoContinue
@@ -3035,8 +3057,9 @@ Public Class Main
         Dim listOfControlsAdd As New List(Of Windows.Forms.CheckBox)
 
         If lblTaskLibraryIDAcquired.Visible Then
-            listOfControlsRemove.Add(chkDPOIncludeCoverImage)
             'Task
+            listOfControlsRemove.Add(chkDPOIncludeCoverImage)
+            listOfControlsRemove.Add(chkDPOThreadCreation)
             listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
             'Group
             listOfControlsRemove.Add(chkDGPOMainPost)
@@ -3045,6 +3068,7 @@ Public Class Main
             listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
             'Task
+            listOfControlsAdd.Add(chkDPOThreadCreation)
             listOfControlsAdd.Add(chkDPOIncludeCoverImage)
             listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
             'Group
@@ -3094,6 +3118,7 @@ Public Class Main
         End If
 
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
+        chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
         chkDGPOMapImage.Enabled = grbTaskInfo.Enabled AndAlso cboBriefingMap.Text.Trim.Length > 0
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
@@ -3179,7 +3204,8 @@ Public Class Main
                                                      "StartTaskWorkflow.gif",
                                                      "Please open the Discord app and position your cursor as shown below",
                                                      "Once your cursor is in the right field, you can click OK and start posting.",
-                                                     "Instructions to read before starting the post!")
+                                                     "Instructions to read before starting the post!",
+                                                     SupportingFeatures.TaskLibraryDiscordURL)
 
                 If Not autoContinue Then
                     Return autoContinue
@@ -3198,7 +3224,7 @@ Public Class Main
                             txtFPResults.Text,
                             $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
                             titleMsg,
-                            New List(Of String) From {"^v"})
+                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL)
 
         If Not autoContinue OrElse fromGroup Then
             Return autoContinue
@@ -3259,24 +3285,14 @@ Public Class Main
                                                      "CreateTaskThread.gif",
                                                      "Follow the instructions as shown below to create the task's thread.",
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
-                                                     "Instructions for the creation of the task's thread!")
-
-        If autoContinue Then
-            Dim msg As String = $"## 🧵 Use this thread for discussions, pictures, results."
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                                msg,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread anchor as the very first message in the thread.",
-                                "Creating thread anchor post.",
-                                New List(Of String) From {"^v"})
-
-        End If
+                                                     "Instructions for the creation of the task's thread!",
+                                                     $"{SupportingFeatures.TaskLibraryDiscordURL}/{txtDiscordTaskID.Text.Trim}")
 
         Return autoContinue
 
     End Function
 
-    Private Function CoverImage(Optional postAfterPasting As Boolean = True) As Boolean
+    Private Function CoverImage(takeMeThereURL As String) As Boolean
 
         Dim autoContinue As Boolean = True
 
@@ -3291,9 +3307,9 @@ Public Class Main
                                     $"On the Discord app, make sure you are on the proper channel and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
                                     "Posting the cover image for the task.",
                                     New List(Of String) From {"^v"},
-                                    postAfterPasting,
-                                    If(postAfterPasting, numWaitSecondsForFiles.Value / 2 * 1000, 0),
-                                    Drawing.Image.FromFile(allFiles(0)))
+                                    False,,
+                                    Drawing.Image.FromFile(allFiles(0)),
+                                    takeMeThereURL)
             Else
                 autoContinue = True
             End If
@@ -3512,6 +3528,9 @@ Public Class Main
             Exit Sub
         End If
 
+        'TODO: Complete
+        SupportingFeatures.LaunchDiscordURL(_ClubPreset.DiscordURL)
+
         If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
 
         If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
@@ -3665,7 +3684,7 @@ Public Class Main
 
         'Cover
         If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
-            autoContinue = CoverImage(False)
+            autoContinue = CoverImage(String.Empty) 'TODO: Group event URL ?
         End If
         If Not autoContinue Then Return False
 
@@ -5252,6 +5271,9 @@ Public Class Main
                 txtTemporaryTaskID.Text = .TemporaryTaskID
                 _TaskEntrySeqID = .EntrySeqID
                 _TaskStatus = .TaskStatus
+                If _TaskEntrySeqID = 0 Then
+                    _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
+                End If
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
@@ -5543,10 +5565,12 @@ Public Class Main
                     Using New Centered_MessageBox(Me)
                         MessageBox.Show("I have opened Discord on the correct task. You should now delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
+                    SupportingFeatures.BringDiscordToTop()
                 Else
                     Using New Centered_MessageBox(Me)
                         MessageBox.Show("You should now go into Discord, find the task and delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
+                    SupportingFeatures.BringDiscordToTop()
                 End If
             End If
 

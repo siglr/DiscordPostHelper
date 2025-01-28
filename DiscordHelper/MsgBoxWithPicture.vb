@@ -4,6 +4,7 @@ Imports SIGLR.SoaringTools.CommonLibrary
 Public Class MsgBoxWithPicture
 
     Private _Continue As Boolean = True
+    Private _takeMeThereURL As String = String.Empty
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         Me.Close()
@@ -20,7 +21,8 @@ Public Class MsgBoxWithPicture
                                 imageName As String,
                                 messageAbove As String,
                                 messageBelow As String,
-                                title As String) As Boolean
+                                title As String,
+                                Optional takeMeThereURL As String = "") As Boolean
 
         _Continue = True
 
@@ -28,6 +30,13 @@ Public Class MsgBoxWithPicture
         lblMessageAbove.Text = messageAbove
         lblMessageBelow.Text = messageBelow
         PictureBox1.Image = Image.FromFile($"{Application.StartupPath}\{imageName}")
+
+        If takeMeThereURL.Trim.Length > 0 Then
+            Me.btnGoURL.Visible = True
+            _takeMeThereURL = takeMeThereURL
+        Else
+            Me.btnGoURL.Visible = False
+        End If
 
         btnStopExpert.Visible = True
 
@@ -41,4 +50,8 @@ Public Class MsgBoxWithPicture
 
     End Function
 
+    Private Sub btnGoURL_Click(sender As Object, e As EventArgs) Handles btnGoURL.Click
+        SupportingFeatures.LaunchDiscordURL(_takeMeThereURL)
+        SupportingFeatures.BringDPHToolToTop(Me.Handle)
+    End Sub
 End Class
