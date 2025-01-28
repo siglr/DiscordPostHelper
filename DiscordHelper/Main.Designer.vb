@@ -355,8 +355,8 @@ Partial Class Main
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblWSGEventAbsent = New System.Windows.Forms.Label()
         Me.lblWSGEventExists = New System.Windows.Forms.Label()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2859,7 +2859,7 @@ Partial Class Main
         '
         Me.btnDeleteEventNews.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteEventNews.Enabled = False
-        Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteEventNews.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDeleteEventNews.Location = New System.Drawing.Point(6, 133)
         Me.btnDeleteEventNews.Name = "btnDeleteEventNews"
         Me.btnDeleteEventNews.Size = New System.Drawing.Size(212, 37)
@@ -2873,7 +2873,7 @@ Partial Class Main
         '
         Me.btnDeleteFromTaskBrowser.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteFromTaskBrowser.Enabled = False
-        Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteFromTaskBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDeleteFromTaskBrowser.Location = New System.Drawing.Point(6, 90)
         Me.btnDeleteFromTaskBrowser.Name = "btnDeleteFromTaskBrowser"
         Me.btnDeleteFromTaskBrowser.Size = New System.Drawing.Size(212, 37)
@@ -3158,7 +3158,7 @@ Partial Class Main
         '
         Me.btnTaskAndGroupEventLinks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTaskAndGroupEventLinks.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTaskAndGroupEventLinks.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 87)
         Me.btnTaskAndGroupEventLinks.Name = "btnTaskAndGroupEventLinks"
         Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(212, 37)
@@ -3172,7 +3172,7 @@ Partial Class Main
         '
         Me.btnTaskFeaturedOnGroupFlight.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnTaskFeaturedOnGroupFlight.Location = New System.Drawing.Point(6, 26)
         Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
         Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(212, 55)
@@ -3310,7 +3310,7 @@ Partial Class Main
         'btnDPORecallSettings
         '
         Me.btnDPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 379)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
@@ -3323,7 +3323,7 @@ Partial Class Main
         'btnDPORememberSettings
         '
         Me.btnDPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 379)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
@@ -3484,7 +3484,7 @@ Partial Class Main
         'btnDPOResetToDefault
         '
         Me.btnDPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 379)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
@@ -3539,11 +3539,11 @@ Partial Class Main
         '
         Me.txtDiscordTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordTaskID.Location = New System.Drawing.Point(121, 27)
+        Me.txtDiscordTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.txtDiscordTaskID.Location = New System.Drawing.Point(109, 26)
         Me.txtDiscordTaskID.Name = "txtDiscordTaskID"
         Me.txtDiscordTaskID.ReadOnly = True
-        Me.txtDiscordTaskID.Size = New System.Drawing.Size(266, 32)
+        Me.txtDiscordTaskID.Size = New System.Drawing.Size(278, 30)
         Me.txtDiscordTaskID.TabIndex = 1
         Me.txtDiscordTaskID.Tag = "24"
         Me.txtDiscordTaskID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -3552,10 +3552,10 @@ Partial Class Main
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.Label31.Location = New System.Drawing.Point(6, 30)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(109, 26)
+        Me.Label31.Size = New System.Drawing.Size(97, 22)
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Task Post ID"
         '
@@ -3778,7 +3778,7 @@ Partial Class Main
         'btnDGPORecallSettings
         '
         Me.btnDGPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDGPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDGPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 297)
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
@@ -3791,7 +3791,7 @@ Partial Class Main
         'btnDGPORememberSettings
         '
         Me.btnDGPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDGPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDGPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 297)
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
@@ -3817,7 +3817,7 @@ Partial Class Main
         'btnDGPOResetToDefault
         '
         Me.btnDGPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDGPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.btnDGPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 295)
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
@@ -4257,7 +4257,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4266,7 +4266,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4283,56 +4283,56 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripSharePackage
         '
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4353,7 +4353,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4383,7 +4383,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4443,6 +4443,17 @@ Partial Class Main
         Me.lblWSGEventExists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblWSGEventExists.Visible = False
         '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.Label18.Location = New System.Drawing.Point(182, 28)
+        Me.Label18.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(36, 22)
+        Me.Label18.TabIndex = 2
+        Me.Label18.Text = "sec"
+        '
         'chkcboSharedWithUsers
         '
         Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4458,17 +4469,6 @@ Partial Class Main
         Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
         Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
         Me.chkcboSharedWithUsers.TabIndex = 97
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.Label18.Location = New System.Drawing.Point(182, 28)
-        Me.Label18.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(36, 22)
-        Me.Label18.TabIndex = 2
-        Me.Label18.Text = "sec"
         '
         'Main
         '
