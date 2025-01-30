@@ -14,6 +14,7 @@ Imports System.Net
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
 Imports System.Windows.Forms
+Imports System.Windows.Input
 
 Public Class Main
 
@@ -2647,32 +2648,7 @@ Public Class Main
 
     Private Sub btnStartFullPostingWorkflow_Click(sender As Object, e As EventArgs) Handles btnStartFullPostingWorkflow.Click
 
-        Dim enforceTaskLibrary As Boolean = True
-        Dim autoContinue As Boolean = True
-
-        If Not ValidPostingRequirements() Then
-            Exit Sub
-        End If
-
-        'First part of Group Flight Event
-        If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
-
-        'Task in Task Library
-        If Not PostTaskInLibrary(autoContinue) Then
-            Exit Sub
-        End If
-
-        If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
-
-        'Publish event to WSG
-        If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
-            'Update WSG task
-            If Not PrepareUpdateWSGTask() Then Exit Sub
-        End If
-
-        If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
-            PublishEventNews()
-        End If
+        GroupEventOrFullWorkflow(False)
 
     End Sub
 
@@ -3530,9 +3506,14 @@ Public Class Main
 
     Private Sub btnStartGroupEventPost_Click(sender As Object, e As EventArgs) Handles btnStartGroupEventPost.Click
 
+        GroupEventOrFullWorkflow(True)
+
+    End Sub
+
+    Private Sub GroupEventOrFullWorkflow(fromGroupOnly As Boolean)
         Dim autoContinue As Boolean = True
 
-        If Not ValidPostingRequirements(True) Then
+        If Not ValidPostingRequirements(fromGroupOnly) Then
             Exit Sub
         End If
 
@@ -3545,15 +3526,13 @@ Public Class Main
             If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
         End If
 
+        'Always publish event News on WSG
+        PublishEventNews()
+
         If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
-            'Update WSG task
+            'Always update WSG task when it exists and active
             If Not PrepareUpdateWSGTask() Then Exit Sub
         End If
-
-        If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
-            PublishEventNews()
-        End If
-
     End Sub
 
     Private Sub btnTaskAndGroupEventLinks_Click(sender As Object, e As EventArgs) Handles btnTaskAndGroupEventLinks.Click
@@ -4431,39 +4410,44 @@ Public Class Main
                 SetBriefingGuidePanel()
                 lblBriefingGuideInstructions.Text = "Review the task information on the various briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
-            Case 35 To 40 'We're done with the briefing
+            Case 35 To 39 'We're done with the briefing
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
-            Case 41 'Discord Post Options for task
+            Case 40 'WSG Task Create/Update
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 73
+                pnlWizardDiscord.Top = 0
+                lblDiscordGuideInstructions.Text = "Any task creation/update includes updating the task on WeSimGlide.org. This option cannot be unchecked."
+                SetFocusOnField(chkWSGTask, fromF1Key)
+            Case 41 'Discord Post Options for task
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 104
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDPOMainPost, fromF1Key)
             Case 42 'Publisher
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 179
+                pnlWizardDiscord.Top = 203
                 lblDiscordGuideInstructions.Text = "This is the primary task publisher. Only the publishers can update task information on WeSimGlide.org."
                 SetFocusOnField(cboTaskOwner, fromF1Key)
             Case 43 'Shared users
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 218
+                pnlWizardDiscord.Top = 242
                 lblDiscordGuideInstructions.Text = "The primary publisher can select other publishers to share the edit rights of the task information."
                 SetFocusOnField(chkcboSharedWithUsers, fromF1Key)
             Case 44 'Update description
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 298
+                pnlWizardDiscord.Top = 322
                 lblDiscordGuideInstructions.Text = "All updates to the task on WeSimGlide.org require a brief update description."
                 SetFocusOnField(txtLastUpdateDescription, fromF1Key)
             Case 45 'Reset all options to default
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 369
+                pnlWizardDiscord.Top = 393
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDPOResetToDefault, fromF1Key)
             Case 46 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 411
+                pnlWizardDiscord.Top = 435
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
                 SetFocusOnField(btnStartTaskPost, fromF1Key)
 
@@ -4563,29 +4547,36 @@ Public Class Main
                 lblBriefingGuideInstructions.Text = "Review the task and event information on the briefing tabs here and when you are satisfied, click Next."
                 SetFocusOnField(BriefingControl1, fromF1Key)
 
-            Case 75 To 79 'Next section
+            Case 75 To 78 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
-            Case 80 'Discord Post Options
+            Case 79 'WSG Create/Update Event
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabDiscord")
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 486
-                pnlWizardDiscord.Top = 316
+                pnlWizardDiscord.Top = 55
+                lblDiscordGuideInstructions.Text = "Any group event creation/update includes updating the event (and possibly task) on WeSimGlide.org. This option cannot be unchecked."
+                SetFocusOnField(chkWSGEvent, fromF1Key)
+
+            Case 80 'Discord Post Options
+                SetDiscordGuidePanelToTopArrowLeftSide()
+                pnlWizardDiscord.Left = 486
+                pnlWizardDiscord.Top = 346
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDGPOCoverImage, fromF1Key)
 
             Case 81 'Reset all options
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 585
-                pnlWizardDiscord.Top = 366
+                pnlWizardDiscord.Top = 402
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDGPOResetToDefault, fromF1Key)
 
             Case 82 'Start workflow
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 585
-                pnlWizardDiscord.Top = 402
+                pnlWizardDiscord.Top = 446
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
                 SetFocusOnField(btnStartGroupEventPost, fromF1Key)
 
@@ -4663,9 +4654,9 @@ Public Class Main
                 End If
                 Return 60
             Case WizardNextChoice.WhereToGoNext.DiscordTask
-                Return 41
+                Return 40
             Case WizardNextChoice.WhereToGoNext.DiscordEvent
-                Return 80
+                Return 79
             Case Else
                 Return 999
         End Select
@@ -6446,7 +6437,27 @@ Public Class Main
             End Using
         End If
     End Sub
-    Private Sub PublishEventNews()
+
+    Private Sub PostEventAndTaskOnWSGAccouncement(eventDate As Date, key As String)
+        Dim msgForEventHunters As String = String.Empty
+        If _TaskEntrySeqID > 0 Then
+            msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
+        Else
+            msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+        End If
+        Clipboard.SetText(msgForEventHunters)
+
+        CopyContent.ShowContent(Me,
+                                msgForEventHunters,
+                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
+                                "Sharing WeSimGlide.org Task and Group Event links",
+                                New List(Of String) From {"^v"},,,,
+                                SupportingFeatures.WSGAnnouncementsDiscordURL)
+
+    End Sub
+
+    Private Function PublishEventNews() As Boolean
+
         If UserCanCreateEvent Then
             Dim key As String
             Dim eventDate As Date
@@ -6529,32 +6540,31 @@ Public Class Main
 
             If result Then
                 SetEventLabelAndButtons()
-                Dim msgForEventHunters As String = String.Empty
-                If _TaskEntrySeqID > 0 Then
-                    msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
-                Else
-                    msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+                If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
+                    PostEventAndTaskOnWSGAccouncement(eventDate, key)
                 End If
-                Clipboard.SetText(msgForEventHunters)
-
-                CopyContent.ShowContent(Me,
-                                msgForEventHunters,
-                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
-                                "Sharing WeSimGlide.org Task and Group Event links",
-                                New List(Of String) From {"^v"},,,,
-                                SupportingFeatures.WSGAnnouncementsDiscordURL)
-
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show("Failed to publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Using
             End If
+
+            Return result
+
         End If
 
-    End Sub
+    End Function
 
     Private Sub btnDeleteEventNews_Click(sender As Object, e As EventArgs) Handles btnDeleteEventNews.Click
         PrepareDeleteEventNews()
+    End Sub
+
+    Private Sub chkWSGTask_CheckedChanged(sender As Object, e As EventArgs) Handles chkWSGTask.CheckedChanged
+        chkWSGTask.Checked = True
+    End Sub
+
+    Private Sub chkWSGEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkWSGEvent.CheckedChanged
+        chkWSGEvent.Checked = True
     End Sub
 
 #End Region
