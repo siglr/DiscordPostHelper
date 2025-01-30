@@ -1942,7 +1942,7 @@ Public Class Main
         sb.AppendLine($"**PLN** : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
         sb.AppendLine($"**WPR** : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
-            sb.AppendLine($" 👉 * Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
+            sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
         End If
         sb.AppendLine()
         If txtMainArea.Text.Trim.Length > 0 Then
