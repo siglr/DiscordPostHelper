@@ -3321,7 +3321,6 @@ Public Class Main
                 If answer = DialogResult.OK Then
                     Dim taskThreadURL As String
                     taskThreadURL = Clipboard.GetText
-                    'TODO: What do we to in test mode for the DiscordTaskID ??
                     txtDiscordTaskID.Text = $"{If(_useTestMode, "T", "")}{SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)}"
                     If txtDiscordTaskID.Text.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
