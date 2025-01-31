@@ -29,6 +29,8 @@ Public Class SupportingFeatures
     Private Const MSFSSoaringToolsLibraryID As String = "1155511739799060552"
     Private Const MSFSWSGAnnouncementsDiscordID As String = "1266809849266831390"
     Private Const MSFSSoaringToolsPrivateTestingID As String = "1067288937527246868"
+    Private Const MSFSSoaringToolsTestingID As String = "1067291857404571750"
+    Private Const MSFSSoaringToolsEventsTestingID As String = "1067291913859891200"
 
     Public Enum DiscordTimeStampFormat As Integer
         TimeOnlyWithoutSeconds = 0
@@ -68,15 +70,16 @@ Public Class SupportingFeatures
     Public Const WS_VSCROLL As Integer = &H200000
     Public Const WS_HSCROLL As Integer = &H100000
 
-    Public Shared ReadOnly Property TaskLibraryDiscordURL As String
-        Get
-            If Not _useTestServer Then
-                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsLibraryID}"
-            Else
-                Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsPrivateTestingID}"
-            End If
-        End Get
-    End Property
+    Public Shared Function TaskLibraryDiscordURL(Optional testMode As Boolean = False) As String
+        If testMode Then
+            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsTestingID}"
+        End If
+        If Not _useTestServer Then
+            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsLibraryID}"
+        Else
+            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsPrivateTestingID}"
+        End If
+    End Function
 
     Public Shared ReadOnly Property WSGAnnouncementsDiscordURL As String
         Get
@@ -84,7 +87,14 @@ Public Class SupportingFeatures
         End Get
     End Property
 
+    Public Shared Function TestEventsDiscordURL() As String
+        Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
+    End Function
+
     Public Shared Function TaskThreadDiscordURL(taskID As String) As String
+        If taskID.StartsWith("T") Then
+            taskID = taskID.Substring(1, taskID.Length - 1)
+        End If
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{taskID}"
     End Function
 
@@ -684,20 +694,6 @@ Public Class SupportingFeatures
                 Dim responseFromServer As String = reader.ReadToEnd()
                 Console.WriteLine(responseFromServer)
             End Using
-        End Using
-
-    End Sub
-
-    Public Sub DeleteTempFile(ByVal fileName As String)
-
-        Dim request As HttpWebRequest = CType(WebRequest.Create($"{SIGLRDiscordPostHelperFolder()}DeleteTempFolder.php?folder={fileName}"), HttpWebRequest)
-        request.Method = "GET"
-
-        Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-
-        Using reader As New IO.StreamReader(response.GetResponseStream())
-            Dim result As String = reader.ReadToEnd()
-            Console.WriteLine(result)
         End Using
 
     End Sub
@@ -2188,7 +2184,7 @@ Public Class SupportingFeatures
             Dim parts As String() = remainingURL.Split("/"c)
 
             ' Check if there are 1 or 2 parts
-            If parts.Length = 2 AndAlso (parts(0) = MSFSSoaringToolsLibraryID OrElse (Debugger.IsAttached AndAlso parts(0) = MSFSSoaringToolsPrivateTestingID)) Then
+            If parts.Length = 2 AndAlso (parts(0) = MSFSSoaringToolsLibraryID OrElse (parts(0) = MSFSSoaringToolsTestingID) OrElse (Debugger.IsAttached AndAlso parts(0) = MSFSSoaringToolsPrivateTestingID)) Then
                 ' Two parts, the first is the library ID and the second is the message ID
                 Return parts(1)
             ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then
@@ -2642,6 +2638,16 @@ Public Class SupportingFeatures
             _testServerAskedOnce = True
         End If
     End Sub
+
+    Public Shared ReadOnly Property UsingTestServer As Boolean
+        Get
+            If Debugger.IsAttached Then
+                AskTestServer()
+            End If
+            Return _useTestServer
+        End Get
+    End Property
+
     Public Shared Function SIGLRDiscordPostHelperFolder() As String
         If Debugger.IsAttached Then
             AskTestServer()

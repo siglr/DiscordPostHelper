@@ -68,6 +68,7 @@ Public Class Main
     Private _previousOwner As String = String.Empty
     Private _currentWSGTaskOwner As String = String.Empty
     Private _currentWSGSharedWith As New List(Of String)
+    Private _useTestMode As Boolean = False
 
     Private _OriginalFlightPlanTitle As String = String.Empty
     Private _OriginalFlightPlanDeparture As String = String.Empty
@@ -124,6 +125,13 @@ Public Class Main
 
         'Get the permission ID
         _userPermissionID = GetUserIDFromPermissionsFile()
+
+        If _userPermissionID = String.Empty Then
+            _useTestMode = True
+        Else
+            _useTestMode = False
+        End If
+        chkTestMode.Checked = _useTestMode
 
         ResetForm()
 
@@ -592,6 +600,7 @@ Public Class Main
                 BuildWeatherInfoResults()
                 BuildGroupFlightPost()
                 SetEventLabelAndButtons()
+                CheckTestModes()
                 CheckWhichOptionsCanBeEnabled()
         End Select
     End Sub
@@ -1938,6 +1947,10 @@ Public Class Main
         sb.AppendLine("## :wsg:WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
         sb.AppendLine("## 📁 Files")
+        If _useTestMode Then
+            sb.AppendLine($"***-> TEST MODE ONLY - Links will not work***")
+            sb.AppendLine()
+        End If
         sb.AppendLine($"**DPHX** : [{txtTitle.Text.Trim}.dphx](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
         sb.AppendLine($"**ZIP** : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
         sb.AppendLine($"**PLN** : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
@@ -2629,7 +2642,10 @@ Public Class Main
     End Sub
 
     Private Sub chkDPOMainPost_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.CheckedChanged
-        If _TaskStatus <= SupportingFeatures.WSGTaskStatus.PendingCreation Then
+        If _useTestMode AndAlso txtDiscordTaskID.Text.StartsWith("T") Then
+            Exit Sub
+        End If
+        If (_TaskStatus <= SupportingFeatures.WSGTaskStatus.PendingCreation) Then
             chkDPOMainPost.Checked = True
         End If
         'chkDPOIncludeCoverImage.Checked = chkDPOMainPost.Checked
@@ -2693,14 +2709,13 @@ Public Class Main
 
     Private Sub btnStartTaskPost_Click(sender As Object, e As EventArgs) Handles btnStartTaskPost.Click
 
-        If Not UserCanCreateTask Then
+        If (Not _useTestMode) AndAlso (Not UserCanCreateTask) Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "You currently don't have the access rights to create a task on WeSimGlide.org", "Missing rights", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Exit Sub
         End If
 
-        Dim enforceTaskLibrary As Boolean = True
         Dim autoContinue As Boolean = True
 
         If txtDiscordTaskID.Text.Length = 0 Then
@@ -2826,7 +2841,7 @@ Public Class Main
 
         'Task Main Post on WeSimGlide.org and Discord
         'Is there an EntrySeqID already?
-        If _TaskEntrySeqID > 0 Then
+        If _TaskEntrySeqID > 0 AndAlso (Not _useTestMode) Then
 
             If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
                 txtDiscordTaskID.Text.Trim.Length = 0 AndAlso
@@ -2876,11 +2891,22 @@ Public Class Main
             'We first need a temporary inactive TaskID (because we don't have the Discord post yet) to retreive our reserved EntrySeqID on WSG
             Dim taskInfo As AllData = SetAndRetrieveSessionData()
             txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
-            txtDiscordTaskID.Text = String.Empty
+            If Not _useTestMode Then
+                txtDiscordTaskID.Text = String.Empty
+            ElseIf txtDiscordTaskID.Text.Length > 0 Then
+                'Ask user
+                Using New Centered_MessageBox(Me)
+                    If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        txtDiscordTaskID.Text = String.Empty
+                    End If
+                End Using
+            End If
             _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
             taskInfo.TemporaryTaskID = txtTemporaryTaskID.Text
             taskInfo.TaskStatus = _TaskStatus
-            autoContinue = CreateWSGTaskPart1()
+            If Not _useTestMode Then
+                autoContinue = CreateWSGTaskPart1()
+            End If
 
             If autoContinue Then
                 'We can now post the task on Discord
@@ -2899,8 +2925,14 @@ Public Class Main
 
         'Are we enforcing the posting on the Task Library only?
         If txtDiscordTaskID.Text = String.Empty Then
+            Dim msg As String = String.Empty
+            If Not _useTestMode Then
+                msg = "Task Library"
+            Else
+                msg = "test channel on Discord"
+            End If
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "Task ID is missing - You must post the task to the Task Library!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Me, $"Task ID is missing - You must post the {msg}!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Return False
         End If
@@ -2981,22 +3013,29 @@ Public Class Main
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
         Dim autoContinue As Boolean = False
 
-        'Retrieve the task details after first step of task creation
-        GetTaskDetails(taskInfo.TemporaryTaskID, taskInfo.EntrySeqID)
-        'Update taskInfo and save file with latest details
-        taskInfo = SetAndRetrieveSessionData()
-        SaveSession()
+        If Not _useTestMode Then
+            'Retrieve the task details after first step of task creation
+            GetTaskDetails(taskInfo.TemporaryTaskID, taskInfo.EntrySeqID)
+            'Update taskInfo and save file with latest details
+            taskInfo = SetAndRetrieveSessionData()
+            SaveSession()
+        End If
 
         'This will now allow us to post the task on Discord with proper links.
         autoContinue = FlightPlanMainInfoCopy()
 
-        If txtDiscordTaskID.Text.Trim.Length > 0 Then
+        If (Not _useTestMode) AndAlso txtDiscordTaskID.Text.Trim.Length > 0 AndAlso (Not txtDiscordTaskID.Text.StartsWith("T")) Then
             autoContinue = PrepareCreateWSGTaskPart2()
         Else
             'We don't have the official Discord task ID, so the task should stay in Pending creation?
-            _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            If _useTestMode Then
+                _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
+                autoContinue = True
+            Else
+                _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+                autoContinue = False
+            End If
             SaveSession()
-            autoContinue = False
         End If
 
         Return autoContinue
@@ -3099,18 +3138,48 @@ Public Class Main
 
     End Sub
 
+    Private Sub CheckTestModes()
+        If _userPermissionID = String.Empty Then
+            chkTestMode.Visible = False
+        Else
+            chkTestMode.Visible = True
+        End If
+        lblTestMode.Visible = False
+        If _useTestMode Then
+            chkTestMode.Checked = True
+            If SupportingFeatures.UsingTestServer Then
+                lblTestMode.Text = $"You are in TEST mode{Environment.NewLine}&& WSG Test Server"
+            Else
+                lblTestMode.Text = "You are in TEST mode"
+            End If
+            lblTestMode.Visible = True
+        ElseIf SupportingFeatures.UsingTestServer Then
+            lblTestMode.Text = "Running with WSG Test Server"
+            lblTestMode.Visible = True
+        End If
+
+        If Not _useTestMode Then
+            If txtDiscordTaskID.Text.StartsWith("T") Then
+                txtDiscordTaskID.Text = String.Empty
+            End If
+            If txtGroupEventPostURL.Text.Trim.Length > 0 Then
+                txtGroupEventPostURL.Text = String.Empty
+            End If
+        End If
+
+        chkWSGTask.Enabled = Not _useTestMode
+        chkWSGTask.Checked = Not _useTestMode
+        chkWSGEvent.Enabled = Not _useTestMode
+        chkWSGEvent.Checked = Not _useTestMode
+
+        grbWSGExtras.Enabled = Not _useTestMode
+
+    End Sub
+
     Private Sub CheckWhichOptionsCanBeEnabled()
 
-        If _userPermissionID = String.Empty Then
-            tabDiscord.Enabled = False
-            Exit Sub
-        End If
-
         'Is there a group selected for event news buttons
-        btnDeleteEventNews.Enabled = False
-        If txtClubFullName.Text.Trim <> String.Empty Then
-            btnDeleteEventNews.Enabled = UserCanDeleteEvent
-        End If
+        SetEventLabelAndButtons()
 
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
         chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
@@ -3161,14 +3230,14 @@ Public Class Main
 
     Private Sub SetEventLabelAndButtons()
 
-        If chkActivateEvent.Checked Then
+        If chkActivateEvent.Checked AndAlso _ClubPreset IsNot Nothing Then
             Dim key As String = String.Empty
             Dim eventDate As Date
             eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
             eventDate = eventDate.ToUniversalTime
             key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
 
-            If VerifyNewsExists(key) = "success" Then
+            If (Not _useTestMode) AndAlso VerifyNewsExists(key) = "success" Then
                 lblWSGEventExists.Visible = True
                 lblWSGEventAbsent.Visible = False
                 btnDeleteEventNews.Enabled = UserCanDeleteEvent
@@ -3178,6 +3247,9 @@ Public Class Main
                 btnDeleteEventNews.Enabled = False
             End If
         Else
+            lblWSGEventExists.Visible = False
+            lblWSGEventAbsent.Visible = True
+            btnDeleteEventNews.Enabled = False
         End If
 
     End Sub
@@ -3194,12 +3266,21 @@ Public Class Main
                 origin = "You can now EDIT the corresponding task message directly in the FLIGHTS channel under TASK LIBRARY."
                 titleMsg = "Updating main FP post"
             Else
+                Dim msgAbove As String = String.Empty
+                Dim msgBelow As String = String.Empty
+                If _useTestMode Then
+                    msgAbove = $"Please open the Discord app and go to the Task TESTING channel.{Environment.NewLine}You can also click the 'Take me there' button."
+                    msgBelow = "Once your cursor is in the right field on the TESTING channel, you can click OK and start posting."
+                Else
+                    msgAbove = $"Please open the Discord app and position your cursor as shown below.{Environment.NewLine}You can also click the 'Take me there' button."
+                    msgBelow = "Once your cursor is in the right field, you can click OK and start posting."
+                End If
                 autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "StartTaskWorkflow.gif",
-                                                     "Please open the Discord app and position your cursor as shown below",
-                                                     "Once your cursor is in the right field, you can click OK and start posting.",
+                                                     msgAbove,
+                                                     msgBelow,
                                                      "Instructions to read before starting the post!",
-                                                     SupportingFeatures.TaskLibraryDiscordURL)
+                                                     SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
 
                 If Not autoContinue Then
                     Return autoContinue
@@ -3218,7 +3299,7 @@ Public Class Main
                             txtFPResults.Text,
                             $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
                             titleMsg,
-                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL)
+                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
 
         If Not autoContinue OrElse fromGroup Then
             Return autoContinue
@@ -3240,7 +3321,8 @@ Public Class Main
                 If answer = DialogResult.OK Then
                     Dim taskThreadURL As String
                     taskThreadURL = Clipboard.GetText
-                    txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)
+                    'TODO: What do we to in test mode for the DiscordTaskID ??
+                    txtDiscordTaskID.Text = $"{If(_useTestMode, "T", "")}{SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)}"
                     If txtDiscordTaskID.Text.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
                             If MessageBox.Show(Me, $"Invalid task ID - If you posted under the Task Library, try again. If not, click Cancel.", "Task ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
@@ -3280,7 +3362,7 @@ Public Class Main
                                                      "Follow the instructions as shown below to create the task's thread.",
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
                                                      "Instructions for the creation of the task's thread!",
-                                                     $"{SupportingFeatures.TaskLibraryDiscordURL}/{txtDiscordTaskID.Text.Trim}")
+                                                     $"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{If(txtDiscordTaskID.Text.StartsWith("T"), txtDiscordTaskID.Text.Substring(1, txtDiscordTaskID.Text.Length - 1), txtDiscordTaskID.Text)}")
 
         Return autoContinue
 
@@ -3498,6 +3580,10 @@ Public Class Main
         End If
     End Sub
 
+    Private Sub btnDiscordGroupEventURLClear_Click(sender As Object, e As EventArgs) Handles btnDiscordGroupEventURLClear.Click
+        txtGroupEventPostURL.Text = String.Empty
+    End Sub
+
     Private Sub btnRepostOriginalURLPaste_Click(sender As Object, e As EventArgs) Handles btnRepostOriginalURLPaste.Click
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
             txtRepostOriginalURL.Text = Clipboard.GetText
@@ -3517,7 +3603,32 @@ Public Class Main
             Exit Sub
         End If
 
+        'Check if event is in the past
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+        If fullMeetDateTimeLocal < Now() Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The group event date is in the past!", "Invalid group event date", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Exit Sub
+        End If
+
+        If _useTestMode AndAlso txtGroupEventPostURL.Text.Trim.Length > 0 Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    txtGroupEventPostURL.Text = String.Empty
+                    SaveSession()
+                End If
+            End Using
+        End If
+
         If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
+
+        'Need to go for the task now
+        If Not fromGroupOnly Then
+            If Not PostTaskInLibrary(autoContinue) Then
+                Exit Sub
+            End If
+        End If
 
         If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
            (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked) OrElse
@@ -3526,8 +3637,10 @@ Public Class Main
             If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
         End If
 
-        'Always publish event News on WSG
-        PublishEventNews()
+        If Not _useTestMode Then
+            'Always publish event News on WSG
+            PublishEventNews()
+        End If
 
         If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
             'Always update WSG task when it exists and active
@@ -3625,7 +3738,7 @@ Public Class Main
 
         'Cover
         If chkDGPOCoverImage.Enabled AndAlso chkDGPOCoverImage.Checked Then
-            autoContinue = CoverImage(_ClubPreset.DiscordURL, True)
+            autoContinue = CoverImage(If(_useTestMode, SupportingFeatures.TestEventsDiscordURL, _ClubPreset.DiscordURL), True)
         End If
         If Not autoContinue Then Return False
 
@@ -3652,11 +3765,13 @@ Public Class Main
     Private Function SecondPartOfGroupPost(autoContinue As Boolean) As Boolean
 
         'Must check if task is created on WSG before continuing
-        If Not (_TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active) Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "The task must be published on WeSimGlide.org before continuing group event posting.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End Using
-            Return True
+        If Not _useTestMode Then
+            If Not (_TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active) Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "The task must be published on WeSimGlide.org before continuing group event posting.", "Creating group flight post", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
+                Return True
+            End If
         End If
 
         'Thread
@@ -3686,7 +3801,7 @@ Public Class Main
                                 New List(Of String) From {"^v"},
                                 True,
                                 If(withCover, numWaitSecondsForFiles.Value / 2 * 1000, 0),,
-                                _ClubPreset.DiscordURL)
+                                If(_useTestMode, SupportingFeatures.TestEventsDiscordURL, _ClubPreset.DiscordURL))
 
         If Not autoContinue Then Return autoContinue
 
@@ -5173,6 +5288,9 @@ Public Class Main
                     _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                 End If
                 txtDiscordTaskID.Text = .DiscordTaskID
+                If txtDiscordTaskID.Text.StartsWith("T") Then
+                    _useTestMode = True
+                End If
                 txtTemporaryTaskID.Text = .TemporaryTaskID
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
@@ -5482,6 +5600,9 @@ Public Class Main
     End Sub
 
     Public Function DeleteTaskFromServer(entrySeqID As Integer) As Boolean
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}DeleteTask.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
@@ -5641,6 +5762,9 @@ Public Class Main
     End Function
 
     Private Function CallScriptToCreateWSGTaskPart1(taskData As Dictionary(Of String, Object)) As Integer
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
         Try
             ' Serialize the task data to JSON
             Dim json As String = JsonConvert.SerializeObject(taskData, New JsonSerializerSettings() With {
@@ -5854,26 +5978,37 @@ Public Class Main
         'One last save of the DPHX that will be published
         SaveSession()
 
-        Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath)
+        If Not _useTestMode Then
+            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath)
 
-        If result Then
-            'Nothing to do
+            If result Then
+                'Nothing to do
+            Else
+                'Put back the pending values
+                taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+                txtTemporaryTaskID.Text = oldTemporaryTaskID
+                taskInfo.TemporaryTaskID = oldTemporaryTaskID
+                SaveSession()
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End If
+            Return result
         Else
-            'Put back the pending values
-            taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
+            'Put back the not created
+            taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
             txtTemporaryTaskID.Text = oldTemporaryTaskID
             taskInfo.TemporaryTaskID = oldTemporaryTaskID
             SaveSession()
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
+            Return True
         End If
-
-        Return result
 
     End Function
 
     Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
         Try
             ' Serialize the task to JSON
             Dim json As String = JsonConvert.SerializeObject(task, New JsonSerializerSettings() With {
@@ -6122,14 +6257,12 @@ Public Class Main
             End Select
             tabFlightPlan.Enabled = IsOwnerOrShared
 
-            If UserCanDeleteTask Then
-                btnDeleteFromTaskBrowser.Enabled = True
-            End If
+            btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask
         Else
             btnStartTaskPost.Text = "Start Task Creation Workflow"
             labelString = "Task does not exist on WeSimGlide.org"
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
-            If UserCanCreateTask Then
+            If UserCanCreateTask OrElse _useTestMode Then
                 btnStartTaskPost.Enabled = grbTaskInfo.Enabled
                 chkDPOMainPost.Checked = True
             Else
@@ -6171,6 +6304,10 @@ Public Class Main
                                  eligibleAward As String,
                                  beginnersGuide As String,
                                  notam As String) As Boolean
+
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
 
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNewsWithRights.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
@@ -6267,6 +6404,9 @@ Public Class Main
     End Function
 
     Public Function DeleteEventNews(key As String) As Boolean
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}ManageNewsWithRights.php"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "POST"
@@ -6328,6 +6468,7 @@ Public Class Main
     End Function
 
     Private Function VerifyNewsExists(key As String) As String
+
         Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}VerifyNewsExists.php?key={key}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
@@ -6560,11 +6701,23 @@ Public Class Main
     End Sub
 
     Private Sub chkWSGTask_CheckedChanged(sender As Object, e As EventArgs) Handles chkWSGTask.CheckedChanged
-        chkWSGTask.Checked = True
+        If chkWSGTask.Enabled Then
+            chkWSGTask.Checked = True
+        End If
     End Sub
 
     Private Sub chkWSGEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkWSGEvent.CheckedChanged
-        chkWSGEvent.Checked = True
+        If chkWSGEvent.Enabled Then
+            chkWSGEvent.Checked = True
+        End If
+    End Sub
+
+    Private Sub chkTestMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkTestMode.CheckedChanged
+        If _userPermissionID = String.Empty Then
+            chkTestMode.Checked = True
+        End If
+        _useTestMode = chkTestMode.Checked
+        CheckTestModes()
     End Sub
 
 #End Region
