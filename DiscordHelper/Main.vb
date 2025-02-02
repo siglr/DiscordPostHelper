@@ -3163,9 +3163,6 @@ Public Class Main
             If txtDiscordTaskID.Text.StartsWith("T") Then
                 txtDiscordTaskID.Text = String.Empty
             End If
-            If txtGroupEventPostURL.Text.Trim.Length > 0 Then
-                txtGroupEventPostURL.Text = String.Empty
-            End If
         End If
 
         chkWSGTask.Enabled = Not _useTestMode
@@ -6715,6 +6712,12 @@ Public Class Main
     Private Sub chkTestMode_CheckedChanged(sender As Object, e As EventArgs) Handles chkTestMode.CheckedChanged
         If _userPermissionID = String.Empty Then
             chkTestMode.Checked = True
+        End If
+        If _useTestMode And Not chkTestMode.Checked Then
+            'Going from test mode to real mode - the group event should be emptied if not
+            If txtGroupEventPostURL.Text.Trim.Length > 0 Then
+                txtGroupEventPostURL.Text = String.Empty
+            End If
         End If
         _useTestMode = chkTestMode.Checked
         CheckTestModes()
