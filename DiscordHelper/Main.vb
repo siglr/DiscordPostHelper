@@ -2337,7 +2337,6 @@ Public Class Main
 
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
 
-        'TODO: Fix! Loading an unchanged file fires a change here
         If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
         End If
