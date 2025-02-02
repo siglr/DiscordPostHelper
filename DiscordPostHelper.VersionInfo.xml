@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.28.4</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.2.1</ReleaseVersion>
+      <ReleaseTitle>New testing mode!</ReleaseTitle>
+      <ReleaseNotes>
+        Added a testing mode where new users and publishers can test their Discord posts without messing with official channels and WeSimGlide.org.
+        Added a few clarifications on the WSG and Discord tab.
+        Fixed combined group event and task workflow.
+        A few other fixes here and there.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.28.4</ReleaseVersion>
       <ReleaseTitle>Small fix post previous release</ReleaseTitle>
