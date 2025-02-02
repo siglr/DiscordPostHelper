@@ -1955,7 +1955,7 @@ Public Class Main
         sb.AppendLine($"**ZIP** : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
         sb.AppendLine($"**PLN** : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
         sb.AppendLine($"**WPR** : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
-        If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text) Then
+        If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
             sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
         End If
         sb.AppendLine()
@@ -2337,6 +2337,7 @@ Public Class Main
 
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
 
+        'TODO: Fix! Loading an unchanged file fires a change here
         If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
         End If
