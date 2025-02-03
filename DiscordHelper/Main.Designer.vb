@@ -74,7 +74,6 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -240,7 +239,6 @@ Partial Class Main
         Me.chkWSGTask = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
         Me.lblUpdateDescription = New System.Windows.Forms.Label()
         Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
@@ -317,7 +315,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -347,6 +344,10 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.btnWSGTaskLink = New System.Windows.Forms.Button()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1038,20 +1039,6 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.FileDropZone1.Tag = "25"
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'FlightPlanTabSplitter
         '
@@ -2861,7 +2848,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(486, 600)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(500, 600)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -2978,9 +2965,9 @@ Partial Class Main
         'pnlFullWorkflowTaskGroupFlight
         '
         Me.pnlFullWorkflowTaskGroupFlight.Controls.Add(Me.btnStartFullPostingWorkflow)
-        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(837, 386)
+        Me.pnlFullWorkflowTaskGroupFlight.Location = New System.Drawing.Point(837, 409)
         Me.pnlFullWorkflowTaskGroupFlight.Name = "pnlFullWorkflowTaskGroupFlight"
-        Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(261, 120)
+        Me.pnlFullWorkflowTaskGroupFlight.Size = New System.Drawing.Size(261, 97)
         Me.pnlFullWorkflowTaskGroupFlight.TabIndex = 3
         Me.pnlFullWorkflowTaskGroupFlight.TabStop = False
         Me.pnlFullWorkflowTaskGroupFlight.Text = "Full Task and Group Flight Event"
@@ -2990,9 +2977,9 @@ Partial Class Main
         Me.btnStartFullPostingWorkflow.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnStartFullPostingWorkflow.Location = New System.Drawing.Point(6, 26)
         Me.btnStartFullPostingWorkflow.Name = "btnStartFullPostingWorkflow"
-        Me.btnStartFullPostingWorkflow.Size = New System.Drawing.Size(249, 86)
+        Me.btnStartFullPostingWorkflow.Size = New System.Drawing.Size(249, 65)
         Me.btnStartFullPostingWorkflow.TabIndex = 0
-        Me.btnStartFullPostingWorkflow.Tag = "88"
+        Me.btnStartFullPostingWorkflow.Tag = "89"
         Me.btnStartFullPostingWorkflow.Text = "Start Combined Workflow for Group Event && Task"
         Me.ToolTip1.SetToolTip(Me.btnStartFullPostingWorkflow, "Click this button to begin posting the entire details for both the group event an" &
         "d the task.")
@@ -3000,11 +2987,12 @@ Partial Class Main
         '
         'grpDiscordOthers
         '
+        Me.grpDiscordOthers.Controls.Add(Me.btnWSGTaskLink)
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskAndGroupEventLinks)
         Me.grpDiscordOthers.Controls.Add(Me.btnTaskFeaturedOnGroupFlight)
         Me.grpDiscordOthers.Location = New System.Drawing.Point(837, 182)
         Me.grpDiscordOthers.Name = "grpDiscordOthers"
-        Me.grpDiscordOthers.Size = New System.Drawing.Size(261, 130)
+        Me.grpDiscordOthers.Size = New System.Drawing.Size(261, 154)
         Me.grpDiscordOthers.TabIndex = 4
         Me.grpDiscordOthers.TabStop = False
         Me.grpDiscordOthers.Text = "Other individual posts"
@@ -3014,7 +3002,7 @@ Partial Class Main
         Me.btnTaskAndGroupEventLinks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTaskAndGroupEventLinks.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 87)
+        Me.btnTaskAndGroupEventLinks.Location = New System.Drawing.Point(6, 68)
         Me.btnTaskAndGroupEventLinks.Name = "btnTaskAndGroupEventLinks"
         Me.btnTaskAndGroupEventLinks.Size = New System.Drawing.Size(249, 37)
         Me.btnTaskAndGroupEventLinks.TabIndex = 1
@@ -3030,10 +3018,10 @@ Partial Class Main
         Me.btnTaskFeaturedOnGroupFlight.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
         Me.btnTaskFeaturedOnGroupFlight.Location = New System.Drawing.Point(6, 26)
         Me.btnTaskFeaturedOnGroupFlight.Name = "btnTaskFeaturedOnGroupFlight"
-        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(249, 55)
+        Me.btnTaskFeaturedOnGroupFlight.Size = New System.Drawing.Size(249, 37)
         Me.btnTaskFeaturedOnGroupFlight.TabIndex = 0
         Me.btnTaskFeaturedOnGroupFlight.Tag = "85"
-        Me.btnTaskFeaturedOnGroupFlight.Text = "Task featured on group flight"
+        Me.btnTaskFeaturedOnGroupFlight.Text = "Task featured on group event"
         Me.ToolTip1.SetToolTip(Me.btnTaskFeaturedOnGroupFlight, "Click this button to copy the message to post on the task and receive instruction" &
         "s to paste it in the Discord.")
         Me.btnTaskFeaturedOnGroupFlight.UseVisualStyleBackColor = True
@@ -3137,23 +3125,6 @@ Partial Class Main
         Me.Label12.Size = New System.Drawing.Size(82, 22)
         Me.Label12.TabIndex = 0
         Me.Label12.Text = "Publisher:"
-        '
-        'chkcboSharedWithUsers
-        '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkcboSharedWithUsers.IsInitializing = False
-        Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 211)
-        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
-        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
-        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
-        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
-        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 2
-        Me.chkcboSharedWithUsers.Tag = "43"
         '
         'cboTaskOwner
         '
@@ -4032,7 +4003,7 @@ Partial Class Main
         Me.GroupBox4.Controls.Add(Me.Label18)
         Me.GroupBox4.Controls.Add(Me.Label15)
         Me.GroupBox4.Controls.Add(Me.numWaitSecondsForFiles)
-        Me.GroupBox4.Location = New System.Drawing.Point(837, 318)
+        Me.GroupBox4.Location = New System.Drawing.Point(837, 342)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(261, 62)
         Me.GroupBox4.TabIndex = 5
@@ -4070,7 +4041,7 @@ Partial Class Main
         Me.numWaitSecondsForFiles.Name = "numWaitSecondsForFiles"
         Me.numWaitSecondsForFiles.Size = New System.Drawing.Size(55, 30)
         Me.numWaitSecondsForFiles.TabIndex = 1
-        Me.numWaitSecondsForFiles.Tag = "87"
+        Me.numWaitSecondsForFiles.Tag = "88"
         Me.numWaitSecondsForFiles.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.numWaitSecondsForFiles, "Number of seconds to wait for Discord to process files and images (half for image" &
         "s).")
@@ -4133,19 +4104,6 @@ Partial Class Main
         Me.btnBriefingGuideNext.Text = "Next"
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
         '
         'lblTaskBrowserIDAndDate
         '
@@ -4356,6 +4314,64 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Name = "GetNowTimeStampOnly"
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.FileDropZone1.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
+        'chkcboSharedWithUsers
+        '
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsInitializing = False
+        Me.chkcboSharedWithUsers.IsReadOnly = False
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 211)
+        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
+        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
+        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
+        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
+        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
+        Me.chkcboSharedWithUsers.TabIndex = 2
+        Me.chkcboSharedWithUsers.Tag = "43"
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'btnWSGTaskLink
+        '
+        Me.btnWSGTaskLink.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWSGTaskLink.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
+        Me.btnWSGTaskLink.Location = New System.Drawing.Point(6, 110)
+        Me.btnWSGTaskLink.Name = "btnWSGTaskLink"
+        Me.btnWSGTaskLink.Size = New System.Drawing.Size(249, 37)
+        Me.btnWSGTaskLink.TabIndex = 2
+        Me.btnWSGTaskLink.Tag = "87"
+        Me.btnWSGTaskLink.Text = "WSG link to Task"
+        Me.ToolTip1.SetToolTip(Me.btnWSGTaskLink, "Click here to get a message with the link to the task on WeSimGlide.org.")
+        Me.btnWSGTaskLink.UseVisualStyleBackColor = True
         '
         'Main
         '
@@ -4779,4 +4795,5 @@ Partial Class Main
     Friend WithEvents lblTestMode As Label
     Friend WithEvents chkTestMode As CheckBox
     Friend WithEvents btnDiscordGroupEventURLClear As Button
+    Friend WithEvents btnWSGTaskLink As Button
 End Class

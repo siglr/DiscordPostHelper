@@ -2656,7 +2656,7 @@ Public Class Main
         lblUpdateDescription.Enabled = txtLastUpdateDescription.Enabled
     End Sub
 
-    Private Sub lblTaskBrowserIDAndDate_DoubleClick(sender As Object, e As EventArgs) Handles lblTaskBrowserIDAndDate.DoubleClick
+    Private Sub lblTaskBrowserIDAndDate_DoubleClick(sender As Object, e As EventArgs) Handles lblTaskBrowserIDAndDate.DoubleClick, btnWSGTaskLink.Click
 
         WeSimGlideTaskLinkPosting()
 
@@ -4705,29 +4705,35 @@ Public Class Main
 
             Case 85 'Task featured on group flight - share
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 192
+                pnlWizardDiscord.Top = 184
                 lblDiscordGuideInstructions.Text = "Click this button to copy the message to share the group event for the task."
                 SetFocusOnField(btnTaskFeaturedOnGroupFlight, fromF1Key)
 
             Case 86 'Task and Group Event Links
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 243
+                pnlWizardDiscord.Top = 224
                 lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with both links to task and group event."
                 SetFocusOnField(btnTaskAndGroupEventLinks, fromF1Key)
 
-            Case 87 'Seconds to wait for files
+            Case 87 'WSG link to task
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 312
+                pnlWizardDiscord.Top = 266
+                lblDiscordGuideInstructions.Text = "Click this button to copy and paste a simple message with the link to the task on WeSimGlide.org."
+                SetFocusOnField(btnWSGTaskLink, fromF1Key)
+
+            Case 88 'Seconds to wait for files
+                SetDiscordGuidePanelToRight()
+                pnlWizardDiscord.Top = 336
                 lblDiscordGuideInstructions.Text = "Specify the pause duration when posting files to wait for Discord to complete the upload and continue the workflow."
                 SetFocusOnField(numWaitSecondsForFiles, fromF1Key)
 
-            Case 88 'Start workflow full workflow
+            Case 89 'Start workflow full workflow
                 SetDiscordGuidePanelToRight()
-                pnlWizardDiscord.Top = 413
+                pnlWizardDiscord.Top = 422
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post both the task and group flight event full details."
                 SetFocusOnField(btnStartFullPostingWorkflow, fromF1Key)
 
-            Case 89 To 99
+            Case 90 To 99
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 
