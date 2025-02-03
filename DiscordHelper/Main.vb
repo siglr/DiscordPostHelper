@@ -3318,7 +3318,7 @@ Public Class Main
                 If answer = DialogResult.OK Then
                     Dim taskThreadURL As String
                     taskThreadURL = Clipboard.GetText
-                    txtDiscordTaskID.Text = $"{If(_useTestMode, "T", "")}{SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL)}"
+                    txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,,, _useTestMode)
                     If txtDiscordTaskID.Text.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
                             If MessageBox.Show(Me, $"Invalid task ID - If you posted under the Task Library, try again. If not, click Cancel.", "Task ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then

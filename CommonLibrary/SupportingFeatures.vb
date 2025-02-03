@@ -2171,7 +2171,7 @@ Public Class SupportingFeatures
         Return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase)
     End Function
 
-    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False, Optional taskID As String = "") As String
+    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False, Optional taskID As String = "", Optional testMode As Boolean = False) As String
 
         ' Check if the inputURL starts with the expected base URL
         Dim baseURL As String = $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/"
@@ -2186,11 +2186,25 @@ Public Class SupportingFeatures
             ' Check if there are 1 or 2 parts
             If parts.Length = 2 AndAlso (parts(0) = MSFSSoaringToolsLibraryID OrElse (parts(0) = MSFSSoaringToolsTestingID) OrElse (Debugger.IsAttached AndAlso parts(0) = MSFSSoaringToolsPrivateTestingID)) Then
                 ' Two parts, the first is the library ID and the second is the message ID
-                Return parts(1)
+                ' Check if part 0 is valid for the context
+                If Debugger.IsAttached AndAlso (Not testMode) AndAlso (parts(0) = MSFSSoaringToolsLibraryID OrElse parts(0) = MSFSSoaringToolsPrivateTestingID) Then
+                    'debugger mode and not test mode, allow official and private testing channels only
+                    Return parts(1)
+                End If
+                If testMode AndAlso parts(0) = MSFSSoaringToolsTestingID Then
+                    'in test mode, only allow testing channel ID and prefix it with "T"
+                    Return $"T{parts(1)}"
+                End If
+                If Not testMode AndAlso parts(0) = MSFSSoaringToolsLibraryID Then
+                    'in real prod mode, only allow official library ID
+                    Return parts(1)
+                End If
+                'In every other situation, return blank
+                Return String.Empty
             ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then
-                Return parts(1)
-            ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
-                Return parts(0)
+                    Return parts(1)
+                ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
+                    Return parts(0)
             End If
         End If
 
