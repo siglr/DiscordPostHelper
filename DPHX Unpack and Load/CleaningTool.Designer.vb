@@ -36,6 +36,18 @@ Partial Class CleaningTool
         Me.lstWeather2020 = New System.Windows.Forms.ListBox()
         Me.lblWeather2020FolderPath = New System.Windows.Forms.Label()
         Me.btnWeather2020Refresh = New System.Windows.Forms.Button()
+        Me.tabFlights2024 = New System.Windows.Forms.TabPage()
+        Me.btnFlights2024SelectAll = New System.Windows.Forms.Button()
+        Me.btnFlights2024Delete = New System.Windows.Forms.Button()
+        Me.lstFlights2024 = New System.Windows.Forms.ListBox()
+        Me.lblFlights2024FolderPath = New System.Windows.Forms.Label()
+        Me.btnFlights2024Refresh = New System.Windows.Forms.Button()
+        Me.tabWeather2024 = New System.Windows.Forms.TabPage()
+        Me.btnWeather2024SelectAll = New System.Windows.Forms.Button()
+        Me.btnWeather2024Delete = New System.Windows.Forms.Button()
+        Me.lstWeather2024 = New System.Windows.Forms.ListBox()
+        Me.lblWeather2024FolderPath = New System.Windows.Forms.Label()
+        Me.btnWeather2024Refresh = New System.Windows.Forms.Button()
         Me.tabPackages = New System.Windows.Forms.TabPage()
         Me.btnPackagesSelectAll = New System.Windows.Forms.Button()
         Me.btnPackagesDelete = New System.Windows.Forms.Button()
@@ -64,28 +76,16 @@ Partial Class CleaningTool
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.tabFlights2024 = New System.Windows.Forms.TabPage()
-        Me.tabWeather2024 = New System.Windows.Forms.TabPage()
-        Me.btnFlights2024SelectAll = New System.Windows.Forms.Button()
-        Me.btnFlights2024Delete = New System.Windows.Forms.Button()
-        Me.lstFlights2024 = New System.Windows.Forms.ListBox()
-        Me.lblFlights2024FolderPath = New System.Windows.Forms.Label()
-        Me.btnFlights2024Refresh = New System.Windows.Forms.Button()
-        Me.btnWeather2024SelectAll = New System.Windows.Forms.Button()
-        Me.btnWeather2024Delete = New System.Windows.Forms.Button()
-        Me.lstWeather2024 = New System.Windows.Forms.ListBox()
-        Me.lblWeather2024FolderPath = New System.Windows.Forms.Label()
-        Me.btnWeather2024Refresh = New System.Windows.Forms.Button()
         Me.tabCtrlCleaningTool.SuspendLayout()
         Me.tabFlights2020.SuspendLayout()
         Me.tabWeather2020.SuspendLayout()
+        Me.tabFlights2024.SuspendLayout()
+        Me.tabWeather2024.SuspendLayout()
         Me.tabPackages.SuspendLayout()
         Me.tabNB21Logs.SuspendLayout()
         Me.tabXCSoarTasks.SuspendLayout()
         Me.tabXCSoarMaps.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        Me.tabFlights2024.SuspendLayout()
-        Me.tabWeather2024.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabCtrlCleaningTool
@@ -254,6 +254,150 @@ Partial Class CleaningTool
         Me.btnWeather2020Refresh.Text = "Refresh"
         Me.ToolTip1.SetToolTip(Me.btnWeather2020Refresh, "Click to refresh the list.")
         '
+        'tabFlights2024
+        '
+        Me.tabFlights2024.Controls.Add(Me.btnFlights2024SelectAll)
+        Me.tabFlights2024.Controls.Add(Me.btnFlights2024Delete)
+        Me.tabFlights2024.Controls.Add(Me.lstFlights2024)
+        Me.tabFlights2024.Controls.Add(Me.lblFlights2024FolderPath)
+        Me.tabFlights2024.Controls.Add(Me.btnFlights2024Refresh)
+        Me.tabFlights2024.Location = New System.Drawing.Point(4, 29)
+        Me.tabFlights2024.Name = "tabFlights2024"
+        Me.tabFlights2024.Size = New System.Drawing.Size(845, 459)
+        Me.tabFlights2024.TabIndex = 6
+        Me.tabFlights2024.Text = "Flight plans 2024"
+        Me.tabFlights2024.UseVisualStyleBackColor = True
+        '
+        'btnFlights2024SelectAll
+        '
+        Me.btnFlights2024SelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFlights2024SelectAll.Location = New System.Drawing.Point(729, 77)
+        Me.btnFlights2024SelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnFlights2024SelectAll.Name = "btnFlights2024SelectAll"
+        Me.btnFlights2024SelectAll.Size = New System.Drawing.Size(109, 35)
+        Me.btnFlights2024SelectAll.TabIndex = 8
+        Me.btnFlights2024SelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnFlights2024SelectAll, "Click to toggle selection of all items in the list.")
+        '
+        'btnFlights2024Delete
+        '
+        Me.btnFlights2024Delete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFlights2024Delete.Location = New System.Drawing.Point(729, 122)
+        Me.btnFlights2024Delete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnFlights2024Delete.Name = "btnFlights2024Delete"
+        Me.btnFlights2024Delete.Size = New System.Drawing.Size(109, 35)
+        Me.btnFlights2024Delete.TabIndex = 9
+        Me.btnFlights2024Delete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnFlights2024Delete, "Click to delete all selected files.")
+        '
+        'lstFlights2024
+        '
+        Me.lstFlights2024.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstFlights2024.FormattingEnabled = True
+        Me.lstFlights2024.ItemHeight = 20
+        Me.lstFlights2024.Location = New System.Drawing.Point(6, 33)
+        Me.lstFlights2024.Name = "lstFlights2024"
+        Me.lstFlights2024.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstFlights2024.Size = New System.Drawing.Size(716, 404)
+        Me.lstFlights2024.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.lstFlights2024, "List of flight plan files currently in your folder.")
+        '
+        'lblFlights2024FolderPath
+        '
+        Me.lblFlights2024FolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblFlights2024FolderPath.Location = New System.Drawing.Point(6, 7)
+        Me.lblFlights2024FolderPath.Name = "lblFlights2024FolderPath"
+        Me.lblFlights2024FolderPath.Size = New System.Drawing.Size(833, 23)
+        Me.lblFlights2024FolderPath.TabIndex = 5
+        Me.lblFlights2024FolderPath.Text = "The flights folder path"
+        Me.ToolTip1.SetToolTip(Me.lblFlights2024FolderPath, "This is the folder that you've set for your flight files (.pln).")
+        '
+        'btnFlights2024Refresh
+        '
+        Me.btnFlights2024Refresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFlights2024Refresh.Location = New System.Drawing.Point(729, 32)
+        Me.btnFlights2024Refresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnFlights2024Refresh.Name = "btnFlights2024Refresh"
+        Me.btnFlights2024Refresh.Size = New System.Drawing.Size(109, 35)
+        Me.btnFlights2024Refresh.TabIndex = 7
+        Me.btnFlights2024Refresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnFlights2024Refresh, "Click to refresh the list.")
+        '
+        'tabWeather2024
+        '
+        Me.tabWeather2024.Controls.Add(Me.btnWeather2024SelectAll)
+        Me.tabWeather2024.Controls.Add(Me.btnWeather2024Delete)
+        Me.tabWeather2024.Controls.Add(Me.lstWeather2024)
+        Me.tabWeather2024.Controls.Add(Me.lblWeather2024FolderPath)
+        Me.tabWeather2024.Controls.Add(Me.btnWeather2024Refresh)
+        Me.tabWeather2024.Location = New System.Drawing.Point(4, 29)
+        Me.tabWeather2024.Name = "tabWeather2024"
+        Me.tabWeather2024.Size = New System.Drawing.Size(845, 459)
+        Me.tabWeather2024.TabIndex = 7
+        Me.tabWeather2024.Text = "Weather 2024"
+        Me.tabWeather2024.UseVisualStyleBackColor = True
+        '
+        'btnWeather2024SelectAll
+        '
+        Me.btnWeather2024SelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWeather2024SelectAll.Location = New System.Drawing.Point(729, 77)
+        Me.btnWeather2024SelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnWeather2024SelectAll.Name = "btnWeather2024SelectAll"
+        Me.btnWeather2024SelectAll.Size = New System.Drawing.Size(109, 35)
+        Me.btnWeather2024SelectAll.TabIndex = 8
+        Me.btnWeather2024SelectAll.Text = "Select All"
+        Me.ToolTip1.SetToolTip(Me.btnWeather2024SelectAll, "Click to toggle selection of all items in the list.")
+        '
+        'btnWeather2024Delete
+        '
+        Me.btnWeather2024Delete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWeather2024Delete.Location = New System.Drawing.Point(729, 122)
+        Me.btnWeather2024Delete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnWeather2024Delete.Name = "btnWeather2024Delete"
+        Me.btnWeather2024Delete.Size = New System.Drawing.Size(109, 35)
+        Me.btnWeather2024Delete.TabIndex = 9
+        Me.btnWeather2024Delete.Text = "Delete"
+        Me.ToolTip1.SetToolTip(Me.btnWeather2024Delete, "Click to delete all selected files.")
+        '
+        'lstWeather2024
+        '
+        Me.lstWeather2024.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstWeather2024.FormattingEnabled = True
+        Me.lstWeather2024.ItemHeight = 20
+        Me.lstWeather2024.Location = New System.Drawing.Point(6, 33)
+        Me.lstWeather2024.Name = "lstWeather2024"
+        Me.lstWeather2024.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.lstWeather2024.Size = New System.Drawing.Size(716, 404)
+        Me.lstWeather2024.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.lstWeather2024, "List of weather files currently in your folder.")
+        '
+        'lblWeather2024FolderPath
+        '
+        Me.lblWeather2024FolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblWeather2024FolderPath.Location = New System.Drawing.Point(6, 7)
+        Me.lblWeather2024FolderPath.Name = "lblWeather2024FolderPath"
+        Me.lblWeather2024FolderPath.Size = New System.Drawing.Size(833, 23)
+        Me.lblWeather2024FolderPath.TabIndex = 5
+        Me.lblWeather2024FolderPath.Text = "The weather files folder path"
+        Me.ToolTip1.SetToolTip(Me.lblWeather2024FolderPath, "This is the folder that you've set for your weather files (.wpr).")
+        '
+        'btnWeather2024Refresh
+        '
+        Me.btnWeather2024Refresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWeather2024Refresh.Location = New System.Drawing.Point(729, 32)
+        Me.btnWeather2024Refresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnWeather2024Refresh.Name = "btnWeather2024Refresh"
+        Me.btnWeather2024Refresh.Size = New System.Drawing.Size(109, 35)
+        Me.btnWeather2024Refresh.TabIndex = 7
+        Me.btnWeather2024Refresh.Text = "Refresh"
+        Me.ToolTip1.SetToolTip(Me.btnWeather2024Refresh, "Click to refresh the list.")
+        '
         'tabPackages
         '
         Me.tabPackages.Controls.Add(Me.btnPackagesSelectAll)
@@ -263,7 +407,7 @@ Partial Class CleaningTool
         Me.tabPackages.Controls.Add(Me.btnPackagesRefresh)
         Me.tabPackages.Location = New System.Drawing.Point(4, 29)
         Me.tabPackages.Name = "tabPackages"
-        Me.tabPackages.Size = New System.Drawing.Size(858, 485)
+        Me.tabPackages.Size = New System.Drawing.Size(845, 459)
         Me.tabPackages.TabIndex = 4
         Me.tabPackages.Text = "Packages"
         Me.tabPackages.UseVisualStyleBackColor = True
@@ -335,7 +479,7 @@ Partial Class CleaningTool
         Me.tabNB21Logs.Controls.Add(Me.btnNB21LogsRefresh)
         Me.tabNB21Logs.Location = New System.Drawing.Point(4, 29)
         Me.tabNB21Logs.Name = "tabNB21Logs"
-        Me.tabNB21Logs.Size = New System.Drawing.Size(858, 485)
+        Me.tabNB21Logs.Size = New System.Drawing.Size(845, 459)
         Me.tabNB21Logs.TabIndex = 5
         Me.tabNB21Logs.Text = "NB21 Logs"
         Me.tabNB21Logs.UseVisualStyleBackColor = True
@@ -407,7 +551,7 @@ Partial Class CleaningTool
         Me.tabXCSoarTasks.Controls.Add(Me.btnXCSoarTasksRefresh)
         Me.tabXCSoarTasks.Location = New System.Drawing.Point(4, 29)
         Me.tabXCSoarTasks.Name = "tabXCSoarTasks"
-        Me.tabXCSoarTasks.Size = New System.Drawing.Size(858, 485)
+        Me.tabXCSoarTasks.Size = New System.Drawing.Size(845, 459)
         Me.tabXCSoarTasks.TabIndex = 2
         Me.tabXCSoarTasks.Text = "XC Soar Tasks"
         Me.tabXCSoarTasks.UseVisualStyleBackColor = True
@@ -479,7 +623,7 @@ Partial Class CleaningTool
         Me.tabXCSoarMaps.Controls.Add(Me.btnXCSoarMapsRefresh)
         Me.tabXCSoarMaps.Location = New System.Drawing.Point(4, 29)
         Me.tabXCSoarMaps.Name = "tabXCSoarMaps"
-        Me.tabXCSoarMaps.Size = New System.Drawing.Size(858, 485)
+        Me.tabXCSoarMaps.Size = New System.Drawing.Size(845, 459)
         Me.tabXCSoarMaps.TabIndex = 3
         Me.tabXCSoarMaps.Text = "XC Soar Maps"
         Me.tabXCSoarMaps.UseVisualStyleBackColor = True
@@ -546,7 +690,7 @@ Partial Class CleaningTool
         '
         Me.Panel1.Controls.Add(Me.OK_Button)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 534)
+        Me.Panel1.Location = New System.Drawing.Point(0, 560)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(877, 44)
         Me.Panel1.TabIndex = 1
@@ -563,157 +707,13 @@ Partial Class CleaningTool
         Me.OK_Button.Text = "OK"
         Me.ToolTip1.SetToolTip(Me.OK_Button, "Click to close window.")
         '
-        'tabFlights2024
-        '
-        Me.tabFlights2024.Controls.Add(Me.btnFlights2024SelectAll)
-        Me.tabFlights2024.Controls.Add(Me.btnFlights2024Delete)
-        Me.tabFlights2024.Controls.Add(Me.lstFlights2024)
-        Me.tabFlights2024.Controls.Add(Me.lblFlights2024FolderPath)
-        Me.tabFlights2024.Controls.Add(Me.btnFlights2024Refresh)
-        Me.tabFlights2024.Location = New System.Drawing.Point(4, 29)
-        Me.tabFlights2024.Name = "tabFlights2024"
-        Me.tabFlights2024.Size = New System.Drawing.Size(845, 459)
-        Me.tabFlights2024.TabIndex = 6
-        Me.tabFlights2024.Text = "Flight plans 2024"
-        Me.tabFlights2024.UseVisualStyleBackColor = True
-        '
-        'tabWeather2024
-        '
-        Me.tabWeather2024.Controls.Add(Me.btnWeather2024SelectAll)
-        Me.tabWeather2024.Controls.Add(Me.btnWeather2024Delete)
-        Me.tabWeather2024.Controls.Add(Me.lstWeather2024)
-        Me.tabWeather2024.Controls.Add(Me.lblWeather2024FolderPath)
-        Me.tabWeather2024.Controls.Add(Me.btnWeather2024Refresh)
-        Me.tabWeather2024.Location = New System.Drawing.Point(4, 29)
-        Me.tabWeather2024.Name = "tabWeather2024"
-        Me.tabWeather2024.Size = New System.Drawing.Size(845, 459)
-        Me.tabWeather2024.TabIndex = 7
-        Me.tabWeather2024.Text = "Weather 2024"
-        Me.tabWeather2024.UseVisualStyleBackColor = True
-        '
-        'btnFlights2024SelectAll
-        '
-        Me.btnFlights2024SelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFlights2024SelectAll.Location = New System.Drawing.Point(729, 77)
-        Me.btnFlights2024SelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnFlights2024SelectAll.Name = "btnFlights2024SelectAll"
-        Me.btnFlights2024SelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnFlights2024SelectAll.TabIndex = 8
-        Me.btnFlights2024SelectAll.Text = "Select All"
-        Me.ToolTip1.SetToolTip(Me.btnFlights2024SelectAll, "Click to toggle selection of all items in the list.")
-        '
-        'btnFlights2024Delete
-        '
-        Me.btnFlights2024Delete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFlights2024Delete.Location = New System.Drawing.Point(729, 122)
-        Me.btnFlights2024Delete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnFlights2024Delete.Name = "btnFlights2024Delete"
-        Me.btnFlights2024Delete.Size = New System.Drawing.Size(109, 35)
-        Me.btnFlights2024Delete.TabIndex = 9
-        Me.btnFlights2024Delete.Text = "Delete"
-        Me.ToolTip1.SetToolTip(Me.btnFlights2024Delete, "Click to delete all selected files.")
-        '
-        'lstFlights2024
-        '
-        Me.lstFlights2024.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstFlights2024.FormattingEnabled = True
-        Me.lstFlights2024.ItemHeight = 20
-        Me.lstFlights2024.Location = New System.Drawing.Point(6, 33)
-        Me.lstFlights2024.Name = "lstFlights2024"
-        Me.lstFlights2024.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstFlights2024.Size = New System.Drawing.Size(716, 404)
-        Me.lstFlights2024.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.lstFlights2024, "List of flight plan files currently in your folder.")
-        '
-        'lblFlights2024FolderPath
-        '
-        Me.lblFlights2024FolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblFlights2024FolderPath.Location = New System.Drawing.Point(6, 7)
-        Me.lblFlights2024FolderPath.Name = "lblFlights2024FolderPath"
-        Me.lblFlights2024FolderPath.Size = New System.Drawing.Size(833, 23)
-        Me.lblFlights2024FolderPath.TabIndex = 5
-        Me.lblFlights2024FolderPath.Text = "The flights folder path"
-        Me.ToolTip1.SetToolTip(Me.lblFlights2024FolderPath, "This is the folder that you've set for your flight files (.pln).")
-        '
-        'btnFlights2024Refresh
-        '
-        Me.btnFlights2024Refresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFlights2024Refresh.Location = New System.Drawing.Point(729, 32)
-        Me.btnFlights2024Refresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnFlights2024Refresh.Name = "btnFlights2024Refresh"
-        Me.btnFlights2024Refresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnFlights2024Refresh.TabIndex = 7
-        Me.btnFlights2024Refresh.Text = "Refresh"
-        Me.ToolTip1.SetToolTip(Me.btnFlights2024Refresh, "Click to refresh the list.")
-        '
-        'btnWeather2024SelectAll
-        '
-        Me.btnWeather2024SelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnWeather2024SelectAll.Location = New System.Drawing.Point(729, 77)
-        Me.btnWeather2024SelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnWeather2024SelectAll.Name = "btnWeather2024SelectAll"
-        Me.btnWeather2024SelectAll.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeather2024SelectAll.TabIndex = 8
-        Me.btnWeather2024SelectAll.Text = "Select All"
-        Me.ToolTip1.SetToolTip(Me.btnWeather2024SelectAll, "Click to toggle selection of all items in the list.")
-        '
-        'btnWeather2024Delete
-        '
-        Me.btnWeather2024Delete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnWeather2024Delete.Location = New System.Drawing.Point(729, 122)
-        Me.btnWeather2024Delete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnWeather2024Delete.Name = "btnWeather2024Delete"
-        Me.btnWeather2024Delete.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeather2024Delete.TabIndex = 9
-        Me.btnWeather2024Delete.Text = "Delete"
-        Me.ToolTip1.SetToolTip(Me.btnWeather2024Delete, "Click to delete all selected files.")
-        '
-        'lstWeather2024
-        '
-        Me.lstWeather2024.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstWeather2024.FormattingEnabled = True
-        Me.lstWeather2024.ItemHeight = 20
-        Me.lstWeather2024.Location = New System.Drawing.Point(6, 33)
-        Me.lstWeather2024.Name = "lstWeather2024"
-        Me.lstWeather2024.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstWeather2024.Size = New System.Drawing.Size(716, 404)
-        Me.lstWeather2024.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.lstWeather2024, "List of weather files currently in your folder.")
-        '
-        'lblWeather2024FolderPath
-        '
-        Me.lblWeather2024FolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWeather2024FolderPath.Location = New System.Drawing.Point(6, 7)
-        Me.lblWeather2024FolderPath.Name = "lblWeather2024FolderPath"
-        Me.lblWeather2024FolderPath.Size = New System.Drawing.Size(833, 23)
-        Me.lblWeather2024FolderPath.TabIndex = 5
-        Me.lblWeather2024FolderPath.Text = "The weather files folder path"
-        Me.ToolTip1.SetToolTip(Me.lblWeather2024FolderPath, "This is the folder that you've set for your weather files (.wpr).")
-        '
-        'btnWeather2024Refresh
-        '
-        Me.btnWeather2024Refresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnWeather2024Refresh.Location = New System.Drawing.Point(729, 32)
-        Me.btnWeather2024Refresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnWeather2024Refresh.Name = "btnWeather2024Refresh"
-        Me.btnWeather2024Refresh.Size = New System.Drawing.Size(109, 35)
-        Me.btnWeather2024Refresh.TabIndex = 7
-        Me.btnWeather2024Refresh.Text = "Refresh"
-        Me.ToolTip1.SetToolTip(Me.btnWeather2024Refresh, "Click to refresh the list.")
-        '
         'CleaningTool
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.OK_Button
-        Me.ClientSize = New System.Drawing.Size(877, 578)
+        Me.ClientSize = New System.Drawing.Size(877, 604)
         Me.ControlBox = False
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.tabCtrlCleaningTool)
@@ -728,13 +728,13 @@ Partial Class CleaningTool
         Me.tabCtrlCleaningTool.ResumeLayout(False)
         Me.tabFlights2020.ResumeLayout(False)
         Me.tabWeather2020.ResumeLayout(False)
+        Me.tabFlights2024.ResumeLayout(False)
+        Me.tabWeather2024.ResumeLayout(False)
         Me.tabPackages.ResumeLayout(False)
         Me.tabNB21Logs.ResumeLayout(False)
         Me.tabXCSoarTasks.ResumeLayout(False)
         Me.tabXCSoarMaps.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
-        Me.tabFlights2024.ResumeLayout(False)
-        Me.tabWeather2024.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
