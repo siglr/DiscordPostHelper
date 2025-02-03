@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.3.1</ReleaseVersion>
+      <ReleaseTitle>Important fix post previous release</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed detection of Discord channel when in test mode.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.2.1</ReleaseVersion>
       <ReleaseTitle>New testing mode!</ReleaseTitle>
