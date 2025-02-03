@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.1.18.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.3.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.3.3</ReleaseVersion>
+      <ReleaseTitle>Fixed Cleanup Tool with MSFS 2024</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the file cleanup tool which didn't work with MSFS 2024 folders.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.1.18.1</ReleaseVersion>
       <ReleaseTitle>Tracker integration</ReleaseTitle>
