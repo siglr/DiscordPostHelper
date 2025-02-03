@@ -142,6 +142,10 @@ Public Class CleaningTool
                 theListBox = lstFlights2020
             Case btnWeather2020SelectAll.Name
                 theListBox = lstWeather2020
+            Case btnFlights2024SelectAll.Name
+                theListBox = lstFlights2024
+            Case btnWeather2024SelectAll.Name
+                theListBox = lstWeather2024
             Case btnPackagesSelectAll.Name
                 theListBox = lstPackages
             Case btnNB21LogsSelectAll.Name
@@ -184,6 +188,10 @@ Public Class CleaningTool
                 TabSelected(tabFlights2020)
             Case btnWeather2020Refresh.Name
                 TabSelected(tabFlights2020)
+            Case btnFlights2024Refresh.Name
+                TabSelected(tabFlights2024)
+            Case btnWeather2024Refresh.Name
+                TabSelected(tabFlights2024)
             Case btnPackagesRefresh.Name
                 TabSelected(tabPackages)
             Case btnNB21LogsRefresh.Name
@@ -202,7 +210,7 @@ Public Class CleaningTool
                                                                           btnNB21LogsDelete.Click,
                                                                           btnXCSoarTasksDelete.Click,
                                                                           btnXCSoarMapsDelete.Click,
-                                                                          btnWeather2024Delete.Click
+                                                                          btnWeather2024Delete.Click, btnFlights2024Delete.Click
 
         Dim theList As ListBox = Nothing
 
@@ -212,6 +220,10 @@ Public Class CleaningTool
                 theList = lstFlights2020
             Case btnWeather2020Delete.Name
                 theList = lstWeather2020
+            Case btnFlights2024Delete.Name
+                theList = lstFlights2024
+            Case btnWeather2024Delete.Name
+                theList = lstWeather2024
             Case btnPackagesDelete.Name
                 theList = lstPackages
             Case btnNB21LogsDelete.Name
@@ -241,6 +253,12 @@ Public Class CleaningTool
             Case btnWeather2020Delete.Name
                 DeleteSelectedFiles(lstWeather2020, lblWeather2020FolderPath.Text)
                 TabSelected(tabWeather2020)
+            Case btnFlights2024Delete.Name
+                DeleteSelectedFiles(lstFlights2024, lblFlights2024FolderPath.Text)
+                TabSelected(tabFlights2024)
+            Case btnWeather2024Delete.Name
+                DeleteSelectedFiles(lstWeather2024, lblWeather2024FolderPath.Text)
+                TabSelected(tabWeather2024)
             Case btnPackagesDelete.Name
                 DeleteSelectedFiles(lstPackages, lblPackagesFolderPath.Text)
                 TabSelected(tabPackages)
