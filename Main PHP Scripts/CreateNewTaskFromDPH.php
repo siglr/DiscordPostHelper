@@ -234,7 +234,8 @@ try {
                 Status = :Status,
                 LastUpdateDescription = :LastUpdateDescription,
                 OwnerName = :OwnerName, 
-                SharedWith = :SharedWith
+                SharedWith = :SharedWith,
+                Availability = :Availability
             WHERE TaskID = :TemporaryTaskID
         ");
 
@@ -242,6 +243,7 @@ try {
         $taskData['LastUpdate'] = formatDatetime($taskData['LastUpdate']);
         $taskData['SimDateTime'] = formatDatetime($taskData['SimDateTime']);
         $taskData['DBEntryUpdate'] = formatDatetime($taskData['DBEntryUpdate']);
+        $taskData['Availability'] = formatDatetime($taskData['Availability']);
 
         // Handle the task data
         $mapImage = isset($taskData['MapImage']) && !empty($taskData['MapImage']) ? base64_decode($taskData['MapImage']) : null;
@@ -301,7 +303,8 @@ try {
             ':TemporaryTaskID' => $taskData['TemporaryTaskID'],
             ':LastUpdateDescription' => $taskData['LastUpdateDescription'],
             ':OwnerName' => $ownerName,
-            ':SharedWith' => $sharedWith
+            ':SharedWith' => $sharedWith,
+            ':Availability' => $taskData['Availability']
 
         ]);
 

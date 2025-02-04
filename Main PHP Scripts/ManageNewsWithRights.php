@@ -142,13 +142,13 @@ try {
                         EventKey, EventMeetDateTime, UseEventSyncFly, SyncFlyDateTime, UseEventLaunch,
                         EventLaunchDateTime, UseEventStartTask, EventStartTaskDateTime, EventDescription, 
                         GroupEventTeaserEnabled, GroupEventTeaserMessage, GroupEventTeaserImage, VoiceChannel,
-                        MSFSServer, TrackerGroup, EligibleAward, BeginnersGuide, Notam
+                        MSFSServer, TrackerGroup, EligibleAward, BeginnersGuide, Notam, Availability
                     )
                     VALUES (
                         :EventKey, :EventMeetDateTime, :UseEventSyncFly, :SyncFlyDateTime, :UseEventLaunch,
                         :EventLaunchDateTime, :UseEventStartTask, :EventStartTaskDateTime, :EventDescription, 
                         :GroupEventTeaserEnabled, :GroupEventTeaserMessage, :GroupEventTeaserImage, :VoiceChannel,
-                        :MSFSServer, :TrackerGroup, :EligibleAward, :BeginnersGuide, :Notam
+                        :MSFSServer, :TrackerGroup, :EligibleAward, :BeginnersGuide, :Notam, :Availability
                     )
                 ");
 
@@ -170,7 +170,8 @@ try {
                     ':TrackerGroup' => $_POST['TrackerGroup'] ?? '',
                     ':EligibleAward' => $_POST['EligibleAward'] ?? '',
                     ':BeginnersGuide' => $_POST['BeginnersGuide'] ?? '',
-                    ':Notam' => $_POST['Notam'] ?? ''
+                    ':Notam' => $_POST['Notam'] ?? '',
+                    ':Availability' => formatDatetime($_POST['Availability'])
                 ]);
             }
             break;

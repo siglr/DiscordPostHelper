@@ -2791,7 +2791,7 @@ Public Class Main
         Dim msg As String = String.Empty
 
         'Map image
-        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty) Then
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso AvailabilityDateTimeToUse <= Now()) Then
             autoContinue = MapImageCopy(True)
             If Not autoContinue Then
                 Return False
@@ -2805,11 +2805,15 @@ Public Class Main
 
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
-            BuildFPResults(True)
-            msg = $"{msg}{txtFPResults.Text.Trim}"
+            If AvailabilityDateTimeToUse <= Now() Then
+                BuildFPResults(True)
+                msg = $"{msg}{txtFPResults.Text.Trim}"
+            Else
+                msg = $"{msg}No task details yet!"
+            End If
         End If
 
-        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty) Then
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso AvailabilityDateTimeToUse <= Now()) Then
             'There is a map
             msg = $"{msg}{Environment.NewLine}## 🗺️ Map"
             Clipboard.SetText(msg)
@@ -2825,7 +2829,7 @@ Public Class Main
         If Not autoContinue Then Return False
 
         'Full Description
-        If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked Then
+        If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso AvailabilityDateTimeToUse <= Now() Then
             If msg.Trim.Length > 0 Then
                 msg = $"{msg}{Environment.NewLine}"
             End If
@@ -3931,15 +3935,19 @@ Public Class Main
         End If
 
         logisticInstructions.AppendLine("## Event Logistics")
+        logisticInstructions.AppendLine($":wsg: WeSimGlide.org: **[{txtEventTitle.Text.Trim}](<{WSGEventLink}>)**")
         logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
         logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
-        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+
+        If AvailabilityDateTimeToUse <= Now() Then
+            logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        End If
 
         If chkUseSyncFly.Checked Then
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
         logisticInstructions.AppendLine()
-        If Not txtDiscordTaskID.Text = String.Empty Then
+        If Not txtDiscordTaskID.Text = String.Empty AndAlso AvailabilityDateTimeToUse <= Now() Then
             logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
         End If
 
@@ -4076,11 +4084,11 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        If chkDGPOMapImage.Checked Then
-            sb.AppendLine($"📁 All files are shared inside the thread below")
+        If AvailabilityDateTimeToUse <= Now() Then
+            sb.AppendLine($"📁 All links to files are shared inside the thread below")
             sb.AppendLine()
         Else
-            sb.AppendLine($"📁 All files will be shared inside the thread below, a few hours before the actual event takes place")
+            sb.AppendLine($"📁 All links to files will be shared inside the thread below, a few hours before the actual event takes place")
             sb.AppendLine()
         End If
 
@@ -5921,6 +5929,8 @@ Public Class Main
 
         Dim sharedWithList As String = JsonConvert.SerializeObject(chkcboSharedWithUsers.GetSelectedItems)
 
+        Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
+
         Dim taskIDToUse As String = String.Empty
         If taskInfo.TemporaryTaskID = String.Empty Then
             taskIDToUse = taskInfo.DiscordTaskID
@@ -5988,6 +5998,7 @@ Public Class Main
             {"Status", taskInfo.TaskStatus},
             {"OwnerName", cboTaskOwner.Text.Trim},
             {"SharedWith", sharedWithList},
+            {"Availability", availabilityToUse},
             {"Mode", modeRights}
         }
 
@@ -6326,7 +6337,8 @@ Public Class Main
                                  msfsServer As String,
                                  eligibleAward As String,
                                  beginnersGuide As String,
-                                 notam As String) As Boolean
+                                 notam As String,
+                                 availability As DateTime) As Boolean
 
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
@@ -6374,7 +6386,8 @@ Public Class Main
                 {"EligibleAward", eligibleAward},
                 {"BeginnersGuide", beginnersGuide},
                 {"Notam", notam},
-                {"UserID", _userPermissionID}
+                {"UserID", _userPermissionID},
+                {"Availability", availability}
             }
 
                 For Each field In fields
@@ -6603,8 +6616,9 @@ Public Class Main
     End Sub
 
     Private Sub PostEventAndTaskOnWSGAccouncement(eventDate As Date, key As String)
+
         Dim msgForEventHunters As String = String.Empty
-        If _TaskEntrySeqID > 0 Then
+        If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
             msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
         Else
             msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
@@ -6619,6 +6633,20 @@ Public Class Main
                                 SupportingFeatures.WSGAnnouncementsDiscordURL)
 
     End Sub
+
+    Private ReadOnly Property WSGEventLink As String
+        Get
+            If _ClubPreset Is Nothing Then
+                Return String.Empty
+            End If
+            Dim key As String
+            Dim eventDate As Date
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+            Return SupportingFeatures.GetWeSimGlideEventURL(key)
+        End Get
+    End Property
 
     Private Function PublishEventNews() As Boolean
 
@@ -6675,6 +6703,8 @@ Public Class Main
                 notam = $"<strong>NOTAMs:</strong><br>{notam}"
             End If
 
+            Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
+
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
                                                     txtEventTitle.Text.Trim,
@@ -6700,7 +6730,8 @@ Public Class Main
                                                     cboMSFSServer.Text.Trim,
                                                     cboEligibleAward.Text.Trim,
                                                     urlBeginnerGuide,
-                                                    notam)
+                                                    notam,
+                                                    availabilityToUse)
 
             If result Then
                 SetEventLabelAndButtons()
@@ -6851,6 +6882,17 @@ Public Class Main
 
 #End Region
 
+    Private ReadOnly Property AvailabilityDateTimeToUse As DateTime
+        Get
+            Dim availabilityDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
+            If chkDelayedAvailability.Enabled AndAlso chkDelayedAvailability.Checked Then
+                If availabilityDateTimeLocal < Now() Then
+                    availabilityDateTimeLocal = Now
+                End If
+            End If
+            Return availabilityDateTimeLocal
+        End Get
+    End Property
 #End Region
 
 End Class
