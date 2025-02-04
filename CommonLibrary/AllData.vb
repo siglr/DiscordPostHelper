@@ -287,6 +287,21 @@ Public Class AllData
     <XmlElement("GroupEventTeaserMessage")>
     Public Property GroupEventTeaserMessage As String
 
+    <XmlElement("DelayedAvailability")>
+    Public Property DelayedAvailability As Boolean
+
+    <XmlElement("DelayedBasedOnGroupEvent")>
+    Public Property DelayedBasedOnGroupEvent As Boolean
+
+    <XmlElement("DelayedAvailabilityNumber")>
+    Public Property DelayedAvailabilityNumber As Integer
+
+    <XmlElement("DelayedAvailabilityUnits")>
+    Public Property DelayedAvailabilityUnits As Integer
+
+    <XmlElement("DelayedAvailabilityDateTime")>
+    Public Property DelayedAvailabilityDateTime As DateTime
+
     Public Sub New()
 
     End Sub

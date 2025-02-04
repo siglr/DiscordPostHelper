@@ -57,6 +57,7 @@ Public Class Main
     Private _TBTaskDBEntryUpdate As DateTime
     Private _TBTaskLastUpdate As DateTime
     Private _isInitiatizing As Boolean = True
+    Private _directChange As Boolean = True
 
     ' User related variables
     Private _userPermissionID As String
@@ -499,6 +500,10 @@ Public Class Main
         btnStartTaskPost.Enabled = False
         tabFlightPlan.Enabled = True
         btnStartFullPostingWorkflow.Enabled = False
+        chkDelayedAvailability.Checked = False
+        chkDelayBasedOnEvent.Checked = True
+        txtMinutesBeforeMeeting.Text = "1"
+        cboDelayUnits.SelectedIndex = 0
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -584,7 +589,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter, txtMinutesBeforeMeeting.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -602,6 +607,7 @@ Public Class Main
                 SetEventLabelAndButtons()
                 CheckTestModes()
                 CheckWhichOptionsCanBeEnabled()
+                CalculateTaskAvailability()
         End Select
     End Sub
 
@@ -1095,7 +1101,7 @@ Public Class Main
                                                                           txtClubFullName.TextChanged,
                                                                           txtRepostOriginalURL.TextChanged,
                                                                           dtRepostOriginalDate.ValueChanged,
-                                                                          txtTrackerGroup.TextChanged
+                                                                          txtTrackerGroup.TextChanged, txtMinutesBeforeMeeting.TextChanged
 
         If _isInitiatizing Then
             Exit Sub
@@ -1209,7 +1215,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress
+    Private Sub DurationNumberValidation(ByVal sender As Windows.Forms.TextBox, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtDurationMin.KeyPress, txtDurationMax.KeyPress, txtMinutesBeforeMeeting.KeyPress
         Dim keyChar = e.KeyChar
 
         If Char.IsControl(keyChar) Then
@@ -2425,6 +2431,7 @@ Public Class Main
 
         BuildEventDatesTimes()
         SessionModified(SourceOfChange.EventTab)
+        CalculateTaskAvailability()
     End Sub
 
     Private Sub EventTimeChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyTime.ValueChanged, dtEventStartTaskTime.ValueChanged, dtEventMeetTime.ValueChanged, dtEventLaunchTime.ValueChanged
@@ -2523,6 +2530,8 @@ Public Class Main
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
+        chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
+        pnlDelayBasedOnGroupEvent.Enabled = chkActivateEvent.Checked
         SessionModified(SourceOfChange.EventTab)
     End Sub
 
@@ -5162,7 +5171,11 @@ Public Class Main
             .GroupEventTeaserEnabled = chkEventTeaser.Checked
             .GroupEventTeaserMessage = txtEventTeaserMessage.Text.Replace(Environment.NewLine, "($*$)")
             .GroupEventTeaserAreaMapImage = txtEventTeaserAreaMapImage.Text
-
+            .DelayedAvailability = chkDelayedAvailability.Checked
+            .DelayedBasedOnGroupEvent = chkDelayBasedOnEvent.Checked
+            .DelayedAvailabilityUnits = cboDelayUnits.SelectedIndex
+            .DelayedAvailabilityNumber = CInt(txtMinutesBeforeMeeting.Text.Trim)
+            .DelayedAvailabilityDateTime = dtAvailabilityTime.Value
         End With
 
         Return allCurrentData
@@ -5327,6 +5340,14 @@ Public Class Main
                 txtOtherBeginnerLink.Text = .BeginnersGuideCustom
                 chkLockMapImage.Checked = .LockMapImage
                 chkLockCoverImage.Checked = .LockCoverImage
+
+                chkDelayedAvailability.Checked = .DelayedAvailability
+                chkDelayBasedOnEvent.Checked = .DelayedBasedOnGroupEvent
+                cboDelayUnits.SelectedIndex = .DelayedAvailabilityUnits
+                txtMinutesBeforeMeeting.Text = .DelayedAvailabilityNumber
+                dtAvailabilityDate.Value = .DelayedAvailabilityDateTime
+                dtAvailabilityTime.Value = .DelayedAvailabilityDateTime
+
                 chkEventTeaser.Checked = .GroupEventTeaserEnabled
                 txtEventTeaserMessage.Text = .GroupEventTeaserMessage.Replace("($*$)", Environment.NewLine)
 
@@ -6726,6 +6747,106 @@ Public Class Main
         End If
         _useTestMode = chkTestMode.Checked
         CheckTestModes()
+    End Sub
+
+    Private Sub chkDelayedAvailability_CheckedChanged(sender As Object, e As EventArgs) Handles chkDelayedAvailability.CheckedChanged
+
+        grbDelayedPosting.Enabled = chkDelayedAvailability.Checked
+
+        If chkDelayedAvailability.Checked Then
+            chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
+            pnlDelayBasedOnGroupEvent.Enabled = chkActivateEvent.Checked
+            CalculateTaskAvailability()
+        End If
+
+        SessionModified(SourceOfChange.DiscordTab)
+
+    End Sub
+
+    Private Sub chkDelayBasedOnEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkDelayBasedOnEvent.CheckedChanged
+
+        pnlDelayBasedOnGroupEvent.Enabled = chkDelayBasedOnEvent.Checked
+
+        If chkDelayBasedOnEvent.Checked Then
+            CalculateTaskAvailability()
+        End If
+
+        SessionModified(SourceOfChange.DiscordTab)
+
+    End Sub
+
+    Private Sub CalculateTaskAvailability()
+
+        If (Not chkDelayBasedOnEvent.Checked) OrElse _loadingFile OrElse _isInitiatizing OrElse txtMinutesBeforeMeeting.Text.Trim = String.Empty Then
+            Exit Sub
+        End If
+
+        Dim nbrMinutesToSubstract As Integer
+
+        nbrMinutesToSubstract = CInt(txtMinutesBeforeMeeting.Text.Trim)
+
+        If cboDelayUnits.SelectedIndex = 0 Then
+            nbrMinutesToSubstract = nbrMinutesToSubstract * 60
+        End If
+
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+        Dim availabilityDateTimeLocal As DateTime = fullMeetDateTimeLocal.AddMinutes(0 - nbrMinutesToSubstract)
+
+        lblBeforeMeetingTime.Text = "before meeting time."
+
+        _directChange = False
+        dtAvailabilityDate.Value = availabilityDateTimeLocal
+        dtAvailabilityTime.Value = availabilityDateTimeLocal
+        _directChange = True
+
+    End Sub
+
+    Private Sub txtMinutesBeforeMeeting_Leave(sender As Object, e As EventArgs) Handles txtMinutesBeforeMeeting.Leave
+        If txtMinutesBeforeMeeting.Text.Trim = String.Empty Then
+            txtMinutesBeforeMeeting.Text = "0"
+        End If
+        CalculateTaskAvailability()
+        GeneralFPTabFieldLeaveDetection(sender, e)
+    End Sub
+
+    Private Sub cboDelayUnits_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDelayUnits.SelectedIndexChanged
+        If _loadingFile OrElse _isInitiatizing Then
+            Exit Sub
+        End If
+        CalculateTaskAvailability()
+        SessionModified(SourceOfChange.DiscordTab)
+    End Sub
+
+    Private Sub dtAvailability_ValueChanged(sender As Object, e As EventArgs) Handles dtAvailabilityDate.ValueChanged, dtAvailabilityTime.ValueChanged
+
+        If _loadingFile OrElse _isInitiatizing OrElse (Not _directChange) Then
+            Exit Sub
+        End If
+
+        If chkDelayBasedOnEvent.Checked Then
+            Dim availabilityDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
+            Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+            Dim nbrMinutesDiff As Integer = DateDiff(DateInterval.Minute, fullMeetDateTimeLocal, availabilityDateTimeLocal)
+
+            ' Determine delay unit based on the number of minutes difference
+            If Math.Abs(nbrMinutesDiff) >= 60 AndAlso nbrMinutesDiff Mod 60 = 0 Then
+                cboDelayUnits.SelectedIndex = 0 ' Hours
+                txtMinutesBeforeMeeting.Text = Math.Abs(nbrMinutesDiff / 60).ToString()
+            Else
+                cboDelayUnits.SelectedIndex = 1 ' Minutes
+                txtMinutesBeforeMeeting.Text = Math.Abs(nbrMinutesDiff).ToString()
+            End If
+
+            ' Display appropriate warning if the availability time is after the meeting time
+            If nbrMinutesDiff <= 0 Then
+                lblBeforeMeetingTime.Text = "before meeting time."
+            Else
+                lblBeforeMeetingTime.Text = "⚠️ AFTER meeting time."
+            End If
+        End If
+
+        SessionModified(SourceOfChange.DiscordTab)
+
     End Sub
 
 #End Region
