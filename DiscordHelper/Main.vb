@@ -504,6 +504,7 @@ Public Class Main
         chkDelayBasedOnEvent.Checked = True
         txtMinutesBeforeMeeting.Text = "1"
         cboDelayUnits.SelectedIndex = 0
+        chkAvailabilityRefly.Checked = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -1948,11 +1949,26 @@ Public Class Main
                 End If
             End If
         End If
+
+        Dim altRestrictions As String = String.Empty
+        If txtAltRestrictions.Text.Trim.Length > 0 Then
+            altRestrictions = "This task contains altitude restrictions"
+        End If
+        Dim baroWarning As String = String.Empty
+        If _WeatherDetails IsNot Nothing AndAlso (Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked)) Then
+            baroWarning = txtBaroPressureExtraInfo.Text.Trim
+        End If
+        Dim fullDetails As Boolean = AvailabilityDateTimeToUse <= Now()
+
         sb.AppendLine()
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
         sb.AppendLine("## :wsg:WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
-        sb.AppendLine("## 📁 Files")
+        If fullDetails Then
+            sb.AppendLine("## 📁 Files")
+        Else
+            sb.AppendLine($"## 📁 Files - Available {_SF.GetDiscordTimeStampForDate(AvailabilityDateTimeToUse, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}")
+        End If
         If _useTestMode Then
             sb.AppendLine($"***-> TEST MODE ONLY - Links will not work***")
             sb.AppendLine()
@@ -1965,14 +1981,16 @@ Public Class Main
             sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
         End If
         sb.AppendLine()
+
         If txtMainArea.Text.Trim.Length > 0 Then
             sb.AppendLine("> 🗺 " & SupportingFeatures.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
-        sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
+
+        If fullDetails Then sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
+        If fullDetails Then sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
         sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
-        sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
+        If fullDetails Then sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
+        If fullDetails Then sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
         sb.AppendLine($"> ⏳ {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
         If txtAATTask.Text.Length > 0 Then
             sb.AppendLine($"> ⚠️ {txtAATTask.Text}")
@@ -1980,14 +1998,6 @@ Public Class Main
         sb.AppendLine($"> ✈️ {SupportingFeatures.ValueToAppendIfNotEmpty(cboRecommendedGliders.Text)}")
         sb.AppendLine($"> 🎚 {SupportingFeatures.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
 
-        Dim altRestrictions As String = String.Empty
-        If txtAltRestrictions.Text.Trim.Length > 0 Then
-            altRestrictions = "This task contains altitude restrictions"
-        End If
-        Dim baroWarning As String = String.Empty
-        If _WeatherDetails IsNot Nothing AndAlso (Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked)) Then
-            baroWarning = txtBaroPressureExtraInfo.Text.Trim
-        End If
         If Not String.IsNullOrEmpty(altRestrictions) OrElse Not String.IsNullOrEmpty(baroWarning) Then
             sb.AppendLine($"> ⚠️ {altRestrictions}{If(Not String.IsNullOrEmpty(altRestrictions) AndAlso Not String.IsNullOrEmpty(baroWarning), " & ", "")}{baroWarning}")
         End If
@@ -3938,17 +3948,14 @@ Public Class Main
         logisticInstructions.AppendLine($":wsg: WeSimGlide.org: **[{txtEventTitle.Text.Trim}](<{WSGEventLink}>)**")
         logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
         logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
-
-        If AvailabilityDateTimeToUse <= Now() Then
-            logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
-        End If
+        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
 
         If chkUseSyncFly.Checked Then
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
         logisticInstructions.AppendLine()
-        If Not txtDiscordTaskID.Text = String.Empty AndAlso AvailabilityDateTimeToUse <= Now() Then
-            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})")
+        If Not txtDiscordTaskID.Text = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
+            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})") 'TODO Remove T when in test mode
         End If
 
         Return logisticInstructions.ToString()
@@ -5184,6 +5191,7 @@ Public Class Main
             .DelayedAvailabilityUnits = cboDelayUnits.SelectedIndex
             .DelayedAvailabilityNumber = CInt(txtMinutesBeforeMeeting.Text.Trim)
             .DelayedAvailabilityDateTime = dtAvailabilityTime.Value
+            .DelayedAvailabilityRefly = chkAvailabilityRefly.Checked
         End With
 
         Return allCurrentData
@@ -5314,7 +5322,11 @@ Public Class Main
                 If txtDiscordTaskID.Text.StartsWith("T") Then
                     _useTestMode = True
                 End If
-                txtTemporaryTaskID.Text = .TemporaryTaskID
+                If txtDiscordTaskID.Text.Trim.Length = 0 Then
+                    txtTemporaryTaskID.Text = .TemporaryTaskID
+                Else
+                    txtTemporaryTaskID.Text = String.Empty
+                End If
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
@@ -5355,6 +5367,7 @@ Public Class Main
                 txtMinutesBeforeMeeting.Text = .DelayedAvailabilityNumber
                 dtAvailabilityDate.Value = .DelayedAvailabilityDateTime
                 dtAvailabilityTime.Value = .DelayedAvailabilityDateTime
+                chkAvailabilityRefly.Checked = .DelayedAvailabilityRefly
 
                 chkEventTeaser.Checked = .GroupEventTeaserEnabled
                 txtEventTeaserMessage.Text = .GroupEventTeaserMessage.Replace("($*$)", Environment.NewLine)
@@ -6893,6 +6906,15 @@ Public Class Main
             Return availabilityDateTimeLocal
         End Get
     End Property
+
+    Private Sub chkDelayBasedOnEvent_EnabledChanged(sender As Object, e As EventArgs) Handles chkDelayBasedOnEvent.EnabledChanged
+        chkAvailabilityRefly.Enabled = chkDelayBasedOnEvent.Enabled
+    End Sub
+
+    Private Sub chkAvailabilityRefly_CheckedChanged(sender As Object, e As EventArgs) Handles chkAvailabilityRefly.CheckedChanged
+        SessionModified(SourceOfChange.DiscordTab)
+    End Sub
+
 #End Region
 
 End Class

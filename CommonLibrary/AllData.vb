@@ -302,6 +302,9 @@ Public Class AllData
     <XmlElement("DelayedAvailabilityDateTime")>
     Public Property DelayedAvailabilityDateTime As DateTime
 
+    <XmlElement("DelayedAvailabilityRefly")>
+    Public Property DelayedAvailabilityRefly As Boolean
+
     Public Sub New()
 
     End Sub

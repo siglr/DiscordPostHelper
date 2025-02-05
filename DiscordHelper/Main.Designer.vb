@@ -218,6 +218,7 @@ Partial Class Main
         Me.tabDiscord = New System.Windows.Forms.TabPage()
         Me.chkDelayedAvailability = New System.Windows.Forms.CheckBox()
         Me.grbDelayedPosting = New System.Windows.Forms.GroupBox()
+        Me.chkAvailabilityRefly = New System.Windows.Forms.CheckBox()
         Me.pnlDelayBasedOnGroupEvent = New System.Windows.Forms.Panel()
         Me.txtMinutesBeforeMeeting = New System.Windows.Forms.TextBox()
         Me.cboDelayUnits = New System.Windows.Forms.ComboBox()
@@ -2850,11 +2851,11 @@ Partial Class Main
         Me.chkDelayedAvailability.Checked = True
         Me.chkDelayedAvailability.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDelayedAvailability.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.chkDelayedAvailability.Location = New System.Drawing.Point(432, 510)
+        Me.chkDelayedAvailability.Location = New System.Drawing.Point(430, 506)
         Me.chkDelayedAvailability.Name = "chkDelayedAvailability"
         Me.chkDelayedAvailability.Size = New System.Drawing.Size(153, 24)
         Me.chkDelayedAvailability.TabIndex = 1
-        Me.chkDelayedAvailability.Tag = "80"
+        Me.chkDelayedAvailability.Tag = "83"
         Me.chkDelayedAvailability.Text = "Delayed Availability"
         Me.ToolTip1.SetToolTip(Me.chkDelayedAvailability, "Select if you want to include the message about event logistics in the group even" &
         "t thread.")
@@ -2862,23 +2863,37 @@ Partial Class Main
         '
         'grbDelayedPosting
         '
+        Me.grbDelayedPosting.Controls.Add(Me.chkAvailabilityRefly)
         Me.grbDelayedPosting.Controls.Add(Me.pnlDelayBasedOnGroupEvent)
         Me.grbDelayedPosting.Controls.Add(Me.Label20)
         Me.grbDelayedPosting.Controls.Add(Me.chkDelayBasedOnEvent)
         Me.grbDelayedPosting.Controls.Add(Me.dtAvailabilityDate)
         Me.grbDelayedPosting.Controls.Add(Me.dtAvailabilityTime)
-        Me.grbDelayedPosting.Location = New System.Drawing.Point(423, 512)
+        Me.grbDelayedPosting.Location = New System.Drawing.Point(423, 506)
         Me.grbDelayedPosting.Name = "grbDelayedPosting"
-        Me.grbDelayedPosting.Size = New System.Drawing.Size(675, 117)
+        Me.grbDelayedPosting.Size = New System.Drawing.Size(675, 127)
         Me.grbDelayedPosting.TabIndex = 97
         Me.grbDelayedPosting.TabStop = False
+        '
+        'chkAvailabilityRefly
+        '
+        Me.chkAvailabilityRefly.AutoSize = True
+        Me.chkAvailabilityRefly.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkAvailabilityRefly.Location = New System.Drawing.Point(6, 94)
+        Me.chkAvailabilityRefly.Name = "chkAvailabilityRefly"
+        Me.chkAvailabilityRefly.Size = New System.Drawing.Size(508, 26)
+        Me.chkAvailabilityRefly.TabIndex = 5
+        Me.chkAvailabilityRefly.Tag = "83"
+        Me.chkAvailabilityRefly.Text = "This is a refly - do not include links to existing task (Discord only)"
+        Me.ToolTip1.SetToolTip(Me.chkAvailabilityRefly, "Select if you want to remove all links to the existing task on Discord.")
+        Me.chkAvailabilityRefly.UseVisualStyleBackColor = True
         '
         'pnlDelayBasedOnGroupEvent
         '
         Me.pnlDelayBasedOnGroupEvent.Controls.Add(Me.txtMinutesBeforeMeeting)
         Me.pnlDelayBasedOnGroupEvent.Controls.Add(Me.cboDelayUnits)
         Me.pnlDelayBasedOnGroupEvent.Controls.Add(Me.lblBeforeMeetingTime)
-        Me.pnlDelayBasedOnGroupEvent.Location = New System.Drawing.Point(223, 23)
+        Me.pnlDelayBasedOnGroupEvent.Location = New System.Drawing.Point(223, 21)
         Me.pnlDelayBasedOnGroupEvent.Name = "pnlDelayBasedOnGroupEvent"
         Me.pnlDelayBasedOnGroupEvent.Size = New System.Drawing.Size(440, 35)
         Me.pnlDelayBasedOnGroupEvent.TabIndex = 1
@@ -2890,7 +2905,7 @@ Partial Class Main
         Me.txtMinutesBeforeMeeting.Name = "txtMinutesBeforeMeeting"
         Me.txtMinutesBeforeMeeting.Size = New System.Drawing.Size(47, 30)
         Me.txtMinutesBeforeMeeting.TabIndex = 2
-        Me.txtMinutesBeforeMeeting.Tag = "11"
+        Me.txtMinutesBeforeMeeting.Tag = "83"
         Me.txtMinutesBeforeMeeting.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMinutesBeforeMeeting, "Number of minutes or hours (depending on units) to set the date and time before t" &
         "he meeting time.")
@@ -2905,7 +2920,7 @@ Partial Class Main
         Me.cboDelayUnits.Name = "cboDelayUnits"
         Me.cboDelayUnits.Size = New System.Drawing.Size(104, 30)
         Me.cboDelayUnits.TabIndex = 1
-        Me.cboDelayUnits.Tag = "63"
+        Me.cboDelayUnits.Tag = "83"
         Me.ToolTip1.SetToolTip(Me.cboDelayUnits, "Select the units for the delay.")
         '
         'lblBeforeMeetingTime
@@ -2923,7 +2938,7 @@ Partial Class Main
         '
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.Label20.Location = New System.Drawing.Point(386, 66)
+        Me.Label20.Location = New System.Drawing.Point(386, 63)
         Me.Label20.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(124, 22)
@@ -2936,11 +2951,11 @@ Partial Class Main
         Me.chkDelayBasedOnEvent.Checked = True
         Me.chkDelayBasedOnEvent.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDelayBasedOnEvent.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkDelayBasedOnEvent.Location = New System.Drawing.Point(6, 26)
+        Me.chkDelayBasedOnEvent.Location = New System.Drawing.Point(6, 24)
         Me.chkDelayBasedOnEvent.Name = "chkDelayBasedOnEvent"
         Me.chkDelayBasedOnEvent.Size = New System.Drawing.Size(195, 26)
         Me.chkDelayBasedOnEvent.TabIndex = 0
-        Me.chkDelayBasedOnEvent.Tag = "80"
+        Me.chkDelayBasedOnEvent.Tag = "83"
         Me.chkDelayBasedOnEvent.Text = "Based on group event:"
         Me.ToolTip1.SetToolTip(Me.chkDelayBasedOnEvent, "Select if you want to base the availability date and time on the group event meet" &
         "ing time.")
@@ -2949,11 +2964,11 @@ Partial Class Main
         'dtAvailabilityDate
         '
         Me.dtAvailabilityDate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.dtAvailabilityDate.Location = New System.Drawing.Point(6, 61)
+        Me.dtAvailabilityDate.Location = New System.Drawing.Point(6, 58)
         Me.dtAvailabilityDate.Name = "dtAvailabilityDate"
         Me.dtAvailabilityDate.Size = New System.Drawing.Size(267, 30)
         Me.dtAvailabilityDate.TabIndex = 2
-        Me.dtAvailabilityDate.Tag = "66"
+        Me.dtAvailabilityDate.Tag = "83"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityDate, "This is the date when the task details and files will become available.")
         '
         'dtAvailabilityTime
@@ -2961,12 +2976,12 @@ Partial Class Main
         Me.dtAvailabilityTime.CustomFormat = "HH:mm tt"
         Me.dtAvailabilityTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.dtAvailabilityTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtAvailabilityTime.Location = New System.Drawing.Point(279, 61)
+        Me.dtAvailabilityTime.Location = New System.Drawing.Point(279, 58)
         Me.dtAvailabilityTime.Name = "dtAvailabilityTime"
         Me.dtAvailabilityTime.ShowUpDown = True
         Me.dtAvailabilityTime.Size = New System.Drawing.Size(104, 30)
         Me.dtAvailabilityTime.TabIndex = 3
-        Me.dtAvailabilityTime.Tag = "66"
+        Me.dtAvailabilityTime.Tag = "83"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityTime, "This is the time when the task details and files will become available.")
         '
         'chkTestMode
@@ -3239,7 +3254,7 @@ Partial Class Main
         Me.grpDiscordTask.Controls.Add(Me.grbTaskDiscord)
         Me.grpDiscordTask.Location = New System.Drawing.Point(8, 3)
         Me.grpDiscordTask.Name = "grpDiscordTask"
-        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 626)
+        Me.grpDiscordTask.Size = New System.Drawing.Size(405, 630)
         Me.grpDiscordTask.TabIndex = 0
         Me.grpDiscordTask.TabStop = False
         Me.grpDiscordTask.Text = "Task (WSG + Discord's Task Library)"
@@ -3276,7 +3291,7 @@ Partial Class Main
         Me.GroupBox1.Controls.Add(Me.btnStartTaskPost)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 58)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(393, 445)
+        Me.GroupBox1.Size = New System.Drawing.Size(393, 449)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Task Publishing Options for Discord"
@@ -3286,7 +3301,7 @@ Partial Class Main
         Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.Label12.Location = New System.Drawing.Point(6, 174)
+        Me.Label12.Location = New System.Drawing.Point(6, 178)
         Me.Label12.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(82, 22)
@@ -3300,7 +3315,7 @@ Partial Class Main
         Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.chkcboSharedWithUsers.IsInitializing = False
         Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 211)
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(6, 215)
         Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
         Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.chkcboSharedWithUsers.MaxVisibleItems = 8
@@ -3317,7 +3332,7 @@ Partial Class Main
         Me.cboTaskOwner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboTaskOwner.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
         Me.cboTaskOwner.FormattingEnabled = True
-        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 171)
+        Me.cboTaskOwner.Location = New System.Drawing.Point(94, 175)
         Me.cboTaskOwner.Name = "cboTaskOwner"
         Me.cboTaskOwner.Size = New System.Drawing.Size(293, 30)
         Me.cboTaskOwner.Sorted = True
@@ -3330,7 +3345,7 @@ Partial Class Main
         Me.lblUpdateDescription.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblUpdateDescription.AutoSize = True
         Me.lblUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 265)
+        Me.lblUpdateDescription.Location = New System.Drawing.Point(6, 269)
         Me.lblUpdateDescription.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
         Me.lblUpdateDescription.Name = "lblUpdateDescription"
         Me.lblUpdateDescription.Size = New System.Drawing.Size(158, 22)
@@ -3342,7 +3357,7 @@ Partial Class Main
         Me.txtLastUpdateDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLastUpdateDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 290)
+        Me.txtLastUpdateDescription.Location = New System.Drawing.Point(6, 294)
         Me.txtLastUpdateDescription.Multiline = True
         Me.txtLastUpdateDescription.Name = "txtLastUpdateDescription"
         Me.txtLastUpdateDescription.Size = New System.Drawing.Size(381, 64)
@@ -3354,7 +3369,7 @@ Partial Class Main
         '
         Me.btnDPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 360)
+        Me.btnDPORecallSettings.Location = New System.Drawing.Point(4, 364)
         Me.btnDPORecallSettings.Name = "btnDPORecallSettings"
         Me.btnDPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORecallSettings.TabIndex = 5
@@ -3367,7 +3382,7 @@ Partial Class Main
         '
         Me.btnDPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 360)
+        Me.btnDPORememberSettings.Location = New System.Drawing.Point(134, 364)
         Me.btnDPORememberSettings.Name = "btnDPORememberSettings"
         Me.btnDPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDPORememberSettings.TabIndex = 6
@@ -3527,7 +3542,7 @@ Partial Class Main
         '
         Me.btnDPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 360)
+        Me.btnDPOResetToDefault.Location = New System.Drawing.Point(264, 364)
         Me.btnDPOResetToDefault.Name = "btnDPOResetToDefault"
         Me.btnDPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDPOResetToDefault.TabIndex = 7
@@ -3540,7 +3555,7 @@ Partial Class Main
         '
         Me.btnStartTaskPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartTaskPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 401)
+        Me.btnStartTaskPost.Location = New System.Drawing.Point(4, 405)
         Me.btnStartTaskPost.Name = "btnStartTaskPost"
         Me.btnStartTaskPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartTaskPost.TabIndex = 8
@@ -3559,7 +3574,7 @@ Partial Class Main
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDNotAcquired)
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskLibraryIDAcquired)
         Me.grbTaskDiscord.Enabled = False
-        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 509)
+        Me.grbTaskDiscord.Location = New System.Drawing.Point(6, 513)
         Me.grbTaskDiscord.Name = "grbTaskDiscord"
         Me.grbTaskDiscord.Size = New System.Drawing.Size(393, 112)
         Me.grbTaskDiscord.TabIndex = 1
@@ -4949,4 +4964,5 @@ Partial Class Main
     Friend WithEvents Label20 As Label
     Friend WithEvents cboDelayUnits As ComboBox
     Friend WithEvents pnlDelayBasedOnGroupEvent As Panel
+    Friend WithEvents chkAvailabilityRefly As CheckBox
 End Class
