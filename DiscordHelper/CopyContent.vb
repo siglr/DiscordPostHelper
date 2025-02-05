@@ -60,6 +60,7 @@ Public Class CopyContent
                                 contentCopied As String,
                                 message As String,
                                 title As String,
+                                location As String,
                                 Optional keySequences As List(Of String) = Nothing,
                                 Optional autoPastePost As Boolean = True,
                                 Optional msToWaitAfterPost As Integer = 500,
@@ -81,6 +82,7 @@ Public Class CopyContent
 
         Me.Text = title
         lblMessage.Text = message
+        lblLocation.Text = location
 
         txtCopiedContent.Text = contentCopied
         imgImageInClipboard.Visible = False

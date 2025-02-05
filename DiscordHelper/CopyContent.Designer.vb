@@ -30,6 +30,7 @@ Partial Class CopyContent
         Me.btnAutoPaste = New System.Windows.Forms.Button()
         Me.imgImageInClipboard = New System.Windows.Forms.PictureBox()
         Me.btnGoURL = New System.Windows.Forms.Button()
+        Me.lblLocation = New System.Windows.Forms.Label()
         CType(Me.imgImageInClipboard, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -43,7 +44,7 @@ Partial Class CopyContent
         Me.txtCopiedContent.Name = "txtCopiedContent"
         Me.txtCopiedContent.ReadOnly = True
         Me.txtCopiedContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtCopiedContent.Size = New System.Drawing.Size(663, 463)
+        Me.txtCopiedContent.Size = New System.Drawing.Size(663, 417)
         Me.txtCopiedContent.TabIndex = 2
         Me.txtCopiedContent.TabStop = False
         '
@@ -59,9 +60,9 @@ Partial Class CopyContent
         '
         'lblMessage
         '
-        Me.lblMessage.Location = New System.Drawing.Point(12, 498)
+        Me.lblMessage.Location = New System.Drawing.Point(12, 495)
         Me.lblMessage.Name = "lblMessage"
-        Me.lblMessage.Size = New System.Drawing.Size(663, 111)
+        Me.lblMessage.Size = New System.Drawing.Size(663, 114)
         Me.lblMessage.TabIndex = 3
         Me.lblMessage.Text = "Content copied to your clipboard:"
         Me.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -100,7 +101,7 @@ Partial Class CopyContent
         '
         Me.imgImageInClipboard.Location = New System.Drawing.Point(12, 32)
         Me.imgImageInClipboard.Name = "imgImageInClipboard"
-        Me.imgImageInClipboard.Size = New System.Drawing.Size(663, 463)
+        Me.imgImageInClipboard.Size = New System.Drawing.Size(663, 417)
         Me.imgImageInClipboard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.imgImageInClipboard.TabIndex = 6
         Me.imgImageInClipboard.TabStop = False
@@ -115,6 +116,18 @@ Partial Class CopyContent
         Me.btnGoURL.Text = "Take me there!"
         Me.btnGoURL.UseVisualStyleBackColor = True
         '
+        'lblLocation
+        '
+        Me.lblLocation.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblLocation.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblLocation.Location = New System.Drawing.Point(12, 452)
+        Me.lblLocation.Name = "lblLocation"
+        Me.lblLocation.Size = New System.Drawing.Size(663, 43)
+        Me.lblLocation.TabIndex = 8
+        Me.lblLocation.Text = "Location"
+        Me.lblLocation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'CopyContent
         '
         Me.AcceptButton = Me.btnOk
@@ -123,6 +136,7 @@ Partial Class CopyContent
         Me.CancelButton = Me.btnOk
         Me.ClientSize = New System.Drawing.Size(687, 658)
         Me.ControlBox = False
+        Me.Controls.Add(Me.lblLocation)
         Me.Controls.Add(Me.btnGoURL)
         Me.Controls.Add(Me.imgImageInClipboard)
         Me.Controls.Add(Me.btnAutoPaste)
@@ -154,4 +168,5 @@ Partial Class CopyContent
     Friend WithEvents btnAutoPaste As Button
     Friend WithEvents imgImageInClipboard As PictureBox
     Friend WithEvents btnGoURL As Button
+    Friend WithEvents lblLocation As Label
 End Class

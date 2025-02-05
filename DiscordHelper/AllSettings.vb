@@ -80,6 +80,9 @@ Public Class AllSettings
     <XmlElement("EventDescriptionTemplate")>
     Public Property EventDescriptionTemplate As String
 
+    <XmlElement("RemindUserPostOptions")>
+    Public Property RemindUserPostOptions As Boolean?
+
     Public Sub New()
 
     End Sub
@@ -127,6 +130,7 @@ Public Class AllSettings
             DPO_chkDGPOPublishWSGEventNews = settingsInFile.DPO_chkDGPOPublishWSGEventNews
             TaskDescriptionTemplate = settingsInFile.TaskDescriptionTemplate
             EventDescriptionTemplate = settingsInFile.EventDescriptionTemplate
+            RemindUserPostOptions = If(settingsInFile.RemindUserPostOptions.HasValue, settingsInFile.RemindUserPostOptions.Value, True)
         Else
             settingsFound = False
         End If

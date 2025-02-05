@@ -149,6 +149,8 @@ Public Class Main
         LoadDPOptions()
         LoadDGPOptions()
 
+        chkRemindUserPostOptions.Checked = SessionSettings.RemindUserPostOptions
+
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
             _CurrentSessionFile = My.Application.CommandLineArgs(0)
@@ -2735,6 +2737,14 @@ Public Class Main
             Exit Sub
         End If
 
+        If chkRemindUserPostOptions.Checked Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Did you make sure to select the correct post options (check boxes) for what you want to post?", "Post Options Reminder", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbNo Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
         Dim autoContinue As Boolean = True
 
         If txtDiscordTaskID.Text.Length = 0 Then
@@ -2762,8 +2772,9 @@ Public Class Main
 
             CopyContent.ShowContent(Me,
                                 msgWeSimGlideLink,
-                                "Task uploaded to WeSimGlide.org! You can now paste the content of the message in the task's thread to share the WSG link.",
+                                "Task uploaded to WeSimGlide.org! You can now paste the content of the message anywhere you want to share the WSG link.",
                                 "Sharing WeSimGlide.org Task link",
+                                "Anywhere you want to share the task link",
                                 New List(Of String) From {"^v"})
         End If
 
@@ -2829,8 +2840,9 @@ Public Class Main
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                             msg,
-                            "Paste the first message in the thread and post it.",
-                            "Pasting first message in group event thread",
+                            "Paste the message in the thread and post it.",
+                            AppendIsTestMode("Pasting message in group event thread"),
+                            AppendIsTestMode("Group Event Thread"),
                             New List(Of String) From {"^v"},,,,
                             SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
             msg = String.Empty
@@ -2850,8 +2862,9 @@ Public Class Main
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                             msg,
-                            "Paste the first message in the thread and post it.",
-                            "Pasting first message in group event thread",
+                            "Paste the message in the thread and post it.",
+                            AppendIsTestMode("Pasting message in group event thread"),
+                            AppendIsTestMode("Group Event Thread"),
                             New List(Of String) From {"^v"},,,,
                             SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
         End If
@@ -2919,7 +2932,7 @@ Public Class Main
             ElseIf txtDiscordTaskID.Text.Length > 0 Then
                 'Ask user
                 Using New Centered_MessageBox(Me)
-                    If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous TASK Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                         txtDiscordTaskID.Text = String.Empty
                     End If
                 End Using
@@ -2995,7 +3008,8 @@ Public Class Main
             autoContinue = CopyContent.ShowContent(Me,
                                 firstThreadMessage,
                                 $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread's top message along with the cover image.",
-                                "Posting cover and first message in thread.",
+                                AppendIsTestMode("Posting cover and first message in thread."),
+                                AppendIsTestMode("Task Thread"),
                                 New List(Of String) From {"^v"},, numWaitSecondsForFiles.Value / 2 * 1000,,
                                 SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
         Else
@@ -3022,7 +3036,8 @@ Public Class Main
             autoContinue = CopyContent.ShowContent(Me,
                             msg,
                             $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
-                            "Creating all remaining details post in the thread.",
+                            AppendIsTestMode("Creating all remaining details post in the thread."),
+                            AppendIsTestMode("Task Thread"),
                             New List(Of String) From {"^v"},,,, SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
         End If
         If Not autoContinue Then
@@ -3273,6 +3288,11 @@ Public Class Main
         End If
 
     End Sub
+
+    Private Function AppendIsTestMode(msg As String) As String
+        Return $"{msg}{If(_useTestMode, " (Test Mode)", String.Empty)}"
+    End Function
+
     Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False, Optional isUpdate As Boolean = False) As Boolean
 
         Dim autoContinue As Boolean = True
@@ -3288,28 +3308,23 @@ Public Class Main
             Else
                 Dim msgAbove As String = String.Empty
                 Dim msgBelow As String = String.Empty
-                If _useTestMode Then
-                    msgAbove = $"Please open the Discord app and go to the Task TESTING channel.{Environment.NewLine}You can also click the 'Take me there' button."
-                    msgBelow = "Once your cursor is in the right field on the TESTING channel, you can click OK and start posting."
-                Else
-                    msgAbove = $"Please open the Discord app and position your cursor as shown below.{Environment.NewLine}You can also click the 'Take me there' button."
-                    msgBelow = "Once your cursor is in the right field, you can click OK and start posting."
-                End If
+                msgAbove = $"Task Main Post ({If(_useTestMode, "Test Mode", "Task Library")})"
+                msgBelow = $"Once your cursor is in the right field {If(_useTestMode, "on the TESTING channel", String.Empty)} (use 'Take me there!'), you can click OK and start posting."
                 autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "StartTaskWorkflow.gif",
                                                      msgAbove,
                                                      msgBelow,
-                                                     "Instructions to read before starting the post!",
+                                                     AppendIsTestMode("Instructions to read before starting the post!"),
                                                      SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
 
                 If Not autoContinue Then
                     Return autoContinue
                 End If
-                origin = "You can now post the main flight plan message directly in the FLIGHTS channel under TASK LIBRARY."
+                origin = $"You can now post the main task message directly in the {If(_useTestMode, "test", "flights")} channel (use 'Take me there!')."
                 titleMsg = "Creating main FP post"
             End If
         Else
-            origin = "You can now post the main flight plan message under the group event's thread."
+            origin = $"You can now post the main flight plan message under the {If(_useTestMode, "test event", "group event")}'s thread (use 'Take me there!')."
             titleMsg = "Creating FP post for group"
         End If
 
@@ -3318,7 +3333,8 @@ Public Class Main
         autoContinue = CopyContent.ShowContent(Me,
                             txtFPResults.Text,
                             $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
-                            titleMsg,
+                            AppendIsTestMode(titleMsg),
+                            AppendIsTestMode("Task Main Post"),
                             New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
 
         If Not autoContinue OrElse fromGroup Then
@@ -3378,9 +3394,9 @@ Public Class Main
 
         autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "CreateTaskThread.gif",
-                                                     "Follow the instructions as shown below to create the task's thread.",
+                                                     $"Task Thread {If(_useTestMode, "(Test Mode)", "in Task Library")}",
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
-                                                     "Instructions for the creation of the task's thread!",
+                                                     AppendIsTestMode("Instructions for the creation of the task's thread!"),
                                                      $"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{If(txtDiscordTaskID.Text.StartsWith("T"), txtDiscordTaskID.Text.Substring(1, txtDiscordTaskID.Text.Length - 1), txtDiscordTaskID.Text)}")
 
         Return autoContinue
@@ -3399,8 +3415,9 @@ Public Class Main
                 Clipboard.SetFileDropList(allFiles)
                 autoContinue = CopyContent.ShowContent(Me,
                                     cboCoverImage.SelectedItem,
-                                    $"On the Discord app, make sure you are on the proper channel and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
-                                    $"Posting the cover image for the {If(fromGroup, "group event", "task")}.",
+                                    $"On the Discord app, make sure you are on the proper channel (use 'Take me there!') and message field.{Environment.NewLine}Now paste the copied cover image as message.{Environment.NewLine}Skip (Ok) if already done.",
+                                    AppendIsTestMode($"Posting the cover image for the {If(fromGroup, "group event", "task")}."),
+                                    AppendIsTestMode($"{If(fromGroup, "Group Event Main Post", "Task Thread")}"),
                                     New List(Of String) From {"^v"},
                                     False,,
                                     Drawing.Image.FromFile(allFiles(0)),
@@ -3432,7 +3449,8 @@ Public Class Main
             autoContinue = CopyContent.ShowContent(Me,
                                     contentForMessage.ToString,
                                     $"Make sure you are on the thread's message field.{Environment.NewLine}Now paste the map image as the next message in the thread WITHOUT posting it and come back for the text for this message.",
-                                    "Posting the map image in the thread - actual map image first",
+                                    AppendIsTestMode("Posting the map image in the thread - actual map image first"),
+                                    AppendIsTestMode($"{If(postingGroupEvent, "Group Event", "Task")} Thread"),
                                     New List(Of String) From {"^v"},
                                     False,,,
                                     SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
@@ -3446,28 +3464,6 @@ Public Class Main
         Dim urlToTaskThread As String = String.Empty
         urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}"
         Return urlToTaskThread
-    End Function
-
-    Private Function FilesTextCopy(fullLegend As Boolean, Optional postingGroupEvent As Boolean = False) As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        If postingGroupEvent Then
-            BuildFileInfoText(fullLegend)
-        Else
-            BuildFileInfoText(fullLegend)
-        End If
-        Clipboard.SetText(txtFilesText.Text)
-        autoContinue = CopyContent.ShowContent(Me,
-                                txtFilesText.Text,
-                                "Now enter the file info in the current message in the thread and post it.",
-                                "Creating the files post in the thread - file info",
-                                New List(Of String) From {"^v"},
-                                True,
-                                numWaitSecondsForFiles.Value * 1000)
-
-        Return autoContinue
-
     End Function
 
     Private Sub BuildFileInfoText(fullLegend As Boolean, Optional DPHXOnly As Boolean = False)
@@ -3618,6 +3614,14 @@ Public Class Main
     Private Sub GroupEventOrFullWorkflow(fromGroupOnly As Boolean)
         Dim autoContinue As Boolean = True
 
+        If chkRemindUserPostOptions.Checked Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "Did you make sure to select the correct post options (check boxes) for what you want to post?", "Post Options Reminder", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbNo Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
         If Not ValidPostingRequirements(fromGroupOnly) Then
             Exit Sub
         End If
@@ -3633,7 +3637,7 @@ Public Class Main
 
         If _useTestMode AndAlso txtGroupEventPostURL.Text.Trim.Length > 0 Then
             Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous GROUP EVENT Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     txtGroupEventPostURL.Text = String.Empty
                     SaveSession()
                 End If
@@ -3697,6 +3701,7 @@ Public Class Main
                                 msg,
                                 "You can now paste the content of the message to share links to the task and the group event.",
                                 "Sharing Discord Task and Group Event links",
+                                "Anywhere you want to share the links",
                                 New List(Of String) From {"^v"})
 
     End Sub
@@ -3716,6 +3721,7 @@ Public Class Main
                                 msg,
                                 "On the task's thread, paste the content of the message to share the event for this task.",
                                 "Sharing Discord Event to Task",
+                                "Anywhere you want to share the Featured message",
                                 New List(Of String) From {"^v"})
 
     End Sub
@@ -3815,8 +3821,9 @@ Public Class Main
         Clipboard.SetText(txtGroupFlightEventPost.Text)
         autoContinue = CopyContent.ShowContent(Me,
                                 txtGroupFlightEventPost.Text,
-                                $"In the Discord app and on the proper channel for the club/group, make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link to that newly created message.",
-                                "Creating group flight post",
+                                $"In the Discord app and on the proper channel for the club/group (use 'Take me there!'), make sure you are on the new message field to post the group flight event.{Environment.NewLine}Next, you will also be asked to copy the link to that newly created message.",
+                                AppendIsTestMode("Creating group flight post"),
+                                AppendIsTestMode("Group Event Main Post"),
                                 New List(Of String) From {"^v"},
                                 True,
                                 If(withCover, numWaitSecondsForFiles.Value / 2 * 1000, 0),,
@@ -3862,9 +3869,9 @@ Public Class Main
 
             autoContinue = MsgBoxWithPicture.ShowContent(Me,
                                                      "CreateTaskThread.gif",
-                                                     "Follow the instructions as shown below to create the group event's thread.",
+                                                     $"Group Event Thread {If(_useTestMode, "(Test Mode)", "(Your Discord)")}",
                                                      "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
-                                                     "Instructions for the creation of the group event's thread!",
+                                                     AppendIsTestMode("Instructions for the creation of the group event's thread!"),
                                                      txtGroupEventPostURL.Text.Trim)
         Else
             Using New Centered_MessageBox(Me)
@@ -3889,7 +3896,8 @@ Public Class Main
             autoContinue = CopyContent.ShowContent(Me,
                                     txtEventTeaserAreaMapImage.Text,
                                     $"Position the cursor on the message field in the group event thread and paste the copied teaser image for your first message.{Environment.NewLine}Skip (Ok) if already done.",
-                                    "Pasting teaser area map image",
+                                    AppendIsTestMode("Pasting teaser area map image"),
+                                    AppendIsTestMode("Group Event Thread"),
                                     New List(Of String) From {"^v"},
                                     txtEventTeaserMessage.Text.Trim.Length = 0,
                                     If(txtEventTeaserMessage.Text.Trim.Length = 0, numWaitSecondsForFiles.Value / 2 * 1000, 0),
@@ -3910,7 +3918,8 @@ Public Class Main
             autoContinue = CopyContent.ShowContent(Me,
                             teaser.ToString,
                             $"Make sure you are back on the thread's message field.{Environment.NewLine}Then post the teaser message as the first message in the event's thread.",
-                            "Posting teaser with text.",
+                            AppendIsTestMode("Posting teaser with text."),
+                            AppendIsTestMode("Group Event Thread"),
                             New List(Of String) From {"^v"},
                             True,
                             If(imagePasted, numWaitSecondsForFiles.Value / 2 * 1000, 0),, SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
@@ -6646,6 +6655,7 @@ Public Class Main
                                 msgForEventHunters,
                                 "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
                                 "Sharing WeSimGlide.org Task and Group Event links",
+                                "WSG Announcements",
                                 New List(Of String) From {"^v"},,,,
                                 SupportingFeatures.WSGAnnouncementsDiscordURL)
 

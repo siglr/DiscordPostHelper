@@ -33,12 +33,12 @@ Partial Class MsgBoxWithPicture
         '
         'lblMessageAbove
         '
-        Me.lblMessageAbove.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.lblMessageAbove.Location = New System.Drawing.Point(16, 6)
+        Me.lblMessageAbove.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Bold)
+        Me.lblMessageAbove.Location = New System.Drawing.Point(12, 399)
         Me.lblMessageAbove.Name = "lblMessageAbove"
         Me.lblMessageAbove.Size = New System.Drawing.Size(659, 60)
         Me.lblMessageAbove.TabIndex = 1
-        Me.lblMessageAbove.Text = "Content copied to your clipboard:"
+        Me.lblMessageAbove.Text = "Location"
         Me.lblMessageAbove.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblMessageBelow
@@ -73,7 +73,7 @@ Partial Class MsgBoxWithPicture
         '
         'PictureBox1
         '
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 69)
+        Me.PictureBox1.Location = New System.Drawing.Point(12, 12)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(659, 384)
         Me.PictureBox1.TabIndex = 5
