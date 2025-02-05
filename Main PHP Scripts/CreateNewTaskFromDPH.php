@@ -31,12 +31,10 @@ try {
     $ownerName = isset($taskData['OwnerName']) ? $taskData['OwnerName'] : 'MajorDad';
     $sharedWith = isset($taskData['SharedWith']) ? $taskData['SharedWith'] : json_encode([]);
 
-    // Check if the task already exists
-    $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM Tasks WHERE TaskID = :TemporaryTaskID");
-    $checkStmt->execute([':TemporaryTaskID' => $taskData['TemporaryTaskID']]);
-    $taskExists = $checkStmt->fetchColumn() > 0;
+    // Determine if it's Step 1 (new task creation) or Step 2 (update)
+    $isCreatingNewTask = isset($taskData['TemporaryTaskID']) && !isset($taskData['EntrySeqID']);
 
-    if (!$taskExists) {
+    if ($isCreatingNewTask) {
         // Step 1: Create new task (minimal fields only)
         logMessage("Creating new temporary task...");
 
@@ -46,6 +44,15 @@ try {
             if (empty($taskData[$field])) {
                 throw new Exception("Missing required field: $field");
             }
+        }
+
+        // Check if the task already exists
+        $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM Tasks WHERE TaskID = :TemporaryTaskID");
+        $checkStmt->execute([':TemporaryTaskID' => $taskData['TemporaryTaskID']]);
+        $taskExists = $checkStmt->fetchColumn() > 0;
+
+        if ($taskExists) {
+            throw new Exception("A task with the same TemporaryTaskID already exists: " . $taskData['TemporaryTaskID']);
         }
 
         // Insert minimal data into the database
@@ -236,7 +243,7 @@ try {
                 OwnerName = :OwnerName, 
                 SharedWith = :SharedWith,
                 Availability = :Availability
-            WHERE TaskID = :TemporaryTaskID
+            WHERE EntrySeqID = :EntrySeqID
         ");
 
         // Ensure datetime fields are properly formatted
@@ -300,7 +307,7 @@ try {
             ':BaroPressureExtraInfo' => $baroPressureExtraInfo,
             ':ExtraFilesList' => $extraFilesList,
             ':Status' => $taskData['Status'],
-            ':TemporaryTaskID' => $taskData['TemporaryTaskID'],
+            ':EntrySeqID' => $taskData['EntrySeqID'],
             ':LastUpdateDescription' => $taskData['LastUpdateDescription'],
             ':OwnerName' => $ownerName,
             ':SharedWith' => $sharedWith,

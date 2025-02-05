@@ -1953,7 +1953,7 @@ Public Class Main
         End If
 
         Dim altRestrictions As String = String.Empty
-        If txtAltRestrictions.Text.Trim.Length > 0 Then
+        If txtAltRestrictions.Text.Trim.Length > 33 Then
             altRestrictions = "This task contains altitude restrictions"
         End If
         Dim baroWarning As String = String.Empty
@@ -2826,11 +2826,11 @@ Public Class Main
 
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
-            If AvailabilityDateTimeToUse <= Now() Then
+            If chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked Then
+                msg = $"{msg}No task details yet!"
+            Else
                 BuildFPResults(True)
                 msg = $"{msg}{txtFPResults.Text.Trim}"
-            Else
-                msg = $"{msg}No task details yet!"
             End If
         End If
 
@@ -5162,11 +5162,7 @@ Public Class Main
             .TrackerGroup = txtTrackerGroup.Text
             .GroupEmoji = lblGroupEmoji.Text
             .DiscordTaskID = txtDiscordTaskID.Text
-            If txtDiscordTaskID.Text.Trim.Length = 0 Then
-                .TemporaryTaskID = txtTemporaryTaskID.Text
-            Else
-                .TemporaryTaskID = String.Empty
-            End If
+            .TemporaryTaskID = txtTemporaryTaskID.Text
             .EntrySeqID = _TaskEntrySeqID
             .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
@@ -5335,7 +5331,7 @@ Public Class Main
                 If txtDiscordTaskID.Text.StartsWith("T") Then
                     _useTestMode = True
                 End If
-                If txtDiscordTaskID.Text.Trim.Length = 0 Then
+                If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation Then
                     txtTemporaryTaskID.Text = .TemporaryTaskID
                 Else
                     txtTemporaryTaskID.Text = String.Empty
@@ -5625,6 +5621,7 @@ Public Class Main
         If result Then
             Dim discordTaskIDToRemove As String = txtDiscordTaskID.Text.Trim
             _TaskEntrySeqID = 0
+            _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
             txtDiscordTaskID.Text = String.Empty
             txtTemporaryTaskID.Text = String.Empty
             SetAndRetrieveSessionData()
@@ -5957,12 +5954,6 @@ Public Class Main
 
         Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
 
-        Dim taskIDToUse As String = String.Empty
-        If taskInfo.TemporaryTaskID = String.Empty Then
-            taskIDToUse = taskInfo.DiscordTaskID
-        Else
-            taskIDToUse = taskInfo.TemporaryTaskID
-        End If
         Dim modeRights As String = String.Empty
         If isUpdate Then
             modeRights = "UpdateTask"
@@ -5972,7 +5963,6 @@ Public Class Main
         Dim taskData As New Dictionary(Of String, Object) From {
             {"RealTaskID", taskInfo.DiscordTaskID},
             {"EntrySeqID", taskInfo.EntrySeqID},
-            {"TemporaryTaskID", taskIDToUse},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
@@ -6364,7 +6354,8 @@ Public Class Main
                                  eligibleAward As String,
                                  beginnersGuide As String,
                                  notam As String,
-                                 availability As DateTime) As Boolean
+                                 availability As DateTime,
+                                 refly As Integer) As Boolean
 
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
@@ -6413,7 +6404,8 @@ Public Class Main
                 {"BeginnersGuide", beginnersGuide},
                 {"Notam", notam},
                 {"UserID", _userPermissionID},
-                {"Availability", availability}
+                {"Availability", availability},
+                {"Refly", refly}
             }
 
                 For Each field In fields
@@ -6720,7 +6712,7 @@ Public Class Main
             Dim notam As String = String.Empty
 
             'Complete notam with notices like barometric pressure and altitude restrictions
-            If txtAltRestrictions.Text.Trim.Length > 0 Then
+            If txtAltRestrictions.Text.Trim.Length > 33 Then
                 notam = $"This task contains altitude restrictions!<br>"
             End If
             If txtBaroPressureExtraInfo.Enabled AndAlso txtBaroPressureExtraInfo.Text.Trim <> String.Empty Then
@@ -6731,6 +6723,8 @@ Public Class Main
             End If
 
             Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
+
+            Dim refly As Integer = If(chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked, 1, 0)
 
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
@@ -6758,7 +6752,8 @@ Public Class Main
                                                     cboEligibleAward.Text.Trim,
                                                     urlBeginnerGuide,
                                                     notam,
-                                                    availabilityToUse)
+                                                    availabilityToUse,
+                                                    refly)
 
             If result Then
                 SetEventLabelAndButtons()
