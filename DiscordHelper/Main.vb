@@ -5153,7 +5153,11 @@ Public Class Main
             .TrackerGroup = txtTrackerGroup.Text
             .GroupEmoji = lblGroupEmoji.Text
             .DiscordTaskID = txtDiscordTaskID.Text
-            .TemporaryTaskID = txtTemporaryTaskID.Text
+            If txtDiscordTaskID.Text.Trim.Length = 0 Then
+                .TemporaryTaskID = txtTemporaryTaskID.Text
+            Else
+                .TemporaryTaskID = String.Empty
+            End If
             .EntrySeqID = _TaskEntrySeqID
             .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
