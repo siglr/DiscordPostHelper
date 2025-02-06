@@ -6907,10 +6907,8 @@ Public Class Main
     Private ReadOnly Property AvailabilityDateTimeToUse As DateTime
         Get
             Dim availabilityDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
-            If chkDelayedAvailability.Enabled AndAlso chkDelayedAvailability.Checked Then
-                If availabilityDateTimeLocal < Now() Then
-                    availabilityDateTimeLocal = Now
-                End If
+            If Not (chkDelayedAvailability.Enabled AndAlso chkDelayedAvailability.Checked AndAlso availabilityDateTimeLocal > Now()) Then
+                availabilityDateTimeLocal = Now()
             End If
             Return availabilityDateTimeLocal
         End Get
