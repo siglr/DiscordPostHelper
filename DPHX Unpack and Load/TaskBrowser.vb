@@ -976,8 +976,9 @@ Public Class TaskBrowser
                                                COALESCE(UserData.Tags, '') AS Tags,
                                                COALESCE(UserData.TaskFlown, 0) AS TaskFlown,
                                                COALESCE(UserData.ToFly, 0) AS ToFly
-                                        FROM Tasks
-                                        LEFT JOIN UserData ON Tasks.EntrySeqID = UserData.EntrySeqID", conn)
+                                               FROM Tasks
+                                               LEFT JOIN UserData ON Tasks.EntrySeqID = UserData.EntrySeqID
+                                               WHERE Tasks.TaskID NOT LIKE 'TEMP%'", conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(_currentTaskDBEntries)
                 End Using
@@ -2046,7 +2047,7 @@ Public Class TaskBrowser
 
                     ' Process deleted tasks
                     For Each entrySeqID In deletedTasks
-                        Dim cmd As New SQLiteCommand("DELETE FROM Tasks WHERE EntrySeqID = @EntrySeqID", conn)
+                        Dim cmd As New SQLiteCommand("DELETE FROM Tasks WHERE EntrySeqID = @EntrySeqID OR TaskID LIKE 'TEMP%'", conn)
                         cmd.Parameters.AddWithValue("@EntrySeqID", entrySeqID)
 
                         Dim rowsAffected = cmd.ExecuteNonQuery()
