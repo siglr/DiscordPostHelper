@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.3.3</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.7.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.7.1</ReleaseVersion>
+      <ReleaseTitle>Quick fix for nasty bug</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a bug occuring with a rogue invalid task entry.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.3.3</ReleaseVersion>
       <ReleaseTitle>Fixed Cleanup Tool with MSFS 2024</ReleaseTitle>
