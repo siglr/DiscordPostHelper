@@ -171,8 +171,8 @@ try {
                     ':EligibleAward' => $_POST['EligibleAward'] ?? '',
                     ':BeginnersGuide' => $_POST['BeginnersGuide'] ?? '',
                     ':Notam' => $_POST['Notam'] ?? '',
-                    ':Availability' => formatDatetime($_POST['Availability'],
-                    ':Refly' => $_POST['Refly'] ?? '')
+                    ':Availability' => formatDatetime($_POST['Availability']),
+                    ':Refly' => $_POST['Refly'] ?? ''
                 ]);
             }
             break;
