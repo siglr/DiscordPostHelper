@@ -370,6 +370,7 @@ Public Class Main
         dtEventSyncFlyTime.CustomFormat = timeFormatToUse
         dtEventLaunchTime.CustomFormat = timeFormatToUse
         dtEventStartTaskTime.CustomFormat = timeFormatToUse
+        dtAvailabilityTime.CustomFormat = timeFormatToUse
 
     End Sub
 
