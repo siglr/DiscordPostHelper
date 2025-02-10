@@ -39,8 +39,8 @@ try {
 
         // Handle Event News (NewsType = 1)
         if ($entry['NewsType'] == 1) {
-            if ($entry['Refly'] == 1) {
-                // If Refly = 1, remove EntrySeqID
+            // If Availability is in the future, remove EntrySeqID
+            if (!empty($entry['EventAvailability']) && $entry['EventAvailability'] > $nowUTC) {
                 $entry['EntrySeqID'] = null;
             }
         }

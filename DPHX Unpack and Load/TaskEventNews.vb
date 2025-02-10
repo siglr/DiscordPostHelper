@@ -32,7 +32,7 @@ Partial Class TaskEventNews
     Public Property EventDate As DateTime = Now.ToUniversalTime
     Public Property News As String = "News"
     Public Property NewsType As NewsTypeEnum
-    Public Property TaskEntrySeqID As Integer = 1
+    Public Property TaskEntrySeqID As Integer = 0
     Public Property URLToGo As String = String.Empty
     Public Event NewsClicked As EventHandler
 
