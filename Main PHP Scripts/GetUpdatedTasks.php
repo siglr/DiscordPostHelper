@@ -12,16 +12,24 @@ try {
 
         // Define the query to retrieve the records with DBEntryUpdate greater than the provided parameter
         $query = "
-            SELECT 
-                EntrySeqID, TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo,
-                MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName,
-                ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves,
-                SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
-                TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
-                ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
-                RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, RepostText, LastUpdateDescription
-            FROM Tasks
-            WHERE DBEntryUpdate > :dbEntryUpdate
+                    SELECT 
+                        EntrySeqID, TaskID, Title, LastUpdate, SimDateTime, IncludeYear, SimDateTimeExtraInfo,
+                        MainAreaPOI, DepartureName, DepartureICAO, DepartureExtra, ArrivalName,
+                        ArrivalICAO, ArrivalExtra, SoaringRidge, SoaringThermals, SoaringWaves,
+                        SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
+                        TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
+                        ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
+                        RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, RepostText, LastUpdateDescription
+                    FROM Tasks
+                    WHERE 
+                        -- 1. Tasks that have been updated and are available
+                        (DBEntryUpdate > :dbEntryUpdate 
+                        AND (Availability IS NULL OR Availability <= datetime('now', 'utc')))
+                        OR 
+                        -- 2. Tasks that have become available since last update
+                        (Availability IS NOT NULL 
+                        AND Availability > :dbEntryUpdate 
+                        AND Availability <= datetime('now', 'utc'))
         ";
 
         // Prepare and execute the query
