@@ -2643,6 +2643,11 @@ Public Class Main
         lblStartTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventStartTaskDate.Value.Year, dtEventStartTaskDate.Value.Month, dtEventStartTaskDate.Value.Day, dtEventStartTaskTime.Value.Hour, dtEventStartTaskTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
         ToolTip1.SetToolTip(lblStartTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
+        _directChange = False
+        dtAvailabilityDate.MaxDate = theDate.ToLocalTime
+        dtAvailabilityTime.MaxDate = theDate.ToLocalTime
+        _directChange = True
+
         'BuildGroupFlightPost()
 
     End Sub
@@ -6831,6 +6836,23 @@ Public Class Main
 
     Private Sub CalculateTaskAvailability()
 
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+        Try
+            If chkActivateEvent.Checked AndAlso fullMeetDateTimeLocal > Now Then
+                _directChange = False
+                dtAvailabilityDate.MaxDate = fullMeetDateTimeLocal
+                dtAvailabilityTime.MaxDate = fullMeetDateTimeLocal
+                _directChange = True
+            Else
+                _directChange = False
+                dtAvailabilityDate.MaxDate = "9998-12-31"
+                dtAvailabilityTime.MaxDate = "9998-12-31"
+                _directChange = True
+            End If
+            SetDelayTimeDifferenceField()
+        Catch ex As Exception
+        End Try
+
         If (Not chkDelayBasedOnEvent.Checked) OrElse _loadingFile OrElse _isInitiatizing OrElse txtMinutesBeforeMeeting.Text.Trim = String.Empty Then
             Exit Sub
         End If
@@ -6843,7 +6865,6 @@ Public Class Main
             nbrMinutesToSubstract = nbrMinutesToSubstract * 60
         End If
 
-        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
         Dim availabilityDateTimeLocal As DateTime = fullMeetDateTimeLocal.AddMinutes(0 - nbrMinutesToSubstract)
 
         lblBeforeMeetingTime.Text = "before meeting time."
@@ -6877,10 +6898,25 @@ Public Class Main
             Exit Sub
         End If
 
-        If chkDelayBasedOnEvent.Checked Then
+        SetDelayTimeDifferenceField()
+        SessionModified(SourceOfChange.DiscordTab)
+
+    End Sub
+
+#End Region
+
+    Private Sub SetDelayTimeDifferenceField()
+        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
+
+        If chkActivateEvent.Checked Then
             Dim availabilityDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
-            Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
             Dim nbrMinutesDiff As Integer = DateDiff(DateInterval.Minute, fullMeetDateTimeLocal, availabilityDateTimeLocal)
+
+            'If nbrMinutesDiff > 0 Then
+            '    dtAvailabilityDate.Value = fullMeetDateTimeLocal
+            '    dtAvailabilityTime.Value = fullMeetDateTimeLocal
+            '    nbrMinutesDiff = 0
+            'End If
 
             ' Determine delay unit based on the number of minutes difference
             If Math.Abs(nbrMinutesDiff) >= 60 AndAlso nbrMinutesDiff Mod 60 = 0 Then
@@ -6890,20 +6926,16 @@ Public Class Main
                 cboDelayUnits.SelectedIndex = 1 ' Minutes
                 txtMinutesBeforeMeeting.Text = Math.Abs(nbrMinutesDiff).ToString()
             End If
-
-            ' Display appropriate warning if the availability time is after the meeting time
-            If nbrMinutesDiff <= 0 Then
-                lblBeforeMeetingTime.Text = "before meeting time."
-            Else
-                lblBeforeMeetingTime.Text = "⚠️ AFTER meeting time."
+            If chkDelayBasedOnEvent.Checked Then
+                ' Display appropriate warning if the availability time is after the meeting time
+                If nbrMinutesDiff <= 0 Then
+                    lblBeforeMeetingTime.Text = "before meeting time."
+                Else
+                    lblBeforeMeetingTime.Text = "⚠️ AFTER meeting time."
+                End If
             End If
         End If
-
-        SessionModified(SourceOfChange.DiscordTab)
-
     End Sub
-
-#End Region
 
     Private ReadOnly Property AvailabilityDateTimeToUse As DateTime
         Get
