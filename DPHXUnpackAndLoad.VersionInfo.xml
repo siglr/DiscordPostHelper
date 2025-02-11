@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.7.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.11.1</ReleaseVersion>
+      <ReleaseTitle>Sync with the DPH tool for delayed availability feature</ReleaseTitle>
+      <ReleaseNotes>
+        Nothing special but supporting delayed availability messages.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.7.1</ReleaseVersion>
       <ReleaseTitle>Quick fix for nasty bug</ReleaseTitle>

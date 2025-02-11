@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.11.1</ReleaseVersion>
+      <ReleaseTitle>New Delayed Availability feature!</ReleaseTitle>
+      <ReleaseNotes>
+        Added a feature to make the files and details available only at a date and time specified by the task designer.
+        Fix - added a check to prevent both a temporary Discord ID and the real Discord ID to exist at the same time.
+        Revisited layout of Copy/Paste messages to more clearly identify WHAT and where we are posting.
+        Added an option to be reminded about post options before starting a workflow.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.3.1</ReleaseVersion>
       <ReleaseTitle>Important fix post previous release</ReleaseTitle>
