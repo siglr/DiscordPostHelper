@@ -1,7 +1,6 @@
 ﻿Imports System.Globalization
 Imports System.IO
 Imports System.IO.Compression
-Imports System.Linq.Expressions
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Text
@@ -13,13 +12,9 @@ Imports System.Xml.Serialization
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 Imports Microsoft.Win32
 Imports System.Reflection
-Imports System.Threading
-Imports NAudio.Utils
 Imports System.Runtime.InteropServices
-Imports System.Security.AccessControl
-Imports System.Reflection.Emit
 Imports System.Drawing
-Imports System.Web.UI.HtmlControls
+Imports Newtonsoft.Json.Linq
 
 Public Class SupportingFeatures
 
@@ -827,19 +822,42 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Shared Function DeleteFolderAndFiles(ByVal folderToDelete As String) As Boolean
+    Public Shared Function DeleteFolderAndFiles(ByVal folderToDelete As String, Optional ByVal recursively As Boolean = False) As Boolean
 
         If Not CleanupDPHXTempFolder(folderToDelete) Then
             Return False
         End If
 
         Try
-            Directory.Delete(folderToDelete)
+            Directory.Delete(folderToDelete, recursively)
             Return True
         Catch ex As Exception
             Return False
         End Try
 
+    End Function
+
+    Public Shared Function ContainsDifferentExtensions(folderPath As String, allowedExtension As String) As Boolean
+        Try
+            ' Ensure the extension starts with a dot
+            If Not allowedExtension.StartsWith(".") Then
+                allowedExtension = "." & allowedExtension
+            End If
+
+            ' Get all files in the folder
+            For Each file As String In Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories)
+                If Path.GetExtension(file).ToLower() <> allowedExtension.ToLower() Then
+                    Return True ' Found a file with a different extension
+                End If
+            Next
+
+            ' If no different extension was found, return False
+            Return False
+
+        Catch ex As Exception
+            Console.WriteLine("Error while checking folder: " & ex.Message)
+            Return False
+        End Try
     End Function
 
     Public Shared Function CleanupDPHXTempFolder(ByVal unpackFolder As String) As Boolean
@@ -2738,6 +2756,36 @@ Public Class SupportingFeatures
             End If
         End Get
     End Property
+
+    Public Shared Function FetchTaskIDUsingEntrySeqID(entrySeqID As String, Optional ByRef taskTitle As String = "") As String
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php?EntrySeqID={entrySeqID}"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "GET"
+
+        Try
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+
+                    ' Parse the JSON response to extract the TaskID
+                    Dim json As JObject = JObject.Parse(jsonResponse)
+
+                    ' Check if the status is "success" and return the TaskID, else return "0"
+                    If json("status").ToString() = "success" Then
+                        taskTitle = json("taskDetails")("Title").ToString()
+                        Return json("taskDetails")("TaskID").ToString()
+                    Else
+                        ' Return Empty string if no task was found
+                        Return String.Empty
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            ' Handle the exception (you could log this or handle it differently based on your needs)
+            Return String.Empty ' Return Empty string if an exception occurs
+        End Try
+    End Function
+
 End Class
 
 

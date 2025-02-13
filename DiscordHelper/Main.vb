@@ -708,7 +708,7 @@ Public Class Main
             DPHFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHFilename}.dph"
         Else
             If txtFlightPlanFile.Text = String.Empty Then
-                SaveFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+                SaveFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
             Else
                 SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
             End If
@@ -1243,7 +1243,7 @@ Public Class Main
     Private Sub SelectFlightPlan_Click(sender As Object, e As EventArgs) Handles btnSelectFlightPlan.Click
 
         If txtWeatherFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtWeatherFile.Text)
         End If
@@ -1282,7 +1282,7 @@ Public Class Main
 
     Private Sub btnSelectWeatherFile_Click(sender As Object, e As EventArgs) Handles btnSelectWeatherFile.Click
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -2564,7 +2564,7 @@ Public Class Main
     Private Sub btnSelectEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnSelectEventTeaserAreaMap.Click
 
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -5007,6 +5007,43 @@ Public Class Main
 
     End Sub
 
+    Private Sub btnLoadFromWSG(sender As Object, e As EventArgs) Handles toolStripOpenFromWSG.Click
+        Dim inputForm As New LoadWSGTaskInputForm()
+        If inputForm.ShowDialog() = DialogResult.OK Then
+            If inputForm.WSGTaskID <> 0 Then
+                'Proceed to download the DPHX file
+                'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
+                Dim taskTitle As String = String.Empty
+                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGTaskID, taskTitle)
+                If taskID <> String.Empty Then
+                    'Make sure temporary folder is available and empty
+                    Dim tempDPHXFromWSGFolder As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempDPHXFromWSG")
+                    If Directory.Exists(tempDPHXFromWSGFolder) Then
+                        'Check if it contains anything else than DPHX files!
+                        If SupportingFeatures.ContainsDifferentExtensions(tempDPHXFromWSGFolder, "dphx") Then
+                            Using New Centered_MessageBox(Me)
+                                If MessageBox.Show($"The temporary folder is about to be deleted and it contains files! Are you sure you want to proceed?", "Temporary folder warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
+                                    Exit Sub
+                                End If
+                            End Using
+                        End If
+                        'Clean it up
+                        SupportingFeatures.DeleteFolderAndFiles(tempDPHXFromWSGFolder, True)
+                    End If
+                    Directory.CreateDirectory($"{tempDPHXFromWSGFolder}\{taskTitle}")
+                    Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, taskTitle, $"{tempDPHXFromWSGFolder}\{taskTitle}")
+                    If selectedFile <> String.Empty Then
+                        LoadFile(selectedFile)
+                    End If
+                End If
+            Else
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show("No task ID specified!", "Invalid task ID", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                End Using
+            End If
+        End If
+    End Sub
+
     Private Sub btnSaveConfig_Click(sender As Object, e As EventArgs) Handles toolStripSave.Click
 
         SaveSession()
@@ -5044,7 +5081,7 @@ Public Class Main
     Private Sub LoadFileDialog()
 
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = "H:\MSFS WIP Flight plans\"
+            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If

@@ -103,6 +103,12 @@
     <Content Include="KnownDesigners.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="LoadWSGTaskInputForm.Designer.vb">
+      <DependentUpon>LoadWSGTaskInputForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoadWSGTaskInputForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -166,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CopyContent.resx">
       <DependentUpon>CopyContent.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadWSGTaskInputForm.resx">
+      <DependentUpon>LoadWSGTaskInputForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>

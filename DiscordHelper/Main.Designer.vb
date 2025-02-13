@@ -360,6 +360,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.toolStripOpenFromWSG = New System.Windows.Forms.ToolStripButton()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -4361,7 +4362,7 @@ Partial Class Main
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripOpenFromWSG, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
@@ -4376,7 +4377,7 @@ Partial Class Main
         Me.toolStripOpen.Name = "toolStripOpen"
         Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
         Me.toolStripOpen.Text = "&Open"
-        Me.toolStripOpen.ToolTipText = "Click to select and load a DPH session file from your PC."
+        Me.toolStripOpen.ToolTipText = "Click to save the current DPH session to your PC."
         '
         'toolStripSave
         '
@@ -4542,6 +4543,14 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Name = "GetNowTimeStampOnly"
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
+        '
+        'toolStripOpenFromWSG
+        '
+        Me.toolStripOpenFromWSG.Image = CType(resources.GetObject("toolStripOpenFromWSG.Image"), System.Drawing.Image)
+        Me.toolStripOpenFromWSG.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripOpenFromWSG.Name = "toolStripOpenFromWSG"
+        Me.toolStripOpenFromWSG.Size = New System.Drawing.Size(67, 25)
+        Me.toolStripOpenFromWSG.Text = "WSG"
         '
         'Main
         '
@@ -4850,7 +4859,6 @@ Partial Class Main
     Friend WithEvents Label2 As Label
     Friend WithEvents txtEventTeaserMessage As TextBox
     Friend WithEvents chkEventTeaser As CheckBox
-    Friend WithEvents toolStripOpen As ToolStripButton
     Friend WithEvents toolStripSave As ToolStripButton
     Friend WithEvents toolStripResetAll As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
@@ -4982,4 +4990,6 @@ Partial Class Main
     Friend WithEvents pnlDelayBasedOnGroupEvent As Panel
     Friend WithEvents chkAvailabilityRefly As CheckBox
     Friend WithEvents chkRemindUserPostOptions As CheckBox
+    Friend WithEvents toolStripOpen As ToolStripButton
+    Friend WithEvents toolStripOpenFromWSG As ToolStripButton
 End Class

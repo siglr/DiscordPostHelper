@@ -1439,38 +1439,10 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Function FetchTaskIDUsingEntrySeqID(entrySeqID As String) As String
-        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php?EntrySeqID={entrySeqID}"
-        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
-        request.Method = "GET"
-
-        Try
-            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-                Using reader As New StreamReader(response.GetResponseStream())
-                    Dim jsonResponse As String = reader.ReadToEnd()
-
-                    ' Parse the JSON response to extract the TaskID
-                    Dim json As JObject = JObject.Parse(jsonResponse)
-
-                    ' Check if the status is "success" and return the TaskID, else return "0"
-                    If json("status").ToString() = "success" Then
-                        Return json("taskDetails")("TaskID").ToString()
-                    Else
-                        ' Return Empty string if no task was found
-                        Return String.Empty
-                    End If
-                End Using
-            End Using
-        Catch ex As Exception
-            ' Handle the exception (you could log this or handle it differently based on your needs)
-            Return String.Empty ' Return Empty string if an exception occurs
-        End Try
-    End Function
-
     Private Sub DownloadAndOpenTaskUsingNewsEntry(theNewsEntry As NewsEntry)
 
         'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
-        Dim taskID As String = FetchTaskIDUsingEntrySeqID(theNewsEntry.EntrySeqID)
+        Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(theNewsEntry.EntrySeqID)
 
         If taskID <> String.Empty Then
             Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, theNewsEntry.Subtitle, Settings.SessionSettings.PackagesFolder)
