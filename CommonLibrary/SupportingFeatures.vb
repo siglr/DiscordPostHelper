@@ -755,11 +755,15 @@ Public Class SupportingFeatures
         End Using
     End Sub
 
-    Public Function UnpackDPHXFile(ByVal dphxFilePath As String) As String
+    Public Function UnpackDPHXFile(ByVal dphxFilePath As String, Optional ByRef dphxUnpackFolder As String = "") As String
 
         Dim folderToUnpackDialog As New FolderBrowserDialog
 
-        folderToUnpackDialog.SelectedPath = Path.GetDirectoryName(Path.GetFullPath(dphxFilePath))
+        If dphxUnpackFolder = String.Empty OrElse (Not Directory.Exists(dphxUnpackFolder)) Then
+            folderToUnpackDialog.SelectedPath = Path.GetDirectoryName(Path.GetFullPath(dphxFilePath))
+        Else
+            folderToUnpackDialog.SelectedPath = dphxUnpackFolder
+        End If
         folderToUnpackDialog.Description = $"Select folder where to unpack the session package ""{Path.GetFileName(dphxFilePath)}"""
         folderToUnpackDialog.ShowNewFolderButton = True
 
@@ -779,6 +783,8 @@ Public Class SupportingFeatures
                 Return String.Empty
             End If
         End If
+
+        dphxUnpackFolder = folderToUnpackDialog.SelectedPath
 
         'Unpack files
         Dim individualFileOverwrite As DialogResult

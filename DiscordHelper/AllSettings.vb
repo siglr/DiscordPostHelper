@@ -83,6 +83,30 @@ Public Class AllSettings
     <XmlElement("RemindUserPostOptions")>
     Public Property RemindUserPostOptions As Boolean?
 
+    <XmlElement("LastUsedFileLocation")>
+    Public Property LastUsedFileLocation As String
+        Get
+            If String.IsNullOrEmpty(_lastUsedFileLocation) OrElse Not Directory.Exists(_lastUsedFileLocation) Then
+                ' Trim up one level at a time until we find an existing directory
+                Do While Not String.IsNullOrEmpty(_lastUsedFileLocation) AndAlso Not Directory.Exists(_lastUsedFileLocation)
+                    _lastUsedFileLocation = Directory.GetParent(_lastUsedFileLocation)?.FullName
+                Loop
+                ' If everything was invalid, default to the application's base directory
+                If String.IsNullOrEmpty(_lastUsedFileLocation) OrElse Not Directory.Exists(_lastUsedFileLocation) Then
+                    _lastUsedFileLocation = AppDomain.CurrentDomain.BaseDirectory
+                End If
+            End If
+            Return _lastUsedFileLocation
+        End Get
+        Set(value As String)
+            If Directory.Exists(value) Then
+                _lastUsedFileLocation = value
+            End If
+        End Set
+    End Property
+
+    Private _lastUsedFileLocation As String
+
     Public Sub New()
 
     End Sub
@@ -131,6 +155,7 @@ Public Class AllSettings
             TaskDescriptionTemplate = settingsInFile.TaskDescriptionTemplate
             EventDescriptionTemplate = settingsInFile.EventDescriptionTemplate
             RemindUserPostOptions = If(settingsInFile.RemindUserPostOptions.HasValue, settingsInFile.RemindUserPostOptions.Value, True)
+            LastUsedFileLocation = settingsInFile.LastUsedFileLocation
         Else
             settingsFound = False
         End If

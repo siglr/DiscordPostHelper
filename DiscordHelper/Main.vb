@@ -695,6 +695,7 @@ Public Class Main
         Dim result As DialogResult
         Dim DPHFilename As String = txtTitle.Text
         Dim DPHXFilename As String = String.Empty
+
         If Not txtDPHXPackageFilename.Text = String.Empty Then
             DPHXFilename = Path.GetFileNameWithoutExtension(txtDPHXPackageFilename.Text)
         End If
@@ -708,7 +709,7 @@ Public Class Main
             DPHFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHFilename}.dph"
         Else
             If txtFlightPlanFile.Text = String.Empty Then
-                SaveFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+                SaveFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
             Else
                 SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
             End If
@@ -717,6 +718,7 @@ Public Class Main
             SaveFileDialog1.Filter = "Discord Post Helper Session|*.dph"
             result = SaveFileDialog1.ShowDialog()
             If result = DialogResult.OK Then
+                SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(SaveFileDialog1.FileName)
                 DPHFilename = SaveFileDialog1.FileName
                 DPHXFilename = $"{Path.GetDirectoryName(SaveFileDialog1.FileName)}\{Path.GetFileNameWithoutExtension(SaveFileDialog1.FileName)}.dphx"
             End If
@@ -1243,7 +1245,7 @@ Public Class Main
     Private Sub SelectFlightPlan_Click(sender As Object, e As EventArgs) Handles btnSelectFlightPlan.Click
 
         If txtWeatherFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            OpenFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtWeatherFile.Text)
         End If
@@ -1256,6 +1258,7 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
             If txtFlightPlanFile.Text.Trim.Length > 0 AndAlso OpenFileDialog1.FileName <> txtFlightPlanFile.Text Then
                 'User has selected a different flight plan than the current one - ask to reset first?
                 Using New Centered_MessageBox(Me)
@@ -1282,7 +1285,7 @@ Public Class Main
 
     Private Sub btnSelectWeatherFile_Click(sender As Object, e As EventArgs) Handles btnSelectWeatherFile.Click
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            OpenFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -1294,6 +1297,7 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
             LoadWeatherfile(OpenFileDialog1.FileName)
         End If
 
@@ -2564,7 +2568,7 @@ Public Class Main
     Private Sub btnSelectEventTeaserAreaMap_Click(sender As Object, e As EventArgs) Handles btnSelectEventTeaserAreaMap.Click
 
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            OpenFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -2576,6 +2580,7 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
             txtEventTeaserAreaMapImage.Text = OpenFileDialog1.FileName
             chkDGPOTeaser.Checked = True
             SessionModified(SourceOfChange.EventTab)
@@ -5033,12 +5038,16 @@ Public Class Main
                     Directory.CreateDirectory($"{tempDPHXFromWSGFolder}\{taskTitle}")
                     Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, taskTitle, $"{tempDPHXFromWSGFolder}\{taskTitle}")
                     If selectedFile <> String.Empty Then
-                        LoadFile(selectedFile)
+                        LoadFile(selectedFile, SessionSettings.LastUsedFileLocation)
                     End If
+                Else
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show("Task does not exist or is not available yet!", "Task ID not found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Using
                 End If
             Else
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show("No task ID specified!", "Invalid task ID", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show("No task ID specified!", "Invalid task ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Using
             End If
         End If
@@ -5081,7 +5090,7 @@ Public Class Main
     Private Sub LoadFileDialog()
 
         If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            OpenFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
         End If
@@ -5094,24 +5103,26 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
             LoadFile(OpenFileDialog1.FileName)
         End If
 
     End Sub
 
-    Private Sub LoadFile(selectedFilename As String)
+    Private Sub LoadFile(selectedFilename As String, Optional dphxUnpackFolder As String = "")
 
         Dim validSessionFile As Boolean = True
 
         'Check if the selected file is a dph or dphx files
         If Path.GetExtension(selectedFilename) = ".dphx" Then
             'Package - we need to unpack it first
-            selectedFilename = _SF.UnpackDPHXFile(selectedFilename)
+            selectedFilename = _SF.UnpackDPHXFile(selectedFilename, dphxUnpackFolder)
 
             If selectedFilename = String.Empty Then
                 validSessionFile = False
             Else
                 validSessionFile = True
+                SessionSettings.LastUsedFileLocation = dphxUnpackFolder
             End If
         End If
 
@@ -5357,10 +5368,8 @@ Public Class Main
                     txtDPHXPackageFilename.Text = .DPHXPackageFilename
                 Else
                     'Should expect the file to be in the same folder as the .dph file
-                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}") Then
-                        .DPHXPackageFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}"
-                        txtDPHXPackageFilename.Text = .DPHXPackageFilename
-                    End If
+                    .DPHXPackageFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}"
+                    txtDPHXPackageFilename.Text = .DPHXPackageFilename
                 End If
                 If .DiscordTaskID = String.Empty AndAlso .DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(.DiscordTaskThreadURL) Then
                     .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
