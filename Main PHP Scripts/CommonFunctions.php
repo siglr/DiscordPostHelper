@@ -74,7 +74,6 @@ function checkUserRight($userPermissions, $right) {
 
 // Function to check user permissions directly
 function checkUserPermission($userID, $permission) {
-    logMessage("Checking permission for UserID: $userID, Permission: $permission");
 
     // Get user permissions
     $userPermissions = getUserPermissions($userID);
@@ -129,7 +128,9 @@ function cleanUpPendingTasks($pdo) {
 
         // Get the count of rows affected
         $rowsDeleted = $deleteStmt->rowCount();
-        logMessage("Deleted $rowsDeleted pending tasks with Status = 10 and LastUpdate < 5 days ago.");
+        if ($rowsDeleted > 0) {
+            logMessage("Deleted $rowsDeleted pending tasks with Status = 10 and LastUpdate < 5 days ago.");
+        }
 
     } catch (Exception $e) {
         logMessage("Error during clean-up of pending tasks: " . $e->getMessage());
@@ -143,7 +144,6 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
         // Open the news database connection
         $newsPdo = new PDO("sqlite:$newsDBPath");
         $newsPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        logMessage("News database connection established.");
 
         cleanUpNewsEntries($newsPdo);
 
@@ -169,7 +169,6 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
             INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
             VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, :News, 0, :TaskID, :EntrySeqID, :URLToGo, :Expiration)
         ");
-        logMessage("Insert statement for news prepared.");
 
         // Execute the insert statement
         $stmt->execute([
@@ -186,7 +185,7 @@ function createOrUpdateTaskNewsEntry($taskData, $isUpdate) {
             ':URLToGo' => null,
             ':Expiration' => null
         ]);
-        logMessage("News entry created or updated for TaskID: {$taskData['TaskID']}.");
+        logMessage("News entry created for TaskID: {$taskData['TaskID']}.");
 
     } catch (Exception $e) {
         logMessage("Error in createOrUpdateTaskNewsEntry: " . $e->getMessage());
@@ -202,7 +201,6 @@ function deleteTaskNewsEntries($taskID) {
         // Open the news database connection
         $newsPdo = new PDO("sqlite:$newsDBPath");
         $newsPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        logMessage("News database connection established for deleting task news.");
 
         // Prepare the delete statement
         $stmt = $newsPdo->prepare("DELETE FROM News WHERE TaskID = :TaskID");

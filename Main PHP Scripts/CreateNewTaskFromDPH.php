@@ -7,7 +7,6 @@ try {
     // Open the database connection
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    logMessage("Database connection established.");
 
     // Ensure the request method is POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -138,7 +137,12 @@ try {
 
     } else {
         // Step 2: Update existing task with full details
-        logMessage("Completing task creation...");
+        if ($taskData['Mode'] == 'CreateTask') {
+            logMessage("Completing task creation...");
+        }
+        else {
+            logMessage("Updating task...");
+        }
 
         // Validate that required files are present
         if (!isset($_FILES['file']) || !isset($_FILES['image'])) {
@@ -325,7 +329,7 @@ try {
         }
 
         echo json_encode(['status' => 'success', 'message' => 'Task updated successfully.']);
-        logMessage("Task creation successfully completed with new TaskID: " . $taskData['RealTaskID']);
+        logMessage("Task update successfully completed for TaskID: " . $taskData['RealTaskID']);
     }
 } catch (Exception $e) {
     logMessage("Error: " . $e->getMessage());

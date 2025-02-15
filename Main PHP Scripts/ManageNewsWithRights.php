@@ -2,6 +2,7 @@
 require __DIR__ . '/CommonFunctions.php';
 
 try {
+    logMessage("--- Script running ManageNewsWithRights ---");
 
     // Open the database connection
     $pdo = new PDO("sqlite:$newsDBPath");
@@ -76,6 +77,7 @@ try {
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo' => $_POST['URLToGo']
             ]);
+            logMessage("Created Task News entry: $key");
             break;
 
         case 'DeleteTask':
@@ -93,7 +95,7 @@ try {
             if ($affectedRows === 0) {
                 throw new Exception('No task found with the specified TaskID.');
             }
-
+            logMessage("Deleted Task News entry: $key");
             break;
 
         case 'CreateEvent':
@@ -175,6 +177,7 @@ try {
                     ':Refly' => $_POST['Refly'] ?? ''
                 ]);
             }
+            logMessage("Created Event News entry: $key");
             break;
 
         case 'DeleteEvent':
@@ -196,7 +199,7 @@ try {
             if ($affectedNewsRows === 0) {
                 throw new Exception('No event found with the specified Key.');
             }
-
+            logMessage("Deleted Event News entry: $key");
             break;
 
         case 'CreateNews':
@@ -227,6 +230,7 @@ try {
                 ':URLToGo' => $_POST['URLToGo'],
                 ':Expiration' => formatDatetime($_POST['Expiration'])
             ]);
+            logMessage("Created General News entry: $key");
             break;
 
         case 'DeleteNews':
@@ -243,6 +247,7 @@ try {
             if ($affectedRows === 0) {
                 throw new Exception('No news entry found with the specified Key.');
             }
+            logMessage("Deleted General News entry: $key");
             break;
 
         default:
