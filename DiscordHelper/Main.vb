@@ -6406,7 +6406,7 @@ Public Class Main
                                  eligibleAward As String,
                                  beginnersGuide As String,
                                  notam As String,
-                                 availability As DateTime,
+                                 availability As String,
                                  refly As Integer) As Boolean
 
         If _useTestMode Then
