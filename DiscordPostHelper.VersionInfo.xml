@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.15.1</ReleaseVersion>
+      <ReleaseTitle>Open from WSG and remembering location</ReleaseTitle>
+      <ReleaseNotes>
+        Added a way to open the task by downloading it directly from WSG by specifying the task ID.
+        The app now saves and reuses the last folder used when loading or saving a file.
+        Fixed a bug with an invalid date/time format being passed to the server when creating the event news.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.11.1</ReleaseVersion>
       <ReleaseTitle>New Delayed Availability feature!</ReleaseTitle>
