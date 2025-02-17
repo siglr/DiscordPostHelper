@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.17.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.17.1</ReleaseVersion>
+      <ReleaseTitle>Small update with a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added wait cursors and fixed a bug with an invalid task ID being retrieved.
+        Fixed some posting options not being available for the event when not being the publisher.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.15.1</ReleaseVersion>
       <ReleaseTitle>Open from WSG and remembering location</ReleaseTitle>
