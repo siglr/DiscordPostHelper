@@ -3229,7 +3229,7 @@ Public Class Main
 
         chkDPOMainPost.Enabled = grbTaskInfo.Enabled
         chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
-        chkDGPOMapImage.Enabled = grbTaskInfo.Enabled AndAlso cboBriefingMap.Text.Trim.Length > 0
+        chkDGPOMapImage.Enabled = cboBriefingMap.Text.Trim.Length > 0
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             chkDPOIncludeCoverImage.Enabled = True AndAlso grbTaskInfo.Enabled
@@ -3258,7 +3258,7 @@ Public Class Main
             chkDGPOTeaser.Checked = False
             chkDGPOTeaser.Enabled = False
         End If
-        chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
+        'chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
 
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOMainPost.Checked AndAlso
