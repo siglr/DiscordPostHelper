@@ -3258,7 +3258,6 @@ Public Class Main
             chkDGPOTeaser.Checked = False
             chkDGPOTeaser.Enabled = False
         End If
-        'chkDGPOMainPost.Enabled = grbTaskInfo.Enabled
 
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOMainPost.Checked AndAlso
