@@ -128,7 +128,7 @@ Public Class SupportingFeatures
             LoadKnownDesigners()
         End If
 
-        CountryISO3166COdes = New Dictionary(Of String, String)
+        CountryISO3166Codes = New Dictionary(Of String, String)
         GetCountryISO3166Codes()
 
         CountryFlagCodes = New Dictionary(Of String, ValueTuple(Of String, String))
@@ -2100,59 +2100,69 @@ Public Class SupportingFeatures
                           Optional pWeatherXML As String = "",
                           Optional pNB21IGCFolder As String = "")
 
-        Dim firstPartURL As String = "siglr.com/DiscordPostHelper/FlightPlans/"
+        Try
+            Cursor.Current = Cursors.WaitCursor
 
-        If pFlightplanFilename = String.Empty Then
-            Process.Start(B21PlannerURL)
-            Exit Sub
-        End If
+            Dim firstPartURL As String = "siglr.com/DiscordPostHelper/FlightPlans/"
 
-        Dim tempFolderName As String = GenerateRandomFileName()
-        Dim urlsList As New StringBuilder()
+            If pFlightplanFilename = String.Empty Then
+                Process.Start(B21PlannerURL)
+                Exit Sub
+            End If
 
-        ' Upload flight plan and append URL
-        If pFlightplanFilename <> String.Empty Then
-            Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
-            UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
-            urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{flightPlanFilename}")
-        End If
+            Dim tempFolderName As String = GenerateRandomFileName()
+            Dim urlsList As New StringBuilder()
 
-        ' Upload weather file and append URL
-        If pWeatherFilename <> String.Empty Then
-            Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
-            UploadFile(tempFolderName, weatherFilename, pWeatherXML)
-            urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{weatherFilename}")
-        End If
+            ' Upload flight plan and append URL
+            If pFlightplanFilename <> String.Empty Then
+                Dim flightPlanFilename As String = Path.GetFileName(pFlightplanFilename)
+                UploadFile(tempFolderName, flightPlanFilename, pFlightplanXML)
+                urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{flightPlanFilename}")
+            End If
 
-        ' Upload IGC files and append URLs
-        If pNB21IGCFolder <> String.Empty AndAlso Directory.Exists(pNB21IGCFolder) Then
-            Dim searchPattern As String = $"*_{Path.GetFileNameWithoutExtension(pFlightplanFilename)}.igc"
-            Dim files As String() = Directory.GetFiles(pNB21IGCFolder, searchPattern)
-            For i As Integer = 0 To files.Length - 1
-                Dim file As String = files(i)
-                UploadDirectFile(tempFolderName, file)
+            ' Upload weather file and append URL
+            If pWeatherFilename <> String.Empty Then
+                Dim weatherFilename As String = Path.GetFileName(pWeatherFilename)
+                UploadFile(tempFolderName, weatherFilename, pWeatherXML)
+                urlsList.AppendLine($"https://{firstPartURL}{tempFolderName}/{weatherFilename}")
+            End If
 
-                ' Append the URL
-                urlsList.Append($"https://{firstPartURL}{tempFolderName}/{Path.GetFileName(file)}")
+            ' Upload IGC files and append URLs
+            If pNB21IGCFolder <> String.Empty AndAlso Directory.Exists(pNB21IGCFolder) Then
+                Dim searchPattern As String = $"*_{Path.GetFileNameWithoutExtension(pFlightplanFilename)}.igc"
+                Dim files As String() = Directory.GetFiles(pNB21IGCFolder, searchPattern)
+                For i As Integer = 0 To files.Length - 1
+                    Dim file As String = files(i)
+                    UploadDirectFile(tempFolderName, file)
 
-                ' Add a Unix-style newline (LF) except for the last URL
-                If i < files.Length - 1 Then
-                    urlsList.Append(vbLf) ' Unix-style line break
-                End If
-            Next
-        End If
+                    ' Append the URL
+                    urlsList.Append($"https://{firstPartURL}{tempFolderName}/{Path.GetFileName(file)}")
 
-        ' Write the URLs to a text file
-        UploadTextFile(tempFolderName, "listoffiles.comp", urlsList.ToString())
+                    ' Add a Unix-style newline (LF) except for the last URL
+                    If i < files.Length - 1 Then
+                        urlsList.Append(vbLf) ' Unix-style line break
+                    End If
+                Next
+            End If
 
-        ' Launch B21PlannerURL with the text file URL
-        Dim processStartString As String
-        If pWeatherFilename <> String.Empty Then
-            processStartString = $"{B21PlannerURL}?wpr={firstPartURL}{tempFolderName}/{Path.GetFileName(pWeatherFilename)}&comp={firstPartURL}{tempFolderName}/listoffiles.comp"
-        Else
-            processStartString = $"{B21PlannerURL}?comp={firstPartURL}{tempFolderName}/listoffiles.comp"
-        End If
-        Process.Start(processStartString)
+            ' Write the URLs to a text file
+            UploadTextFile(tempFolderName, "listoffiles.comp", urlsList.ToString())
+
+            ' Launch B21PlannerURL with the text file URL
+            Dim processStartString As String
+            If pWeatherFilename <> String.Empty Then
+                processStartString = $"{B21PlannerURL}?wpr={firstPartURL}{tempFolderName}/{Path.GetFileName(pWeatherFilename)}&comp={firstPartURL}{tempFolderName}/listoffiles.comp"
+            Else
+                processStartString = $"{B21PlannerURL}?comp={firstPartURL}{tempFolderName}/listoffiles.comp"
+            End If
+            Process.Start(processStartString)
+
+            Cursor.Current = Cursors.Default
+
+        Catch ex As Exception
+            Cursor.Current = Cursors.Default
+
+        End Try
 
     End Sub
 
@@ -2226,9 +2236,9 @@ Public Class SupportingFeatures
                 'In every other situation, return blank
                 Return String.Empty
             ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then
-                    Return parts(1)
-                ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
-                    Return parts(0)
+                Return parts(1)
+            ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
+                Return parts(0)
             End If
         End If
 
@@ -2727,6 +2737,8 @@ Public Class SupportingFeatures
         Dim localFilePath As String = Path.Combine(localFolder, localFileName)
 
         Try
+            Cursor.Current = Cursors.WaitCursor
+
             ' Create the directory if it doesn't exist
             If Not Directory.Exists(localFolder) Then
                 Directory.CreateDirectory(localFolder)
@@ -2744,8 +2756,11 @@ Public Class SupportingFeatures
                 Throw New Exception("Failed to download the task file.")
             End If
 
+            Cursor.Current = Cursors.Default
+
         Catch ex As Exception
             ' Handle the exception (e.g., log the error)
+            Cursor.Current = Cursors.Default
             Using New Centered_MessageBox()
                 MessageBox.Show($"An error occurred while downloading the task file:{Environment.NewLine}{ex.Message}", "Downloading task", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
@@ -2763,8 +2778,11 @@ Public Class SupportingFeatures
         End Get
     End Property
 
-    Public Shared Function FetchTaskIDUsingEntrySeqID(entrySeqID As String, Optional ByRef taskTitle As String = "") As String
-        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php?EntrySeqID={entrySeqID}"
+    Public Shared Function FetchTaskIDUsingEntrySeqID(entrySeqID As String, Optional ByRef taskTitle As String = "", Optional onlyAvailable As Boolean = True) As String
+
+        Dim onlyAvailableInt As Integer = If(onlyAvailable, 1, 0)
+
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php?EntrySeqID={entrySeqID}&OnlyAvailable={onlyAvailableInt}"
         Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
         request.Method = "GET"
 

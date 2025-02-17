@@ -1442,7 +1442,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub DownloadAndOpenTaskUsingNewsEntry(theNewsEntry As NewsEntry)
 
         'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
-        Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(theNewsEntry.EntrySeqID)
+        Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(theNewsEntry.EntrySeqID, True)
 
         If taskID <> String.Empty Then
             Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, theNewsEntry.Subtitle, Settings.SessionSettings.PackagesFolder)

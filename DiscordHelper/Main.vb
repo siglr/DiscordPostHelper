@@ -5019,7 +5019,7 @@ Public Class Main
                 'Proceed to download the DPHX file
                 'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
                 Dim taskTitle As String = String.Empty
-                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGTaskID, taskTitle)
+                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGTaskID, taskTitle, True)
                 If taskID <> String.Empty Then
                     'Make sure temporary folder is available and empty
                     Dim tempDPHXFromWSGFolder As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempDPHXFromWSG")
@@ -5042,7 +5042,7 @@ Public Class Main
                     End If
                 Else
                     Using New Centered_MessageBox(Me)
-                        MessageBox.Show("Task does not exist or is not available yet!", "Task ID not found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show("Task does not exist or is not available yet!", "Task ID not found or unavailable", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Using
                 End If
             Else
@@ -5706,6 +5706,7 @@ Public Class Main
     End Sub
 
     Public Function DeleteTaskFromServer(entrySeqID As Integer) As Boolean
+
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
@@ -5719,6 +5720,8 @@ Public Class Main
         request.ContentLength = data.Length
 
         Try
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.WaitCursor
+
             Using stream As Stream = request.GetRequestStream()
                 stream.Write(data, 0, data.Length)
             End Using
@@ -5731,7 +5734,10 @@ Public Class Main
                     Return result("status").ToString() = "success"
                 End Using
             End Using
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
+
         Catch ex As Exception
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
             ' Handle the exception
             ' Log the error or display a message
             Using New Centered_MessageBox(Me)
@@ -5872,6 +5878,8 @@ Public Class Main
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
         Try
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.WaitCursor
+
             ' Serialize the task data to JSON
             Dim json As String = JsonConvert.SerializeObject(taskData, New JsonSerializerSettings() With {
             .NullValueHandling = NullValueHandling.Ignore
@@ -5938,7 +5946,9 @@ Public Class Main
                     Throw New Exception($"Server returned status code: {response.StatusCode}")
                 End If
             End Using
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
         Catch ex As Exception
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
             ' Show error message
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, $"Error publishing task to WSG (Step 1): {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -6112,6 +6122,7 @@ Public Class Main
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
         Try
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.WaitCursor
             ' Serialize the task to JSON
             Dim json As String = JsonConvert.SerializeObject(task, New JsonSerializerSettings() With {
             .NullValueHandling = NullValueHandling.Ignore
@@ -6181,7 +6192,10 @@ Public Class Main
                     Return responseJson("status").ToString() = "success"
                 End Using
             End Using
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
+
         Catch ex As Exception
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, $"Error uploading task: {ex.Message}", "Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
