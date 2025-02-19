@@ -7,8 +7,11 @@
     Public ReadOnly Property EventNewsID As String
     Public ReadOnly Property MSFSServer As String
     Public ReadOnly Property VoiceChannel As String
+    Public ReadOnly Property TimeZoneID As String
     Public ReadOnly Property EventDayOfWeek As DayOfWeek
     Public ReadOnly Property ZuluTime As DateTime
+    Public ReadOnly Property SummerEventDayOfWeek As DayOfWeek
+    Public ReadOnly Property SummerZuluTime As DateTime
     Public ReadOnly Property SyncFlyDelay As Integer
     Public ReadOnly Property LaunchDelay As Integer
     Public ReadOnly Property StartTaskDelay As Integer
@@ -19,6 +22,7 @@
     Public ReadOnly Property ForceLaunch As Boolean
     Public ReadOnly Property ForceStartTask As Boolean
     Public ReadOnly Property DiscordURL As String
+    Public ReadOnly Property SharedPublishers As List(Of String)
 
     Private _emoji As String
     Public ReadOnly Property Emoji As String
@@ -35,8 +39,11 @@
                    pEventNewsID As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
+                   pTimeZoneID As String,
                    pZuluDayOfWeek As DayOfWeek,
                    pZuluTime As DateTime,
+                   pSummerZuluDayOfWeek As DayOfWeek,
+                   pSummerZuluTime As DateTime,
                    pSyncFlyDelay As Integer,
                    pLaunchTDelay As Integer,
                    pStartTaskDelay As Integer,
@@ -45,7 +52,8 @@
                    pForceSyncFly As Boolean,
                    pForceLaunch As Boolean,
                    pForceStartTask As Boolean,
-                   pDiscordURL As String)
+                   pDiscordURL As String,
+                   pSharedPublishers As List(Of String))
 
         ClubId = pClubId
         ClubName = pClubName
@@ -55,8 +63,11 @@
         _emoji = pEmoji
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
+        TimeZoneID = pTimeZoneID
         EventDayOfWeek = pZuluDayOfWeek
         ZuluTime = pZuluTime
+        SummerEventDayOfWeek = pSummerZuluDayOfWeek
+        SummerZuluTime = pSummerZuluTime
         SyncFlyDelay = pSyncFlyDelay
         LaunchDelay = pLaunchTDelay
         StartTaskDelay = pStartTaskDelay
@@ -66,6 +77,7 @@
         ForceLaunch = pForceLaunch
         ForceStartTask = pForceStartTask
         DiscordURL = $"https://discord.com/channels/{pDiscordURL}"
+        SharedPublishers = pSharedPublishers
 
     End Sub
 
@@ -75,20 +87,39 @@
         End Get
     End Property
 
-    Public Function GetZuluTimeForDate(selectedDate As Date) As DateTime
+    Public Function GetZuluTimeForDate(selectedDate As Date, forceStandard As Boolean) As DateTime
 
-        'Going back to always returning ZuluTime without checking daylight savings
-        Return ZuluTime
+        If forceStandard Then
+            Return ZuluTime
+        End If
 
-        'Dim localTimeZone As TimeZoneInfo = TimeZoneInfo.Local
-        '' Check if the local time zone is currently observing daylight saving time
-        'Dim isDst As Boolean = localTimeZone.IsDaylightSavingTime(selectedDate)
-        'If isDst Then
-        '    Return ZuluTime.AddHours(-1)
-        'Else
-        '    Return ZuluTime
-        'End If
+        Dim clubTimeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneID)
+        Dim isDST As Boolean = clubTimeZone.IsDaylightSavingTime(selectedDate)
 
+        If isDST Then
+            Return SummerZuluTime
+        Else
+            Return ZuluTime
+        End If
+
+    End Function
+
+    Public Function GetZuluTimeEventDayOfWeekForDate(selectedDate As Date) As DayOfWeek
+
+        Dim clubTimeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneID)
+        Dim isDST As Boolean = clubTimeZone.IsDaylightSavingTime(selectedDate)
+
+        If isDST Then
+            Return SummerEventDayOfWeek
+        Else
+            Return EventDayOfWeek
+        End If
+
+    End Function
+
+    Public Function IsSummerTime(selectedDateTime As DateTime) As Boolean
+        Dim clubTimeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneID)
+        Return clubTimeZone.IsDaylightSavingTime(selectedDateTime)
     End Function
 
 End Class

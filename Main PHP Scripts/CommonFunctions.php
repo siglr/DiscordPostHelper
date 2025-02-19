@@ -14,6 +14,7 @@ $logFile = preg_replace(
 );
 
 $userPermissionsPath = $config['userPermissionsPath'];
+$soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
 
 // Function to log messages

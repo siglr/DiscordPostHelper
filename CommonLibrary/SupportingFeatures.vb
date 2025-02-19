@@ -152,55 +152,66 @@ Public Class SupportingFeatures
 
     End Sub
 
+
     Private Sub LoadDefaultClubEvents()
-        Dim xmlDoc As New XmlDocument()
-        xmlDoc.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KnownSoaringClubs.xml"))
 
-        Dim events As XmlNodeList = xmlDoc.GetElementsByTagName("KnownSoaringClub")
+        Try
+            Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveSoaringClubs.php"
+            Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+            request.Method = "GET"
 
-        For Each eventNode As XmlNode In events
-            Dim clubId As String = eventNode("ClubId").InnerText
-            Dim clubName As String = eventNode("ClubName").InnerText
-            Dim clubFullName As String = eventNode("ClubFullName").InnerText
-            Dim trackerGroup As String = eventNode("TrackerGroup").InnerText
-            Dim emoji As String = eventNode("Emoji").InnerText
-            Dim eventNewsID As String = eventNode("EventNewsID").InnerText
-            Dim msfsServer As String = eventNode("MSFSServer").InnerText
-            Dim voiceChannel As String = eventNode("VoiceChannel").InnerText
-            Dim dayOfWeek As DayOfWeek = [Enum].Parse(GetType(DayOfWeek), eventNode("ZuluDayOfWeek").InnerText)
-            Dim zuluTime As DateTime = DateTime.Parse(eventNode("ZuluTime").InnerText)
-            Dim syncFlyDelay As Integer = Integer.Parse(eventNode("SyncFlyDelay").InnerText)
-            Dim launchDelay As Integer = Integer.Parse(eventNode("LaunchDelay").InnerText)
-            Dim startTaskDelay As Integer = Integer.Parse(eventNode("StartTaskDelay").InnerText)
-            Dim eligibleAward As Boolean = Boolean.Parse(eventNode("EligibleAward").InnerText)
-            Dim beginnerLink As String = eventNode("BeginnerLink").InnerText
-            Dim forceSyncFly As Boolean = Boolean.Parse(eventNode("ForceSyncFly").InnerText)
-            Dim forceLaunch As Boolean = Boolean.Parse(eventNode("ForceLaunch").InnerText)
-            Dim forceStartTask As Boolean = Boolean.Parse(eventNode("ForceStartTask").InnerText)
-            Dim discordURL As String = eventNode("DiscordURL").InnerText
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As JObject = JObject.Parse(jsonResponse)
 
-            Dim presetEvent As New PresetEvent(clubId,
-                                               clubName,
-                                               clubFullName,
-                                               trackerGroup,
-                                               emoji,
-                                               eventNewsID,
-                                               msfsServer,
-                                               voiceChannel,
-                                               dayOfWeek,
-                                               zuluTime,
-                                               syncFlyDelay,
-                                               launchDelay,
-                                               startTaskDelay,
-                                               eligibleAward,
-                                               beginnerLink,
-                                               forceSyncFly,
-                                               forceLaunch,
-                                               forceStartTask,
-                                               discordURL)
+                    If result("status").ToString() = "success" Then
+                        Dim clubs As JArray = JArray.Parse(result("clubs").ToString())
 
-            DefaultKnownClubEvents.Add(clubId, presetEvent)
-        Next
+                        For Each club As JObject In clubs
+                            ' Get SharedPublishers as a List(Of String)
+                            Dim sharedPublishers As New List(Of String)
+                            If club("SharedPublishers") IsNot Nothing Then
+                                For Each publisher As JToken In club("SharedPublishers")
+                                    sharedPublishers.Add(publisher.ToString())
+                                Next
+                            End If
+
+                            Dim presetEvent As New PresetEvent(
+                                club("ClubId").ToString(),
+                                club("ClubName").ToString(),
+                                club("ClubFullName").ToString(),
+                                club("TrackerGroup").ToString(),
+                                club("Emoji").ToString(),
+                                club("EventNewsID").ToString(),
+                                club("MSFSServer").ToString(),
+                                club("VoiceChannel").ToString(),
+                                club("TimeZoneID").ToString(),
+                                [Enum].Parse(GetType(DayOfWeek), club("ZuluDayOfWeek").ToString()),
+                                DateTime.Parse(club("ZuluTime").ToString()),
+                                [Enum].Parse(GetType(DayOfWeek), club("SummerZuluDayOfWeek").ToString()),
+                                DateTime.Parse(club("SummerZuluTime").ToString()),
+                                Integer.Parse(club("SyncFlyDelay").ToString()),
+                                Integer.Parse(club("LaunchDelay").ToString()),
+                                Integer.Parse(club("StartTaskDelay").ToString()),
+                                Boolean.Parse(club("EligibleAward").ToString()),
+                                club("BeginnerLink").ToString(),
+                                Boolean.Parse(club("ForceSyncFly").ToString()),
+                                Boolean.Parse(club("ForceLaunch").ToString()),
+                                Boolean.Parse(club("ForceStartTask").ToString()),
+                                club("DiscordURL").ToString(),
+                                sharedPublishers
+                                )
+                            DefaultKnownClubEvents.Add(presetEvent.ClubId, presetEvent)
+                        Next
+                    Else
+                        Throw New Exception("Error retrieving soaring clubs: " & result("message").ToString())
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            Throw New Exception("Failed to retrieve soaring clubs: " & ex.Message)
+        End Try
     End Sub
 
     Public Function ListOfAllTrackerGroups() As List(Of String)

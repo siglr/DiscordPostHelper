@@ -2318,7 +2318,7 @@ Partial Class Main
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
         Me.lblLocalDSTWarning.Size = New System.Drawing.Size(217, 26)
         Me.lblLocalDSTWarning.TabIndex = 18
-        Me.lblLocalDSTWarning.Text = "⚠️Local DST in effect⚠️"
+        Me.lblLocalDSTWarning.Text = "⚠️Club summer time in effect⚠️"
         Me.lblLocalDSTWarning.Visible = False
         '
         'Label48
