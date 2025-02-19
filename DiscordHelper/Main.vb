@@ -2429,6 +2429,18 @@ Public Class Main
                 txtEventTitle.Text = TaskTitleMinusClubName()
             End If
 
+            'Manage shared publishers for this club
+            If (Not _loadingFile) AndAlso grpDiscordTask.Enabled AndAlso cboTaskOwner.Enabled Then
+                'It is possible for the user to post the task and manage the owner, so shared users CAN be selected
+                For Each publisherName As String In _ClubPreset.SharedPublishers
+                    If publisherName = cboTaskOwner.Text OrElse chkcboSharedWithUsers.GetSelectedItems.Contains(publisherName) Then
+                    Else
+                        Dim listSingleUser As New List(Of String)
+                        listSingleUser.Add(publisherName)
+                        chkcboSharedWithUsers.SelectItemsByNames(listSingleUser)
+                    End If
+                Next
+            End If
         Else
             _ClubPreset = Nothing
         End If
