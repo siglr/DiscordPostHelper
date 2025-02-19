@@ -100,9 +100,6 @@
     <Compile Include="CopyContent.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Content Include="KnownDesigners.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Compile Include="LoadWSGTaskInputForm.Designer.vb">
       <DependentUpon>LoadWSGTaskInputForm.vb</DependentUpon>
     </Compile>

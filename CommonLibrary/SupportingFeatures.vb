@@ -125,7 +125,6 @@ Public Class SupportingFeatures
 
         If _ClientRunning = ClientApp.DiscordPostHelper Then
             LoadDefaultClubEvents()
-            LoadKnownDesigners()
         End If
 
         CountryISO3166Codes = New Dictionary(Of String, String)
@@ -135,23 +134,6 @@ Public Class SupportingFeatures
         GetCountryFlagCodes()
 
     End Sub
-
-    Private Sub LoadKnownDesigners()
-        Dim xmlDoc As New XmlDocument()
-        Dim fileName As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KnownDesigners.xml")
-        If File.Exists(fileName) Then
-            xmlDoc.Load(fileName)
-
-            Dim designers As XmlNodeList = xmlDoc.GetElementsByTagName("KnownDesigner")
-
-            For Each designerNode As XmlNode In designers
-                Dim designerName As String = designerNode("Name").InnerText
-                KnownDesigners.Add(designerName)
-            Next
-        End If
-
-    End Sub
-
 
     Private Sub LoadDefaultClubEvents()
 
@@ -204,6 +186,14 @@ Public Class SupportingFeatures
                                 )
                             DefaultKnownClubEvents.Add(presetEvent.ClubId, presetEvent)
                         Next
+
+                        ' Load Known Designers
+                        Dim designers As JArray = JArray.Parse(result("designers").ToString())
+                        KnownDesigners.Clear()
+                        For Each designer As JToken In designers
+                            KnownDesigners.Add(designer.ToString())
+                        Next
+
                     Else
                         Throw New Exception("Error retrieving soaring clubs: " & result("message").ToString())
                     End If
