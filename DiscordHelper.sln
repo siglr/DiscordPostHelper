@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\ResetThreadAccessForTask.php = Main PHP Scripts\ResetThreadAccessForTask.php
 		Main PHP Scripts\RetrieveDeletedTasks.php = Main PHP Scripts\RetrieveDeletedTasks.php
 		Main PHP Scripts\RetrieveNews.php = Main PHP Scripts\RetrieveNews.php
+		Main PHP Scripts\RetrieveSoaringClubs.php = Main PHP Scripts\RetrieveSoaringClubs.php
 		Main PHP Scripts\RetrieveUserRights.php = Main PHP Scripts\RetrieveUserRights.php
 		Main PHP Scripts\SaveDirectFileUnderTempFolder.php = Main PHP Scripts\SaveDirectFileUnderTempFolder.php
 		Main PHP Scripts\SaveFileUnderTempFolder.php = Main PHP Scripts\SaveFileUnderTempFolder.php

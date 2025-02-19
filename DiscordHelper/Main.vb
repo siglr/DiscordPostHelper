@@ -2394,8 +2394,17 @@ Public Class Main
             CheckAndSetEventAward()
             chkDateTimeUTC.Checked = True
 
+            'Try with standard time first
             dtEventMeetDate.Value = _SF.FindNextDate(Now, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
-            dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value)
+            dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, True)
+            'Now with the standard date and time, check if summer time applies
+            Dim fullEventMeetDate As DateTime = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, False)
+            If _ClubPreset.IsSummerTime(fullEventMeetDate) Then
+                'Yes, so recheck the proper date and time for summer
+                dtEventMeetDate.Value = _SF.FindNextDate(Now, _ClubPreset.SummerEventDayOfWeek, _ClubPreset.SummerZuluTime)
+                dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, False)
+            End If
+
             Application.DoEvents()
 
             If _ClubPreset.ForceSyncFly AndAlso Not chkUseSyncFly.Checked Then
@@ -2637,7 +2646,11 @@ Public Class Main
         ToolTip1.SetToolTip(lblMeetTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
 
         'Check if local DST applies for this date
-        lblLocalDSTWarning.Visible = _SF.DSTAppliesForLocalDate(theDate)
+        If _ClubPreset IsNot Nothing Then
+            lblLocalDSTWarning.Visible = _ClubPreset.IsSummerTime(theDate)
+        Else
+            lblLocalDSTWarning.Visible = _SF.DSTAppliesForLocalDate(theDate)
+        End If
 
         lblSyncTimeResult.Text = _SF.FormatEventDateTime(New Date(dtEventSyncFlyDate.Value.Year, dtEventSyncFlyDate.Value.Month, dtEventSyncFlyDate.Value.Day, dtEventSyncFlyTime.Value.Hour, dtEventSyncFlyTime.Value.Minute, 0), eventDay, chkDateTimeUTC.Checked)
         ToolTip1.SetToolTip(lblSyncTimeResult, $"{eventDay.ToString} - Right click for UNIX timestamp options")
