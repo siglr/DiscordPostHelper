@@ -2471,9 +2471,12 @@ Public Class Main
         Select Case changedField.Name
             Case dtEventMeetDate.Name
                 dtEventSyncFlyDate.Value = dtEventMeetDate.Value
+                dtEventLaunchDate.Value = dtEventSyncFlyDate.Value
+                dtEventStartTaskDate.Value = dtEventLaunchDate.Value
 
             Case dtEventSyncFlyDate.Name
                 dtEventLaunchDate.Value = dtEventSyncFlyDate.Value
+                dtEventStartTaskDate.Value = dtEventLaunchDate.Value
 
             Case dtEventLaunchDate.Name
                 dtEventStartTaskDate.Value = dtEventLaunchDate.Value
