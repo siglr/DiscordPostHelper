@@ -841,9 +841,10 @@ Public Class Main
 
     Private Sub cboKnownTaskDesigners_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboKnownTaskDesigners.SelectedIndexChanged
 
-        Dim designerSelected As String = cboKnownTaskDesigners.Text.Substring(0, cboKnownTaskDesigners.Text.LastIndexOf("#")).Trim
-
-        txtCredits.Text = $"All credits to @{designerSelected} for this task."
+        If cboKnownTaskDesigners.SelectedIndex >= 0 Then
+            Dim designerSelected As String = cboKnownTaskDesigners.Text.Substring(0, cboKnownTaskDesigners.Text.LastIndexOf("#")).Trim
+            txtCredits.Text = $"All credits to @{designerSelected} for this task."
+        End If
 
     End Sub
 
