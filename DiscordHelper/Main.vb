@@ -2484,7 +2484,7 @@ Public Class Main
 
         BuildEventDatesTimes()
         SessionModified(SourceOfChange.EventTab)
-        CalculateTaskAvailability() 'Test
+        CalculateTaskAvailability()
     End Sub
 
     Private Sub EventTimeChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyTime.ValueChanged, dtEventStartTaskTime.ValueChanged, dtEventMeetTime.ValueChanged, dtEventLaunchTime.ValueChanged
