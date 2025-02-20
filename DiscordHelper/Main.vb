@@ -2452,7 +2452,7 @@ Public Class Main
             _ClubPreset = Nothing
         End If
 
-        'BuildGroupFlightPost() Test
+        'BuildGroupFlightPost()
 
         SessionModified(SourceOfChange.EventTab)
 
