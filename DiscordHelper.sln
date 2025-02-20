@@ -32,7 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\CreateNewTaskFromDPH.php = Main PHP Scripts\CreateNewTaskFromDPH.php
 		Main PHP Scripts\DeleteTask.php = Main PHP Scripts\DeleteTask.php
 		Main PHP Scripts\DeleteTempFolder.php = Main PHP Scripts\DeleteTempFolder.php
-		Main PHP Scripts\DPHGetVersion.txt = Main PHP Scripts\DPHGetVersion.txt
 		Main PHP Scripts\DPHGetVersionInfo.php = Main PHP Scripts\DPHGetVersionInfo.php
 		Main PHP Scripts\FindTaskUsingEntrySeqID.php = Main PHP Scripts\FindTaskUsingEntrySeqID.php
 		Main PHP Scripts\FindTaskUsingID.php = Main PHP Scripts\FindTaskUsingID.php
