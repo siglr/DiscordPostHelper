@@ -15,6 +15,7 @@ Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
 Imports System.Windows.Forms
 Imports System.Windows.Input
+Imports System.Web.UI.WebControls.WebParts
 
 Public Class Main
 
@@ -58,6 +59,7 @@ Public Class Main
     Private _TBTaskLastUpdate As DateTime
     Private _isInitiatizing As Boolean = True
     Private _directChange As Boolean = True
+    Private _eventDateTimeChangeInProgress As Boolean = False
 
     ' User related variables
     Private _userPermissionID As String
@@ -2361,6 +2363,10 @@ Public Class Main
 
     Private Sub ClubSelected(sender As Object, e As EventArgs) Handles cboGroupOrClubName.SelectedIndexChanged
 
+        If _isInitiatizing OrElse _loadingFile Then
+            Exit Sub
+        End If
+
         If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
         End If
@@ -2454,7 +2460,13 @@ Public Class Main
 
     Private Sub EventDateChanged(sender As Object, e As EventArgs) Handles dtEventSyncFlyDate.ValueChanged, dtEventStartTaskDate.ValueChanged, dtEventMeetDate.ValueChanged, dtEventLaunchDate.ValueChanged
 
+        If (_isInitiatizing AndAlso Not _loadingFile) OrElse _eventDateTimeChangeInProgress Then
+            Exit Sub
+        End If
+
         Dim changedField As DateTimePicker = DirectCast(sender, DateTimePicker)
+
+        _eventDateTimeChangeInProgress = True
 
         Select Case changedField.Name
             Case dtEventMeetDate.Name
@@ -2467,6 +2479,8 @@ Public Class Main
                 dtEventStartTaskDate.Value = dtEventLaunchDate.Value
 
         End Select
+
+        _eventDateTimeChangeInProgress = False
 
         BuildEventDatesTimes()
         SessionModified(SourceOfChange.EventTab)
@@ -6895,6 +6909,10 @@ Public Class Main
 
     Private Sub chkDelayedAvailability_CheckedChanged(sender As Object, e As EventArgs) Handles chkDelayedAvailability.CheckedChanged
 
+        If _isInitiatizing Then
+            Exit Sub
+        End If
+
         grbDelayedPosting.Enabled = chkDelayedAvailability.Checked
 
         If chkDelayedAvailability.Checked Then
@@ -6921,6 +6939,10 @@ Public Class Main
 
     Private Sub CalculateTaskAvailability()
 
+        If _isInitiatizing Then
+            Exit Sub
+        End If
+
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
         Try
             If chkActivateEvent.Checked AndAlso fullMeetDateTimeLocal > Now Then
@@ -6934,11 +6956,11 @@ Public Class Main
                 dtAvailabilityTime.MaxDate = "9998-12-31"
                 _directChange = True
             End If
-            SetDelayTimeDifferenceField()
         Catch ex As Exception
         End Try
 
         If (Not chkDelayBasedOnEvent.Checked) OrElse _loadingFile OrElse _isInitiatizing OrElse txtMinutesBeforeMeeting.Text.Trim = String.Empty Then
+            SetDelayTimeDifferenceField()
             Exit Sub
         End If
 
