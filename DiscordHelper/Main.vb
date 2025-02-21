@@ -4525,7 +4525,7 @@ Public Class Main
             Case 11 'Durations
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 403
-                lblGuideInstructions.Text = "If you entered speeds above, these will be pre-filled. You can adjust or enter the expected min and max duration of the task as you see fit, and also enter extra information."
+                lblGuideInstructions.Text = "You can enter the expected min and max duration of the task as you see fit, and also enter extra information."
                 SetFocusOnField(txtDurationMin, fromF1Key)
             Case 12 'Gliders
                 SetGuidePanelToLeft()
