@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.17.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Auto summer time detection</ReleaseTitle>
+      <ReleaseNotes>
+        Soaring clubs now have a default time zone and based on the date, the correct time (and day) is selected in consideration with summer time too.
+        Moved XML files to the server to make updating easier.
+        New ability to set default shared designers per soaring club.
+        Fixed the open from WSG popup window sizing problem.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.17.1</ReleaseVersion>
       <ReleaseTitle>Small update with a few fixes</ReleaseTitle>
