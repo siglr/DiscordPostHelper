@@ -2980,10 +2980,10 @@ Partial Class Main
         '
         'dtAvailabilityDate
         '
-        Me.dtAvailabilityDate.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.dtAvailabilityDate.Font = New System.Drawing.Font("Segoe UI", 11.78182!)
         Me.dtAvailabilityDate.Location = New System.Drawing.Point(6, 58)
         Me.dtAvailabilityDate.Name = "dtAvailabilityDate"
-        Me.dtAvailabilityDate.Size = New System.Drawing.Size(267, 30)
+        Me.dtAvailabilityDate.Size = New System.Drawing.Size(267, 31)
         Me.dtAvailabilityDate.TabIndex = 2
         Me.dtAvailabilityDate.Tag = "83"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityDate, "This is the date when the task details and files will become available.")
@@ -2991,12 +2991,12 @@ Partial Class Main
         'dtAvailabilityTime
         '
         Me.dtAvailabilityTime.CustomFormat = "HH:mm tt"
-        Me.dtAvailabilityTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.dtAvailabilityTime.Font = New System.Drawing.Font("Segoe UI", 11.78182!)
         Me.dtAvailabilityTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
         Me.dtAvailabilityTime.Location = New System.Drawing.Point(279, 58)
         Me.dtAvailabilityTime.Name = "dtAvailabilityTime"
         Me.dtAvailabilityTime.ShowUpDown = True
-        Me.dtAvailabilityTime.Size = New System.Drawing.Size(104, 30)
+        Me.dtAvailabilityTime.Size = New System.Drawing.Size(104, 31)
         Me.dtAvailabilityTime.TabIndex = 3
         Me.dtAvailabilityTime.Tag = "83"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityTime, "This is the time when the task details and files will become available.")
