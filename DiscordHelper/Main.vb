@@ -2371,13 +2371,13 @@ Public Class Main
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
         End If
 
-        Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
+        SetClubPreset()
+
         txtClubFullName.Text = String.Empty
         txtTrackerGroup.Text = String.Empty
         lblGroupEmoji.Text = String.Empty
 
-        If clubExists Then
-            _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
+        If _ClubPreset IsNot Nothing Then
 
             If _ClubPreset.IsCustom Then
                 txtClubFullName.ReadOnly = False
@@ -2448,13 +2448,60 @@ Public Class Main
                     End If
                 Next
             End If
-        Else
-            _ClubPreset = Nothing
         End If
 
         'BuildGroupFlightPost()
 
         SessionModified(SourceOfChange.EventTab)
+
+    End Sub
+
+    Private Sub SetClubPreset()
+        Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
+        If clubExists Then
+            _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
+        Else
+            _ClubPreset = Nothing
+        End If
+    End Sub
+    Private Sub btnEventSelectNextWeekClicked(sender As Object, e As EventArgs) Handles btnEventSelectNextWeek.Click
+
+        If _ClubPreset IsNot Nothing Then
+            Dim startingDate As DateTime = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, True)
+            'Try with standard time first
+            dtEventMeetDate.Value = _SF.FindNextDate(startingDate, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
+            dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, True)
+            'Now with the standard date and time, check if summer time applies
+            Dim fullEventMeetDate As DateTime = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, False)
+            If _ClubPreset.IsSummerTime(fullEventMeetDate) Then
+                'Yes, so recheck the proper date and time for summer
+                dtEventMeetDate.Value = _SF.FindNextDate(startingDate, _ClubPreset.SummerEventDayOfWeek, _ClubPreset.SummerZuluTime)
+                dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, False)
+            End If
+            Application.DoEvents()
+        Else
+            dtEventMeetDate.Value = dtEventMeetDate.Value.AddDays(7)
+        End If
+
+    End Sub
+
+    Private Sub btnEventSelectPrevWeekClicked(sender As Object, e As EventArgs) Handles btnEventSelectPrevWeek.Click
+        If _ClubPreset IsNot Nothing Then
+            Dim startingDate As DateTime = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, True)
+            'Try with standard time first
+            dtEventMeetDate.Value = _SF.FindPreviousDate(startingDate, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
+            dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, True)
+            'Now with the standard date and time, check if summer time applies
+            Dim fullEventMeetDate As DateTime = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, False)
+            If _ClubPreset.IsSummerTime(fullEventMeetDate) Then
+                'Yes, so recheck the proper date and time for summer
+                dtEventMeetDate.Value = _SF.FindPreviousDate(startingDate.AddHours(-1), _ClubPreset.SummerEventDayOfWeek, _ClubPreset.SummerZuluTime)
+                dtEventMeetTime.Value = _ClubPreset.GetZuluTimeForDate(dtEventMeetDate.Value, False)
+            End If
+            Application.DoEvents()
+        Else
+            dtEventMeetDate.Value = dtEventMeetDate.Value.AddDays(-7)
+        End If
 
     End Sub
 
@@ -5433,6 +5480,7 @@ Public Class Main
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
+                SetClubPreset()
                 txtTrackerGroup.Text = .TrackerGroup
                 lblGroupEmoji.Text = .GroupEmoji
                 txtEventTitle.Text = .EventTopic

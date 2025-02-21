@@ -525,6 +525,28 @@ Public Class SupportingFeatures
         Return nextDate
     End Function
 
+    Public Function FindPreviousDate(startDate As DateTime, dayOfWeek As DayOfWeek, clubDefaultMeetTime As DateTime) As DateTime
+        Dim previousDate As DateTime = Conversions.ConvertLocalToUTC(startDate)
+        Dim previousDateFound As Boolean = False
+
+        ' If today, check if time is after event start
+        If previousDate.DayOfWeek = dayOfWeek Then
+            If previousDate.TimeOfDay > clubDefaultMeetTime.TimeOfDay Then
+                previousDateFound = True
+            End If
+        End If
+
+        ' Find the previous occurrence of the specified day
+        While Not previousDateFound
+            previousDate = previousDate.AddDays(-1)
+            If previousDate.DayOfWeek = dayOfWeek Then
+                previousDateFound = True
+            End If
+        End While
+
+        Return previousDate
+    End Function
+
     Public Function GetFullEventDateTimeInLocal(dateControl As DateTimePicker, timeControl As DateTimePicker, useUTC As Boolean) As DateTime
 
         Dim dateFromDateControl As DateTime = dateControl.Value
