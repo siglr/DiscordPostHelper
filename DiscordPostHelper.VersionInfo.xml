@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.20.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.2.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.2.22.1</ReleaseVersion>
+      <ReleaseTitle>Previous and Next week selection</ReleaseTitle>
+      <ReleaseNotes>
+        Added "next" and "previous" week buttons for meet/brief. date selection.
+        Fixed a silly error with summer time.
+        Fixed: club preset not being set during file loading.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.20.1</ReleaseVersion>
       <ReleaseTitle>Auto summer time detection</ReleaseTitle>
