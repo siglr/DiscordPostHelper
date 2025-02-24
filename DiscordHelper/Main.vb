@@ -3552,7 +3552,8 @@ Public Class Main
                                     AppendIsTestMode("Posting the map image in the thread - actual map image first"),
                                     AppendIsTestMode($"{If(postingGroupEvent, "Group Event", "Task")} Thread"),
                                     New List(Of String) From {"^v"},
-                                    False,,,
+                                    False,,
+                                    Drawing.Image.FromFile(allFiles(0)),
                                     SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
         End If
 
