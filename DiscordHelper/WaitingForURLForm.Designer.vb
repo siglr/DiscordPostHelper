@@ -68,7 +68,7 @@ Partial Class WaitingForURLForm
         Me.Name = "WaitingForURLForm"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "WaitingForURLForm"
+        Me.Text = "Waiting for URL from Discord"
         Me.ResumeLayout(False)
 
     End Sub
