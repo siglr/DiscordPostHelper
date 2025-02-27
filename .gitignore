@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TasksDatabase.sqbpro
 /DiscordHelper.sln.startup.json
+/config.php
