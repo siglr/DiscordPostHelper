@@ -6182,7 +6182,7 @@ Public Class Main
         SaveSession()
 
         If Not _useTestMode Then
-            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath)
+            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath, taskInfo.CoverImageSelected)
 
             If result Then
                 'Nothing to do
@@ -6208,7 +6208,7 @@ Public Class Main
 
     End Function
 
-    Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String) As Boolean
+    Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String, Optional coverImagePath As String = "") As Boolean
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
@@ -6235,8 +6235,11 @@ Public Class Main
             Dim bmp As Drawing.Image = CopyWeatherGraphToClipboard()
 
             ' Convert BMP to JPG with specified quality
-            Dim jpgFilePath As String = Path.Combine(Path.GetTempPath(), "weather_chart.jpg")
-            SaveJpegWithQuality(bmp, jpgFilePath, 80L)
+            Dim weatherChartJpgFilePath As String = Path.Combine(Path.GetTempPath(), "weather_chart.jpg")
+            SupportingFeatures.SaveJpegWithQuality(bmp, weatherChartJpgFilePath, 80L)
+
+            ' Convert cover image to JPG (if needed)
+            Dim convertedCoverImagePath As String = SupportingFeatures.ConvertImageToJpg(coverImagePath)
 
             Using memStream As New MemoryStream()
                 Dim boundaryBytes As Byte() = Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & vbCrLf)
@@ -6259,8 +6262,13 @@ Public Class Main
                 ' Add DPHX file
                 AddFileToRequest(memStream, dphxFilePath, "file", boundaryBytes)
 
-                ' Add JPG file
-                AddFileToRequest(memStream, jpgFilePath, "image", boundaryBytes)
+                ' Add WeatherChart JPG file
+                AddFileToRequest(memStream, weatherChartJpgFilePath, "image", boundaryBytes)
+
+                ' Add Cover Image (if available)
+                If Not String.IsNullOrEmpty(convertedCoverImagePath) AndAlso File.Exists(convertedCoverImagePath) Then
+                    AddFileToRequest(memStream, convertedCoverImagePath, "cover", boundaryBytes)
+                End If
 
                 memStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length)
 
@@ -6294,15 +6302,6 @@ Public Class Main
         End Try
     End Function
 
-    Private Sub SaveJpegWithQuality(image As Drawing.Image, filePath As String, quality As Long)
-        Dim qualityParam As New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality)
-        Dim jpegCodec As System.Drawing.Imaging.ImageCodecInfo = GetEncoderInfo("image/jpeg")
-        Dim encoderParams As New System.Drawing.Imaging.EncoderParameters(1)
-        encoderParams.Param(0) = qualityParam
-
-        image.Save(filePath, jpegCodec, encoderParams)
-    End Sub
-
     Private Sub AddFileToRequest(memStream As MemoryStream, filePath As String, fieldName As String, boundaryBytes As Byte())
         Dim header As String = $"Content-Disposition: form-data; name=""{fieldName}""; filename=""{Path.GetFileName(filePath)}""" & vbCrLf & "Content-Type: application/octet-stream" & vbCrLf & vbCrLf
         Dim headerBytes As Byte() = Encoding.UTF8.GetBytes(header)
@@ -6321,15 +6320,6 @@ Public Class Main
         memStream.Write(boundaryBytes, 0, boundaryBytes.Length)
     End Sub
 
-    Private Function GetEncoderInfo(mimeType As String) As Imaging.ImageCodecInfo
-        Dim codecs As Imaging.ImageCodecInfo() = Imaging.ImageCodecInfo.GetImageEncoders()
-        For Each codec As Imaging.ImageCodecInfo In codecs
-            If codec.MimeType = mimeType Then
-                Return codec
-            End If
-        Next
-        Return Nothing
-    End Function
 
     Private Sub GetTaskDetails(taskID As String, entrySeqID As Integer)
         Try

@@ -167,6 +167,41 @@ try {
             throw new Exception('Failed to upload the weather image file.');
         }
 
+        // Check if a cover image was uploaded and process it
+        if (isset($_FILES['cover'])) {
+
+            // Check for upload errors
+            if ($_FILES['cover']['error'] !== UPLOAD_ERR_OK) {
+                logMessage("Cover image upload error code: " . $_FILES['cover']['error']);
+                throw new Exception("Cover image upload failed with error code: " . $_FILES['cover']['error']);
+            }
+        
+            $cover = $_FILES['cover'];
+            $target_cover_dir = $fileRootPath . 'TaskBrowser/Covers/';
+            $target_cover_file = $target_cover_dir . basename($taskData['EntrySeqID'] . '.jpg');
+        
+            // Ensure the destination directory exists
+            if (!is_dir($target_cover_dir)) {
+                if (!mkdir($target_cover_dir, 0775, true) && !is_dir($target_cover_dir)) {
+                    logMessage("Failed to create cover image directory");
+                    throw new Exception("Failed to create cover image directory: " . $target_cover_dir);
+                }
+            }
+        
+            // Verify the uploaded file actually exists before moving
+            if (!file_exists($cover['tmp_name'])) {
+                logMessage("Cover image temporary file does not exist");
+                throw new Exception("Cover image temporary file does not exist: " . $cover['tmp_name']);
+            }
+        
+            // Move the uploaded file
+            if (!move_uploaded_file($cover['tmp_name'], $target_cover_file)) {
+                logMessage("Failed to upload the cover image file");
+                throw new Exception('Failed to upload the cover image file.');
+            }
+        
+        }
+
         // Prepare BaroPressureExtraInfo
         $baroPressureExtraInfo = isset($taskData['BaroPressureExtraInfo']) ? trim($taskData['BaroPressureExtraInfo']) : null;
         if (trim($baroPressureExtraInfo) === 'Non standard: Set your altimeter! (Press "B" once in your glider)' || 

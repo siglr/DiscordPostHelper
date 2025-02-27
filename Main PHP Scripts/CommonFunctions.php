@@ -16,6 +16,8 @@ $logFile = preg_replace(
 $userPermissionsPath = $config['userPermissionsPath'];
 $soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
+$disWHFlights = $config['disWHFlights'];
+$disWHAnnouncements = $config['disWHAnnouncements'];
 
 // Function to log messages
 function logMessage($message) {

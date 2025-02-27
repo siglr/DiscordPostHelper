@@ -2833,6 +2833,80 @@ Public Class SupportingFeatures
         End Try
     End Function
 
+    Public Shared Function ConvertImageToJpg(imagePath As String, Optional maxWidth As Integer = 1920, Optional maxHeight As Integer = 1080) As String
+        Try
+            If String.IsNullOrEmpty(imagePath) OrElse Not File.Exists(imagePath) Then
+                Return String.Empty ' No cover image provided
+            End If
+
+            Dim tempJpgPath As String = Path.Combine(Path.GetTempPath(), "cover_image.jpg")
+
+            ' Load the image
+            Using img As Image = Image.FromFile(imagePath)
+                ' Resize if needed
+                Dim resizedImg As Image = ResizeImageIfNeeded(img, maxWidth, maxHeight)
+
+                ' Save as JPG with specified quality
+                SaveJpegWithQuality(resizedImg, tempJpgPath, 80L)
+
+                ' Dispose resized image if it was created separately
+                If Not Object.ReferenceEquals(img, resizedImg) Then
+                    resizedImg.Dispose()
+                End If
+            End Using
+
+            Return tempJpgPath
+        Catch ex As Exception
+            MessageBox.Show($"Failed to process cover image: {ex.Message}", "Image Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return String.Empty
+        End Try
+    End Function
+
+    Public Shared Sub SaveJpegWithQuality(image As Drawing.Image, filePath As String, quality As Long)
+        Dim qualityParam As New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality)
+        Dim jpegCodec As System.Drawing.Imaging.ImageCodecInfo = GetEncoderInfo("image/jpeg")
+        Dim encoderParams As New System.Drawing.Imaging.EncoderParameters(1)
+        encoderParams.Param(0) = qualityParam
+
+        image.Save(filePath, jpegCodec, encoderParams)
+    End Sub
+
+    Private Shared Function ResizeImageIfNeeded(img As Image, maxWidth As Integer, maxHeight As Integer) As Image
+        ' Check if resizing is needed
+        If img.Width <= maxWidth AndAlso img.Height <= maxHeight Then
+            Return img ' No resizing needed
+        End If
+
+        ' Calculate new dimensions while maintaining aspect ratio
+        Dim ratioX As Double = maxWidth / img.Width
+        Dim ratioY As Double = maxHeight / img.Height
+        Dim ratio As Double = Math.Min(ratioX, ratioY)
+
+        Dim newWidth As Integer = CInt(img.Width * ratio)
+        Dim newHeight As Integer = CInt(img.Height * ratio)
+
+        ' Create a new resized bitmap
+        Dim resizedImg As New Bitmap(newWidth, newHeight)
+        Using g As Graphics = Graphics.FromImage(resizedImg)
+            g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
+            g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+            g.DrawImage(img, 0, 0, newWidth, newHeight)
+        End Using
+
+        Return resizedImg
+    End Function
+
+    Private Shared Function GetEncoderInfo(mimeType As String) As Imaging.ImageCodecInfo
+        Dim codecs As Imaging.ImageCodecInfo() = Imaging.ImageCodecInfo.GetImageEncoders()
+        For Each codec As Imaging.ImageCodecInfo In codecs
+            If codec.MimeType = mimeType Then
+                Return codec
+            End If
+        Next
+        Return Nothing
+    End Function
+
 End Class
 
 
