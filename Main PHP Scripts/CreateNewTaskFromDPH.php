@@ -229,7 +229,8 @@ try {
         // Update the database with full task details
         $stmt = $pdo->prepare("
             UPDATE Tasks SET
-                TaskID = :RealTaskID, 
+                TaskID = :RealTaskID,
+                DiscordPostID = :RealTaskID,
                 Title = :Title, 
                 LastUpdate = :LastUpdate,
                 SimDateTime = :SimDateTime,
