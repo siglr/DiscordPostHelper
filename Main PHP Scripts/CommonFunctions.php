@@ -16,8 +16,9 @@ $logFile = preg_replace(
 $userPermissionsPath = $config['userPermissionsPath'];
 $soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
-$disWHFlights = $config['disWHFlights'];
-$disWHAnnouncements = $config['disWHAnnouncements'];
+$disWHPrefix = 'https://discord.com/api/webhooks/';
+$disWHFlights = $disWHPrefix . $config['disWHFlights'];
+$disWHAnnouncements = $disWHPrefix . $config['disWHAnnouncements'];
 
 // Function to log messages
 function logMessage($message) {
@@ -92,6 +93,8 @@ function checkUserPermission($userID, $permission) {
     return $hasRight;
 }
 function cleanUpNewsEntries($pdo) {
+    global $disWHAnnouncements;
+
     // Get the current UTC datetime
     $currentDatetime = $pdo->query("SELECT datetime('now')")->fetchColumn();
 
@@ -103,6 +106,24 @@ function cleanUpNewsEntries($pdo) {
     $expiredKeys = $pdo->query("SELECT DISTINCT Key FROM News WHERE NewsType IN (1, 2) AND Expiration < datetime('now')")->fetchAll(PDO::FETCH_COLUMN);
 
     if (!empty($expiredKeys)) {
+        // Before deleting from the Events table, try to delete the corresponding Discord posts.
+        foreach ($expiredKeys as $key) {
+            // Query the Events table for a Discord post ID (assuming your field is WSGAnnouncementID)
+            $stmt = $pdo->prepare("SELECT WSGAnnouncementID FROM Events WHERE EventKey = ?");
+            $stmt->execute([$key]);
+            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $discordPostID = $row['WSGAnnouncementID'];
+                if (!empty($discordPostID)) {
+                    // Attempt to delete the Discord post
+                    $result = manageDiscordPost($disWHAnnouncements, "", $discordPostID, true);
+                    $resultObj = json_decode($result, true);
+                    if ($resultObj['result'] !== "success") {
+                        logMessage("CleanUp: Failed to delete Discord post with ID $discordPostID for event key $key. Error: " . $resultObj['error']);
+                    }
+                }
+            }
+        }
+
         // Step 2: Delete corresponding entries in the Events table
         $placeholders = implode(',', array_fill(0, count($expiredKeys), '?'));
         $deleteEventsStmt = $pdo->prepare("DELETE FROM Events WHERE EventKey IN ($placeholders)");
@@ -216,4 +237,116 @@ function deleteTaskNewsEntries($taskID) {
         throw new Exception('Failed to delete task news entries.');
     }
 }
+
+function manageDiscordPost($webhookUrl, $messageContent = '', $postID = null, $deletePost = false) {
+    // Prepare the base response structure.
+    $response = [
+        "result" => "error",
+        "error" => "",
+        "postID" => null
+    ];
+    
+    // Validate parameters.
+    if ($deletePost) {
+        if (empty($postID)) {
+            $response['error'] = "Post ID is required when deletePost is true.";
+            return json_encode($response);
+        }
+    } else {
+        // For creation or update, message content must be provided.
+        if (empty($messageContent)) {
+            $response['error'] = "Message content is required for creating or updating a post.";
+            return json_encode($response);
+        }
+    }
+    
+    // Function to execute cURL and handle errors.
+    function executeCurl($ch) {
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ["error" => $error, "result" => false, "resultData" => null];
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return ["error" => "", "result" => $httpCode, "resultData" => $result];
+    }
+    
+    // DELETE operation.
+    if ($deletePost) {
+        $url = rtrim($webhookUrl, '/') . "/messages/" . $postID;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Optional: set a timeout, e.g., 10 seconds.
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $resultData = executeCurl($ch);
+        if ($resultData["result"] === false) {
+            $response['error'] = "cURL Error: " . $resultData["error"];
+        } elseif ($resultData["result"] == 204) { // 204 No Content indicates success.
+            $response['result'] = "success";
+        } else {
+            $response['error'] = "Error deleting message. HTTP Code: " . $resultData["result"];
+        }
+        return json_encode($response);
+    }
+    
+    // UPDATE operation (postID is provided and deletePost is false).
+    if (!empty($postID)) {
+        $url = rtrim($webhookUrl, '/') . "/messages/" . $postID;
+        $data = ["content" => $messageContent];
+        
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $resultData = executeCurl($ch);
+        if ($resultData["result"] === false) {
+            $response['error'] = "cURL Error: " . $resultData["error"];
+        } elseif ($resultData["result"] == 200) {
+            $response['result'] = "success";
+            $response['postID'] = $postID;
+        } else {
+            $response['error'] = "Error updating message. HTTP Code: " . $resultData["result"];
+        }
+        return json_encode($response);
+    }
+    
+    // CREATE operation (no postID provided).
+    // Use ?wait=true to have Discord return the full message object including the post ID.
+    $url = rtrim($webhookUrl, '/') . "?wait=true";
+    $data = ["content" => $messageContent];
+    
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    
+    $resultData = executeCurl($ch);
+    if ($resultData["result"] === false) {
+        $response['error'] = "cURL Error: " . $resultData["error"];
+    } else {
+        $httpCode = $resultData["result"];
+        $resultJson = json_decode($resultData["resultData"], true);
+        if ($httpCode == 200 && isset($resultJson['id'])) {
+            $response['result'] = "success";
+            $response['postID'] = $resultJson['id'];
+        } else {
+            $response['error'] = "Error creating message. HTTP Code: " . $httpCode;
+            if (isset($resultJson['message'])) {
+                $response['error'] .= " - " . $resultJson['message'];
+            }
+        }
+    }
+    
+    return json_encode($response);
+}
+
 ?>

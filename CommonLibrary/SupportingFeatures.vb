@@ -50,7 +50,8 @@ Public Class SupportingFeatures
     End Enum
 
     Public ReadOnly DefaultKnownClubEvents As New Dictionary(Of String, PresetEvent)
-    Public ReadOnly KnownDesigners As New List(Of String)
+    Public ReadOnly DiscordNameIDPair As New Dictionary(Of String, String)
+    Public ReadOnly KnownDesigners As New List(Of KnownDesignerInfo)
     Public ReadOnly AllWaypoints As New List(Of ATCWaypoint)
     Public AATMinDuration As TimeSpan = TimeSpan.Zero
     Public ReadOnly CountryFlagCodes As Dictionary(Of String, ValueTuple(Of String, String))
@@ -165,6 +166,7 @@ Public Class SupportingFeatures
                                 club("ClubFullName").ToString(),
                                 club("TrackerGroup").ToString(),
                                 club("Emoji").ToString(),
+                                club("EmojiID").ToString(),
                                 club("EventNewsID").ToString(),
                                 club("MSFSServer").ToString(),
                                 club("VoiceChannel").ToString(),
@@ -185,15 +187,27 @@ Public Class SupportingFeatures
                                 sharedPublishers
                                 )
                             DefaultKnownClubEvents.Add(presetEvent.ClubId, presetEvent)
+                            If Not DiscordNameIDPair.ContainsKey(presetEvent.Emoji) Then
+                                DiscordNameIDPair.Add(presetEvent.Emoji, presetEvent.EmojiID)
+                            End If
                         Next
 
-                        ' Load Known Designers
-                        Dim designers As JArray = JArray.Parse(result("designers").ToString())
+
+                        ' Load Known Designers (extended version)
+                        Dim designers As JArray = JArray.Parse(result("designersExtended").ToString())
                         KnownDesigners.Clear()
-                        For Each designer As JToken In designers
-                            KnownDesigners.Add(designer.ToString())
-                        Next
+                        For Each designer As JObject In designers
+                            Dim d As New KnownDesignerInfo()
+                            d.Name = designer("Name").ToString()
+                            d.DiscordID = designer("DiscordID").ToString()
+                            KnownDesigners.Add(d)
 
+                            Dim aboutName As String = d.Name.Substring(0, d.Name.LastIndexOf("#")).Trim
+                            If Not DiscordNameIDPair.ContainsKey(aboutName) Then
+                                DiscordNameIDPair.Add(aboutName, d.DiscordID)
+                            End If
+
+                        Next
                     Else
                         Throw New Exception("Error retrieving soaring clubs: " & result("message").ToString())
                     End If
@@ -231,8 +245,8 @@ Public Class SupportingFeatures
     Public Sub PopulateKnownDesignersList(ByVal ctlControl As IList)
         ctlControl.Clear()
 
-        For Each designer As String In KnownDesigners
-            ctlControl.Add(designer)
+        For Each designer As KnownDesignerInfo In KnownDesigners
+            ctlControl.Add(designer.Name)
         Next
     End Sub
 

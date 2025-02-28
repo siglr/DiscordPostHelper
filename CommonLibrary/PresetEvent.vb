@@ -23,6 +23,7 @@
     Public ReadOnly Property ForceStartTask As Boolean
     Public ReadOnly Property DiscordURL As String
     Public ReadOnly Property SharedPublishers As List(Of String)
+    Public ReadOnly Property EmojiID As String
 
     Private _emoji As String
     Public ReadOnly Property Emoji As String
@@ -36,6 +37,7 @@
                    pClubFullName As String,
                    pTrackerGroup As String,
                    pEmoji As String,
+                   pEmojiID As String,
                    pEventNewsID As String,
                    pMSFSServer As String,
                    pVoiceChannel As String,
@@ -61,6 +63,7 @@
         TrackerGroup = pTrackerGroup
         EventNewsID = pEventNewsID
         _emoji = pEmoji
+        EmojiID = pEmojiID
         MSFSServer = pMSFSServer
         VoiceChannel = pVoiceChannel
         TimeZoneID = pTimeZoneID

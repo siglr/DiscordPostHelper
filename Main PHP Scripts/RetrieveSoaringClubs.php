@@ -30,6 +30,7 @@ try {
             'ClubFullName' => (string)$club->ClubFullName,
             'TrackerGroup' => (string)$club->TrackerGroup,
             'Emoji' => (string)$club->Emoji,
+            'EmojiID' => (string)$club->EmojiID,
             'EventNewsID' => (string)$club->EventNewsID,
             'MSFSServer' => (string)$club->MSFSServer,
             'VoiceChannel' => (string)$club->VoiceChannel,
@@ -51,14 +52,26 @@ try {
         ];
     }
 
-    // Convert KnownDesigners to an array
-    $designers = [];
+    // Convert KnownDesigners to an array of strings for backward compatibility,
+    // and also build an extended array with extra info.
+    $designersAsStrings = [];
+    $designersExtended = [];
     foreach ($xml->KnownDesigners->KnownDesigner as $designer) {
-        $designers[] = (string)$designer->Name;
+        $name = (string)$designer->Name;
+        $discordID = (string)$designer->DiscordID;
+        $designersAsStrings[] = $name;  // Original behavior: just the name.
+        $designersExtended[] = [
+            'Name'      => $name,
+            'DiscordID' => $discordID
+        ];
     }
 
-    // Return both clubs and designers
-    echo json_encode(['status' => 'success', 'clubs' => $clubs, 'designers' => $designers]);
+    echo json_encode([
+        'status' => 'success', 
+        'clubs' => $clubs, 
+        'designers' => $designersAsStrings,      // For current deployments
+        'designersExtended' => $designersExtended  // For new versions that need DiscordID
+    ]);
 
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

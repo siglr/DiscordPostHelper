@@ -6502,7 +6502,8 @@ Public Class Main
                                  beginnersGuide As String,
                                  notam As String,
                                  availability As String,
-                                 refly As Integer) As Boolean
+                                 refly As Integer,
+                                 wsgAnnouncement As String) As Boolean
 
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
@@ -6552,7 +6553,8 @@ Public Class Main
                 {"Notam", notam},
                 {"UserID", _userPermissionID},
                 {"Availability", availability},
-                {"Refly", refly}
+                {"Refly", refly},
+                {"WSGAnnouncement", wsgAnnouncement}
             }
 
                 For Each field In fields
@@ -6780,25 +6782,24 @@ Public Class Main
         End If
     End Sub
 
-    Private Sub PostEventAndTaskOnWSGAccouncement(eventDate As Date, key As String)
+    Private Function GetEventAndTaskWSGAccouncement(eventDate As Date, key As String) As String
+
+        Dim roleTaskBrowserID As String = "1168038746772471828"
+        Dim roleEventHunterID As String = "1267461823234441298"
 
         Dim msgForEventHunters As String = String.Empty
-        If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
-            msgForEventHunters = $"@TasksBrowser @EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### :wsg: [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
-        Else
-            msgForEventHunters = $"@EventHunter {Environment.NewLine}# {lblGroupEmoji.Text} {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+        Dim groupEmojiID As String = String.Empty
+        If _SF.DiscordNameIDPair.ContainsKey(lblGroupEmoji.Text.Trim) Then
+            groupEmojiID = _SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)
         End If
-        Clipboard.SetText(msgForEventHunters)
+        If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
+            msgForEventHunters = $"<@&{roleTaskBrowserID}> <@&{roleEventHunterID}> {Environment.NewLine}# <{lblGroupEmoji.Text}{groupEmojiID}> {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### <:wsg:1296813102893105203> [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
+        Else
+            msgForEventHunters = $"<@&{roleEventHunterID}> {Environment.NewLine}# <{lblGroupEmoji.Text}{groupEmojiID}> {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+        End If
+        Return msgForEventHunters
 
-        CopyContent.ShowContent(Me,
-                                msgForEventHunters,
-                                "Event news published to WeSimGlide.org! You can now paste the content of the message into the 'wsg-announcements' channel to share WSG event and task links.",
-                                "Sharing WeSimGlide.org Task and Group Event links",
-                                "WSG Announcements",
-                                New List(Of String) From {"^v"},,,,
-                                SupportingFeatures.WSGAnnouncementsDiscordURL)
-
-    End Sub
+    End Function
 
     Private ReadOnly Property WSGEventLink As String
         Get
@@ -6900,13 +6901,11 @@ Public Class Main
                                                     urlBeginnerGuide,
                                                     notam,
                                                     availabilityToUse,
-                                                    refly)
+                                                    refly,
+                                                    GetEventAndTaskWSGAccouncement(eventDate, key))
 
             If result Then
                 SetEventLabelAndButtons()
-                If chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked Then
-                    PostEventAndTaskOnWSGAccouncement(eventDate, key)
-                End If
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show("Failed to publish the event news entry.", "Publishing event news entry", MessageBoxButtons.OK, MessageBoxIcon.Error)
