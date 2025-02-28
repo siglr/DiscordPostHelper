@@ -77,12 +77,6 @@ Public Class SupportingFeatures
         End If
     End Function
 
-    Public Shared ReadOnly Property WSGAnnouncementsDiscordURL As String
-        Get
-            Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSWSGAnnouncementsDiscordID}"
-        End Get
-    End Property
-
     Public Shared Function TestEventsDiscordURL() As String
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
     End Function
@@ -2285,12 +2279,6 @@ Public Class SupportingFeatures
     Public Shared ReadOnly Property GetMSFSSoaringToolsDiscordID As String
         Get
             Return MSFSSoaringToolsDiscordID
-        End Get
-    End Property
-
-    Public Shared ReadOnly Property GetMSFSSoaringToolsLibraryID As String
-        Get
-            Return MSFSSoaringToolsLibraryID
         End Get
     End Property
 

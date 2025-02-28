@@ -3465,7 +3465,7 @@ Public Class Main
 
     Private Function GetDiscordLinkToTaskThread() As String
         Dim urlToTaskThread As String = String.Empty
-        urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtTaskID.Text}"
+        urlToTaskThread = $"{SupportingFeatures.TaskLibraryDiscordURL}/{txtTaskID.Text}"
         Return urlToTaskThread
     End Function
 
@@ -3967,7 +3967,7 @@ Public Class Main
         End If
         logisticInstructions.AppendLine()
         If Not txtTaskID.Text = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
-            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtTaskID.Text})") 'TODO Remove T when in test mode
+            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID})")
         End If
 
         Return logisticInstructions.ToString()
@@ -5671,7 +5671,7 @@ Public Class Main
         Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID)
 
         If result Then
-            Dim discordTaskIDToRemove As String = txtTaskID.Text.Trim
+            Dim discordTaskIDToRemove As String = _taskDiscordPostID
             _TaskEntrySeqID = 0
             _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
             txtTaskID.Text = String.Empty
@@ -5684,7 +5684,7 @@ Public Class Main
             'Bring user to Discord to delete task!
             If discordTaskIDToRemove.Length > 0 Then
                 'There is a Discord ID
-                If SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{discordTaskIDToRemove}") Then
+                If SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{discordTaskIDToRemove}") Then
                     Using New Centered_MessageBox(Me)
                         MessageBox.Show("I have opened Discord on the correct task. You should now delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
