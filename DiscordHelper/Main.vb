@@ -6075,7 +6075,7 @@ Public Class Main
         Dim repostText As String = String.Empty
         If chkRepost.Checked Then
             If txtRepostOriginalURL.TextLength > 0 Then
-                repostText = $"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}]({txtRepostOriginalURL.Text}) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
+                repostText = $"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(txtRepostOriginalURL.Text)}](<{txtRepostOriginalURL.Text}>) on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
             Else
                 repostText = $"This task was originally posted on {dtRepostOriginalDate.Value.ToString("MMMM dd, yyyy", _EnglishCulture)}"
             End If
