@@ -142,30 +142,45 @@ try {
             $wsgAnnouncementID = "";
             if (isset($_POST['EventMeetDateTime']) && !empty($_POST['EventMeetDateTime'])) {
                 if (isset($_POST['WSGAnnouncement'])) {
-                    $newAnnouncement = $_POST['WSGAnnouncement'];
-                    $discordPostID = "";
-                    // If there is an existing Discord post, compare its announcement content.
-                    if ($existingAnnouncement !== null && !empty($existingAnnouncementID)) {
-                        if ($existingAnnouncement === $newAnnouncement) {
-                            // Content unchanged; reuse the existing Discord post ID.
-                            $discordPostID = $existingAnnouncementID;
+                    $newAnnouncement = trim($_POST['WSGAnnouncement']);
+                    // Case 1: New announcement is blank
+                    if ($newAnnouncement === "") {
+                        // If there is an existing Discord post, delete it.
+                        if (!empty($existingAnnouncementID)) {
+                            $result = manageDiscordPost($disWHAnnouncements, "", $existingAnnouncementID, true);
+                            $resultObj = json_decode($result, true);
+                            if ($resultObj['result'] !== "success") {
+                                logMessage("Failed to delete Discord post with ID $existingAnnouncementID for event key $key due to blank announcement. Error: " . $resultObj['error']);
+                            }
+                        }
+                        $wsgAnnouncementID = "";
+                    }
+                    // Case 2: New announcement is non-blank
+                    else {
+                        $discordPostID = "";
+                        if (!empty($existingAnnouncementID)) {
+                            // There is an existing Discord post.
+                            if ($existingAnnouncement !== null && $existingAnnouncement === $newAnnouncement) {
+                                // Content unchanged; reuse the existing Discord post ID.
+                                $discordPostID = $existingAnnouncementID;
+                            } else {
+                                // Content changed; update the Discord post.
+                                $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, $existingAnnouncementID, false);
+                                $resultObj = json_decode($result, true);
+                                if ($resultObj['result'] === "success") {
+                                    $discordPostID = $resultObj['postID'];
+                                }
+                            }
                         } else {
-                            // Content changed; update the Discord post.
-                            $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, $existingAnnouncementID, false);
+                            // No existing Discord post; create a new one.
+                            $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, null, false);
                             $resultObj = json_decode($result, true);
                             if ($resultObj['result'] === "success") {
                                 $discordPostID = $resultObj['postID'];
                             }
                         }
-                    } else {
-                        // No existing Discord post found; create a new one.
-                        $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, null, false);
-                        $resultObj = json_decode($result, true);
-                        if ($resultObj['result'] === "success") {
-                            $discordPostID = $resultObj['postID'];
-                        }
+                        $wsgAnnouncementID = $discordPostID;
                     }
-                    $wsgAnnouncementID = $discordPostID;
                 }
             }
 

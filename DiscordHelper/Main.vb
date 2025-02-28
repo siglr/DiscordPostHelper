@@ -304,6 +304,7 @@ Public Class Main
             chkDGPOMapImage.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
             chkDGPOMainPost.Checked = SessionSettings.DPO_chkDGPOMainPost
             chkDGPOFullDescription.Checked = SessionSettings.DPO_chkDGPOFullDescription
+            chkDGPOPublishWSGEventNews.Checked = SessionSettings.DPO_chkDGPOPublishWSGEventNews
             chkDGPOEventLogistics.Checked = SessionSettings.DPO_chkDGPOEventLogistics
         End If
 
@@ -3664,6 +3665,7 @@ Public Class Main
         SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOMapImage.Checked
         SessionSettings.DPO_chkDGPOMainPost = chkDGPOMainPost.Checked
         SessionSettings.DPO_chkDGPOFullDescription = chkDGPOFullDescription.Checked
+        SessionSettings.DPO_chkDGPOPublishWSGEventNews = chkDGPOPublishWSGEventNews.Checked
         SessionSettings.DPO_chkDGPOEventLogistics = chkDGPOEventLogistics.Checked
 
     End Sub
@@ -3686,6 +3688,7 @@ Public Class Main
         chkDGPOMainPost.Checked = True
         chkDGPOFullDescription.Checked = True
         chkDGPOEventLogistics.Checked = True
+        chkDGPOPublishWSGEventNews.Checked = True
 
         CheckWhichOptionsCanBeEnabled()
 
@@ -6784,6 +6787,10 @@ Public Class Main
     End Sub
 
     Private Function GetEventAndTaskWSGAccouncement(eventDate As Date, key As String) As String
+
+        If Not (chkDGPOPublishWSGEventNews.Enabled AndAlso chkDGPOPublishWSGEventNews.Checked) Then
+            Return String.Empty
+        End If
 
         Dim roleTaskBrowserID As String = "@&1168038746772471828"
         Dim roleEventHunterID As String = "@&1267461823234441298"
