@@ -2,7 +2,7 @@
 
 Public Class LoadWSGTaskInputForm
 
-    Public Property WSGTaskID As Integer
+    Public Property WSGEntrySeqTaskID As Integer
 
     Private Sub txtInput_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtInput.KeyPress
         Dim keyChar = e.KeyChar
@@ -28,7 +28,7 @@ Public Class LoadWSGTaskInputForm
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         Dim tempValue As Integer
         If Integer.TryParse(txtInput.Text, tempValue) Then
-            WSGTaskID = tempValue
+            WSGEntrySeqTaskID = tempValue
             Me.DialogResult = DialogResult.OK
             Me.Close()
         Else

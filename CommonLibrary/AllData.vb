@@ -263,8 +263,15 @@ Public Class AllData
     <XmlElement("DiscordTaskThreadURL")>
     Public Property DiscordTaskThreadURL As String
 
+    'Deprecated - only there for legacy
     <XmlElement("DiscordTaskID")>
     Public Property DiscordTaskID As String
+
+    <XmlElement("DiscordPostID")>
+    Public Property DiscordPostID As String
+
+    <XmlElement("TaskID")>
+    Public Property TaskID As String
 
     <XmlElement("TemporaryTaskID")>
     Public Property TemporaryTaskID As String

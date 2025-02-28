@@ -59,6 +59,7 @@ Public Class Main
     Private _TaskStatus As SupportingFeatures.WSGTaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
     Private _TBTaskDBEntryUpdate As DateTime
     Private _TBTaskLastUpdate As DateTime
+    Private _taskDiscordPostID As String = String.Empty
     Private _isInitiatizing As Boolean = True
     Private _directChange As Boolean = True
     Private _eventDateTimeChangeInProgress As Boolean = False
@@ -389,6 +390,7 @@ Public Class Main
         _TaskTotalDistanceInKm = 0
         _PossibleElevationUpdateRequired = False
         _TaskEntrySeqID = 0
+        _taskDiscordPostID = String.Empty
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
 
         cboDifficulty.SelectedIndex = 0
@@ -479,7 +481,7 @@ Public Class Main
         grpGroupEventPost.Enabled = False
         grpDiscordGroupFlight.Enabled = False
         cboBeginnersGuide.Text = "The Beginner's Guide to Soaring Events (GotGravel)"
-        txtDiscordTaskID.Text = String.Empty
+        txtTaskID.Text = String.Empty
         txtEventTeaserAreaMapImage.Text = String.Empty
         txtEventTeaserMessage.Text = String.Empty
         chkEventTeaser.Checked = False
@@ -1047,19 +1049,19 @@ Public Class Main
 
     End Sub
 
-    Private Sub txtDiscordTaskID_TextChanged(sender As Object, e As EventArgs) Handles txtDiscordTaskID.TextChanged
-        If txtDiscordTaskID.Text.Trim = String.Empty Then
-            lblTaskLibraryIDNotAcquired.Visible = True
-            lblTaskLibraryIDAcquired.Visible = False
+    Private Sub txtTaskID_TextChanged(sender As Object, e As EventArgs) Handles txtTaskID.TextChanged
+        If txtTaskID.Text.Trim = String.Empty Then
+            lblTaskIDNotAcquired.Visible = True
+            lblTaskIDAcquired.Visible = False
         Else
-            lblTaskLibraryIDAcquired.Visible = True
-            lblTaskLibraryIDNotAcquired.Visible = False
+            lblTaskIDAcquired.Visible = True
+            lblTaskIDNotAcquired.Visible = False
             'Try to retrieve the task EntrySeqID online
             Try
                 If txtTemporaryTaskID.Text.Trim.Length > 0 Then
                     GetTaskDetails(txtTemporaryTaskID.Text.Trim, _TaskEntrySeqID)
                 Else
-                    GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+                    GetTaskDetails(txtTaskID.Text.Trim, _TaskEntrySeqID)
                 End If
             Catch ex As Exception
                 'Do nothing - it means the task has not been pushed to the online database
@@ -2853,7 +2855,7 @@ Public Class Main
 
         Dim autoContinue As Boolean = True
 
-        If txtDiscordTaskID.Text.Length = 0 Then
+        If txtTaskID.Text.Length = 0 Then
             If Not ValidPostingRequirements() Then
                 Exit Sub
             End If
@@ -2986,15 +2988,15 @@ Public Class Main
         If _TaskEntrySeqID > 0 AndAlso (Not _useTestMode) Then
 
             If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
-                txtDiscordTaskID.Text.Trim.Length = 0 AndAlso
+                txtTaskID.Text.Trim.Length = 0 AndAlso
                 txtTemporaryTaskID.Text.Trim.Length > 0 Then
-                'Scenario 1 - The task is pending creation and has only a temporary TaskID (no DiscordTaskID)
+                'Scenario 1 - The task is pending creation and has only a temporary TaskID (no TaskID)
                 '             We need to resume at posting task on Discord.
                 autoContinue = PostTaskOnDiscord()
 
             ElseIf _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
-                txtDiscordTaskID.Text.Trim.Length > 0 Then
-                'Scenario 2 - The task is pending creation and has a DiscordTaskID (the task has been published to Discord but is still incomplete on WSG)
+                txtTaskID.Text.Trim.Length > 0 Then
+                'Scenario 2 - The task is pending creation and has a TaskID (the task has been published to Discord but is still incomplete on WSG)
                 '             We need to resume at trying to complete the publishing on WSG.
                 autoContinue = PrepareCreateWSGTaskPart2()
 
@@ -3029,12 +3031,12 @@ Public Class Main
             Dim taskInfo As AllData = SetAndRetrieveSessionData()
             txtTemporaryTaskID.Text = $"TEMP-{Guid.NewGuid().ToString}"
             If Not _useTestMode Then
-                txtDiscordTaskID.Text = String.Empty
-            ElseIf txtDiscordTaskID.Text.Length > 0 Then
+                txtTaskID.Text = String.Empty
+            ElseIf txtTaskID.Text.Length > 0 Then
                 'Ask user
                 Using New Centered_MessageBox(Me)
                     If MessageBox.Show(Me, "Because you are testing, I need to know if you want to reset from the start? Did you delete the previous TASK Discord post?", "Test mode reset question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                        txtDiscordTaskID.Text = String.Empty
+                        txtTaskID.Text = String.Empty
                     End If
                 End Using
             End If
@@ -3051,7 +3053,7 @@ Public Class Main
             Else
                 'Something went wrong - we cannot continue
                 txtTemporaryTaskID.Text = String.Empty
-                txtDiscordTaskID.Text = String.Empty
+                txtTaskID.Text = String.Empty
                 _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
             End If
         End If
@@ -3061,7 +3063,7 @@ Public Class Main
         End If
 
         'Are we enforcing the posting on the Task Library only?
-        If txtDiscordTaskID.Text = String.Empty Then
+        If txtTaskID.Text = String.Empty Then
             Dim msg As String = String.Empty
             If Not _useTestMode Then
                 msg = "Task Library"
@@ -3093,7 +3095,7 @@ Public Class Main
         'This will now allow us to post the task on Discord with proper links.
         autoContinue = FlightPlanMainInfoCopy()
 
-        If (Not _useTestMode) AndAlso txtDiscordTaskID.Text.Trim.Length > 0 AndAlso (Not txtDiscordTaskID.Text.StartsWith("T")) Then
+        If (Not _useTestMode) AndAlso txtTaskID.Text.Trim.Length > 0 AndAlso (Not txtTaskID.Text.StartsWith("T")) Then
             autoContinue = PrepareCreateWSGTaskPart2()
         Else
             'We don't have the official Discord task ID, so the task should stay in Pending creation?
@@ -3123,7 +3125,7 @@ Public Class Main
             End Using
         End If
         'Retrieve the updated task details
-        GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+        GetTaskDetails(txtTaskID.Text.Trim, _TaskEntrySeqID)
         Return autoContinue
 
     End Function
@@ -3144,7 +3146,7 @@ Public Class Main
             Return False
         End If
         'Retrieve the updated task details
-        GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+        GetTaskDetails(txtTaskID.Text.Trim, _TaskEntrySeqID)
         Return autoContinue
 
     End Function
@@ -3154,7 +3156,7 @@ Public Class Main
         Dim listOfControlsRemove As New List(Of Windows.Forms.CheckBox)
         Dim listOfControlsAdd As New List(Of Windows.Forms.CheckBox)
 
-        If lblTaskLibraryIDAcquired.Visible Then
+        If lblTaskIDAcquired.Visible Then
             'Task
             listOfControlsRemove.Add(chkDPOIncludeCoverImage)
             'Group
@@ -3197,7 +3199,7 @@ Public Class Main
         For Each optionCheckBox As Windows.Forms.CheckBox In optionCheckBoxes
             If Not optionCheckBox.Text.StartsWith(warningIcon) Then
                 optionCheckBox.Text = $"{warningIcon} {optionCheckBox.Text}"
-                optionCheckBox.ForeColor = lblTaskLibraryIDNotAcquired.ForeColor
+                optionCheckBox.ForeColor = lblTaskIDNotAcquired.ForeColor
             End If
         Next
 
@@ -3224,8 +3226,8 @@ Public Class Main
         End If
 
         If Not _useTestMode Then
-            If txtDiscordTaskID.Text.StartsWith("T") Then
-                txtDiscordTaskID.Text = String.Empty
+            If txtTaskID.Text.StartsWith("T") Then
+                txtTaskID.Text = String.Empty
             End If
         End If
 
@@ -3359,7 +3361,7 @@ Public Class Main
             Return autoContinue
         End If
 
-        If txtDiscordTaskID.Text = String.Empty Then
+        If txtTaskID.Text = String.Empty Then
             Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
             Dim waitingForm As WaitingForURLForm
             Dim answer As DialogResult
@@ -3375,8 +3377,8 @@ Public Class Main
                 If answer = DialogResult.OK Then
                     Dim taskThreadURL As String
                     taskThreadURL = Clipboard.GetText
-                    txtDiscordTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,,, _useTestMode)
-                    If txtDiscordTaskID.Text.Trim.Length = 0 Then
+                    txtTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
+                    If txtTaskID.Text.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
                             If MessageBox.Show(Me, $"Invalid task ID - If you posted under the Task Library, try again. If not, click Cancel.", "Task ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
                                 validTaskIDOrCancel = True
@@ -3463,7 +3465,7 @@ Public Class Main
 
     Private Function GetDiscordLinkToTaskThread() As String
         Dim urlToTaskThread As String = String.Empty
-        urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text}"
+        urlToTaskThread = $"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtTaskID.Text}"
         Return urlToTaskThread
     End Function
 
@@ -3964,8 +3966,8 @@ Public Class Main
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
         logisticInstructions.AppendLine()
-        If Not txtDiscordTaskID.Text = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
-            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtDiscordTaskID.Text})") 'TODO Remove T when in test mode
+        If Not txtTaskID.Text = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
+            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task thread](https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{txtTaskID.Text})") 'TODO Remove T when in test mode
         End If
 
         Return logisticInstructions.ToString()
@@ -3983,7 +3985,7 @@ Public Class Main
 
         Dim sb As New StringBuilder
 
-        If Not txtDiscordTaskID.Text = String.Empty Then
+        If Not txtTaskID.Text = String.Empty Then
             sb.AppendLine("## Relevant task details summary")
             If altRestrictionsMsg AndAlso txtAltRestrictions.Text.Trim.Length > 33 Then
                 sb.AppendLine("⚠️ There are altitude restrictions on this task")
@@ -4534,7 +4536,7 @@ Public Class Main
                 SetGuidePanelToRight()
                 pnlGuide.Top = 531
                 lblGuideInstructions.Text = "You can specify an image that will be used as cover for the flight on Discord. Any image you add named ""Cover"" will be automatically selected."
-                SetFocusOnField(txtDiscordTaskID, fromF1Key)
+                SetFocusOnField(txtTaskID, fromF1Key)
             Case 24 'External source of task
                 SetGuidePanelToRight()
                 pnlGuide.Top = 597
@@ -5005,11 +5007,11 @@ Public Class Main
     Private Sub btnLoadFromWSG(sender As Object, e As EventArgs) Handles toolStripOpenFromWSG.Click
         Dim inputForm As New LoadWSGTaskInputForm()
         If inputForm.ShowDialog() = DialogResult.OK Then
-            If inputForm.WSGTaskID <> 0 Then
+            If inputForm.WSGEntrySeqTaskID <> 0 Then
                 'Proceed to download the DPHX file
                 'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
                 Dim taskTitle As String = String.Empty
-                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGTaskID, taskTitle, True)
+                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGEntrySeqTaskID, taskTitle, True)
                 If taskID <> String.Empty Then
                     'Make sure temporary folder is available and empty
                     Dim tempDPHXFromWSGFolder As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempDPHXFromWSG")
@@ -5205,9 +5207,10 @@ Public Class Main
             End If
             .TrackerGroup = txtTrackerGroup.Text
             .GroupEmoji = lblGroupEmoji.Text
-            .DiscordTaskID = txtDiscordTaskID.Text
+            .TaskID = txtTaskID.Text
             .TemporaryTaskID = txtTemporaryTaskID.Text
             .EntrySeqID = _TaskEntrySeqID
+            .DiscordPostID = _taskDiscordPostID
             .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
@@ -5361,16 +5364,22 @@ Public Class Main
                     .DPHXPackageFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.DPHXPackageFilename)}"
                     txtDPHXPackageFilename.Text = .DPHXPackageFilename
                 End If
-                If .DiscordTaskID = String.Empty AndAlso .DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(.DiscordTaskThreadURL) Then
-                    .DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
+
+                'TaskID
+                If .TaskID = String.Empty AndAlso .DiscordTaskID <> String.Empty Then
+                    .TaskID = .DiscordTaskID
+                ElseIf .TaskID = String.Empty AndAlso .DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(.DiscordTaskThreadURL) Then
+                    .TaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
+
+                _taskDiscordPostID = .DiscordPostID
                 _TaskEntrySeqID = .EntrySeqID
                 _TaskStatus = .TaskStatus
                 If _TaskEntrySeqID = 0 Then
                     _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                 End If
-                txtDiscordTaskID.Text = .DiscordTaskID
-                If txtDiscordTaskID.Text.StartsWith("T") Then
+                txtTaskID.Text = .TaskID
+                If txtTaskID.Text.StartsWith("T") Then
                     _useTestMode = True
                 End If
                 If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation Then
@@ -5449,7 +5458,7 @@ Public Class Main
             End With
 
             If _TaskEntrySeqID > 0 Then
-                GetTaskDetails(txtDiscordTaskID.Text.Trim, _TaskEntrySeqID)
+                GetTaskDetails(txtTaskID.Text.Trim, _TaskEntrySeqID)
             Else
                 SetTBTaskDetailsLabel()
             End If
@@ -5662,10 +5671,10 @@ Public Class Main
         Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID)
 
         If result Then
-            Dim discordTaskIDToRemove As String = txtDiscordTaskID.Text.Trim
+            Dim discordTaskIDToRemove As String = txtTaskID.Text.Trim
             _TaskEntrySeqID = 0
             _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
-            txtDiscordTaskID.Text = String.Empty
+            txtTaskID.Text = String.Empty
             txtTemporaryTaskID.Text = String.Empty
             SetAndRetrieveSessionData()
             SaveSession()
@@ -6014,7 +6023,7 @@ Public Class Main
             modeRights = "CreateTask"
         End If
         Dim taskData As New Dictionary(Of String, Object) From {
-            {"RealTaskID", taskInfo.DiscordTaskID},
+            {"RealTaskID", taskInfo.TaskID},
             {"EntrySeqID", taskInfo.EntrySeqID},
             {"Title", taskInfo.Title},
             {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
@@ -6250,6 +6259,9 @@ Public Class Main
                     If result("status").ToString() = "success" Then
                         If entrySeqID = 0 Then
                             _TaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                            _taskDiscordPostID = String.Empty
+                        Else
+                            _taskDiscordPostID = result("taskDetails")("DiscordPostID").ToString()
                         End If
                         Integer.TryParse(result("taskDetails")("Status"), _TaskStatus)
                         ' Specify the format of the datetime string

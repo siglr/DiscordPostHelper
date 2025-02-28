@@ -87,13 +87,6 @@ Public Class SupportingFeatures
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
     End Function
 
-    Public Shared Function TaskThreadDiscordURL(taskID As String) As String
-        If taskID.StartsWith("T") Then
-            taskID = taskID.Substring(1, taskID.Length - 1)
-        End If
-        Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{taskID}"
-    End Function
-
     Public Shared Function GetTaskThreadURLFromGroupURL(discordMessageUrl As String) As String
         Try
             ' Split the URL by slashes
@@ -2242,7 +2235,7 @@ Public Class SupportingFeatures
         Return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase)
     End Function
 
-    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False, Optional taskID As String = "", Optional testMode As Boolean = False) As String
+    Public Shared Function ExtractMessageIDFromDiscordURL(ByVal inputURL As String, Optional acceptFirstPartOnly As Boolean = False, Optional testMode As Boolean = False) As String
 
         ' Check if the inputURL starts with the expected base URL
         Dim baseURL As String = $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/"
@@ -2272,8 +2265,6 @@ Public Class SupportingFeatures
                 End If
                 'In every other situation, return blank
                 Return String.Empty
-            ElseIf parts.Length = 2 AndAlso parts(0) = taskID Then
-                Return parts(1)
             ElseIf parts.Length = 1 AndAlso acceptFirstPartOnly Then
                 Return parts(0)
             End If

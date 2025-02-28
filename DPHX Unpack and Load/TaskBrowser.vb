@@ -444,6 +444,7 @@ Public Class TaskBrowser
             'Success
         End If
 
+        'TODO Change to DiscordPostID - but we need it first!
         If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_selectedTaskRow("TaskID").ToString.Trim}") Then
             Using New Centered_MessageBox()
                 MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)

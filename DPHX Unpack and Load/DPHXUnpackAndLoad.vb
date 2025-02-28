@@ -561,6 +561,10 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
+            If _allDPHData.DiscordPostID = String.Empty AndAlso _allDPHData.DiscordTaskID <> String.Empty Then
+                _allDPHData.DiscordPostID = _allDPHData.DiscordTaskID
+            End If
+
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),

@@ -305,11 +305,14 @@ Public Class BriefingControl
         AddCountryFlagPictures()
         FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
 
-        If _sessionData.DiscordTaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
-            _sessionData.DiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
+        'TaskID
+        If _sessionData.TaskID = String.Empty AndAlso _sessionData.DiscordTaskID <> String.Empty Then
+            _sessionData.TaskID = _sessionData.DiscordTaskID
+        ElseIf _sessionData.TaskID = String.Empty AndAlso _sessionData.DiscordTaskThreadURL <> String.Empty AndAlso SupportingFeatures.IsValidURL(_sessionData.DiscordTaskThreadURL) Then
+            _sessionData.TaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
         End If
 
-        If _sessionData.DiscordTaskID = String.Empty Then
+        If _sessionData.DiscordPostID = String.Empty Then
             btnGotoDiscordTaskThread.Text = $"No task thread defined"
             btnGotoDiscordTaskThread.Enabled = False
         Else
@@ -1046,7 +1049,7 @@ Public Class BriefingControl
 
     Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
 
-        If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_sessionData.DiscordTaskID}") Then
+        If Not SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_sessionData.DiscordPostID}") Then
             Using New Centered_MessageBox()
                 MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
@@ -1069,7 +1072,7 @@ Public Class BriefingControl
                 ' Programmatically trigger the button's click event
                 Dim inviteURL As String = String.Empty
 
-                If _sessionData.DiscordTaskID <> String.Empty Then
+                If _sessionData.DiscordPostID <> String.Empty Then
                     inviteURL = "https://discord.gg/aW8YYe3HJF"
                 End If
                 If inviteURL <> String.Empty Then
