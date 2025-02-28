@@ -70,7 +70,7 @@ Public Class SupportingFeatures
         If testMode Then
             Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsTestingID}"
         End If
-        If Not _useTestServer Then
+        If Not useTestServer Then
             Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsLibraryID}"
         Else
             Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsPrivateTestingID}"
@@ -202,7 +202,7 @@ Public Class SupportingFeatures
                             d.DiscordID = designer("DiscordID").ToString()
                             KnownDesigners.Add(d)
 
-                            Dim aboutName As String = d.Name.Substring(0, d.Name.LastIndexOf("#")).Trim
+                            Dim aboutName As String = d.Name.Substring(0, d.Name.LastIndexOf("#")).Trim.ToLower
                             If Not DiscordNameIDPair.ContainsKey(aboutName) Then
                                 DiscordNameIDPair.Add(aboutName, d.DiscordID)
                             End If
@@ -2710,15 +2710,15 @@ Public Class SupportingFeatures
         Return String.Empty
     End Function
 
-    Private Shared _useTestServer As Boolean = False
+    Public Shared useTestServer As Boolean = False
     Private Shared _testServerAskedOnce As Boolean = False
 
     Private Shared Sub AskTestServer()
         If Not _testServerAskedOnce Then
             If MsgBox("Do you want to run in TEST environment ?", vbYesNo Or vbQuestion, "Confirm TEST environment") = vbYes Then
-                _useTestServer = True
+                useTestServer = True
             Else
-                _useTestServer = False
+                useTestServer = False
             End If
             _testServerAskedOnce = True
         End If
@@ -2729,14 +2729,14 @@ Public Class SupportingFeatures
             If Debugger.IsAttached Then
                 AskTestServer()
             End If
-            Return _useTestServer
+            Return useTestServer
         End Get
     End Property
 
     Public Shared Function SIGLRDiscordPostHelperFolder() As String
         If Debugger.IsAttached Then
             AskTestServer()
-            If _useTestServer Then
+            If useTestServer Then
                 Return "https://siglr.com/DiscordPostHelperTest/"
             Else
                 Return "https://siglr.com/DiscordPostHelper/"
@@ -2748,7 +2748,7 @@ Public Class SupportingFeatures
 
         If Debugger.IsAttached Then
             AskTestServer()
-            If _useTestServer Then
+            If useTestServer Then
                 Return "TasksDatabaseTest.db"
             Else
                 Return "TasksDatabase.db"
@@ -2807,7 +2807,7 @@ Public Class SupportingFeatures
 
     Public Shared ReadOnly Property WeSimGlide As String
         Get
-            If _useTestServer Then
+            If useTestServer Then
                 Return "https://soaring.siglr.com/"
             Else
                 Return "https://wesimglide.org/"

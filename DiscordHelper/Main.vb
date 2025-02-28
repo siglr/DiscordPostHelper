@@ -304,7 +304,6 @@ Public Class Main
             chkDGPOMapImage.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
             chkDGPOMainPost.Checked = SessionSettings.DPO_chkDGPOMainPost
             chkDGPOFullDescription.Checked = SessionSettings.DPO_chkDGPOFullDescription
-            chkDGPOPublishWSGEventNews.Checked = SessionSettings.DPO_chkDGPOPublishWSGEventNews
             chkDGPOEventLogistics.Checked = SessionSettings.DPO_chkDGPOEventLogistics
         End If
 
@@ -3661,7 +3660,6 @@ Public Class Main
         SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOMapImage.Checked
         SessionSettings.DPO_chkDGPOMainPost = chkDGPOMainPost.Checked
         SessionSettings.DPO_chkDGPOFullDescription = chkDGPOFullDescription.Checked
-        SessionSettings.DPO_chkDGPOPublishWSGEventNews = chkDGPOPublishWSGEventNews.Checked
         SessionSettings.DPO_chkDGPOEventLogistics = chkDGPOEventLogistics.Checked
 
     End Sub
@@ -3683,7 +3681,6 @@ Public Class Main
 
         chkDGPOMainPost.Checked = True
         chkDGPOFullDescription.Checked = True
-        chkDGPOPublishWSGEventNews.Checked = True
         chkDGPOEventLogistics.Checked = True
 
         CheckWhichOptionsCanBeEnabled()
@@ -6784,18 +6781,23 @@ Public Class Main
 
     Private Function GetEventAndTaskWSGAccouncement(eventDate As Date, key As String) As String
 
-        Dim roleTaskBrowserID As String = "1168038746772471828"
-        Dim roleEventHunterID As String = "1267461823234441298"
+        Dim roleTaskBrowserID As String = "@&1168038746772471828"
+        Dim roleEventHunterID As String = "@&1267461823234441298"
+
+        If SupportingFeatures.useTestServer Then
+            roleTaskBrowserID = "TaskBrowsers"
+            roleEventHunterID = "EventHunters"
+        End If
 
         Dim msgForEventHunters As String = String.Empty
-        Dim groupEmojiID As String = String.Empty
+        Dim groupEmoji As String = String.Empty
         If _SF.DiscordNameIDPair.ContainsKey(lblGroupEmoji.Text.Trim) Then
-            groupEmojiID = _SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)
+            groupEmoji = $"<{lblGroupEmoji.Text}{_SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)}> "
         End If
         If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
-            msgForEventHunters = $"<@&{roleTaskBrowserID}> <@&{roleEventHunterID}> {Environment.NewLine}# <{lblGroupEmoji.Text}{groupEmojiID}> {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### <:wsg:1296813102893105203> [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
+            msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### <:wsg:1296813102893105203> [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
         Else
-            msgForEventHunters = $"<@&{roleEventHunterID}> {Environment.NewLine}# <{lblGroupEmoji.Text}{groupEmojiID}> {_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
+            msgForEventHunters = $"<{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### Please monitor the original event as task has not been published yet."
         End If
         Return msgForEventHunters
 
