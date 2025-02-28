@@ -18,7 +18,7 @@ try {
     // Query to fetch news entries with events info (if applicable)
     $stmtNews = $pdoNews->query("
         SELECT 
-            News.Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, EntrySeqID, URLToGo, Expiration,
+            News.Key, News.TaskID, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, EntrySeqID, URLToGo, Expiration,
             Events.Availability AS EventAvailability, Events.Refly
         FROM News
         LEFT JOIN Events ON News.Key = Events.EventKey
