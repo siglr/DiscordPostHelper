@@ -16,6 +16,7 @@ Imports System.Drawing.Imaging
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports System.Web.UI.WebControls.WebParts
+Imports System.Text.RegularExpressions
 
 Public Class Main
 
@@ -33,6 +34,7 @@ Public Class Main
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
     Private Const DefaultMapImageWidth As Integer = 1647
     Private Const DefaultMapImageHeight As Integer = 639
+    Private Const WSGEmoji As String = "<:wsg:1296813102893105203>"
 
     Private ReadOnly _SF As New SupportingFeatures
     Private ReadOnly _CurrentDistanceUnit As Integer
@@ -287,10 +289,7 @@ Public Class Main
     Private Sub LoadDPOptions()
 
         If SessionSettings.DPO_DPOUseCustomSettings Then
-            chkDPOMainPost.Checked = SessionSettings.DPO_chkDPOMainPost
-            chkDPOThreadCreation.Checked = SessionSettings.DPO_chkDPOThreadCreation
             chkDPOIncludeCoverImage.Checked = SessionSettings.DPO_chkDPOIncludeCoverImage
-            chkDPOFeaturedOnGroupFlight.Checked = SessionSettings.DPO_chkDPOFeaturedOnGroupFlight
         End If
 
     End Sub
@@ -1972,7 +1971,7 @@ Public Class Main
 
         sb.AppendLine()
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
-        sb.AppendLine("## :wsg:WeSimGlide.org")
+        sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
         If fullDetails Then
             sb.AppendLine("## 📁 Files")
@@ -2018,8 +2017,13 @@ Public Class Main
 
         If Not fromGroup Then
             sb.AppendLine()
-            sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtCredits.Text,,, 1))
-            sb.Append("### Use thread for discussions, pictures, results.")
+            'Build the credits text based on user to tag
+            sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(ProcessCredits(txtCredits.Text),,, 1))
+            If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked AndAlso cboCoverImage.Text.Trim <> String.Empty Then
+                'Add cover image
+                Dim baseUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}TaskBrowser/Covers/"
+                sb.AppendLine($"[Task Cover]({baseUrl}{_TaskEntrySeqID.ToString}.jpg)")
+            End If
         End If
 
         txtFPResults.Text = sb.ToString.Trim
@@ -2033,6 +2037,20 @@ Public Class Main
         txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
 
     End Sub
+
+    Function ProcessCredits(ByVal input As String) As String
+        Dim pattern As String = "@([\w\.]+)"
+        Dim regex As New Regex(pattern)
+        Dim output As String = regex.Replace(input, Function(m)
+                                                        Dim username As String = m.Groups(1).Value
+                                                        If _SF.DiscordNameIDPair.ContainsKey(username) Then
+                                                            Return "<@" & _SF.DiscordNameIDPair(username) & ">"
+                                                        Else
+                                                            Return m.Value ' Leave unchanged if not found
+                                                        End If
+                                                    End Function)
+        Return output
+    End Function
 
     Private Function AddFlagsToTitle() As String
         Dim answer As New StringBuilder
@@ -2759,23 +2777,12 @@ Public Class Main
 
 #Region "Discord - Flight Plan event handlers"
 
-    Private Sub chkDPOMainPost_EnabledChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.EnabledChanged
+    Private Sub chkDPOMainPost_EnabledChanged(sender As Object, e As EventArgs)
         If _sessionModified Then
             btnStartTaskPost.Enabled = _sessionModified
         Else
-            btnStartTaskPost.Enabled = chkDPOMainPost.Enabled
+            btnStartTaskPost.Enabled = grbTaskInfo.Enabled
         End If
-    End Sub
-
-    Private Sub chkDPOMainPost_CheckedChanged(sender As Object, e As EventArgs) Handles chkDPOMainPost.CheckedChanged
-        If _useTestMode AndAlso txtDiscordTaskID.Text.StartsWith("T") Then
-            Exit Sub
-        End If
-        If (_TaskStatus <= SupportingFeatures.WSGTaskStatus.PendingCreation) Then
-            chkDPOMainPost.Checked = True
-        End If
-        'chkDPOIncludeCoverImage.Checked = chkDPOMainPost.Checked
-        'chkDPOFeaturedOnGroupFlight.Checked = chkDPOMainPost.Checked
     End Sub
 
     Private Sub txtLastUpdateDescription_EnabledChanged(sender As Object, e As EventArgs) Handles txtLastUpdateDescription.EnabledChanged
@@ -2802,10 +2809,7 @@ Public Class Main
 
     Private Sub btnDPORememberSettings_Click(sender As Object, e As EventArgs) Handles btnDPORememberSettings.Click
         SessionSettings.DPO_DPOUseCustomSettings = True
-        SessionSettings.DPO_chkDPOMainPost = chkDPOMainPost.Checked
-        SessionSettings.DPO_chkDPOThreadCreation = chkDPOThreadCreation.Checked
         SessionSettings.DPO_chkDPOIncludeCoverImage = chkDPOIncludeCoverImage.Checked
-        SessionSettings.DPO_chkDPOFeaturedOnGroupFlight = chkDPOFeaturedOnGroupFlight.Checked
     End Sub
 
     Private Sub chkRepost_CheckedChanged(sender As Object, e As EventArgs) Handles chkRepost.CheckedChanged
@@ -2824,10 +2828,7 @@ Public Class Main
 
     Private Sub btnDPOResetToDefault_Click(sender As Object, e As EventArgs) Handles btnDPOResetToDefault.Click
 
-        chkDPOMainPost.Checked = True
-        chkDPOThreadCreation.Checked = True
         chkDPOIncludeCoverImage.Checked = True
-        chkDPOFeaturedOnGroupFlight.Checked = True
 
         CheckWhichOptionsCanBeEnabled()
 
@@ -3008,12 +3009,7 @@ Public Class Main
                         End Using
                     End If
                     autoContinue = PrepareUpdateWSGTask()
-                    If autoContinue AndAlso chkDPOMainPost.Enabled AndAlso chkDPOMainPost.Checked Then
-                        autoContinue = FlightPlanMainInfoCopy(False, True)
-                    End If
-                    If autoContinue Then
-                        autoContinue = PostTaskThreadContent(autoContinue)
-                    End If
+                    autoContinue = FlightPlanMainInfoCopy(False, True)
 
                     'WE'RE DONE - EXIT!
                     Return autoContinue
@@ -3078,78 +3074,8 @@ Public Class Main
             Return False
         End If
 
-        Return PostTaskThreadContent(autoContinue)
+        Return autoContinue
 
-    End Function
-
-    Private Function PostTaskThreadContent(autoContinue As Boolean) As Boolean
-
-        If Not autoContinue Then
-            Return autoContinue
-        End If
-
-        Dim firstThreadMessage As String = String.Empty
-        Dim msg As String = String.Empty
-
-        If (chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked) _
-            OrElse (chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked) _
-            OrElse (chkDPOFeaturedOnGroupFlight.Enabled AndAlso chkDPOFeaturedOnGroupFlight.Checked) Then
-            firstThreadMessage = $"## 🧵 Use this thread for discussions, pictures, results."
-        End If
-
-        'Thread Creation
-        If chkDPOThreadCreation.Enabled AndAlso chkDPOThreadCreation.Checked Then
-            autoContinue = CreateTaskThread()
-            If Not autoContinue Then Return autoContinue
-        End If
-
-        'Cover Image
-        If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked Then
-            ' We need to post the cover image together with the first thread message
-            autoContinue = CoverImage(SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
-            If Not autoContinue Then Return autoContinue
-
-            Clipboard.SetText(firstThreadMessage)
-            autoContinue = CopyContent.ShowContent(Me,
-                                firstThreadMessage,
-                                $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the thread's top message along with the cover image.",
-                                AppendIsTestMode("Posting cover and first message in thread."),
-                                AppendIsTestMode("Task Thread"),
-                                New List(Of String) From {"^v"},, numWaitSecondsForFiles.Value / 2 * 1000,,
-                                SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
-        Else
-            ' We need to post the first thread message along with the featured in group if selected
-            msg = $"{firstThreadMessage}{Environment.NewLine}"
-        End If
-        If Not autoContinue Then
-            Return False
-        End If
-
-        Dim taskFeatured As String = String.Empty
-        If chkDPOFeaturedOnGroupFlight.Enabled AndAlso chkDPOFeaturedOnGroupFlight.Checked Then
-            taskFeatured = TaskFeatureOnGroupFlight()
-        End If
-        If taskFeatured.Length > 0 Then
-            taskFeatured = $"{taskFeatured}"
-        End If
-
-        msg = $"{msg}{taskFeatured}"
-
-        'Remaining details
-        If msg.Trim.Length > 0 Then
-            Clipboard.SetText(msg)
-            autoContinue = CopyContent.ShowContent(Me,
-                            msg,
-                            $"Make sure you are on the thread's message field.{Environment.NewLine}Then post the content of your clipboard as the next message in the task's thread.",
-                            AppendIsTestMode("Creating all remaining details post in the thread."),
-                            AppendIsTestMode("Task Thread"),
-                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskThreadDiscordURL(txtDiscordTaskID.Text.Trim))
-        End If
-        If Not autoContinue Then
-            Return False
-        End If
-
-        Return True
     End Function
 
     Private Function PostTaskOnDiscord() As Boolean
@@ -3231,8 +3157,6 @@ Public Class Main
         If lblTaskLibraryIDAcquired.Visible Then
             'Task
             listOfControlsRemove.Add(chkDPOIncludeCoverImage)
-            listOfControlsRemove.Add(chkDPOThreadCreation)
-            listOfControlsRemove.Add(chkDPOFeaturedOnGroupFlight)
             'Group
             listOfControlsRemove.Add(chkDGPOMainPost)
             listOfControlsRemove.Add(chkDGPOFullDescription)
@@ -3240,9 +3164,7 @@ Public Class Main
             listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
             'Task
-            listOfControlsAdd.Add(chkDPOThreadCreation)
             listOfControlsAdd.Add(chkDPOIncludeCoverImage)
-            listOfControlsAdd.Add(chkDPOFeaturedOnGroupFlight)
             'Group
             listOfControlsAdd.Add(chkDGPOMainPost)
             listOfControlsAdd.Add(chkDGPOFullDescription)
@@ -3321,8 +3243,6 @@ Public Class Main
         'Is there a group selected for event news buttons
         SetEventLabelAndButtons()
 
-        chkDPOMainPost.Enabled = grbTaskInfo.Enabled
-        chkDPOThreadCreation.Enabled = grbTaskInfo.Enabled
         chkDGPOMapImage.Enabled = cboBriefingMap.Text.Trim.Length > 0
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
@@ -3337,12 +3257,6 @@ Public Class Main
             chkDGPOFullDescription.Enabled = False
         Else
             chkDGPOFullDescription.Enabled = True
-        End If
-
-        If _ClubPreset IsNot Nothing AndAlso chkActivateEvent.Checked AndAlso txtGroupEventPostURL.Text.Trim.Length > 0 Then
-            chkDPOFeaturedOnGroupFlight.Enabled = True AndAlso grbTaskInfo.Enabled
-        Else
-            chkDPOFeaturedOnGroupFlight.Enabled = False
         End If
 
         'Group Event
@@ -3484,24 +3398,6 @@ Public Class Main
                 End If
             Loop
         End If
-
-        Return autoContinue
-
-    End Function
-
-    Private Function CreateTaskThread() As Boolean
-
-        Dim autoContinue As Boolean = True
-
-        Dim fpTitle As String = $"{txtTitle.Text}{AddFlagsToTitle()}"
-        Clipboard.SetText(fpTitle)
-
-        autoContinue = MsgBoxWithPicture.ShowContent(Me,
-                                                     "CreateTaskThread.gif",
-                                                     $"Task Thread {If(_useTestMode, "(Test Mode)", "in Task Library")}",
-                                                     "ONLY once you've created the thread, pasted its name in THREAD NAME and positionned your cursor on the thread's message field, can you click OK and resume the workflow.",
-                                                     AppendIsTestMode("Instructions for the creation of the task's thread!"),
-                                                     $"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{If(txtDiscordTaskID.Text.StartsWith("T"), txtDiscordTaskID.Text.Substring(1, txtDiscordTaskID.Text.Length - 1), txtDiscordTaskID.Text)}")
 
         Return autoContinue
 
@@ -4673,7 +4569,7 @@ Public Class Main
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = 104
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
-                SetFocusOnField(chkDPOMainPost, fromF1Key)
+                SetFocusOnField(chkDPOIncludeCoverImage, fromF1Key)
             Case 42 'Publisher
                 SetDiscordGuidePanelToLeft()
                 pnlWizardDiscord.Top = 203
@@ -6465,7 +6361,6 @@ Public Class Main
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             If UserCanCreateTask OrElse _useTestMode Then
                 btnStartTaskPost.Enabled = grbTaskInfo.Enabled
-                chkDPOMainPost.Checked = True
             Else
                 btnStartTaskPost.Enabled = False
             End If
@@ -6806,7 +6701,7 @@ Public Class Main
             groupEmoji = $"<{lblGroupEmoji.Text}{_SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)}> "
         End If
         If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
-            msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### <:wsg:1296813102893105203> [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
+            msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### {WSGEmoji} [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
         Else
             Dim taskUnavailableMsg As String = String.Empty
             If _TaskEntrySeqID > 0 Then
