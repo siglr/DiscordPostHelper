@@ -1982,12 +1982,16 @@ Public Class Main
             sb.AppendLine($"***-> TEST MODE ONLY - Links will not work***")
             sb.AppendLine()
         End If
-        sb.AppendLine($"**DPHX** : [{txtTitle.Text.Trim}.dphx](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"**ZIP** : [{txtTitle.Text.Trim}.zip](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"**PLN** : [{Path.GetFileName(txtFlightPlanFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"**WPR** : [{Path.GetFileName(txtWeatherFile.Text)}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        sb.AppendLine($"**DPHX** : [{IIf(fullDetails, $"{txtTitle.Text.Trim}.dphx", "DPHX file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"**ZIP** : [{IIf(fullDetails, $"{txtTitle.Text.Trim}.zip", "ZIP file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"**PLN** : [{IIf(fullDetails, Path.GetFileName(txtFlightPlanFile.Text), "PLN file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"**WPR** : [{IIf(fullDetails, Path.GetFileName(txtWeatherFile.Text), "WPR file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
-            sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
+            If fullDetails Then
+                sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
+            Else
+                sb.AppendLine($" 👉 *Note: weather preset name in MSFS is different than filename*")
+            End If
         End If
         sb.AppendLine()
 
