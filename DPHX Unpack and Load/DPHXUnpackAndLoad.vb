@@ -1,4 +1,5 @@
 ﻿Imports System.Configuration
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -31,6 +32,7 @@ Public Class DPHXUnpackAndLoad
     Private _showingPrompt As Boolean = False
     Private _lastLoadSuccess As Boolean = False
     Private _status As New frmStatus()
+    Private _taskDiscordPostID As String = String.Empty
 
     Private WithEvents _DPHXWS As DPHXLocalWS
 
@@ -561,14 +563,14 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
-            If _allDPHData.DiscordPostID = String.Empty AndAlso _allDPHData.DiscordTaskID <> String.Empty Then
-                _allDPHData.DiscordPostID = _allDPHData.DiscordTaskID
-            End If
+            'We need to retrieve the DiscordPostID from the task online server
+            GetTaskDetails(_allDPHData.TaskID, _allDPHData.EntrySeqID)
 
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                                          _taskDiscordPostID,
                                           TempDPHXUnpackFolder)
 
             If newDPHFile = String.Empty Then
@@ -589,6 +591,51 @@ Public Class DPHXUnpackAndLoad
         SetFormCaption(_currentFile)
         packageNameToolStrip.Text = _currentFile
 
+    End Sub
+
+    Private Sub GetTaskDetails(taskID As String, entrySeqID As Integer)
+        Try
+
+            Dim taskDetailsUrl As String = String.Empty
+            Dim request As HttpWebRequest = Nothing
+
+            If entrySeqID > 0 Then
+                'Use EntrySeqID
+                taskDetailsUrl = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingEntrySeqID.php"
+                request = CType(WebRequest.Create(taskDetailsUrl & "?EntrySeqID=" & entrySeqID.ToString), HttpWebRequest)
+            Else
+                taskDetailsUrl = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FindTaskUsingID.php"
+                request = CType(WebRequest.Create(taskDetailsUrl & "?TaskID=" & taskID), HttpWebRequest)
+            End If
+
+            ' Create the web request
+            request.Method = "GET"
+            request.ContentType = "application/json"
+
+            ' Get the response
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As JObject = JObject.Parse(jsonResponse)
+
+                    ' Check the status
+                    If result("status").ToString() = "success" Then
+                        If entrySeqID = 0 Then
+                            '_TaskEntrySeqID = result("taskDetails")("EntrySeqID")
+                            _taskDiscordPostID = String.Empty
+                        Else
+                            _taskDiscordPostID = result("taskDetails")("DiscordPostID").ToString()
+                        End If
+                    Else
+                        '_TaskEntrySeqID = 0
+                        Throw New Exception("Error retrieving task details: " & result("message").ToString())
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            Throw New Exception("Error: " & ex.Message)
+        End Try
     End Sub
 
     Private Sub DisableUnpackButton()

@@ -2992,7 +2992,7 @@ Public Class Main
                 txtTemporaryTaskID.Text.Trim.Length > 0 Then
                 'Scenario 1 - The task is pending creation and has only a temporary TaskID (no TaskID)
                 '             We need to resume at posting task on Discord.
-                autoContinue = PostTaskOnDiscord()
+                autoContinue = PostTaskOnDiscordFirstTime()
 
             ElseIf _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation AndAlso
                 txtTaskID.Text.Trim.Length > 0 Then
@@ -3049,7 +3049,7 @@ Public Class Main
 
             If autoContinue Then
                 'We can now post the task on Discord
-                autoContinue = PostTaskOnDiscord()
+                autoContinue = PostTaskOnDiscordFirstTime()
             Else
                 'Something went wrong - we cannot continue
                 txtTemporaryTaskID.Text = String.Empty
@@ -3151,7 +3151,7 @@ Public Class Main
 
     End Function
 
-    Private Function PostTaskOnDiscord() As Boolean
+    Private Function PostTaskOnDiscordFirstTime() As Boolean
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
         Dim autoContinue As Boolean = False
 
@@ -3162,6 +3162,7 @@ Public Class Main
             taskInfo = SetAndRetrieveSessionData()
             SaveSession()
         End If
+        txtTaskID.Text = $"P{taskInfo.TemporaryTaskID.Substring(4)}"
 
         'This will now allow us to post the task on Discord with proper links.
         BuildFPResults(False, False)
@@ -4168,7 +4169,7 @@ Public Class Main
             'Can't generate briefing
             BriefingControl1.FullReset()
         Else
-            BriefingControl1.GenerateBriefing(_SF, SetAndRetrieveSessionData(), txtFlightPlanFile.Text, txtWeatherFile.Text)
+            BriefingControl1.GenerateBriefing(_SF, SetAndRetrieveSessionData(), txtFlightPlanFile.Text, txtWeatherFile.Text, _taskDiscordPostID)
         End If
 
     End Sub
@@ -5110,7 +5111,6 @@ Public Class Main
             .TaskID = txtTaskID.Text
             .TemporaryTaskID = txtTemporaryTaskID.Text
             .EntrySeqID = _TaskEntrySeqID
-            .DiscordPostID = _taskDiscordPostID
             .TaskStatus = _TaskStatus
             .EventTopic = txtEventTitle.Text
             .MSFSServer = cboMSFSServer.SelectedIndex
@@ -5272,7 +5272,6 @@ Public Class Main
                     .TaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(.DiscordTaskThreadURL, True)
                 End If
 
-                _taskDiscordPostID = .DiscordPostID
                 _TaskEntrySeqID = .EntrySeqID
                 _TaskStatus = .TaskStatus
                 If _TaskEntrySeqID = 0 Then

@@ -312,12 +312,14 @@ try {
         }
 
         // Handle task posting to Discord using the $disWHFlights webhook
+        $discordLogMessage = '';
         if (trim($discordMsg) === "") {
             // No content provided; skip Discord operations.
             $discordResponse = [
                 "result" => "success",
                 "postID" => (isset($taskData['DiscordPostID']) ? $taskData['DiscordPostID'] : null)
             ];
+            $discordLogMessage = 'No Discord content provided - skipping Discord operations.';
         } else {
             if (isset($taskData['DiscordPostID']) && !empty($taskData['DiscordPostID'])) {
                 // Retrieve the existing Discord message content
@@ -328,7 +330,7 @@ try {
                     // Retrieval failed; likely the webhook is not the author
                     $discordResponse = [
                         "result" => "error",
-                        "error" => "Error retrieving existing Discord post: " . $retrieveResponse['error'],
+                        "error" => "Could not retrieve existing Discord post. (" . $taskData['DiscordPostID'] . ")",
                         "postID" => (isset($taskData['DiscordPostID']) ? $taskData['DiscordPostID'] : null)
                     ];
                 } else {
@@ -340,16 +342,19 @@ try {
                             "result" => "success",
                             "postID" => $taskData['DiscordPostID']
                         ];
+                        $discordLogMessage = "Discord post content is the same - no update required. (" . $taskData['DiscordPostID'] . ")";
                     } else {
                         // Content changed; update the Discord post.
                         $discordResult = manageDiscordPost($disWHFlights, $discordMsg, $taskData['DiscordPostID'], false);
                         $discordResponse = json_decode($discordResult, true);
+                        $discordLogMessage = "Discord post content updated. (" . $taskData['DiscordPostID'] . ")";
                     }
                 }
             } else {
                 // No existing Discord post: create a new one.
                 $discordResult = manageDiscordPost($disWHFlights, $discordMsg, null, false);
                 $discordResponse = json_decode($discordResult, true);
+                $discordLogMessage = "Discord post content created. (" . $taskData['DiscordPostID'] . ")";
             }
         }
 
@@ -359,7 +364,9 @@ try {
         } else {
             // Return the error message to the caller
             $discordError = $discordResponse['error'];
+            $discordLogMessage = $discordError;
         }
+        logMessage($discordLogMessage);
 
         // Perform the update
         $stmt->execute([

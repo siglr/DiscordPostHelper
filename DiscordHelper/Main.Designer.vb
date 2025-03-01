@@ -74,7 +74,6 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -257,7 +256,6 @@ Partial Class Main
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
         Me.lblUpdateDescription = New System.Windows.Forms.Label()
         Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
@@ -319,7 +317,6 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -350,6 +347,9 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1040,20 +1040,6 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
-        '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.FileDropZone1.Tag = "25"
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'FlightPlanTabSplitter
         '
@@ -2830,7 +2816,10 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.txtTemporaryTaskID)
         Me.tabDiscord.Controls.Add(Me.txtFPResultsDelayedAvailability)
+        Me.tabDiscord.Controls.Add(Me.txtTaskID)
+        Me.tabDiscord.Controls.Add(Me.Label31)
         Me.tabDiscord.Controls.Add(Me.chkRemindUserPostOptions)
         Me.tabDiscord.Controls.Add(Me.chkDelayedAvailability)
         Me.tabDiscord.Controls.Add(Me.grbDelayedPosting)
@@ -3317,8 +3306,7 @@ Partial Class Main
         '
         'GroupBox1
         '
-        Me.GroupBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.lblNbrCarsMainFP)
@@ -3365,24 +3353,6 @@ Partial Class Main
         Me.lblNbrCarsMainFP.Text = "0"
         Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Number of characters for the task's main information post.")
-        '
-        'chkcboSharedWithUsers
-        '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkcboSharedWithUsers.IsInitializing = False
-        Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
-        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
-        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
-        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
-        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
-        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 2
-        Me.chkcboSharedWithUsers.Tag = "43"
-        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
         '
         'cboTaskOwner
         '
@@ -3513,11 +3483,9 @@ Partial Class Main
         '
         'grbTaskDiscord
         '
-        Me.grbTaskDiscord.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.grbTaskDiscord.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grbTaskDiscord.Controls.Add(Me.txtTemporaryTaskID)
-        Me.grbTaskDiscord.Controls.Add(Me.txtTaskID)
-        Me.grbTaskDiscord.Controls.Add(Me.Label31)
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskIDNotAcquired)
         Me.grbTaskDiscord.Controls.Add(Me.lblTaskIDAcquired)
         Me.grbTaskDiscord.Enabled = False
@@ -3531,7 +3499,7 @@ Partial Class Main
         'txtTemporaryTaskID
         '
         Me.txtTemporaryTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTemporaryTaskID.Location = New System.Drawing.Point(150, 1)
+        Me.txtTemporaryTaskID.Location = New System.Drawing.Point(413, 789)
         Me.txtTemporaryTaskID.Name = "txtTemporaryTaskID"
         Me.txtTemporaryTaskID.ReadOnly = True
         Me.txtTemporaryTaskID.Size = New System.Drawing.Size(61, 32)
@@ -3541,10 +3509,8 @@ Partial Class Main
         '
         'txtTaskID
         '
-        Me.txtTaskID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.txtTaskID.Location = New System.Drawing.Point(109, 26)
+        Me.txtTaskID.Location = New System.Drawing.Point(129, 790)
         Me.txtTaskID.Name = "txtTaskID"
         Me.txtTaskID.ReadOnly = True
         Me.txtTaskID.Size = New System.Drawing.Size(278, 30)
@@ -3552,16 +3518,18 @@ Partial Class Main
         Me.txtTaskID.Tag = ""
         Me.txtTaskID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.txtTaskID, "The internal ID of the task.")
+        Me.txtTaskID.Visible = False
         '
         'Label31
         '
         Me.Label31.AutoSize = True
         Me.Label31.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.Label31.Location = New System.Drawing.Point(6, 30)
+        Me.Label31.Location = New System.Drawing.Point(26, 794)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(85, 22)
         Me.Label31.TabIndex = 0
         Me.Label31.Text = "Internal ID"
+        Me.Label31.Visible = False
         '
         'lblTaskIDNotAcquired
         '
@@ -3569,11 +3537,11 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTaskIDNotAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTaskIDNotAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskIDNotAcquired.Location = New System.Drawing.Point(6, 67)
+        Me.lblTaskIDNotAcquired.Location = New System.Drawing.Point(6, 46)
         Me.lblTaskIDNotAcquired.Name = "lblTaskIDNotAcquired"
         Me.lblTaskIDNotAcquired.Size = New System.Drawing.Size(381, 33)
         Me.lblTaskIDNotAcquired.TabIndex = 3
-        Me.lblTaskIDNotAcquired.Text = "TASK LIBRARY ID NOT ACQUIRED"
+        Me.lblTaskIDNotAcquired.Text = "TASK INTERNAL ID NOT ACQUIRED"
         Me.lblTaskIDNotAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblTaskIDAcquired
@@ -3581,11 +3549,11 @@ Partial Class Main
         Me.lblTaskIDAcquired.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblTaskIDAcquired.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTaskIDAcquired.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblTaskIDAcquired.Location = New System.Drawing.Point(6, 67)
+        Me.lblTaskIDAcquired.Location = New System.Drawing.Point(6, 46)
         Me.lblTaskIDAcquired.Name = "lblTaskIDAcquired"
         Me.lblTaskIDAcquired.Size = New System.Drawing.Size(381, 33)
         Me.lblTaskIDAcquired.TabIndex = 4
-        Me.lblTaskIDAcquired.Text = "TASK LIBRARY ID ACQUIRED"
+        Me.lblTaskIDAcquired.Text = "TASK INTERNAL ID ACQUIRED"
         Me.lblTaskIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblTaskIDAcquired.Visible = False
         '
@@ -4167,19 +4135,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
         'lblTaskBrowserIDAndDate
         '
         Me.lblTaskBrowserIDAndDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4399,6 +4354,51 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.FileDropZone1.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
+        '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'chkcboSharedWithUsers
+        '
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsInitializing = False
+        Me.chkcboSharedWithUsers.IsReadOnly = False
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
+        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
+        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
+        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
+        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
+        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
+        Me.chkcboSharedWithUsers.TabIndex = 2
+        Me.chkcboSharedWithUsers.Tag = "43"
+        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4462,7 +4462,6 @@ Partial Class Main
         Me.FlowLayoutPanel4.ResumeLayout(False)
         Me.FlowLayoutPanel4.PerformLayout()
         Me.grbTaskDiscord.ResumeLayout(False)
-        Me.grbTaskDiscord.PerformLayout()
         Me.grpDiscordGroupFlight.ResumeLayout(False)
         Me.grpDiscordGroupFlight.PerformLayout()
         Me.grpGroupFlightEvent.ResumeLayout(False)

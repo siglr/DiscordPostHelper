@@ -21,6 +21,7 @@ Public Class BriefingControl
     Private _initPrefUnits As Boolean = False
     Private _onUnitsTab As Boolean = False
     Private _loaded As Boolean = False
+    Private _discordPostID As String = String.Empty
 
     Public Property EventIsEnabled As Boolean
     Private ReadOnly Property PrefUnits As New PreferredUnits
@@ -276,6 +277,7 @@ Public Class BriefingControl
                                 sessionData As AllData,
                                 flightplanfile As String,
                                 weatherfile As String,
+                                discordPostID As String,
                                 Optional unpackFolder As String = "NONE")
 
         _SF = supportFeat
@@ -312,7 +314,8 @@ Public Class BriefingControl
             _sessionData.TaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(_sessionData.DiscordTaskThreadURL, True)
         End If
 
-        If _sessionData.DiscordPostID = String.Empty Then
+        _discordPostID = discordPostID
+        If _discordPostID = String.Empty Then
             btnGotoDiscordTaskThread.Text = $"No task thread defined"
             btnGotoDiscordTaskThread.Enabled = False
         Else
@@ -1049,7 +1052,7 @@ Public Class BriefingControl
 
     Private Sub btnGotoDiscordTaskThread_Click(sender As Object, e As EventArgs) Handles btnGotoDiscordTaskThread.Click
 
-        If Not SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_sessionData.DiscordPostID}") Then
+        If Not SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_discordPostID}") Then
             Using New Centered_MessageBox()
                 MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
@@ -1072,7 +1075,7 @@ Public Class BriefingControl
                 ' Programmatically trigger the button's click event
                 Dim inviteURL As String = String.Empty
 
-                If _sessionData.DiscordPostID <> String.Empty Then
+                If _discordPostID <> String.Empty Then
                     inviteURL = "https://discord.gg/aW8YYe3HJF"
                 End If
                 If inviteURL <> String.Empty Then
