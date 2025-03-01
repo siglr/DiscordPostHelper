@@ -349,6 +349,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtFPResultsDelayedAvailability = New System.Windows.Forms.TextBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -2829,6 +2830,7 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.txtFPResultsDelayedAvailability)
         Me.tabDiscord.Controls.Add(Me.chkRemindUserPostOptions)
         Me.tabDiscord.Controls.Add(Me.chkDelayedAvailability)
         Me.tabDiscord.Controls.Add(Me.grbDelayedPosting)
@@ -4384,6 +4386,19 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'txtFPResultsDelayedAvailability
+        '
+        Me.txtFPResultsDelayedAvailability.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFPResultsDelayedAvailability.Location = New System.Drawing.Point(616, 820)
+        Me.txtFPResultsDelayedAvailability.Multiline = True
+        Me.txtFPResultsDelayedAvailability.Name = "txtFPResultsDelayedAvailability"
+        Me.txtFPResultsDelayedAvailability.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtFPResultsDelayedAvailability.Size = New System.Drawing.Size(59, 23)
+        Me.txtFPResultsDelayedAvailability.TabIndex = 99
+        Me.txtFPResultsDelayedAvailability.Tag = "21"
+        Me.ToolTip1.SetToolTip(Me.txtFPResultsDelayedAvailability, "This is the content of the main Discord post for the flight plan.")
+        Me.txtFPResultsDelayedAvailability.Visible = False
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4806,4 +4821,5 @@ Partial Class Main
     Friend WithEvents toolStripOpenFromWSG As ToolStripButton
     Friend WithEvents btnEventSelectNextWeek As Button
     Friend WithEvents btnEventSelectPrevWeek As Button
+    Friend WithEvents txtFPResultsDelayedAvailability As TextBox
 End Class

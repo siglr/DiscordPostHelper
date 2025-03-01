@@ -594,7 +594,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter, txtMinutesBeforeMeeting.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherSummary.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter, txtMinutesBeforeMeeting.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -1926,7 +1926,24 @@ Public Class Main
 
     End Sub
 
-    Private Sub BuildFPResults(Optional fromGroup As Boolean = False)
+    Private Sub BuildFPResults(Optional fromGroup As Boolean = False, Optional onlyFullDetailsMode As Boolean = True)
+
+        txtFPResults.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, True)
+        If Not onlyFullDetailsMode Then
+            txtFPResultsDelayedAvailability.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, False)
+        End If
+
+        If txtLongDescription.Text.Trim.Length > 0 Then
+            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}{txtLongDescription.Text.Trim}"
+        Else
+            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}None provided"
+        End If
+
+        txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
+
+    End Sub
+
+    Private Function BuildFPResultBaseOnAvailabilityOrNot(fromGroup As Boolean, fullDetailsMode As Boolean) As String
 
         Dim sb As New StringBuilder()
 
@@ -1951,13 +1968,12 @@ Public Class Main
         If _WeatherDetails IsNot Nothing AndAlso (Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked)) Then
             baroWarning = txtBaroPressureExtraInfo.Text.Trim
         End If
-        Dim fullDetails As Boolean = AvailabilityDateTimeToUse <= Now()
 
         sb.AppendLine()
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
         sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
-        If fullDetails Then
+        If fullDetailsMode Then
             sb.AppendLine("## 📁 Files")
         Else
             sb.AppendLine($"## 📁 Files - Available {_SF.GetDiscordTimeStampForDate(AvailabilityDateTimeToUse, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}")
@@ -1966,12 +1982,12 @@ Public Class Main
             sb.AppendLine($"***-> TEST MODE ONLY - Links will not work***")
             sb.AppendLine()
         End If
-        sb.AppendLine($"**DPHX** : [{IIf(fullDetails, $"{txtTitle.Text.Trim}.dphx", "DPHX file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"**ZIP** : [{IIf(fullDetails, $"{txtTitle.Text.Trim}.zip", "ZIP file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"**PLN** : [{IIf(fullDetails, Path.GetFileName(txtFlightPlanFile.Text), "PLN file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"**WPR** : [{IIf(fullDetails, Path.GetFileName(txtWeatherFile.Text), "WPR file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        sb.AppendLine($"**DPHX** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", "DPHX file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"**ZIP** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", "ZIP file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"**PLN** : [{IIf(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), "PLN file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"**WPR** : [{IIf(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), "WPR file hidden")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
-            If fullDetails Then
+            If fullDetailsMode Then
                 sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
             Else
                 sb.AppendLine($" 👉 *Note: weather preset name in MSFS is different than filename*")
@@ -1983,11 +1999,11 @@ Public Class Main
             sb.AppendLine("> 🗺 " & SupportingFeatures.ValueToAppendIfNotEmpty(txtMainArea.Text))
         End If
 
-        If fullDetails Then sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
-        If fullDetails Then sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
+        If fullDetailsMode Then sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
+        If fullDetailsMode Then sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
         sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
-        If fullDetails Then sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
-        If fullDetails Then sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
+        If fullDetailsMode Then sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
+        If fullDetailsMode Then sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
         sb.AppendLine($"> ⏳ {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
         If txtAATTask.Text.Length > 0 Then
             sb.AppendLine($"> ⚠️ {txtAATTask.Text}")
@@ -2010,17 +2026,15 @@ Public Class Main
             End If
         End If
 
-        txtFPResults.Text = sb.ToString.Trim
+        Return sb.ToString.Trim
 
-        If txtLongDescription.Text.Trim.Length > 0 Then
-            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}{txtLongDescription.Text.Trim}"
-        Else
-            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}None provided"
-        End If
+    End Function
 
-        txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
-
-    End Sub
+    Private ReadOnly Property IsDelayedAvailability() As Boolean
+        Get
+            Return AvailabilityDateTimeToUse > Now()
+        End Get
+    End Property
 
     Function ProcessCredits(ByVal input As String) As String
         Dim pattern As String = "@([\w\.]+)"
@@ -2612,7 +2626,7 @@ Public Class Main
         SessionModified(SourceOfChange.EventTab)
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtEventTitle.Leave, txtEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -2919,8 +2933,12 @@ Public Class Main
             If chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked Then
                 msg = $"{msg}No task details yet!"
             Else
-                BuildFPResults(True)
-                msg = $"{msg}{txtFPResults.Text.Trim}"
+                BuildFPResults(True, False)
+                If IsDelayedAvailability Then
+                    msg = $"{msg}{txtFPResultsDelayedAvailability.Text.Trim}"
+                Else
+                    msg = $"{msg}{txtFPResults.Text.Trim}"
+                End If
             End If
         End If
 
@@ -3301,7 +3319,7 @@ Public Class Main
         Dim origin As String = String.Empty
         Dim titleMsg As String = String.Empty
 
-        BuildFPResults(fromGroup)
+        BuildFPResults(fromGroup, False)
 
         If Not fromGroup Then
             If isUpdate Then
@@ -3330,10 +3348,14 @@ Public Class Main
             titleMsg = "Creating FP post for group"
         End If
 
-        Clipboard.SetText(txtFPResults.Text)
+        If IsDelayedAvailability Then
+            Clipboard.SetText(txtFPResultsDelayedAvailability.Text)
+        Else
+            Clipboard.SetText(txtFPResults.Text)
+        End If
 
         autoContinue = CopyContent.ShowContent(Me,
-                            txtFPResults.Text,
+                            IIf(IsDelayedAvailability, txtFPResultsDelayedAvailability.Text, txtFPResults.Text),
                             $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
                             AppendIsTestMode(titleMsg),
                             AppendIsTestMode("Task Main Post"),
