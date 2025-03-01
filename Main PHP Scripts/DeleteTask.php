@@ -27,8 +27,8 @@ try {
         throw new Exception('User does not have permission to delete tasks.');
     }
 
-    // Retrieve TaskID using EntrySeqID
-    $stmt = $pdo->prepare("SELECT TaskID FROM Tasks WHERE EntrySeqID = :EntrySeqID");
+    // Retrieve TaskID and DiscordPostID using EntrySeqID
+    $stmt = $pdo->prepare("SELECT TaskID, DiscordPostID FROM Tasks WHERE EntrySeqID = :EntrySeqID");
     $stmt->execute([':EntrySeqID' => $entrySeqID]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -37,13 +37,20 @@ try {
     }
 
     $taskID = $result['TaskID'];
+    $discordPostID = $result['DiscordPostID'];
 
     // Delete the task from the main Tasks table
     $stmt = $pdo->prepare("DELETE FROM Tasks WHERE EntrySeqID = :EntrySeqID");
-    $stmt->execute([':EntrySeqID' => $entrySeqID]);
+    if (!$stmt->execute([':EntrySeqID' => $entrySeqID])) {
+        throw new Exception('Delete task from Tasks table failed.');
+    }
 
     // Delete the associated news entries
-    deleteTaskNewsEntries($taskID);
+    try {
+        deleteTaskNewsEntries($taskID);
+    } catch (Exception $ex) {
+        $errors[] = "Failed to delete news entries: " . $ex->getMessage();
+    }
 
     // Get the current UTC time
     $now = new DateTime("now", new DateTimeZone("UTC"));
@@ -51,17 +58,19 @@ try {
 
     // Insert the EntrySeqID and DeletionDate into the DeletedTasks table
     $stmt = $pdo->prepare("INSERT INTO DeletedTasks (EntrySeqID, DeletionDate) VALUES (:EntrySeqID, :DeletionDate)");
-    $stmt->execute([
+    if (!$stmt->execute([
         ':EntrySeqID' => $entrySeqID,
         ':DeletionDate' => $nowFormatted
-    ]);
+    ])) {
+        $errors[] = "Failed to insert deletion record into DeletedTasks.";
+    }
 
     // Delete the associated DPHX file
     $target_dir = $fileRootPath . 'TaskBrowser/Tasks/';
     $target_file = $target_dir . basename($taskID . '.dphx');
     if (file_exists($target_file)) {
         if (!unlink($target_file)) {
-            throw new Exception('Failed to delete the DPHX file.');
+            $errors[] = 'Failed to delete the DPHX file.';
         } else {
             logMessage("DPHX file deleted: " . $target_file);
         }
@@ -74,7 +83,7 @@ try {
     $target_file = $target_dir . basename($entrySeqID . '.jpg');
     if (file_exists($target_file)) {
         if (!unlink($target_file)) {
-            throw new Exception('Failed to delete the weather chart file.');
+            $errors[] = 'Failed to delete the weather chart file.';
         } else {
             logMessage("Weather chart file deleted: " . $target_file);
         }
@@ -87,7 +96,7 @@ try {
     $target_file = $target_dir . basename($entrySeqID . '.jpg');
     if (file_exists($target_file)) {
         if (!unlink($target_file)) {
-            throw new Exception('Failed to delete the cover image.');
+            $errors[] = 'Failed to delete the cover image.';
         } else {
             logMessage("Cover image deleted: " . $target_file);
         }
@@ -95,8 +104,35 @@ try {
         logMessage("No cover image found: " . $target_file);
     }
 
+    // Delete the associated Discord post, if one exists.
+    if (!empty($discordPostID)) {
+        $discordResult = manageDiscordPost($disWHFlights, "", $discordPostID, true);
+        $discordResponse = json_decode($discordResult, true);
+        if ($discordResponse['result'] === "success") {
+            logMessage("Deleted Discord post with ID: " . $discordPostID);
+        } else {
+            $discordError = $discordResponse['error'];
+            $errors[] = "Failed to delete Discord post with ID: " . $discordPostID . ". Error: " . $discordError;
+            logMessage("Failed to delete Discord post with ID: " . $discordPostID . ". Error: " . $discordError);
+        }
+    }
+
+    // Prepare output based on accumulated errors.
+    if (!empty($errors)) {
+        $output = [
+            'status'  => 'error',
+            'message' => implode(' ', $errors)
+        ];
+    } else {
+        $output = [
+            'status'       => 'success',
+            'message'      => 'Task, associated news, files, and Discord post deleted successfully.',
+            'discordError' => isset($discordError) ? $discordError : ''
+        ];
+    }
+    
+    echo json_encode($output);
     logMessage("Deleted task with EntrySeqID: " . $entrySeqID . " by UserID: " . $userID);
-    echo json_encode(['status' => 'success', 'message' => 'Task, associated news, and file deleted successfully.']);
     logMessage("--- End of script DeleteTask ---");
 
 } catch (Exception $e) {

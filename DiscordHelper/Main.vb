@@ -5489,7 +5489,6 @@ Public Class Main
                 result = MessageBox.Show($"Are you sure you want to delete this task from WeSimGlide.org?", "Removing a task from WeSimGlide.org", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
             End Using
             If result = DialogResult.Yes Then
-                'TODO: Modify the delete task to delete the associated Discord Post!
                 DeleteTaskFromWSG()
                 SetTBTaskDetailsLabel()
             End If
@@ -5568,7 +5567,8 @@ Public Class Main
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
-        Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID)
+        Dim discordDeleted As Boolean = False
+        Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID, discordDeleted)
 
         If result Then
             Dim discordTaskIDToRemove As String = _taskDiscordPostID
@@ -5583,16 +5583,16 @@ Public Class Main
                 MessageBox.Show("Task removed from database successfully.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
             'Bring user to Discord to delete task!
-            If discordTaskIDToRemove.Length > 0 Then
-                'There is a Discord ID
+            If Not discordDeleted AndAlso discordTaskIDToRemove.Length > 0 Then
+                'There is a Discord ID that needs deletion
                 If SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{discordTaskIDToRemove}") Then
                     Using New Centered_MessageBox(Me)
-                        MessageBox.Show("I have opened Discord on the correct task. You should now delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show("I have opened Discord on the correct task. You should now delete it along with its thread (if any).", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
                     SupportingFeatures.BringDiscordToTop()
                 Else
                     Using New Centered_MessageBox(Me)
-                        MessageBox.Show("You should now go into Discord, find the task and delete it along with its thread.", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show("You should now go into Discord, find the task and delete it along with its thread (if any).", "Discord removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Using
                     SupportingFeatures.BringDiscordToTop()
                 End If
@@ -5606,7 +5606,7 @@ Public Class Main
 
     End Sub
 
-    Public Function DeleteTaskFromServer(entrySeqID As Integer) As Boolean
+    Public Function DeleteTaskFromServer(entrySeqID As Integer, ByRef discordDeleted As Boolean) As Boolean
 
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
@@ -5632,6 +5632,7 @@ Public Class Main
                     Dim jsonResponse As String = reader.ReadToEnd()
                     ' Assuming the response is a JSON object with a "status" field
                     Dim result As Dictionary(Of String, Object) = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+                    discordDeleted = result("discordError") = String.Empty
                     Return result("status").ToString() = "success"
                 End Using
             End Using
