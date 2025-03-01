@@ -230,7 +230,7 @@ try {
         $stmt = $pdo->prepare("
             UPDATE Tasks SET
                 TaskID = :RealTaskID,
-                DiscordPostID = :RealTaskID,
+                DiscordPostID = :DiscordPostID,
                 Title = :Title, 
                 LastUpdate = :LastUpdate,
                 SimDateTime = :SimDateTime,
@@ -282,7 +282,9 @@ try {
                 LastUpdateDescription = :LastUpdateDescription,
                 OwnerName = :OwnerName, 
                 SharedWith = :SharedWith,
-                Availability = :Availability
+                Availability = :Availability,
+                NormalPostContent = :NormalPostContent,
+                AvailabilityPostContent = :AvailabilityPostContent
             WHERE EntrySeqID = :EntrySeqID
         ");
 
@@ -296,10 +298,74 @@ try {
         $mapImage = isset($taskData['MapImage']) && !empty($taskData['MapImage']) ? base64_decode($taskData['MapImage']) : null;
         $coverImage = isset($taskData['CoverImage']) && !empty($taskData['CoverImage']) ? base64_decode($taskData['CoverImage']) : null;
 
+        // Handle task posting to Discord
+        $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->getTimestamp();
+        $availabilityTimestamp = !empty($taskData['Availability']) 
+            ? DateTime::createFromFormat('Y-m-d H:i:s', $taskData['Availability'], new DateTimeZone('UTC'))->getTimestamp()
+            : null;
+        if ($availabilityTimestamp !== null && $availabilityTimestamp > $nowUTC) {
+            // Task should be unavailable - we'll use AvailabilityPostContent
+            $discordMsg = $taskData['AvailabilityPostContent'];
+        } else {
+            // Task is available - we'll use NormalPostContent
+            $discordMsg = $taskData['NormalPostContent'];
+        }
+
+        // Handle task posting to Discord using the $disWHFlights webhook
+        if (trim($discordMsg) === "") {
+            // No content provided; skip Discord operations.
+            $discordResponse = [
+                "result" => "success",
+                "postID" => (isset($taskData['DiscordPostID']) ? $taskData['DiscordPostID'] : null)
+            ];
+        } else {
+            if (isset($taskData['DiscordPostID']) && !empty($taskData['DiscordPostID'])) {
+                // Retrieve the existing Discord message content
+                $retrieveResult = getDiscordMessageContent($disWHFlights, $taskData['DiscordPostID']);
+                $retrieveResponse = json_decode($retrieveResult, true);
+
+                if ($retrieveResponse['result'] !== "success") {
+                    // Retrieval failed; likely the webhook is not the author
+                    $discordResponse = [
+                        "result" => "error",
+                        "error" => "Error retrieving existing Discord post: " . $retrieveResponse['error'],
+                        "postID" => (isset($taskData['DiscordPostID']) ? $taskData['DiscordPostID'] : null)
+                    ];
+                } else {
+                    $existingContent = $retrieveResponse['content'];
+                    // Compare the retrieved content with the new content
+                    if ($existingContent === $discordMsg) {
+                        // Content unchanged; reuse the existing Discord post ID without updating
+                        $discordResponse = [
+                            "result" => "success",
+                            "postID" => $taskData['DiscordPostID']
+                        ];
+                    } else {
+                        // Content changed; update the Discord post.
+                        $discordResult = manageDiscordPost($disWHFlights, $discordMsg, $taskData['DiscordPostID'], false);
+                        $discordResponse = json_decode($discordResult, true);
+                    }
+                }
+            } else {
+                // No existing Discord post: create a new one.
+                $discordResult = manageDiscordPost($disWHFlights, $discordMsg, null, false);
+                $discordResponse = json_decode($discordResult, true);
+            }
+        }
+
+        if ($discordResponse['result'] === "success") {
+            // Update the task data with the returned Discord post ID
+            $taskData['DiscordPostID'] = $discordResponse['postID'];
+        } else {
+            // Return the error message to the caller
+            $discordError = $discordResponse['error'];
+        }
+
         // Perform the update
         $stmt->execute([
             ':RealTaskID' => $taskData['RealTaskID'],
             ':Title' => $taskData['Title'],
+            ':DiscordPostID' => $taskData['DiscordPostID'],
             ':LastUpdate' => $taskData['LastUpdate'],
             ':SimDateTime' => $taskData['SimDateTime'],
             ':IncludeYear' => $taskData['IncludeYear'],
@@ -351,8 +417,9 @@ try {
             ':LastUpdateDescription' => $taskData['LastUpdateDescription'],
             ':OwnerName' => $ownerName,
             ':SharedWith' => $sharedWith,
+            ':NormalPostContent' => $taskData['NormalPostContent'],
+            ':AvailabilityPostContent' => $taskData['AvailabilityPostContent'],
             ':Availability' => $taskData['Availability']
-
         ]);
 
         // Call createOrUpdateTaskNewsEntry if Status = 99
@@ -364,7 +431,12 @@ try {
             cleanUpPendingTasks($pdo);
         }
 
-        echo json_encode(['status' => 'success', 'message' => 'Task updated successfully.']);
+        $output = [
+            'status'           => 'success',
+            'message'          => 'Task updated successfully.',
+            'discordError'     => isset($discordError) ? $discordError : ''
+        ];
+        echo json_encode($output);
         logMessage("Task update successfully completed for TaskID: " . $taskData['RealTaskID']);
     }
 } catch (Exception $e) {

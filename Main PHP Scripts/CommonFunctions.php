@@ -467,4 +467,41 @@ function manageDiscordPost($webhookUrl, $messageContent = '', $postID = null, $d
     
     return json_encode($response);
 }
+function getDiscordMessageContent($webhookUrl, $postID) {
+    // Construct the URL to retrieve the message.
+    $url = rtrim($webhookUrl, '/') . "/messages/" . $postID;
+    
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    
+    $responseData = curl_exec($ch);
+    if (curl_errno($ch)) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return json_encode([
+            "result"  => "error",
+            "error"   => "cURL Error: " . $error,
+            "content" => ""
+        ]);
+    }
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode == 200) {
+        $messageObj = json_decode($responseData, true);
+        $content = isset($messageObj['content']) ? $messageObj['content'] : "";
+        return json_encode([
+            "result"  => "success",
+            "content" => $content
+        ]);
+    } else {
+        return json_encode([
+            "result"  => "error",
+            "error"   => "Error retrieving message. HTTP Code: " . $httpCode,
+            "content" => ""
+        ]);
+    }
+}
+
 ?>

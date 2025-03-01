@@ -560,6 +560,7 @@ Public Class Main
         If Not CheckUnsavedAndConfirmAction("exit") Then
             e.Cancel = True
         Else
+            SessionSettings.RemindUserPostOptions = chkRemindUserPostOptions.Checked
             SessionSettings.MainFormSize = Me.Size.ToString()
             SessionSettings.MainFormLocation = Me.Location.ToString()
             SessionSettings.WaitSecondsForFiles = numWaitSecondsForFiles.Value
@@ -2911,7 +2912,7 @@ Public Class Main
 
     End Function
 
-    Private Function PostTaskInGroupEventPartOne(autoContinue As Boolean) As Boolean
+    Private Function PostTaskInGroupEvent(autoContinue As Boolean) As Boolean
 
         Dim msg As String = String.Empty
 
@@ -2983,7 +2984,6 @@ Public Class Main
 
     Private Function PostTaskInLibrary(autoContinue As Boolean) As Boolean
 
-        'Task Main Post on WeSimGlide.org and Discord
         'Is there an EntrySeqID already?
         If _TaskEntrySeqID > 0 AndAlso (Not _useTestMode) Then
 
@@ -3010,8 +3010,8 @@ Public Class Main
                             Return False
                         End Using
                     End If
+                    BuildFPResults(False, False)
                     autoContinue = PrepareUpdateWSGTask()
-                    autoContinue = FlightPlanMainInfoCopy(False, True)
 
                     'WE'RE DONE - EXIT!
                     Return autoContinue
@@ -3058,22 +3058,93 @@ Public Class Main
             End If
         End If
 
+        Return autoContinue
+
+    End Function
+
+    Private Function ManualDiscordTaskPost() As Boolean
+
+        Dim autoContinue As Boolean = True
+        Dim origin As String = String.Empty
+        Dim titleMsg As String = String.Empty
+
+        If Not _taskDiscordPostID = String.Empty Then
+            origin = $"WSG was unable to edit the task post. Please check and update it yourself if needed.{Environment.NewLine}You can now EDIT the corresponding task post in the FLIGHTS channel under TASK LIBRARY."
+            titleMsg = "Updating main FP post"
+        Else
+            Dim msgAbove As String = String.Empty
+            Dim msgBelow As String = String.Empty
+            msgAbove = $"Task Main Post ({If(_useTestMode, "Test Mode", "Task Library")})"
+            msgBelow = $"Once your cursor is in the right field {If(_useTestMode, "on the TESTING channel", String.Empty)} (use 'Take me there!'), you can click OK and start posting."
+            autoContinue = MsgBoxWithPicture.ShowContent(Me,
+                                                 "StartTaskWorkflow.gif",
+                                                 msgAbove,
+                                                 msgBelow,
+                                                 AppendIsTestMode("Instructions to read before starting the post!"),
+                                                 SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
+
+            If Not autoContinue Then
+                Return autoContinue
+            End If
+            origin = $"You can now post the main task message directly in the {If(_useTestMode, "test", "flights")} channel (use 'Take me there!')."
+            titleMsg = "Creating main FP post"
+        End If
+
+        If IsDelayedAvailability Then
+            Clipboard.SetText(txtFPResultsDelayedAvailability.Text)
+        Else
+            Clipboard.SetText(txtFPResults.Text)
+        End If
+
+        autoContinue = CopyContent.ShowContent(Me,
+                            IIf(IsDelayedAvailability, txtFPResultsDelayedAvailability.Text, txtFPResults.Text),
+                            $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
+                            AppendIsTestMode(titleMsg),
+                            AppendIsTestMode("Task Main Post"),
+                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
+
         If Not autoContinue Then
             Return autoContinue
         End If
 
-        'Are we enforcing the posting on the Task Library only?
-        If txtTaskID.Text = String.Empty Then
-            Dim msg As String = String.Empty
-            If Not _useTestMode Then
-                msg = "Task Library"
-            Else
-                msg = "test channel on Discord"
-            End If
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, $"Task ID is missing - You must post the {msg}!", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
-            Return False
+        If _taskDiscordPostID = String.Empty Then
+            Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
+            Dim waitingForm As WaitingForURLForm
+            Dim answer As DialogResult
+            Dim validTaskIDOrCancel As Boolean = False
+
+            Do Until validTaskIDOrCancel
+                Clipboard.Clear()
+                waitingForm = New WaitingForURLForm(message)
+                answer = waitingForm.ShowDialog()
+
+                SupportingFeatures.BringDPHToolToTop(Me.Handle)
+                'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
+                If answer = DialogResult.OK Then
+                    Dim taskThreadURL As String
+                    taskThreadURL = Clipboard.GetText
+                    _taskDiscordPostID = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
+                    If _taskDiscordPostID.Trim.Length = 0 Then
+                        Using New Centered_MessageBox(Me)
+                            If MessageBox.Show(Me, $"Invalid Discord Post ID - If you posted under the Task Library, try again. If not, click Cancel.", "Discord Post ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
+                                validTaskIDOrCancel = True
+                                autoContinue = False
+                            End If
+                        End Using
+                    Else
+                        validTaskIDOrCancel = True
+                        SaveSession()
+                    End If
+                Else
+                    validTaskIDOrCancel = True
+                    autoContinue = False
+                End If
+                If Not autoContinue Then
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, $"Discord Post ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}", "Discord Post ID missingg", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Using
+                End If
+            Loop
         End If
 
         Return autoContinue
@@ -3093,7 +3164,7 @@ Public Class Main
         End If
 
         'This will now allow us to post the task on Discord with proper links.
-        autoContinue = FlightPlanMainInfoCopy()
+        BuildFPResults(False, False)
 
         If (Not _useTestMode) AndAlso txtTaskID.Text.Trim.Length > 0 AndAlso (Not txtTaskID.Text.StartsWith("T")) Then
             autoContinue = PrepareCreateWSGTaskPart2()
@@ -3311,102 +3382,6 @@ Public Class Main
 
     Private Function AppendIsTestMode(msg As String) As String
         Return $"{msg}{If(_useTestMode, " (Test Mode)", String.Empty)}"
-    End Function
-
-    Private Function FlightPlanMainInfoCopy(Optional fromGroup As Boolean = False, Optional isUpdate As Boolean = False) As Boolean
-
-        Dim autoContinue As Boolean = True
-        Dim origin As String = String.Empty
-        Dim titleMsg As String = String.Empty
-
-        BuildFPResults(fromGroup, False)
-
-        If Not fromGroup Then
-            If isUpdate Then
-                origin = "You can now EDIT the corresponding task message directly in the FLIGHTS channel under TASK LIBRARY."
-                titleMsg = "Updating main FP post"
-            Else
-                Dim msgAbove As String = String.Empty
-                Dim msgBelow As String = String.Empty
-                msgAbove = $"Task Main Post ({If(_useTestMode, "Test Mode", "Task Library")})"
-                msgBelow = $"Once your cursor is in the right field {If(_useTestMode, "on the TESTING channel", String.Empty)} (use 'Take me there!'), you can click OK and start posting."
-                autoContinue = MsgBoxWithPicture.ShowContent(Me,
-                                                     "StartTaskWorkflow.gif",
-                                                     msgAbove,
-                                                     msgBelow,
-                                                     AppendIsTestMode("Instructions to read before starting the post!"),
-                                                     SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
-
-                If Not autoContinue Then
-                    Return autoContinue
-                End If
-                origin = $"You can now post the main task message directly in the {If(_useTestMode, "test", "flights")} channel (use 'Take me there!')."
-                titleMsg = "Creating main FP post"
-            End If
-        Else
-            origin = $"You can now post the main flight plan message under the {If(_useTestMode, "test event", "group event")}'s thread (use 'Take me there!')."
-            titleMsg = "Creating FP post for group"
-        End If
-
-        If IsDelayedAvailability Then
-            Clipboard.SetText(txtFPResultsDelayedAvailability.Text)
-        Else
-            Clipboard.SetText(txtFPResults.Text)
-        End If
-
-        autoContinue = CopyContent.ShowContent(Me,
-                            IIf(IsDelayedAvailability, txtFPResultsDelayedAvailability.Text, txtFPResults.Text),
-                            $"{origin}{Environment.NewLine}Skip (Ok) if already done.",
-                            AppendIsTestMode(titleMsg),
-                            AppendIsTestMode("Task Main Post"),
-                            New List(Of String) From {"^v"},,,, SupportingFeatures.TaskLibraryDiscordURL(_useTestMode))
-
-        If Not autoContinue OrElse fromGroup Then
-            Return autoContinue
-        End If
-
-        If txtTaskID.Text = String.Empty Then
-            Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
-            Dim waitingForm As WaitingForURLForm
-            Dim answer As DialogResult
-            Dim validTaskIDOrCancel As Boolean = False
-
-            Do Until validTaskIDOrCancel
-                Clipboard.Clear()
-                waitingForm = New WaitingForURLForm(message)
-                answer = waitingForm.ShowDialog()
-
-                SupportingFeatures.BringDPHToolToTop(Me.Handle)
-                'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
-                If answer = DialogResult.OK Then
-                    Dim taskThreadURL As String
-                    taskThreadURL = Clipboard.GetText
-                    txtTaskID.Text = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
-                    If txtTaskID.Text.Trim.Length = 0 Then
-                        Using New Centered_MessageBox(Me)
-                            If MessageBox.Show(Me, $"Invalid task ID - If you posted under the Task Library, try again. If not, click Cancel.", "Task ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
-                                validTaskIDOrCancel = True
-                                autoContinue = False
-                            End If
-                        End Using
-                    Else
-                        validTaskIDOrCancel = True
-                        SaveSession()
-                    End If
-                Else
-                    validTaskIDOrCancel = True
-                    autoContinue = False
-                End If
-                If Not autoContinue Then
-                    Using New Centered_MessageBox(Me)
-                        MessageBox.Show(Me, $"Task ID is missing - You should be posting your task to the Task Library and get the link to that post!{Environment.NewLine}", "Task ID missing", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End Using
-                End If
-            Loop
-        End If
-
-        Return autoContinue
-
     End Function
 
     Private Function CoverImage(takeMeThereURL As String, Optional fromGroup As Boolean = False) As Boolean
@@ -3757,7 +3732,7 @@ Public Class Main
         End If
 
         'Second part of Group Flight Event - task part one
-        autoContinue = PostTaskInGroupEventPartOne(autoContinue)
+        autoContinue = PostTaskInGroupEvent(autoContinue)
         If Not autoContinue Then Return False
 
         Return True
@@ -6002,6 +5977,9 @@ Public Class Main
             {"OwnerName", cboTaskOwner.Text.Trim},
             {"SharedWith", sharedWithList},
             {"Availability", availabilityToUse},
+            {"DiscordPostID", _taskDiscordPostID},
+            {"NormalPostContent", txtFPResults.Text},
+            {"AvailabilityPostContent", txtFPResultsDelayedAvailability.Text},
             {"Mode", modeRights}
         }
 
@@ -6016,10 +5994,15 @@ Public Class Main
         SaveSession()
 
         If Not _useTestMode Then
-            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(taskData, filePath, taskInfo.CoverImageSelected)
+            Dim discordUpdateSuccess As Boolean = False
+            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(discordUpdateSuccess, taskData, filePath, taskInfo.CoverImageSelected)
 
             If result Then
-                'Nothing to do
+                'Check if Discord was also a success
+                If Not discordUpdateSuccess Then
+                    'We want the user to possibly update his Discord message himself
+                    ManualDiscordTaskPost()
+                End If
             Else
                 'Put back the pending values
                 taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
@@ -6042,7 +6025,7 @@ Public Class Main
 
     End Function
 
-    Private Function CallScriptToCreateWSGTaskPart2(task As Dictionary(Of String, Object), dphxFilePath As String, Optional coverImagePath As String = "") As Boolean
+    Private Function CallScriptToCreateWSGTaskPart2(ByRef discordUpdateSuccess As Boolean, task As Dictionary(Of String, Object), dphxFilePath As String, Optional coverImagePath As String = "") As Boolean
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
@@ -6122,6 +6105,9 @@ Public Class Main
                     Dim result As String = reader.ReadToEnd()
                     ' Assuming the server returns a JSON object with a "status" field
                     Dim responseJson As JObject = JObject.Parse(result)
+                    If responseJson("discordError").ToString = String.Empty Then
+                        discordUpdateSuccess = True
+                    End If
                     Return responseJson("status").ToString() = "success"
                 End Using
             End Using

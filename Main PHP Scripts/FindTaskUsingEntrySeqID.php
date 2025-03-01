@@ -35,7 +35,7 @@ try {
                 echo json_encode([
                     'status' => 'unavailable',
                     'message' => 'Task is not available yet.',
-                    'availability' => $taskDetails['Availability'] // Fixed incorrect variable reference
+                    'availability' => $taskDetails['Availability'] 
                 ]);
                 exit;
             }
