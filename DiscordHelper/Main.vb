@@ -2916,7 +2916,7 @@ Public Class Main
         Dim msg As String = String.Empty
 
         'Map image
-        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso AvailabilityDateTimeToUse <= Now()) Then
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso (Not IsDelayedAvailability)) Then
             autoContinue = MapImageCopy(True)
             If Not autoContinue Then
                 Return False
@@ -2942,7 +2942,7 @@ Public Class Main
             End If
         End If
 
-        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso AvailabilityDateTimeToUse <= Now()) Then
+        If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso (Not IsDelayedAvailability)) Then
             'There is a map
             msg = $"{msg}{Environment.NewLine}## 🗺️ Map"
             Clipboard.SetText(msg)
@@ -2959,7 +2959,7 @@ Public Class Main
         If Not autoContinue Then Return False
 
         'Full Description
-        If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso AvailabilityDateTimeToUse <= Now() Then
+        If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso (Not IsDelayedAvailability) Then
             If msg.Trim.Length > 0 Then
                 msg = $"{msg}{Environment.NewLine}"
             End If
@@ -4051,7 +4051,7 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        If AvailabilityDateTimeToUse <= Now() Then
+        If (Not IsDelayedAvailability) Then
             sb.AppendLine($"📁 All links to files are shared inside the thread below")
             sb.AppendLine()
         Else
@@ -6637,7 +6637,7 @@ Public Class Main
         If _SF.DiscordNameIDPair.ContainsKey(lblGroupEmoji.Text.Trim) Then
             groupEmoji = $"<{lblGroupEmoji.Text}{_SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)}> "
         End If
-        If _TaskEntrySeqID > 0 AndAlso AvailabilityDateTimeToUse <= Now() Then
+        If _TaskEntrySeqID > 0 AndAlso (Not IsDelayedAvailability) Then
             msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### {WSGEmoji} [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
         Else
             Dim taskUnavailableMsg As String = String.Empty
