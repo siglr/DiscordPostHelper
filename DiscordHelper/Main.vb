@@ -403,8 +403,6 @@ Public Class Main
         lstAllCountries.Items.Clear()
         lstAllRecommendedAddOns.Items.Clear()
 
-        txtFilesText.Text = String.Empty
-
         txtFlightPlanFile.Text = String.Empty
         txtWeatherFile.Text = String.Empty
         txtTitle.Text = String.Empty
@@ -596,7 +594,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtFilesText.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDiscordEventTopic.Enter, txtDiscordEventDescription.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter, txtMinutesBeforeMeeting.Enter
+    Private Sub EnterTextBox(sender As Object, e As EventArgs) Handles txtWeatherWinds.Enter, txtWeatherSummary.Enter, txtWeatherFirstPart.Enter, txtWeatherClouds.Enter, txtTitle.Enter, txtSoaringTypeExtraInfo.Enter, txtSimDateTimeExtraInfo.Enter, txtShortDescription.Enter, txtMainArea.Enter, txtLongDescription.Enter, txtGroupFlightEventPost.Enter, txtFullDescriptionResults.Enter, txtFPResults.Enter, txtEventTitle.Enter, txtEventDescription.Enter, txtDurationMin.Enter, txtDurationMax.Enter, txtDurationExtraInfo.Enter, txtDifficultyExtraInfo.Enter, txtDepName.Enter, txtDepExtraInfo.Enter, txtCredits.Enter, txtArrivalName.Enter, txtArrivalExtraInfo.Enter, txtAltRestrictions.Enter, txtBaroPressureExtraInfo.Enter, txtOtherBeginnerLink.Enter, txtEventTeaserMessage.Enter, txtClubFullName.Enter, txtTrackerGroup.Enter, txtMinutesBeforeMeeting.Enter
         SupportingFeatures.EnteringTextBox(sender)
     End Sub
 
@@ -1305,22 +1303,6 @@ Public Class Main
             LoadWeatherfile(OpenFileDialog1.FileName)
         End If
 
-    End Sub
-
-    Private Sub txtWeatherFirstPart_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherFirstPart.TextChanged
-        lblNbrCarsWeatherInfo.Text = txtWeatherFirstPart.Text.Length
-    End Sub
-
-    Private Sub txtWeatherClouds_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherClouds.TextChanged
-        lblNbrCarsWeatherClouds.Text = txtWeatherClouds.Text.Length
-    End Sub
-
-    Private Sub txtWeatherWinds_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherWinds.TextChanged
-        lblNbrCarsWeatherWinds.Text = txtWeatherWinds.Text.Length
-    End Sub
-
-    Private Sub txtFilesText_TextChanged(sender As Object, e As EventArgs) Handles txtFilesText.TextChanged
-        lblNbrCarsFilesText.Text = txtFilesText.Text.Length
     End Sub
 
     Private Sub CopyToEventFields(sender As Object, e As EventArgs)
@@ -2630,7 +2612,7 @@ Public Class Main
         SessionModified(SourceOfChange.EventTab)
     End Sub
 
-    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtDiscordEventTopic.Leave, txtDiscordEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
+    Private Sub EventTabTextControlLeave(sender As Object, e As EventArgs) Handles txtGroupFlightEventPost.Leave, txtEventTitle.Leave, txtEventDescription.Leave, txtOtherBeginnerLink.Leave, txtEventTeaserMessage.Leave, txtClubFullName.Leave, txtTrackerGroup.Leave
 
         'Trim all text boxes!
         If TypeOf sender Is Windows.Forms.TextBox Then
@@ -3469,62 +3451,6 @@ Public Class Main
         Return urlToTaskThread
     End Function
 
-    Private Sub BuildFileInfoText(fullLegend As Boolean, Optional DPHXOnly As Boolean = False)
-        Dim sb As New StringBuilder
-        sb.AppendLine("## 📁 **Files**")
-
-        If Not fullLegend Then
-            txtFilesText.Text = sb.ToString.Trim
-            sb.Clear()
-            Exit Sub
-        End If
-
-        'Check if the DPHX package is included
-        If File.Exists(txtDPHXPackageFilename.Text) Then
-            sb.AppendLine("### DPHX Unpack & Load")
-            sb.AppendLine("> Simply download the included **.DPHX** package and double-click it.")
-            sb.AppendLine("> *To get and install the tool [click this link](https://flightsim.to/file/62573/msfs-soaring-task-tools-dphx-unpack-load)*")
-            sb.AppendLine("> ")
-            If DPHXOnly Then
-                sb.AppendLine("> Otherwise, visit the task's thread and download the required files and put them in the proper folders.")
-            Else
-                sb.AppendLine("> Otherwise, you must download the required files and put them in the proper folders.")
-            End If
-        Else
-            sb.AppendLine("You must download the required files and put them in the proper folders.")
-        End If
-
-        If Not DPHXOnly Then
-
-            sb.AppendLine("### Required")
-            sb.AppendLine($"> Flight plan: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
-            sb.AppendLine($"> Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
-
-            'Check if there is a tsk file in the files
-            Dim optionalAdded As Boolean = False
-            For i = 0 To lstAllFiles.Items.Count() - 1
-                If File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".tsk" Then
-                    If Not optionalAdded Then
-                        sb.AppendLine("### XCSoar Files - Optional")
-                        sb.AppendLine("> *Only if you use the XCSoar program.*")
-                        optionalAdded = True
-                    End If
-                    sb.AppendLine("> XCSoar Task (.tsk)")
-                ElseIf File.Exists(lstAllFiles.Items(i)) AndAlso Path.GetExtension(lstAllFiles.Items(i)) = ".xcm" Then
-                    If Not optionalAdded Then
-                        sb.AppendLine("### XCSoar Files - Optional")
-                        sb.AppendLine("> *Only if you use the XCSoar program.*")
-                        optionalAdded = True
-                    End If
-                    sb.AppendLine("> XCSoar Map (.xcm)")
-                End If
-            Next
-        End If
-
-        txtFilesText.Text = sb.ToString.Trim
-        sb.Clear()
-    End Sub
-
     Private Function TaskFeatureOnGroupFlight() As String
 
         Dim sb As New StringBuilder
@@ -4129,29 +4055,6 @@ Public Class Main
         End If
 
         txtGroupFlightEventPost.Text = sb.ToString.Trim
-
-    End Sub
-
-    Private Sub BuildDiscordEventDescription()
-
-        txtDiscordEventTopic.Text = String.Empty
-        If Not txtEventTitle.Text = String.Empty Then
-            If cboGroupOrClubName.SelectedIndex > -1 Then
-                txtDiscordEventTopic.AppendText($"{_ClubPreset.ClubName} - ")
-            End If
-            txtDiscordEventTopic.AppendText(txtEventTitle.Text)
-        End If
-
-        Dim sb As New StringBuilder
-
-        sb.AppendLine($"**Server:** {cboMSFSServer.Text}")
-        sb.AppendLine($"**Duration:** {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
-        sb.AppendLine()
-        sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
-        sb.AppendLine("**More Information on this group flight event:**")
-        sb.AppendLine(txtGroupEventPostURL.Text)
-
-        txtDiscordEventDescription.Text = sb.ToString.Trim
 
     End Sub
 

@@ -273,19 +273,12 @@ Partial Class Main
         Me.Label31 = New System.Windows.Forms.Label()
         Me.lblTaskIDNotAcquired = New System.Windows.Forms.Label()
         Me.lblTaskIDAcquired = New System.Windows.Forms.Label()
-        Me.txtDiscordEventDescription = New System.Windows.Forms.TextBox()
-        Me.txtDiscordEventTopic = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsWeatherClouds = New System.Windows.Forms.Label()
         Me.txtFullDescriptionResults = New System.Windows.Forms.TextBox()
         Me.txtWeatherFirstPart = New System.Windows.Forms.TextBox()
-        Me.txtFilesText = New System.Windows.Forms.TextBox()
         Me.txtWeatherWinds = New System.Windows.Forms.TextBox()
         Me.txtFPResults = New System.Windows.Forms.TextBox()
         Me.txtWeatherClouds = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsWeatherInfo = New System.Windows.Forms.Label()
         Me.txtAltRestrictions = New System.Windows.Forms.TextBox()
-        Me.lblNbrCarsWeatherWinds = New System.Windows.Forms.Label()
-        Me.lblNbrCarsFilesText = New System.Windows.Forms.Label()
         Me.grpDiscordGroupFlight = New System.Windows.Forms.GroupBox()
         Me.chkWSGEvent = New System.Windows.Forms.CheckBox()
         Me.grpGroupFlightEvent = New System.Windows.Forms.GroupBox()
@@ -2849,19 +2842,12 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.txtWaypointsDetails)
         Me.tabDiscord.Controls.Add(Me.txtGroupFlightEventPost)
         Me.tabDiscord.Controls.Add(Me.grpDiscordTask)
-        Me.tabDiscord.Controls.Add(Me.txtDiscordEventDescription)
-        Me.tabDiscord.Controls.Add(Me.txtDiscordEventTopic)
-        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherClouds)
         Me.tabDiscord.Controls.Add(Me.txtFullDescriptionResults)
         Me.tabDiscord.Controls.Add(Me.txtWeatherFirstPart)
-        Me.tabDiscord.Controls.Add(Me.txtFilesText)
         Me.tabDiscord.Controls.Add(Me.txtWeatherWinds)
         Me.tabDiscord.Controls.Add(Me.txtFPResults)
         Me.tabDiscord.Controls.Add(Me.txtWeatherClouds)
-        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherInfo)
         Me.tabDiscord.Controls.Add(Me.txtAltRestrictions)
-        Me.tabDiscord.Controls.Add(Me.lblNbrCarsWeatherWinds)
-        Me.tabDiscord.Controls.Add(Me.lblNbrCarsFilesText)
         Me.tabDiscord.Controls.Add(Me.grpDiscordGroupFlight)
         Me.tabDiscord.Controls.Add(Me.GroupBox4)
         Me.tabDiscord.Location = New System.Drawing.Point(4, 29)
@@ -3588,41 +3574,6 @@ Partial Class Main
         Me.lblTaskIDAcquired.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblTaskIDAcquired.Visible = False
         '
-        'txtDiscordEventDescription
-        '
-        Me.txtDiscordEventDescription.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventDescription.Location = New System.Drawing.Point(1396, 814)
-        Me.txtDiscordEventDescription.Multiline = True
-        Me.txtDiscordEventDescription.Name = "txtDiscordEventDescription"
-        Me.txtDiscordEventDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtDiscordEventDescription.Size = New System.Drawing.Size(59, 23)
-        Me.txtDiscordEventDescription.TabIndex = 8
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventDescription, "This is the content of the Discord Event description field.")
-        Me.txtDiscordEventDescription.Visible = False
-        '
-        'txtDiscordEventTopic
-        '
-        Me.txtDiscordEventTopic.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDiscordEventTopic.Location = New System.Drawing.Point(1331, 810)
-        Me.txtDiscordEventTopic.Name = "txtDiscordEventTopic"
-        Me.txtDiscordEventTopic.Size = New System.Drawing.Size(59, 32)
-        Me.txtDiscordEventTopic.TabIndex = 6
-        Me.ToolTip1.SetToolTip(Me.txtDiscordEventTopic, "Specify the event title (leave blank if none) - comes from the flight plan (title" &
-        ") tab if created in the same session.")
-        Me.txtDiscordEventTopic.Visible = False
-        '
-        'lblNbrCarsWeatherClouds
-        '
-        Me.lblNbrCarsWeatherClouds.AutoSize = True
-        Me.lblNbrCarsWeatherClouds.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherClouds.Location = New System.Drawing.Point(634, 823)
-        Me.lblNbrCarsWeatherClouds.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
-        Me.lblNbrCarsWeatherClouds.Name = "lblNbrCarsWeatherClouds"
-        Me.lblNbrCarsWeatherClouds.Size = New System.Drawing.Size(17, 20)
-        Me.lblNbrCarsWeatherClouds.TabIndex = 14
-        Me.lblNbrCarsWeatherClouds.Text = "0"
-        Me.lblNbrCarsWeatherClouds.Visible = False
-        '
         'txtFullDescriptionResults
         '
         Me.txtFullDescriptionResults.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3648,19 +3599,6 @@ Partial Class Main
         Me.txtWeatherFirstPart.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.txtWeatherFirstPart, "This is the basic weather content for the second Discord post.")
         Me.txtWeatherFirstPart.Visible = False
-        '
-        'txtFilesText
-        '
-        Me.txtFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFilesText.Location = New System.Drawing.Point(1006, 819)
-        Me.txtFilesText.Multiline = True
-        Me.txtFilesText.Name = "txtFilesText"
-        Me.txtFilesText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtFilesText.Size = New System.Drawing.Size(59, 23)
-        Me.txtFilesText.TabIndex = 83
-        Me.txtFilesText.Tag = "23"
-        Me.ToolTip1.SetToolTip(Me.txtFilesText, "This is the files content for the third Discord post.")
-        Me.txtFilesText.Visible = False
         '
         'txtWeatherWinds
         '
@@ -3701,18 +3639,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.txtWeatherClouds, "This is the cloud layers content for the second Discord post.")
         Me.txtWeatherClouds.Visible = False
         '
-        'lblNbrCarsWeatherInfo
-        '
-        Me.lblNbrCarsWeatherInfo.AutoSize = True
-        Me.lblNbrCarsWeatherInfo.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherInfo.Location = New System.Drawing.Point(588, 823)
-        Me.lblNbrCarsWeatherInfo.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
-        Me.lblNbrCarsWeatherInfo.Name = "lblNbrCarsWeatherInfo"
-        Me.lblNbrCarsWeatherInfo.Size = New System.Drawing.Size(17, 20)
-        Me.lblNbrCarsWeatherInfo.TabIndex = 11
-        Me.lblNbrCarsWeatherInfo.Text = "0"
-        Me.lblNbrCarsWeatherInfo.Visible = False
-        '
         'txtAltRestrictions
         '
         Me.txtAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3725,30 +3651,6 @@ Partial Class Main
         Me.txtAltRestrictions.Tag = "22"
         Me.ToolTip1.SetToolTip(Me.txtAltRestrictions, "This is the altitude restrictions content for the second Discord post.")
         Me.txtAltRestrictions.Visible = False
-        '
-        'lblNbrCarsWeatherWinds
-        '
-        Me.lblNbrCarsWeatherWinds.AutoSize = True
-        Me.lblNbrCarsWeatherWinds.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsWeatherWinds.Location = New System.Drawing.Point(611, 823)
-        Me.lblNbrCarsWeatherWinds.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
-        Me.lblNbrCarsWeatherWinds.Name = "lblNbrCarsWeatherWinds"
-        Me.lblNbrCarsWeatherWinds.Size = New System.Drawing.Size(17, 20)
-        Me.lblNbrCarsWeatherWinds.TabIndex = 12
-        Me.lblNbrCarsWeatherWinds.Text = "0"
-        Me.lblNbrCarsWeatherWinds.Visible = False
-        '
-        'lblNbrCarsFilesText
-        '
-        Me.lblNbrCarsFilesText.AutoSize = True
-        Me.lblNbrCarsFilesText.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.lblNbrCarsFilesText.Location = New System.Drawing.Point(655, 823)
-        Me.lblNbrCarsFilesText.Margin = New System.Windows.Forms.Padding(3, 4, 3, 3)
-        Me.lblNbrCarsFilesText.Name = "lblNbrCarsFilesText"
-        Me.lblNbrCarsFilesText.Size = New System.Drawing.Size(17, 20)
-        Me.lblNbrCarsFilesText.TabIndex = 76
-        Me.lblNbrCarsFilesText.Text = "0"
-        Me.lblNbrCarsFilesText.Visible = False
         '
         'grpDiscordGroupFlight
         '
@@ -4675,8 +4577,6 @@ Partial Class Main
     Friend WithEvents txtGroupFlightEventPost As TextBox
     Friend WithEvents lblEventTaskDistance As Label
     Friend WithEvents Label48 As Label
-    Friend WithEvents txtDiscordEventDescription As TextBox
-    Friend WithEvents txtDiscordEventTopic As TextBox
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents pnlGuide As Panel
     Friend WithEvents Panel3 As Panel
@@ -4698,17 +4598,12 @@ Partial Class Main
     Friend WithEvents chkActivateEvent As CheckBox
     Friend WithEvents tabDiscord As TabPage
     Friend WithEvents txtFullDescriptionResults As TextBox
-    Friend WithEvents txtFilesText As TextBox
     Friend WithEvents lblNbrCarsMainFP As Label
     Friend WithEvents txtFPResults As TextBox
-    Friend WithEvents lblNbrCarsWeatherClouds As Label
     Friend WithEvents txtWeatherFirstPart As TextBox
     Friend WithEvents txtWeatherWinds As TextBox
     Friend WithEvents txtWeatherClouds As TextBox
-    Friend WithEvents lblNbrCarsWeatherInfo As Label
-    Friend WithEvents lblNbrCarsWeatherWinds As Label
     Friend WithEvents txtAltRestrictions As TextBox
-    Friend WithEvents lblNbrCarsFilesText As Label
     Friend WithEvents grbTaskPart2 As GroupBox
     Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents btnMoveCountryDown As Button
