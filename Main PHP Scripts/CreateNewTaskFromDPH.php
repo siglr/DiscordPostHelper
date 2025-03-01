@@ -438,6 +438,9 @@ try {
         ];
         echo json_encode($output);
         logMessage("Task update successfully completed for TaskID: " . $taskData['RealTaskID']);
+        if ($output['discordError'] !== '') {
+            logMessage("Unable to handle Discord post: " . $output['discordError']);
+        }
     }
 } catch (Exception $e) {
     logMessage("Error: " . $e->getMessage());
