@@ -5489,6 +5489,7 @@ Public Class Main
                 result = MessageBox.Show($"Are you sure you want to delete this task from WeSimGlide.org?", "Removing a task from WeSimGlide.org", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
             End Using
             If result = DialogResult.Yes Then
+                'TODO: Modify the delete task to delete the associated Discord Post!
                 DeleteTaskFromWSG()
                 SetTBTaskDetailsLabel()
             End If
@@ -5573,6 +5574,7 @@ Public Class Main
             Dim discordTaskIDToRemove As String = _taskDiscordPostID
             _TaskEntrySeqID = 0
             _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
+            _taskDiscordPostID = String.Empty
             txtTaskID.Text = String.Empty
             txtTemporaryTaskID.Text = String.Empty
             SetAndRetrieveSessionData()

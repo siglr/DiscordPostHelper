@@ -82,6 +82,19 @@ try {
         logMessage("Weather chart file not found: " . $target_file);
     }
 
+    // Delete the associated cover image - if any
+    $target_dir = $fileRootPath . 'TaskBrowser/Covers/';
+    $target_file = $target_dir . basename($entrySeqID . '.jpg');
+    if (file_exists($target_file)) {
+        if (!unlink($target_file)) {
+            throw new Exception('Failed to delete the cover image.');
+        } else {
+            logMessage("Cover image deleted: " . $target_file);
+        }
+    } else {
+        logMessage("No cover image found: " . $target_file);
+    }
+
     logMessage("Deleted task with EntrySeqID: " . $entrySeqID . " by UserID: " . $userID);
     echo json_encode(['status' => 'success', 'message' => 'Task, associated news, and file deleted successfully.']);
     logMessage("--- End of script DeleteTask ---");
