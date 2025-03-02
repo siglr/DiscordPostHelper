@@ -392,6 +392,8 @@ Public Class Main
         _TaskEntrySeqID = 0
         _taskDiscordPostID = String.Empty
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
+        lblDiscordTaskPostID.Text = "❌ Discord Post ID"
+        lblWSGTaskEntrySeqID.Text = "❌ WeSimGlide.org ID: None"
 
         cboDifficulty.SelectedIndex = 0
         cboVoiceChannel.Items.Clear()
@@ -6237,6 +6239,7 @@ Public Class Main
         btnStartTaskPost.Enabled = False
 
         If _TaskEntrySeqID > 0 Then
+            lblWSGTaskEntrySeqID.Text = $"✅ WeSimGlide.org ID: {_TaskEntrySeqID}"
             'Verify if local DPH has been changed
             btnStartTaskPost.Text = "Start Task Update Workflow"
             Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
@@ -6281,6 +6284,7 @@ Public Class Main
 
             btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask
         Else
+            lblWSGTaskEntrySeqID.Text = $"❌ WeSimGlide.org ID: None"
             btnStartTaskPost.Text = "Start Task Creation Workflow"
             labelString = "Task does not exist on WeSimGlide.org"
             lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
@@ -6289,6 +6293,12 @@ Public Class Main
             Else
                 btnStartTaskPost.Enabled = False
             End If
+        End If
+
+        If _taskDiscordPostID = String.Empty Then
+            lblDiscordTaskPostID.Text = "❌ Discord Post ID"
+        Else
+            lblDiscordTaskPostID.Text = "✅ Discord Post ID"
         End If
 
         lblTaskBrowserIDAndDate.Text = labelString
@@ -6940,6 +6950,78 @@ Public Class Main
 
     Private Sub chkAvailabilityRefly_CheckedChanged(sender As Object, e As EventArgs) Handles chkAvailabilityRefly.CheckedChanged
         SessionModified(SourceOfChange.DiscordTab)
+    End Sub
+
+    Private Sub lblDiscordTaskPostID_TextChanged(sender As Object, e As EventArgs) Handles lblDiscordTaskPostID.TextChanged
+        If lblDiscordTaskPostID.Text.StartsWith("✅") Then
+            btnDiscordTaskPostIDGo.Enabled = True
+        Else
+            btnDiscordTaskPostIDGo.Enabled = False
+        End If
+    End Sub
+
+    Private Sub lblWSGTaskEntrySeqID_TextChanged(sender As Object, e As EventArgs) Handles lblWSGTaskEntrySeqID.TextChanged
+        If lblWSGTaskEntrySeqID.Text.StartsWith("✅") Then
+            btnDiscordTaskPostIDSet.Enabled = True
+        Else
+            btnDiscordTaskPostIDSet.Enabled = False
+        End If
+    End Sub
+
+    Private Sub btnDiscordTaskPostIDGo_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskPostIDGo.Click
+        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID}")
+    End Sub
+
+    Private Sub btnDiscordTaskPostIDSet_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskPostIDSet.Click
+
+        If lblDiscordTaskPostID.Text.StartsWith("✅") Then
+            'Ask for confirmation
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, $"Are you sure you want to change the Discord Post ID associated with this task?", "Confirm Discord Post ID change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
+        Dim waitingForm As WaitingForURLForm
+        Dim answer As DialogResult
+        Dim validTaskIDOrCancel As Boolean = False
+        Dim autoContinue As Boolean = True
+        Dim newTaskDiscordTaskID As String = String.Empty
+
+        Do Until validTaskIDOrCancel
+            Clipboard.Clear()
+            waitingForm = New WaitingForURLForm(message)
+            answer = waitingForm.ShowDialog()
+
+            SupportingFeatures.BringDPHToolToTop(Me.Handle)
+            'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
+            If answer = DialogResult.OK Then
+                Dim taskThreadURL As String
+                taskThreadURL = Clipboard.GetText
+                newTaskDiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
+                If newTaskDiscordTaskID.Trim.Length = 0 Then
+                    Using New Centered_MessageBox(Me)
+                        If MessageBox.Show(Me, $"Invalid Discord Post ID - If you posted under the Task Library, try again. If not, click Cancel.", "Discord Post ID missing", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = DialogResult.Cancel Then
+                            validTaskIDOrCancel = True
+                            autoContinue = False
+                        End If
+                    End Using
+                Else
+                    validTaskIDOrCancel = True
+                    SaveSession()
+                End If
+            Else
+                validTaskIDOrCancel = True
+                autoContinue = False
+            End If
+            If autoContinue AndAlso newTaskDiscordTaskID.Trim.Length > 0 AndAlso _taskDiscordPostID <> newTaskDiscordTaskID Then
+                _taskDiscordPostID = newTaskDiscordTaskID
+                SessionModified(SourceOfChange.DiscordTab)
+            End If
+        Loop
+
     End Sub
 
 #End Region
