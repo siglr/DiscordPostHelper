@@ -120,14 +120,14 @@ try {
     // Prepare output based on accumulated errors.
     if (!empty($errors)) {
         $output = [
-            'status'  => 'error',
-            'message' => implode(' ', $errors)
+            'status'  => 'success',
+            'message' => implode(' ', $errors),
+            'discordError' => isset($discordError) ? $discordError : ''
         ];
     } else {
         $output = [
             'status'       => 'success',
-            'message'      => 'Task, associated news, files, and Discord post deleted successfully.',
-            'discordError' => isset($discordError) ? $discordError : ''
+            'message'      => 'Task, associated news, files, and Discord post deleted successfully.'
         ];
     }
     
