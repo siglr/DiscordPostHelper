@@ -2259,7 +2259,7 @@ Public Class SupportingFeatures
                 End If
                 If testMode AndAlso parts(0) = MSFSSoaringToolsTestingID Then
                     'in test mode, only allow testing channel ID and prefix it with "T"
-                    Return $"T{parts(1)}"
+                    Return parts(1)
                 End If
                 If Not testMode AndAlso parts(0) = MSFSSoaringToolsLibraryID Then
                     'in real prod mode, only allow official library ID

@@ -2004,7 +2004,7 @@ Public Class Main
             sb.AppendLine($"## 📁 Files - Available {_SF.GetDiscordTimeStampForDate(AvailabilityDateTimeToUse, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}")
         End If
         If _useTestMode Then
-            sb.AppendLine($"***-> TEST MODE ONLY - Links will not work***")
+            sb.AppendLine($"***-> TEST MODE ONLY - Links and cover will not work***")
             sb.AppendLine()
         End If
         sb.AppendLine($"**DPHX** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", "DPHX not yet available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
@@ -3188,11 +3188,17 @@ Public Class Main
             'Update taskInfo and save file with latest details
             taskInfo = SetAndRetrieveSessionData()
             SaveSession()
+            txtTaskID.Text = $"P{taskInfo.TemporaryTaskID.Substring(4)}"
+        Else
+            txtTaskID.Text = $"T{taskInfo.TemporaryTaskID.Substring(4)}"
         End If
-        txtTaskID.Text = $"P{taskInfo.TemporaryTaskID.Substring(4)}"
 
         'This will now allow us to post the task on Discord with proper links.
         BuildFPResults(False, False)
+
+        If _useTestMode Then
+            ManualDiscordTaskPost()
+        End If
 
         If (Not _useTestMode) AndAlso txtTaskID.Text.Trim.Length > 0 AndAlso (Not txtTaskID.Text.StartsWith("T")) Then
             autoContinue = PrepareCreateWSGTaskPart2()
@@ -3930,8 +3936,8 @@ Public Class Main
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
         logisticInstructions.AppendLine()
-        If Not txtTaskID.Text = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
-            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID})")
+        If Not _taskDiscordPostID = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
+            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID})")
         End If
 
         Return logisticInstructions.ToString()
@@ -6855,9 +6861,12 @@ Public Class Main
             If txtGroupEventPostURL.Text.Trim.Length > 0 Then
                 txtGroupEventPostURL.Text = String.Empty
             End If
+            _taskDiscordPostID = String.Empty
+            SetTBTaskDetailsLabel()
         End If
         _useTestMode = chkTestMode.Checked
         CheckTestModes()
+        SetEventLabelAndButtons()
     End Sub
 
     Private Sub chkDelayedAvailability_CheckedChanged(sender As Object, e As EventArgs) Handles chkDelayedAvailability.CheckedChanged

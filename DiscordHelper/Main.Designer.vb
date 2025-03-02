@@ -74,6 +74,7 @@ Partial Class Main
         Me.lblCountries = New System.Windows.Forms.Label()
         Me.txtWeatherSummary = New System.Windows.Forms.TextBox()
         Me.lblWeatherSummary = New System.Windows.Forms.Label()
+        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.FlightPlanTabSplitter = New System.Windows.Forms.Splitter()
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
@@ -218,6 +219,11 @@ Partial Class Main
         Me.lblLaunchTimeResult = New System.Windows.Forms.Label()
         Me.lblStartTimeResult = New System.Windows.Forms.Label()
         Me.tabDiscord = New System.Windows.Forms.TabPage()
+        Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
+        Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.lblDiscordGuideInstructions = New System.Windows.Forms.Label()
+        Me.pnlDiscordArrow = New System.Windows.Forms.Panel()
         Me.txtTemporaryTaskID = New System.Windows.Forms.TextBox()
         Me.txtFPResultsDelayedAvailability = New System.Windows.Forms.TextBox()
         Me.txtTaskID = New System.Windows.Forms.TextBox()
@@ -236,11 +242,6 @@ Partial Class Main
         Me.dtAvailabilityTime = New System.Windows.Forms.DateTimePicker()
         Me.chkTestMode = New System.Windows.Forms.CheckBox()
         Me.lblTestMode = New System.Windows.Forms.Label()
-        Me.pnlWizardDiscord = New System.Windows.Forms.Panel()
-        Me.btnDiscordGuideNext = New System.Windows.Forms.Button()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.lblDiscordGuideInstructions = New System.Windows.Forms.Label()
-        Me.pnlDiscordArrow = New System.Windows.Forms.Panel()
         Me.grbWSGExtras = New System.Windows.Forms.GroupBox()
         Me.lblWSGUserName = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -260,6 +261,7 @@ Partial Class Main
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
         Me.lblUpdateDescription = New System.Windows.Forms.Label()
         Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
@@ -322,6 +324,7 @@ Partial Class Main
         Me.pnlWizardBriefing = New System.Windows.Forms.Panel()
         Me.lblBriefingGuideInstructions = New System.Windows.Forms.Label()
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
+        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -352,9 +355,6 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -375,10 +375,10 @@ Partial Class Main
         Me.pnlEventDateTimeControls.SuspendLayout()
         Me.TimeStampContextualMenu.SuspendLayout()
         Me.tabDiscord.SuspendLayout()
-        Me.grbDelayedPosting.SuspendLayout()
-        Me.pnlDelayBasedOnGroupEvent.SuspendLayout()
         Me.pnlWizardDiscord.SuspendLayout()
         Me.Panel4.SuspendLayout()
+        Me.grbDelayedPosting.SuspendLayout()
+        Me.pnlDelayBasedOnGroupEvent.SuspendLayout()
         Me.grbWSGExtras.SuspendLayout()
         Me.pnlFullWorkflowTaskGroupFlight.SuspendLayout()
         Me.grpDiscordOthers.SuspendLayout()
@@ -1046,6 +1046,20 @@ Partial Class Main
         Me.lblWeatherSummary.Size = New System.Drawing.Size(166, 26)
         Me.lblWeatherSummary.TabIndex = 8
         Me.lblWeatherSummary.Text = "Weather Summary"
+        '
+        'FileDropZone1
+        '
+        Me.FileDropZone1.AllowDrop = True
+        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
+        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
+        Me.FileDropZone1.Name = "FileDropZone1"
+        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
+        Me.FileDropZone1.TabIndex = 5
+        Me.FileDropZone1.Tag = "25"
+        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
         'FlightPlanTabSplitter
         '
@@ -2872,6 +2886,61 @@ Partial Class Main
         Me.tabDiscord.Text = "WeSimGlide / Discord"
         Me.tabDiscord.UseVisualStyleBackColor = True
         '
+        'pnlWizardDiscord
+        '
+        Me.pnlWizardDiscord.BackColor = System.Drawing.Color.Gray
+        Me.pnlWizardDiscord.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
+        Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
+        Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(416, 700)
+        Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
+        Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
+        Me.pnlWizardDiscord.TabIndex = 94
+        Me.pnlWizardDiscord.Visible = False
+        '
+        'btnDiscordGuideNext
+        '
+        Me.btnDiscordGuideNext.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDiscordGuideNext.Location = New System.Drawing.Point(3, 3)
+        Me.btnDiscordGuideNext.Name = "btnDiscordGuideNext"
+        Me.btnDiscordGuideNext.Size = New System.Drawing.Size(73, 83)
+        Me.btnDiscordGuideNext.TabIndex = 0
+        Me.btnDiscordGuideNext.Text = "Next"
+        Me.ToolTip1.SetToolTip(Me.btnDiscordGuideNext, "Click here to go to the next step in the guide.")
+        Me.btnDiscordGuideNext.UseVisualStyleBackColor = True
+        '
+        'Panel4
+        '
+        Me.Panel4.BackColor = System.Drawing.Color.Gray
+        Me.Panel4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.Panel4.Controls.Add(Me.lblDiscordGuideInstructions)
+        Me.Panel4.Location = New System.Drawing.Point(84, 0)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(586, 89)
+        Me.Panel4.TabIndex = 81
+        '
+        'lblDiscordGuideInstructions
+        '
+        Me.lblDiscordGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 13.74545!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDiscordGuideInstructions.ForeColor = System.Drawing.Color.White
+        Me.lblDiscordGuideInstructions.Location = New System.Drawing.Point(-1, 0)
+        Me.lblDiscordGuideInstructions.Name = "lblDiscordGuideInstructions"
+        Me.lblDiscordGuideInstructions.Size = New System.Drawing.Size(584, 89)
+        Me.lblDiscordGuideInstructions.TabIndex = 0
+        Me.lblDiscordGuideInstructions.Text = "Click the ""Flight Plan"" button and select the flight plan to use for this task."
+        Me.lblDiscordGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'pnlDiscordArrow
+        '
+        Me.pnlDiscordArrow.BackColor = System.Drawing.Color.Gray
+        Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
+        Me.pnlDiscordArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pnlDiscordArrow.Location = New System.Drawing.Point(667, 0)
+        Me.pnlDiscordArrow.Name = "pnlDiscordArrow"
+        Me.pnlDiscordArrow.Size = New System.Drawing.Size(91, 89)
+        Me.pnlDiscordArrow.TabIndex = 80
+        '
         'txtTemporaryTaskID
         '
         Me.txtTemporaryTaskID.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3098,61 +3167,6 @@ Partial Class Main
         Me.lblTestMode.TabIndex = 95
         Me.lblTestMode.Text = "You are in TEST mode"
         Me.lblTestMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'pnlWizardDiscord
-        '
-        Me.pnlWizardDiscord.BackColor = System.Drawing.Color.Gray
-        Me.pnlWizardDiscord.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
-        Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
-        Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(416, 700)
-        Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
-        Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
-        Me.pnlWizardDiscord.TabIndex = 94
-        Me.pnlWizardDiscord.Visible = False
-        '
-        'btnDiscordGuideNext
-        '
-        Me.btnDiscordGuideNext.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDiscordGuideNext.Location = New System.Drawing.Point(3, 3)
-        Me.btnDiscordGuideNext.Name = "btnDiscordGuideNext"
-        Me.btnDiscordGuideNext.Size = New System.Drawing.Size(73, 83)
-        Me.btnDiscordGuideNext.TabIndex = 0
-        Me.btnDiscordGuideNext.Text = "Next"
-        Me.ToolTip1.SetToolTip(Me.btnDiscordGuideNext, "Click here to go to the next step in the guide.")
-        Me.btnDiscordGuideNext.UseVisualStyleBackColor = True
-        '
-        'Panel4
-        '
-        Me.Panel4.BackColor = System.Drawing.Color.Gray
-        Me.Panel4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Panel4.Controls.Add(Me.lblDiscordGuideInstructions)
-        Me.Panel4.Location = New System.Drawing.Point(84, 0)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(586, 89)
-        Me.Panel4.TabIndex = 81
-        '
-        'lblDiscordGuideInstructions
-        '
-        Me.lblDiscordGuideInstructions.Font = New System.Drawing.Font("Segoe UI Variable Display Semib", 13.74545!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDiscordGuideInstructions.ForeColor = System.Drawing.Color.White
-        Me.lblDiscordGuideInstructions.Location = New System.Drawing.Point(-1, 0)
-        Me.lblDiscordGuideInstructions.Name = "lblDiscordGuideInstructions"
-        Me.lblDiscordGuideInstructions.Size = New System.Drawing.Size(584, 89)
-        Me.lblDiscordGuideInstructions.TabIndex = 0
-        Me.lblDiscordGuideInstructions.Text = "Click the ""Flight Plan"" button and select the flight plan to use for this task."
-        Me.lblDiscordGuideInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'pnlDiscordArrow
-        '
-        Me.pnlDiscordArrow.BackColor = System.Drawing.Color.Gray
-        Me.pnlDiscordArrow.BackgroundImage = Global.SIGLR.SoaringTools.DiscordPostHelper.My.Resources.Resources.right_arrow
-        Me.pnlDiscordArrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.pnlDiscordArrow.Location = New System.Drawing.Point(667, 0)
-        Me.pnlDiscordArrow.Name = "pnlDiscordArrow"
-        Me.pnlDiscordArrow.Size = New System.Drawing.Size(91, 89)
-        Me.pnlDiscordArrow.TabIndex = 80
         '
         'grbWSGExtras
         '
@@ -3413,6 +3427,24 @@ Partial Class Main
         Me.lblNbrCarsMainFP.Text = "0"
         Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Number of characters for the task's main information post.")
+        '
+        'chkcboSharedWithUsers
+        '
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsInitializing = False
+        Me.chkcboSharedWithUsers.IsReadOnly = False
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
+        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
+        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
+        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
+        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
+        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
+        Me.chkcboSharedWithUsers.TabIndex = 2
+        Me.chkcboSharedWithUsers.Tag = "43"
+        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
         '
         'cboTaskOwner
         '
@@ -4212,6 +4244,19 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnBriefingGuideNext, "Click here to go to the next step in the guide.")
         Me.btnBriefingGuideNext.UseVisualStyleBackColor = True
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
         'lblTaskBrowserIDAndDate
         '
         Me.lblTaskBrowserIDAndDate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4280,7 +4325,7 @@ Partial Class Main
         Me.toolStripReload.Image = CType(resources.GetObject("toolStripReload.Image"), System.Drawing.Image)
         Me.toolStripReload.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripReload.Name = "toolStripReload"
-        Me.toolStripReload.Size = New System.Drawing.Size(84, 26)
+        Me.toolStripReload.Size = New System.Drawing.Size(84, 25)
         Me.toolStripReload.Text = "Discard"
         Me.toolStripReload.ToolTipText = "Click here to discard changes and reload the current DPH session file."
         Me.toolStripReload.Visible = False
@@ -4355,7 +4400,7 @@ Partial Class Main
         Me.toolStripStopGuide.Image = CType(resources.GetObject("toolStripStopGuide.Image"), System.Drawing.Image)
         Me.toolStripStopGuide.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripStopGuide.Name = "toolStripStopGuide"
-        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 26)
+        Me.toolStripStopGuide.Size = New System.Drawing.Size(130, 25)
         Me.toolStripStopGuide.Text = "&Turn guide off"
         Me.toolStripStopGuide.ToolTipText = "Click to disable wizard"
         Me.toolStripStopGuide.Visible = False
@@ -4431,51 +4476,6 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
-        'FileDropZone1
-        '
-        Me.FileDropZone1.AllowDrop = True
-        Me.FileDropZone1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FileDropZone1.Location = New System.Drawing.Point(3, 682)
-        Me.FileDropZone1.MinimumSize = New System.Drawing.Size(700, 161)
-        Me.FileDropZone1.Name = "FileDropZone1"
-        Me.FileDropZone1.Size = New System.Drawing.Size(709, 169)
-        Me.FileDropZone1.TabIndex = 5
-        Me.FileDropZone1.Tag = "25"
-        Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
-        '
-        'chkcboSharedWithUsers
-        '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkcboSharedWithUsers.IsInitializing = False
-        Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
-        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
-        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
-        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
-        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
-        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 2
-        Me.chkcboSharedWithUsers.Tag = "43"
-        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4522,12 +4522,12 @@ Partial Class Main
         Me.TimeStampContextualMenu.ResumeLayout(False)
         Me.tabDiscord.ResumeLayout(False)
         Me.tabDiscord.PerformLayout()
+        Me.pnlWizardDiscord.ResumeLayout(False)
+        Me.Panel4.ResumeLayout(False)
         Me.grbDelayedPosting.ResumeLayout(False)
         Me.grbDelayedPosting.PerformLayout()
         Me.pnlDelayBasedOnGroupEvent.ResumeLayout(False)
         Me.pnlDelayBasedOnGroupEvent.PerformLayout()
-        Me.pnlWizardDiscord.ResumeLayout(False)
-        Me.Panel4.ResumeLayout(False)
         Me.grbWSGExtras.ResumeLayout(False)
         Me.pnlFullWorkflowTaskGroupFlight.ResumeLayout(False)
         Me.grpDiscordOthers.ResumeLayout(False)
