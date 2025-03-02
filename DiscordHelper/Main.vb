@@ -4510,36 +4510,61 @@ Public Class Main
                 SetFocusOnField(chkWSGTask, fromF1Key)
             Case 41 'Discord Post Options for task
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 104
+                pnlWizardDiscord.Top = 58
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDPOIncludeCoverImage, fromF1Key)
             Case 42 'Publisher
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 203
+                pnlWizardDiscord.Top = 103
                 lblDiscordGuideInstructions.Text = "This is the primary task publisher. Only the publishers can update task information on WeSimGlide.org."
                 SetFocusOnField(cboTaskOwner, fromF1Key)
             Case 43 'Shared users
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 242
+                pnlWizardDiscord.Top = 142
                 lblDiscordGuideInstructions.Text = "The primary publisher can select other publishers to share the edit rights of the task information."
                 SetFocusOnField(chkcboSharedWithUsers, fromF1Key)
             Case 44 'Update description
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 322
+                pnlWizardDiscord.Top = 215
                 lblDiscordGuideInstructions.Text = "All updates to the task on WeSimGlide.org require a brief update description."
                 SetFocusOnField(txtLastUpdateDescription, fromF1Key)
             Case 45 'Reset all options to default
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 393
+                pnlWizardDiscord.Top = 271
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDPOResetToDefault, fromF1Key)
             Case 46 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 435
+                pnlWizardDiscord.Top = 314
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
                 SetFocusOnField(btnStartTaskPost, fromF1Key)
+            Case 47 'IDs
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 408
+                lblDiscordGuideInstructions.Text = "This section shows a status of all proper IDs associated with the task."
+                SetFocusOnField(btnDiscordTaskPostIDGo, fromF1Key)
+            Case 48 'Delayed Availability
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 475
+                lblDiscordGuideInstructions.Text = "Enable this to set a date and time when the task will become available."
+                SetFocusOnField(chkDelayedAvailability, fromF1Key)
+            Case 49 'Based on group event
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 502
+                lblDiscordGuideInstructions.Text = "You can also set the date and time based on the group event meeting time."
+                SetFocusOnField(chkDelayBasedOnEvent, fromF1Key)
+            Case 50 'Date and time for availability
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 537
+                lblDiscordGuideInstructions.Text = "Set the date and time when the task will become available."
+                SetFocusOnField(dtAvailabilityDate, fromF1Key)
+            Case 51 'Refly
+                SetDiscordGuidePanelToLeft()
+                pnlWizardDiscord.Top = 569
+                lblDiscordGuideInstructions.Text = "Enable this to hide any (existing) task hint information when this is a refly."
+                SetFocusOnField(chkAvailabilityRefly, fromF1Key)
 
-            Case 47 To 59 'Next section
+            Case 52 To 59 'Next section
                 _GuideCurrentStep = AskWhereToGoNext()
                 ShowGuide()
 

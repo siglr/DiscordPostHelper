@@ -2840,6 +2840,7 @@ Partial Class Main
         '
         'tabDiscord
         '
+        Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.txtTemporaryTaskID)
         Me.tabDiscord.Controls.Add(Me.txtFPResultsDelayedAvailability)
         Me.tabDiscord.Controls.Add(Me.txtTaskID)
@@ -2849,7 +2850,6 @@ Partial Class Main
         Me.tabDiscord.Controls.Add(Me.grbDelayedPosting)
         Me.tabDiscord.Controls.Add(Me.chkTestMode)
         Me.tabDiscord.Controls.Add(Me.lblTestMode)
-        Me.tabDiscord.Controls.Add(Me.pnlWizardDiscord)
         Me.tabDiscord.Controls.Add(Me.grbWSGExtras)
         Me.tabDiscord.Controls.Add(Me.pnlFullWorkflowTaskGroupFlight)
         Me.tabDiscord.Controls.Add(Me.grpDiscordOthers)
@@ -2944,7 +2944,7 @@ Partial Class Main
         Me.chkDelayedAvailability.Name = "chkDelayedAvailability"
         Me.chkDelayedAvailability.Size = New System.Drawing.Size(153, 24)
         Me.chkDelayedAvailability.TabIndex = 1
-        Me.chkDelayedAvailability.Tag = "83"
+        Me.chkDelayedAvailability.Tag = "48"
         Me.chkDelayedAvailability.Text = "Delayed Availability"
         Me.ToolTip1.SetToolTip(Me.chkDelayedAvailability, "Select if you want to include the message about event logistics in the group even" &
         "t thread.")
@@ -2972,7 +2972,7 @@ Partial Class Main
         Me.chkAvailabilityRefly.Name = "chkAvailabilityRefly"
         Me.chkAvailabilityRefly.Size = New System.Drawing.Size(508, 26)
         Me.chkAvailabilityRefly.TabIndex = 5
-        Me.chkAvailabilityRefly.Tag = "83"
+        Me.chkAvailabilityRefly.Tag = "51"
         Me.chkAvailabilityRefly.Text = "This is a refly - do not include links to existing task (Discord only)"
         Me.ToolTip1.SetToolTip(Me.chkAvailabilityRefly, "Select if you want to remove all links to the existing task on Discord.")
         Me.chkAvailabilityRefly.UseVisualStyleBackColor = True
@@ -2994,7 +2994,7 @@ Partial Class Main
         Me.txtMinutesBeforeMeeting.Name = "txtMinutesBeforeMeeting"
         Me.txtMinutesBeforeMeeting.Size = New System.Drawing.Size(47, 30)
         Me.txtMinutesBeforeMeeting.TabIndex = 2
-        Me.txtMinutesBeforeMeeting.Tag = "83"
+        Me.txtMinutesBeforeMeeting.Tag = "49"
         Me.txtMinutesBeforeMeeting.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.ToolTip1.SetToolTip(Me.txtMinutesBeforeMeeting, "Number of minutes or hours (depending on units) to set the date and time before t" &
         "he meeting time.")
@@ -3009,7 +3009,7 @@ Partial Class Main
         Me.cboDelayUnits.Name = "cboDelayUnits"
         Me.cboDelayUnits.Size = New System.Drawing.Size(104, 30)
         Me.cboDelayUnits.TabIndex = 1
-        Me.cboDelayUnits.Tag = "83"
+        Me.cboDelayUnits.Tag = "49"
         Me.ToolTip1.SetToolTip(Me.cboDelayUnits, "Select the units for the delay.")
         '
         'lblBeforeMeetingTime
@@ -3044,7 +3044,7 @@ Partial Class Main
         Me.chkDelayBasedOnEvent.Name = "chkDelayBasedOnEvent"
         Me.chkDelayBasedOnEvent.Size = New System.Drawing.Size(195, 26)
         Me.chkDelayBasedOnEvent.TabIndex = 0
-        Me.chkDelayBasedOnEvent.Tag = "83"
+        Me.chkDelayBasedOnEvent.Tag = "49"
         Me.chkDelayBasedOnEvent.Text = "Based on group event:"
         Me.ToolTip1.SetToolTip(Me.chkDelayBasedOnEvent, "Select if you want to base the availability date and time on the group event meet" &
         "ing time.")
@@ -3058,7 +3058,7 @@ Partial Class Main
         Me.dtAvailabilityDate.Name = "dtAvailabilityDate"
         Me.dtAvailabilityDate.Size = New System.Drawing.Size(267, 31)
         Me.dtAvailabilityDate.TabIndex = 2
-        Me.dtAvailabilityDate.Tag = "83"
+        Me.dtAvailabilityDate.Tag = "50"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityDate, "This is the date when the task details and files will become available.")
         '
         'dtAvailabilityTime
@@ -3071,7 +3071,7 @@ Partial Class Main
         Me.dtAvailabilityTime.ShowUpDown = True
         Me.dtAvailabilityTime.Size = New System.Drawing.Size(104, 31)
         Me.dtAvailabilityTime.TabIndex = 3
-        Me.dtAvailabilityTime.Tag = "83"
+        Me.dtAvailabilityTime.Tag = "50"
         Me.ToolTip1.SetToolTip(Me.dtAvailabilityTime, "This is the time when the task details and files will become available.")
         '
         'chkTestMode
@@ -3106,7 +3106,7 @@ Partial Class Main
         Me.pnlWizardDiscord.Controls.Add(Me.btnDiscordGuideNext)
         Me.pnlWizardDiscord.Controls.Add(Me.Panel4)
         Me.pnlWizardDiscord.Controls.Add(Me.pnlDiscordArrow)
-        Me.pnlWizardDiscord.Location = New System.Drawing.Point(500, 700)
+        Me.pnlWizardDiscord.Location = New System.Drawing.Point(416, 700)
         Me.pnlWizardDiscord.Name = "pnlWizardDiscord"
         Me.pnlWizardDiscord.Size = New System.Drawing.Size(750, 89)
         Me.pnlWizardDiscord.TabIndex = 94
@@ -3579,7 +3579,7 @@ Partial Class Main
         Me.btnDiscordTaskPostIDSet.Name = "btnDiscordTaskPostIDSet"
         Me.btnDiscordTaskPostIDSet.Size = New System.Drawing.Size(51, 29)
         Me.btnDiscordTaskPostIDSet.TabIndex = 7
-        Me.btnDiscordTaskPostIDSet.Tag = "45"
+        Me.btnDiscordTaskPostIDSet.Tag = "47"
         Me.btnDiscordTaskPostIDSet.Text = "Set"
         Me.ToolTip1.SetToolTip(Me.btnDiscordTaskPostIDSet, "Click to modify the Discord post ID for this task.")
         Me.btnDiscordTaskPostIDSet.UseVisualStyleBackColor = True
@@ -3592,7 +3592,7 @@ Partial Class Main
         Me.btnDiscordTaskPostIDGo.Name = "btnDiscordTaskPostIDGo"
         Me.btnDiscordTaskPostIDGo.Size = New System.Drawing.Size(51, 29)
         Me.btnDiscordTaskPostIDGo.TabIndex = 6
-        Me.btnDiscordTaskPostIDGo.Tag = "45"
+        Me.btnDiscordTaskPostIDGo.Tag = "47"
         Me.btnDiscordTaskPostIDGo.Text = "Go"
         Me.ToolTip1.SetToolTip(Me.btnDiscordTaskPostIDGo, "Click to go on this task's Discord post.")
         Me.btnDiscordTaskPostIDGo.UseVisualStyleBackColor = True
