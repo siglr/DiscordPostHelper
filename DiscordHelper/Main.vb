@@ -1932,8 +1932,10 @@ Public Class Main
     Private Sub BuildFPResults(Optional fromGroup As Boolean = False, Optional onlyFullDetailsMode As Boolean = True)
 
         txtFPResults.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, True)
-        If Not onlyFullDetailsMode Then
+        If (Not onlyFullDetailsMode) AndAlso IsDelayedAvailability Then
             txtFPResultsDelayedAvailability.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, False)
+        Else
+            txtFPResultsDelayedAvailability.Text = String.Empty
         End If
 
         If txtLongDescription.Text.Trim.Length > 0 Then
@@ -3528,6 +3530,13 @@ Public Class Main
         txtGroupEventPostURL.Text = String.Empty
     End Sub
 
+    Private Sub btnGroupEventURLGo_Click(sender As Object, e As EventArgs) Handles btnGroupEventURLGo.Click
+        If txtGroupEventPostURL.Text.Trim.Length > 0 Then
+            SupportingFeatures.LaunchDiscordURL(txtGroupEventPostURL.Text)
+            SupportingFeatures.BringDiscordToTop()
+        End If
+    End Sub
+
     Private Sub btnRepostOriginalURLPaste_Click(sender As Object, e As EventArgs) Handles btnRepostOriginalURLPaste.Click
         If SupportingFeatures.IsValidURL(Clipboard.GetText) Then
             txtRepostOriginalURL.Text = Clipboard.GetText
@@ -3594,10 +3603,6 @@ Public Class Main
             PublishEventNews()
         End If
 
-        If _TaskEntrySeqID > 0 AndAlso _TaskStatus = SupportingFeatures.WSGTaskStatus.Active Then
-            'Always update WSG task when it exists and active
-            If Not PrepareUpdateWSGTask() Then Exit Sub
-        End If
     End Sub
 
     Private Sub btnTaskAndGroupEventLinks_Click(sender As Object, e As EventArgs) Handles btnTaskAndGroupEventLinks.Click
@@ -6970,6 +6975,7 @@ Public Class Main
 
     Private Sub btnDiscordTaskPostIDGo_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskPostIDGo.Click
         SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID}")
+        SupportingFeatures.BringDiscordToTop()
     End Sub
 
     Private Sub btnDiscordTaskPostIDSet_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskPostIDSet.Click
@@ -6982,6 +6988,9 @@ Public Class Main
                 End If
             End Using
         End If
+
+        SupportingFeatures.BringDiscordToTop()
+        SupportingFeatures.BringDPHToolToTop(Me.Handle)
 
         Dim message As String = "Please get the link to the task's post in Discord (""...More menu"" and ""Copy Message Link"")"
         Dim waitingForm As WaitingForURLForm
