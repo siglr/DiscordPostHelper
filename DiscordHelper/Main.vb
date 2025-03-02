@@ -17,6 +17,7 @@ Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports System.Web.UI.WebControls.WebParts
 Imports System.Text.RegularExpressions
+Imports System.Data.SqlTypes
 
 Public Class Main
 
@@ -2659,7 +2660,6 @@ Public Class Main
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
         chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
-        pnlDelayBasedOnGroupEvent.Enabled = chkActivateEvent.Checked
         SessionModified(SourceOfChange.EventTab)
     End Sub
 
@@ -3322,6 +3322,7 @@ Public Class Main
         SetEventLabelAndButtons()
 
         chkDGPOMapImage.Enabled = cboBriefingMap.Text.Trim.Length > 0
+        chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
 
         If cboCoverImage.SelectedItem IsNot Nothing AndAlso cboCoverImage.SelectedItem.ToString <> String.Empty Then
             chkDPOIncludeCoverImage.Enabled = True AndAlso grbTaskInfo.Enabled
@@ -6821,7 +6822,6 @@ Public Class Main
 
         If chkDelayedAvailability.Checked Then
             chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
-            pnlDelayBasedOnGroupEvent.Enabled = chkActivateEvent.Checked
             CalculateTaskAvailability()
         End If
 
@@ -6909,6 +6909,12 @@ Public Class Main
             Exit Sub
         End If
 
+        If DirectCast(sender, DateTimePicker).Name = "dtAvailabilityDate" Then
+            'Set the time field's date to this one
+            Dim combinedDate As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
+            dtAvailabilityTime.Value = combinedDate
+        End If
+
         SetDelayTimeDifferenceField()
         SessionModified(SourceOfChange.DiscordTab)
 
@@ -6943,6 +6949,8 @@ Public Class Main
                     lblBeforeMeetingTime.Text = "before meeting time."
                 Else
                     lblBeforeMeetingTime.Text = "⚠️ AFTER meeting time."
+                    dtAvailabilityTime.Value = fullMeetDateTimeLocal
+                    dtAvailabilityDate.Value = fullMeetDateTimeLocal
                 End If
             End If
         End If
