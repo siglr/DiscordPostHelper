@@ -3576,19 +3576,19 @@ Public Class Main
     Private Sub GroupEventOrFullWorkflow(fromGroupOnly As Boolean)
         Dim autoContinue As Boolean = True
 
-        If txtGroupEventPostURL.Text.Trim.Length > 0 Then
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, "There is already a group event URL specified for this event, would you like to clear it first?", "Existing group event URL!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
-                    txtGroupEventPostURL.Text = String.Empty
-                    SaveSession()
-                End If
-            End Using
-        End If
-
         If chkRemindUserPostOptions.Checked Then
             Using New Centered_MessageBox(Me)
                 If MessageBox.Show(Me, "Did you make sure to select the correct post options (check boxes) for what you want to post?", "Post Options Reminder", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbNo Then
                     Exit Sub
+                End If
+            End Using
+        End If
+
+        If txtGroupEventPostURL.Text.Trim.Length > 0 AndAlso chkDGPOMainGroupPost.Enabled AndAlso chkDGPOMainGroupPost.Checked Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "There is already a group event URL specified for this event, would you like to clear it first?", "Existing group event URL!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
+                    txtGroupEventPostURL.Text = String.Empty
+                    SaveSession()
                 End If
             End Using
         End If
