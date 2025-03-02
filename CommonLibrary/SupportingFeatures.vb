@@ -485,26 +485,34 @@ Public Class SupportingFeatures
     End Function
 
     Public Function FormatEventDateTime(dateTimeToUse As DateTime, ByRef eventDay As DayOfWeek, useUTC As Boolean) As String
-
         Dim dateTimeInZulu As DateTime
         Dim dateTimeInLocal As DateTime
-
         Dim result As String
+
+        ' Get the current culture's short time pattern and remove seconds if present.
+        Dim timePattern As String = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
+        timePattern = timePattern.Replace(":ss", "").Replace(":s", "")
+
+        ' Get the current culture's long date pattern.
+        Dim datePattern As String = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongDatePattern
+        ' If the pattern doesn't already include the day-of-week, prepend it.
+        If Not datePattern.Contains("dddd") Then
+            datePattern = "dddd, " & datePattern
+        End If
 
         If useUTC Then
             dateTimeInZulu = dateTimeToUse
             dateTimeInLocal = Conversions.ConvertUTCToLocal(dateTimeInZulu)
-            result = $"{dateTimeInLocal.ToLongDateString()} {dateTimeInLocal:hh:mm tt} Local"
+            result = $"{dateTimeInLocal.ToString(datePattern)} {dateTimeInLocal.ToString(timePattern)} Local"
             eventDay = dateTimeInLocal.DayOfWeek
         Else
             dateTimeInLocal = dateTimeToUse
             dateTimeInZulu = Conversions.ConvertLocalToUTC(dateTimeInLocal)
-            result = $"{dateTimeInZulu.ToLongDateString()} {dateTimeInZulu:hh:mm tt} UTC"
+            result = $"{dateTimeInZulu.ToString(datePattern)} {dateTimeInZulu.ToString(timePattern)} UTC"
             eventDay = dateTimeInZulu.DayOfWeek
         End If
 
         Return result
-
     End Function
 
     Public Function FindNextDate(startDate As DateTime, dayOfWeek As DayOfWeek, clubDefaultMeetTime As DateTime) As DateTime

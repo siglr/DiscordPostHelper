@@ -143,6 +143,7 @@ Public Class Main
         ResetForm()
 
         SetTimePickerFormat()
+        SetDatePickerFormat()
 
         SessionSettings.Load()
 
@@ -374,6 +375,24 @@ Public Class Main
         dtEventLaunchTime.CustomFormat = timeFormatToUse
         dtEventStartTaskTime.CustomFormat = timeFormatToUse
         dtAvailabilityTime.CustomFormat = timeFormatToUse
+
+    End Sub
+
+    Private Sub SetDatePickerFormat()
+
+        ' Force the user's long date format but without the day-of-week.
+        Dim dtfi As DateTimeFormatInfo = CultureInfo.CurrentCulture.DateTimeFormat
+        Dim datePattern As String = dtfi.LongDatePattern
+        ' Remove the day-of-week token ("dddd") and any trailing comma/space.
+        Dim dateFormatToUse As String = Regex.Replace(datePattern, "dddd[, ]*", "").Trim()
+
+        dtSimDate.CustomFormat = dateFormatToUse
+        dtRepostOriginalDate.CustomFormat = dateFormatToUse
+        dtEventMeetDate.CustomFormat = dateFormatToUse
+        dtEventSyncFlyDate.CustomFormat = dateFormatToUse
+        dtEventLaunchDate.CustomFormat = dateFormatToUse
+        dtEventStartTaskDate.CustomFormat = dateFormatToUse
+        dtAvailabilityDate.CustomFormat = dateFormatToUse
 
     End Sub
 
@@ -2738,6 +2757,10 @@ Public Class Main
     End Sub
 
     Private Sub BuildEventDatesTimes()
+
+        If _isInitiatizing AndAlso Not _loadingFile Then
+            Exit Sub
+        End If
 
         Dim eventDay As DayOfWeek
 
