@@ -8,15 +8,21 @@ try {
 
     // Query tasks that need to be updated:
     // Those with non-empty AvailabilityPostContent and with Availability <= current UTC time.
-    $query = "SELECT EntrySeqID, DiscordPostID, NormalPostContent 
+    $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');    
+
+    // Use the computed time as a parameter in your query
+    $query = "SELECT EntrySeqID, DiscordPostID, NormalPostContent, Availability 
               FROM Tasks 
               WHERE TRIM(AvailabilityPostContent) <> '' 
-                AND Availability <= datetime('now','utc')";
-    $stmt = $pdo->query($query);
+                AND Availability <= :nowUTC";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([':nowUTC' => $nowUTC]);
     $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($tasks) {
         foreach ($tasks as $task) {
+            logMessage("Availability: " . $task['Availability'] . " RightNow: " . $nowUTC);
+
             $entrySeqID = $task['EntrySeqID'];
             $discordPostID = $task['DiscordPostID'];
             $normalContent = $task['NormalPostContent'];
@@ -27,6 +33,8 @@ try {
                 $discordResponse = json_decode($discordResult, true);
                 if ($discordResponse['result'] !== "success") {
                     logMessage("Error updating Discord post for task EntrySeqID $entrySeqID: " . $discordResponse['error']);
+                } else {
+                    logMessage("Discord post updated successfully for task EntrySeqID $entrySeqID.");
                 }
             } else {
                 logMessage("Error: Task EntrySeqID $entrySeqID missing DiscordPostID or NormalPostContent.");
@@ -40,6 +48,6 @@ try {
         }
     }
 } catch (Exception $e) {
-    logMessage("Error in UpdateDiscordPostsCron: " . $e->getMessage());
+    logMessage("Error in EveryMinuteCronJob: " . $e->getMessage());
 }
 ?>
