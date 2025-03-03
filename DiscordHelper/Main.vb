@@ -4554,22 +4554,22 @@ Public Class Main
                 SetFocusOnField(chkcboSharedWithUsers, fromF1Key)
             Case 44 'Update description
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 215
+                pnlWizardDiscord.Top = 205
                 lblDiscordGuideInstructions.Text = "All updates to the task on WeSimGlide.org require a brief update description."
                 SetFocusOnField(txtLastUpdateDescription, fromF1Key)
             Case 45 'Reset all options to default
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 271
+                pnlWizardDiscord.Top = 244
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDPOResetToDefault, fromF1Key)
             Case 46 'Start Task Posting Workflow
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 314
+                pnlWizardDiscord.Top = 284
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your task on Discord using the selected options above."
                 SetFocusOnField(btnStartTaskPost, fromF1Key)
             Case 47 'IDs
                 SetDiscordGuidePanelToLeft()
-                pnlWizardDiscord.Top = 408
+                pnlWizardDiscord.Top = 394
                 lblDiscordGuideInstructions.Text = "This section shows a status of all proper IDs associated with the task."
                 SetFocusOnField(btnDiscordTaskPostIDGo, fromF1Key)
             Case 48 'Delayed Availability
