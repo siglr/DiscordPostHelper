@@ -444,10 +444,22 @@ Public Class TaskBrowser
             'Success
         End If
 
-        'TODO Change to DiscordPostID - but we need it first!
-        If Not SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/{_selectedTaskRow("TaskID").ToString.Trim}") Then
+        Dim discordIDToUse As String = String.Empty
+        If _selectedTaskRow("DiscordPostID").ToString.Trim <> String.Empty Then
+            discordIDToUse = _selectedTaskRow("DiscordPostID").ToString.Trim
+        ElseIf Not _selectedTaskRow("TaskID").ToString.Trim.StartsWith("P") Then
+            discordIDToUse = _selectedTaskRow("TaskID").ToString.Trim
+        End If
+
+        If discordIDToUse.Length > 0 Then
+            If Not SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL()}/{discordIDToUse}") Then
+                Using New Centered_MessageBox()
+                    MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End If
+        Else
             Using New Centered_MessageBox()
-                MessageBox.Show("Invalid URL provided! Please specify a valid URL.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("No Discord post ID for this task was provided.", "No Discord ID", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
     End Sub
@@ -661,7 +673,7 @@ Public Class TaskBrowser
 
 #End Region
 
-#Region "Subs and functions"
+#Region "Subs And functions"
 
     Private Sub ClearTaskFilterOnMap()
         If webView.CoreWebView2 IsNot Nothing Then
@@ -971,6 +983,7 @@ Public Class TaskBrowser
                                                Tasks.ThreadAccess,
                                                Tasks.RepostText,
                                                Tasks.LastUpdateDescription,
+                                               Tasks.DiscordPostID,
                                         	   COALESCE(UserData.TaskQualityRating, 0) AS TaskQualityRating,
                                                COALESCE(UserData.TaskDifficultyRating, 0) AS TaskDifficultyRating,
                                                COALESCE(UserData.Comment, '') AS Comment,
@@ -1943,7 +1956,8 @@ Public Class TaskBrowser
                                                                                     CoverImage,  
                                                                                     DBEntryUpdate,
                                                                                     RepostText,
-                                                                                    LastUpdateDescription) 
+                                                                                    LastUpdateDescription,
+                                                                                    DiscordPostID) 
                                                         VALUES (@EntrySeqID,  
                                                                 @TaskID, 
                                                                 @Title, 
@@ -1981,7 +1995,8 @@ Public Class TaskBrowser
                                                                 @CoverImage, 
                                                                 @DBEntryUpdate,
                                                                 @RepostText,
-                                                                @LastUpdateDescription)", conn)
+                                                                @LastUpdateDescription,
+                                                                @DiscordPostID)", conn)
 
                         ' Add parameters and set their values
                         cmd.Parameters.AddWithValue("@EntrySeqID", row("EntrySeqID"))
@@ -2022,6 +2037,8 @@ Public Class TaskBrowser
                         cmd.Parameters.AddWithValue("@DBEntryUpdate", row("DBEntryUpdate"))
                         cmd.Parameters.AddWithValue("@RepostText", row("RepostText"))
                         cmd.Parameters.AddWithValue("@LastUpdateDescription", row("LastUpdateDescription"))
+                        cmd.Parameters.AddWithValue("@DiscordPostID", row("DiscordPostID"))
+
 
                         Dim rowsAffected = cmd.ExecuteNonQuery()
                         If rowsAffected = 1 Then
@@ -2204,7 +2221,8 @@ Public Class TaskBrowser
             "TaskFlown",
             "ToFly",
             "RepostText",
-            "LastUpdateDescription"}
+            "LastUpdateDescription",
+            "DiscordPostID"}
 
     End Function
 

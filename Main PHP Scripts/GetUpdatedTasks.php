@@ -19,7 +19,7 @@ try {
                         SoaringDynamic, SoaringExtraInfo, DurationMin, DurationMax, DurationExtraInfo,
                         TaskDistance, TotalDistance, RecommendedGliders, DifficultyRating, DifficultyExtraInfo,
                         ShortDescription, LongDescription, WeatherSummary, Credits, Countries,
-                        RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, RepostText, LastUpdateDescription
+                        RecommendedAddOns, MapImage, CoverImage, DBEntryUpdate, RepostText, LastUpdateDescription, DiscordPostID
                     FROM Tasks
                     WHERE 
                         -- 1. Tasks that have been updated and are available
