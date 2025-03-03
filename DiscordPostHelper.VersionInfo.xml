@@ -1,6 +1,21 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.2.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.3.3.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.3.3.1</ReleaseVersion>
+      <ReleaseTitle>Automatic posting to Discord Flights channel</ReleaseTitle>
+      <ReleaseNotes>
+        Transferred the Discord task posting from the app to WSG (on task creation or update).
+        Transferred the posting to wsg-announcements from the app to WSG (on event creation, update or delete).
+        When provided, added cover image (max 1920x1080) when publishing task.
+        Renamed the repost checkbox and made the group event URL read-only (use paste button if needed).
+        Made sure to hide filenames in Discord post when using delayed availability.
+        Added the map image back to the posting popup.
+        Fixed the title of the form that waits for the URL from Discord.
+        Fixed the options Reminder checkbox not saving its state on closing the app.
+        Layout adjustments, wizard adjustments, small fixes here and there too.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.2.22.1</ReleaseVersion>
       <ReleaseTitle>Previous and Next week selection</ReleaseTitle>
