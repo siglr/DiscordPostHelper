@@ -267,6 +267,9 @@ Public Class AllData
     <XmlElement("DiscordTaskID")>
     Public Property DiscordTaskID As String
 
+    <XmlElement("TestDiscordTaskID")>
+    Public Property TestDiscordTaskID As String
+
     <XmlElement("TaskID")>
     Public Property TaskID As String
 

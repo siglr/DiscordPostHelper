@@ -3197,7 +3197,30 @@ Public Class Main
         BuildFPResults(False, False)
 
         If _useTestMode Then
-            ManualDiscordTaskPost()
+            Dim msgContent As String = String.Empty
+            If IsDelayedAvailability Then
+                msgContent = txtFPResultsDelayedAvailability.Text
+            Else
+                msgContent = txtFPResults.Text
+            End If
+            Dim returnedDiscordPostID As String = String.Empty
+            If PostTaskToTestChannel(msgContent, _taskDiscordPostID, False, returnedDiscordPostID) Then
+                'Offer to user to go see the output?
+                _taskDiscordPostID = returnedDiscordPostID
+                Using New Centered_MessageBox
+                    If MessageBox.Show(Me, "The task was posted on the Discord test channel. Would you like me to take you there?", "Task posted on test channel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
+                        'Goto to the discord post ID
+                        If Not SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL(True)}/{_taskDiscordPostID}") Then
+                            Using New Centered_MessageBox()
+                                MessageBox.Show("An error occured trying to access the task post on Discord.", "Error launching Discord", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            End Using
+                        End If
+                    End If
+                End Using
+            Else
+                'The webhook didn't work - do it manually?
+                ManualDiscordTaskPost()
+            End If
         End If
 
         If (Not _useTestMode) AndAlso txtTaskID.Text.Trim.Length > 0 AndAlso (Not txtTaskID.Text.StartsWith("T")) Then
@@ -5219,6 +5242,9 @@ Public Class Main
             .DelayedAvailabilityNumber = CInt(txtMinutesBeforeMeeting.Text.Trim)
             .DelayedAvailabilityDateTime = dtAvailabilityTime.Value
             .DelayedAvailabilityRefly = chkAvailabilityRefly.Checked
+            If _useTestMode Then
+                .TestDiscordTaskID = _taskDiscordPostID
+            End If
         End With
 
         Return allCurrentData
@@ -5351,6 +5377,7 @@ Public Class Main
                 txtTaskID.Text = .TaskID
                 If txtTaskID.Text.StartsWith("T") Then
                     _useTestMode = True
+                    _taskDiscordPostID = .TestDiscordTaskID
                 End If
                 If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation Then
                     txtTemporaryTaskID.Text = .TemporaryTaskID
@@ -5715,6 +5742,60 @@ Public Class Main
             ' Log the error or display a message
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, $"Error deleting task: {ex.Message}", "Task deletion error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
+
+    Public Function PostTaskToTestChannel(ByVal content As String, ByVal discordID As String, ByVal deletePost As Boolean, ByRef postID As String) As Boolean
+
+        ' Build the URL to your PHP script.
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}PostingTaskToTestChannel.php"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/x-www-form-urlencoded"
+
+        ' Build POST data.
+        ' The PHP script expects:
+        '   content: the text to post (or edit)
+        '   discordID: the existing Discord post ID (if editing or deleting)
+        '   delete: a string "true" if deleting, otherwise "false"
+        Dim postData As String = $"content={Uri.EscapeDataString(content)}&discordID={Uri.EscapeDataString(discordID)}&delete={Uri.EscapeDataString(deletePost.ToString().ToLower())}"
+        Dim data As Byte() = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = data.Length
+
+        Try
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.WaitCursor
+
+            Using stream As Stream = request.GetRequestStream()
+                stream.Write(data, 0, data.Length)
+            End Using
+
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As Dictionary(Of String, Object) = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+                    Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
+
+                    If deletePost Then
+                        ' For deletion, we expect a response with status "success" only.
+                        Return result("status").ToString() = "success"
+                    Else
+                        ' For create or update, if successful, the postID is returned.
+                        If result("status").ToString() = "success" Then
+                            postID = result("postID").ToString()
+                            Return True
+                        Else
+                            Return False
+                        End If
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error posting task: {ex.Message}", "Task posting error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Return False
         End Try
@@ -6861,6 +6942,10 @@ Public Class Main
             If txtGroupEventPostURL.Text.Trim.Length > 0 Then
                 txtGroupEventPostURL.Text = String.Empty
             End If
+            If _taskDiscordPostID.Length > 0 Then
+                'Try to delete the Discord post
+                PostTaskToTestChannel(String.Empty, _taskDiscordPostID, True, _taskDiscordPostID)
+            End If
             _taskDiscordPostID = String.Empty
             SetTBTaskDetailsLabel()
         End If
@@ -7048,7 +7133,7 @@ Public Class Main
     End Sub
 
     Private Sub btnDiscordTaskPostIDGo_Click(sender As Object, e As EventArgs) Handles btnDiscordTaskPostIDGo.Click
-        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID}")
+        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID}")
         SupportingFeatures.BringDiscordToTop()
     End Sub
 

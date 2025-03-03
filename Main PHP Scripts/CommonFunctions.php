@@ -24,6 +24,7 @@ $taskRepositoryPathHTTPS = isset($config['repositoryPathHTTPS']) ? $config['repo
 $disWHPrefix = 'https://discord.com/api/webhooks/';
 $disWHFlights = $disWHPrefix . $config['disWHFlights'];
 $disWHAnnouncements = $disWHPrefix . $config['disWHAnnouncements'];
+$disWHTestFlights = $disWHPrefix . $config['disWHTestFlights'];
 
 // Function to log messages
 function logMessage($message) {
