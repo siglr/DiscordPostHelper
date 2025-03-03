@@ -120,8 +120,8 @@ try {
 
             // Insert new Event entry into News table
             $stmt = $pdo->prepare("
-                INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, News, NewsType, TaskID, EntrySeqID, URLToGo, Expiration)
-                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, :News, 1, :TaskID, :EntrySeqID, :URLToGo, :Expiration)
+                INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, NewsType, EntrySeqID, URLToGo, Expiration)
+                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, 1, :EntrySeqID, :URLToGo, :Expiration)
             ");
             $stmt->execute([
                 ':Key'        => $key,
@@ -131,8 +131,6 @@ try {
                 ':Comments'   => $_POST['Comments'],
                 ':Credits'    => $_POST['Credits'],
                 ':EventDate'  => formatDatetime($_POST['EventDate']),
-                ':News'       => $_POST['News'],
-                ':TaskID'     => $_POST['TaskID'],
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo'    => $_POST['URLToGo'],
                 ':Expiration' => formatDatetime($_POST['Expiration'])
