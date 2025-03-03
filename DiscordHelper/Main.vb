@@ -134,9 +134,9 @@ Public Class Main
         _userPermissionID = GetUserIDFromPermissionsFile()
 
         If _userPermissionID = String.Empty Then
-            _useTestMode = True
+            ToggleTestMode(True)
         Else
-            _useTestMode = False
+            ToggleTestMode(False)
         End If
         chkTestMode.Checked = _useTestMode
 
@@ -402,6 +402,7 @@ Public Class Main
         _CurrentSessionFile = String.Empty
 
         BriefingControl1.FullReset()
+        lblCountriesTestModeMsg.Visible = _useTestMode
 
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
@@ -467,7 +468,8 @@ Public Class Main
         Else
             txtEventDescription.Text = SessionSettings.EventDescriptionTemplate.Replace("($*$)", Environment.NewLine)
         End If
-        chkLockCountries.Checked = False
+        chkLockCountries.Checked = _useTestMode
+        chkLockCountries.Enabled = Not _useTestMode
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
         txtWeatherFirstPart.Text = String.Empty
@@ -5376,9 +5378,10 @@ Public Class Main
                 End If
                 txtTaskID.Text = .TaskID
                 If txtTaskID.Text.StartsWith("T") Then
-                    _useTestMode = True
+                    ToggleTestMode(True)
                     _taskDiscordPostID = .TestDiscordTaskID
                 End If
+                lblCountriesTestModeMsg.Visible = _useTestMode
                 If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation Then
                     txtTemporaryTaskID.Text = .TemporaryTaskID
                 Else
@@ -6949,7 +6952,7 @@ Public Class Main
             _taskDiscordPostID = String.Empty
             SetTBTaskDetailsLabel()
         End If
-        _useTestMode = chkTestMode.Checked
+        ToggleTestMode(chkTestMode.Checked)
         CheckTestModes()
         SetEventLabelAndButtons()
     End Sub
@@ -7190,6 +7193,18 @@ Public Class Main
             End If
         Loop
 
+    End Sub
+
+    Private Sub lblCountriesTestModeMsg_VisibleChanged(sender As Object, e As EventArgs) Handles lblCountriesTestModeMsg.VisibleChanged
+
+
+    End Sub
+
+    Private Sub ToggleTestMode(testMode As Boolean)
+        _useTestMode = testMode
+        lblCountriesTestModeMsg.Visible = testMode
+        chkLockCountries.Enabled = Not testMode
+        chkLockCountries.Checked = testMode
     End Sub
 
 #End Region
