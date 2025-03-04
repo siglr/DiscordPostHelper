@@ -2009,10 +2009,10 @@ Public Class Main
             sb.AppendLine($"***-> TEST MODE ONLY - Links and cover will not work***")
             sb.AppendLine()
         End If
-        sb.AppendLine($"**DPHX** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", "DPHX not yet available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"**ZIP** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", "ZIP not yet available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"**PLN** : [{IIf(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), "PLN not yet available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"**WPR** : [{IIf(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), "WPR not yet available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        sb.AppendLine($"**DPHX** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
+        sb.AppendLine($"**ZIP** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
+        sb.AppendLine($"**PLN** : [{IIf(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
+        sb.AppendLine($"**WPR** : [{IIf(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
             If fullDetailsMode Then
                 sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
