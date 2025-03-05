@@ -10,6 +10,9 @@ try {
     if (isset($_GET['DBEntryUpdate']) && !empty($_GET['DBEntryUpdate'])) {
         $dbEntryUpdate = $_GET['DBEntryUpdate'];
 
+        // Compute current UTC time in PHP
+        $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+
         // Define the query to retrieve the records with DBEntryUpdate greater than the provided parameter
         $query = "
             SELECT 
@@ -23,16 +26,17 @@ try {
             FROM Tasks
             WHERE 
                 (DBEntryUpdate > :dbEntryUpdate 
-                 AND (Availability IS NULL OR Availability <= datetime('now', 'utc')))
+                 AND (Availability IS NULL OR Availability <= :nowUTC))
                  OR 
                 (Availability IS NOT NULL 
                  AND Availability > :dbEntryUpdate 
-                 AND Availability <= datetime('now', 'utc'))
+                 AND Availability <= :nowUTC)
         ";
 
         // Prepare and execute the query
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':dbEntryUpdate', $dbEntryUpdate, PDO::PARAM_STR);
+        $stmt->bindParam(':nowUTC', $nowUTC, PDO::PARAM_STR);
         $stmt->execute();
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
