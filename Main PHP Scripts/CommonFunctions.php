@@ -18,8 +18,8 @@ $soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
 
 // Repository paths (used by WeSimGlide.org)
-$taskRepositoryPath = isset($config['repositoryPath']) ? $config['repositoryPath'] : '';
-$taskRepositoryPathHTTPS = isset($config['repositoryPathHTTPS']) ? $config['repositoryPathHTTPS'] : '';
+$taskBrowserPath = isset($config['taskBrowserPath']) ? $config['taskBrowserPath'] : '';
+$taskBrowserPathHTTPS = isset($config['taskBrowserPathHTTPS']) ? $config['taskBrowserPathHTTPS'] : '';
 
 $disWHPrefix = 'https://discord.com/api/webhooks/';
 $disWHFlights = $disWHPrefix . $config['disWHFlights'];
@@ -265,13 +265,13 @@ function deleteTaskNewsEntries($taskID) {
 
 // Function to retrieve and unpack a DPHX file into a task-specific folder
 function retrieveAndUnpackDPHX($taskID) {
-    global $taskRepositoryPath, $taskRepositoryPathHTTPS;
+    global $taskBrowserPath, $taskBrowserPathHTTPS;
 
     $tempDir = __DIR__ . '/DPHXTemp';
     $taskFolder = "$tempDir/$taskID";
     $dphxFile = "$taskFolder/$taskID.dphx";
-    $repositoryUrl = "$taskRepositoryPath/$taskID.dphx";
-    $repositoryUrlHTTPS = "$taskRepositoryPathHTTPS/$taskID.dphx";
+    $repositoryUrl = "$taskBrowserPath/Tasks/$taskID.dphx";
+    $repositoryUrlHTTPS = "$taskBrowserPathHTTPS/Tasks/$taskID.dphx";
 
     // Ensure the temp directory exists
     if (!file_exists($tempDir)) {
