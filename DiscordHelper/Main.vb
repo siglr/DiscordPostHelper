@@ -5587,11 +5587,16 @@ Public Class Main
             'Ask confirmation
             Dim result As DialogResult
             Using New Centered_MessageBox(Me)
-                result = MessageBox.Show($"Are you sure you want to delete this task from WeSimGlide.org?", "Removing a task from WeSimGlide.org", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                result = MessageBox.Show($"Are you REALLY sure you want to delete this task from WeSimGlide.org and Discord?", "Removing a task from WeSimGlide.org and Discord", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
             End Using
             If result = DialogResult.Yes Then
-                DeleteTaskFromWSG()
-                SetTBTaskDetailsLabel()
+                Using New Centered_MessageBox(Me)
+                    result = MessageBox.Show($"This is your last chance, this operation WILL delete the task entry on WSG and on Discord. Are you still sure?", "Removing a task from WeSimGlide.org and Discord", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                End Using
+                If result = DialogResult.Yes Then
+                    DeleteTaskFromWSG()
+                    SetTBTaskDetailsLabel()
+                End If
             End If
         End If
     End Sub
@@ -6392,7 +6397,6 @@ Public Class Main
         btnStartTaskPost.Enabled = False
 
         If _TaskEntrySeqID > 0 Then
-            lblWSGTaskEntrySeqID.Text = $"✅ WeSimGlide.org ID: {_TaskEntrySeqID}"
             'Verify if local DPH has been changed
             btnStartTaskPost.Text = "Start Task Update Workflow"
             Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
@@ -6434,8 +6438,9 @@ Public Class Main
                     lblTaskBrowserIDAndDate.ForeColor = Color.FromArgb(255, 128, 0)
             End Select
             tabFlightPlan.Enabled = IsOwnerOrShared
+            lblWSGTaskEntrySeqID.Text = $"✅ WeSimGlide.org ID: {_TaskEntrySeqID}"
 
-            btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask
+            btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask AndAlso IsOwnerOrShared
         Else
             lblWSGTaskEntrySeqID.Text = $"❌ WeSimGlide.org ID: None"
             btnStartTaskPost.Text = "Start Task Creation Workflow"
@@ -7129,7 +7134,7 @@ Public Class Main
 
     Private Sub lblWSGTaskEntrySeqID_TextChanged(sender As Object, e As EventArgs) Handles lblWSGTaskEntrySeqID.TextChanged
         If lblWSGTaskEntrySeqID.Text.StartsWith("✅") Then
-            btnDiscordTaskPostIDSet.Enabled = True
+            btnDiscordTaskPostIDSet.Enabled = True AndAlso IsOwnerOrShared
         Else
             btnDiscordTaskPostIDSet.Enabled = False
         End If
@@ -7145,7 +7150,7 @@ Public Class Main
         If lblDiscordTaskPostID.Text.StartsWith("✅") Then
             'Ask for confirmation
             Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, $"Are you sure you want to change the Discord Post ID associated with this task?", "Confirm Discord Post ID change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                If MessageBox.Show(Me, $"Are you REALLY sure you want to change the Discord Post ID associated with this task?", "Confirm Discord Post ID change", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
                     Exit Sub
                 End If
             End Using
