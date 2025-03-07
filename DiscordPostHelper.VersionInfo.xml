@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.3.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.3.7.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.3.7.1</ReleaseVersion>
+      <ReleaseTitle>Small update for various fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Prevented use of Azure APIs if in test mode.
+        Changed the text of unavailable links yet again.
+        The "Set" button on Discord Post ID should not be enabled if you are not a publisher or in the shared publishers (if you can't update the task, you can't update the task's Discord ID).
+        Changed the delete task button to be only available if user has rights AND is task owner or shared publisher, AND ask 2 confirmations for safety.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.3.3.1</ReleaseVersion>
       <ReleaseTitle>Automatic posting to Discord Flights channel</ReleaseTitle>
