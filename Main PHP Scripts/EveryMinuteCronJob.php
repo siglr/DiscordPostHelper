@@ -2,32 +2,33 @@
 require __DIR__ . '/CommonFunctions.php';
 
 try {
-    // Open the database connection
-    $pdo = new PDO("sqlite:$databasePath");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Calculate the current UTC time once
+    $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
 
-    // Query tasks that need to be updated:
-    // Those with non-empty AvailabilityPostContent and with Availability <= current UTC time.
-    $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');    
+    /*
+     * Update Tasks Routine:
+     * Update Discord posts for tasks whose AvailabilityPostContent is set and whose availability has passed.
+     */
+    $pdoTasks = new PDO("sqlite:$databasePath");
+    $pdoTasks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Use the computed time as a parameter in your query
-    $query = "SELECT EntrySeqID, DiscordPostID, NormalPostContent, Availability 
-              FROM Tasks 
-              WHERE TRIM(AvailabilityPostContent) <> '' 
-                AND Availability <= :nowUTC";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([':nowUTC' => $nowUTC]);
-    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $queryTasks = "SELECT EntrySeqID, DiscordPostID, NormalPostContent, Availability 
+                   FROM Tasks 
+                   WHERE TRIM(AvailabilityPostContent) <> '' 
+                     AND Availability <= :nowUTC";
+    $stmtTasks = $pdoTasks->prepare($queryTasks);
+    $stmtTasks->execute([':nowUTC' => $nowUTC]);
+    $tasks = $stmtTasks->fetchAll(PDO::FETCH_ASSOC);
 
     if ($tasks) {
         foreach ($tasks as $task) {
             logMessage("Availability: " . $task['Availability'] . " RightNow: " . $nowUTC);
 
-            $entrySeqID = $task['EntrySeqID'];
+            $entrySeqID    = $task['EntrySeqID'];
             $discordPostID = $task['DiscordPostID'];
             $normalContent = $task['NormalPostContent'];
 
-            // Update the Discord post if both DiscordPostID and NormalPostContent are provided.
+            // Update Discord post if both DiscordPostID and NormalPostContent are provided.
             if (!empty($discordPostID) && !empty($normalContent)) {
                 $discordResult = manageDiscordPost($disWHFlights, $normalContent, $discordPostID, false);
                 $discordResponse = json_decode($discordResult, true);
@@ -41,12 +42,70 @@ try {
             }
 
             // Clear the AvailabilityPostContent field regardless of Discord update outcome.
-            $updateStmt = $pdo->prepare("UPDATE Tasks SET AvailabilityPostContent = '' WHERE EntrySeqID = :EntrySeqID");
+            $updateStmt = $pdoTasks->prepare("UPDATE Tasks SET AvailabilityPostContent = '' WHERE EntrySeqID = :EntrySeqID");
             if (!$updateStmt->execute([':EntrySeqID' => $entrySeqID])) {
                 logMessage("Error: Failed to clear AvailabilityPostContent for task EntrySeqID: " . $entrySeqID);
             }
         }
     }
+
+    /*
+     * Update Announcements Routine:
+     * Modify the WSGAnnouncement in the News database for events that need to be updated on Discord.
+     */
+    $pdoNews = new PDO("sqlite:$newsDBPath");
+    $pdoNews->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $queryNews = "
+        SELECT 
+            Events.EventKey, Events.Availability, Events.WSGAnnouncementID, Events.WSGAnnouncement, News.EntrySeqID
+        FROM Events
+        JOIN News ON Events.EventKey = News.Key
+        WHERE WSGAnnouncement LIKE '%Please monitor the event as task has been set for later availability%'
+          AND Availability <= :nowUTC
+    ";
+    $stmtNews = $pdoNews->prepare($queryNews);
+    $stmtNews->execute([':nowUTC' => $nowUTC]);
+    $entries = $stmtNews->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($entries) {
+        foreach ($entries as $entry) {
+            $eventKey         = $entry['EventKey'];
+            $wsgAnnouncementID = $entry['WSGAnnouncementID'];
+            $oldAnnouncement  = $entry['WSGAnnouncement'];
+            $entrySeqID       = $entry['EntrySeqID'];
+
+            // Build the new announcement line dynamically.
+            $newAnnouncementLine = "### <:wsg:1296813102893105203> [Task #{$entrySeqID}](<{$wsgRoot}/index.html?task={$entrySeqID}>)";
+
+            // Replace the last line of the announcement.
+            $lines = explode("\n", $oldAnnouncement);
+            $lastLine = array_pop($lines);
+            if (strpos($lastLine, "Please monitor the event as task has been set for later availability") !== false) {
+                $lines[] = $newAnnouncementLine;
+            } else {
+                $lines[] = $lastLine; // keep original
+                $lines[] = $newAnnouncementLine; // append new line
+            }
+            $newAnnouncement = implode("\n", $lines);
+
+            // Update the Discord announcement using the announcements webhook.
+            $discordResult = manageDiscordPost($disWHAnnouncements, $newAnnouncement, $wsgAnnouncementID, false);
+            $discordResponse = json_decode($discordResult, true);
+            if ($discordResponse['result'] !== "success") {
+                logMessage("Error updating Discord announcement for EventKey {$eventKey}: " . $discordResponse['error']);
+            } else {
+                logMessage("Discord announcement updated successfully for EventKey {$eventKey}.");
+
+                // Update the Events table with the new announcement.
+                $updateStmt = $pdoNews->prepare("UPDATE Events SET WSGAnnouncement = :wsgAnnouncement WHERE EventKey = :eventKey");
+                if (!$updateStmt->execute([':wsgAnnouncement' => $newAnnouncement, ':eventKey' => $eventKey])) {
+                    logMessage("Error: Failed to update WSGAnnouncement for EventKey {$eventKey}.");
+                }
+            }
+        }
+    }
+
 } catch (Exception $e) {
     logMessage("Error in EveryMinuteCronJob: " . $e->getMessage());
 }

@@ -16,6 +16,7 @@ $logFile = preg_replace(
 $userPermissionsPath = $config['userPermissionsPath'];
 $soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
+$wsgRoot = $config['wsgRoot'];
 
 // Repository paths (used by WeSimGlide.org)
 $taskBrowserPath = isset($config['taskBrowserPath']) ? $config['taskBrowserPath'] : '';
