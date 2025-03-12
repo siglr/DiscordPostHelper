@@ -299,6 +299,7 @@ try {
         $coverImage = isset($taskData['CoverImage']) && !empty($taskData['CoverImage']) ? base64_decode($taskData['CoverImage']) : null;
 
         // Handle task posting to Discord
+        sleep(3); // Wait 3 seconds to make sure the cover image is in place
         $nowUTC = (new DateTime('now', new DateTimeZone('UTC')))->getTimestamp();
         $availabilityTimestamp = !empty($taskData['Availability']) 
             ? DateTime::createFromFormat('Y-m-d H:i:s', $taskData['Availability'], new DateTimeZone('UTC'))->getTimestamp()
