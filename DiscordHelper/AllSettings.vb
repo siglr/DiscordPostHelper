@@ -56,6 +56,9 @@ Public Class AllSettings
     <XmlElement("DPO_chkDGPOMainPost")>
     Public Property DPO_chkDGPOMainPost As Boolean
 
+    <XmlElement("DPO_chkDGPOAltRestrictions")>
+    Public Property DPO_chkDGPOAltRestrictions As Boolean
+
     <XmlElement("DPO_chkDGPOFullDescription")>
     Public Property DPO_chkDGPOFullDescription As Boolean
 
@@ -138,6 +141,7 @@ Public Class AllSettings
             DPO_chkDGPOFilesWithFullLegend = settingsInFile.DPO_chkDGPOFilesWithFullLegend
             DPO_chkDGPOMainPost = settingsInFile.DPO_chkDGPOMainPost
             DPO_chkDGPOFullDescription = settingsInFile.DPO_chkDGPOFullDescription
+            DPO_chkDGPOAltRestrictions = settingsInFile.DPO_chkDGPOAltRestrictions
             DPO_chkDGPOPublishWSGEventNews = settingsInFile.DPO_chkDGPOPublishWSGEventNews
             DPO_chkDGPOEventLogistics = settingsInFile.DPO_chkDGPOEventLogistics
             TaskDescriptionTemplate = settingsInFile.TaskDescriptionTemplate

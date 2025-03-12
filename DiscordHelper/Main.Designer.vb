@@ -262,7 +262,6 @@ Partial Class Main
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblNbrCarsMainFP = New System.Windows.Forms.Label()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.cboTaskOwner = New System.Windows.Forms.ComboBox()
         Me.lblUpdateDescription = New System.Windows.Forms.Label()
         Me.txtLastUpdateDescription = New System.Windows.Forms.TextBox()
@@ -311,6 +310,8 @@ Partial Class Main
         Me.chkDGPOMainPost = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel20 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOMapImage = New System.Windows.Forms.CheckBox()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.chkDGPOAltRestrictions = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel25 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOFullDescription = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel5 = New System.Windows.Forms.FlowLayoutPanel()
@@ -356,6 +357,7 @@ Partial Class Main
         Me.GetNowTimeOnlyWithoutSeconds = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -398,6 +400,7 @@ Partial Class Main
         Me.FlowLayoutPanel23.SuspendLayout()
         Me.FlowLayoutPanel24.SuspendLayout()
         Me.FlowLayoutPanel20.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
         Me.FlowLayoutPanel25.SuspendLayout()
         Me.FlowLayoutPanel5.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -3440,24 +3443,6 @@ Partial Class Main
         Me.lblNbrCarsMainFP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.lblNbrCarsMainFP, "Number of characters for the task's main information post.")
         '
-        'chkcboSharedWithUsers
-        '
-        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
-        Me.chkcboSharedWithUsers.IsInitializing = False
-        Me.chkcboSharedWithUsers.IsReadOnly = False
-        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
-        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
-        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
-        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
-        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
-        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
-        Me.chkcboSharedWithUsers.TabIndex = 2
-        Me.chkcboSharedWithUsers.Tag = "43"
-        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
-        '
         'cboTaskOwner
         '
         Me.cboTaskOwner.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -3799,7 +3784,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblWSGEventAbsent.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblWSGEventAbsent.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblWSGEventAbsent.Location = New System.Drawing.Point(6, 393)
+        Me.lblWSGEventAbsent.Location = New System.Drawing.Point(6, 399)
         Me.lblWSGEventAbsent.Name = "lblWSGEventAbsent"
         Me.lblWSGEventAbsent.Size = New System.Drawing.Size(381, 33)
         Me.lblWSGEventAbsent.TabIndex = 5
@@ -3810,7 +3795,7 @@ Partial Class Main
         '
         Me.btnDGPORecallSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORecallSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 308)
+        Me.btnDGPORecallSettings.Location = New System.Drawing.Point(4, 316)
         Me.btnDGPORecallSettings.Name = "btnDGPORecallSettings"
         Me.btnDGPORecallSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORecallSettings.TabIndex = 1
@@ -3823,7 +3808,7 @@ Partial Class Main
         '
         Me.btnDGPORememberSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPORememberSettings.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 308)
+        Me.btnDGPORememberSettings.Location = New System.Drawing.Point(134, 316)
         Me.btnDGPORememberSettings.Name = "btnDGPORememberSettings"
         Me.btnDGPORememberSettings.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPORememberSettings.TabIndex = 2
@@ -3836,7 +3821,7 @@ Partial Class Main
         '
         Me.btnStartGroupEventPost.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnStartGroupEventPost.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 349)
+        Me.btnStartGroupEventPost.Location = New System.Drawing.Point(4, 357)
         Me.btnStartGroupEventPost.Name = "btnStartGroupEventPost"
         Me.btnStartGroupEventPost.Size = New System.Drawing.Size(384, 37)
         Me.btnStartGroupEventPost.TabIndex = 4
@@ -3849,7 +3834,7 @@ Partial Class Main
         '
         Me.btnDGPOResetToDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDGPOResetToDefault.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!)
-        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 306)
+        Me.btnDGPOResetToDefault.Location = New System.Drawing.Point(264, 314)
         Me.btnDGPOResetToDefault.Name = "btnDGPOResetToDefault"
         Me.btnDGPOResetToDefault.Size = New System.Drawing.Size(124, 35)
         Me.btnDGPOResetToDefault.TabIndex = 3
@@ -3870,12 +3855,13 @@ Partial Class Main
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel23)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel24)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel20)
+        Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel1)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel25)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel5)
         Me.flpDiscordGroupPostOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flpDiscordGroupPostOptions.Location = New System.Drawing.Point(0, 26)
         Me.flpDiscordGroupPostOptions.Name = "flpDiscordGroupPostOptions"
-        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(393, 266)
+        Me.flpDiscordGroupPostOptions.Size = New System.Drawing.Size(393, 284)
         Me.flpDiscordGroupPostOptions.TabIndex = 0
         '
         'FlowLayoutPanel16
@@ -4077,12 +4063,38 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkDGPOMapImage, "Select if you want to include the file description along with the files.")
         Me.chkDGPOMapImage.UseVisualStyleBackColor = True
         '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel1.Controls.Add(Me.chkDGPOAltRestrictions)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 202)
+        Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(376, 26)
+        Me.FlowLayoutPanel1.TabIndex = 9
+        '
+        'chkDGPOAltRestrictions
+        '
+        Me.chkDGPOAltRestrictions.AutoSize = True
+        Me.chkDGPOAltRestrictions.Checked = True
+        Me.chkDGPOAltRestrictions.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkDGPOAltRestrictions.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkDGPOAltRestrictions.Location = New System.Drawing.Point(3, 3)
+        Me.chkDGPOAltRestrictions.Name = "chkDGPOAltRestrictions"
+        Me.chkDGPOAltRestrictions.Size = New System.Drawing.Size(177, 26)
+        Me.chkDGPOAltRestrictions.TabIndex = 0
+        Me.chkDGPOAltRestrictions.Tag = "80"
+        Me.chkDGPOAltRestrictions.Text = "Altitude restrictions"
+        Me.ToolTip1.SetToolTip(Me.chkDGPOAltRestrictions, "Select if you want to include altitude restrictions.")
+        Me.chkDGPOAltRestrictions.UseVisualStyleBackColor = True
+        '
         'FlowLayoutPanel25
         '
         Me.FlowLayoutPanel25.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel25.Controls.Add(Me.chkDGPOFullDescription)
-        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 202)
+        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 228)
         Me.FlowLayoutPanel25.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel25.Name = "FlowLayoutPanel25"
         Me.FlowLayoutPanel25.Size = New System.Drawing.Size(376, 26)
@@ -4108,7 +4120,7 @@ Partial Class Main
         Me.FlowLayoutPanel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel5.Controls.Add(Me.chkDGPOPublishWSGEventNews)
-        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 228)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 254)
         Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(376, 26)
@@ -4134,7 +4146,7 @@ Partial Class Main
         Me.lblWSGEventExists.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblWSGEventExists.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblWSGEventExists.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblWSGEventExists.Location = New System.Drawing.Point(6, 393)
+        Me.lblWSGEventExists.Location = New System.Drawing.Point(6, 399)
         Me.lblWSGEventExists.Name = "lblWSGEventExists"
         Me.lblWSGEventExists.Size = New System.Drawing.Size(381, 33)
         Me.lblWSGEventExists.TabIndex = 6
@@ -4481,6 +4493,24 @@ Partial Class Main
         Me.GetNowTimeStampOnly.Size = New System.Drawing.Size(269, 26)
         Me.GetNowTimeStampOnly.Text = "TimestampOnly"
         '
+        'chkcboSharedWithUsers
+        '
+        Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkcboSharedWithUsers.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!)
+        Me.chkcboSharedWithUsers.IsInitializing = False
+        Me.chkcboSharedWithUsers.IsReadOnly = False
+        Me.chkcboSharedWithUsers.Location = New System.Drawing.Point(7, 110)
+        Me.chkcboSharedWithUsers.LockedValueFromUser = Nothing
+        Me.chkcboSharedWithUsers.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.chkcboSharedWithUsers.MaxVisibleItems = 8
+        Me.chkcboSharedWithUsers.Name = "chkcboSharedWithUsers"
+        Me.chkcboSharedWithUsers.SelectedItemsTextFormat = "Shared with {0} user(s)"
+        Me.chkcboSharedWithUsers.Size = New System.Drawing.Size(381, 30)
+        Me.chkcboSharedWithUsers.TabIndex = 2
+        Me.chkcboSharedWithUsers.Tag = "43"
+        Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -4563,6 +4593,8 @@ Partial Class Main
         Me.FlowLayoutPanel24.PerformLayout()
         Me.FlowLayoutPanel20.ResumeLayout(False)
         Me.FlowLayoutPanel20.PerformLayout()
+        Me.FlowLayoutPanel1.ResumeLayout(False)
+        Me.FlowLayoutPanel1.PerformLayout()
         Me.FlowLayoutPanel25.ResumeLayout(False)
         Me.FlowLayoutPanel25.PerformLayout()
         Me.FlowLayoutPanel5.ResumeLayout(False)
@@ -4910,4 +4942,6 @@ Partial Class Main
     Friend WithEvents btnDiscordTaskPostIDSet As Button
     Friend WithEvents btnGroupEventURLGo As Button
     Friend WithEvents lblCountriesTestModeMsg As Label
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents chkDGPOAltRestrictions As CheckBox
 End Class

@@ -305,6 +305,7 @@ Public Class Main
             chkDGPOTeaser.Checked = SessionSettings.DPO_chkDGPOTeaser
             chkDGPOMapImage.Checked = SessionSettings.DPO_chkDGPOFilesWithFullLegend
             chkDGPOMainPost.Checked = SessionSettings.DPO_chkDGPOMainPost
+            chkDGPOAltRestrictions.Checked = SessionSettings.DPO_chkDGPOAltRestrictions
             chkDGPOFullDescription.Checked = SessionSettings.DPO_chkDGPOFullDescription
             chkDGPOPublishWSGEventNews.Checked = SessionSettings.DPO_chkDGPOPublishWSGEventNews
             chkDGPOEventLogistics.Checked = SessionSettings.DPO_chkDGPOEventLogistics
@@ -2000,6 +2001,12 @@ Public Class Main
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
         sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
+        If fromGroup Then
+            If Not _taskDiscordPostID = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
+                sb.AppendLine($"## 🧵Discord")
+                sb.AppendLine($"[{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID})")
+            End If
+        End If
         If fullDetailsMode Then
             sb.AppendLine("## 📁 Files")
         Else
@@ -2030,6 +2037,7 @@ Public Class Main
         If fullDetailsMode Then sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
         sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
         If fullDetailsMode Then sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
+        If fullDetailsMode AndAlso txtWeatherSummary.Text.Trim.Length > 0 Then sb.AppendLine($"> ⛅ {txtWeatherSummary.Text.Trim}")
         If fullDetailsMode Then sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
         sb.AppendLine($"> ⏳ {SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}")
         If txtAATTask.Text.Length > 0 Then
@@ -2945,17 +2953,27 @@ Public Class Main
 
         Dim msg As String = String.Empty
 
+        'Event Logistics
+        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
+            msg = $"{GroupFlightEventThreadLogistics()}"
+            Clipboard.SetText(msg)
+            autoContinue = CopyContent.ShowContent(Me,
+                            msg,
+                            "Paste the message in the thread and post it.",
+                            AppendIsTestMode("Pasting event logistics in group event thread"),
+                            AppendIsTestMode("Group Event Thread"),
+                            New List(Of String) From {"^v"},,,,
+                            SupportingFeatures.GetTaskThreadURLFromGroupURL(txtGroupEventPostURL.Text.Trim))
+            If Not autoContinue Then Return False
+            msg = String.Empty
+        End If
+
         'Map image
         If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso (Not IsDelayedAvailability)) Then
             autoContinue = MapImageCopy(True)
             If Not autoContinue Then
                 Return False
             End If
-        End If
-
-        'Event Logistics
-        If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
-            msg = $"{GroupFlightEventThreadLogistics()}"
         End If
 
         'Main post
@@ -2987,6 +3005,14 @@ Public Class Main
         End If
 
         If Not autoContinue Then Return False
+
+        'Altitude restrictions
+        If chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked AndAlso (Not IsDelayedAvailability) Then
+            If msg.Trim.Length > 0 Then
+                msg = $"{msg}{Environment.NewLine}"
+            End If
+            msg = $"{msg}{txtAltRestrictions.Text.Trim}"
+        End If
 
         'Full Description
         If chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso (Not IsDelayedAvailability) Then
@@ -3292,6 +3318,7 @@ Public Class Main
             'Group
             listOfControlsRemove.Add(chkDGPOMainPost)
             listOfControlsRemove.Add(chkDGPOFullDescription)
+            listOfControlsRemove.Add(chkDGPOAltRestrictions)
             listOfControlsRemove.Add(chkDGPOMapImage)
             listOfControlsRemove.Add(chkDGPOEventLogistics)
         Else
@@ -3299,6 +3326,7 @@ Public Class Main
             listOfControlsAdd.Add(chkDPOIncludeCoverImage)
             'Group
             listOfControlsAdd.Add(chkDGPOMainPost)
+            listOfControlsAdd.Add(chkDGPOAltRestrictions)
             listOfControlsAdd.Add(chkDGPOFullDescription)
             listOfControlsAdd.Add(chkDGPOMapImage)
             listOfControlsAdd.Add(chkDGPOEventLogistics)
@@ -3386,6 +3414,13 @@ Public Class Main
             chkDGPOCoverImage.Enabled = False
         End If
 
+        'Altitude restrictions
+        If txtAltRestrictions.Text.Trim.Length = 0 Then
+            chkDGPOAltRestrictions.Enabled = False
+        Else
+            chkDGPOAltRestrictions.Enabled = True
+        End If
+
         If txtLongDescription.Text.Trim.Length = 0 Then
             chkDGPOFullDescription.Enabled = False
         Else
@@ -3402,6 +3437,7 @@ Public Class Main
 
         If Not chkDGPOTeaser.Checked AndAlso
            Not chkDGPOMainPost.Checked AndAlso
+           Not chkDGPOAltRestrictions.Checked AndAlso
            Not chkDGPOFullDescription.Checked AndAlso
            Not chkDGPOMapImage.Checked AndAlso
            Not chkDGPOEventLogistics.Checked Then
@@ -3545,6 +3581,7 @@ Public Class Main
         SessionSettings.DPO_chkDGPOTeaser = chkDGPOTeaser.Checked
         SessionSettings.DPO_chkDGPOFilesWithFullLegend = chkDGPOMapImage.Checked
         SessionSettings.DPO_chkDGPOMainPost = chkDGPOMainPost.Checked
+        SessionSettings.DPO_chkDGPOAltRestrictions = chkDGPOAltRestrictions.Checked
         SessionSettings.DPO_chkDGPOFullDescription = chkDGPOFullDescription.Checked
         SessionSettings.DPO_chkDGPOPublishWSGEventNews = chkDGPOPublishWSGEventNews.Checked
         SessionSettings.DPO_chkDGPOEventLogistics = chkDGPOEventLogistics.Checked
@@ -3567,6 +3604,7 @@ Public Class Main
         chkDGPOMapImage.Checked = True
 
         chkDGPOMainPost.Checked = True
+        chkDGPOAltRestrictions.Checked = True
         chkDGPOFullDescription.Checked = True
         chkDGPOEventLogistics.Checked = True
         chkDGPOPublishWSGEventNews.Checked = True
@@ -3657,6 +3695,7 @@ Public Class Main
 
         If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
            (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked) OrElse
+           (chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked) OrElse
            (chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked) OrElse
            (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked) Then
             If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
@@ -3728,6 +3767,7 @@ Public Class Main
 
         If chkDGPOTeaser.Checked Then
             chkDGPOMainPost.Checked = False
+            chkDGPOAltRestrictions.Checked = False
             chkDGPOFullDescription.Checked = False
             chkDGPOMapImage.Checked = False
             chkDGPOEventLogistics.Checked = False
@@ -3739,7 +3779,7 @@ Public Class Main
 
     Private Sub chkDGPOAll_CheckedChanged(sender As Object, e As EventArgs) Handles chkDGPOEventLogistics.CheckedChanged,
                                                                                     chkDGPOFullDescription.CheckedChanged,
-                                                                                    chkDGPOMainPost.CheckedChanged
+                                                                                    chkDGPOMainPost.CheckedChanged, chkDGPOAltRestrictions.CheckedChanged
 
         If _isInitiatizing Then
             Exit Sub
@@ -3959,10 +3999,6 @@ Public Class Main
 
         If chkUseSyncFly.Checked Then
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
-        End If
-        logisticInstructions.AppendLine()
-        If Not _taskDiscordPostID = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
-            logisticInstructions.AppendLine($"🧵 [{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID})")
         End If
 
         Return logisticInstructions.ToString()
