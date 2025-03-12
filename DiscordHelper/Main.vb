@@ -4742,21 +4742,21 @@ Public Class Main
             Case 80 'Discord Post Options
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 486
-                pnlWizardDiscord.Top = 346
+                pnlWizardDiscord.Top = 371
                 lblDiscordGuideInstructions.Text = "These are all the options you can toggle to include the various elements of the post, as you see fit."
                 SetFocusOnField(chkDGPOCoverImage, fromF1Key)
 
             Case 81 'Reset all options
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 585
-                pnlWizardDiscord.Top = 402
+                pnlWizardDiscord.Top = 412
                 lblDiscordGuideInstructions.Text = "Use these buttons to recall, save or reset all the options above to your remembered settings or their default values."
                 SetFocusOnField(btnDGPOResetToDefault, fromF1Key)
 
             Case 82 'Start workflow
                 SetDiscordGuidePanelToTopArrowLeftSide()
                 pnlWizardDiscord.Left = 585
-                pnlWizardDiscord.Top = 446
+                pnlWizardDiscord.Top = 456
                 lblDiscordGuideInstructions.Text = "Click this button to start the workflow to post your group event on Discord using the selected options."
                 SetFocusOnField(btnStartGroupEventPost, fromF1Key)
 

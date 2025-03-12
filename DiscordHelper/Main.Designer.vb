@@ -303,7 +303,6 @@ Partial Class Main
         Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
         Me.FlowLayoutPanel19 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOTeaser = New System.Windows.Forms.CheckBox()
-        Me.Label11 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel23 = New System.Windows.Forms.FlowLayoutPanel()
         Me.chkDGPOEventLogistics = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel24 = New System.Windows.Forms.FlowLayoutPanel()
@@ -3851,7 +3850,6 @@ Partial Class Main
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel17)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel18)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel19)
-        Me.flpDiscordGroupPostOptions.Controls.Add(Me.Label11)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel23)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel24)
         Me.flpDiscordGroupPostOptions.Controls.Add(Me.FlowLayoutPanel20)
@@ -3956,8 +3954,8 @@ Partial Class Main
         'FlowLayoutPanel19
         '
         Me.FlowLayoutPanel19.Controls.Add(Me.chkDGPOTeaser)
-        Me.FlowLayoutPanel19.Location = New System.Drawing.Point(3, 78)
-        Me.FlowLayoutPanel19.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel19.Location = New System.Drawing.Point(3, 85)
+        Me.FlowLayoutPanel19.Margin = New System.Windows.Forms.Padding(3, 7, 0, 0)
         Me.FlowLayoutPanel19.Name = "FlowLayoutPanel19"
         Me.FlowLayoutPanel19.Size = New System.Drawing.Size(376, 26)
         Me.FlowLayoutPanel19.TabIndex = 3
@@ -3975,22 +3973,13 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkDGPOTeaser, "Select if you want to only post a teaser in the group event's thread.")
         Me.chkDGPOTeaser.UseVisualStyleBackColor = True
         '
-        'Label11
-        '
-        Me.Label11.Enabled = False
-        Me.Label11.Location = New System.Drawing.Point(3, 104)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(227, 20)
-        Me.Label11.TabIndex = 3
-        Me.Label11.Text = " "
-        '
         'FlowLayoutPanel23
         '
         Me.FlowLayoutPanel23.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel23.Controls.Add(Me.chkDGPOEventLogistics)
-        Me.FlowLayoutPanel23.Location = New System.Drawing.Point(3, 124)
-        Me.FlowLayoutPanel23.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel23.Location = New System.Drawing.Point(3, 118)
+        Me.FlowLayoutPanel23.Margin = New System.Windows.Forms.Padding(3, 7, 0, 0)
         Me.FlowLayoutPanel23.Name = "FlowLayoutPanel23"
         Me.FlowLayoutPanel23.Size = New System.Drawing.Size(376, 26)
         Me.FlowLayoutPanel23.TabIndex = 4
@@ -4016,8 +4005,8 @@ Partial Class Main
         Me.FlowLayoutPanel24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel24.Controls.Add(Me.chkDGPOMainPost)
-        Me.FlowLayoutPanel24.Location = New System.Drawing.Point(3, 150)
-        Me.FlowLayoutPanel24.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.FlowLayoutPanel24.Location = New System.Drawing.Point(3, 151)
+        Me.FlowLayoutPanel24.Margin = New System.Windows.Forms.Padding(3, 7, 0, 0)
         Me.FlowLayoutPanel24.Name = "FlowLayoutPanel24"
         Me.FlowLayoutPanel24.Size = New System.Drawing.Size(376, 26)
         Me.FlowLayoutPanel24.TabIndex = 5
@@ -4042,7 +4031,7 @@ Partial Class Main
         Me.FlowLayoutPanel20.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel20.Controls.Add(Me.chkDGPOMapImage)
-        Me.FlowLayoutPanel20.Location = New System.Drawing.Point(3, 176)
+        Me.FlowLayoutPanel20.Location = New System.Drawing.Point(3, 177)
         Me.FlowLayoutPanel20.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel20.Name = "FlowLayoutPanel20"
         Me.FlowLayoutPanel20.Size = New System.Drawing.Size(376, 26)
@@ -4068,7 +4057,7 @@ Partial Class Main
         Me.FlowLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel1.Controls.Add(Me.chkDGPOAltRestrictions)
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 202)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 203)
         Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(376, 26)
@@ -4094,7 +4083,7 @@ Partial Class Main
         Me.FlowLayoutPanel25.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel25.Controls.Add(Me.chkDGPOFullDescription)
-        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 228)
+        Me.FlowLayoutPanel25.Location = New System.Drawing.Point(3, 229)
         Me.FlowLayoutPanel25.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel25.Name = "FlowLayoutPanel25"
         Me.FlowLayoutPanel25.Size = New System.Drawing.Size(376, 26)
@@ -4120,7 +4109,7 @@ Partial Class Main
         Me.FlowLayoutPanel5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel5.Controls.Add(Me.chkDGPOPublishWSGEventNews)
-        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 254)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 255)
         Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(376, 26)
@@ -4305,7 +4294,7 @@ Partial Class Main
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripSave, Me.toolStripResetAll, Me.toolStripReload, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.toolStripOpenFromWSG, Me.toolStripSharePackage, Me.ToolStripSeparator3, Me.toolStripGuideMe, Me.toolStripStopGuide, Me.ToolStripDropDownButton1, Me.toolStripCurrentDateTime})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1494, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 7
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -4315,7 +4304,7 @@ Partial Class Main
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPH file from your PC."
         '
@@ -4324,7 +4313,7 @@ Partial Class Main
         Me.toolStripSave.Image = CType(resources.GetObject("toolStripSave.Image"), System.Drawing.Image)
         Me.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSave.Name = "toolStripSave"
-        Me.toolStripSave.Size = New System.Drawing.Size(65, 25)
+        Me.toolStripSave.Size = New System.Drawing.Size(65, 26)
         Me.toolStripSave.Text = "&Save"
         Me.toolStripSave.ToolTipText = "Click to save the current DPH session to your PC."
         '
@@ -4333,7 +4322,7 @@ Partial Class Main
         Me.toolStripResetAll.Image = CType(resources.GetObject("toolStripResetAll.Image"), System.Drawing.Image)
         Me.toolStripResetAll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripResetAll.Name = "toolStripResetAll"
-        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 25)
+        Me.toolStripResetAll.Size = New System.Drawing.Size(92, 26)
         Me.toolStripResetAll.Text = "&Reset All"
         Me.toolStripResetAll.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
@@ -4350,42 +4339,42 @@ Partial Class Main
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripDiscordTaskLibrary
         '
         Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
         Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
+        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 26)
         Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
         Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library on Discord."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripOpenFromWSG
         '
         Me.toolStripOpenFromWSG.Image = CType(resources.GetObject("toolStripOpenFromWSG.Image"), System.Drawing.Image)
         Me.toolStripOpenFromWSG.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpenFromWSG.Name = "toolStripOpenFromWSG"
-        Me.toolStripOpenFromWSG.Size = New System.Drawing.Size(67, 25)
+        Me.toolStripOpenFromWSG.Size = New System.Drawing.Size(67, 26)
         Me.toolStripOpenFromWSG.Text = "WSG"
         Me.toolStripOpenFromWSG.ToolTipText = "Click to select and load a DPH file directly from WeSimGlide.org"
         '
@@ -4394,21 +4383,21 @@ Partial Class Main
         Me.toolStripSharePackage.Image = CType(resources.GetObject("toolStripSharePackage.Image"), System.Drawing.Image)
         Me.toolStripSharePackage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSharePackage.Name = "toolStripSharePackage"
-        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 25)
+        Me.toolStripSharePackage.Size = New System.Drawing.Size(132, 26)
         Me.toolStripSharePackage.Text = "Share &Package"
         Me.toolStripSharePackage.ToolTipText = "Click to create a shareable package with all files."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
         '
         'toolStripGuideMe
         '
         Me.toolStripGuideMe.Image = CType(resources.GetObject("toolStripGuideMe.Image"), System.Drawing.Image)
         Me.toolStripGuideMe.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripGuideMe.Name = "toolStripGuideMe"
-        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 25)
+        Me.toolStripGuideMe.Size = New System.Drawing.Size(183, 26)
         Me.toolStripGuideMe.Text = "&Guide me please! (F1)"
         Me.toolStripGuideMe.ToolTipText = "Click to activate wizard"
         '
@@ -4429,7 +4418,7 @@ Partial Class Main
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -4459,7 +4448,7 @@ Partial Class Main
         Me.toolStripCurrentDateTime.Image = CType(resources.GetObject("toolStripCurrentDateTime.Image"), System.Drawing.Image)
         Me.toolStripCurrentDateTime.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCurrentDateTime.Name = "toolStripCurrentDateTime"
-        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 25)
+        Me.toolStripCurrentDateTime.Size = New System.Drawing.Size(143, 26)
         Me.toolStripCurrentDateTime.Text = "CurrentDateTime"
         Me.toolStripCurrentDateTime.ToolTipText = "Click for UNIX timestamp options"
         '
@@ -4857,7 +4846,6 @@ Partial Class Main
     Friend WithEvents chkDGPOMainGroupPost As CheckBox
     Friend WithEvents FlowLayoutPanel18 As FlowLayoutPanel
     Friend WithEvents chkDGPOThreadCreation As CheckBox
-    Friend WithEvents Label11 As Label
     Friend WithEvents FlowLayoutPanel19 As FlowLayoutPanel
     Friend WithEvents chkDGPOTeaser As CheckBox
     Friend WithEvents FlowLayoutPanel20 As FlowLayoutPanel
