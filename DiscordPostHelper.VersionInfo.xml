@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.3.7.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.3.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.3.12.1</ReleaseVersion>
+      <ReleaseTitle>Altitude Restrictions are back in group posting options</ReleaseTitle>
+      <ReleaseNotes>
+        Added altitude restrictions back to group posting options.
+        Added weather summary to task full details.
+        Rearranged posting workflow a bit to encapsulate logistics on its own.
+        Adjusted wizard and group posting layout.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.3.7.1</ReleaseVersion>
       <ReleaseTitle>Small update for various fixes</ReleaseTitle>
