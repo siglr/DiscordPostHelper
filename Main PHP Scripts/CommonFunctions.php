@@ -382,16 +382,18 @@ function manageDiscordPost($webhookUrl, $messageContent = '', $postID = null, $d
     }
     
     // Function to execute cURL and handle errors.
-    function executeCurl($ch) {
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            $error = curl_error($ch);
+    if (!function_exists('executeCurl')) {
+        function executeCurl($ch) {
+            $result = curl_exec($ch);
+            if (curl_errno($ch)) {
+                $error = curl_error($ch);
+                curl_close($ch);
+                return ["error" => $error, "result" => false, "resultData" => null];
+            }
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
-            return ["error" => $error, "result" => false, "resultData" => null];
+            return ["error" => "", "result" => $httpCode, "resultData" => $result];
         }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        return ["error" => "", "result" => $httpCode, "resultData" => $result];
     }
     
     // DELETE operation.
