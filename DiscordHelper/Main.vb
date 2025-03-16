@@ -3453,11 +3453,7 @@ Public Class Main
     Private Sub SetEventLabelAndButtons()
 
         If chkActivateEvent.Checked AndAlso _ClubPreset IsNot Nothing Then
-            Dim key As String = String.Empty
-            Dim eventDate As Date
-            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
-            eventDate = eventDate.ToUniversalTime
-            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+            Dim key As String = WSGEventID
 
             If (Not _useTestMode) AndAlso VerifyNewsExists(key) = "success" Then
                 lblWSGEventExists.Visible = True
@@ -3540,7 +3536,7 @@ Public Class Main
 
     Private Function GetDiscordLinkToTaskThread() As String
         Dim urlToTaskThread As String = String.Empty
-        urlToTaskThread = $"{SupportingFeatures.TaskLibraryDiscordURL}/{txtTaskID.Text}"
+        urlToTaskThread = $"{SupportingFeatures.TaskLibraryDiscordURL}/{_taskDiscordPostID}"
         Return urlToTaskThread
     End Function
 
@@ -3723,14 +3719,19 @@ Public Class Main
         sb.AppendLine("## :calendar: Group Flight")
         sb.AppendLine($"Links and details are up for the{clubName}group flight of {_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time.")
 
-        'Task
-        sb.AppendLine()
-        sb.AppendLine($"Task thread link: [{txtTitle.Text}]({GetDiscordLinkToTaskThread()})")
-
-        'Group Event link
-        If txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
-            sb.AppendLine($"Group event link: [{txtClubFullName.Text} - {txtEventTitle.Text}]({txtGroupEventPostURL.Text})")
+        'WeSimGlide
+        sb.AppendLine("## :wsg: WeSimGlide.org")
+        If WSGEventID <> String.Empty Then
+            sb.AppendLine($"Group: [{txtClubFullName.Text} - {txtEventTitle.Text}](<{WSGEventLink}>)")
         End If
+        sb.AppendLine($"Task: [#{_TaskEntrySeqID.ToString.Trim} on WeSimGlide.org](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)")
+
+        'Discord
+        sb.AppendLine("## :discord_logo: Discord")
+        If txtGroupEventPostURL.Text.Trim <> String.Empty AndAlso SupportingFeatures.IsValidURL(txtGroupEventPostURL.Text.Trim) Then
+            sb.AppendLine($"Group: [{txtClubFullName.Text} - {txtEventTitle.Text}]({txtGroupEventPostURL.Text})")
+        End If
+        sb.AppendLine($"Task: [{txtTitle.Text}]({GetDiscordLinkToTaskThread()})")
 
         Dim msg As String = sb.ToString
         Clipboard.SetText(msg)
@@ -6791,11 +6792,7 @@ Public Class Main
 
     Private Sub PrepareDeleteEventNews()
         If UserCanDeleteEvent Then
-            Dim key As String = String.Empty
-            Dim eventDate As Date
-            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
-            eventDate = eventDate.ToUniversalTime
-            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+            Dim key As String = WSGEventID
             Dim result As Boolean = DeleteEventNews(key)
             If result Then
                 Using New Centered_MessageBox(Me)
@@ -6849,11 +6846,7 @@ Public Class Main
             If _ClubPreset Is Nothing Then
                 Return String.Empty
             End If
-            Dim key As String
-            Dim eventDate As Date
-            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
-            eventDate = eventDate.ToUniversalTime
-            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+            Dim key As String = WSGEventID
             Return SupportingFeatures.GetWeSimGlideEventURL(key)
         End Get
     End Property
@@ -6861,13 +6854,12 @@ Public Class Main
     Private Function PublishEventNews() As Boolean
 
         If UserCanCreateEvent Then
-            Dim key As String
+            Dim key As String = WSGEventID
             Dim eventDate As Date
             Dim comments As String = String.Empty
 
             eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
             eventDate = eventDate.ToUniversalTime
-            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
 
             Dim eventSyncDate As Date
             Dim eventLaunchDate As Date
@@ -7247,6 +7239,24 @@ Public Class Main
         chkLockCountries.Enabled = Not testMode
         chkLockCountries.Checked = testMode
     End Sub
+
+    Private ReadOnly Property WSGEventID As String
+        Get
+
+            If _ClubPreset Is Nothing Then
+                Return String.Empty
+            End If
+
+            Dim key As String = String.Empty
+            Dim eventDate As Date
+            eventDate = SupportingFeatures.GetFullEventDateTimeInLocal(dtEventMeetDate.Value, dtEventMeetTime.Value, chkDateTimeUTC.Checked)
+            eventDate = eventDate.ToUniversalTime
+            key = $"E-{_ClubPreset.EventNewsID}{eventDate.ToUniversalTime.ToString("yyyyMMdd")}"
+
+            Return key
+
+        End Get
+    End Property
 
 #End Region
 
