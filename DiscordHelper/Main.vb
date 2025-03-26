@@ -2057,7 +2057,8 @@ Public Class Main
             If chkDPOIncludeCoverImage.Enabled AndAlso chkDPOIncludeCoverImage.Checked AndAlso cboCoverImage.Text.Trim <> String.Empty Then
                 'Add cover image
                 Dim baseUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}TaskBrowser/Covers/"
-                sb.AppendLine($"[Task Cover]({baseUrl}{_TaskEntrySeqID.ToString}.jpg)")
+                Dim fakeVersion As String = (New Random()).Next(100000, 999999).ToString()
+                sb.AppendLine($"[Task Cover]({baseUrl}{_TaskEntrySeqID.ToString}.jpg?v={fakeVersion})")
             End If
         End If
 
