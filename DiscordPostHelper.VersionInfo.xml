@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.3.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.4.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.4.2.1</ReleaseVersion>
+      <ReleaseTitle>Small improvements and fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Provide event and task links for both WSG and Discord.
+        Add a version to the URL for the cover image to clear cache when modified.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.3.12.1</ReleaseVersion>
       <ReleaseTitle>Altitude Restrictions are back in group posting options</ReleaseTitle>
