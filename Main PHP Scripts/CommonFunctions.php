@@ -17,6 +17,7 @@ $userPermissionsPath = $config['userPermissionsPath'];
 $soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
 $wsgRoot = $config['wsgRoot'];
+$blesstok = $config['blesstok'];
 
 // Repository paths (used by WeSimGlide.org)
 $taskBrowserPath = isset($config['taskBrowserPath']) ? $config['taskBrowserPath'] : '';
