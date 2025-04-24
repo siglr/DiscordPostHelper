@@ -534,6 +534,8 @@ Public Class Main
         txtMinutesBeforeMeeting.Text = "1"
         cboDelayUnits.SelectedIndex = 0
         chkAvailabilityRefly.Checked = False
+        btnSyncFlightPlanTitle.Enabled = False
+        btnSyncWeatherTitle.Enabled = False
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -1380,10 +1382,22 @@ Public Class Main
             grbTaskInfo.Enabled = False
             grbTaskPart2.Enabled = False
             grbTaskDiscord.Enabled = False
+            btnSyncFlightPlanTitle.Enabled = False
         Else
             grbTaskInfo.Enabled = True
             grbTaskPart2.Enabled = True
             grbTaskDiscord.Enabled = True
+            btnSyncFlightPlanTitle.Enabled = True
+        End If
+
+    End Sub
+
+    Private Sub txtWeatherFile_TextChanged(sender As Object, e As EventArgs) Handles txtWeatherFile.TextChanged
+
+        If txtWeatherFile.Text = String.Empty Then
+            btnSyncWeatherTitle.Enabled = False
+        Else
+            btnSyncWeatherTitle.Enabled = True
         End If
 
     End Sub
@@ -1408,7 +1422,7 @@ Public Class Main
 
     End Sub
 
-    Private Sub btnSyncTitles_Click(sender As Object, e As EventArgs) Handles btnSyncTitles.Click
+    Private Sub btnSyncFlightPlanTitles_Click(sender As Object, e As EventArgs) Handles btnSyncFlightPlanTitle.Click
 
         If Not CheckUnsavedAndConfirmAction("Sync titles") Then
             Exit Sub
@@ -1472,6 +1486,26 @@ Public Class Main
         chkTitleLock.Checked = False
         _loadingFile = False
         SaveSession()
+
+    End Sub
+
+    Private Sub btnSyncWeatherTitles_Click(sender As Object, e As EventArgs) Handles btnSyncWeatherTitle.Click
+
+        If Not CheckUnsavedAndConfirmAction("Sync titles") Then
+            Exit Sub
+        End If
+
+        txtTitle.Text = txtTitle.Text.Trim
+
+        'Check if title is valid as a filename
+        Dim resultFilenameValidation As String = SupportingFeatures.ValidateFileName(txtTitle.Text)
+        If resultFilenameValidation <> String.Empty Then
+            'Title not valid as a filename
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"The title cannot be a filename:{Environment.NewLine}{resultFilenameValidation}", "Invalid filename", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
 
         'Sync weather profile name inside .wpr
         If _WeatherDetails.PresetName <> txtTitle.Text Then

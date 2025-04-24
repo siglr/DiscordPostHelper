@@ -80,11 +80,11 @@ Partial Class Main
         Me.pnlFlightPlanLeftSide = New System.Windows.Forms.Panel()
         Me.lblElevationUpdateWarning = New System.Windows.Forms.Label()
         Me.grbTaskInfo = New System.Windows.Forms.GroupBox()
+        Me.btnSyncWeatherTitle = New System.Windows.Forms.Button()
         Me.txtAATTask = New System.Windows.Forms.TextBox()
         Me.btnRecallTaskDescriptionTemplate = New System.Windows.Forms.Button()
         Me.btnSaveDescriptionTemplate = New System.Windows.Forms.Button()
         Me.btnWeatherBrowser = New System.Windows.Forms.Button()
-        Me.btnSyncTitles = New System.Windows.Forms.Button()
         Me.chkSoaringTypeDynamic = New System.Windows.Forms.CheckBox()
         Me.chkSoaringTypeWave = New System.Windows.Forms.CheckBox()
         Me.btnPasteUsernameCredits = New System.Windows.Forms.Button()
@@ -141,6 +141,7 @@ Partial Class Main
         Me.cboKnownTaskDesigners = New System.Windows.Forms.ComboBox()
         Me.btnSelectFlightPlan = New System.Windows.Forms.Button()
         Me.txtFlightPlanFile = New System.Windows.Forms.TextBox()
+        Me.btnSyncFlightPlanTitle = New System.Windows.Forms.Button()
         Me.tabEvent = New System.Windows.Forms.TabPage()
         Me.chkActivateEvent = New System.Windows.Forms.CheckBox()
         Me.pnlWizardEvent = New System.Windows.Forms.Panel()
@@ -1093,6 +1094,7 @@ Partial Class Main
         Me.pnlFlightPlanLeftSide.Controls.Add(Me.grbTaskInfo)
         Me.pnlFlightPlanLeftSide.Controls.Add(Me.btnSelectFlightPlan)
         Me.pnlFlightPlanLeftSide.Controls.Add(Me.txtFlightPlanFile)
+        Me.pnlFlightPlanLeftSide.Controls.Add(Me.btnSyncFlightPlanTitle)
         Me.pnlFlightPlanLeftSide.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlFlightPlanLeftSide.Location = New System.Drawing.Point(3, 3)
         Me.pnlFlightPlanLeftSide.Margin = New System.Windows.Forms.Padding(0)
@@ -1121,11 +1123,11 @@ Partial Class Main
         Me.grbTaskInfo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskInfo.Controls.Add(Me.btnSyncWeatherTitle)
         Me.grbTaskInfo.Controls.Add(Me.txtAATTask)
         Me.grbTaskInfo.Controls.Add(Me.btnRecallTaskDescriptionTemplate)
         Me.grbTaskInfo.Controls.Add(Me.btnSaveDescriptionTemplate)
         Me.grbTaskInfo.Controls.Add(Me.btnWeatherBrowser)
-        Me.grbTaskInfo.Controls.Add(Me.btnSyncTitles)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeDynamic)
         Me.grbTaskInfo.Controls.Add(Me.chkSoaringTypeWave)
         Me.grbTaskInfo.Controls.Add(Me.btnPasteUsernameCredits)
@@ -1188,6 +1190,20 @@ Partial Class Main
         Me.grbTaskInfo.TabIndex = 2
         Me.grbTaskInfo.TabStop = False
         '
+        'btnSyncWeatherTitle
+        '
+        Me.btnSyncWeatherTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSyncWeatherTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSyncWeatherTitle.Location = New System.Drawing.Point(657, 24)
+        Me.btnSyncWeatherTitle.Name = "btnSyncWeatherTitle"
+        Me.btnSyncWeatherTitle.Size = New System.Drawing.Size(66, 32)
+        Me.btnSyncWeatherTitle.TabIndex = 1
+        Me.btnSyncWeatherTitle.Tag = "22"
+        Me.btnSyncWeatherTitle.Text = "Sync"
+        Me.ToolTip1.SetToolTip(Me.btnSyncWeatherTitle, "Click this button to harmonize the weather's title and filename with the task's t" &
+        "itle.")
+        Me.btnSyncWeatherTitle.UseVisualStyleBackColor = True
+        '
         'txtAATTask
         '
         Me.txtAATTask.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1230,7 +1246,7 @@ Partial Class Main
         '
         Me.btnWeatherBrowser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWeatherBrowser.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnWeatherBrowser.Location = New System.Drawing.Point(635, 24)
+        Me.btnWeatherBrowser.Location = New System.Drawing.Point(536, 22)
         Me.btnWeatherBrowser.Name = "btnWeatherBrowser"
         Me.btnWeatherBrowser.Size = New System.Drawing.Size(88, 32)
         Me.btnWeatherBrowser.TabIndex = 2
@@ -1239,20 +1255,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnWeatherBrowser, "Click this button to open the weather profile browser / manager.")
         Me.btnWeatherBrowser.UseVisualStyleBackColor = True
         Me.btnWeatherBrowser.Visible = False
-        '
-        'btnSyncTitles
-        '
-        Me.btnSyncTitles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSyncTitles.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSyncTitles.Location = New System.Drawing.Point(656, 66)
-        Me.btnSyncTitles.Name = "btnSyncTitles"
-        Me.btnSyncTitles.Size = New System.Drawing.Size(66, 32)
-        Me.btnSyncTitles.TabIndex = 6
-        Me.btnSyncTitles.Tag = "22"
-        Me.btnSyncTitles.Text = "Sync"
-        Me.ToolTip1.SetToolTip(Me.btnSyncTitles, "Click this button to harmonize all titles and filenames for flight plan and weath" &
-        "er file.")
-        Me.btnSyncTitles.UseVisualStyleBackColor = True
         '
         'chkSoaringTypeDynamic
         '
@@ -1571,7 +1573,7 @@ Partial Class Main
         Me.txtTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTitle.Location = New System.Drawing.Point(189, 66)
         Me.txtTitle.Name = "txtTitle"
-        Me.txtTitle.Size = New System.Drawing.Size(461, 32)
+        Me.txtTitle.Size = New System.Drawing.Size(533, 32)
         Me.txtTitle.TabIndex = 5
         Me.txtTitle.Tag = "3"
         Me.ToolTip1.SetToolTip(Me.txtTitle, "Task title - can come from the flight plan's title.")
@@ -1616,7 +1618,7 @@ Partial Class Main
         Me.txtWeatherFile.Location = New System.Drawing.Point(189, 24)
         Me.txtWeatherFile.Name = "txtWeatherFile"
         Me.txtWeatherFile.ReadOnly = True
-        Me.txtWeatherFile.Size = New System.Drawing.Size(534, 32)
+        Me.txtWeatherFile.Size = New System.Drawing.Size(462, 32)
         Me.txtWeatherFile.TabIndex = 1
         Me.txtWeatherFile.TabStop = False
         Me.txtWeatherFile.Tag = "2"
@@ -1898,11 +1900,25 @@ Partial Class Main
         Me.txtFlightPlanFile.Location = New System.Drawing.Point(195, 18)
         Me.txtFlightPlanFile.Name = "txtFlightPlanFile"
         Me.txtFlightPlanFile.ReadOnly = True
-        Me.txtFlightPlanFile.Size = New System.Drawing.Size(534, 32)
+        Me.txtFlightPlanFile.Size = New System.Drawing.Size(462, 32)
         Me.txtFlightPlanFile.TabIndex = 1
         Me.txtFlightPlanFile.TabStop = False
         Me.txtFlightPlanFile.Tag = "1"
         Me.ToolTip1.SetToolTip(Me.txtFlightPlanFile, "Current flight plan file selected.")
+        '
+        'btnSyncFlightPlanTitle
+        '
+        Me.btnSyncFlightPlanTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSyncFlightPlanTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.12727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSyncFlightPlanTitle.Location = New System.Drawing.Point(663, 18)
+        Me.btnSyncFlightPlanTitle.Name = "btnSyncFlightPlanTitle"
+        Me.btnSyncFlightPlanTitle.Size = New System.Drawing.Size(66, 32)
+        Me.btnSyncFlightPlanTitle.TabIndex = 6
+        Me.btnSyncFlightPlanTitle.Tag = "22"
+        Me.btnSyncFlightPlanTitle.Text = "Sync"
+        Me.ToolTip1.SetToolTip(Me.btnSyncFlightPlanTitle, "Click this button to harmonize the flight plan's title and filename with the task" &
+        "'s title.")
+        Me.btnSyncFlightPlanTitle.UseVisualStyleBackColor = True
         '
         'tabEvent
         '
@@ -4853,7 +4869,7 @@ Partial Class Main
     Friend WithEvents FlowLayoutPanel23 As FlowLayoutPanel
     Friend WithEvents chkDGPOEventLogistics As CheckBox
     Friend WithEvents grpDiscordOthers As GroupBox
-    Friend WithEvents btnSyncTitles As Button
+    Friend WithEvents btnSyncFlightPlanTitle As Button
     Friend WithEvents txtClubFullName As TextBox
     Friend WithEvents FlowLayoutPanel24 As FlowLayoutPanel
     Friend WithEvents chkDGPOMainPost As CheckBox
@@ -4932,4 +4948,5 @@ Partial Class Main
     Friend WithEvents lblCountriesTestModeMsg As Label
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     Friend WithEvents chkDGPOAltRestrictions As CheckBox
+    Friend WithEvents btnSyncWeatherTitle As Button
 End Class
