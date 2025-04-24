@@ -322,6 +322,22 @@ try {
             ];
             $discordLogMessage = 'No Discord content provided - skipping Discord operations.';
         } else {
+            // === inject a “please upload your IGC” reminder ===
+            $reminder = "*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*";
+
+            if (preg_match('/\[Task Cover\]/', $discordMsg)) {
+                // insert reminder with a blank line before and after
+                $discordMsg = preg_replace(
+                    '/(\[Task Cover\].*)/s',
+                    "\n{$reminder}\n\n\$1",
+                    $discordMsg,
+                    1
+                );
+            } else {
+                // no cover: append with a blank line before
+                $discordMsg .= "\n\n{$reminder}";
+            }
+            // === end reminder injection ===
             if (isset($taskData['DiscordPostID']) && !empty($taskData['DiscordPostID'])) {
                 // Retrieve the existing Discord message content
                 $retrieveResult = getDiscordMessageContent($disWHFlights, $taskData['DiscordPostID']);

@@ -4003,6 +4003,9 @@ Public Class Main
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
         End If
 
+        logisticInstructions.AppendLine()
+        logisticInstructions.AppendLine("*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*")
+
         Return logisticInstructions.ToString()
 
     End Function
