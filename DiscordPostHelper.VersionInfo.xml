@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.4.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.4.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.4.24.1</ReleaseVersion>
+      <ReleaseTitle>Split Sync Title into two</ReleaseTitle>
+      <ReleaseNotes>
+        Split the "Sync Title" function into two buttons, one for the PLN, one for the WPR.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.4.2.1</ReleaseVersion>
       <ReleaseTitle>Small improvements and fixes</ReleaseTitle>
