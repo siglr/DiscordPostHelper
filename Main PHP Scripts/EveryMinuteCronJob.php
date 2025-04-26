@@ -30,6 +30,22 @@ try {
 
             // Update Discord post if both DiscordPostID and NormalPostContent are provided.
             if (!empty($discordPostID) && !empty($normalContent)) {
+                if (strpos($normalContent, "Don't forget to upload your IGC log file") === false) {
+                    $reminder = "*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*";
+
+                    if (preg_match('/\[Task Cover\]/', $normalContent)) {
+                        // insert reminder with a blank line before and after
+                        $normalContent = preg_replace(
+                            '/(\[Task Cover\].*)/s',
+                            "\n{$reminder}\n\n\$1",
+                            $normalContent,
+                            1
+                        );
+                    } else {
+                        // no cover: append with a blank line before
+                        $normalContent .= "\n\n{$reminder}";
+                    }
+                }
                 $discordResult = manageDiscordPost($disWHFlights, $normalContent, $discordPostID, false);
                 $discordResponse = json_decode($discordResult, true);
                 if ($discordResponse['result'] !== "success") {
