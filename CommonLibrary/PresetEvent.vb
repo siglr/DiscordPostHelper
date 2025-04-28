@@ -23,6 +23,7 @@
     Public ReadOnly Property ForceStartTask As Boolean
     Public ReadOnly Property DiscordURL As String
     Public ReadOnly Property SharedPublishers As List(Of String)
+    Public ReadOnly Property AuthorizedPublishers As List(Of String)
     Public ReadOnly Property EmojiID As String
 
     Private _emoji As String
@@ -56,7 +57,8 @@
                    pForceLaunch As Boolean,
                    pForceStartTask As Boolean,
                    pDiscordURL As String,
-                   pSharedPublishers As List(Of String))
+                   pSharedPublishers As List(Of String),
+                   pAuthorizedPublishers As List(Of String))
 
         ClubId = pClubId
         ClubName = pClubName
@@ -83,6 +85,7 @@
         ForceStartTask = pForceStartTask
         DiscordURL = $"https://discord.com/channels/{pDiscordURL}"
         SharedPublishers = pSharedPublishers
+        AuthorizedPublishers = pAuthorizedPublishers
 
     End Sub
 

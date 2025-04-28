@@ -17,10 +17,19 @@ try {
     // Convert KnownSoaringClubs to an array
     $clubs = [];
     foreach ($xml->KnownSoaringClubs->KnownSoaringClub as $club) {
+        // --- Shared publishers
         $sharedPublishers = [];
-        if ($club->SharedPublishers) {
+        if (isset($club->SharedPublishers->Name)) {
             foreach ($club->SharedPublishers->Name as $publisher) {
                 $sharedPublishers[] = (string)$publisher;
+            }
+        }
+
+        // --- Authorized publishers
+        $authorizedPublishers = [];
+        if (isset($club->AuthorizedPublishers->Name)) {
+            foreach ($club->AuthorizedPublishers->Name as $publisher) {
+                $authorizedPublishers[] = (string)$publisher;
             }
         }
 
@@ -49,7 +58,8 @@ try {
             'ForceLaunch' => filter_var($club->ForceLaunch, FILTER_VALIDATE_BOOLEAN),
             'ForceStartTask' => filter_var($club->ForceStartTask, FILTER_VALIDATE_BOOLEAN),
             'DiscordURL' => (string)$club->DiscordURL,
-            'SharedPublishers' => $sharedPublishers
+            'SharedPublishers' => $sharedPublishers,
+            'AuthorizedPublishers' => $authorizedPublishers
         ];
     }
 

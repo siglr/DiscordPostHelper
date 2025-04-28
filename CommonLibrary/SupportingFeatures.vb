@@ -146,6 +146,13 @@ Public Class SupportingFeatures
                                     sharedPublishers.Add(publisher.ToString())
                                 Next
                             End If
+                            ' Get AuthorizedPublishers as a List(Of String)
+                            Dim authorizedPublishers As New List(Of String)
+                            If club("AuthorizedPublishers") IsNot Nothing Then
+                                For Each publisher As JToken In club("AuthorizedPublishers")
+                                    authorizedPublishers.Add(publisher.ToString())
+                                Next
+                            End If
 
                             Dim presetEvent As New PresetEvent(
                                 club("ClubId").ToString(),
@@ -172,14 +179,14 @@ Public Class SupportingFeatures
                                 Boolean.Parse(club("ForceLaunch").ToString()),
                                 Boolean.Parse(club("ForceStartTask").ToString()),
                                 club("DiscordURL").ToString(),
-                                sharedPublishers
+                                sharedPublishers,
+                                authorizedPublishers
                                 )
                             DefaultKnownClubEvents.Add(presetEvent.ClubId, presetEvent)
                             If Not DiscordNameIDPair.ContainsKey(presetEvent.Emoji) Then
                                 DiscordNameIDPair.Add(presetEvent.Emoji, presetEvent.EmojiID)
                             End If
                         Next
-
 
                         ' Load Known Designers (extended version)
                         Dim designers As JArray = JArray.Parse(result("designersExtended").ToString())
