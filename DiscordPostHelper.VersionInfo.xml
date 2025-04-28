@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.4.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.4.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Better soaring club management</ReleaseTitle>
+      <ReleaseNotes>
+        Retrieve each "For beginners" guide through the WSG server
+        Added the UKVGA guide for beginners
+        Verify if a user has the right to create a group event for a specific club
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.4.24.1</ReleaseVersion>
       <ReleaseTitle>Split Sync Title into two</ReleaseTitle>
