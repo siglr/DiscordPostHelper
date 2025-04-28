@@ -429,6 +429,7 @@ Public Class Main
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
         lblDiscordTaskPostID.Text = "❌ Discord Post ID"
         lblWSGTaskEntrySeqID.Text = "❌ WeSimGlide.org ID: None"
+        lblEventClubNotAuthorized.Visible = False
 
         cboDifficulty.SelectedIndex = 0
         cboVoiceChannel.Items.Clear()
@@ -729,6 +730,14 @@ Public Class Main
         If txtTitle.Text.Trim = String.Empty Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "A title is required before saving!", "Title required", vbOKOnly, vbCritical)
+            End Using
+            Return
+        End If
+
+        'Check if user has the right to save / publish when an event is selected and he is not authorizede
+        If lblEventClubNotAuthorized.Enabled Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You are not authorized to save this file with event from this soaring club!", "Not authorized", vbOKOnly, vbCritical)
             End Using
             Return
         End If
@@ -2487,6 +2496,7 @@ Public Class Main
                 txtClubFullName.Text = "Specify your own club name"
                 txtTrackerGroup.Text = String.Empty
                 lblGroupEmoji.Text = String.Empty
+                lblEventClubNotAuthorized.Visible = False
             Else
                 txtClubFullName.ReadOnly = True
                 cboGroupOrClubName.Text = _ClubPreset.ClubId
@@ -2554,6 +2564,7 @@ Public Class Main
         End If
 
         'BuildGroupFlightPost()
+        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked AndAlso IsClubAuthorizedEventOrganizer
 
         SessionModified(SourceOfChange.EventTab)
 
@@ -2563,8 +2574,15 @@ Public Class Main
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
+            'Check if user is authorized to publish events for this club
+            If _ClubPreset.AuthorizedPublishers.Contains(lblWSGUserName.Text) Then
+                lblEventClubNotAuthorized.Visible = False
+            Else
+                lblEventClubNotAuthorized.Visible = True
+            End If
         Else
             _ClubPreset = Nothing
+            lblEventClubNotAuthorized.Visible = False
         End If
     End Sub
     Private Sub btnEventSelectNextWeekClicked(sender As Object, e As EventArgs) Handles btnEventSelectNextWeek.Click
@@ -2735,7 +2753,7 @@ Public Class Main
 
     Private Sub chkActivateEvent_CheckedChanged(sender As Object, e As EventArgs) Handles chkActivateEvent.CheckedChanged
         grpGroupEventPost.Enabled = chkActivateEvent.Checked
-        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked
+        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked AndAlso IsClubAuthorizedEventOrganizer
         chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
         SessionModified(SourceOfChange.EventTab)
     End Sub
@@ -5695,6 +5713,11 @@ Public Class Main
 #End Region
 
 #Region "Permissions"
+    Private ReadOnly Property IsClubAuthorizedEventOrganizer As Boolean
+        Get
+            Return Not lblEventClubNotAuthorized.Enabled
+        End Get
+    End Property
     Private ReadOnly Property IsOwnerOrShared As Boolean
         Get
             Return _currentWSGTaskOwner = _userName OrElse _currentWSGSharedWith.Contains(_userName) OrElse _isSuperUser
@@ -6839,7 +6862,7 @@ Public Class Main
     Private Sub btnStartTaskPost_EnabledChanged(sender As Object, e As EventArgs) Handles btnStartTaskPost.EnabledChanged
         If btnStartTaskPost.Enabled Then
             btnStartTaskPost.Enabled = IsOwnerOrShared
-            btnStartFullPostingWorkflow.Enabled = IsOwnerOrShared
+            btnStartFullPostingWorkflow.Enabled = IsOwnerOrShared AndAlso IsClubAuthorizedEventOrganizer
         End If
     End Sub
 
@@ -7310,6 +7333,11 @@ Public Class Main
 
         End Get
     End Property
+
+    Private Sub lblEventClubNotAuthorized_VisibleChanged(sender As Object, e As EventArgs) Handles lblEventClubNotAuthorized.VisibleChanged
+        lblEventClubNotAuthorized.Enabled = lblEventClubNotAuthorized.Visible
+        grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked AndAlso IsClubAuthorizedEventOrganizer
+    End Sub
 
 #End Region
 

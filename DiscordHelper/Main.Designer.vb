@@ -356,8 +356,9 @@ Partial Class Main
         Me.GetNowCountdown = New System.Windows.Forms.ToolStripMenuItem()
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
-        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
+        Me.lblEventClubNotAuthorized = New System.Windows.Forms.Label()
+        Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
         Me.tabFlightPlan.SuspendLayout()
@@ -1991,6 +1992,7 @@ Partial Class Main
         Me.grpGroupEventPost.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpGroupEventPost.Controls.Add(Me.lblEventClubNotAuthorized)
         Me.grpGroupEventPost.Controls.Add(Me.btnGroupEventURLGo)
         Me.grpGroupEventPost.Controls.Add(Me.btnEventSelectPrevWeek)
         Me.grpGroupEventPost.Controls.Add(Me.btnEventSelectNextWeek)
@@ -2146,7 +2148,7 @@ Partial Class Main
         Me.lblGroupEmoji.AutoSize = True
         Me.lblGroupEmoji.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblGroupEmoji.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGroupEmoji.Location = New System.Drawing.Point(847, 58)
+        Me.lblGroupEmoji.Location = New System.Drawing.Point(821, 22)
         Me.lblGroupEmoji.Name = "lblGroupEmoji"
         Me.lblGroupEmoji.Size = New System.Drawing.Size(18, 28)
         Me.lblGroupEmoji.TabIndex = 88
@@ -4484,6 +4486,32 @@ Partial Class Main
         Me.FileDropZone1.Tag = "25"
         Me.ToolTip1.SetToolTip(Me.FileDropZone1, "Drag files here to automatically process them depending on their type")
         '
+        'BriefingControl1
+        '
+        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BriefingControl1.EventIsEnabled = False
+        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
+        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
+        Me.BriefingControl1.Name = "BriefingControl1"
+        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
+        Me.BriefingControl1.TabIndex = 0
+        Me.BriefingControl1.Tag = "100"
+        '
+        'lblEventClubNotAuthorized
+        '
+        Me.lblEventClubNotAuthorized.AutoSize = True
+        Me.lblEventClubNotAuthorized.Enabled = False
+        Me.lblEventClubNotAuthorized.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblEventClubNotAuthorized.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblEventClubNotAuthorized.Location = New System.Drawing.Point(845, 64)
+        Me.lblEventClubNotAuthorized.Name = "lblEventClubNotAuthorized"
+        Me.lblEventClubNotAuthorized.Size = New System.Drawing.Size(475, 26)
+        Me.lblEventClubNotAuthorized.TabIndex = 104
+        Me.lblEventClubNotAuthorized.Text = "⚠️You are not authorized to publish events for this club"
+        Me.lblEventClubNotAuthorized.Visible = False
+        '
         'chkcboSharedWithUsers
         '
         Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4501,19 +4529,6 @@ Partial Class Main
         Me.chkcboSharedWithUsers.TabIndex = 2
         Me.chkcboSharedWithUsers.Tag = "43"
         Me.ToolTip1.SetToolTip(Me.chkcboSharedWithUsers, "Select other task designers to share publishing rights with.")
-        '
-        'BriefingControl1
-        '
-        Me.BriefingControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BriefingControl1.EventIsEnabled = False
-        Me.BriefingControl1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.BriefingControl1.Location = New System.Drawing.Point(0, 0)
-        Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
-        Me.BriefingControl1.Name = "BriefingControl1"
-        Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
-        Me.BriefingControl1.TabIndex = 0
-        Me.BriefingControl1.Tag = "100"
         '
         'Main
         '
@@ -4948,4 +4963,5 @@ Partial Class Main
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     Friend WithEvents chkDGPOAltRestrictions As CheckBox
     Friend WithEvents btnSyncWeatherTitle As Button
+    Friend WithEvents lblEventClubNotAuthorized As Label
 End Class
