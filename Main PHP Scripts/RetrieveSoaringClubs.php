@@ -44,6 +44,7 @@ try {
             'StartTaskDelay' => (int)$club->StartTaskDelay,
             'EligibleAward' => filter_var($club->EligibleAward, FILTER_VALIDATE_BOOLEAN),
             'BeginnerLink' => (string)$club->BeginnerLink,
+            'BeginnerLinkURL' => (string)$club->BeginnerLinkURL,
             'ForceSyncFly' => filter_var($club->ForceSyncFly, FILTER_VALIDATE_BOOLEAN),
             'ForceLaunch' => filter_var($club->ForceLaunch, FILTER_VALIDATE_BOOLEAN),
             'ForceStartTask' => filter_var($club->ForceStartTask, FILTER_VALIDATE_BOOLEAN),

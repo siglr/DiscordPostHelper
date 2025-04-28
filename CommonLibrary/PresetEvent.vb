@@ -17,7 +17,7 @@
     Public ReadOnly Property StartTaskDelay As Integer
     Public ReadOnly Property EligibleAward As Boolean
     Public ReadOnly Property BeginnerLink As String
-
+    Public ReadOnly Property BeginnerLinkURL As String
     Public ReadOnly Property ForceSyncFly As Boolean
     Public ReadOnly Property ForceLaunch As Boolean
     Public ReadOnly Property ForceStartTask As Boolean
@@ -51,6 +51,7 @@
                    pStartTaskDelay As Integer,
                    pEligibleAward As Boolean,
                    pBeginnerLink As String,
+                   pBeginnerLinkURL As String,
                    pForceSyncFly As Boolean,
                    pForceLaunch As Boolean,
                    pForceStartTask As Boolean,
@@ -76,6 +77,7 @@
         StartTaskDelay = pStartTaskDelay
         EligibleAward = pEligibleAward
         BeginnerLink = pBeginnerLink
+        BeginnerLinkURL = pBeginnerLinkURL
         ForceSyncFly = pForceSyncFly
         ForceLaunch = pForceLaunch
         ForceStartTask = pForceStartTask

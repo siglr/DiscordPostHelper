@@ -167,6 +167,7 @@ Public Class SupportingFeatures
                                 Integer.Parse(club("StartTaskDelay").ToString()),
                                 Boolean.Parse(club("EligibleAward").ToString()),
                                 club("BeginnerLink").ToString(),
+                                club("BeginnerLinkURL").ToString(),
                                 Boolean.Parse(club("ForceSyncFly").ToString()),
                                 Boolean.Parse(club("ForceLaunch").ToString()),
                                 Boolean.Parse(club("ForceStartTask").ToString()),

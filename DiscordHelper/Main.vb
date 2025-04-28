@@ -18,6 +18,9 @@ Imports System.Windows.Input
 Imports System.Web.UI.WebControls.WebParts
 Imports System.Text.RegularExpressions
 Imports System.Data.SqlTypes
+Imports System.Security.Policy
+Imports System.Web
+Imports System.Diagnostics.Eventing.Reader
 
 Public Class Main
 
@@ -152,6 +155,16 @@ Public Class Main
         If SessionSettings.WaitSecondsForFiles >= 1 AndAlso SessionSettings.WaitSecondsForFiles <= 10 Then
             numWaitSecondsForFiles.Value = SessionSettings.WaitSecondsForFiles
         End If
+
+        'Load clubs guides
+        cboBeginnersGuide.Items.Clear()
+        cboBeginnersGuide.Items.Add("None")
+        For Each club As PresetEvent In _SF.DefaultKnownClubEvents.Values
+            If Not cboBeginnersGuide.Items.Contains(club.BeginnerLink) Then
+                cboBeginnersGuide.Items.Add(club.BeginnerLink)
+            End If
+        Next
+        cboBeginnersGuide.Items.Add("Other (provide link below)")
 
         LoadDPOptions()
         LoadDGPOptions()
@@ -4187,11 +4200,13 @@ Public Class Main
                 If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
                     urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
                 End If
-            Case "The Beginner's Guide to Soaring Events (GotGravel)"
-                urlBeginnerGuide = "[The Beginner's Guide to Soaring Events (GotGravel)](https://discord.com/channels/793376245915189268/1097520643580362753/1097520937701736529)"
-            Case "How to join our Group Flights (Sim Soaring Club)"
-                urlBeginnerGuide = "[How to join our Group Flights (Sim Soaring Club)](https://discord.com/channels/876123356385149009/1038819881396744285)"
             Case Else
+                'Retrieve the link from the club
+                For Each club In _SF.DefaultKnownClubEvents.Values
+                    If club.BeginnerLink = cboBeginnersGuide.Text Then
+                        urlBeginnerGuide = $"[{club.BeginnerLink}]({club.BeginnerLinkURL})"
+                    End If
+                Next
         End Select
         If Not urlBeginnerGuide = String.Empty Then
             sb.AppendLine($"‍:student: If it's your first time flying with us, please make sure to read the following guide: {urlBeginnerGuide}")
