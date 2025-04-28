@@ -21,6 +21,7 @@ Imports System.Data.SqlTypes
 Imports System.Security.Policy
 Imports System.Web
 Imports System.Diagnostics.Eventing.Reader
+Imports System.Security.AccessControl
 
 Public Class Main
 
@@ -2572,10 +2573,20 @@ Public Class Main
 
     Private Sub SetClubPreset()
         Dim clubExists As Boolean = _SF.DefaultKnownClubEvents.ContainsKey(cboGroupOrClubName.Text.ToUpper)
+        If Not clubExists Then
+            cboGroupOrClubName.Text = "CUSTOM"
+            clubExists = True
+            txtClubFullName.ReadOnly = False
+            If txtClubFullName.Text.Trim = String.Empty Then
+                txtClubFullName.Text = "Specify your own club name"
+            End If
+            txtTrackerGroup.Text = String.Empty
+            lblGroupEmoji.Text = String.Empty
+        End If
         If clubExists Then
             _ClubPreset = _SF.DefaultKnownClubEvents(cboGroupOrClubName.Text.ToUpper)
             'Check if user is authorized to publish events for this club
-            If _ClubPreset.AuthorizedPublishers.Contains(lblWSGUserName.Text) Then
+            If _ClubPreset.AuthorizedPublishers.Contains(lblWSGUserName.Text) OrElse _ClubPreset.ClubId = "CUSTOM" Then
                 lblEventClubNotAuthorized.Visible = False
             Else
                 lblEventClubNotAuthorized.Visible = True
@@ -5498,9 +5509,9 @@ Public Class Main
                 chkActivateEvent.Checked = .EventEnabled
                 cboGroupOrClubName.Text = .GroupClubId
                 txtClubFullName.Text = .GroupClubName
-                SetClubPreset()
                 txtTrackerGroup.Text = .TrackerGroup
                 lblGroupEmoji.Text = .GroupEmoji
+                SetClubPreset()
                 txtEventTitle.Text = .EventTopic
                 cboMSFSServer.SelectedIndex = .MSFSServer
                 cboVoiceChannel.Text = .VoiceChannel
@@ -5715,7 +5726,7 @@ Public Class Main
 #Region "Permissions"
     Private ReadOnly Property IsClubAuthorizedEventOrganizer As Boolean
         Get
-            Return Not lblEventClubNotAuthorized.Enabled
+            Return (Not lblEventClubNotAuthorized.Enabled)
         End Get
     End Property
     Private ReadOnly Property IsOwnerOrShared As Boolean

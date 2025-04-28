@@ -2399,6 +2399,7 @@ Partial Class Main
         '
         'cboGroupOrClubName
         '
+        Me.cboGroupOrClubName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboGroupOrClubName.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cboGroupOrClubName.FormattingEnabled = True
         Me.cboGroupOrClubName.Items.AddRange(New Object() {"TSC", "FSC", "SSC Saturday", "Aus Tuesdays", "DTS"})
