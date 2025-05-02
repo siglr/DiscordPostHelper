@@ -15,6 +15,7 @@ Public Class Form1
     Private igcFiles As List(Of String)
     Private currentIdx As Integer
     Private igcDetails As IGCLookupDetails = Nothing
+    Private tempFolder As String = Nothing
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -22,33 +23,36 @@ Public Class Form1
         browser.DialogHandler = uploadHandler
         browser.Load("https://xp-soaring.github.io/tasks/b21_task_planner/index.html")
 
-    End Sub
+        Dim exeFolder = Path.GetDirectoryName(Application.ExecutablePath)
+        tempFolder = Path.Combine(exeFolder, "IGCTemp")
 
-    Private Sub btnSelectFolder_Click(sender As Object, e As EventArgs) _
-        Handles btnSelectFolder.Click
+        'Let's go!
+        igcFiles = IO.Directory.GetFiles(tempFolder, "*.igc").ToList()
 
-        Using fbd As New FolderBrowserDialog()
-            If fbd.ShowDialog() <> DialogResult.OK Then Return
+        ' Clear the multiline TextBox instead of ListBox
+        txtLog.Clear()
 
-            igcFiles = IO.Directory.GetFiles(fbd.SelectedPath, "*.igc").ToList()
+        If igcFiles.Count = 0 Then
+            txtLog.AppendText("No .igc files found." & Environment.NewLine)
+            Return
+        End If
 
-            ' Clear the multiline TextBox instead of ListBox
-            txtLog.Clear()
+        txtLog.AppendText($"Found {igcFiles.Count} files. Starting…{Environment.NewLine}")
+        currentIdx = 0
+        ProcessNextFileAsync()
 
-            If igcFiles.Count = 0 Then
-                txtLog.AppendText("No .igc files found." & Environment.NewLine)
-                Return
-            End If
 
-            txtLog.AppendText($"Found {igcFiles.Count} files. Starting…{Environment.NewLine}")
-            currentIdx = 0
-            ProcessNextFileAsync()
-        End Using
     End Sub
 
     Private Async Sub ProcessNextFileAsync()
         If currentIdx >= igcFiles.Count Then
             txtLog.AppendText("✅ All done." & Environment.NewLine)
+            txtLog.AppendText("✅ Clearing folder!" & Environment.NewLine)
+            'Clear the folder
+            If Directory.Exists(tempFolder) Then
+                Directory.Delete(tempFolder, recursive:=True)
+            End If
+            Directory.CreateDirectory(tempFolder)
             Return
         End If
 
@@ -59,6 +63,13 @@ Public Class Form1
 
         ' 1) Parse everything out of the .igc
         Dim doc = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        If doc Is Nothing Then
+            txtLog.AppendText("❌ Error parsing IGC file." & Environment.NewLine)
+            currentIdx += 1
+            ProcessNextFileAsync()
+            Return
+        End If
+
         Dim root = doc.RootElement
 
         igcDetails.TaskTitle = root.GetProperty("igcTitle").GetString()

@@ -172,7 +172,7 @@ Module IgcParser
             End If
         Next
         If headerData Is Nothing Then
-            Throw New Exception("No C-header found in IGC file.")
+            Return Nothing
         End If
 
         ' 3) LDAT → LocalDate

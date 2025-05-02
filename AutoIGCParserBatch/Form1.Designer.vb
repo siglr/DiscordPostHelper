@@ -23,7 +23,6 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         browser = New CefSharp.WinForms.ChromiumWebBrowser()
-        btnSelectFolder = New Button()
         txtLog = New TextBox()
         SuspendLayout()
         ' 
@@ -31,19 +30,10 @@ Partial Class Form1
         ' 
         browser.ActivateBrowserOnCreation = False
         browser.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-        browser.Location = New Point(12, 44)
+        browser.Location = New Point(12, 12)
         browser.Name = "browser"
-        browser.Size = New Size(1483, 911)
+        browser.Size = New Size(1483, 943)
         browser.TabIndex = 0
-        ' 
-        ' btnSelectFolder
-        ' 
-        btnSelectFolder.Location = New Point(12, 12)
-        btnSelectFolder.Name = "btnSelectFolder"
-        btnSelectFolder.Size = New Size(131, 26)
-        btnSelectFolder.TabIndex = 1
-        btnSelectFolder.Text = "Select Folder"
-        btnSelectFolder.UseVisualStyleBackColor = True
         ' 
         ' txtLog
         ' 
@@ -62,7 +52,6 @@ Partial Class Form1
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(2010, 967)
         Controls.Add(txtLog)
-        Controls.Add(btnSelectFolder)
         Controls.Add(browser)
         Name = "Form1"
         Text = "Form1"
@@ -71,7 +60,6 @@ Partial Class Form1
     End Sub
 
     Friend WithEvents browser As CefSharp.WinForms.ChromiumWebBrowser
-    Friend WithEvents btnSelectFolder As Button
     Friend WithEvents txtLog As TextBox
 
 End Class
