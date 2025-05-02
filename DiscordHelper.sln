@@ -25,6 +25,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TaskBrowserAdmin", "TaskBro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PHP Scripts", "{2363873E-68A6-4AA1-8D35-BB1D68483494}"
 	ProjectSection(SolutionItems) = preProject
+		Main PHP Scripts\CheckIgcUploaded.php = Main PHP Scripts\CheckIgcUploaded.php
 		Main PHP Scripts\CheckPermissions.php = Main PHP Scripts\CheckPermissions.php
 		Main PHP Scripts\CommonFunctions.php = Main PHP Scripts\CommonFunctions.php
 		config.php = config.php
@@ -40,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\IncrementThreadAccessForTask.php = Main PHP Scripts\IncrementThreadAccessForTask.php
 		Main PHP Scripts\ManageNews.php = Main PHP Scripts\ManageNews.php
 		Main PHP Scripts\ManageNewsWithRights.php = Main PHP Scripts\ManageNewsWithRights.php
+		Main PHP Scripts\MatchIGCToTask.php = Main PHP Scripts\MatchIGCToTask.php
 		Main PHP Scripts\PostingTaskToTestChannel.php = Main PHP Scripts\PostingTaskToTestChannel.php
 		Main PHP Scripts\RetrieveDeletedTasks.php = Main PHP Scripts\RetrieveDeletedTasks.php
 		Main PHP Scripts\RetrieveNews.php = Main PHP Scripts\RetrieveNews.php
@@ -47,9 +49,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\RetrieveUserRights.php = Main PHP Scripts\RetrieveUserRights.php
 		Main PHP Scripts\SaveDirectFileUnderTempFolder.php = Main PHP Scripts\SaveDirectFileUnderTempFolder.php
 		Main PHP Scripts\SaveFileUnderTempFolder.php = Main PHP Scripts\SaveFileUnderTempFolder.php
+		Main PHP Scripts\SaveIGCRecordForBatch.php = Main PHP Scripts\SaveIGCRecordForBatch.php
 		Main PHP Scripts\SaveTextFileUnderTempFolder.php = Main PHP Scripts\SaveTextFileUnderTempFolder.php
 		Main PHP Scripts\VerifyNewsExists.php = Main PHP Scripts\VerifyNewsExists.php
 	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AutoIGCParserBatch", "AutoIGCParserBatch\AutoIGCParserBatch.vbproj", "{E65DE5C4-425D-4619-B8E3-0A991BD9C938}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +90,10 @@ Global
 		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E992182-47CF-43E7-A529-2987F7DC3AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E65DE5C4-425D-4619-B8E3-0A991BD9C938}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{E65DE5C4-425D-4619-B8E3-0A991BD9C938}.Debug|Any CPU.Build.0 = Debug|x64
+		{E65DE5C4-425D-4619-B8E3-0A991BD9C938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E65DE5C4-425D-4619-B8E3-0A991BD9C938}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
