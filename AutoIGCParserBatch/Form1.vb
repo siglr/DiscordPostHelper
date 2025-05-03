@@ -45,6 +45,9 @@ Public Class Form1
     End Sub
 
     Private Async Sub ProcessNextFileAsync()
+
+        lblProgress.Text = $"{currentIdx} / {igcFiles.Count}"
+
         If currentIdx >= igcFiles.Count Then
             txtLog.AppendText("✅ All done." & Environment.NewLine)
             txtLog.AppendText("✅ Clearing folder!" & Environment.NewLine)
@@ -53,6 +56,10 @@ Public Class Form1
                 Directory.Delete(tempFolder, recursive:=True)
             End If
             Directory.CreateDirectory(tempFolder)
+
+            'Call the PHP script that reassigns the IGC records to a proper user if possible
+            Await CallSetUnassignedIGCRecordUserAsync()
+
             Return
         End If
 
@@ -631,6 +638,29 @@ Public Class Form1
         Catch ex As Exception
             txtLog.AppendText($"❌ HTTP error saving IGC: {ex.Message}{vbCrLf}")
             Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Calls the admin script to reassign any IGCRecords with WSGUserID=0.
+    ''' </summary>
+    Private Async Function CallSetUnassignedIGCRecordUserAsync() As Task
+        Try
+            Using client As New HttpClient()
+                client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
+                ' If your script accepts POST instead, swap to PostAsync with an empty FormUrlEncodedContent.
+                Dim resp = Await client.GetAsync("adm_SetUnassignedIGCRecordUser.php")
+                Dim body = Await resp.Content.ReadAsStringAsync()
+
+                If resp.IsSuccessStatusCode Then
+                    txtLog.AppendText($"✔ Reassigned unassigned IGC records: {body}{Environment.NewLine}")
+                Else
+                    txtLog.AppendText($"❌ Error reassigning IGC records: HTTP {CInt(resp.StatusCode)} – {resp.ReasonPhrase}{Environment.NewLine}")
+                    txtLog.AppendText(body & Environment.NewLine)
+                End If
+            End Using
+        Catch ex As Exception
+            txtLog.AppendText($"❌ Exception calling adm_SetUnassignedIGCRecordUser.php: {ex.Message}{Environment.NewLine}")
         End Try
     End Function
 

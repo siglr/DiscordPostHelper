@@ -24,6 +24,7 @@ Partial Class Form1
     Private Sub InitializeComponent()
         browser = New CefSharp.WinForms.ChromiumWebBrowser()
         txtLog = New TextBox()
+        lblProgress = New Label()
         SuspendLayout()
         ' 
         ' browser
@@ -46,11 +47,26 @@ Partial Class Form1
         txtLog.Size = New Size(497, 943)
         txtLog.TabIndex = 2
         ' 
+        ' lblProgress
+        ' 
+        lblProgress.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        lblProgress.AutoSize = True
+        lblProgress.BackColor = Color.White
+        lblProgress.BorderStyle = BorderStyle.FixedSingle
+        lblProgress.Font = New Font("Segoe UI", 40F, FontStyle.Bold)
+        lblProgress.Location = New Point(32, 850)
+        lblProgress.Name = "lblProgress"
+        lblProgress.Size = New Size(172, 86)
+        lblProgress.TabIndex = 3
+        lblProgress.Text = "1/10"
+        lblProgress.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(2010, 967)
+        Controls.Add(lblProgress)
         Controls.Add(txtLog)
         Controls.Add(browser)
         Name = "Form1"
@@ -61,5 +77,6 @@ Partial Class Form1
 
     Friend WithEvents browser As CefSharp.WinForms.ChromiumWebBrowser
     Friend WithEvents txtLog As TextBox
+    Friend WithEvents lblProgress As Label
 
 End Class

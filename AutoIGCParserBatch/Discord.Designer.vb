@@ -28,6 +28,8 @@ Partial Class frmDiscord
         btnGo = New Button()
         btnStart = New Button()
         btnUpload = New Button()
+        btnStop = New Button()
+        lblProgress = New Label()
         SuspendLayout()
         ' 
         ' txtLog
@@ -77,18 +79,45 @@ Partial Class frmDiscord
         ' 
         ' btnUpload
         ' 
-        btnUpload.Location = New Point(676, 10)
+        btnUpload.Location = New Point(789, 10)
         btnUpload.Name = "btnUpload"
         btnUpload.Size = New Size(155, 26)
         btnUpload.TabIndex = 8
         btnUpload.Text = "Process && Upload"
         btnUpload.UseVisualStyleBackColor = True
         ' 
+        ' btnStop
+        ' 
+        btnStop.Enabled = False
+        btnStop.Location = New Point(676, 10)
+        btnStop.Name = "btnStop"
+        btnStop.Size = New Size(107, 26)
+        btnStop.TabIndex = 9
+        btnStop.Text = "Stop scraping"
+        btnStop.UseVisualStyleBackColor = True
+        ' 
+        ' lblProgress
+        ' 
+        lblProgress.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        lblProgress.AutoSize = True
+        lblProgress.BackColor = Color.White
+        lblProgress.BorderStyle = BorderStyle.FixedSingle
+        lblProgress.Font = New Font("Segoe UI", 40F, FontStyle.Bold)
+        lblProgress.Location = New Point(30, 990)
+        lblProgress.Name = "lblProgress"
+        lblProgress.Size = New Size(71, 86)
+        lblProgress.TabIndex = 10
+        lblProgress.Tag = " "
+        lblProgress.Text = "  "
+        lblProgress.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' frmDiscord
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(2083, 1108)
+        Controls.Add(lblProgress)
+        Controls.Add(btnStop)
         Controls.Add(btnUpload)
         Controls.Add(btnStart)
         Controls.Add(btnGo)
@@ -107,4 +136,6 @@ Partial Class frmDiscord
     Friend WithEvents btnGo As Button
     Friend WithEvents btnStart As Button
     Friend WithEvents btnUpload As Button
+    Friend WithEvents btnStop As Button
+    Friend WithEvents lblProgress As Label
 End Class

@@ -7,10 +7,14 @@ Imports System.Net.Http
 Public Class frmDiscord
 
     Private listOfIGCUrls As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+    Private scrapingUp As Boolean = False
 
     Private Async Sub btnGo_Click(sender As Object, e As EventArgs) Handles btnGo.Click
 
         txtDiscordThreadURL.Text = Clipboard.GetText
+
+        txtLog.Clear()
+        listOfIGCUrls.Clear()
 
         Dim url = txtDiscordThreadURL.Text.Trim()
         If String.IsNullOrEmpty(url) Then
@@ -40,56 +44,43 @@ Public Class frmDiscord
         browser.Load("https://discord.com/channels/@me")
     End Sub
 
-    Private Async Sub ScrapeIgcUrlsFromDiscordThreadAsync()
-        txtLog.AppendText("→ Scanning IGC URLs in thread…" & vbCrLf)
+    Private Async Function ScrapeIgcUrlsFromDiscordThreadAsync() As Task
+        ' assume user has already loaded & manually scrolled to bottom…
+        txtLog.AppendText($"🎯 Starting harvest at bottom: {listOfIGCUrls.Count} links so far." & vbCrLf)
 
-        ' helper JS: find scrollable parent of the message list
-        Const findAndScrollJs As String = "
-      (function(dir){
+        Dim findAndScrollUpJs = "
+      (function(){
         const list = document.querySelector('ol[data-list-id=""chat-messages""]');
         if(!list) return false;
         let el = list;
-        // walk up until we find an element that's actually scrollable
         while(el && !(el.scrollHeight > el.clientHeight)) el = el.parentElement;
         if(!el) return false;
-        // scroll down or up
-        el.scrollTop = (dir === 'down' ? el.scrollHeight : 0);
+        el.scrollTop = 0;
         return true;
-      })(DIR);
+      })();
     "
 
-        ' 1) Scroll DOWN in a loop, scraping after each jump
-        txtLog.AppendText("→ Scrolling DOWN to newest…" & vbCrLf)
-        For i = 1 To 20
-            Dim js = findAndScrollJs.Replace("DIR", "'down'")
-            Dim r = Await browser.EvaluateScriptAsync(js)
-            If Not (r.Success AndAlso CBool(r.Result)) Then
-                txtLog.AppendText($"    ⚠ Could not find scroll container on pass {i}" & vbCrLf)
-                Exit For
+        Do While scrapingUp
+            ' scroll up
+            Dim r = Await browser.EvaluateScriptAsync(findAndScrollUpJs)
+            If Not (r.Success AndAlso Convert.ToBoolean(r.Result)) Then
+                txtLog.AppendText("    ⚠ Cannot find scroll container, aborting." & vbCrLf)
+                Exit Do
             End If
-            Await Task.Delay(500)
-            Await ExtractIgcLinksAsync()
-        Next
-        txtLog.AppendText("✔ Bottom region reached." & vbCrLf)
 
-        ' 2) Scroll UP in a loop, scraping after each jump
-        txtLog.AppendText("→ Scrolling UP to oldest…" & vbCrLf)
-        For i = 1 To 50
-            Dim js = findAndScrollJs.Replace("DIR", "'up'")
-            Dim r = Await browser.EvaluateScriptAsync(js)
-            If Not (r.Success AndAlso CBool(r.Result)) Then
-                txtLog.AppendText($"    ⚠ Could not find scroll container on pass {i}" & vbCrLf)
-                Exit For
-            End If
             Await Task.Delay(500)
-            Await ExtractIgcLinksAsync()
-        Next
-        txtLog.AppendText("✔ Top region reached." & vbCrLf)
-        txtLog.AppendText($"🎯 Total unique IGC files: {listOfIGCUrls.Count}{vbCrLf}")
 
+            ' harvest whatever's now in view
+            Await ExtractIgcLinksAsync()
+            txtLog.AppendText($"    ⬆️  Scrolled up — total so far: {listOfIGCUrls.Count}" & vbCrLf)
+        Loop
+
+        txtLog.AppendText($"✔️  Harvest loop ended. {listOfIGCUrls.Count} total IGC URLs collected." & vbCrLf)
+        scrapingUp = False
+
+        ' then call your downloader if you like
         Await DownloadAllIgcFilesAsync()
-
-    End Sub
+    End Function
 
     ''' <summary>
     ''' Pulls all .igc links currently in view into the field dictionary.
@@ -110,6 +101,7 @@ Public Class frmDiscord
             Dim name = Path.GetFileName(uri.LocalPath)
             If Not listOfIGCUrls.ContainsKey(name) Then
                 listOfIGCUrls.Add(name, url)
+                lblProgress.Text = $"0 / {listOfIGCUrls.Count}"
                 txtLog.AppendText($"  ➕ Found {name}" & vbCrLf)
             End If
         Next
@@ -154,6 +146,15 @@ Public Class frmDiscord
     End Function
 
     Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        txtLog.Clear()
+        listOfIGCUrls.Clear()
+        btnStop.Enabled = True
+        btnStart.Enabled = False
+        btnUpload.Enabled = False
+        btnGo.Enabled = False
+
+        scrapingUp = True
+        txtLog.AppendText("▶️  Starting auto-scroll up…" & vbCrLf)
         ScrapeIgcUrlsFromDiscordThreadAsync()
     End Sub
 
@@ -169,6 +170,7 @@ Public Class frmDiscord
         Directory.CreateDirectory(tempFolder)
 
         ' 3) Download each file
+        Dim indexCount As Integer = 0
         Using client As New HttpClient()
             For Each kvp In listOfIGCUrls
                 Dim name = kvp.Key    ' e.g. "Fliege_…igc"
@@ -176,6 +178,8 @@ Public Class frmDiscord
                 Dim dest = Path.Combine(tempFolder, name)
 
                 Try
+                    indexCount += 1
+                    lblProgress.Text = $"{indexCount} / {listOfIGCUrls.Count}"
                     txtLog.AppendText($"→ Downloading {name}…{vbCrLf}")
                     Dim data = Await client.GetByteArrayAsync(url)
                     File.WriteAllBytes(dest, data)
@@ -194,5 +198,14 @@ Public Class frmDiscord
         uploadForm.ShowDialog()
         uploadForm.Dispose()
         uploadForm = Nothing
+    End Sub
+
+    Private Sub btnStop_Click(sender As Object, e As EventArgs) Handles btnStop.Click
+        scrapingUp = False
+        btnStop.Enabled = False
+        btnStart.Enabled = True
+        btnUpload.Enabled = True
+        btnGo.Enabled = True
+        txtLog.AppendText("⏹  Stopped by user." & vbCrLf)
     End Sub
 End Class
