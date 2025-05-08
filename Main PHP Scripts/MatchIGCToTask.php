@@ -13,35 +13,52 @@ try {
         $data['igcWaypoints'] = json_decode($data['igcWaypoints'], true);
     }
 
-    // 2) Validate inputs
-    if (!isset($data['igcTitle']) || !isset($data['igcWaypoints'])) {
-        throw new Exception("Required parameters missing: igcTitle and igcWaypoints.");
-    }
-    $igcTitle     = trim($data['igcTitle']);
-    $igcWaypoints = $data['igcWaypoints'];
-
     // 3) Open DB
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $foundTask = null;
 
+    // If EntrySeqID has been forced - retrieve the PLNXML and nothing else
+    $entrySeqID = isset($data['entrySeqID']) ? (int)$data['entrySeqID'] : 0;
+    if ($entrySeqID > 0) {
+        $stmt = $pdo->prepare("
+            SELECT EntrySeqID, PLNXML
+              FROM Tasks
+             WHERE EntrySeqID = :EntrySeqID
+        ");
+        $stmt->bindValue(':EntrySeqID', $entrySeqID, PDO::PARAM_INT);
+        $stmt->execute();
+        $foundTask = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$foundTask) {
+            throw new Exception("Forced task does not exist!");
+        }
+    }
+
     //
     // === STEP 1: Search by Title ===
     //
-    $stmt = $pdo->prepare(
-        "SELECT EntrySeqID, PLNXML FROM Tasks WHERE PLNXML LIKE :titleClause"
-    );
-    $titleClause = '%<Title>' . $igcTitle . '</Title>%';
-    $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
-    $stmt->execute();
-    $titleResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!$foundTask) {
+        if (!isset($data['igcTitle']) || !isset($data['igcWaypoints'])) {
+            throw new Exception("Required parameters missing: igcTitle and igcWaypoints.");
+        }
+        $igcTitle     = trim($data['igcTitle']);
+        $igcWaypoints = $data['igcWaypoints'];
 
-    if (!empty($titleResults)) {
-        foreach ($titleResults as $cand) {
-            if (validateCandidate($cand, $igcWaypoints)) {
-                $foundTask = $cand;
-                break;
+        $stmt = $pdo->prepare(
+            "SELECT EntrySeqID, PLNXML FROM Tasks WHERE PLNXML LIKE :titleClause"
+        );
+        $titleClause = '%<Title>' . $igcTitle . '</Title>%';
+        $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
+        $stmt->execute();
+        $titleResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!empty($titleResults)) {
+            foreach ($titleResults as $cand) {
+                if (validateCandidate($cand, $igcWaypoints)) {
+                    $foundTask = $cand;
+                    break;
+                }
             }
         }
     }
@@ -101,7 +118,8 @@ try {
     if ($foundTask) {
         echo json_encode([
             'status'     => 'found',
-            'EntrySeqID' => $foundTask['EntrySeqID']
+            'EntrySeqID' => $foundTask['EntrySeqID'],
+            'PLNXML' => $foundTask['PLNXML']
         ]);
     } else {
         echo json_encode([

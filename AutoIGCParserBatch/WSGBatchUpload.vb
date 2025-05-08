@@ -7,6 +7,8 @@ Imports System.Net.Http
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Net.Http.Headers
+Imports System.Collections.Specialized
+Imports System.Net
 
 Public Class WSGBatchUpload
 
@@ -39,10 +41,22 @@ Public Class WSGBatchUpload
             Return
         End If
 
+        If ForcedTaskId > 0 Then
+            'We need to retrieve the flight plan file from the server
+            Dim plnxml As String = FetchPlnXml(ForcedTaskId)
+            If plnxml <> "" Then
+                ' write it out as [EntrySeqID].pln
+                Dim plnPath = Path.Combine(tempFolder, $"{ForcedTaskId}.pln")
+                File.WriteAllText(plnPath, plnxml)
+                txtLog.AppendText($"✔ Forced flight-plan saved to: {plnPath}" & Environment.NewLine)
+            Else
+                txtLog.AppendText($"❌ Could not fetch PLNXML for task {ForcedTaskId}" & Environment.NewLine)
+            End If
+        End If
+
         txtLog.AppendText($"Found {igcFiles.Count} files. Starting…{Environment.NewLine}")
         currentIdx = 0
         ProcessNextFileAsync()
-
 
     End Sub
 
@@ -105,7 +119,12 @@ Public Class WSGBatchUpload
         }) _
         .ToList()
 
-        igcDetails.EntrySeqID = Await GetOrFetchEntrySeqID()
+        'If the EntrySeqID has been forced, then no need to call the server to search and retrieve the correct task
+        If ForcedTaskId > 0 Then
+            igcDetails.EntrySeqID = ForcedTaskId
+        Else
+            igcDetails.EntrySeqID = Await GetOrFetchEntrySeqID()
+        End If
 
         If igcDetails.EntrySeqID = 0 Then
             txtLog.AppendText($"❌ No matching task for IGC: {Path.GetFileName(igcDetails.IGCLocalFilePath)}. Skipping." & vbCrLf)
@@ -120,17 +139,29 @@ Public Class WSGBatchUpload
         Dim alreadyUploaded As Boolean = Await ParseIGCFileAndCheckIfAlreadyUploaded()
 
         If Not alreadyUploaded Then
-            ' 1) Tell our handler which file to feed in
+            If ForcedTaskId > 0 Then
+                'Load the flight plan first
+                ' Tell our handler which file to feed in
+                uploadHandler.FileToUpload = $"{tempFolder}\{ForcedTaskId}.pln"
+
+                ' Fire the JS “Choose file(s)” click
+                Await ClickElementByIdAsync("drop_zone_choose_button")
+
+                ' Wait for the file input to be populated
+                Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+                If Not gotPlnFile Then
+                    txtLog.AppendText("  ❌ PLN File never made it into the input!" & Environment.NewLine)
+                    Return
+                End If
+            End If
+            ' Tell our handler which file to feed in
             uploadHandler.FileToUpload = igcDetails.IGCLocalFilePath
 
-            ' 2) Fire the JS “Choose file(s)” click
+            ' Fire the JS “Choose file(s)” click
             Await ClickElementByIdAsync("drop_zone_choose_button")
 
-            ' 3) Wait for the file input to be populated
-            Dim gotFile = Await WaitForConditionAsync(
-      "document.getElementById('drop_zone_choose_input').files.length > 0",
-      timeoutSeconds:=5
-    )
+            ' Wait for the file input to be populated
+            Dim gotFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
             If Not gotFile Then
                 txtLog.AppendText("  ❌ File never made it into the input!" & Environment.NewLine)
                 Return
@@ -519,7 +550,6 @@ Public Class WSGBatchUpload
 
         igcDetails.AlreadyUploaded = True
 
-        ' 6) Call CheckIgcUploaded.php
         Try
             Using client As New HttpClient()
                 client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
@@ -548,7 +578,6 @@ Public Class WSGBatchUpload
             Return igcDetails.AlreadyUploaded
         End Try
 
-        ' 7) Not found, proceed
         igcDetails.AlreadyUploaded = False
         Return igcDetails.AlreadyUploaded
 
@@ -663,6 +692,47 @@ Public Class WSGBatchUpload
             End Using
         Catch ex As Exception
             txtLog.AppendText($"❌ Exception calling adm_SetUnassignedIGCRecordUser.php: {ex.Message}{Environment.NewLine}")
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Given an EntrySeqID, POSTs to your modified MatchIGCToTask.php
+    ''' (which, when entrySeqID>0, returns { status:"found", EntrySeqID:…, PLNXML:… } )
+    ''' and returns the PLNXML (or "" on error).
+    ''' </summary>
+    Private Function FetchPlnXml(entrySeqID As Integer) As String
+        Const url As String = "https://siglr.com/DiscordPostHelper/MatchIGCToTask.php"
+        Try
+            Using client As New HttpClient()
+                ' build the form data
+                Dim formData = New List(Of KeyValuePair(Of String, String)) From {
+                New KeyValuePair(Of String, String)("entrySeqID", entrySeqID.ToString())
+            }
+                Dim content = New FormUrlEncodedContent(formData)
+
+                ' POST and block on the result
+                Dim resp = client.PostAsync(url, content).GetAwaiter().GetResult()
+                If Not resp.IsSuccessStatusCode Then
+                    txtLog.AppendText($"❌ PHP error {(CInt(resp.StatusCode))} {resp.ReasonPhrase}" & vbCrLf)
+                    Return String.Empty
+                End If
+
+                ' read and parse JSON
+                Dim body = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+                Dim doc = JsonDocument.Parse(body)
+                Dim root = doc.RootElement
+                Dim status = root.GetProperty("status").GetString()
+
+                If status = "found" Then
+                    Return root.GetProperty("PLNXML").GetString()
+                Else
+                    txtLog.AppendText($"❌ Fetch PLNXML failed (status={status})" & vbCrLf)
+                    Return String.Empty
+                End If
+            End Using
+        Catch ex As Exception
+            txtLog.AppendText($"❌ Error fetching PLNXML: {ex.Message}" & vbCrLf)
+            Return String.Empty
         End Try
     End Function
 

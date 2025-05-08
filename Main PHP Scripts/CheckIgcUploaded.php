@@ -3,8 +3,8 @@ require __DIR__ . '/CommonFunctions.php';
 
 try {
     // 1) Grab POST data
-    $key = $_POST['IGCKey']      ?? null;
-    $entrySeqID = $_POST['EntrySeqID'] ?? null;
+    $key         = $_POST['IGCKey']      ?? null;
+    $entrySeqID  = $_POST['EntrySeqID']  ?? null;
     if (!$key || !$entrySeqID) {
         throw new Exception("Missing required parameters: IGCKey and EntrySeqID.");
     }
@@ -13,21 +13,25 @@ try {
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // 3) Check IGCRecords for this key+task
-    $sql = "SELECT 1 FROM IGCRecords WHERE IGCKey = :igcKey AND EntrySeqID = :entrySeq";
+    // 3) Case-insensitive check for this key+task
+    $sql = "
+      SELECT 1
+        FROM IGCRecords
+       WHERE IGCKey   COLLATE NOCASE = :igcKey
+         AND EntrySeqID           = :entrySeq
+      LIMIT 1
+    ";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':igcKey'    => $key,
-        ':entrySeq'  => $entrySeqID
+        ':igcKey'   => $key,
+        ':entrySeq' => (int)$entrySeqID
     ]);
-    $exists = (bool) $stmt->fetchColumn();
+    $exists = (bool)$stmt->fetchColumn();
 
     // 4) Return JSON
-    if ($exists) {
-        echo json_encode(['status' => 'exists']);
-    } else {
-        echo json_encode(['status' => 'not_found']);
-    }
+    echo json_encode([
+        'status' => $exists ? 'exists' : 'not_found'
+    ]);
 }
 catch (Exception $e) {
     echo json_encode([
@@ -36,3 +40,4 @@ catch (Exception $e) {
     ]);
     exit;
 }
+?>

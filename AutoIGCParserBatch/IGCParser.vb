@@ -149,16 +149,15 @@ Module IgcParser
         Dim norm = FindGliderType(gliderType)
         If norm <> "" Then gliderType = norm
 
-        ' 2) C-lines: header + waypoints
-        ' Declare headerData as a nullable tuple of the correct fields
+        ' 2) Try to read a real C-header + waypoints
         Dim headerData As (
-                    utcDate As String,
-                    utcTime As String,
-                    localTime As String,
-                    flightId As String,
-                    numWaypoints As String,
-                    taskTitle As String
-                )? = Nothing
+        utcDate As String,
+        utcTime As String,
+        localTime As String,
+        flightId As String,
+        numWaypoints As String,
+        taskTitle As String
+    )? = Nothing
         Dim waypoints As New List(Of (id As String, coord As String))()
         For Each L In lines
             If Not L.StartsWith("C"c) Then Continue For
@@ -171,8 +170,53 @@ Module IgcParser
                 waypoints.Add((wp.Value.originalId, $"{wp.Value.latitude},{wp.Value.longitude}"))
             End If
         Next
+
+        ' 2b) If no C-header, synthesize one from HFDTE + B + LTIM
         If headerData Is Nothing Then
-            Return Nothing
+            ' date from HFDTE or today
+            Dim fallbackDate As DateTime = Date.UtcNow
+            Dim hLine = lines.FirstOrDefault(Function(l) l.StartsWith("HFDTE"))
+            If hLine IsNot Nothing Then
+                Dim m = Regex.Match(hLine, "^HFDTE(\d{2})(\d{2})(\d{2})$")
+                If m.Success Then
+                    Dim d = Integer.Parse(m.Groups(1).Value)
+                    Dim mo = Integer.Parse(m.Groups(2).Value)
+                    Dim yy = 2000 + Integer.Parse(m.Groups(3).Value)
+                    fallbackDate = New DateTime(yy, mo, d, 0, 0, 0, DateTimeKind.Utc)
+                End If
+            End If
+
+            ' time from first B-record
+            Dim bLine = lines.FirstOrDefault(Function(l) l.StartsWith("B"))
+            If bLine IsNot Nothing AndAlso bLine.Length >= 7 Then
+                Dim hh = Integer.Parse(bLine.Substring(1, 2))
+                Dim mm = Integer.Parse(bLine.Substring(3, 2))
+                Dim ss = Integer.Parse(bLine.Substring(5, 2))
+                fallbackDate = New DateTime(fallbackDate.Year, fallbackDate.Month, fallbackDate.Day, hh, mm, ss, DateTimeKind.Utc)
+            End If
+
+            ' localTime from LTIM if present
+            Dim localTimeF = ""
+            Dim lt = lines.FirstOrDefault(Function(l) l.Contains("LTIM"))
+            If lt IsNot Nothing Then
+                Dim mm = Regex.Match(lt, "LTIM\s+\d{6}\s+(\d{6})")
+                If mm.Success Then localTimeF = mm.Groups(1).Value
+            End If
+
+            ' build ddmmyy & hhmmss
+            Dim ddmmyy = fallbackDate.ToString("ddMMyy", Globalization.CultureInfo.InvariantCulture)
+            Dim hhmmss = fallbackDate.ToString("HHmmss", Globalization.CultureInfo.InvariantCulture)
+
+            headerData = (
+            utcDate:=ddmmyy,
+            utcTime:=hhmmss,
+            localTime:=If(localTimeF <> "", localTimeF, hhmmss),
+            flightId:="",
+            numWaypoints:="0",
+            taskTitle:=""   ' force-match scenario
+        )
+            ' leave waypoints empty
+            waypoints.Clear()
         End If
 
         ' 3) LDAT → LocalDate
@@ -185,41 +229,39 @@ Module IgcParser
                 Continue For
             End If
             Dim m = Regex.Match(L, "LDAT\s+\d{8}\s+(\d{8})")
-            If m.Success Then
-                localDateRaw = m.Groups(1).Value
-            End If
+            If m.Success Then localDateRaw = m.Groups(1).Value
         Next
         Dim localDate = If(localDateRaw <> "",
-          $"{localDateRaw.Substring(0, 4)}-{localDateRaw.Substring(4, 2)}-{localDateRaw.Substring(6, 2)}",
-          "")
+                     $"{localDateRaw.Substring(0, 4)}-{localDateRaw.Substring(4, 2)}-{localDateRaw.Substring(6, 2)}",
+                     "")
 
         ' 4) B-record for BeginTimeUTC
         Dim beginTimeUTC = ParseBRecord(lines)
 
         ' 5) Build IGCRecordDateTimeUTC = YYMMDDHHMMSS
-        Dim ddmmyy = headerData.Value.utcDate
-        Dim hhmmss = headerData.Value.utcTime
-        Dim keyDT = ddmmyy.Substring(4, 2) & ddmmyy.Substring(2, 2) & ddmmyy.Substring(0, 2) & hhmmss
+        Dim dd2 = headerData.Value.utcDate
+        Dim tt2 = headerData.Value.utcTime
+        Dim keyDT = dd2.Substring(4, 2) & dd2.Substring(2, 2) & dd2.Substring(0, 2) & tt2
 
-        ' 6) Assemble into an anonymous object
+        ' 6) Assemble into payload
         Dim payload = New With {
-          .igcTitle = headerData.Value.taskTitle,
-          .igcWaypoints = waypoints.Select(Function(w) New With {w.id, w.coord}).ToList(),
-          .pilot = pilot,
-          .gliderID = gliderID,
-          .competitionID = competitionID,
-          .competitionClass = competitionClass,
-          .gliderType = gliderType,
-          .NB21Version = nb21Version,
-          .Sim = sim,
-          .IGCRecordDateTimeUTC = keyDT,
-          .IGCUploadDateTimeUTC = Date.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-          .LocalDate = localDate,
-          .LocalTime = headerData.Value.localTime,
-          .BeginTimeUTC = beginTimeUTC
-        }
+              .igcTitle = headerData.Value.taskTitle,
+              .igcWaypoints = waypoints.Select(Function(w) New With {w.id, w.coord}).ToList(),
+              .pilot = pilot,
+              .gliderID = gliderID,
+              .competitionID = competitionID,
+              .competitionClass = competitionClass,
+              .gliderType = gliderType,
+              .NB21Version = nb21Version,
+              .Sim = sim,
+              .IGCRecordDateTimeUTC = keyDT,
+              .IGCUploadDateTimeUTC = Date.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+              .LocalDate = localDate,
+              .LocalTime = headerData.Value.localTime,
+              .BeginTimeUTC = beginTimeUTC
+            }
 
-        ' 7) Serialize & parse so caller gets a JsonDocument
+        ' 7) Serialize + return
         Dim json = JsonSerializer.Serialize(payload, New JsonSerializerOptions With {.WriteIndented = False})
         Return JsonDocument.Parse(json)
     End Function
