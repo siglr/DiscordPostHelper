@@ -30,7 +30,7 @@ try {
     // === STEP 1: Search by Title ===
     //
     $stmt = $pdo->prepare(
-        "SELECT * FROM Tasks WHERE PLNXML LIKE :titleClause"
+        "SELECT EntrySeqID, PLNXML FROM Tasks WHERE PLNXML LIKE :titleClause"
     );
     $titleClause = '%<Title>' . $igcTitle . '</Title>%';
     $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
@@ -57,7 +57,7 @@ try {
             $params[]  = '%<ATCWaypoint id="' . $wpID . '">%';
         }
         if (!empty($clauses)) {
-            $sql  = "SELECT * FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, PLNXML FROM Tasks WHERE " . implode(' AND ', $clauses);
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             $wpResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -83,7 +83,7 @@ try {
                 $clauses[] = "PLNXML LIKE ?";
                 $params[]  = '%<ATCWaypoint id="' . $wpID . '">%';
             }
-            $sql  = "SELECT * FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, PLNXML FROM Tasks WHERE " . implode(' AND ', $clauses);
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             $cands = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -30,6 +30,7 @@ Partial Class frmDiscord
         btnUpload = New Button()
         btnStop = New Button()
         lblProgress = New Label()
+        txtForcedTask = New TextBox()
         SuspendLayout()
         ' 
         ' txtLog
@@ -111,11 +112,19 @@ Partial Class frmDiscord
         lblProgress.Text = "  "
         lblProgress.TextAlign = ContentAlignment.MiddleCenter
         ' 
+        ' txtForcedTask
+        ' 
+        txtForcedTask.Location = New Point(950, 12)
+        txtForcedTask.Name = "txtForcedTask"
+        txtForcedTask.Size = New Size(52, 26)
+        txtForcedTask.TabIndex = 11
+        ' 
         ' frmDiscord
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(2083, 1108)
+        Controls.Add(txtForcedTask)
         Controls.Add(lblProgress)
         Controls.Add(btnStop)
         Controls.Add(btnUpload)
@@ -138,4 +147,5 @@ Partial Class frmDiscord
     Friend WithEvents btnUpload As Button
     Friend WithEvents btnStop As Button
     Friend WithEvents lblProgress As Label
+    Friend WithEvents txtForcedTask As TextBox
 End Class

@@ -8,7 +8,7 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Net.Http.Headers
 
-Public Class Form1
+Public Class WSGBatchUpload
 
     Private taskCache As New Dictionary(Of String, Integer)
     Private uploadHandler As UploadFileDialogHandler
@@ -16,6 +16,8 @@ Public Class Form1
     Private currentIdx As Integer
     Private igcDetails As IGCLookupDetails = Nothing
     Private tempFolder As String = Nothing
+
+    Public Property ForcedTaskId As Integer = 0
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 

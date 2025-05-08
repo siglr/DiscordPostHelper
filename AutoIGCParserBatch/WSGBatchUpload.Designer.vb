@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class WSGBatchUpload
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -61,7 +61,7 @@ Partial Class Form1
         lblProgress.Text = "1/10"
         lblProgress.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' Form1
+        ' WSGBatchUpload
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
@@ -69,8 +69,8 @@ Partial Class Form1
         Controls.Add(lblProgress)
         Controls.Add(txtLog)
         Controls.Add(browser)
-        Name = "Form1"
-        Text = "Form1"
+        Name = "WSGBatchUpload"
+        Text = "WSGBatchUpload"
         ResumeLayout(False)
         PerformLayout()
     End Sub

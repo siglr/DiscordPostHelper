@@ -194,10 +194,19 @@ Public Class frmDiscord
     End Function
 
     Private Sub btnUpload_Click(sender As Object, e As EventArgs) Handles btnUpload.Click
-        Dim uploadForm As New Form1
+        If txtForcedTask.Text.Trim <> String.Empty Then
+            If MsgBox($"Are you sure you want to force match these IGC to task #{txtForcedTask.Text.Trim} ?", vbYesNo, "Forced task specified") = vbNo Then
+                Exit Sub
+            End If
+        End If
+        Dim uploadForm As New WSGBatchUpload
+        If txtForcedTask.Text.Trim <> String.Empty Then
+            uploadForm.ForcedTaskId = CInt(txtForcedTask.Text)
+        End If
         uploadForm.ShowDialog()
         uploadForm.Dispose()
         uploadForm = Nothing
+        txtForcedTask.Text = String.Empty
     End Sub
 
     Private Sub btnStop_Click(sender As Object, e As EventArgs) Handles btnStop.Click
