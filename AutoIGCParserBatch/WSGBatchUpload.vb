@@ -104,6 +104,13 @@ Public Class WSGBatchUpload
         igcDetails.NB21Version = root.GetProperty("NB21Version").GetString()
         igcDetails.Sim = root.GetProperty("Sim").GetString()
 
+        If igcDetails.NB21Version Is Nothing OrElse igcDetails.NB21Version.Trim = String.Empty Then
+            txtLog.AppendText("❌ IGC file not coming from NB21 Logger." & Environment.NewLine)
+            currentIdx += 1
+            ProcessNextFileAsync()
+            Return
+        End If
+
         igcDetails.IGCRecordDateTimeUTC = root.GetProperty("IGCRecordDateTimeUTC").GetString()
         igcDetails.IGCUploadDateTimeUTC = root.GetProperty("IGCUploadDateTimeUTC").GetString()
         igcDetails.LocalDate = root.GetProperty("LocalDate").GetString()
