@@ -243,7 +243,18 @@ Module IgcParser
         Dim tt2 = headerData.Value.utcTime
         Dim keyDT = dd2.Substring(4, 2) & dd2.Substring(2, 2) & dd2.Substring(0, 2) & tt2
 
-        ' 6) Assemble into payload
+        ' 6) LocalTime fallback if "000000"
+        Dim localTime = headerData.Value.localTime
+        If localTime = "000000" Then
+            ' find first LTIM line and grab its second field
+            Dim ltimLine = lines.FirstOrDefault(Function(l) l.Contains("LTIM"))
+            If ltimLine IsNot Nothing Then
+                Dim m2 = Regex.Match(ltimLine, "LTIM\s+\d{6}\s+(\d{6})")
+                If m2.Success Then localTime = m2.Groups(1).Value
+            End If
+        End If
+
+        ' 7) Assemble into payload
         Dim payload = New With {
               .igcTitle = headerData.Value.taskTitle,
               .igcWaypoints = waypoints.Select(Function(w) New With {w.id, w.coord}).ToList(),
@@ -257,11 +268,11 @@ Module IgcParser
               .IGCRecordDateTimeUTC = keyDT,
               .IGCUploadDateTimeUTC = Date.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
               .LocalDate = localDate,
-              .LocalTime = headerData.Value.localTime,
+              .LocalTime = localTime,
               .BeginTimeUTC = beginTimeUTC
             }
 
-        ' 7) Serialize + return
+        ' 8) Serialize + return
         Dim json = JsonSerializer.Serialize(payload, New JsonSerializerOptions With {.WriteIndented = False})
         Return JsonDocument.Parse(json)
     End Function
