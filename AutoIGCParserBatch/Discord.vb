@@ -89,8 +89,6 @@ Public Class frmDiscord
         txtLog.AppendText($"✔️  Harvest loop ended. {listOfIGCUrls.Count} total IGC URLs collected." & vbCrLf)
         scrapingUp = False
 
-        ' then call your downloader if you like
-        Await DownloadAllIgcFilesAsync()
     End Function
 
     ''' <summary>
@@ -156,7 +154,7 @@ Public Class frmDiscord
         Return False
     End Function
 
-    Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+    Private Async Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
         txtLog.Clear()
         listOfIGCUrls.Clear()
         btnStop.Enabled = True
@@ -165,16 +163,19 @@ Public Class frmDiscord
         btnGo.Enabled = False
         forcedTaskConfirmed = False
 
+        Await TryJumpToPresentAsync()
+
+        scrapingUp = True
+        txtLog.AppendText("▶️  Starting auto-scroll up…" & vbCrLf)
+        Await ScrapeIgcUrlsFromDiscordThreadAsync()
         If txtForcedTask.Text.Trim <> String.Empty Then
             If MsgBox($"Are you sure you want to force match these IGC to task #{txtForcedTask.Text.Trim} ?", vbYesNo, "Forced task specified") = vbNo Then
                 Exit Sub
             End If
             forcedTaskConfirmed = True
         End If
+        Await DownloadAllIgcFilesAsync()
 
-        scrapingUp = True
-        txtLog.AppendText("▶️  Starting auto-scroll up…" & vbCrLf)
-        ScrapeIgcUrlsFromDiscordThreadAsync()
     End Sub
 
     Private Async Function DownloadAllIgcFilesAsync() As Task
@@ -243,4 +244,105 @@ Public Class frmDiscord
         btnGo.Enabled = True
         txtLog.AppendText("⏹  Stopped by user." & vbCrLf)
     End Sub
+
+    ''' <summary>
+    ''' Finds the center of the element with the given id and sends
+    ''' a real mouse‐down / up to that point.
+    ''' </summary>
+    Private Async Function ClickElementByIdAsync(id As String) As Task
+        ' 1) Get the element’s bounding rect from JS
+        Dim rectScript = $"
+      (function() {{
+        var e = document.getElementById('{id}');
+        if (!e) return null;
+        var r = e.getBoundingClientRect();
+        return {{ x: r.left + r.width/2, y: r.top + r.height/2 }};
+      }})();
+    "
+        Dim rectResp = Await browser.EvaluateScriptAsync(rectScript)
+        If Not rectResp.Success OrElse rectResp.Result Is Nothing Then
+            txtLog.AppendText($"⚠ Could not locate element #{id}{Environment.NewLine}")
+            Return
+        End If
+
+        ' 2) Extract coordinates
+        Dim dict = DirectCast(rectResp.Result, IDictionary(Of String, Object))
+        Dim x = Convert.ToDouble(dict("x"))
+        Dim y = Convert.ToDouble(dict("y"))
+
+        ' 3) Send a real mouse‐down + mouse‐up
+        Dim host = browser.GetBrowser().GetHost()
+
+        ' Mouse down with no modifiers:
+        host.SendMouseClickEvent(CInt(x), CInt(y), MouseButtonType.Left, False, 1, CefEventFlags.None)
+        ' Mouse up:
+        host.SendMouseClickEvent(CInt(x), CInt(y), MouseButtonType.Left, True, 1, CefEventFlags.None)
+
+    End Function
+
+    ''' <summary>
+    ''' Finds the center of the first element matching the CSS selector
+    ''' and sends a real mouse‐down/up so CEF treats it as a genuine click.
+    ''' </summary>
+    Private Async Function ClickElementAsync(selector As String) As Task
+        ' 1) Grab bounding rect
+        Dim rectScript = $"
+      (function(){{
+        var e = document.querySelector('{selector}');
+        if(!e) return null;
+        var r = e.getBoundingClientRect();
+        return {{ x:r.left + r.width/2, y:r.top + r.height/2 }};
+      }})();
+    "
+        Dim rectResp = Await browser.EvaluateScriptAsync(rectScript)
+        If Not rectResp.Success OrElse rectResp.Result Is Nothing Then
+            txtLog.AppendText($"⚠ Could not locate element '{selector}'{Environment.NewLine}")
+            Return
+        End If
+
+        Dim dict = DirectCast(rectResp.Result, IDictionary(Of String, Object))
+        Dim x = Convert.ToDouble(dict("x"))
+        Dim y = Convert.ToDouble(dict("y"))
+
+        ' 2) Send a real mouse click
+        Dim host = browser.GetBrowser().GetHost()
+        Dim mevt As New MouseEvent(CInt(x), CInt(y), CefEventFlags.None)
+        host.SendMouseClickEvent(mevt, MouseButtonType.Left, False, 1)
+        host.SendMouseClickEvent(mevt, MouseButtonType.Left, True, 1)
+
+    End Function
+
+    Private Async Function TryJumpToPresentAsync() As Task
+        txtLog.AppendText("→ Waiting up to 5s for ‘Jump To Present’ button…" & vbCrLf)
+
+        Dim found = Await WaitForConditionAsync(
+        "Array.from(document.querySelectorAll('button'))" &
+        ".some(b => b.textContent.trim() === 'Jump To Present')",
+        timeoutSeconds:=5
+    )
+
+        If Not found Then
+            txtLog.AppendText("→ ‘Jump To Present’ never appeared—continuing without it." & vbCrLf)
+            Return
+        End If
+
+        txtLog.AppendText("✔ ‘Jump To Present’ is visible; assigning id…" & vbCrLf)
+        Dim prep = Await browser.EvaluateScriptAsync("
+        (()=> {
+          const btn = Array.from(document.querySelectorAll('button'))
+                            .find(b => b.textContent.trim() === 'Jump To Present');
+          if (btn) btn.id = 'jumpPresentBtn';
+          return !!btn;
+        })();
+    ")
+        If prep.Success AndAlso Convert.ToBoolean(prep.Result) Then
+            txtLog.AppendText("✔ id=jumpPresentBtn assigned; clicking…" & vbCrLf)
+            Await ClickElementByIdAsync("jumpPresentBtn")
+            Await Task.Delay(1500)
+            txtLog.AppendText("✔ Jumped to present." & vbCrLf)
+        Else
+            txtLog.AppendText("⚠ Button vanished before we could click it." & vbCrLf)
+        End If
+    End Function
+
 End Class
