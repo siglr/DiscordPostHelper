@@ -31,6 +31,7 @@ Partial Class frmDiscord
         btnStop = New Button()
         lblProgress = New Label()
         txtForcedTask = New TextBox()
+        chkManualStop = New CheckBox()
         SuspendLayout()
         ' 
         ' txtLog
@@ -58,42 +59,42 @@ Partial Class frmDiscord
         txtDiscordThreadURL.Location = New Point(12, 11)
         txtDiscordThreadURL.Name = "txtDiscordThreadURL"
         txtDiscordThreadURL.Size = New Size(428, 26)
-        txtDiscordThreadURL.TabIndex = 5
+        txtDiscordThreadURL.TabIndex = 0
         ' 
         ' btnGo
         ' 
         btnGo.Location = New Point(446, 10)
         btnGo.Name = "btnGo"
         btnGo.Size = New Size(132, 26)
-        btnGo.TabIndex = 6
+        btnGo.TabIndex = 1
         btnGo.Text = "Paste && Go"
         btnGo.UseVisualStyleBackColor = True
         ' 
         ' btnStart
         ' 
-        btnStart.Location = New Point(584, 10)
+        btnStart.Location = New Point(642, 10)
         btnStart.Name = "btnStart"
         btnStart.Size = New Size(86, 26)
-        btnStart.TabIndex = 7
+        btnStart.TabIndex = 3
         btnStart.Text = "Get IGCs"
         btnStart.UseVisualStyleBackColor = True
         ' 
         ' btnUpload
         ' 
-        btnUpload.Location = New Point(789, 10)
+        btnUpload.Location = New Point(927, 11)
         btnUpload.Name = "btnUpload"
         btnUpload.Size = New Size(155, 26)
-        btnUpload.TabIndex = 8
+        btnUpload.TabIndex = 6
         btnUpload.Text = "Process && Upload"
         btnUpload.UseVisualStyleBackColor = True
         ' 
         ' btnStop
         ' 
         btnStop.Enabled = False
-        btnStop.Location = New Point(676, 10)
+        btnStop.Location = New Point(814, 10)
         btnStop.Name = "btnStop"
         btnStop.Size = New Size(107, 26)
-        btnStop.TabIndex = 9
+        btnStop.TabIndex = 5
         btnStop.Text = "Stop scraping"
         btnStop.UseVisualStyleBackColor = True
         ' 
@@ -114,16 +115,27 @@ Partial Class frmDiscord
         ' 
         ' txtForcedTask
         ' 
-        txtForcedTask.Location = New Point(950, 12)
+        txtForcedTask.Location = New Point(584, 11)
         txtForcedTask.Name = "txtForcedTask"
         txtForcedTask.Size = New Size(52, 26)
-        txtForcedTask.TabIndex = 11
+        txtForcedTask.TabIndex = 2
+        ' 
+        ' chkManualStop
+        ' 
+        chkManualStop.AutoSize = True
+        chkManualStop.Location = New Point(734, 13)
+        chkManualStop.Name = "chkManualStop"
+        chkManualStop.Size = New Size(74, 23)
+        chkManualStop.TabIndex = 4
+        chkManualStop.Text = "Manual"
+        chkManualStop.UseVisualStyleBackColor = True
         ' 
         ' frmDiscord
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(2083, 1108)
+        Controls.Add(chkManualStop)
         Controls.Add(txtForcedTask)
         Controls.Add(lblProgress)
         Controls.Add(btnStop)
@@ -133,8 +145,10 @@ Partial Class frmDiscord
         Controls.Add(txtDiscordThreadURL)
         Controls.Add(txtLog)
         Controls.Add(browser)
+        Location = New Point(80, 0)
         Name = "frmDiscord"
-        Text = "frmDiscord"
+        StartPosition = FormStartPosition.Manual
+        Text = "IGC Extractor"
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -148,4 +162,5 @@ Partial Class frmDiscord
     Friend WithEvents btnStop As Button
     Friend WithEvents lblProgress As Label
     Friend WithEvents txtForcedTask As TextBox
+    Friend WithEvents chkManualStop As CheckBox
 End Class

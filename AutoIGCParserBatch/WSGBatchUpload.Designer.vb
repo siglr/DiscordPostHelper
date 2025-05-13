@@ -70,6 +70,7 @@ Partial Class WSGBatchUpload
         Controls.Add(txtLog)
         Controls.Add(browser)
         Name = "WSGBatchUpload"
+        StartPosition = FormStartPosition.CenterParent
         Text = "WSGBatchUpload"
         ResumeLayout(False)
         PerformLayout()

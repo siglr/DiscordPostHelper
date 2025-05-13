@@ -3,11 +3,13 @@ Imports CefSharp.WinForms
 Imports System.IO
 Imports System.Diagnostics
 Imports System.Net.Http
+Imports System.DirectoryServices.ActiveDirectory
 
 Public Class frmDiscord
 
     Private listOfIGCUrls As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
     Private scrapingUp As Boolean = False
+    Private forcedTaskConfirmed As Boolean = False
 
     Private Async Sub btnGo_Click(sender As Object, e As EventArgs) Handles btnGo.Click
 
@@ -60,6 +62,8 @@ Public Class frmDiscord
       })();
     "
 
+        Dim oldCount As Integer = 0
+        Dim nbrTries As Integer = 0
         Do While scrapingUp
             ' scroll up
             Dim r = Await browser.EvaluateScriptAsync(findAndScrollUpJs)
@@ -68,11 +72,18 @@ Public Class frmDiscord
                 Exit Do
             End If
 
-            Await Task.Delay(500)
+            Await Task.Delay(400)
 
             ' harvest whatever's now in view
+            oldCount = listOfIGCUrls.Count
             Await ExtractIgcLinksAsync()
             txtLog.AppendText($"    ⬆️  Scrolled up — total so far: {listOfIGCUrls.Count}" & vbCrLf)
+            If listOfIGCUrls.Count = oldCount Then
+                nbrTries = nbrTries + 1
+                If nbrTries > 4 AndAlso Not chkManualStop.Checked Then
+                    btnStop_Click(btnStop, Nothing)
+                End If
+            End If
         Loop
 
         txtLog.AppendText($"✔️  Harvest loop ended. {listOfIGCUrls.Count} total IGC URLs collected." & vbCrLf)
@@ -152,6 +163,14 @@ Public Class frmDiscord
         btnStart.Enabled = False
         btnUpload.Enabled = False
         btnGo.Enabled = False
+        forcedTaskConfirmed = False
+
+        If txtForcedTask.Text.Trim <> String.Empty Then
+            If MsgBox($"Are you sure you want to force match these IGC to task #{txtForcedTask.Text.Trim} ?", vbYesNo, "Forced task specified") = vbNo Then
+                Exit Sub
+            End If
+            forcedTaskConfirmed = True
+        End If
 
         scrapingUp = True
         txtLog.AppendText("▶️  Starting auto-scroll up…" & vbCrLf)
@@ -188,13 +207,20 @@ Public Class frmDiscord
                     txtLog.AppendText($"❌ Error downloading {name}: {ex.Message}{vbCrLf}")
                 End Try
             Next
+
         End Using
 
         txtLog.AppendText($"🏁 All downloads complete. Files in: {tempFolder}{vbCrLf}")
+
+        If indexCount = listOfIGCUrls.Count Then
+            btnUpload_Click(btnUpload, Nothing)
+            forcedTaskConfirmed = False
+        End If
+
     End Function
 
     Private Sub btnUpload_Click(sender As Object, e As EventArgs) Handles btnUpload.Click
-        If txtForcedTask.Text.Trim <> String.Empty Then
+        If txtForcedTask.Text.Trim <> String.Empty AndAlso Not forcedTaskConfirmed Then
             If MsgBox($"Are you sure you want to force match these IGC to task #{txtForcedTask.Text.Trim} ?", vbYesNo, "Forced task specified") = vbNo Then
                 Exit Sub
             End If
