@@ -76,6 +76,8 @@ Public Class WSGBatchUpload
             'Call the PHP script that reassigns the IGC records to a proper user if possible
             Await CallSetUnassignedIGCRecordUserAsync()
 
+            'Load the still unassigned IGC results
+            browser.Load($"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={igcDetails.EntrySeqID}&only_unassigned=1")
             Return
         End If
 
