@@ -563,6 +563,22 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
+            'Fix the weather file format to be compatible with both MSFS versions
+            If _allDPHData.WeatherFilename <> String.Empty Then
+                'Weather file present
+                Dim weatherFile As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename))
+                If File.Exists(weatherFile) Then
+                    If _SF.FixWPRFormat(weatherFile) Then
+                        'Success
+                    Else
+                        'Failure
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show($"Unable to verify and fix the weather file for compatibility with both MSFS versions.", "Fixing WPR file", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        End Using
+                    End If
+                End If
+            End If
+
             'We need to retrieve the DiscordPostID from the task online server
             GetTaskDetails(_allDPHData.TaskID, _allDPHData.EntrySeqID)
 
