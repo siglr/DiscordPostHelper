@@ -2279,6 +2279,11 @@ Public Class Main
     Private Sub LoadWeatherfile(filename As String)
         'read file
         txtWeatherFile.Text = filename
+
+        'Fix weather
+        If Not _SF.FixWPRFormat(filename, False) Then
+        End If
+
         _XmlDocWeatherPreset.Load(filename)
 
         _WeatherDetails = Nothing
