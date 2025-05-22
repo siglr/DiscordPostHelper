@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.3.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.5.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.5.22.1</ReleaseVersion>
+      <ReleaseTitle>Better weather file compatibility</ReleaseTitle>
+      <ReleaseNotes>
+        Auto fix the weather file at load for better compatibility with MSFS 2020 and 2024
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.3.3.1</ReleaseVersion>
       <ReleaseTitle>Sync with the DPH tool and small bug fixes</ReleaseTitle>
