@@ -958,32 +958,47 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Function FixWPRFormat(wprFilename As String) As Boolean
-
-        Dim xmlWeatherPreset As New XmlDocument
-
+    Public Function FixWPRFormat(wprFilename As String, expandSelfClosingTags As Boolean) As Boolean
         Try
-            xmlWeatherPreset.Load(wprFilename)
+            ' --- Step 1: Remove <ComputeWindFromDeparture> if present ---
+            Dim xmlDoc As New XmlDocument()
+            xmlDoc.Load(wprFilename)
 
-            Dim nodesToRemove As XmlNodeList = xmlWeatherPreset.DocumentElement.SelectNodes("WeatherPreset.Preset/ComputeWindFromDeparture")
-
-            If nodesToRemove IsNot Nothing AndAlso nodesToRemove.Count > 0 Then
+            Dim nodesToRemove As XmlNodeList = xmlDoc.DocumentElement.SelectNodes("WeatherPreset.Preset/ComputeWindFromDeparture")
+            If nodesToRemove IsNot Nothing Then
                 For Each node As XmlNode In nodesToRemove
                     node.ParentNode.RemoveChild(node)
                 Next
 
-                xmlWeatherPreset.Save(wprFilename)
+                ' Save changes after removal
+                xmlDoc.Save(wprFilename)
+            End If
+
+            ' --- Step 2: Optionally convert self-closing tags to explicit open/close form ---
+            If expandSelfClosingTags Then
+                Dim content As String = File.ReadAllText(wprFilename)
+
+                Dim selfClosingTagRegex As New Regex("<([a-zA-Z0-9_]+)([^>]*)\s*/>", RegexOptions.Compiled)
+
+                Dim updatedContent As String = selfClosingTagRegex.Replace(content, Function(m)
+                                                                                        Dim tagName = m.Groups(1).Value
+                                                                                        Dim attributes = m.Groups(2).Value.Trim()
+                                                                                        If attributes.Length > 0 Then
+                                                                                            Return $"<{tagName} {attributes}></{tagName}>"
+                                                                                        Else
+                                                                                            Return $"<{tagName}></{tagName}>"
+                                                                                        End If
+                                                                                    End Function)
+
+                File.WriteAllText(wprFilename, updatedContent)
             End If
 
             Return True
 
         Catch ex As Exception
+            ' Optional: log or display error
             Return False
-
-        Finally
-            xmlWeatherPreset = Nothing
         End Try
-
     End Function
 
     Public Function GetVersionInfo() As VersionInfo

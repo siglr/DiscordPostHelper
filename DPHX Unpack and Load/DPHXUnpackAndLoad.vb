@@ -568,7 +568,7 @@ Public Class DPHXUnpackAndLoad
                 'Weather file present
                 Dim weatherFile As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename))
                 If File.Exists(weatherFile) Then
-                    If _SF.FixWPRFormat(weatherFile) Then
+                    If _SF.FixWPRFormat(weatherFile, False) Then
                         'Success
                     Else
                         'Failure
