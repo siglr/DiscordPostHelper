@@ -76,6 +76,9 @@ Public Class WSGBatchUpload
             'Call the PHP script that reassigns the IGC records to a proper user if possible
             Await CallSetUnassignedIGCRecordUserAsync()
 
+            'Call the PHP script that updates the latest IGC leader records JSON file
+            Await CallUpdateLatestIGCLeadersAsync()
+
             'Load the still unassigned IGC results
             browser.Load($"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={igcDetails.EntrySeqID}&only_unassigned=1")
             Return
@@ -701,6 +704,29 @@ Public Class WSGBatchUpload
             End Using
         Catch ex As Exception
             txtLog.AppendText($"❌ Exception calling adm_SetUnassignedIGCRecordUser.php: {ex.Message}{Environment.NewLine}")
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Calls the admin script to update the JSON files that contains the latest leader IGC records
+    ''' </summary>
+    Private Async Function CallUpdateLatestIGCLeadersAsync() As Task
+        Try
+            Using client As New HttpClient()
+                client.BaseAddress = New Uri("https://wesimglide.org/php/")
+                ' If your script accepts POST instead, swap to PostAsync with an empty FormUrlEncodedContent.
+                Dim resp = Await client.GetAsync("UpdateLatestIGCLeaders.php")
+                Dim body = Await resp.Content.ReadAsStringAsync()
+
+                If resp.IsSuccessStatusCode Then
+                    txtLog.AppendText($"✔ Updated latest IGC leaders file: {body}{Environment.NewLine}")
+                Else
+                    txtLog.AppendText($"❌ Error updating latest IGC leaders file: HTTP {CInt(resp.StatusCode)} – {resp.ReasonPhrase}{Environment.NewLine}")
+                    txtLog.AppendText(body & Environment.NewLine)
+                End If
+            End Using
+        Catch ex As Exception
+            txtLog.AppendText($"❌ Exception calling UpdateLatestIGCLeaders.php: {ex.Message}{Environment.NewLine}")
         End Try
     End Function
 
