@@ -5132,7 +5132,7 @@ Public Class Main
                 'Proceed to download the DPHX file
                 'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
                 Dim taskTitle As String = String.Empty
-                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGEntrySeqTaskID, taskTitle, True)
+                Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(inputForm.WSGEntrySeqTaskID, taskTitle, Not (_isSuperUser))
                 If taskID <> String.Empty Then
                     'Make sure temporary folder is available and empty
                     Dim tempDPHXFromWSGFolder As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempDPHXFromWSG")
