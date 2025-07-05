@@ -509,4 +509,35 @@ function getDiscordMessageContent($webhookUrl, $postID) {
     }
 }
 
+/**
+ * Returns the IP address of the current user.
+ *
+ * Checks various headers in case of proxies (e.g. Cloudflare),
+ * then falls back to REMOTE_ADDR.
+ *
+ * @return string Client IP address.
+ */
+function getClientIP(): string
+{
+    // If behind Cloudflare, this header will have the real IP
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        return $_SERVER['HTTP_CF_CONNECTING_IP'];
+    }
+
+    // Check for shared internet/ISP IP
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+
+    // Check for IPs passed from proxies
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Can be a comma-separated list; take the first one (original client)
+        $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim($ips[0]);
+    }
+
+    // Default fallback
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
 ?>
