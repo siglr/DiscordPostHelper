@@ -62,8 +62,6 @@ Public Class WSGBatchUpload
 
     Private Async Sub ProcessNextFileAsync()
 
-        lblProgress.Text = $"{currentIdx} / {igcFiles.Count}"
-
         If currentIdx >= igcFiles.Count Then
             txtLog.AppendText("✅ All done." & Environment.NewLine)
             txtLog.AppendText("✅ Clearing folder!" & Environment.NewLine)

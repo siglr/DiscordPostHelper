@@ -98,7 +98,7 @@ Module IgcParser
             orig = raw
         Else
             Dim parts = raw.Split(New Char() {";"c}, StringSplitOptions.RemoveEmptyEntries).Select(Function(s) s.Trim()) _
-               .ToArray()
+                .ToArray()
             If parts.Length = 3 Then
                 orig = parts(2)
             ElseIf parts.Length = 2 Then
