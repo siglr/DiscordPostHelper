@@ -146,6 +146,10 @@ Public Class Settings
             SessionSettings.Exclude2024WeatherFileFromCleanup = chkExclude2024WeatherFileFromCleanup.Checked
             SessionSettings.ExcludeXCSoarTaskFileFromCleanup = chkExcludeXCSoarTaskFileFromCleanup.Checked
             SessionSettings.ExcludeXCSoarMapFileFromCleanup = chkExcludeXCSoarMapFileFromCleanup.Checked
+            If cboWSGIntegration.SelectedIndex = -1 Then
+                cboWSGIntegration.SelectedIndex = 0 'Default to None if no selection made   
+            End If
+            SessionSettings.WSGIntegration = cboWSGIntegration.SelectedIndex
 
             If optOverwriteAlwaysOverwrite.Checked Then
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -626,6 +630,8 @@ Public Class Settings
         chkExclude2024WeatherFileFromCleanup.Checked = SessionSettings.Exclude2024WeatherFileFromCleanup
         chkExcludeXCSoarTaskFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarTaskFileFromCleanup
         chkExcludeXCSoarMapFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarMapFileFromCleanup
+
+        cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
 
     End Sub
 

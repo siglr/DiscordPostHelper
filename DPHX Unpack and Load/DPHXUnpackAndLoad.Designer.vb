@@ -31,9 +31,11 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripOpen = New System.Windows.Forms.ToolStripButton()
         Me.toolStripUnpack = New System.Windows.Forms.ToolStripButton()
         Me.toolStripCleanup = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripFileBrowser = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.toolStripDiscordTaskLibrary = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripWSGMap = New System.Windows.Forms.ToolStripButton()
+        Me.toolStripWSGEvents = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.toolStripB21Planner = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
@@ -44,7 +46,6 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripSettings = New System.Windows.Forms.ToolStripButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.txtPackageName = New System.Windows.Forms.TextBox()
-        Me.chkNewsRetrieval = New System.Windows.Forms.CheckBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
         Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
@@ -64,27 +65,12 @@ Partial Class DPHXUnpackAndLoad
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.RetrieveNewsList = New System.Windows.Forms.Timer(Me.components)
-        Me.newsSplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.btnNewsPanelCollapse = New System.Windows.Forms.Button()
-        Me.flowNewsPanel = New System.Windows.Forms.FlowLayoutPanel()
-        Me.contextGroupEventNews = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ctxtNewsViewTaskInLibrary = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ctxtNewsDownloadAndOpenTask = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ctxtNewsVisitGroupEvent = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.pnlDPHFile.SuspendLayout()
         Me.msfs2024ToolStrip.SuspendLayout()
         Me.msfs2020ToolStrip.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
-        CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.newsSplitContainer.Panel1.SuspendLayout()
-        Me.newsSplitContainer.Panel2.SuspendLayout()
-        Me.newsSplitContainer.SuspendLayout()
-        Me.contextGroupEventNews.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlToolbar
@@ -103,7 +89,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.toolStripFileBrowser, Me.ToolStripSeparator1, Me.toolStripDiscordTaskLibrary, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator3, Me.toolStripFileBrowser, Me.ToolStripSeparator1, Me.toolStripWSGMap, Me.toolStripWSGEvents, Me.ToolStripSeparator4, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
@@ -140,6 +126,11 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripCleanup.Text = "&Cleanup"
         Me.toolStripCleanup.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
+        '
         'toolStripFileBrowser
         '
         Me.toolStripFileBrowser.Image = CType(resources.GetObject("toolStripFileBrowser.Image"), System.Drawing.Image)
@@ -147,20 +138,30 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripFileBrowser.Name = "toolStripFileBrowser"
         Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 25)
         Me.toolStripFileBrowser.Text = "File Browser"
+        Me.toolStripFileBrowser.ToolTipText = "Click to open the File Browser"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
-        'toolStripDiscordTaskLibrary
+        'toolStripWSGMap
         '
-        Me.toolStripDiscordTaskLibrary.Image = CType(resources.GetObject("toolStripDiscordTaskLibrary.Image"), System.Drawing.Image)
-        Me.toolStripDiscordTaskLibrary.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.toolStripDiscordTaskLibrary.Name = "toolStripDiscordTaskLibrary"
-        Me.toolStripDiscordTaskLibrary.Size = New System.Drawing.Size(114, 25)
-        Me.toolStripDiscordTaskLibrary.Text = "Task &Library"
-        Me.toolStripDiscordTaskLibrary.ToolTipText = "Click here to open the Task Library Browser."
+        Me.toolStripWSGMap.Image = CType(resources.GetObject("toolStripWSGMap.Image"), System.Drawing.Image)
+        Me.toolStripWSGMap.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripWSGMap.Name = "toolStripWSGMap"
+        Me.toolStripWSGMap.Size = New System.Drawing.Size(63, 25)
+        Me.toolStripWSGMap.Text = "Map"
+        Me.toolStripWSGMap.ToolTipText = "Click to open WeSimGlide Map"
+        '
+        'toolStripWSGEvents
+        '
+        Me.toolStripWSGEvents.Image = CType(resources.GetObject("toolStripWSGEvents.Image"), System.Drawing.Image)
+        Me.toolStripWSGEvents.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.toolStripWSGEvents.Name = "toolStripWSGEvents"
+        Me.toolStripWSGEvents.Size = New System.Drawing.Size(77, 25)
+        Me.toolStripWSGEvents.Text = "Events"
+        Me.toolStripWSGEvents.ToolTipText = "Click to open WeSimGlide Events"
         '
         'ToolStripSeparator4
         '
@@ -233,18 +234,6 @@ Partial Class DPHXUnpackAndLoad
         Me.txtPackageName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip1.SetToolTip(Me.txtPackageName, "The currently loaded DPHX package file")
         Me.txtPackageName.Visible = False
-        '
-        'chkNewsRetrieval
-        '
-        Me.chkNewsRetrieval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkNewsRetrieval.AutoSize = True
-        Me.chkNewsRetrieval.Location = New System.Drawing.Point(20, 6)
-        Me.chkNewsRetrieval.Name = "chkNewsRetrieval"
-        Me.chkNewsRetrieval.Size = New System.Drawing.Size(199, 24)
-        Me.chkNewsRetrieval.TabIndex = 7
-        Me.chkNewsRetrieval.Text = "Disable automatic retrieval"
-        Me.ToolTip1.SetToolTip(Me.chkNewsRetrieval, "Check this to disable the automatic retrieval of news.")
-        Me.chkNewsRetrieval.UseVisualStyleBackColor = True
         '
         'OpenFileDialog1
         '
@@ -432,108 +421,19 @@ Partial Class DPHXUnpackAndLoad
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ctrlBriefing.EventIsEnabled = False
         Me.ctrlBriefing.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.ctrlBriefing.Location = New System.Drawing.Point(0, -4)
+        Me.ctrlBriefing.Location = New System.Drawing.Point(0, 105)
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
-        Me.ctrlBriefing.Size = New System.Drawing.Size(756, 597)
+        Me.ctrlBriefing.Size = New System.Drawing.Size(1006, 597)
         Me.ctrlBriefing.TabIndex = 3
-        '
-        'RetrieveNewsList
-        '
-        Me.RetrieveNewsList.Enabled = True
-        Me.RetrieveNewsList.Interval = 60000
-        '
-        'newsSplitContainer
-        '
-        Me.newsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.newsSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
-        Me.newsSplitContainer.IsSplitterFixed = True
-        Me.newsSplitContainer.Location = New System.Drawing.Point(0, 105)
-        Me.newsSplitContainer.Name = "newsSplitContainer"
-        '
-        'newsSplitContainer.Panel1
-        '
-        Me.newsSplitContainer.Panel1.Controls.Add(Me.btnNewsPanelCollapse)
-        Me.newsSplitContainer.Panel1.Controls.Add(Me.ctrlBriefing)
-        '
-        'newsSplitContainer.Panel2
-        '
-        Me.newsSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.newsSplitContainer.Panel2.Controls.Add(Me.flowNewsPanel)
-        Me.newsSplitContainer.Panel2.Controls.Add(Me.chkNewsRetrieval)
-        Me.newsSplitContainer.Size = New System.Drawing.Size(1006, 595)
-        Me.newsSplitContainer.SplitterDistance = 759
-        Me.newsSplitContainer.SplitterWidth = 1
-        Me.newsSplitContainer.TabIndex = 8
-        '
-        'btnNewsPanelCollapse
-        '
-        Me.btnNewsPanelCollapse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewsPanelCollapse.Location = New System.Drawing.Point(744, 17)
-        Me.btnNewsPanelCollapse.Name = "btnNewsPanelCollapse"
-        Me.btnNewsPanelCollapse.Size = New System.Drawing.Size(17, 85)
-        Me.btnNewsPanelCollapse.TabIndex = 4
-        Me.btnNewsPanelCollapse.Text = ">"
-        Me.btnNewsPanelCollapse.UseVisualStyleBackColor = True
-        '
-        'flowNewsPanel
-        '
-        Me.flowNewsPanel.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.flowNewsPanel.AutoScroll = True
-        Me.flowNewsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
-        Me.flowNewsPanel.Location = New System.Drawing.Point(0, 36)
-        Me.flowNewsPanel.Name = "flowNewsPanel"
-        Me.flowNewsPanel.Size = New System.Drawing.Size(284, 559)
-        Me.flowNewsPanel.TabIndex = 6
-        Me.flowNewsPanel.WrapContents = False
-        '
-        'contextGroupEventNews
-        '
-        Me.contextGroupEventNews.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.contextGroupEventNews.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ctxtNewsViewTaskInLibrary, Me.ctxtNewsDownloadAndOpenTask, Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent, Me.ctxtNewsViewTaskInLibraryVisitGroupEvent, Me.ctxtNewsVisitGroupEvent})
-        Me.contextGroupEventNews.Name = "contextGroupEventNews"
-        Me.contextGroupEventNews.ShowImageMargin = False
-        Me.contextGroupEventNews.Size = New System.Drawing.Size(228, 124)
-        '
-        'ctxtNewsViewTaskInLibrary
-        '
-        Me.ctxtNewsViewTaskInLibrary.Name = "ctxtNewsViewTaskInLibrary"
-        Me.ctxtNewsViewTaskInLibrary.Size = New System.Drawing.Size(227, 24)
-        Me.ctxtNewsViewTaskInLibrary.Text = "View in library"
-        '
-        'ctxtNewsDownloadAndOpenTask
-        '
-        Me.ctxtNewsDownloadAndOpenTask.Name = "ctxtNewsDownloadAndOpenTask"
-        Me.ctxtNewsDownloadAndOpenTask.Size = New System.Drawing.Size(227, 24)
-        Me.ctxtNewsDownloadAndOpenTask.Text = "Open task"
-        '
-        'ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent
-        '
-        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Name = "ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent"
-        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
-        Me.ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Text = "Open task && event"
-        '
-        'ctxtNewsViewTaskInLibraryVisitGroupEvent
-        '
-        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Name = "ctxtNewsViewTaskInLibraryVisitGroupEvent"
-        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
-        Me.ctxtNewsViewTaskInLibraryVisitGroupEvent.Text = "View in library && open event"
-        '
-        'ctxtNewsVisitGroupEvent
-        '
-        Me.ctxtNewsVisitGroupEvent.Name = "ctxtNewsVisitGroupEvent"
-        Me.ctxtNewsVisitGroupEvent.Size = New System.Drawing.Size(227, 24)
-        Me.ctxtNewsVisitGroupEvent.Text = "Open event"
         '
         'DPHXUnpackAndLoad
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1006, 724)
-        Me.Controls.Add(Me.newsSplitContainer)
+        Me.Controls.Add(Me.ctrlBriefing)
         Me.Controls.Add(Me.txtPackageName)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.pnlDPHFile)
@@ -558,12 +458,6 @@ Partial Class DPHXUnpackAndLoad
         Me.msfs2020ToolStrip.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.newsSplitContainer.Panel1.ResumeLayout(False)
-        Me.newsSplitContainer.Panel2.ResumeLayout(False)
-        Me.newsSplitContainer.Panel2.PerformLayout()
-        CType(Me.newsSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.newsSplitContainer.ResumeLayout(False)
-        Me.contextGroupEventNews.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -581,8 +475,6 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStripUnpack As ToolStripButton
     Friend WithEvents toolStripCleanup As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents toolStripDiscordTaskLibrary As ToolStripButton
-    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents toolStripB21Planner As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
@@ -598,17 +490,7 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents tool2020StatusStop As ToolStripButton
     Friend WithEvents ToolStrip1 As ToolStripExtensions.ToolStripExtended
     Friend WithEvents toolStripFileBrowser As ToolStripButton
-    Friend WithEvents RetrieveNewsList As Timer
-    Friend WithEvents chkNewsRetrieval As CheckBox
     Friend WithEvents newsSplitContainer As SplitContainer
-    Friend WithEvents flowNewsPanel As FlowLayoutPanel
-    Friend WithEvents btnNewsPanelCollapse As Button
-    Friend WithEvents contextGroupEventNews As ContextMenuStrip
-    Friend WithEvents ctxtNewsViewTaskInLibrary As ToolStripMenuItem
-    Friend WithEvents ctxtNewsDownloadAndOpenTask As ToolStripMenuItem
-    Friend WithEvents ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent As ToolStripMenuItem
-    Friend WithEvents ctxtNewsViewTaskInLibraryVisitGroupEvent As ToolStripMenuItem
-    Friend WithEvents ctxtNewsVisitGroupEvent As ToolStripMenuItem
     Friend WithEvents msfs2024ToolStrip As ToolStrip
     Friend WithEvents tool2024StatusOK As ToolStripButton
     Friend WithEvents tool2024StatusStop As ToolStripButton
@@ -616,4 +498,8 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents lbl2024AllFilesStatus As ToolStripTextBox
     Friend WithEvents ToolStripLabel2 As ToolStripLabel
     Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents toolStripWSGMap As ToolStripButton
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents toolStripWSGEvents As ToolStripButton
 End Class

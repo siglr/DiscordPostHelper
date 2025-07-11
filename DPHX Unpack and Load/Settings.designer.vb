@@ -35,9 +35,6 @@ Partial Class Settings
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Button()
         Me.btnUnpackingFolder = New System.Windows.Forms.Button()
-        Me.optOverwriteAlwaysOverwrite = New System.Windows.Forms.RadioButton()
-        Me.optOverwriteAlwaysSkip = New System.Windows.Forms.RadioButton()
-        Me.optOverwriteAlwaysAsk = New System.Windows.Forms.RadioButton()
         Me.btn2020WeatherPresetsFolderPaste = New System.Windows.Forms.Button()
         Me.btnTempFolderPaste = New System.Windows.Forms.Button()
         Me.btnPackagesFolderPaste = New System.Windows.Forms.Button()
@@ -82,28 +79,34 @@ Partial Class Settings
         Me.btnTrackerEXEFolderClear = New System.Windows.Forms.Button()
         Me.btnTrackerEXEFolderPaste = New System.Windows.Forms.Button()
         Me.btnTrackerEXEFolder = New System.Windows.Forms.Button()
+        Me.optOverwriteAlwaysOverwrite = New System.Windows.Forms.RadioButton()
+        Me.optOverwriteAlwaysSkip = New System.Windows.Forms.RadioButton()
+        Me.optOverwriteAlwaysAsk = New System.Windows.Forms.RadioButton()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
+        Me.separator3 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.pnlUnpackingFolder = New System.Windows.Forms.Panel()
+        Me.separator4 = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.pnlPackagesFolder = New System.Windows.Forms.Panel()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnlNB21LoggerFlightsFolder = New System.Windows.Forms.Panel()
+        Me.separator5 = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.pnlAutoUnpack = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.pnlXCSoarMapsFolder = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.pnlNoticeAndButtons = New System.Windows.Forms.Panel()
+        Me.separator9 = New System.Windows.Forms.Panel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlMSFS2024WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.pnlMSFS2024FlightPlanFilesFolder = New System.Windows.Forms.Panel()
+        Me.separator2 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.pnlMSFSInstallations = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
@@ -118,16 +121,17 @@ Partial Class Settings
         Me.pnlLocalWSPort = New System.Windows.Forms.Panel()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.pnlTrackerExe = New System.Windows.Forms.Panel()
+        Me.separator6 = New System.Windows.Forms.Panel()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.separator2 = New System.Windows.Forms.Panel()
-        Me.separator3 = New System.Windows.Forms.Panel()
-        Me.separator4 = New System.Windows.Forms.Panel()
-        Me.separator5 = New System.Windows.Forms.Panel()
-        Me.separator6 = New System.Windows.Forms.Panel()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.separator7 = New System.Windows.Forms.Panel()
-        Me.separator8 = New System.Windows.Forms.Panel()
+        Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
+        Me.pnlWSGAutoLaunch = New System.Windows.Forms.Panel()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.cboWSGIntegration = New System.Windows.Forms.ComboBox()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -135,7 +139,6 @@ Partial Class Settings
         Me.pnlUnpackingFolder.SuspendLayout()
         Me.pnlPackagesFolder.SuspendLayout()
         Me.pnlNB21LoggerFlightsFolder.SuspendLayout()
-        Me.pnlAutoOverwrite.SuspendLayout()
         Me.pnlAutoUnpack.SuspendLayout()
         Me.pnlXCSoarMapsFolder.SuspendLayout()
         Me.pnlNoticeAndButtons.SuspendLayout()
@@ -149,6 +152,9 @@ Partial Class Settings
         Me.pnlNB21LoggerExe.SuspendLayout()
         Me.pnlLocalWSPort.SuspendLayout()
         Me.pnlTrackerExe.SuspendLayout()
+        Me.separator7.SuspendLayout()
+        Me.pnlAutoOverwrite.SuspendLayout()
+        Me.pnlWSGAutoLaunch.SuspendLayout()
         Me.SuspendLayout()
         '
         'okCancelPanel
@@ -289,41 +295,6 @@ Partial Class Settings
         Me.btnUnpackingFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnUnpackingFolder, "Select the folder for the flight plan files (.pln)")
         Me.btnUnpackingFolder.UseVisualStyleBackColor = True
-        '
-        'optOverwriteAlwaysOverwrite
-        '
-        Me.optOverwriteAlwaysOverwrite.AutoSize = True
-        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 6)
-        Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
-        Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
-        Me.optOverwriteAlwaysOverwrite.TabIndex = 1
-        Me.optOverwriteAlwaysOverwrite.Text = "Always overwrite"
-        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysOverwrite, "Files with the same names will be overwritten")
-        Me.optOverwriteAlwaysOverwrite.UseVisualStyleBackColor = True
-        '
-        'optOverwriteAlwaysSkip
-        '
-        Me.optOverwriteAlwaysSkip.AutoSize = True
-        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 6)
-        Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
-        Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
-        Me.optOverwriteAlwaysSkip.TabIndex = 2
-        Me.optOverwriteAlwaysSkip.Text = "Always skip"
-        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysSkip, "Files with the same names will be skipped")
-        Me.optOverwriteAlwaysSkip.UseVisualStyleBackColor = True
-        '
-        'optOverwriteAlwaysAsk
-        '
-        Me.optOverwriteAlwaysAsk.AutoSize = True
-        Me.optOverwriteAlwaysAsk.Checked = True
-        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 6)
-        Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
-        Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
-        Me.optOverwriteAlwaysAsk.TabIndex = 3
-        Me.optOverwriteAlwaysAsk.TabStop = True
-        Me.optOverwriteAlwaysAsk.Text = "Always ask"
-        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysAsk, "Files with the same names will result in a dialog asking you each time.")
-        Me.optOverwriteAlwaysAsk.UseVisualStyleBackColor = True
         '
         'btn2020WeatherPresetsFolderPaste
         '
@@ -852,6 +823,41 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolder, "Select the folder containing the tracker's EXE file")
         Me.btnTrackerEXEFolder.UseVisualStyleBackColor = True
         '
+        'optOverwriteAlwaysOverwrite
+        '
+        Me.optOverwriteAlwaysOverwrite.AutoSize = True
+        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 6)
+        Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
+        Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
+        Me.optOverwriteAlwaysOverwrite.TabIndex = 1
+        Me.optOverwriteAlwaysOverwrite.Text = "Always overwrite"
+        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysOverwrite, "Files with the same names will be overwritten")
+        Me.optOverwriteAlwaysOverwrite.UseVisualStyleBackColor = True
+        '
+        'optOverwriteAlwaysSkip
+        '
+        Me.optOverwriteAlwaysSkip.AutoSize = True
+        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 6)
+        Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
+        Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
+        Me.optOverwriteAlwaysSkip.TabIndex = 2
+        Me.optOverwriteAlwaysSkip.Text = "Always skip"
+        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysSkip, "Files with the same names will be skipped")
+        Me.optOverwriteAlwaysSkip.UseVisualStyleBackColor = True
+        '
+        'optOverwriteAlwaysAsk
+        '
+        Me.optOverwriteAlwaysAsk.AutoSize = True
+        Me.optOverwriteAlwaysAsk.Checked = True
+        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 6)
+        Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
+        Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
+        Me.optOverwriteAlwaysAsk.TabIndex = 3
+        Me.optOverwriteAlwaysAsk.TabStop = True
+        Me.optOverwriteAlwaysAsk.Text = "Always ask"
+        Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysAsk, "Files with the same names will result in a dialog asking you each time.")
+        Me.optOverwriteAlwaysAsk.UseVisualStyleBackColor = True
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -890,6 +896,14 @@ Partial Class Settings
         Me.pnlXCSoarTasksFolder.Size = New System.Drawing.Size(769, 45)
         Me.pnlXCSoarTasksFolder.TabIndex = 5
         '
+        'separator3
+        '
+        Me.separator3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator3.Location = New System.Drawing.Point(0, 0)
+        Me.separator3.Name = "separator3"
+        Me.separator3.Size = New System.Drawing.Size(787, 1)
+        Me.separator3.TabIndex = 11
+        '
         'Label8
         '
         Me.Label8.AutoSize = True
@@ -911,6 +925,14 @@ Partial Class Settings
         Me.pnlUnpackingFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlUnpackingFolder.Size = New System.Drawing.Size(769, 45)
         Me.pnlUnpackingFolder.TabIndex = 7
+        '
+        'separator4
+        '
+        Me.separator4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator4.Location = New System.Drawing.Point(0, 0)
+        Me.separator4.Name = "separator4"
+        Me.separator4.Size = New System.Drawing.Size(787, 1)
+        Me.separator4.TabIndex = 11
         '
         'Label3
         '
@@ -956,6 +978,14 @@ Partial Class Settings
         Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(769, 45)
         Me.pnlNB21LoggerFlightsFolder.TabIndex = 9
         '
+        'separator5
+        '
+        Me.separator5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator5.Location = New System.Drawing.Point(0, 0)
+        Me.separator5.Name = "separator5"
+        Me.separator5.Size = New System.Drawing.Size(787, 1)
+        Me.separator5.TabIndex = 11
+        '
         'Label10
         '
         Me.Label10.AutoSize = True
@@ -964,29 +994,6 @@ Partial Class Settings
         Me.Label10.Size = New System.Drawing.Size(165, 20)
         Me.Label10.TabIndex = 0
         Me.Label10.Text = "NB21 Log Flights Folder:"
-        '
-        'pnlAutoOverwrite
-        '
-        Me.pnlAutoOverwrite.Controls.Add(Me.separator7)
-        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysAsk)
-        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysSkip)
-        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
-        Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
-        Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 598)
-        Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
-        Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 39)
-        Me.pnlAutoOverwrite.TabIndex = 11
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(5, 8)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(147, 20)
-        Me.Label4.TabIndex = 0
-        Me.Label4.Text = "Automatic Overwrite:"
         '
         'pnlAutoUnpack
         '
@@ -997,7 +1004,7 @@ Partial Class Settings
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 39)
-        Me.pnlAutoUnpack.TabIndex = 12
+        Me.pnlAutoUnpack.TabIndex = 13
         '
         'Label6
         '
@@ -1032,15 +1039,23 @@ Partial Class Settings
         '
         'pnlNoticeAndButtons
         '
-        Me.pnlNoticeAndButtons.Controls.Add(Me.separator8)
+        Me.pnlNoticeAndButtons.Controls.Add(Me.separator9)
         Me.pnlNoticeAndButtons.Controls.Add(Me.Label7)
         Me.pnlNoticeAndButtons.Controls.Add(Me.okCancelPanel)
         Me.pnlNoticeAndButtons.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 721)
+        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 760)
         Me.pnlNoticeAndButtons.Name = "pnlNoticeAndButtons"
         Me.pnlNoticeAndButtons.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 68)
-        Me.pnlNoticeAndButtons.TabIndex = 13
+        Me.pnlNoticeAndButtons.TabIndex = 16
+        '
+        'separator9
+        '
+        Me.separator9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator9.Location = New System.Drawing.Point(0, 0)
+        Me.separator9.Name = "separator9"
+        Me.separator9.Size = New System.Drawing.Size(787, 1)
+        Me.separator9.TabIndex = 11
         '
         'Label7
         '
@@ -1091,6 +1106,14 @@ Partial Class Settings
         Me.pnlMSFS2024FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
         Me.pnlMSFS2024FlightPlanFilesFolder.TabIndex = 3
+        '
+        'separator2
+        '
+        Me.separator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator2.Location = New System.Drawing.Point(0, 0)
+        Me.separator2.Name = "separator2"
+        Me.separator2.Size = New System.Drawing.Size(787, 1)
+        Me.separator2.TabIndex = 11
         '
         'Label12
         '
@@ -1214,11 +1237,11 @@ Partial Class Settings
         Me.pnlLocalWSPort.Controls.Add(Me.txtDPHXLocalPort)
         Me.pnlLocalWSPort.Controls.Add(Me.Label17)
         Me.pnlLocalWSPort.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 676)
+        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 715)
         Me.pnlLocalWSPort.Name = "pnlLocalWSPort"
         Me.pnlLocalWSPort.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlLocalWSPort.Size = New System.Drawing.Size(769, 45)
-        Me.pnlLocalWSPort.TabIndex = 14
+        Me.pnlLocalWSPort.TabIndex = 15
         '
         'Label17
         '
@@ -1246,7 +1269,15 @@ Partial Class Settings
         Me.pnlTrackerExe.Name = "pnlTrackerExe"
         Me.pnlTrackerExe.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlTrackerExe.Size = New System.Drawing.Size(769, 74)
-        Me.pnlTrackerExe.TabIndex = 15
+        Me.pnlTrackerExe.TabIndex = 11
+        '
+        'separator6
+        '
+        Me.separator6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator6.Location = New System.Drawing.Point(0, 0)
+        Me.separator6.Name = "separator6"
+        Me.separator6.Size = New System.Drawing.Size(787, 1)
+        Me.separator6.TabIndex = 11
         '
         'Label18
         '
@@ -1275,61 +1306,75 @@ Partial Class Settings
         Me.Label20.TabIndex = 5
         Me.Label20.Text = "Tracker EXE Folder:"
         '
-        'separator2
+        'Label4
         '
-        Me.separator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator2.Location = New System.Drawing.Point(0, 0)
-        Me.separator2.Name = "separator2"
-        Me.separator2.Size = New System.Drawing.Size(787, 1)
-        Me.separator2.TabIndex = 11
-        '
-        'separator3
-        '
-        Me.separator3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator3.Location = New System.Drawing.Point(0, 0)
-        Me.separator3.Name = "separator3"
-        Me.separator3.Size = New System.Drawing.Size(787, 1)
-        Me.separator3.TabIndex = 11
-        '
-        'separator4
-        '
-        Me.separator4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator4.Location = New System.Drawing.Point(0, 0)
-        Me.separator4.Name = "separator4"
-        Me.separator4.Size = New System.Drawing.Size(787, 1)
-        Me.separator4.TabIndex = 11
-        '
-        'separator5
-        '
-        Me.separator5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator5.Location = New System.Drawing.Point(0, 0)
-        Me.separator5.Name = "separator5"
-        Me.separator5.Size = New System.Drawing.Size(787, 1)
-        Me.separator5.TabIndex = 11
-        '
-        'separator6
-        '
-        Me.separator6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator6.Location = New System.Drawing.Point(0, 0)
-        Me.separator6.Name = "separator6"
-        Me.separator6.Size = New System.Drawing.Size(787, 1)
-        Me.separator6.TabIndex = 11
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(5, 8)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(147, 20)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "Automatic Overwrite:"
         '
         'separator7
         '
         Me.separator7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.separator7.Controls.Add(Me.Panel3)
         Me.separator7.Location = New System.Drawing.Point(0, 0)
         Me.separator7.Name = "separator7"
         Me.separator7.Size = New System.Drawing.Size(787, 1)
         Me.separator7.TabIndex = 11
         '
-        'separator8
+        'pnlAutoOverwrite
         '
-        Me.separator8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.separator8.Location = New System.Drawing.Point(0, 0)
-        Me.separator8.Name = "separator8"
-        Me.separator8.Size = New System.Drawing.Size(787, 1)
-        Me.separator8.TabIndex = 11
+        Me.pnlAutoOverwrite.Controls.Add(Me.separator7)
+        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysAsk)
+        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysSkip)
+        Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
+        Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
+        Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 598)
+        Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
+        Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 39)
+        Me.pnlAutoOverwrite.TabIndex = 12
+        '
+        'pnlWSGAutoLaunch
+        '
+        Me.pnlWSGAutoLaunch.Controls.Add(Me.cboWSGIntegration)
+        Me.pnlWSGAutoLaunch.Controls.Add(Me.Label21)
+        Me.pnlWSGAutoLaunch.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlWSGAutoLaunch.Location = New System.Drawing.Point(0, 676)
+        Me.pnlWSGAutoLaunch.Name = "pnlWSGAutoLaunch"
+        Me.pnlWSGAutoLaunch.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlWSGAutoLaunch.Size = New System.Drawing.Size(769, 39)
+        Me.pnlWSGAutoLaunch.TabIndex = 14
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(5, 8)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(166, 20)
+        Me.Label21.TabIndex = 0
+        Me.Label21.Text = "WeSimGlide Integration:"
+        '
+        'cboWSGIntegration
+        '
+        Me.cboWSGIntegration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboWSGIntegration.FormattingEnabled = True
+        Me.cboWSGIntegration.Items.AddRange(New Object() {"None (do nothing)", "Auto open Map Tab", "Auto open Events Tab"})
+        Me.cboWSGIntegration.Location = New System.Drawing.Point(194, 5)
+        Me.cboWSGIntegration.Name = "cboWSGIntegration"
+        Me.cboWSGIntegration.Size = New System.Drawing.Size(201, 28)
+        Me.cboWSGIntegration.TabIndex = 2
+        '
+        'Panel3
+        '
+        Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel3.Location = New System.Drawing.Point(0, 76)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(787, 1)
+        Me.Panel3.TabIndex = 12
         '
         'Settings
         '
@@ -1337,10 +1382,11 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(769, 799)
+        Me.ClientSize = New System.Drawing.Size(769, 831)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnlNoticeAndButtons)
         Me.Controls.Add(Me.pnlLocalWSPort)
+        Me.Controls.Add(Me.pnlWSGAutoLaunch)
         Me.Controls.Add(Me.pnlAutoUnpack)
         Me.Controls.Add(Me.pnlAutoOverwrite)
         Me.Controls.Add(Me.pnlTrackerExe)
@@ -1359,9 +1405,9 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 843)
+        Me.MaximumSize = New System.Drawing.Size(5000, 875)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(700, 843)
+        Me.MinimumSize = New System.Drawing.Size(787, 875)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
@@ -1380,8 +1426,6 @@ Partial Class Settings
         Me.pnlPackagesFolder.PerformLayout()
         Me.pnlNB21LoggerFlightsFolder.ResumeLayout(False)
         Me.pnlNB21LoggerFlightsFolder.PerformLayout()
-        Me.pnlAutoOverwrite.ResumeLayout(False)
-        Me.pnlAutoOverwrite.PerformLayout()
         Me.pnlAutoUnpack.ResumeLayout(False)
         Me.pnlAutoUnpack.PerformLayout()
         Me.pnlXCSoarMapsFolder.ResumeLayout(False)
@@ -1408,6 +1452,11 @@ Partial Class Settings
         Me.pnlLocalWSPort.PerformLayout()
         Me.pnlTrackerExe.ResumeLayout(False)
         Me.pnlTrackerExe.PerformLayout()
+        Me.separator7.ResumeLayout(False)
+        Me.pnlAutoOverwrite.ResumeLayout(False)
+        Me.pnlAutoOverwrite.PerformLayout()
+        Me.pnlWSGAutoLaunch.ResumeLayout(False)
+        Me.pnlWSGAutoLaunch.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1425,11 +1474,6 @@ Partial Class Settings
     Friend WithEvents pnlUnpackingFolder As Panel
     Friend WithEvents btnUnpackingFolder As Button
     Friend WithEvents Label3 As Label
-    Friend WithEvents pnlAutoOverwrite As Panel
-    Friend WithEvents optOverwriteAlwaysSkip As RadioButton
-    Friend WithEvents optOverwriteAlwaysOverwrite As RadioButton
-    Friend WithEvents Label4 As Label
-    Friend WithEvents optOverwriteAlwaysAsk As RadioButton
     Friend WithEvents btn2020FlightPlansFolderPaste As Button
     Friend WithEvents btn2020WeatherPresetsFolderPaste As Button
     Friend WithEvents btnTempFolderPaste As Button
@@ -1514,6 +1558,15 @@ Partial Class Settings
     Friend WithEvents separator4 As Panel
     Friend WithEvents separator5 As Panel
     Friend WithEvents separator6 As Panel
+    Friend WithEvents separator9 As Panel
+    Friend WithEvents Label4 As Label
+    Friend WithEvents optOverwriteAlwaysOverwrite As RadioButton
+    Friend WithEvents optOverwriteAlwaysSkip As RadioButton
+    Friend WithEvents optOverwriteAlwaysAsk As RadioButton
     Friend WithEvents separator7 As Panel
-    Friend WithEvents separator8 As Panel
+    Friend WithEvents pnlAutoOverwrite As Panel
+    Friend WithEvents pnlWSGAutoLaunch As Panel
+    Friend WithEvents Label21 As Label
+    Friend WithEvents cboWSGIntegration As ComboBox
+    Friend WithEvents Panel3 As Panel
 End Class

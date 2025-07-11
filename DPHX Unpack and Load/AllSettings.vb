@@ -11,6 +11,12 @@ Public Class AllSettings
         AlwaysAsk = 2
     End Enum
 
+    Public Enum WSGIntegrationOptions As Integer
+        None = 0
+        OpenMap = 1
+        OpenEvents = 2
+    End Enum
+
     <XmlElement("MSFS2020Steam")>
     Public Property MSFS2020Steam As Boolean
 
@@ -234,24 +240,6 @@ Public Class AllSettings
     <XmlElement("ExcludeXCSoarMapFileFromCleanup")>
     Public Property ExcludeXCSoarMapFileFromCleanup As Boolean
 
-    <XmlElement("LocalDBTimestamp")>
-    Public Property LocalDBTimestamp As String
-
-    <XmlElement("TaskLibrarySortColumn")>
-    Public Property TaskLibrarySortColumn As String
-
-    <XmlElement("TaskLibrarySortAsc")>
-    Public Property TaskLibrarySortAsc As Boolean
-
-    <XmlElement("TaskLibrarySplitterLocation")>
-    Public Property TaskLibrarySplitterLocation As Integer
-
-    <XmlElement("TaskLibraryRightPartSplitterLocation")>
-    Public Property TaskLibraryRightPartSplitterLocation As Integer
-
-    <XmlElement("TaskLibraryDetailsZoomLevel")>
-    Public Property TaskLibraryDetailsZoomLevel As Single
-
     Private _LocalWebServerPort As String
     <XmlElement("LocalWebServerPort")>
     Public Property LocalWebServerPort As String
@@ -266,13 +254,8 @@ Public Class AllSettings
         End Set
     End Property
 
-    <XmlElement("FavoriteSearches")>
-    Public Property FavoriteSearches As SerializableDictionary(Of String, List(Of String))
-
-
-    <XmlArray("TBColumnsSettings")>
-    <XmlArrayItem("Column")>
-    Public Property TBColumnsSettings As List(Of TBColumnSetting)
+    <XmlElement("WSGIntegration")>
+    Public Property WSGIntegration As WSGIntegrationOptions
 
     Public ReadOnly Property Is2020Installed As Boolean
         Get
@@ -287,10 +270,6 @@ Public Class AllSettings
 
 
     Public Sub New()
-
-        ' Initialize the list
-        TBColumnsSettings = New List(Of TBColumnSetting)
-        FavoriteSearches = New SerializableDictionary(Of String, List(Of String))()
 
     End Sub
 
@@ -355,42 +334,7 @@ Public Class AllSettings
             Exclude2024WeatherFileFromCleanup = settingsInFile.Exclude2024WeatherFileFromCleanup
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
-            LocalDBTimestamp = settingsInFile.LocalDBTimestamp
-            TaskLibrarySortColumn = settingsInFile.TaskLibrarySortColumn
-            TaskLibrarySortAsc = settingsInFile.TaskLibrarySortAsc
-            TaskLibrarySplitterLocation = settingsInFile.TaskLibrarySplitterLocation
-            If TaskLibrarySplitterLocation = 0 Then
-                TaskLibrarySplitterLocation = 60
-            End If
-            TaskLibraryRightPartSplitterLocation = settingsInFile.TaskLibraryRightPartSplitterLocation
-            If TaskLibraryRightPartSplitterLocation = 0 Then
-                TaskLibraryRightPartSplitterLocation = 50
-            End If
-            TaskLibraryDetailsZoomLevel = settingsInFile.TaskLibraryDetailsZoomLevel
-            If TaskLibraryDetailsZoomLevel <= 0.015625 OrElse TaskLibraryDetailsZoomLevel >= 64 Then
-                TaskLibraryDetailsZoomLevel = 1.5
-            End If
-            If TaskLibrarySortColumn = String.Empty Then
-                TaskLibrarySortColumn = "LastUpdate"
-                TaskLibrarySortAsc = True
-            End If
-            TBColumnsSettings = settingsInFile.TBColumnsSettings
-            If LocalDBTimestamp = String.Empty Then
-                LocalDBTimestamp = "None"
-            End If
-            ' Add deserialization for StringListDictionary
-            FavoriteSearches = settingsInFile.FavoriteSearches
-
-            'Remove any favorite that doesn't contain any values
-            Dim allFavKeys As New List(Of String)
-            For Each favKey As String In FavoriteSearches.Keys
-                allFavKeys.Add(favKey)
-            Next
-            For Each favKey As String In allFavKeys
-                If FavoriteSearches(favKey).Count = 0 Then
-                    FavoriteSearches.Remove(favKey)
-                End If
-            Next
+            WSGIntegration = settingsInFile.WSGIntegration
 
             'Check if at least one installation
             If Not (MSFS2020Microsoft OrElse MSFS2020Steam OrElse MSFS2024Microsoft OrElse MSFS2024Steam) Then

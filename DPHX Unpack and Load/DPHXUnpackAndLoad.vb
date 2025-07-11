@@ -28,7 +28,6 @@ Public Class DPHXUnpackAndLoad
     Private _filesToUnpack2024 As New Dictionary(Of String, String)
     Private _filesCurrentlyUnpacked2024 As New Dictionary(Of String, String)
     Private _currentNewsKeyPublished As New Dictionary(Of String, Date)
-    Private _groupEventNewsEntries As New Dictionary(Of String, NewsEntry)
     Private _showingPrompt As Boolean = False
     Private _lastLoadSuccess As Boolean = False
     Private _status As New frmStatus()
@@ -87,8 +86,6 @@ Public Class DPHXUnpackAndLoad
 
         msfs2020ToolStrip.Visible = False
         msfs2024ToolStrip.Visible = False
-        chkNewsRetrieval.Left = 3
-        newsSplitContainer.SplitterDistance = 750
 
         If Not _SF.CheckRequiredNetFrameworkVersion Then
             MessageBox.Show("This application requires Microsoft .NET Framework 4.8 or later to be present.", "Installation does not meet requirement", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -153,14 +150,21 @@ Public Class DPHXUnpackAndLoad
             msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
             msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
 
-            DatabaseUpdate.CheckAndUpdateDatabase()
-
-            RetrieveNewsList_Tick(sender, e)
-
             ' Start the server
             _DPHXWS = New DPHXLocalWS(Settings.SessionSettings.LocalWebServerPort)
             _DPHXWS.Start()
 
+            'Check WSG integration
+            Select Case Settings.SessionSettings.WSGIntegration
+                Case AllSettings.WSGIntegrationOptions.None
+                    'Do nothing
+                Case AllSettings.WSGIntegrationOptions.OpenMap
+                    'Open map in WSG
+                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
+                Case AllSettings.WSGIntegrationOptions.OpenEvents
+                    'Open events in WSG
+                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=events")
+            End Select
         End If
 
     End Sub
@@ -195,13 +199,6 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub DPHXUnpackAndLoad_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
         ctrlBriefing.AdjustRTBoxControls()
-    End Sub
-
-    Private Sub chkNewsRetrieval_CheckedChanged(sender As Object, e As EventArgs) Handles chkNewsRetrieval.CheckedChanged
-        RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
-        If Not RetrieveNewsList.Enabled Then
-            RetrieveNewsList.Stop()
-        End If
     End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
@@ -328,64 +325,13 @@ Public Class DPHXUnpackAndLoad
     Private Sub ChkMSFS_Tick(sender As Object, e As EventArgs) Handles ChkMSFS.Tick
         Dim processList As Process() = Process.GetProcessesByName("FlightSimulator")
         If processList.Length > 0 Then
-            RetrieveNewsList.Enabled = False
             warningMSFSRunningToolStrip.Visible = True
         Else
-            RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
             warningMSFSRunningToolStrip.Visible = False
         End If
 
     End Sub
 
-    Private Sub RetrieveNewsList_Tick(sender As Object, e As EventArgs) Handles RetrieveNewsList.Tick
-
-        RetrieveNewsList.Enabled = False
-
-        FetchNewsEntries()
-
-        If Not chkNewsRetrieval.Enabled Then
-            RetrieveNewsList.Enabled = True
-        Else
-            RetrieveNewsList.Enabled = False
-        End If
-
-        If Not _showingPrompt Then
-            'Check if there is an group event that is within 2 hours and user has not provided an answer
-            Dim userParticipatingInEvent As Boolean = False
-            For Each groupEventNews As NewsEntry In _groupEventNewsEntries.Values
-                If groupEventNews.IsWithin2HoursOfEvent AndAlso Not groupEventNews.UserHasAnswered Then
-                    'Ask user!
-                    Dim msgPrompt As String = $"The following group event is starting soon. Will you be participating?{Environment.NewLine}{Environment.NewLine}{groupEventNews.Title}{Environment.NewLine}{groupEventNews.Subtitle}{Environment.NewLine}{_SF.GetFullEventDateTimeInLocal(groupEventNews.EventDate, groupEventNews.EventDate, True).ToString}"
-                    _showingPrompt = True
-                    Using New Centered_MessageBox()
-                        If MessageBox.Show(msgPrompt, "Group Event Starting Soon", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
-                            'User will be participating
-                            userParticipatingInEvent = True
-                        Else
-                            'User will not be participating - do nothing
-                        End If
-                        groupEventNews.UserHasAnswered = True
-                    End Using
-                    _showingPrompt = False
-                End If
-                If userParticipatingInEvent Then
-                    SupportingFeatures.LaunchDiscordURL(groupEventNews.URLToGo)
-                    If groupEventNews.EntrySeqID > 0 Then
-                        DownloadAndOpenTaskUsingNewsEntry(groupEventNews)
-                    Else
-                        _showingPrompt = True
-                        Using New Centered_MessageBox()
-                            MessageBox.Show("The task has not yet been published for the event!", "Group Event Starting Soon", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                        End Using
-                        _showingPrompt = False
-                    End If
-                    Exit For
-                End If
-
-            Next
-        End If
-
-    End Sub
 
     Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
 
@@ -406,12 +352,6 @@ Public Class DPHXUnpackAndLoad
     Private Sub GoToFeedbackChannelOnDiscordToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GoToFeedbackChannelOnDiscordToolStripMenuItem.Click
 
         SupportingFeatures.LaunchDiscordURL($"https://discord.com/channels/1022705603489042472/1101255812883693588")
-
-    End Sub
-
-    Private Sub toolStripDiscordTaskLibrary_Click(sender As Object, e As EventArgs) Handles toolStripDiscordTaskLibrary.Click
-
-        OpenTaskLibraryBrowser()
 
     End Sub
 
@@ -465,27 +405,6 @@ Public Class DPHXUnpackAndLoad
 #End Region
 
 #Region "Subs and functions"
-
-    Private Sub OpenTaskLibraryBrowser(Optional entrySeqID As Integer = 0)
-
-        RetrieveNewsList.Enabled = False
-
-        Using taskBrowserForm As New TaskBrowser()
-            taskBrowserForm.OpenWithEntrySeqID = entrySeqID
-            taskBrowserForm.ShowDialog(Me)
-
-            Dim selectedFile As String = taskBrowserForm.DownloadedFilePath
-            If selectedFile <> String.Empty Then
-                LoadDPHXPackage(selectedFile)
-                If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
-                    UnpackFiles()
-                End If
-            End If
-        End Using
-
-        RetrieveNewsList.Enabled = Not chkNewsRetrieval.Checked
-
-    End Sub
 
     Private Sub SetFormCaption(filename As String)
 
@@ -1286,240 +1205,12 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Public Sub FetchNewsEntries()
-        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveNews.php"
-        Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
-        request.Method = "GET"
-
-        Try
-            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-                Using reader As New StreamReader(response.GetResponseStream())
-                    Dim jsonResponse As String = reader.ReadToEnd()
-                    Dim newsEntries As List(Of NewsEntry) = ConvertJsonToDataTable(jsonResponse)
-
-                    ' Determine if there are new or updated entries
-                    Dim newOrUpdatedEntries As Boolean = False
-                    Dim fetchedKeys As New Dictionary(Of String, DateTime)
-
-                    ' Populate fetchedKeys with new entries' keys and Published dates
-                    For Each newsEntry In newsEntries
-                        Dim publishedDate As DateTime = DateTime.Parse(newsEntry.Published)
-                        fetchedKeys.Add(newsEntry.Key, publishedDate)
-
-                        ' Check if the entry is new or updated
-                        If Not _currentNewsKeyPublished.ContainsKey(newsEntry.Key) Then
-                            ' New entry
-                            newOrUpdatedEntries = True
-                            If newsEntry.NewsType + 1 = TaskEventNews.NewsTypeEnum.Event Then
-                                _groupEventNewsEntries.Add(newsEntry.Key, newsEntry)
-                            End If
-                        ElseIf _currentNewsKeyPublished(newsEntry.Key) < publishedDate Then
-                            ' Updated entry
-                            newOrUpdatedEntries = True
-                            If newsEntry.NewsType + 1 = TaskEventNews.NewsTypeEnum.Event Then
-                                If _groupEventNewsEntries.ContainsKey(newsEntry.Key) Then
-                                    newsEntry.UserHasAnswered = _groupEventNewsEntries(newsEntry.Key).UserHasAnswered
-                                    _groupEventNewsEntries(newsEntry.Key) = newsEntry
-                                End If
-                            End If
-                        End If
-                    Next
-
-                    ' Determine if there are deletions by comparing keys
-                    Dim deletions As Boolean = _currentNewsKeyPublished.Keys.Except(fetchedKeys.Keys).Any()
-                    For Each deletedItem As String In _currentNewsKeyPublished.Keys.Except(fetchedKeys.Keys)
-                        'Delete the news entry from the global dictionary
-                        If _groupEventNewsEntries.ContainsKey(deletedItem) Then
-                            If _groupEventNewsEntries(deletedItem).NewsType = TaskEventNews.NewsTypeEnum.Event Then
-                                _groupEventNewsEntries.Remove(deletedItem)
-                            End If
-                        End If
-                    Next
-
-                    ' If there are new/updated entries or deletions, rebuild the news panel
-                    If newOrUpdatedEntries Or deletions Then
-                        _currentNewsKeyPublished.Clear()
-
-                        ' Clean up existing news panels
-                        For Each newsPanel As TaskEventNews In flowNewsPanel.Controls
-                            RemoveHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
-                            newsPanel.Dispose()
-                            newsPanel = Nothing
-                        Next
-                        flowNewsPanel.Controls.Clear()
-
-                        ' Add new news panels
-                        For Each newsEntry In newsEntries
-                            Dim newsPanel = New TaskEventNews(newsEntry)
-                            If newsEntry.NewsType + 1 <> TaskEventNews.NewsTypeEnum.News Then
-                                newsPanel.ContextMenuStrip = contextGroupEventNews
-                            End If
-                            AddHandler newsPanel.NewsClicked, AddressOf NewsPanelClicked
-                            _currentNewsKeyPublished.Add(newsEntry.Key, DateTime.Parse(newsEntry.Published))
-                            flowNewsPanel.Controls.Add(newsPanel)
-                        Next
-
-                        ' Update button color
-                        If newOrUpdatedEntries Then
-                            If newsSplitContainer.Panel2Collapsed Then
-                                btnNewsPanelCollapse.BackColor = Color.Yellow
-                            End If
-                        End If
-                    End If
-                End Using
-            End Using
-        Catch ex As Exception
-            ' Handle the exception
-            ' Log the error or display a message
-            Throw
-        End Try
+    Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
+        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
     End Sub
 
-    Private Sub NewsPanelClicked(sender As Object, e As EventArgs)
-
-        Dim theNewsEntry As TaskEventNews = CType(sender, TaskEventNews)
-
-        Select Case theNewsEntry.NewsType
-            Case TaskEventNews.NewsTypeEnum.Task
-                'Open the library with a specific task
-                OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
-
-            Case TaskEventNews.NewsTypeEnum.Event
-                'Open the Discord event
-                SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
-                'Open the library with the task
-                If theNewsEntry.TaskEntrySeqID > 0 Then
-                    OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
-                Else
-                    Using New Centered_MessageBox()
-                        MessageBox.Show(Me, "The associated task has not yet been published! Stay tuned!", "Task for group event", vbOKOnly, vbInformation)
-                    End Using
-                End If
-
-            Case TaskEventNews.NewsTypeEnum.News
-                'Launch URL
-                SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
-
-        End Select
-
-    End Sub
-
-    Private Function ConvertJsonToDataTable(jsonResponse As String) As List(Of NewsEntry)
-
-        Dim newsEntries As New List(Of NewsEntry)
-
-        Dim jsonResponseObject = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
-        If jsonResponseObject("status").ToString() = "success" Then
-            newsEntries = JsonConvert.DeserializeObject(Of List(Of NewsEntry))(jsonResponseObject("data").ToString())
-
-        Else
-            Throw New Exception(jsonResponseObject("message").ToString())
-        End If
-
-        Return newsEntries
-    End Function
-
-    Private Sub btnNewsPanelCollapse_Click(sender As Object, e As EventArgs) Handles btnNewsPanelCollapse.Click
-        newsSplitContainer.Panel2Collapsed = Not newsSplitContainer.Panel2Collapsed
-        btnNewsPanelCollapse.Text = If(newsSplitContainer.Panel2Collapsed, "<", ">")
-
-        If Not newsSplitContainer.Panel2Collapsed Then
-            btnNewsPanelCollapse.BackColor = SystemColors.Control
-        End If
-
-    End Sub
-
-    Private Sub contextGroupEventNews_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles contextGroupEventNews.Opening
-
-        Dim newsPanel As TaskEventNews = contextGroupEventNews.SourceControl
-
-        Select Case newsPanel.NewsType
-            Case TaskEventNews.NewsTypeEnum.Task
-                ctxtNewsDownloadAndOpenTask.Visible = True
-                ctxtNewsViewTaskInLibrary.Visible = True
-                ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Visible = False
-                ctxtNewsViewTaskInLibraryVisitGroupEvent.Visible = False
-                ctxtNewsVisitGroupEvent.Visible = False
-            Case TaskEventNews.NewsTypeEnum.Event
-                If newsPanel.TaskEntrySeqID > 0 Then
-                    ctxtNewsDownloadAndOpenTask.Visible = True
-                    ctxtNewsViewTaskInLibrary.Visible = True
-                    If newsPanel.URLToGo <> String.Empty Then
-                        ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Visible = True
-                        ctxtNewsViewTaskInLibraryVisitGroupEvent.Visible = True
-                        ctxtNewsVisitGroupEvent.Visible = True
-                    Else
-                        ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Visible = False
-                        ctxtNewsViewTaskInLibraryVisitGroupEvent.Visible = False
-                        ctxtNewsVisitGroupEvent.Visible = False
-                    End If
-                Else
-                    ctxtNewsDownloadAndOpenTask.Visible = False
-                    ctxtNewsViewTaskInLibrary.Visible = False
-                    ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Visible = False
-                    ctxtNewsViewTaskInLibraryVisitGroupEvent.Visible = False
-                    If newsPanel.URLToGo <> String.Empty Then
-                        ctxtNewsVisitGroupEvent.Visible = True
-                    Else
-                        ctxtNewsVisitGroupEvent.Visible = False
-                        e.Cancel = True
-                    End If
-                End If
-        End Select
-
-    End Sub
-
-    Private Sub ctxtNewsViewTaskInLibrary_Click(sender As Object, e As EventArgs) Handles ctxtNewsViewTaskInLibrary.Click
-
-        Dim theNewsEntry As TaskEventNews = contextGroupEventNews.SourceControl
-        OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
-
-    End Sub
-
-    Private Sub ctxtNewsDownloadAndOpenTask_Click(sender As Object, e As EventArgs) Handles ctxtNewsDownloadAndOpenTask.Click
-
-        Dim theNewsEntry As TaskEventNews = contextGroupEventNews.SourceControl
-        DownloadAndOpenTaskUsingNewsEntry(_groupEventNewsEntries(theNewsEntry.Key))
-
-    End Sub
-
-    Private Sub ctxtNewsVisitGroupEvent_Click(sender As Object, e As EventArgs) Handles ctxtNewsVisitGroupEvent.Click
-
-        Dim theNewsEntry As TaskEventNews = contextGroupEventNews.SourceControl
-        SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
-
-    End Sub
-
-    Private Sub ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent_Click(sender As Object, e As EventArgs) Handles ctxtNewsDownloadAndOpenTaskAndVisitGroupEvent.Click
-
-        Dim theNewsEntry As TaskEventNews = contextGroupEventNews.SourceControl
-        SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
-        DownloadAndOpenTaskUsingNewsEntry(_groupEventNewsEntries(theNewsEntry.Key))
-
-    End Sub
-
-    Private Sub ctxtNewsViewTaskInLibraryVisitGroupEvent_Click(sender As Object, e As EventArgs) Handles ctxtNewsViewTaskInLibraryVisitGroupEvent.Click
-
-        Dim theNewsEntry As TaskEventNews = contextGroupEventNews.SourceControl
-        SupportingFeatures.LaunchDiscordURL(theNewsEntry.URLToGo)
-        OpenTaskLibraryBrowser(theNewsEntry.TaskEntrySeqID)
-
-    End Sub
-
-    Private Sub DownloadAndOpenTaskUsingNewsEntry(theNewsEntry As NewsEntry)
-
-        'We need to call the script FindTaskUsingEntrySeqID to get the TaskID
-        Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(theNewsEntry.EntrySeqID, True)
-
-        If taskID <> String.Empty Then
-            Dim selectedFile As String = SupportingFeatures.DownloadTaskFile(taskID, theNewsEntry.Subtitle, Settings.SessionSettings.PackagesFolder)
-            If selectedFile <> String.Empty Then
-                LoadDPHXPackage(selectedFile)
-                If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
-                    UnpackFiles()
-                End If
-            End If
-        End If
+    Private Sub toolStripWSGEvents_Click(sender As Object, e As EventArgs) Handles toolStripWSGEvents.Click
+        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=events")
     End Sub
 
 #End Region
