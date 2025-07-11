@@ -150,6 +150,7 @@ Public Class Settings
                 cboWSGIntegration.SelectedIndex = 0 'Default to None if no selection made   
             End If
             SessionSettings.WSGIntegration = cboWSGIntegration.SelectedIndex
+            SessionSettings.WSGIgnoreWhenOpeningDPHX = chkWSGExceptOpeningDPHX.Checked
 
             If optOverwriteAlwaysOverwrite.Checked Then
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -632,6 +633,7 @@ Public Class Settings
         chkExcludeXCSoarMapFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarMapFileFromCleanup
 
         cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
+        chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
 
     End Sub
 

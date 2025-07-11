@@ -127,11 +127,12 @@ Partial Class Settings
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.separator7 = New System.Windows.Forms.Panel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.pnlAutoOverwrite = New System.Windows.Forms.Panel()
         Me.pnlWSGAutoLaunch = New System.Windows.Forms.Panel()
-        Me.Label21 = New System.Windows.Forms.Label()
         Me.cboWSGIntegration = New System.Windows.Forms.ComboBox()
-        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.chkWSGExceptOpeningDPHX = New System.Windows.Forms.CheckBox()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -1324,6 +1325,14 @@ Partial Class Settings
         Me.separator7.Size = New System.Drawing.Size(787, 1)
         Me.separator7.TabIndex = 11
         '
+        'Panel3
+        '
+        Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel3.Location = New System.Drawing.Point(0, 76)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(787, 1)
+        Me.Panel3.TabIndex = 12
+        '
         'pnlAutoOverwrite
         '
         Me.pnlAutoOverwrite.Controls.Add(Me.separator7)
@@ -1340,6 +1349,7 @@ Partial Class Settings
         '
         'pnlWSGAutoLaunch
         '
+        Me.pnlWSGAutoLaunch.Controls.Add(Me.chkWSGExceptOpeningDPHX)
         Me.pnlWSGAutoLaunch.Controls.Add(Me.cboWSGIntegration)
         Me.pnlWSGAutoLaunch.Controls.Add(Me.Label21)
         Me.pnlWSGAutoLaunch.Dock = System.Windows.Forms.DockStyle.Top
@@ -1348,6 +1358,16 @@ Partial Class Settings
         Me.pnlWSGAutoLaunch.Padding = New System.Windows.Forms.Padding(2)
         Me.pnlWSGAutoLaunch.Size = New System.Drawing.Size(769, 39)
         Me.pnlWSGAutoLaunch.TabIndex = 14
+        '
+        'cboWSGIntegration
+        '
+        Me.cboWSGIntegration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboWSGIntegration.FormattingEnabled = True
+        Me.cboWSGIntegration.Items.AddRange(New Object() {"None (do nothing)", "Auto open Home tab", "Auto open Map tab", "Auto open Events tab"})
+        Me.cboWSGIntegration.Location = New System.Drawing.Point(194, 5)
+        Me.cboWSGIntegration.Name = "cboWSGIntegration"
+        Me.cboWSGIntegration.Size = New System.Drawing.Size(201, 28)
+        Me.cboWSGIntegration.TabIndex = 2
         '
         'Label21
         '
@@ -1358,23 +1378,19 @@ Partial Class Settings
         Me.Label21.TabIndex = 0
         Me.Label21.Text = "WeSimGlide Integration:"
         '
-        'cboWSGIntegration
+        'chkWSGExceptOpeningDPHX
         '
-        Me.cboWSGIntegration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboWSGIntegration.FormattingEnabled = True
-        Me.cboWSGIntegration.Items.AddRange(New Object() {"None (do nothing)", "Auto open Map Tab", "Auto open Events Tab"})
-        Me.cboWSGIntegration.Location = New System.Drawing.Point(194, 5)
-        Me.cboWSGIntegration.Name = "cboWSGIntegration"
-        Me.cboWSGIntegration.Size = New System.Drawing.Size(201, 28)
-        Me.cboWSGIntegration.TabIndex = 2
-        '
-        'Panel3
-        '
-        Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel3.Location = New System.Drawing.Point(0, 76)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(787, 1)
-        Me.Panel3.TabIndex = 12
+        Me.chkWSGExceptOpeningDPHX.AutoSize = True
+        Me.chkWSGExceptOpeningDPHX.Checked = True
+        Me.chkWSGExceptOpeningDPHX.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkWSGExceptOpeningDPHX.Location = New System.Drawing.Point(402, 8)
+        Me.chkWSGExceptOpeningDPHX.Name = "chkWSGExceptOpeningDPHX"
+        Me.chkWSGExceptOpeningDPHX.Size = New System.Drawing.Size(233, 24)
+        Me.chkWSGExceptOpeningDPHX.TabIndex = 3
+        Me.chkWSGExceptOpeningDPHX.Text = "Ignore when opening DPHX file"
+        Me.ToolTip1.SetToolTip(Me.chkWSGExceptOpeningDPHX, "Enable this to ignore the WSG integration option when starting the tool through a" &
+        " DPHX file.")
+        Me.chkWSGExceptOpeningDPHX.UseVisualStyleBackColor = True
         '
         'Settings
         '
@@ -1569,4 +1585,5 @@ Partial Class Settings
     Friend WithEvents Label21 As Label
     Friend WithEvents cboWSGIntegration As ComboBox
     Friend WithEvents Panel3 As Panel
+    Friend WithEvents chkWSGExceptOpeningDPHX As CheckBox
 End Class

@@ -2249,6 +2249,37 @@ Public Class SupportingFeatures
 
     End Sub
 
+    ''' <summary>
+    ''' Returns the full paths of all IGC files in <paramref name="igcFolder"/>
+    ''' whose names end with "_{plnBaseName}.igc". 
+    ''' </summary>
+    ''' <param name="plnFilePath">The .pln flight-plan filename (can be full path or just name).</param>
+    ''' <param name="igcFolder">The folder where IGC files live.</param>
+    ''' <returns>An empty list if inputs are invalid or no matches; otherwise the matching file paths.</returns>
+    Public Function GetCorrespondingIGCFiles(
+        ByVal plnFilePath As String,
+        ByVal igcFolder As String
+    ) As List(Of String)
+
+        Dim results As New List(Of String)
+
+        ' Validate inputs
+        If String.IsNullOrWhiteSpace(plnFilePath) OrElse
+       String.IsNullOrWhiteSpace(igcFolder) OrElse
+       Not Directory.Exists(igcFolder) Then
+            Return results
+        End If
+
+        ' Build the search pattern "*_{basename}.igc"
+        Dim baseName As String = Path.GetFileNameWithoutExtension(plnFilePath)
+        Dim searchPattern As String = $"*_{baseName}.igc"
+
+        ' Grab and return all matching files
+        results.AddRange(Directory.GetFiles(igcFolder, searchPattern))
+        Return results
+
+    End Function
+
     Public Shared Function LaunchDiscordURL(ByRef theURL As String) As Boolean
         Dim isValid As Boolean = IsValidURL(theURL)
         Dim discordWorked As Boolean = False

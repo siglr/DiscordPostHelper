@@ -13,8 +13,9 @@ Public Class AllSettings
 
     Public Enum WSGIntegrationOptions As Integer
         None = 0
-        OpenMap = 1
-        OpenEvents = 2
+        OpenHome = 1
+        OpenMap = 2
+        OpenEvents = 3
     End Enum
 
     <XmlElement("MSFS2020Steam")>
@@ -257,6 +258,9 @@ Public Class AllSettings
     <XmlElement("WSGIntegration")>
     Public Property WSGIntegration As WSGIntegrationOptions
 
+    <XmlElement("WSGIgnoreWhenOpeningDPHX")>
+    Public Property WSGIgnoreWhenOpeningDPHX As Boolean
+
     Public ReadOnly Property Is2020Installed As Boolean
         Get
             Return MSFS2020Microsoft OrElse MSFS2020Steam
@@ -335,6 +339,7 @@ Public Class AllSettings
             ExcludeXCSoarTaskFileFromCleanup = settingsInFile.ExcludeXCSoarTaskFileFromCleanup
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
             WSGIntegration = settingsInFile.WSGIntegration
+            WSGIgnoreWhenOpeningDPHX = settingsInFile.WSGIgnoreWhenOpeningDPHX
 
             'Check if at least one installation
             If Not (MSFS2020Microsoft OrElse MSFS2020Steam OrElse MSFS2024Microsoft OrElse MSFS2024Steam) Then

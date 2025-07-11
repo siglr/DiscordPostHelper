@@ -158,6 +158,9 @@ Public Class DPHXUnpackAndLoad
             Select Case Settings.SessionSettings.WSGIntegration
                 Case AllSettings.WSGIntegrationOptions.None
                     'Do nothing
+                Case AllSettings.WSGIntegrationOptions.OpenHome
+                    'Open map in WSG
+                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=home")
                 Case AllSettings.WSGIntegrationOptions.OpenMap
                     'Open map in WSG
                     SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
@@ -1209,8 +1212,20 @@ Public Class DPHXUnpackAndLoad
         SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
     End Sub
 
-    Private Sub toolStripWSGEvents_Click(sender As Object, e As EventArgs) Handles toolStripWSGEvents.Click
-        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=events")
+    Private Sub toolStripWSGHome_Click(sender As Object, e As EventArgs) Handles toolStripWSGHome.Click
+        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=home#")
+    End Sub
+
+    Private Sub toolStripWSGUploadIGC_Click(sender As Object, e As EventArgs) Handles toolStripWSGUploadIGC.Click
+
+        Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
+
+        If flightplanFilename Is String.Empty Then
+        Else
+            Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(flightplanFilename, Settings.SessionSettings.NB21IGCFolder)
+
+        End If
+
     End Sub
 
 #End Region
