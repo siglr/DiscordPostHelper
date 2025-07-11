@@ -8,7 +8,9 @@ Module IgcParser
     ' Glider-Type Title-Strings (only these are needed to normalize)
     ' ————————————————————————————————
     Private ReadOnly B21_GliderTitleMap As New Dictionary(Of String, String()) From {
-      {"AS-33", {"as33", "as-33"}},
+      {"AS33-18", {"as33-18", "as 33-18"}},
+      {"AS33-15", {"as33-15", "as 33-15"}},
+      {"AS33", {"as33", "as-33"}},
       {"ASW28", {"asw28", "asw-28"}},
       {"JS3-18", {"js3-18"}},
       {"JS3-15", {"js3-15"}},
