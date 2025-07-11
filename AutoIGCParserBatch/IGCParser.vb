@@ -97,7 +97,8 @@ Module IgcParser
         If raw.EndsWith(";"c) Then
             orig = raw
         Else
-            Dim parts = raw.Split(";"c, StringSplitOptions.RemoveEmptyEntries).Select(Function(s) s.Trim()).ToArray()
+            Dim parts = raw.Split(New Char() {";"c}, StringSplitOptions.RemoveEmptyEntries).Select(Function(s) s.Trim()) _
+               .ToArray()
             If parts.Length = 3 Then
                 orig = parts(2)
             ElseIf parts.Length = 2 Then
