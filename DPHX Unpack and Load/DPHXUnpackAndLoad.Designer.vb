@@ -24,6 +24,7 @@ Partial Class DPHXUnpackAndLoad
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
         Me.pnlToolbar = New System.Windows.Forms.Panel()
         Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
@@ -45,7 +46,7 @@ Partial Class DPHXUnpackAndLoad
         Me.DiscordInviteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripSettings = New System.Windows.Forms.ToolStripButton()
         Me.txtPackageName = New System.Windows.Forms.TextBox()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
         Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
@@ -63,7 +64,7 @@ Partial Class DPHXUnpackAndLoad
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ChkMSFS = New System.Windows.Forms.Timer()
+        Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.pnlToolbar.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -166,6 +167,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'toolStripWSGUploadIGC
         '
+        Me.toolStripWSGUploadIGC.Enabled = False
         Me.toolStripWSGUploadIGC.Image = CType(resources.GetObject("toolStripWSGUploadIGC.Image"), System.Drawing.Image)
         Me.toolStripWSGUploadIGC.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGUploadIGC.Name = "toolStripWSGUploadIGC"

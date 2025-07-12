@@ -177,6 +177,7 @@
     <Compile Include="frmStatus.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="IGCResults.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
     </Compile>
@@ -206,10 +207,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="WSGBatchUpload.Designer.vb">
-      <DependentUpon>WSGBatchUpload.vb</DependentUpon>
+    <Compile Include="IGCFileUpload.Designer.vb">
+      <DependentUpon>IGCFileUpload.vb</DependentUpon>
     </Compile>
-    <Compile Include="WSGBatchUpload.vb">
+    <Compile Include="IGCFileUpload.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
@@ -234,8 +235,8 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WSGBatchUpload.resx">
-      <DependentUpon>WSGBatchUpload.vb</DependentUpon>
+    <EmbeddedResource Include="IGCFileUpload.resx">
+      <DependentUpon>IGCFileUpload.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

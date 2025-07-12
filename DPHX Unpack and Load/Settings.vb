@@ -8,6 +8,105 @@ Public Class Settings
 
     Public Shared SessionSettings As New AllSettings
 
+    Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        okCancelPanel.Top = Me.Height - 103
+
+        If SessionSettings.MSFS2020Microsoft OrElse SessionSettings.MSFS2020Steam Then
+            chkMSFS2020.Checked = True
+            opt2020Steam.Checked = SessionSettings.MSFS2020Steam
+            opt2020Microsoft.Checked = SessionSettings.MSFS2020Microsoft
+        End If
+        If SessionSettings.MSFS2024Microsoft OrElse SessionSettings.MSFS2024Steam Then
+            chkMSFS2024.Checked = True
+            opt2024Steam.Checked = SessionSettings.MSFS2024Steam
+            opt2024Microsoft.Checked = SessionSettings.MSFS2024Microsoft
+        End If
+
+        If Directory.Exists(SessionSettings.MSFS2020FlightPlansFolder) Then
+            btnMSFS2020FlightPlanFilesFolder.Text = SessionSettings.MSFS2020FlightPlansFolder
+            ToolTip1.SetToolTip(btnMSFS2020FlightPlanFilesFolder, SessionSettings.MSFS2020FlightPlansFolder)
+        End If
+        If Directory.Exists(SessionSettings.MSFS2020WeatherPresetsFolder) Then
+            btnMSFS2020WeatherPresetsFolder.Text = SessionSettings.MSFS2020WeatherPresetsFolder
+            ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, SessionSettings.MSFS2020WeatherPresetsFolder)
+        End If
+        If Directory.Exists(SessionSettings.MSFS2024FlightPlansFolder) Then
+            btnMSFS2024FlightPlanFilesFolder.Text = SessionSettings.MSFS2024FlightPlansFolder
+            ToolTip1.SetToolTip(btnMSFS2024FlightPlanFilesFolder, SessionSettings.MSFS2024FlightPlansFolder)
+        End If
+        If Directory.Exists(SessionSettings.MSFS2024WeatherPresetsFolder) Then
+            btnMSFS2024WeatherPresetsFolder.Text = SessionSettings.MSFS2024WeatherPresetsFolder
+            ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, SessionSettings.MSFS2024WeatherPresetsFolder)
+        End If
+        If Directory.Exists(SessionSettings.UnpackingFolder) Then
+            btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
+            ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
+        End If
+        If Directory.Exists(SessionSettings.PackagesFolder) Then
+            btnPackagesFolder.Text = SessionSettings.PackagesFolder
+            ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
+        End If
+        If Directory.Exists(SessionSettings.NB21IGCFolder) Then
+            btnNB21IGCFolder.Text = SessionSettings.NB21IGCFolder
+            ToolTip1.SetToolTip(btnNB21IGCFolder, SessionSettings.NB21IGCFolder)
+        End If
+        If Directory.Exists(SessionSettings.NB21EXEFolder) Then
+            btnNB21EXEFolder.Text = SessionSettings.NB21EXEFolder
+            ToolTip1.SetToolTip(btnNB21EXEFolder, SessionSettings.NB21EXEFolder)
+        End If
+        If Directory.Exists(SessionSettings.TrackerEXEFolder) Then
+            btnTrackerEXEFolder.Text = SessionSettings.TrackerEXEFolder
+            ToolTip1.SetToolTip(btnTrackerEXEFolder, SessionSettings.TrackerEXEFolder)
+        End If
+        If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
+            btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
+            ToolTip1.SetToolTip(btnXCSoarTasksFolder, SessionSettings.XCSoarTasksFolder)
+        End If
+        If Directory.Exists(SessionSettings.XCSoarMapsFolder) Then
+            btnXCSoarMapsFolder.Text = SessionSettings.XCSoarMapsFolder
+            ToolTip1.SetToolTip(btnXCSoarMapsFolder, SessionSettings.XCSoarMapsFolder)
+        End If
+
+        Dim NB21port As Integer
+        If Integer.TryParse(SessionSettings.NB21LocalWSPort, NB21port) AndAlso NB21port >= 0 AndAlso NB21port <= 65535 Then
+            txtNB21LocalWSPort.Text = SessionSettings.NB21LocalWSPort
+        End If
+        chkEnableNB21StartAndFeed.Checked = SessionSettings.NB21StartAndFeed
+
+        Dim Trackerport As Integer
+        If Integer.TryParse(SessionSettings.TrackerLocalWSPort, Trackerport) AndAlso Trackerport >= 0 AndAlso Trackerport <= 65535 Then
+            txtTrackerLocalWSPort.Text = SessionSettings.TrackerLocalWSPort
+        End If
+        chkEnableTrackerStartAndFeed.Checked = SessionSettings.TrackerStartAndFeed
+
+        Dim DPHXport As Integer
+        If Integer.TryParse(SessionSettings.LocalWebServerPort, DPHXport) AndAlso DPHXport >= 0 AndAlso DPHXport <= 65535 Then
+            txtDPHXLocalPort.Text = SessionSettings.LocalWebServerPort
+        End If
+
+        Select Case SessionSettings.AutoOverwriteFiles
+            Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
+                optOverwriteAlwaysOverwrite.Checked = True
+            Case AllSettings.AutoOverwriteOptions.AlwaysSkip
+                optOverwriteAlwaysSkip.Checked = True
+            Case AllSettings.AutoOverwriteOptions.AlwaysAsk
+                optOverwriteAlwaysAsk.Checked = True
+        End Select
+
+        chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
+        chkExclude2020FlightPlanFromCleanup.Checked = SessionSettings.Exclude2020FlightPlanFromCleanup
+        chkExclude2020WeatherFileFromCleanup.Checked = SessionSettings.Exclude2020WeatherFileFromCleanup
+        chkExclude2024FlightPlanFromCleanup.Checked = SessionSettings.Exclude2024FlightPlanFromCleanup
+        chkExclude2024WeatherFileFromCleanup.Checked = SessionSettings.Exclude2024WeatherFileFromCleanup
+        chkExcludeXCSoarTaskFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarTaskFileFromCleanup
+        chkExcludeXCSoarMapFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarMapFileFromCleanup
+
+        cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
+        chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
+
+    End Sub
+
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
 
         Dim validSettings As Boolean = True
@@ -535,105 +634,6 @@ Public Class Settings
                 MessageBox.Show("Invalid folder path in the clipboard", "Cannot paste", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
-
-    End Sub
-
-    Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        okCancelPanel.Top = Me.Height - 103
-
-        If SessionSettings.MSFS2020Microsoft OrElse SessionSettings.MSFS2020Steam Then
-            chkMSFS2020.Checked = True
-            opt2020Steam.Checked = SessionSettings.MSFS2020Steam
-            opt2020Microsoft.Checked = SessionSettings.MSFS2020Microsoft
-        End If
-        If SessionSettings.MSFS2024Microsoft OrElse SessionSettings.MSFS2024Steam Then
-            chkMSFS2024.Checked = True
-            opt2024Steam.Checked = SessionSettings.MSFS2024Steam
-            opt2024Microsoft.Checked = SessionSettings.MSFS2024Microsoft
-        End If
-
-        If Directory.Exists(SessionSettings.MSFS2020FlightPlansFolder) Then
-            btnMSFS2020FlightPlanFilesFolder.Text = SessionSettings.MSFS2020FlightPlansFolder
-            ToolTip1.SetToolTip(btnMSFS2020FlightPlanFilesFolder, SessionSettings.MSFS2020FlightPlansFolder)
-        End If
-        If Directory.Exists(SessionSettings.MSFS2020WeatherPresetsFolder) Then
-            btnMSFS2020WeatherPresetsFolder.Text = SessionSettings.MSFS2020WeatherPresetsFolder
-            ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, SessionSettings.MSFS2020WeatherPresetsFolder)
-        End If
-        If Directory.Exists(SessionSettings.MSFS2024FlightPlansFolder) Then
-            btnMSFS2024FlightPlanFilesFolder.Text = SessionSettings.MSFS2024FlightPlansFolder
-            ToolTip1.SetToolTip(btnMSFS2024FlightPlanFilesFolder, SessionSettings.MSFS2024FlightPlansFolder)
-        End If
-        If Directory.Exists(SessionSettings.MSFS2024WeatherPresetsFolder) Then
-            btnMSFS2024WeatherPresetsFolder.Text = SessionSettings.MSFS2024WeatherPresetsFolder
-            ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, SessionSettings.MSFS2024WeatherPresetsFolder)
-        End If
-        If Directory.Exists(SessionSettings.UnpackingFolder) Then
-            btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
-            ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
-        End If
-        If Directory.Exists(SessionSettings.PackagesFolder) Then
-            btnPackagesFolder.Text = SessionSettings.PackagesFolder
-            ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
-        End If
-        If Directory.Exists(SessionSettings.NB21IGCFolder) Then
-            btnNB21IGCFolder.Text = SessionSettings.NB21IGCFolder
-            ToolTip1.SetToolTip(btnNB21IGCFolder, SessionSettings.NB21IGCFolder)
-        End If
-        If Directory.Exists(SessionSettings.NB21EXEFolder) Then
-            btnNB21EXEFolder.Text = SessionSettings.NB21EXEFolder
-            ToolTip1.SetToolTip(btnNB21EXEFolder, SessionSettings.NB21EXEFolder)
-        End If
-        If Directory.Exists(SessionSettings.TrackerEXEFolder) Then
-            btnTrackerEXEFolder.Text = SessionSettings.TrackerEXEFolder
-            ToolTip1.SetToolTip(btnTrackerEXEFolder, SessionSettings.TrackerEXEFolder)
-        End If
-        If Directory.Exists(SessionSettings.XCSoarTasksFolder) Then
-            btnXCSoarTasksFolder.Text = SessionSettings.XCSoarTasksFolder
-            ToolTip1.SetToolTip(btnXCSoarTasksFolder, SessionSettings.XCSoarTasksFolder)
-        End If
-        If Directory.Exists(SessionSettings.XCSoarMapsFolder) Then
-            btnXCSoarMapsFolder.Text = SessionSettings.XCSoarMapsFolder
-            ToolTip1.SetToolTip(btnXCSoarMapsFolder, SessionSettings.XCSoarMapsFolder)
-        End If
-
-        Dim NB21port As Integer
-        If Integer.TryParse(SessionSettings.NB21LocalWSPort, NB21port) AndAlso NB21port >= 0 AndAlso NB21port <= 65535 Then
-            txtNB21LocalWSPort.Text = SessionSettings.NB21LocalWSPort
-        End If
-        chkEnableNB21StartAndFeed.Checked = SessionSettings.NB21StartAndFeed
-
-        Dim Trackerport As Integer
-        If Integer.TryParse(SessionSettings.TrackerLocalWSPort, Trackerport) AndAlso Trackerport >= 0 AndAlso Trackerport <= 65535 Then
-            txtTrackerLocalWSPort.Text = SessionSettings.TrackerLocalWSPort
-        End If
-        chkEnableTrackerStartAndFeed.Checked = SessionSettings.TrackerStartAndFeed
-
-        Dim DPHXport As Integer
-        If Integer.TryParse(SessionSettings.LocalWebServerPort, DPHXport) AndAlso DPHXport >= 0 AndAlso DPHXport <= 65535 Then
-            txtDPHXLocalPort.Text = SessionSettings.LocalWebServerPort
-        End If
-
-        Select Case SessionSettings.AutoOverwriteFiles
-            Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                optOverwriteAlwaysOverwrite.Checked = True
-            Case AllSettings.AutoOverwriteOptions.AlwaysSkip
-                optOverwriteAlwaysSkip.Checked = True
-            Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                optOverwriteAlwaysAsk.Checked = True
-        End Select
-
-        chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
-        chkExclude2020FlightPlanFromCleanup.Checked = SessionSettings.Exclude2020FlightPlanFromCleanup
-        chkExclude2020WeatherFileFromCleanup.Checked = SessionSettings.Exclude2020WeatherFileFromCleanup
-        chkExclude2024FlightPlanFromCleanup.Checked = SessionSettings.Exclude2024FlightPlanFromCleanup
-        chkExclude2024WeatherFileFromCleanup.Checked = SessionSettings.Exclude2024WeatherFileFromCleanup
-        chkExcludeXCSoarTaskFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarTaskFileFromCleanup
-        chkExcludeXCSoarMapFileFromCleanup.Checked = SessionSettings.ExcludeXCSoarMapFileFromCleanup
-
-        cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
-        chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
 
     End Sub
 
