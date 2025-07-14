@@ -82,6 +82,7 @@ Partial Class Settings
         Me.optOverwriteAlwaysOverwrite = New System.Windows.Forms.RadioButton()
         Me.optOverwriteAlwaysSkip = New System.Windows.Forms.RadioButton()
         Me.optOverwriteAlwaysAsk = New System.Windows.Forms.RadioButton()
+        Me.chkWSGExceptOpeningDPHX = New System.Windows.Forms.CheckBox()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -132,7 +133,6 @@ Partial Class Settings
         Me.pnlWSGAutoLaunch = New System.Windows.Forms.Panel()
         Me.cboWSGIntegration = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.chkWSGExceptOpeningDPHX = New System.Windows.Forms.CheckBox()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -859,6 +859,20 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.optOverwriteAlwaysAsk, "Files with the same names will result in a dialog asking you each time.")
         Me.optOverwriteAlwaysAsk.UseVisualStyleBackColor = True
         '
+        'chkWSGExceptOpeningDPHX
+        '
+        Me.chkWSGExceptOpeningDPHX.AutoSize = True
+        Me.chkWSGExceptOpeningDPHX.Checked = True
+        Me.chkWSGExceptOpeningDPHX.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkWSGExceptOpeningDPHX.Location = New System.Drawing.Point(402, 8)
+        Me.chkWSGExceptOpeningDPHX.Name = "chkWSGExceptOpeningDPHX"
+        Me.chkWSGExceptOpeningDPHX.Size = New System.Drawing.Size(233, 24)
+        Me.chkWSGExceptOpeningDPHX.TabIndex = 3
+        Me.chkWSGExceptOpeningDPHX.Text = "Ignore when opening DPHX file"
+        Me.ToolTip1.SetToolTip(Me.chkWSGExceptOpeningDPHX, "Enable this to ignore the WSG integration option when starting the tool through a" &
+        " DPHX file.")
+        Me.chkWSGExceptOpeningDPHX.UseVisualStyleBackColor = True
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -1377,20 +1391,6 @@ Partial Class Settings
         Me.Label21.Size = New System.Drawing.Size(166, 20)
         Me.Label21.TabIndex = 0
         Me.Label21.Text = "WeSimGlide Integration:"
-        '
-        'chkWSGExceptOpeningDPHX
-        '
-        Me.chkWSGExceptOpeningDPHX.AutoSize = True
-        Me.chkWSGExceptOpeningDPHX.Checked = True
-        Me.chkWSGExceptOpeningDPHX.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkWSGExceptOpeningDPHX.Location = New System.Drawing.Point(402, 8)
-        Me.chkWSGExceptOpeningDPHX.Name = "chkWSGExceptOpeningDPHX"
-        Me.chkWSGExceptOpeningDPHX.Size = New System.Drawing.Size(233, 24)
-        Me.chkWSGExceptOpeningDPHX.TabIndex = 3
-        Me.chkWSGExceptOpeningDPHX.Text = "Ignore when opening DPHX file"
-        Me.ToolTip1.SetToolTip(Me.chkWSGExceptOpeningDPHX, "Enable this to ignore the WSG integration option when starting the tool through a" &
-        " DPHX file.")
-        Me.chkWSGExceptOpeningDPHX.UseVisualStyleBackColor = True
         '
         'Settings
         '

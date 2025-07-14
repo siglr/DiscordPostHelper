@@ -637,7 +637,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp, btnTrackerEXEFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp, btnTrackerEXEFolder.MouseUp, btnMSFS2024WeatherPresetsFolder.MouseUp, btnMSFS2024FlightPlanFilesFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)
