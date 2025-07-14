@@ -109,7 +109,10 @@ Public Class BriefingControl
                                                                                             radioGateDiameterImperial.CheckedChanged,
                                                                                             radioGateDiameterBoth.CheckedChanged,
                                                                                             radioGateMeasurementRadius.CheckedChanged,
-                                                                                            radioGateMeasurementDiameter.CheckedChanged
+                                                                                            radioGateMeasurementDiameter.CheckedChanged,
+                                                                                            radioSpeedMetric.CheckedChanged,
+                                                                                            radioSpeedKnots.CheckedChanged,
+                                                                                            radioSpeedImperial.CheckedChanged
 
         UnitPrefChanged(sender)
 
@@ -1028,6 +1031,8 @@ Public Class BriefingControl
                 PrefUnits.Altitude = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("Distance") Then
                 PrefUnits.Distance = CInt(radioBtn.Tag)
+            ElseIf radioBtn.Name.Contains("Speed") Then
+                PrefUnits.Speed = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("GateDiameter") Then
                 PrefUnits.GateDiameter = CInt(radioBtn.Tag)
             ElseIf radioBtn.Name.Contains("GateMeasurement") Then

@@ -10,51 +10,219 @@ Imports System.Net.Http.Headers
 Imports System.Collections.Specialized
 Imports System.Net
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports System.Globalization
 
 Public Class IGCFileUpload
 
     Private uploadHandler As UploadFileDialogHandler
     Private igcFiles As List(Of String)
-    Private igcDetails As IGCLookupDetails = Nothing
     Private entrySeqID As Integer = 0
     Private plnFilePath As String = Nothing
+    Private simLocalDateTime As DateTime = Nothing
     Private alreadyUploaded As Boolean = False
-    Private igcResults As IGCResults = Nothing
+    Private dictIGCDetails As New Dictionary(Of String, IGCLookupDetails)
+    Private igcDetails As IGCLookupDetails = Nothing
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pPLNFilePath As String, pEntrySeqID As Integer, pSimLocalDateTime As DateTime)
+        entrySeqID = pEntrySeqID
+        igcFiles = pIGCFiles
+        plnFilePath = pPLNFilePath
+        simLocalDateTime = pSimLocalDateTime
 
         uploadHandler = New UploadFileDialogHandler()
         browser.DialogHandler = uploadHandler
         browser.Load("https://xp-soaring.github.io/tasks/b21_task_planner/index.html")
 
+        lstbxIGCFiles.Items.Clear()
+        dictIGCDetails.Clear()
+        Dim thisIGCDetails As IGCLookupDetails = Nothing
+        If igcFiles IsNot Nothing AndAlso igcFiles.Count > 0 Then
+            For Each igcFile As String In igcFiles
+                thisIGCDetails = New IGCLookupDetails
+                thisIGCDetails.IGCLocalFilePath = igcFile
+                thisIGCDetails.EntrySeqID = entrySeqID
+                dictIGCDetails.Add(thisIGCDetails.IGCFileName, thisIGCDetails)
+                lstbxIGCFiles.Items.Add(thisIGCDetails.IGCFileName)
+            Next
+        End If
+        'Subscribe for when the main frame finishes loading
+        AddHandler browser.FrameLoadEnd, AddressOf OnBrowserFrameLoadEnd
+        Me.Width = parentForm.Width
+        Me.Height = parentForm.Height
+        Me.ShowDialog(parentForm)
+
     End Sub
 
-    Public Sub Display(pIGCFiles As List(Of String), pPLNFilePath As String, pEntrySeqID As Integer)
-        entrySeqID = pEntrySeqID
-        igcFiles = pIGCFiles
-        plnFilePath = pPLNFilePath
+    Private Sub OnBrowserFrameLoadEnd(sender As Object, e As CefSharp.FrameLoadEndEventArgs)
+        ' only once, and only for the main frame
+        If Not e.Frame.IsMain Then Return
 
+        ' we’re on CEF’s render thread—marshal back to WinForms
+        Me.Invoke(Sub()
+                      If lstbxIGCFiles.Items.Count > 0 Then
+                          lstbxIGCFiles.SelectedIndex = 0
+                      End If
+                  End Sub)
+
+        ' unsubscribe, so it only runs once
+        RemoveHandler browser.FrameLoadEnd, AddressOf OnBrowserFrameLoadEnd
     End Sub
 
-    Private Sub ProcessSelectedIGCFile()
+    Private Async Function ProcessSelectedIGCFile() As Task
 
-        'TODO: Select the IGC file to process
-        ProcessIGCFileStep1Async(Nothing)
+        lblProcessing.Visible = True
+        lblProcessing.Text = String.Empty
 
-    End Sub
+        'Parse the IGC file
+        If igcDetails.IsParsed = False Then
+            Await ProcessIGCFileStep1Parsing()
+        End If
+
+        'Display the IGC details
+        txtPilot.Text = igcDetails.Pilot
+        txtCompID.Text = igcDetails.CompetitionID
+        txtGlider.Text = igcDetails.GliderType
+        txtNB21.Text = igcDetails.NB21Version
+        txtSim.Text = igcDetails.Sim
+
+        Dim rawUtc = igcDetails.IGCRecordDateTimeUTC
+        ' Parse into a DateTime (yyMMddHHmmss)
+        Dim dtUtc As DateTime
+        If DateTime.TryParseExact(rawUtc,
+                                  "yyMMddHHmmss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal,
+                                  dtUtc) Then
+
+            ' Convert to local and format: short date + long time
+            Dim dtLocal = dtUtc.ToLocalTime()
+            txtRecordDate.Text = $"{dtLocal:d} {dtLocal:T}"
+
+        Else
+            ' Fallback if something’s wrong
+            txtRecordDate.Text = rawUtc
+        End If
+
+        txtWSGStatus.Text = String.Empty
+        txtTaskPlannerStatus.Text = String.Empty
+
+        If Not igcDetails.AlreadyUploadedChecked Then
+            'Check if already uploaded
+            Dim resultCheckIGCAlreadyUploaded As String = Await CheckIGCAlreadyUploaded()
+            If Not String.IsNullOrEmpty(resultCheckIGCAlreadyUploaded) Then
+                'Error checking if IGC already uploaded
+                txtWSGStatus.Text = $"Error: {resultCheckIGCAlreadyUploaded}"
+            Else
+                igcDetails.AlreadyUploadedChecked = True
+            End If
+        End If
+
+        pnlResults.Visible = False
+
+        If String.IsNullOrEmpty(txtWSGStatus.Text) Then
+            If igcDetails.AlreadyUploaded Then
+                txtWSGStatus.Text = "Already uploaded"
+                txtTaskPlannerStatus.Text = "N/A"
+                Return
+            Else
+                txtWSGStatus.Text = "Not found - can upload"
+            End If
+        End If
+
+        If igcDetails.Results Is Nothing Then
+            Await ExtractionFromTaskPlanner()
+        Else
+            txtTaskPlannerStatus.Text = "Results already available"
+        End If
+        If igcDetails.Results Is Nothing Then
+            'Still nothing - error processing?
+        Else
+            Await FillResultsPanel()
+        End If
+
+    End Function
+
+    Private Async Function FillResultsPanel() As Task
+
+        'Fill results
+        pnlResults.Visible = True
+        Dim flagValid As String = "❗"
+        Dim flagCompleted As String = "❌"
+        Dim flagDateTime As String = "❌"
+        Dim flagPenalties As String = "👮"
+        If igcDetails.Results.IGCValid Then
+            flagValid = "🔒"
+        End If
+        If igcDetails.Results.TaskCompleted Then
+            flagCompleted = "🏁"
+        End If
+        If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, simLocalDateTime) Then
+            flagDateTime = "⌚"
+        End If
+        If igcDetails.Results.Penalties Then
+            flagPenalties = "✅"
+        End If
+        txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"
+        txtLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.LocalDate, igcDetails.LocalTime)
+        txtTaskLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(simLocalDateTime)
+
+        Select Case SupportingFeatures.PrefUnits.Speed
+            Case PreferredUnits.SpeedUnits.Imperial
+                txtSpeed.Text = String.Format("{0:N1} mph", Conversions.KmhToMph(igcDetails.Results.Speed))
+            Case PreferredUnits.SpeedUnits.Knots
+                txtSpeed.Text = String.Format("{0} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
+            Case PreferredUnits.SpeedUnits.Metric
+                txtSpeed.Text = $"{igcDetails.Results.Speed} km/h"
+        End Select
+
+        Select Case SupportingFeatures.PrefUnits.Distance
+            Case PreferredUnits.DistanceUnits.Metric
+                txtDistance.Text = $"{igcDetails.Results.Distance} km"
+            Case PreferredUnits.DistanceUnits.Imperial
+                txtDistance.Text = String.Format("{0:N1} mi", Conversions.KmToMiles(igcDetails.Results.Distance))
+            Case PreferredUnits.DistanceUnits.Both
+                txtDistance.Text = String.Format($"{igcDetails.Results.Distance} km / {Conversions.KmToMiles(igcDetails.Results.Distance):N1} mi")
+        End Select
+
+        txtTime.Text = igcDetails.Results.Duration
+        txtTPVersion.Text = igcDetails.Results.TPVersion
+
+    End Function
+
+    Private Async Function ExtractionFromTaskPlanner() As Task
+
+        Dim currentZoomLevel As Double = Await browser.GetZoomLevelAsync()
+        browser.SetZoomLevel(0.0)
+        browser.Enabled = False
+        lblProcessing.Visible = True
+        lblProcessing.Text = "Extracting results, please wait..."
+        Dim resultExctractMsg As String = Await ProcessIGCFileStep2TaskPlanner()
+        browser.SetZoomLevel(currentZoomLevel)
+        If String.IsNullOrEmpty(resultExctractMsg) Then
+            'All fine
+            lblProcessing.Visible = False
+            browser.Enabled = True
+            txtTaskPlannerStatus.Text = "Results extracted"
+        Else
+            'Error
+            lblProcessing.Visible = True
+            txtTaskPlannerStatus.Text = resultExctractMsg
+        End If
+
+    End Function
 
     Private Async Sub UploadIGCResults()
 
         ' Upload the IGC results and file to the server
         If Await SaveIgcRecordForBatchAsync(
                         igcDetails,
-                        igcResults.TaskCompleted,
-                        igcResults.Penalties,
-                        igcResults.DurationInSeconds,
-                        igcResults.Distance,
-                        igcResults.Speed,
-                        igcResults.IGCValid,
-                        igcResults.TPVersion
+                        igcDetails.Results.TaskCompleted,
+                        igcDetails.Results.Penalties,
+                        igcDetails.Results.DurationInSeconds,
+                        igcDetails.Results.Distance,
+                        igcDetails.Results.Speed,
+                        igcDetails.Results.IGCValid,
+                        igcDetails.Results.TPVersion
                         ) Then
 
             ' Finish with the post‐upload steps
@@ -76,14 +244,9 @@ Public Class IGCFileUpload
 
     End Sub
 
-    Private Async Sub ProcessIGCFileStep1Async(igcFile As String)
+    Private Async Function ProcessIGCFileStep1Parsing() As Task
 
         Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
-
-        igcDetails = New IGCLookupDetails
-
-        igcDetails.IGCLocalFilePath = igcFile
-        igcDetails.EntrySeqID = entrySeqID
 
         'Parse everything out of the .igc
         Dim doc = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
@@ -127,146 +290,102 @@ Public Class IGCFileUpload
         }) _
         .ToList()
 
-    End Sub
+        igcDetails.IsParsed = True
 
-    Private Async Sub ProcessIGCFileStep2Async()
+    End Function
 
-        'Check if already uploaded
-        Dim resultCheckIGCAlreadyUploaded As String = Await CheckIGCAlreadyUploaded()
-        If String.IsNullOrEmpty(resultCheckIGCAlreadyUploaded) Then
-            'Error checking if IGC already uploaded
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show($"Error checking if IGC already uploaded: {resultCheckIGCAlreadyUploaded}", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
-            Return
+    Private Async Function ProcessIGCFileStep2TaskPlanner() As Task(Of String)
+
+        'Load the flight plan first
+        ' Tell our handler which file to feed in
+        uploadHandler.FileToUpload = $"{plnFilePath}"
+
+        ' Fire the JS “Choose file(s)” click
+        Await ClickElementByIdAsync("drop_zone_choose_button")
+
+        ' Wait for the file input to be populated
+        Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+        If Not gotPlnFile Then
+            Return "Could not load the PLN file!"
         End If
 
-        If igcDetails.AlreadyUploaded Then
-            ' TODO: Mark the IFC file as already uploaded
+        'Then the IGC file
+        ' Tell our handler which IGC file to feed in
+        uploadHandler.FileToUpload = igcDetails.IGCLocalFilePath
 
-        Else
-            'Load the flight plan first
-            ' Tell our handler which file to feed in
-            uploadHandler.FileToUpload = $"{plnFilePath}"
+        ' Fire the JS “Choose file(s)” click
+        Await ClickElementByIdAsync("drop_zone_choose_button")
 
-            ' Fire the JS “Choose file(s)” click
-            Await ClickElementByIdAsync("drop_zone_choose_button")
-
-            ' Wait for the file input to be populated
-            Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
-            If Not gotPlnFile Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Could not load the PLN file!", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-                Return
-            End If
-
-            'Then the IGC file
-            ' Tell our handler which IGC file to feed in
-            uploadHandler.FileToUpload = igcDetails.IGCLocalFilePath
-
-            ' Fire the JS “Choose file(s)” click
-            Await ClickElementByIdAsync("drop_zone_choose_button")
-
-            ' Wait for the file input to be populated
-            Dim gotFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
-            If Not gotFile Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Could not load the IGC file!", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-                Return
-            End If
-
-            ' Now wait for at least one tracklogs entry
-            Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table tr.tracklogs_entry_current').length > 0", timeoutSeconds:=10)
-            If Not hasRows Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("No tracklogs entries detected!", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-                Return
-            End If
-
-            ' Click the first tracklog
-            Await ClickElementAsync("#tracklogs_table tr.tracklogs_entry_current")
-
-            ' Click Load Task
-            Await ClickElementAsync("#tracklog_info_load_task")
-
-            ' Switch back to the Tracklogs tab (the Load Task button never hides)
-            Await browser.EvaluateScriptAsync("b21_task_planner.tab_tracklogs_click()")
-
-            ' Wait for the Tracklogs panel to be visible again
-            Dim tabVisible = Await WaitForConditionAsync("document.getElementById('tracklogs').style.display != 'none'", timeoutSeconds:=5)
-
-            If Not tabVisible Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("Tracklogs tab never re-appeared!", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Using
-                Return
-            End If
-
-            ' Extract IGCDetails
-            Await ExtractResults()
-
+        ' Wait for the file input to be populated
+        Dim gotFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+        If Not gotFile Then
+            Return "Could not load the IGC file!"
         End If
 
-    End Sub
+        ' Now wait for at least one tracklogs entry
+        Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table tr.tracklogs_entry_current').length > 0", timeoutSeconds:=10)
+        If Not hasRows Then
+            Return "No tracklogs entries detected!"
+        End If
 
-#Region "Browser Related Stuff"
+        ' Click the first tracklog
+        Await ClickElementAsync("#tracklogs_table tr.tracklogs_entry_current")
 
-    ''' <summary>
-    ''' Parses the tracklogs table and planner version,  
-    ''' builds the IGCDetails object & writes its JSON to txtLog.
-    ''' </summary>
-    Private Async Function ExtractResults() As Task(Of Boolean)
+        ' Click Load Task
+        Await ClickElementAsync("#tracklog_info_load_task")
 
-        ' 1) Get the raw tracklogs HTML
+        ' Switch back to the Tracklogs tab (the Load Task button never hides)
+        Await browser.EvaluateScriptAsync("b21_task_planner.tab_tracklogs_click()")
+
+        ' Wait for the Tracklogs panel to be visible again
+        Dim tabVisible = Await WaitForConditionAsync("document.getElementById('tracklogs').style.display != 'none'", timeoutSeconds:=5)
+
+        If Not tabVisible Then
+            Return "Tracklogs tab never re-appeared!"
+        End If
+
+        'Read tracklogs
         Dim res = Await browser.EvaluateScriptAsync("document.querySelector('#tracklogs_table')?.outerHTML")
         If Not res.Success OrElse res.Result Is Nothing Then
-            'txtLog.AppendText("⚠ Could not read tracklogs HTML." & vbCrLf)
-            Return False
+            Return "Could not read tracklogs HTML."
         End If
         Dim tracklogsHtml As String = res.Result.ToString()
 
-        ' 2) Load it into HtmlAgilityPack
+        'Load it into HtmlAgilityPack
         Dim doc As New HtmlDocument()
         doc.LoadHtml(tracklogsHtml)
 
-        ' 3) Find the “current” row (fallback to any row if needed)
+        'Find the “current” row (fallback to any row if needed)
         Dim row As HtmlNode = doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry_current')]")
-
         If row Is Nothing Then
             row = doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry')]")
         End If
-
         If row Is Nothing Then
-            'txtLog.AppendText("❌ No tracklogs row found in parsed HTML." & vbCrLf)
-            Return False
+            Return "No tracklogs row found in parsed HTML."
         End If
 
-        ' 4) Within that row, locate the info cell
+        'Within that row, locate the info cell
         Dim infoTd As HtmlNode = row.SelectSingleNode(".//td[contains(@class,'tracklogs_entry_info')]")
         If infoTd Is Nothing Then
-            'txtLog.AppendText("❌ Could not find info cell." & vbCrLf)
-            Return False
+            Return "Could not find info cell."
         End If
 
-        ' 5) Pull out the name div for IGCValid & raw text
+        'Pull out the name div for IGCValid & raw text
         Dim nameDiv As HtmlNode = infoTd.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_name')]")
         Dim rawName As String = If(nameDiv?.InnerText.Trim(), "")
         Dim igcValid As Boolean = rawName.StartsWith("🔒")
 
-        ' 6) Pull out the result‐status div
+        'Pull out the result‐status div
         Dim resultDiv As HtmlNode = nameDiv.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_finished')]")
         Dim cssClass As String = If(resultDiv?.GetAttributeValue("class", ""), "")
         Dim taskCompleted As Boolean = cssClass.Contains("tracklogs_entry_finished_ok")
         Dim penalties As Boolean = cssClass.Contains("penalties")
 
-        ' 7) Extract the “XXh YYkm ZZkph” (or similar) text
+        'Extract the “XXh YYkm ZZkph” (or similar) text
         Dim span As HtmlNode = resultDiv.SelectSingleNode(".//span")
         Dim resultText As String = If(span?.InnerText.Trim(), "")
 
-        ' 8) Parse duration / distance / speed
+        'Parse duration / distance / speed
         Dim duration As String = Nothing
         Dim distance As String = Nothing
         Dim speed As String = Nothing
@@ -288,16 +407,18 @@ Public Class IGCFileUpload
             If m.Success Then distance = m.Groups(1).Value
         End If
 
-        ' 9) Fetch the planner version
+        'Fetch the planner version
         Dim verRes As JavascriptResponse = Await browser.EvaluateScriptAsync("document.querySelector('#b21_task_planner_version')?.innerText")
         Dim plannerVersion As String = If(verRes.Success, verRes.Result?.ToString(), "")
 
-        ' 10) Build the IGC results object
-        igcResults = New IGCResults(taskCompleted, penalties, duration, distance, speed, igcValid, plannerVersion)
+        'Build the IGC results object
+        igcDetails.Results = New IGCResults(taskCompleted, penalties, duration, distance, speed, igcValid, plannerVersion)
 
-        Return True
+        Return String.Empty
+
     End Function
 
+#Region "Browser Related Stuff"
 
     ''' <summary>
     ''' Polls a JS expression until it returns true or the timeout elapses.
@@ -401,7 +522,7 @@ Public Class IGCFileUpload
 
         Try
             Using client As New HttpClient()
-                client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
+                client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
                 Dim chkForm = New FormUrlEncodedContent(
                 New Dictionary(Of String, String) From {
                     {"IGCKey", igcDetails.IGCKeyFilename},
@@ -410,7 +531,7 @@ Public Class IGCFileUpload
             )
                 Dim chkResp = Await client.PostAsync("CheckIgcUploaded.php", chkForm)
                 If Not chkResp.IsSuccessStatusCode Then
-                    Return $"Check IGC already uploaded PHP error {(CInt(chkResp.StatusCode))} {chkResp.ReasonPhrase}"
+                    Return $"{(CInt(chkResp.StatusCode))} {chkResp.ReasonPhrase}"
                 End If
                 Dim chkBody = Await chkResp.Content.ReadAsStringAsync()
                 Dim chkDoc = JsonDocument.Parse(chkBody)
@@ -446,7 +567,7 @@ Public Class IGCFileUpload
 
         Try
             Using client As New HttpClient()
-                client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
+                client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
 
                 Using content As New MultipartFormDataContent()
                     ' Helper to avoid passing Nothing into StringContent
@@ -523,7 +644,7 @@ Public Class IGCFileUpload
     Private Async Function CallSetUnassignedIGCRecordUserAsync() As Task
         Try
             Using client As New HttpClient()
-                client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
+                client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
                 ' If your script accepts POST instead, swap to PostAsync with an empty FormUrlEncodedContent.
                 Dim resp = Await client.GetAsync("adm_SetUnassignedIGCRecordUser.php")
                 Dim body = Await resp.Content.ReadAsStringAsync()
@@ -539,7 +660,7 @@ Public Class IGCFileUpload
     Private Async Function CallUpdateLatestIGCLeadersAsync() As Task
         Try
             Using client As New HttpClient()
-                client.BaseAddress = New Uri("https://wesimglide.org/php/")
+                client.BaseAddress = New Uri($"{SupportingFeatures.WeSimGlide}php/")
                 ' If your script accepts POST instead, swap to PostAsync with an empty FormUrlEncodedContent.
                 Dim resp = Await client.GetAsync("UpdateLatestIGCLeaders.php")
                 Dim body = Await resp.Content.ReadAsStringAsync()
@@ -548,5 +669,46 @@ Public Class IGCFileUpload
         Catch ex As Exception
         End Try
     End Function
+
+    Private Async Sub lstbxIGCFiles_SelectedIndexChangedAsync(sender As Object, e As EventArgs) Handles lstbxIGCFiles.SelectedIndexChanged
+
+        Try
+            If lstbxIGCFiles.SelectedIndex >= 0 Then
+                lstbxIGCFiles.Enabled = False
+                SetCurrentIGCDetails()
+                Await ProcessSelectedIGCFile()
+                lstbxIGCFiles.Enabled = True
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub SetCurrentIGCDetails()
+        If lstbxIGCFiles.SelectedIndex >= 0 Then
+            igcDetails = dictIGCDetails(lstbxIGCFiles.SelectedItem.ToString())
+        End If
+    End Sub
+
+    Private Async Sub btnRecalculate_Click(sender As Object, e As EventArgs) Handles btnRecalculate.Click
+        Try
+            If lstbxIGCFiles.SelectedIndex >= 0 Then
+                lstbxIGCFiles.Enabled = False
+                Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
+                Await ExtractionFromTaskPlanner()
+                Await FillResultsPanel()
+                lstbxIGCFiles.Enabled = True
+            End If
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        Me.Close()
+    End Sub
 
 End Class

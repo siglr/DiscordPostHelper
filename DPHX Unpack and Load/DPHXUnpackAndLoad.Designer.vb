@@ -94,7 +94,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripOpen, Me.toolStripUnpack, Me.toolStripCleanup, Me.ToolStripSeparator3, Me.toolStripFileBrowser, Me.ToolStripSeparator1, Me.toolStripWSGHome, Me.toolStripWSGMap, Me.toolStripWSGUploadIGC, Me.ToolStripSeparator5, Me.toolStripB21Planner, Me.ToolStripSeparator2, Me.ToolStripDropDownButton1, Me.toolStripSettings})
         Me.ToolStrip1.Location = New System.Drawing.Point(5, 5)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(996, 28)
+        Me.ToolStrip1.Size = New System.Drawing.Size(996, 29)
         Me.ToolStrip1.SuppressHighlighting = False
         Me.ToolStrip1.TabIndex = 8
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -104,7 +104,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(70, 25)
+        Me.toolStripOpen.Size = New System.Drawing.Size(70, 26)
         Me.toolStripOpen.Text = "&Open"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPHX pacage from your PC."
         '
@@ -260,7 +260,7 @@ Partial Class DPHXUnpackAndLoad
         Me.pnlDPHFile.Location = New System.Drawing.Point(0, 45)
         Me.pnlDPHFile.Name = "pnlDPHFile"
         Me.pnlDPHFile.Padding = New System.Windows.Forms.Padding(5)
-        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 60)
+        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 68)
         Me.pnlDPHFile.TabIndex = 2
         '
         'msfs2024ToolStrip
@@ -269,9 +269,9 @@ Partial Class DPHXUnpackAndLoad
         Me.msfs2024ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.msfs2024ToolStrip.ImageScalingSize = New System.Drawing.Size(18, 18)
         Me.msfs2024ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.tool2024StatusOK, Me.tool2024StatusStop, Me.tool2024StatusWarning, Me.lbl2024AllFilesStatus})
-        Me.msfs2024ToolStrip.Location = New System.Drawing.Point(5, 30)
+        Me.msfs2024ToolStrip.Location = New System.Drawing.Point(5, 34)
         Me.msfs2024ToolStrip.Name = "msfs2024ToolStrip"
-        Me.msfs2024ToolStrip.Size = New System.Drawing.Size(996, 25)
+        Me.msfs2024ToolStrip.Size = New System.Drawing.Size(996, 29)
         Me.msfs2024ToolStrip.TabIndex = 1
         Me.msfs2024ToolStrip.Text = "ToolStrip2"
         '
@@ -337,7 +337,7 @@ Partial Class DPHXUnpackAndLoad
         Me.msfs2020ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.tool2020StatusOK, Me.tool2020StatusStop, Me.tool2020StatusWarning, Me.lbl2020AllFilesStatus})
         Me.msfs2020ToolStrip.Location = New System.Drawing.Point(5, 5)
         Me.msfs2020ToolStrip.Name = "msfs2020ToolStrip"
-        Me.msfs2020ToolStrip.Size = New System.Drawing.Size(996, 25)
+        Me.msfs2020ToolStrip.Size = New System.Drawing.Size(996, 29)
         Me.msfs2020ToolStrip.TabIndex = 0
         Me.msfs2020ToolStrip.Text = "ToolStrip2"
         '

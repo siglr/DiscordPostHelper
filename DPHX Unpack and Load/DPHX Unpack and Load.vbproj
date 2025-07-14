@@ -164,6 +164,7 @@
       <Link>UploadFileDialogHandler.vb</Link>
     </Compile>
     <Compile Include="AllSettings.vb" />
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="CleaningTool.Designer.vb">
       <DependentUpon>CleaningTool.vb</DependentUpon>
     </Compile>

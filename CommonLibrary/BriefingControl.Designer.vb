@@ -110,6 +110,11 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.grbSpeed = New System.Windows.Forms.GroupBox()
+        Me.FlowLayoutPanel8 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.radioSpeedMetric = New System.Windows.Forms.RadioButton()
+        Me.radioSpeedImperial = New System.Windows.Forms.RadioButton()
+        Me.radioSpeedKnots = New System.Windows.Forms.RadioButton()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
@@ -165,6 +170,8 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
+        Me.grbSpeed.SuspendLayout()
+        Me.FlowLayoutPanel8.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -808,6 +815,7 @@ Partial Class BriefingControl
         '
         'tabUnits
         '
+        Me.tabUnits.Controls.Add(Me.grbSpeed)
         Me.tabUnits.Controls.Add(Me.grbGateDiameterOrRadius)
         Me.tabUnits.Controls.Add(Me.lblPrefUnitsMessage)
         Me.tabUnits.Controls.Add(Me.grbTemperature)
@@ -828,10 +836,10 @@ Partial Class BriefingControl
         Me.grbGateDiameterOrRadius.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbGateDiameterOrRadius.Controls.Add(Me.FlowLayoutPanel7)
-        Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 129)
+        Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 189)
         Me.grbGateDiameterOrRadius.Name = "grbGateDiameterOrRadius"
         Me.grbGateDiameterOrRadius.Size = New System.Drawing.Size(947, 57)
-        Me.grbGateDiameterOrRadius.TabIndex = 2
+        Me.grbGateDiameterOrRadius.TabIndex = 3
         Me.grbGateDiameterOrRadius.TabStop = False
         Me.grbGateDiameterOrRadius.Text = "Gate Size Format"
         '
@@ -873,7 +881,7 @@ Partial Class BriefingControl
         Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 584)
         Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
         Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(963, 104)
-        Me.lblPrefUnitsMessage.TabIndex = 7
+        Me.lblPrefUnitsMessage.TabIndex = 8
         Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
     "description fields is excluded and will appear as it is."
         Me.lblPrefUnitsMessage.TextAlign = System.Drawing.ContentAlignment.BottomCenter
@@ -883,10 +891,10 @@ Partial Class BriefingControl
         Me.grbTemperature.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTemperature.Controls.Add(Me.FlowLayoutPanel6)
-        Me.grbTemperature.Location = New System.Drawing.Point(3, 381)
+        Me.grbTemperature.Location = New System.Drawing.Point(3, 441)
         Me.grbTemperature.Name = "grbTemperature"
         Me.grbTemperature.Size = New System.Drawing.Size(947, 57)
-        Me.grbTemperature.TabIndex = 6
+        Me.grbTemperature.TabIndex = 7
         Me.grbTemperature.TabStop = False
         Me.grbTemperature.Text = "Temperature"
         '
@@ -939,10 +947,10 @@ Partial Class BriefingControl
         Me.grbWindSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbWindSpeed.Controls.Add(Me.FlowLayoutPanel5)
-        Me.grbWindSpeed.Location = New System.Drawing.Point(3, 255)
+        Me.grbWindSpeed.Location = New System.Drawing.Point(3, 315)
         Me.grbWindSpeed.Name = "grbWindSpeed"
         Me.grbWindSpeed.Size = New System.Drawing.Size(947, 57)
-        Me.grbWindSpeed.TabIndex = 4
+        Me.grbWindSpeed.TabIndex = 5
         Me.grbWindSpeed.TabStop = False
         Me.grbWindSpeed.Text = "Wind Speed"
         '
@@ -995,10 +1003,10 @@ Partial Class BriefingControl
         Me.grbGateDiameter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbGateDiameter.Controls.Add(Me.FlowLayoutPanel4)
-        Me.grbGateDiameter.Location = New System.Drawing.Point(3, 192)
+        Me.grbGateDiameter.Location = New System.Drawing.Point(3, 252)
         Me.grbGateDiameter.Name = "grbGateDiameter"
         Me.grbGateDiameter.Size = New System.Drawing.Size(947, 57)
-        Me.grbGateDiameter.TabIndex = 3
+        Me.grbGateDiameter.TabIndex = 4
         Me.grbGateDiameter.TabStop = False
         Me.grbGateDiameter.Text = "Gate Measurement"
         '
@@ -1107,10 +1115,10 @@ Partial Class BriefingControl
         Me.grbBarometric.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbBarometric.Controls.Add(Me.FlowLayoutPanel1)
-        Me.grbBarometric.Location = New System.Drawing.Point(3, 318)
+        Me.grbBarometric.Location = New System.Drawing.Point(3, 378)
         Me.grbBarometric.Name = "grbBarometric"
         Me.grbBarometric.Size = New System.Drawing.Size(947, 57)
-        Me.grbBarometric.TabIndex = 5
+        Me.grbBarometric.TabIndex = 6
         Me.grbBarometric.TabStop = False
         Me.grbBarometric.Text = "Barometric Pressure"
         '
@@ -1218,6 +1226,62 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
+        'grbSpeed
+        '
+        Me.grbSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbSpeed.Controls.Add(Me.FlowLayoutPanel8)
+        Me.grbSpeed.Location = New System.Drawing.Point(3, 126)
+        Me.grbSpeed.Name = "grbSpeed"
+        Me.grbSpeed.Size = New System.Drawing.Size(947, 57)
+        Me.grbSpeed.TabIndex = 2
+        Me.grbSpeed.TabStop = False
+        Me.grbSpeed.Text = "Speed"
+        '
+        'FlowLayoutPanel8
+        '
+        Me.FlowLayoutPanel8.Controls.Add(Me.radioSpeedMetric)
+        Me.FlowLayoutPanel8.Controls.Add(Me.radioSpeedImperial)
+        Me.FlowLayoutPanel8.Controls.Add(Me.radioSpeedKnots)
+        Me.FlowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FlowLayoutPanel8.Location = New System.Drawing.Point(3, 23)
+        Me.FlowLayoutPanel8.Name = "FlowLayoutPanel8"
+        Me.FlowLayoutPanel8.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel8.TabIndex = 0
+        '
+        'radioSpeedMetric
+        '
+        Me.radioSpeedMetric.AutoSize = True
+        Me.radioSpeedMetric.Location = New System.Drawing.Point(3, 3)
+        Me.radioSpeedMetric.Name = "radioSpeedMetric"
+        Me.radioSpeedMetric.Size = New System.Drawing.Size(151, 24)
+        Me.radioSpeedMetric.TabIndex = 0
+        Me.radioSpeedMetric.Tag = "0"
+        Me.radioSpeedMetric.Text = "Metric (Kilometers)"
+        Me.radioSpeedMetric.UseVisualStyleBackColor = True
+        '
+        'radioSpeedImperial
+        '
+        Me.radioSpeedImperial.AutoSize = True
+        Me.radioSpeedImperial.Location = New System.Drawing.Point(160, 3)
+        Me.radioSpeedImperial.Name = "radioSpeedImperial"
+        Me.radioSpeedImperial.Size = New System.Drawing.Size(125, 24)
+        Me.radioSpeedImperial.TabIndex = 1
+        Me.radioSpeedImperial.Tag = "1"
+        Me.radioSpeedImperial.Text = "Imperial (Miles)"
+        Me.radioSpeedImperial.UseVisualStyleBackColor = True
+        '
+        'radioSpeedKnots
+        '
+        Me.radioSpeedKnots.AutoSize = True
+        Me.radioSpeedKnots.Location = New System.Drawing.Point(291, 3)
+        Me.radioSpeedKnots.Name = "radioSpeedKnots"
+        Me.radioSpeedKnots.Size = New System.Drawing.Size(65, 24)
+        Me.radioSpeedKnots.TabIndex = 2
+        Me.radioSpeedKnots.Tag = "2"
+        Me.radioSpeedKnots.Text = "Knots"
+        Me.radioSpeedKnots.UseVisualStyleBackColor = True
+        '
         'BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -1293,6 +1357,9 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
+        Me.grbSpeed.ResumeLayout(False)
+        Me.FlowLayoutPanel8.ResumeLayout(False)
+        Me.FlowLayoutPanel8.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1384,4 +1451,9 @@ Partial Class BriefingControl
     Friend WithEvents chkShowGraph As Windows.Forms.CheckBox
     Friend WithEvents Panel1 As Windows.Forms.Panel
     Friend WithEvents FullWeatherGraphPanel1 As FullWeatherGraphPanel
+    Friend WithEvents grbSpeed As Windows.Forms.GroupBox
+    Friend WithEvents FlowLayoutPanel8 As Windows.Forms.FlowLayoutPanel
+    Friend WithEvents radioSpeedMetric As Windows.Forms.RadioButton
+    Friend WithEvents radioSpeedImperial As Windows.Forms.RadioButton
+    Friend WithEvents radioSpeedKnots As Windows.Forms.RadioButton
 End Class

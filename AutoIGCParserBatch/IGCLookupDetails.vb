@@ -2,6 +2,7 @@
     ' — from your matching step —
     Public Property EntrySeqID As Integer
     Public Property AlreadyUploaded As Boolean
+    Public Property AlreadyUploadedChecked As Boolean = False
     Public Property TaskTitle As String
 
     ' — constructed key/filename —
@@ -32,6 +33,17 @@
 
     ' — where the local .igc lives —
     Public Property IGCLocalFilePath As String
+
+    Public Property IsParsed As Boolean = False
+
+    Public Property Results As IGCResults
+
+    Public ReadOnly Property IGCFileName As String
+        Get
+            Return System.IO.Path.GetFileNameWithoutExtension(IGCLocalFilePath)
+        End Get
+    End Property
+
 End Class
 
 Public Class IGCWaypoint

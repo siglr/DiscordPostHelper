@@ -113,6 +113,34 @@ Public Class Conversions
         Return knots * constKnotsToKmh
     End Function
 
+    ''' <summary>
+    ''' Converts a speed string in “km/h” into miles per hour.
+    ''' Returns 0 on parse failure.
+    ''' </summary>
+    Public Shared Function KmhToMph(kmhString As String) As Single
+        Dim kmh As Single
+        ' TryParse will use the current culture’s decimal separator
+        If Single.TryParse(kmhString, kmh) Then
+            ' 1 km/h ≈ 0.621371192 mph
+            Return kmh * 0.6213712F
+        End If
+        Return 0
+    End Function
+
+    ''' <summary>
+    ''' Converts a speed string in “km/h” into knots.
+    ''' Returns 0 on parse failure.
+    ''' </summary>
+    Public Shared Function KmhToKnots(kmhString As String) As Single
+        Dim kmh As Single
+        If Single.TryParse(kmhString, kmh) Then
+            ' 1 knot = 1.852 km/h  ⇒  knots = km/h ÷ 1.852
+            Return kmh / constKnotsToKmh
+        End If
+        Return 0
+    End Function
+
+
     Public Shared Function ConvertDateToUnixTimestamp(dateToConvert As DateTime) As Long
         Dim unixTimestamp As Long = CType((dateToConvert.ToUniversalTime() - New DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds, Long)
         Return unixTimestamp

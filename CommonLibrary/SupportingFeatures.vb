@@ -2884,6 +2884,119 @@ Public Class SupportingFeatures
         End Get
     End Property
 
+    Public Shared Function LocalDateTimeMatch(ByVal localDate As String, ByVal localTime As String, ByVal simDateTime As String) As Boolean
+
+        ' 0) Quick null/empty guard
+        If String.IsNullOrWhiteSpace(localDate) _
+           OrElse String.IsNullOrWhiteSpace(localTime) _
+           OrElse String.IsNullOrWhiteSpace(simDateTime) Then
+            Return False
+        End If
+
+        ' 1) Parse the task’s UTC datetime
+        '    → convert "YYYY-MM-DD HH:mm:ss" into an ISO + Z suffix
+        Dim simIso = simDateTime.Replace(" "c, "T"c) & "Z"
+        Dim taskDT As DateTime
+        If Not DateTime.TryParseExact(
+                simIso,
+                "yyyy-MM-ddTHH:mm:ssZ",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                taskDT
+            ) Then
+            ' fallback to a permissive parse
+            If Not DateTime.TryParse(
+                    simIso,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                    taskDT
+                ) Then
+                Return False
+            End If
+        End If
+        Dim taskYear = taskDT.Year
+
+        ' 2) Extract month & day from localDate
+        Dim m = Regex.Match(localDate, "^(\d{4})-(\d{2})-(\d{2})$")
+        If Not m.Success Then Return False
+        Dim month = Integer.Parse(m.Groups(2).Value)
+        Dim day = Integer.Parse(m.Groups(3).Value)
+
+        ' 3) Extract hh, mm, ss from localTime ("HHmmss")
+        If localTime.Length < 6 Then Return False
+        Dim hh = Integer.Parse(localTime.Substring(0, 2))
+        Dim mm = Integer.Parse(localTime.Substring(2, 2))
+        Dim ss = Integer.Parse(localTime.Substring(4, 2))
+
+        ' 4) Build the IGC DateTime in UTC using the task’s year
+        Dim igcDT = New DateTime(taskYear, month, day, hh, mm, ss, DateTimeKind.Utc)
+
+        ' 5) Compare absolute difference ≤ 30 minutes
+        Dim deltaMinutes = Math.Abs((taskDT - igcDT).TotalMinutes)
+        Return deltaMinutes <= 30
+    End Function
+
+    ' --------- Public overload: takes datePart="yyyy-MM-dd" and timePart="HHmmss" ---------
+    Public Shared Function FormatDateWithoutYearSecondsAndWeekday(datePart As String, timePart As String) As String
+
+        Dim dtDate As DateTime
+        ' 1) Parse the date
+        If Not DateTime.TryParseExact(
+           datePart, "yyyy-MM-dd",
+           CultureInfo.InvariantCulture,
+           DateTimeStyles.None,
+           dtDate
+       ) Then
+            Return datePart
+        End If
+
+        ' 2) Parse the time (HHmmss or at least HHmm)
+        Dim hh As Integer = 0, mm As Integer = 0, ss As Integer = 0
+        If Not String.IsNullOrEmpty(timePart) AndAlso timePart.Length >= 4 Then
+            Try
+                hh = Integer.Parse(timePart.Substring(0, 2))
+                mm = Integer.Parse(timePart.Substring(2, 2))
+                If timePart.Length >= 6 Then ss = Integer.Parse(timePart.Substring(4, 2))
+            Catch
+                ' leave at zero on parse errors
+            End Try
+        End If
+
+        ' 3) Combine into a single DateTime
+        Dim combined As New DateTime(
+        dtDate.Year, dtDate.Month, dtDate.Day,
+        hh, mm, ss,
+        DateTimeKind.Unspecified
+    )
+
+        ' 4) Delegate to the DateTime overload
+        Return FormatDateWithoutYearSecondsAndWeekday(combined)
+    End Function
+
+    ' --------- Public overload: takes a DateTime directly ---------
+    Public Shared Function FormatDateWithoutYearSecondsAndWeekday(dateTime As DateTime) As String
+        Return FormatDateWithoutYearSecondsAndWeekdayCore(dateTime)
+    End Function
+
+    ' --------- Private shared core ---------
+    Private Shared Function FormatDateWithoutYearSecondsAndWeekdayCore(dt As DateTime) As String
+
+        Dim culture = CultureInfo.CurrentCulture
+        Dim dtf = culture.DateTimeFormat
+
+        ' Month‐day pattern (e.g. "MMMM dd" or "dd MMMM") → drop leading zero
+        Dim mdPattern = dtf.MonthDayPattern.Replace("dd", "d")
+
+        ' Time pattern (e.g. "H:mm" or "h:mm tt") → keep as‐is (no seconds)
+        Dim tmPattern = dtf.ShortTimePattern
+
+        ' Combine with comma: "May 15, 7:06 PM" or "15 mai, 19:06"
+        Dim pattern = $"{mdPattern}, {tmPattern}"
+
+        Return dt.ToString(pattern, culture)
+    End Function
+
+
     Public Shared Function FetchTaskIDUsingEntrySeqID(entrySeqID As String, Optional ByRef taskTitle As String = "", Optional onlyAvailable As Boolean = True) As String
 
         Dim onlyAvailableInt As Integer = If(onlyAvailable, 1, 0)

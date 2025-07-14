@@ -1,6 +1,7 @@
 ﻿Public Class PreferredUnits
     Private _altitude As AltitudeUnits
     Private _distance As DistanceUnits
+    Private _speed As SpeedUnits
     Private _GateDiameter As GateDiameterUnits
     Private _windSpeed As WindSpeedUnits
     Private _barometric As BarometricUnits
@@ -11,6 +12,12 @@
         Metric = 0
         Imperial = 1
         Both = 2
+    End Enum
+
+    Public Enum SpeedUnits As Integer
+        Metric = 0
+        Imperial = 1
+        Knots = 2
     End Enum
 
     Public Enum BarometricUnits As Integer
@@ -52,6 +59,17 @@
 
         'Load values from registry
         _distance = SupportingFeatures.ReadRegistryKey("DistanceUnit", DistanceUnits.Both)
+
+        Dim defaultUnitForSpeed As SpeedUnits
+        Select Case _distance
+            Case DistanceUnits.Imperial
+                defaultUnitForSpeed = SpeedUnits.Imperial
+            Case DistanceUnits.Metric
+                defaultUnitForSpeed = SpeedUnits.Metric
+            Case Else
+                defaultUnitForSpeed = SpeedUnits.Metric
+        End Select
+        _speed = SupportingFeatures.ReadRegistryKey("SpeedUnit", defaultUnitForSpeed)
         _barometric = SupportingFeatures.ReadRegistryKey("BarometricUnit", BarometricUnits.Both)
         _temperature = SupportingFeatures.ReadRegistryKey("TemperatureUnit", TemperatureUnits.Both)
         _windSpeed = SupportingFeatures.ReadRegistryKey("WindSpeedUnit", WindSpeedUnits.Both)
@@ -81,6 +99,16 @@
         Set(value As DistanceUnits)
             _distance = value
             SupportingFeatures.WriteRegistryKey("DistanceUnit", _distance)
+        End Set
+    End Property
+
+    Public Property Speed As SpeedUnits
+        Get
+            Return _speed
+        End Get
+        Set(value As SpeedUnits)
+            _speed = value
+            SupportingFeatures.WriteRegistryKey("SpeedUnit", _distance)
         End Set
     End Property
 

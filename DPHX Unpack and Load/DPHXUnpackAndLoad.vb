@@ -160,13 +160,13 @@ Public Class DPHXUnpackAndLoad
                     'Do nothing
                 Case AllSettings.WSGIntegrationOptions.OpenHome
                     'Open map in WSG
-                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=home")
+                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
                 Case AllSettings.WSGIntegrationOptions.OpenMap
                     'Open map in WSG
-                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
+                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
                 Case AllSettings.WSGIntegrationOptions.OpenEvents
                     'Open events in WSG
-                    SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=events")
+                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
             End Select
         End If
 
@@ -1211,11 +1211,11 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
-        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=map")
+        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
     End Sub
 
     Private Sub toolStripWSGHome_Click(sender As Object, e As EventArgs) Handles toolStripWSGHome.Click
-        SupportingFeatures.LaunchDiscordURL("https://wesimglide.org/index.html?tab=home#")
+        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home#")
     End Sub
 
     Private Sub toolStripWSGUploadIGC_Click(sender As Object, e As EventArgs) Handles toolStripWSGUploadIGC.Click
@@ -1226,7 +1226,9 @@ Public Class DPHXUnpackAndLoad
         Else
             Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(flightplanFilename, Settings.SessionSettings.NB21IGCFolder)
             If listOfIGCFiles.Count > 0 Then
-                'TODO: Present the IGCUpload dialog with the list of IGC files
+                'Present the IGCUpload dialog with the list of IGC files
+                Dim igcUploadDialog As New IGCFileUpload
+                igcUploadDialog.Display(Me, listOfIGCFiles, flightplanFilename, _allDPHData.EntrySeqID, _allDPHData.SimLocalDateTime)
             Else
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show("No IGC files found in the NB21 IGC folder that match the flight plan.", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)
