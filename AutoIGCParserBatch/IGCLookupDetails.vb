@@ -4,6 +4,7 @@
     Public Property AlreadyUploaded As Boolean
     Public Property AlreadyUploadedChecked As Boolean = False
     Public Property TaskTitle As String
+    Public Property WSGUserID As Integer = 0
 
     ' — constructed key/filename —
     Public ReadOnly Property IGCKeyFilename As String

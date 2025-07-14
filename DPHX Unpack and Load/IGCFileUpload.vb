@@ -125,7 +125,7 @@ Public Class IGCFileUpload
                 txtTaskPlannerStatus.Text = "N/A"
                 Return
             Else
-                txtWSGStatus.Text = "Not found - can upload"
+                txtWSGStatus.Text = $"Can upload - WSG User: {igcDetails.WSGUserID}"
             End If
         End If
 
@@ -211,28 +211,32 @@ Public Class IGCFileUpload
 
     End Function
 
-    Private Async Sub UploadIGCResults()
+    Private Async Function UploadIGCResults() As Task
 
         ' Upload the IGC results and file to the server
-        If Await SaveIgcRecordForBatchAsync(
-                        igcDetails,
-                        igcDetails.Results.TaskCompleted,
-                        igcDetails.Results.Penalties,
-                        igcDetails.Results.DurationInSeconds,
-                        igcDetails.Results.Distance,
-                        igcDetails.Results.Speed,
-                        igcDetails.Results.IGCValid,
-                        igcDetails.Results.TPVersion
-                        ) Then
+        Dim saveResults As String = Await SaveIgcRecordForBatchAsync()
+
+        If String.IsNullOrEmpty(saveResults) Then
 
             ' Finish with the post‐upload steps
+            txtWSGStatus.Text = "Already uploaded"
+            txtTaskPlannerStatus.Text = "N/A"
+            igcDetails.AlreadyUploaded = True
+            igcDetails.Results = Nothing
+            pnlResults.Visible = False
+            lblProcessing.Visible = True
+            lblProcessing.Text = String.Empty
+
             FinishUp()
 
         Else
-            'TODO: Handle the error
+            'Handle the error
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(saveResults, "Error uploading IGC", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
         End If
 
-    End Sub
+    End Function
 
     Private Async Sub FinishUp()
 
@@ -523,30 +527,47 @@ Public Class IGCFileUpload
         Try
             Using client As New HttpClient()
                 client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
-                Dim chkForm = New FormUrlEncodedContent(
-                New Dictionary(Of String, String) From {
-                    {"IGCKey", igcDetails.IGCKeyFilename},
-                    {"EntrySeqID", igcDetails.EntrySeqID.ToString()}
-                }
-            )
+
+                ' Build form values, including the new PilotName and CompID
+                Dim values As New Dictionary(Of String, String) From {
+                {"IGCKey", igcDetails.IGCKeyFilename},
+                {"EntrySeqID", igcDetails.EntrySeqID.ToString()},
+                {"PilotName", igcDetails.Pilot},
+                {"CompID", igcDetails.CompetitionID}
+            }
+                Dim chkForm As New FormUrlEncodedContent(values)
+
                 Dim chkResp = Await client.PostAsync("CheckIgcUploaded.php", chkForm)
                 If Not chkResp.IsSuccessStatusCode Then
-                    Return $"{(CInt(chkResp.StatusCode))} {chkResp.ReasonPhrase}"
+                    Return $"{CInt(chkResp.StatusCode)} {chkResp.ReasonPhrase}"
                 End If
+
                 Dim chkBody = Await chkResp.Content.ReadAsStringAsync()
                 Dim chkDoc = JsonDocument.Parse(chkBody)
-                Dim chkStatus = chkDoc.RootElement.GetProperty("status").GetString()
-                If chkStatus = "exists" Then
+                Dim root = chkDoc.RootElement
+                Dim status = root.GetProperty("status").GetString()
+
+                If status = "exists" Then
                     igcDetails.AlreadyUploaded = True
                     Return String.Empty
                 End If
+
+                ' Not found → read inferred WSGUserID (0 if absent)
+                Dim prop As JsonElement
+                If root.TryGetProperty("wsgUserID", prop) Then
+                    Dim wsgID As Integer
+                    If Integer.TryParse(prop.GetRawText(), wsgID) Then
+                        igcDetails.WSGUserID = wsgID
+                    End If
+                End If
+
             End Using
+
         Catch ex As Exception
             Return $"Error checking upload: {ex.Message}"
         End Try
 
         Return String.Empty
-
     End Function
 
     ''' <summary>
@@ -554,16 +575,7 @@ Public Class IGCFileUpload
     ''' plus the .igc file itself, to SaveIGCRecordForBatch.php.
     ''' Returns True on success, False otherwise.
     ''' </summary>
-    Private Async Function SaveIgcRecordForBatchAsync(
-                                                    igcDetails As IGCLookupDetails,
-                                                    taskCompleted As Boolean,
-                                                    penalties As Boolean,
-                                                    durationSeconds As Integer,
-                                                    distance As String,
-                                                    speed As String,
-                                                    igcValid As Boolean,
-                                                    tpVersion As String
-                           ) As Task(Of Boolean)
+    Private Async Function SaveIgcRecordForBatchAsync() As Task(Of String)
 
         Try
             Using client As New HttpClient()
@@ -588,16 +600,16 @@ Public Class IGCFileUpload
                     content.Add(New StringContent(safe(igcDetails.CompetitionClass)), "CompetitionClass")
                     content.Add(New StringContent(safe(igcDetails.NB21Version)), "NB21Version")
                     content.Add(New StringContent(safe(igcDetails.Sim)), "Sim")
-                    content.Add(New StringContent("0"), "WSGUserID")
+                    content.Add(New StringContent(safe(igcDetails.WSGUserID)), "WSGUserID")
 
                     ' --- parsed results ---
-                    content.Add(New StringContent(If(taskCompleted, "1", "0")), "TaskCompleted")
-                    content.Add(New StringContent(If(penalties, "1", "0")), "Penalties")
-                    content.Add(New StringContent(durationSeconds.ToString()), "Duration")
-                    content.Add(New StringContent(safe(distance)), "Distance")
-                    content.Add(New StringContent(safe(speed)), "Speed")
-                    content.Add(New StringContent(If(igcValid, "1", "0")), "IGCValid")
-                    content.Add(New StringContent(safe(tpVersion)), "TPVersion")
+                    content.Add(New StringContent(If(igcDetails.Results.TaskCompleted, "1", "0")), "TaskCompleted")
+                    content.Add(New StringContent(If(igcDetails.Results.Penalties, "1", "0")), "Penalties")
+                    content.Add(New StringContent(igcDetails.Results.DurationInSeconds.ToString()), "Duration")
+                    content.Add(New StringContent(safe(igcDetails.Results.Distance)), "Distance")
+                    content.Add(New StringContent(safe(igcDetails.Results.Speed)), "Speed")
+                    content.Add(New StringContent(If(igcDetails.Results.IGCValid, "1", "0")), "IGCValid")
+                    content.Add(New StringContent(safe(igcDetails.Results.TPVersion)), "TPVersion")
 
                     ' --- attach the .igc file ---
                     Using fs = File.OpenRead(igcDetails.IGCLocalFilePath)
@@ -608,8 +620,7 @@ Public Class IGCFileUpload
                         ' --- POST it ---
                         Dim resp = Await client.PostAsync("SaveIGCRecordForBatch.php", content)
                         If Not resp.IsSuccessStatusCode Then
-                            'txtLog.AppendText($"❌ Save PHP error {(CInt(resp.StatusCode))} {resp.ReasonPhrase}{vbCrLf}")
-                            Return False
+                            Return $"Save PHP error {(CInt(resp.StatusCode))} {resp.ReasonPhrase}"
                         End If
 
                         ' parse JSON response
@@ -618,23 +629,20 @@ Public Class IGCFileUpload
                         Dim status = doc.RootElement.GetProperty("status").GetString()
 
                         If status = "success" Then
-                            'txtLog.AppendText($"✔ Saved IGCKey {igcDetails.IGCKeyFilename}{vbCrLf}")
-                            Return True
+                            Return String.Empty
                         Else
                             Dim msg = ""
                             If doc.RootElement.TryGetProperty("message", Nothing) Then
                                 msg = doc.RootElement.GetProperty("message").GetString()
                             End If
-                            'txtLog.AppendText($"❌ Save failed: {msg}{vbCrLf}")
-                            Return False
+                            Return $"Save failed: {msg}"
                         End If
                     End Using
                 End Using
             End Using
 
         Catch ex As Exception
-            'txtLog.AppendText($"❌ HTTP error saving IGC: {ex.Message}{vbCrLf}")
-            Return False
+            Return ($"HTTP error saving IGC: {ex.Message}")
         End Try
     End Function
 
@@ -711,4 +719,15 @@ Public Class IGCFileUpload
         Me.Close()
     End Sub
 
+    Private Async Sub btnUpload_Click(sender As Object, e As EventArgs) Handles btnUpload.Click
+
+        Await UploadIGCResults()
+
+    End Sub
+
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        'TODO: Ask confirmation and delete the selected IGC file from the list, from the dictionary and from the disk
+
+    End Sub
 End Class

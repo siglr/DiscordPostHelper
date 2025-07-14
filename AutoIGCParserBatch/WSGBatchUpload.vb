@@ -560,31 +560,50 @@ Public Class WSGBatchUpload
 
     Private Async Function ParseIGCFileAndCheckIfAlreadyUploaded() As Task(Of Boolean)
 
+        ' Assume uploaded until proven otherwise
         igcDetails.AlreadyUploaded = True
 
         Try
             Using client As New HttpClient()
                 client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
-                Dim chkForm = New FormUrlEncodedContent(
-                New Dictionary(Of String, String) From {
-                    {"IGCKey", igcDetails.IGCKeyFilename},
-                    {"EntrySeqID", igcDetails.EntrySeqID.ToString()}
-                }
-            )
+
+                ' Build form values
+                Dim values As New Dictionary(Of String, String)
+                values.Add("IGCKey", igcDetails.IGCKeyFilename)
+                values.Add("EntrySeqID", igcDetails.EntrySeqID.ToString())
+                values.Add("PilotName", igcDetails.Pilot)              ' new
+                values.Add("CompID", igcDetails.CompetitionID)          ' new
+
+                Dim chkForm As New FormUrlEncodedContent(values)
                 Dim chkResp = Await client.PostAsync("CheckIgcUploaded.php", chkForm)
+
                 If Not chkResp.IsSuccessStatusCode Then
                     txtLog.AppendText(
-                  $"❌ Check-upload PHP error {(CInt(chkResp.StatusCode))} {chkResp.ReasonPhrase}" & vbCrLf)
+                    $"❌ Check-upload PHP error {(CInt(chkResp.StatusCode))} {chkResp.ReasonPhrase}" & vbCrLf)
                     Return igcDetails.AlreadyUploaded
                 End If
+
                 Dim chkBody = Await chkResp.Content.ReadAsStringAsync()
                 Dim chkDoc = JsonDocument.Parse(chkBody)
-                Dim chkStatus = chkDoc.RootElement.GetProperty("status").GetString()
-                If chkStatus = "exists" Then
-                    txtLog.AppendText($"⚠ IGCKey already uploaded. Skipping." & vbCrLf)
+                Dim root = chkDoc.RootElement
+
+                Dim status = root.GetProperty("status").GetString()
+
+                If status = "exists" Then
+                    txtLog.AppendText("⚠ IGCKey already uploaded. Skipping." & vbCrLf)
                     Return igcDetails.AlreadyUploaded
                 End If
+
+                ' Not found → read inferred WSGUserID (0 if absent)
+                Dim wsgID As Integer = 0
+                Dim prop As JsonElement
+                If root.TryGetProperty("wsgUserID", prop) Then
+                    Integer.TryParse(prop.GetRawText(), wsgID)
+                End If
+                igcDetails.WSGUserID = wsgID
+                txtLog.AppendText($"ℹ Inferred WSGUserID = {wsgID}" & vbCrLf)
             End Using
+
         Catch ex As Exception
             txtLog.AppendText($"❌ Error checking upload: {ex.Message}" & vbCrLf)
             Return igcDetails.AlreadyUploaded
@@ -592,7 +611,6 @@ Public Class WSGBatchUpload
 
         igcDetails.AlreadyUploaded = False
         Return igcDetails.AlreadyUploaded
-
     End Function
 
     ''' <summary>
@@ -634,7 +652,7 @@ Public Class WSGBatchUpload
                     content.Add(New StringContent(safe(igcDetails.CompetitionClass)), "CompetitionClass")
                     content.Add(New StringContent(safe(igcDetails.NB21Version)), "NB21Version")
                     content.Add(New StringContent(safe(igcDetails.Sim)), "Sim")
-                    content.Add(New StringContent("0"), "WSGUserID")
+                    content.Add(New StringContent(safe(igcDetails.WSGUserID)), "WSGUserID")
 
                     ' --- parsed results ---
                     content.Add(New StringContent(If(taskCompleted, "1", "0")), "TaskCompleted")
