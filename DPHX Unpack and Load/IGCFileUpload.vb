@@ -5,6 +5,7 @@ Imports System.Net.Http.Headers
 Imports System.Text.Json
 Imports System.Text.RegularExpressions
 Imports CefSharp
+Imports CefSharp.WinForms.Internals
 Imports HtmlAgilityPack
 Imports SIGLR.SoaringTools.CommonLibrary
 
@@ -680,8 +681,10 @@ Public Class IGCFileUpload
             If lstbxIGCFiles.SelectedIndex >= 0 Then
                 lstbxIGCFiles.Enabled = False
                 SetCurrentIGCDetails()
+                Me.Text = $"IGC File Upload - {igcDetails.IGCFileName}"
                 Await ProcessSelectedIGCFile()
                 lstbxIGCFiles.Enabled = True
+                lstbxIGCFiles.Focus()
             End If
 
         Catch ex As Exception
@@ -723,7 +726,23 @@ Public Class IGCFileUpload
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
 
-        'TODO: Ask confirmation and delete the selected IGC file from the list, from the dictionary and from the disk
-
+        'Ask confirmation and delete the selected IGC file from the list, from the dictionary and from the disk
+        Using New Centered_MessageBox(Me)
+            If MessageBox.Show("Are you sure you want to delete the selected IGC file?", "Delete IGC File", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                If lstbxIGCFiles.SelectedIndex >= 0 Then
+                    Dim igcFileName As String = igcDetails.IGCFileName
+                    File.Delete(igcDetails.IGCLocalFilePath)
+                    dictIGCDetails.Remove(igcFileName)
+                    igcFiles.Remove(igcFileName)
+                    lstbxIGCFiles.Items.Remove(igcFileName)
+                    If lstbxIGCFiles.Items.Count > 0 Then
+                        lstbxIGCFiles.SelectedIndex = 0
+                    Else
+                        Me.Close()
+                    End If
+                End If
+            End If
+        End Using
     End Sub
+
 End Class
