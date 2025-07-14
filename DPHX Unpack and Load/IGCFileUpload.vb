@@ -1,16 +1,12 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
+Imports System.Net.Http
+Imports System.Net.Http.Headers
+Imports System.Text.Json
+Imports System.Text.RegularExpressions
 Imports CefSharp
 Imports HtmlAgilityPack
-Imports System.Text.Json
-Imports System.Text.Json.Serialization
-Imports System.Net.Http
-Imports System.Text
-Imports System.Text.RegularExpressions
-Imports System.Net.Http.Headers
-Imports System.Collections.Specialized
-Imports System.Net
 Imports SIGLR.SoaringTools.CommonLibrary
-Imports System.Globalization
 
 Public Class IGCFileUpload
 
