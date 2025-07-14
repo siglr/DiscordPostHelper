@@ -189,6 +189,15 @@ Public Class BriefingControl
                 radioDistanceBoth.Checked = True
         End Select
 
+        Select Case PrefUnits.Speed
+            Case SpeedUnits.Metric
+                radioSpeedMetric.Checked = True
+            Case SpeedUnits.Imperial
+                radioSpeedImperial.Checked = True
+            Case SpeedUnits.Knots
+                radioSpeedKnots.Checked = True
+        End Select
+
         Select Case PrefUnits.GateDiameter
             Case GateDiameterUnits.Metric
                 radioGateDiameterMetric.Checked = True

@@ -108,7 +108,7 @@
         End Get
         Set(value As SpeedUnits)
             _speed = value
-            SupportingFeatures.WriteRegistryKey("SpeedUnit", _distance)
+            SupportingFeatures.WriteRegistryKey("SpeedUnit", _speed)
         End Set
     End Property
 

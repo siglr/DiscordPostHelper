@@ -170,7 +170,7 @@ Public Class IGCFileUpload
             Case PreferredUnits.SpeedUnits.Imperial
                 txtSpeed.Text = String.Format("{0:N1} mph", Conversions.KmhToMph(igcDetails.Results.Speed))
             Case PreferredUnits.SpeedUnits.Knots
-                txtSpeed.Text = String.Format("{0} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
+                txtSpeed.Text = String.Format("{0:N1} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
             Case PreferredUnits.SpeedUnits.Metric
                 txtSpeed.Text = $"{igcDetails.Results.Speed} km/h"
         End Select
