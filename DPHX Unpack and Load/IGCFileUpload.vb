@@ -2,11 +2,10 @@
 Imports System.IO
 Imports System.Net.Http
 Imports System.Net.Http.Headers
-Imports System.Text.Json
 Imports System.Text.RegularExpressions
 Imports CefSharp
-Imports CefSharp.WinForms.Internals
 Imports HtmlAgilityPack
+Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class IGCFileUpload
@@ -250,7 +249,7 @@ Public Class IGCFileUpload
         Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
 
         'Parse everything out of the .igc
-        Dim doc = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        Dim doc As JToken = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
         If doc Is Nothing Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Error parsing IGC file.", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -258,16 +257,16 @@ Public Class IGCFileUpload
             Return
         End If
 
-        Dim root = doc.RootElement
+        Dim root As JObject = CType(doc, JObject)
 
-        igcDetails.TaskTitle = root.GetProperty("igcTitle").GetString()
-        igcDetails.Pilot = root.GetProperty("pilot").GetString()
-        igcDetails.GliderID = root.GetProperty("gliderID").GetString()
-        igcDetails.CompetitionID = root.GetProperty("competitionID").GetString()
-        igcDetails.CompetitionClass = root.GetProperty("competitionClass").GetString()
-        igcDetails.GliderType = root.GetProperty("gliderType").GetString()
-        igcDetails.NB21Version = root.GetProperty("NB21Version").GetString()
-        igcDetails.Sim = root.GetProperty("Sim").GetString()
+        igcDetails.TaskTitle = root.Value(Of String)("igcTitle")
+        igcDetails.Pilot = root.Value(Of String)("pilot")
+        igcDetails.GliderID = root.Value(Of String)("gliderID")
+        igcDetails.CompetitionID = root.Value(Of String)("competitionID")
+        igcDetails.CompetitionClass = root.Value(Of String)("competitionClass")
+        igcDetails.GliderType = root.Value(Of String)("gliderType")
+        igcDetails.NB21Version = root.Value(Of String)("NB21Version")
+        igcDetails.Sim = root.Value(Of String)("Sim")
 
         If igcDetails.NB21Version Is Nothing OrElse igcDetails.NB21Version.Trim = String.Empty Then
             Using New Centered_MessageBox(Me)
@@ -276,18 +275,19 @@ Public Class IGCFileUpload
             Return
         End If
 
-        igcDetails.IGCRecordDateTimeUTC = root.GetProperty("IGCRecordDateTimeUTC").GetString()
-        igcDetails.IGCUploadDateTimeUTC = root.GetProperty("IGCUploadDateTimeUTC").GetString()
-        igcDetails.LocalDate = root.GetProperty("LocalDate").GetString()
-        igcDetails.LocalTime = root.GetProperty("LocalTime").GetString()
-        igcDetails.BeginTimeUTC = root.GetProperty("BeginTimeUTC").GetString()
+        igcDetails.IGCRecordDateTimeUTC = root.Value(Of String)("IGCRecordDateTimeUTC")
+        igcDetails.IGCUploadDateTimeUTC = root.Value(Of String)("IGCUploadDateTimeUTC")
+        igcDetails.LocalDate = root.Value(Of String)("LocalDate")
+        igcDetails.LocalTime = root.Value(Of String)("LocalTime")
+        igcDetails.BeginTimeUTC = root.Value(Of String)("BeginTimeUTC")
 
         ' Waypoints
-        igcDetails.IGCWaypoints = root.GetProperty("igcWaypoints") _
-        .EnumerateArray() _
-        .Select(Function(el) New IGCWaypoint With {
-            .Id = el.GetProperty("id").GetString(),
-            .Coord = el.GetProperty("coord").GetString()
+        igcDetails.IGCWaypoints = root("igcWaypoints") _
+        .OfType(Of JArray)() _
+        .FirstOrDefault() _
+        ?.Select(Function(el) New IGCWaypoint With {
+            .Id = el.Value(Of String)("id"),
+            .Coord = el.Value(Of String)("coord")
         }) _
         .ToList()
 
@@ -540,9 +540,8 @@ Public Class IGCFileUpload
                 End If
 
                 Dim chkBody = Await chkResp.Content.ReadAsStringAsync()
-                Dim chkDoc = JsonDocument.Parse(chkBody)
-                Dim root = chkDoc.RootElement
-                Dim status = root.GetProperty("status").GetString()
+                Dim chkDoc = JToken.Parse(chkBody)
+                Dim status As String = chkDoc("status")?.ToString()
 
                 If status = "exists" Then
                     igcDetails.AlreadyUploaded = True
@@ -550,10 +549,10 @@ Public Class IGCFileUpload
                 End If
 
                 ' Not found → read inferred WSGUserID (0 if absent)
-                Dim prop As JsonElement
-                If root.TryGetProperty("wsgUserID", prop) Then
+                Dim wsgToken As JToken = chkDoc("wsgUserID")
+                If wsgToken IsNot Nothing Then
                     Dim wsgID As Integer
-                    If Integer.TryParse(prop.GetRawText(), wsgID) Then
+                    If Integer.TryParse(wsgToken.ToString(), wsgID) Then
                         igcDetails.WSGUserID = wsgID
                     End If
                 End If
@@ -621,16 +620,17 @@ Public Class IGCFileUpload
                         End If
 
                         ' parse JSON response
-                        Dim body = Await resp.Content.ReadAsStringAsync()
-                        Dim doc = JsonDocument.Parse(body)
-                        Dim status = doc.RootElement.GetProperty("status").GetString()
+                        Dim body As String = Await resp.Content.ReadAsStringAsync()
+                        Dim jdoc As JToken = JToken.Parse(body)
+                        Dim status As String = jdoc("status")?.ToString()
 
                         If status = "success" Then
                             Return String.Empty
                         Else
-                            Dim msg = ""
-                            If doc.RootElement.TryGetProperty("message", Nothing) Then
-                                msg = doc.RootElement.GetProperty("message").GetString()
+                            Dim msg As String = ""
+                            ' if there’s a "message" property, grab its text
+                            If jdoc("message") IsNot Nothing Then
+                                msg = jdoc("message")?.ToString()
                             End If
                             Return $"Save failed: {msg}"
                         End If
@@ -688,7 +688,7 @@ Public Class IGCFileUpload
             End If
 
         Catch ex As Exception
-
+            MessageBox.Show($"Error processing IGC file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub

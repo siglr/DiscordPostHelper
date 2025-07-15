@@ -25,7 +25,24 @@ Partial Class IGCFileUpload
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IGCFileUpload))
         Me.browser = New CefSharp.WinForms.ChromiumWebBrowser()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.btnDelete = New System.Windows.Forms.Button()
+        Me.btnClose = New System.Windows.Forms.Button()
         Me.pnlResults = New System.Windows.Forms.Panel()
+        Me.btnUpload = New System.Windows.Forms.Button()
+        Me.btnRecalculate = New System.Windows.Forms.Button()
+        Me.txtTPVersion = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.txtDistance = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.txtTime = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.txtSpeed = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.txtTaskLocalDateTime = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.txtLocalDateTime = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.txtFlags = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.txtTaskPlannerStatus = New System.Windows.Forms.TextBox()
@@ -46,23 +63,6 @@ Partial Class IGCFileUpload
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lstbxIGCFiles = New System.Windows.Forms.ListBox()
         Me.lblProcessing = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.txtLocalDateTime = New System.Windows.Forms.TextBox()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.txtTaskLocalDateTime = New System.Windows.Forms.TextBox()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.txtSpeed = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.txtTime = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.txtDistance = New System.Windows.Forms.TextBox()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.txtTPVersion = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.btnRecalculate = New System.Windows.Forms.Button()
-        Me.btnUpload = New System.Windows.Forms.Button()
-        Me.btnClose = New System.Windows.Forms.Button()
-        Me.btnDelete = New System.Windows.Forms.Button()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -78,7 +78,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(3, 3)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(734, 688)
+        Me.browser.Size = New System.Drawing.Size(733, 688)
         Me.browser.TabIndex = 0
         '
         'SplitContainer1
@@ -123,6 +123,29 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
         '
+        'btnDelete
+        '
+        Me.btnDelete.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDelete.Location = New System.Drawing.Point(7, 325)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(214, 28)
+        Me.btnDelete.TabIndex = 17
+        Me.btnDelete.Text = "Delete IGC File"
+        Me.btnDelete.UseVisualStyleBackColor = True
+        '
+        'btnClose
+        '
+        Me.btnClose.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnClose.Location = New System.Drawing.Point(7, 659)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(214, 32)
+        Me.btnClose.TabIndex = 19
+        Me.btnClose.Text = "Close"
+        Me.btnClose.UseVisualStyleBackColor = True
+        '
         'pnlResults
         '
         Me.pnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -149,6 +172,164 @@ Partial Class IGCFileUpload
         Me.pnlResults.Size = New System.Drawing.Size(227, 282)
         Me.pnlResults.TabIndex = 18
         Me.pnlResults.Visible = False
+        '
+        'btnUpload
+        '
+        Me.btnUpload.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUpload.Location = New System.Drawing.Point(7, 245)
+        Me.btnUpload.Name = "btnUpload"
+        Me.btnUpload.Size = New System.Drawing.Size(214, 32)
+        Me.btnUpload.TabIndex = 16
+        Me.btnUpload.Text = "Upload to WSG"
+        Me.btnUpload.UseVisualStyleBackColor = True
+        '
+        'btnRecalculate
+        '
+        Me.btnRecalculate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRecalculate.Location = New System.Drawing.Point(7, 207)
+        Me.btnRecalculate.Name = "btnRecalculate"
+        Me.btnRecalculate.Size = New System.Drawing.Size(214, 32)
+        Me.btnRecalculate.TabIndex = 15
+        Me.btnRecalculate.Text = "Extract Again"
+        Me.btnRecalculate.UseVisualStyleBackColor = True
+        '
+        'txtTPVersion
+        '
+        Me.txtTPVersion.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTPVersion.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTPVersion.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtTPVersion.Location = New System.Drawing.Point(99, 181)
+        Me.txtTPVersion.Name = "txtTPVersion"
+        Me.txtTPVersion.ReadOnly = True
+        Me.txtTPVersion.Size = New System.Drawing.Size(122, 20)
+        Me.txtTPVersion.TabIndex = 14
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(3, 181)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(77, 20)
+        Me.Label16.TabIndex = 13
+        Me.Label16.Text = "TP Version"
+        '
+        'txtDistance
+        '
+        Me.txtDistance.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtDistance.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtDistance.Location = New System.Drawing.Point(99, 155)
+        Me.txtDistance.Name = "txtDistance"
+        Me.txtDistance.ReadOnly = True
+        Me.txtDistance.Size = New System.Drawing.Size(122, 20)
+        Me.txtDistance.TabIndex = 12
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(3, 155)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(65, 20)
+        Me.Label15.TabIndex = 11
+        Me.Label15.Text = "Distance"
+        '
+        'txtTime
+        '
+        Me.txtTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtTime.Location = New System.Drawing.Point(99, 129)
+        Me.txtTime.Name = "txtTime"
+        Me.txtTime.ReadOnly = True
+        Me.txtTime.Size = New System.Drawing.Size(122, 20)
+        Me.txtTime.TabIndex = 10
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(3, 129)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(41, 20)
+        Me.Label14.TabIndex = 9
+        Me.Label14.Text = "Time"
+        '
+        'txtSpeed
+        '
+        Me.txtSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtSpeed.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtSpeed.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtSpeed.Location = New System.Drawing.Point(99, 103)
+        Me.txtSpeed.Name = "txtSpeed"
+        Me.txtSpeed.ReadOnly = True
+        Me.txtSpeed.Size = New System.Drawing.Size(122, 20)
+        Me.txtSpeed.TabIndex = 8
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(3, 103)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(51, 20)
+        Me.Label13.TabIndex = 7
+        Me.Label13.Text = "Speed"
+        '
+        'txtTaskLocalDateTime
+        '
+        Me.txtTaskLocalDateTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTaskLocalDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTaskLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtTaskLocalDateTime.Location = New System.Drawing.Point(99, 77)
+        Me.txtTaskLocalDateTime.Name = "txtTaskLocalDateTime"
+        Me.txtTaskLocalDateTime.ReadOnly = True
+        Me.txtTaskLocalDateTime.Size = New System.Drawing.Size(122, 20)
+        Me.txtTaskLocalDateTime.TabIndex = 6
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(3, 77)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(77, 20)
+        Me.Label12.TabIndex = 5
+        Me.Label12.Text = "(task local)"
+        '
+        'txtLocalDateTime
+        '
+        Me.txtLocalDateTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtLocalDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtLocalDateTime.Location = New System.Drawing.Point(99, 51)
+        Me.txtLocalDateTime.Name = "txtLocalDateTime"
+        Me.txtLocalDateTime.ReadOnly = True
+        Me.txtLocalDateTime.Size = New System.Drawing.Size(122, 20)
+        Me.txtLocalDateTime.TabIndex = 4
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(3, 51)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(76, 20)
+        Me.Label11.TabIndex = 3
+        Me.Label11.Text = "Local time"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.Label10.Location = New System.Drawing.Point(3, 3)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(60, 20)
+        Me.Label10.TabIndex = 0
+        Me.Label10.Text = "Results"
         '
         'txtFlags
         '
@@ -359,191 +540,10 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(745, 694)
+        Me.lblProcessing.Size = New System.Drawing.Size(747, 694)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.Label10.Location = New System.Drawing.Point(3, 3)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(60, 20)
-        Me.Label10.TabIndex = 0
-        Me.Label10.Text = "Results"
-        '
-        'txtLocalDateTime
-        '
-        Me.txtLocalDateTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtLocalDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtLocalDateTime.Location = New System.Drawing.Point(99, 51)
-        Me.txtLocalDateTime.Name = "txtLocalDateTime"
-        Me.txtLocalDateTime.ReadOnly = True
-        Me.txtLocalDateTime.Size = New System.Drawing.Size(122, 20)
-        Me.txtLocalDateTime.TabIndex = 4
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(3, 51)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(76, 20)
-        Me.Label11.TabIndex = 3
-        Me.Label11.Text = "Local time"
-        '
-        'txtTaskLocalDateTime
-        '
-        Me.txtTaskLocalDateTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTaskLocalDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTaskLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtTaskLocalDateTime.Location = New System.Drawing.Point(99, 77)
-        Me.txtTaskLocalDateTime.Name = "txtTaskLocalDateTime"
-        Me.txtTaskLocalDateTime.ReadOnly = True
-        Me.txtTaskLocalDateTime.Size = New System.Drawing.Size(122, 20)
-        Me.txtTaskLocalDateTime.TabIndex = 6
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(3, 77)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(77, 20)
-        Me.Label12.TabIndex = 5
-        Me.Label12.Text = "(task local)"
-        '
-        'txtSpeed
-        '
-        Me.txtSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtSpeed.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtSpeed.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtSpeed.Location = New System.Drawing.Point(99, 103)
-        Me.txtSpeed.Name = "txtSpeed"
-        Me.txtSpeed.ReadOnly = True
-        Me.txtSpeed.Size = New System.Drawing.Size(122, 20)
-        Me.txtSpeed.TabIndex = 8
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(3, 103)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(51, 20)
-        Me.Label13.TabIndex = 7
-        Me.Label13.Text = "Speed"
-        '
-        'txtTime
-        '
-        Me.txtTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTime.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtTime.Location = New System.Drawing.Point(99, 129)
-        Me.txtTime.Name = "txtTime"
-        Me.txtTime.ReadOnly = True
-        Me.txtTime.Size = New System.Drawing.Size(122, 20)
-        Me.txtTime.TabIndex = 10
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(3, 129)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(41, 20)
-        Me.Label14.TabIndex = 9
-        Me.Label14.Text = "Time"
-        '
-        'txtDistance
-        '
-        Me.txtDistance.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDistance.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtDistance.Location = New System.Drawing.Point(99, 155)
-        Me.txtDistance.Name = "txtDistance"
-        Me.txtDistance.ReadOnly = True
-        Me.txtDistance.Size = New System.Drawing.Size(122, 20)
-        Me.txtDistance.TabIndex = 12
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(3, 155)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(65, 20)
-        Me.Label15.TabIndex = 11
-        Me.Label15.Text = "Distance"
-        '
-        'txtTPVersion
-        '
-        Me.txtTPVersion.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTPVersion.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTPVersion.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtTPVersion.Location = New System.Drawing.Point(99, 181)
-        Me.txtTPVersion.Name = "txtTPVersion"
-        Me.txtTPVersion.ReadOnly = True
-        Me.txtTPVersion.Size = New System.Drawing.Size(122, 20)
-        Me.txtTPVersion.TabIndex = 14
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(3, 181)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(77, 20)
-        Me.Label16.TabIndex = 13
-        Me.Label16.Text = "TP Version"
-        '
-        'btnRecalculate
-        '
-        Me.btnRecalculate.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRecalculate.Location = New System.Drawing.Point(7, 207)
-        Me.btnRecalculate.Name = "btnRecalculate"
-        Me.btnRecalculate.Size = New System.Drawing.Size(214, 32)
-        Me.btnRecalculate.TabIndex = 15
-        Me.btnRecalculate.Text = "Extract Again"
-        Me.btnRecalculate.UseVisualStyleBackColor = True
-        '
-        'btnUpload
-        '
-        Me.btnUpload.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnUpload.Location = New System.Drawing.Point(7, 245)
-        Me.btnUpload.Name = "btnUpload"
-        Me.btnUpload.Size = New System.Drawing.Size(214, 32)
-        Me.btnUpload.TabIndex = 16
-        Me.btnUpload.Text = "Upload to WSG"
-        Me.btnUpload.UseVisualStyleBackColor = True
-        '
-        'btnClose
-        '
-        Me.btnClose.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnClose.Location = New System.Drawing.Point(7, 659)
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(214, 32)
-        Me.btnClose.TabIndex = 19
-        Me.btnClose.Text = "Close"
-        Me.btnClose.UseVisualStyleBackColor = True
-        '
-        'btnDelete
-        '
-        Me.btnDelete.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Location = New System.Drawing.Point(7, 325)
-        Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(214, 28)
-        Me.btnDelete.TabIndex = 17
-        Me.btnDelete.Text = "Delete IGC File"
-        Me.btnDelete.UseVisualStyleBackColor = True
         '
         'IGCFileUpload
         '
