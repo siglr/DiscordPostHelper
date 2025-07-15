@@ -1217,20 +1217,15 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripWSGUploadIGC_Click(sender As Object, e As EventArgs) Handles toolStripWSGUploadIGC.Click
 
-        Dim flightplanFilename As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
-
-        If flightplanFilename Is String.Empty Then
+        Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(Nothing, Settings.SessionSettings.NB21IGCFolder)
+        If listOfIGCFiles.Count > 0 Then
+            'Present the IGCUpload dialog with the list of IGC files
+            Dim igcUploadDialog As New IGCFileUpload
+            igcUploadDialog.Display(Me, listOfIGCFiles, _allDPHData.EntrySeqID, _allDPHData.SimLocalDateTime)
         Else
-            Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(flightplanFilename, Settings.SessionSettings.NB21IGCFolder)
-            If listOfIGCFiles.Count > 0 Then
-                'Present the IGCUpload dialog with the list of IGC files
-                Dim igcUploadDialog As New IGCFileUpload
-                igcUploadDialog.Display(Me, listOfIGCFiles, flightplanFilename, _allDPHData.EntrySeqID, _allDPHData.SimLocalDateTime)
-            Else
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show("No IGC files found in the NB21 IGC folder that match the flight plan.", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End Using
-            End If
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("No IGC files found in the NB21 IGC folder that match the flight plan.", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
         End If
 
     End Sub

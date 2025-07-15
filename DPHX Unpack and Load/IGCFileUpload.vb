@@ -2,9 +2,11 @@
 Imports System.IO
 Imports System.Net.Http
 Imports System.Net.Http.Headers
+Imports System.Text
 Imports System.Text.RegularExpressions
 Imports CefSharp
 Imports HtmlAgilityPack
+Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
 
@@ -12,17 +14,16 @@ Public Class IGCFileUpload
 
     Private uploadHandler As UploadFileDialogHandler
     Private igcFiles As List(Of String)
-    Private entrySeqID As Integer = 0
-    Private plnFilePath As String = Nothing
+    Private currentDPHXEntrySeqID As Integer = 0
     Private simLocalDateTime As DateTime = Nothing
     Private alreadyUploaded As Boolean = False
     Private dictIGCDetails As New Dictionary(Of String, IGCLookupDetails)
     Private igcDetails As IGCLookupDetails = Nothing
+    Private taskCache As New Dictionary(Of String, Tuple(Of Integer, String))
 
-    Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pPLNFilePath As String, pEntrySeqID As Integer, pSimLocalDateTime As DateTime)
-        entrySeqID = pEntrySeqID
+    Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer, pSimLocalDateTime As DateTime)
+        currentDPHXEntrySeqID = pEntrySeqID
         igcFiles = pIGCFiles
-        plnFilePath = pPLNFilePath
         simLocalDateTime = pSimLocalDateTime
 
         uploadHandler = New UploadFileDialogHandler()
@@ -36,7 +37,6 @@ Public Class IGCFileUpload
             For Each igcFile As String In igcFiles
                 thisIGCDetails = New IGCLookupDetails
                 thisIGCDetails.IGCLocalFilePath = igcFile
-                thisIGCDetails.EntrySeqID = entrySeqID
                 dictIGCDetails.Add(thisIGCDetails.IGCFileName, thisIGCDetails)
                 lstbxIGCFiles.Items.Add(thisIGCDetails.IGCFileName)
             Next
@@ -48,7 +48,6 @@ Public Class IGCFileUpload
         Me.ShowDialog(parentForm)
 
     End Sub
-
     Private Sub OnBrowserFrameLoadEnd(sender As Object, e As CefSharp.FrameLoadEndEventArgs)
         ' only once, and only for the main frame
         If Not e.Frame.IsMain Then Return
@@ -100,6 +99,28 @@ Public Class IGCFileUpload
 
         txtWSGStatus.Text = String.Empty
         lblProcessing.Text = String.Empty
+        pnlResults.Visible = False
+
+        If igcDetails.CacheKey Is Nothing OrElse igcDetails.CacheKey = String.Empty Then
+            'CacheKey is not set, so look for the EntrySeqID for this IGC file
+            Dim matchErr As String = Await GetOrFetchEntrySeqID()
+        End If
+        If igcDetails.EntrySeqID = 0 Then
+            'No task matched!
+            txtWSGStatus.Text = "No task found!"
+            txtIGCEntrySeqID.Text = "Task not found"
+            lblProcessing.Text = "No task found!"
+            Return
+        Else
+            'Check if the task is the same as the current DPHX task
+            If igcDetails.EntrySeqID <> currentDPHXEntrySeqID Then
+                'Set a different color for the EntrySeqID - red if different
+                txtIGCEntrySeqID.Text = $"{igcDetails.EntrySeqID.ToString} <> current DPHX"
+            Else
+                'Set a different color for the EntrySeqID - WindowText if same
+                txtIGCEntrySeqID.Text = igcDetails.EntrySeqID.ToString
+            End If
+        End If
 
         If Not igcDetails.AlreadyUploadedChecked Then
             'Check if already uploaded
@@ -112,12 +133,10 @@ Public Class IGCFileUpload
             End If
         End If
 
-        pnlResults.Visible = False
-
         If String.IsNullOrEmpty(txtWSGStatus.Text) Then
             If igcDetails.AlreadyUploaded Then
                 txtWSGStatus.Text = "Already uploaded"
-                lblProcessing.Text = "Already uploaded - N/A"
+                lblProcessing.Text = "Already uploaded"
                 Return
             Else
                 txtWSGStatus.Text = $"Can upload - WSG User: {igcDetails.WSGUserID}"
@@ -160,23 +179,31 @@ Public Class IGCFileUpload
         txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"
         txtLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.LocalDate, igcDetails.LocalTime)
 
-        Select Case SupportingFeatures.PrefUnits.Speed
-            Case PreferredUnits.SpeedUnits.Imperial
-                txtSpeed.Text = String.Format("{0:N1} mph", Conversions.KmhToMph(igcDetails.Results.Speed))
-            Case PreferredUnits.SpeedUnits.Knots
-                txtSpeed.Text = String.Format("{0:N1} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
-            Case PreferredUnits.SpeedUnits.Metric
-                txtSpeed.Text = $"{igcDetails.Results.Speed} km/h"
-        End Select
+        If igcDetails.Results.Speed Is Nothing Then
+            txtSpeed.Text = String.Empty
+        Else
+            Select Case SupportingFeatures.PrefUnits.Speed
+                Case PreferredUnits.SpeedUnits.Imperial
+                    txtSpeed.Text = String.Format("{0:N1} mph", Conversions.KmhToMph(igcDetails.Results.Speed))
+                Case PreferredUnits.SpeedUnits.Knots
+                    txtSpeed.Text = String.Format("{0:N1} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
+                Case PreferredUnits.SpeedUnits.Metric
+                    txtSpeed.Text = $"{igcDetails.Results.Speed} km/h"
+            End Select
+        End If
 
-        Select Case SupportingFeatures.PrefUnits.Distance
-            Case PreferredUnits.DistanceUnits.Metric
-                txtDistance.Text = $"{igcDetails.Results.Distance} km"
-            Case PreferredUnits.DistanceUnits.Imperial
-                txtDistance.Text = String.Format("{0:N1} mi", Conversions.KmToMiles(igcDetails.Results.Distance))
-            Case PreferredUnits.DistanceUnits.Both
-                txtDistance.Text = String.Format($"{igcDetails.Results.Distance} km / {Conversions.KmToMiles(igcDetails.Results.Distance):N1} mi")
-        End Select
+        If igcDetails.Results.Distance Is Nothing Then
+            txtDistance.Text = String.Empty
+        Else
+            Select Case SupportingFeatures.PrefUnits.Distance
+                Case PreferredUnits.DistanceUnits.Metric
+                    txtDistance.Text = $"{igcDetails.Results.Distance} km"
+                Case PreferredUnits.DistanceUnits.Imperial
+                    txtDistance.Text = String.Format("{0:N1} mi", Conversions.KmToMiles(igcDetails.Results.Distance))
+                Case PreferredUnits.DistanceUnits.Both
+                    txtDistance.Text = String.Format($"{igcDetails.Results.Distance} km / {Conversions.KmToMiles(igcDetails.Results.Distance):N1} mi")
+            End Select
+        End If
 
         txtTime.Text = igcDetails.Results.Duration
 
@@ -278,14 +305,18 @@ Public Class IGCFileUpload
         igcDetails.BeginTimeUTC = root.Value(Of String)("BeginTimeUTC")
 
         ' Waypoints
-        igcDetails.IGCWaypoints = root("igcWaypoints") _
-        .OfType(Of JArray)() _
-        .FirstOrDefault() _
-        ?.Select(Function(el) New IGCWaypoint With {
-            .Id = el.Value(Of String)("id"),
-            .Coord = el.Value(Of String)("coord")
-        }) _
-        .ToList()
+        igcDetails.IGCWaypoints = New List(Of IGCWaypoint)()
+
+        Dim wps = TryCast(root("igcWaypoints"), JArray)
+        If wps IsNot Nothing Then
+            For Each item As JObject In wps
+                Dim wp As New IGCWaypoint With {
+            .Id = item("id")?.ToString(),
+            .Coord = item("coord")?.ToString()
+        }
+                igcDetails.IGCWaypoints.Add(wp)
+            Next
+        End If
 
         igcDetails.IsParsed = True
 
@@ -293,15 +324,32 @@ Public Class IGCFileUpload
 
     Private Async Function ProcessIGCFileStep2TaskPlanner() As Task(Of String)
 
-        'Load the flight plan first
-        ' Tell our handler which file to feed in
-        uploadHandler.FileToUpload = $"{plnFilePath}"
+        'Load the flight plan first - we need to save the content from igcDetails.PLNXML to disk in a temporary location first
+        ' 1) Build a temp .pln filename based on the EntrySeqID
+        Dim plnFileName = $"{igcDetails.EntrySeqID}.pln"
+        Dim tempPlnPath = Path.Combine(Path.GetTempPath(), plnFileName)
 
-        ' Fire the JS “Choose file(s)” click
+        ' 2) Write out the PLNXML only if it isn’t already on disk
+        If Not File.Exists(tempPlnPath) Then
+            File.WriteAllText(tempPlnPath, igcDetails.PLNXML, Encoding.UTF8)
+        End If
+
+        ' 3) Point the upload handler at that file
+        uploadHandler.FileToUpload = tempPlnPath
+
+        ' 4) Fire the JS click to open the file dialog
         Await ClickElementByIdAsync("drop_zone_choose_button")
 
         ' Wait for the file input to be populated
         Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+        ' Cleanup: delete the temp file once the click has been issued
+        If File.Exists(tempPlnPath) Then
+            Try
+                File.Delete(tempPlnPath)
+            Catch
+                ' ignore any delete errors
+            End Try
+        End If
         If Not gotPlnFile Then
             Return "Could not load the PLN file!"
         End If
@@ -400,7 +448,7 @@ Public Class IGCFileUpload
             End If
         Else
             ' incomplete: only distance is shown
-            Dim m As Match = Regex.Match(resultText, "([\d\.]+)km")
+            Dim m As Match = Regex.Match(resultText.Trim(), "([\d\.]+)\s*km", RegexOptions.IgnoreCase)
             If m.Success Then distance = m.Groups(1).Value
         End If
 
@@ -724,7 +772,7 @@ Public Class IGCFileUpload
 
         'Ask confirmation and delete the selected IGC file from the list, from the dictionary and from the disk
         Using New Centered_MessageBox(Me)
-            If MessageBox.Show("Are you sure you want to delete the selected IGC file?", "Delete IGC File", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If MessageBox.Show($"Are you sure you want to delete the selected IGC file?{Environment.NewLine}WARNING: THIS IS PERMANENT!", "Delete IGC File", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 If lstbxIGCFiles.SelectedIndex >= 0 Then
                     Dim igcFileName As String = igcDetails.IGCFileName
                     File.Delete(igcDetails.IGCLocalFilePath)
@@ -761,7 +809,7 @@ Public Class IGCFileUpload
         End If
 
         ' Compute destination path and move
-        Dim destPath = Path.Combine(processedFolder, igcFileName)
+        Dim destPath = Path.Combine(processedFolder, $"{igcFileName}.igc")
         File.Move(sourcePath, destPath)
 
         ' Remove from our collections and UI (same as delete)
@@ -776,4 +824,92 @@ Public Class IGCFileUpload
             Me.Close()
         End If
     End Sub
+
+    ''' <summary>
+    ''' Reads all C-lines, filters between first/last “*”, then joins with “|”
+    ''' to form a stable cache key.
+    ''' </summary>
+    Private Function ExtractIgcRecordCacheKey(filePath As String) As String
+        Dim raw = File.ReadAllLines(filePath) _
+                   .Where(Function(l) l.StartsWith("C"c)) _
+                   .Select(Function(l) l.Trim()) _
+                   .ToList()
+
+        ' strip before/after the * markers
+        Dim firstStar = raw.FindIndex(Function(r) r.Contains("*"))
+        Dim lastStar = raw.FindLastIndex(Function(r) r.Contains("*"))
+        If firstStar < 0 OrElse lastStar < 0 OrElse lastStar < firstStar Then
+            Return String.Join("|", raw)
+        End If
+        Dim slice = raw.Skip(firstStar).Take(lastStar - firstStar + 1)
+        Return String.Join("|", slice)
+    End Function
+
+    Private Async Function FetchEntrySeqIDFromServer() As Task(Of String)
+
+        Dim response As String = String.Empty
+
+        Try
+
+            Dim form = New Dictionary(Of String, String) From {
+              {"igcTitle", igcDetails.TaskTitle},
+              {"igcWaypoints", JsonConvert.SerializeObject(
+                                   igcDetails.IGCWaypoints.Select(
+                                     Function(wp) New With {wp.Id, wp.Coord}
+                                   ).ToList()
+                                 )}
+          }
+            Using client As New HttpClient()
+                client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
+                Dim resp = Await client.PostAsync("MatchIGCToTask.php",
+                                                New FormUrlEncodedContent(form))
+
+                If resp.IsSuccessStatusCode Then
+                    Dim body = Await resp.Content.ReadAsStringAsync()
+                    Dim j = JObject.Parse(body)
+                    If j("status")?.ToString() = "found" Then
+                        ' Found a match, extract the EntrySeqID and store it into the current igcDetails
+                        Integer.TryParse(j("EntrySeqID")?.ToString(), igcDetails.EntrySeqID)
+                        igcDetails.PLNXML = j("PLNXML")?.ToString()
+                    End If
+                End If
+            End Using
+        Catch ex As Exception
+            response = $"Error fetching EntrySeqID: {ex.Message}"
+        End Try
+
+        Return response
+
+    End Function
+
+    ''' <summary>
+    ''' Returns either the forced ID, the cached ID, or—on cache miss—the
+    ''' server-matched ID (and stores it in cache).
+    ''' </summary>
+    Private Async Function GetOrFetchEntrySeqID() As Task(Of String)
+
+        Dim response As String = String.Empty
+
+        ' Compute cache key
+        igcDetails.CacheKey = ExtractIgcRecordCacheKey(igcDetails.IGCLocalFilePath)
+
+        ' Cache hit?
+        Dim taskAndPLN As Tuple(Of Integer, String) = Nothing
+        If taskCache.TryGetValue(igcDetails.CacheKey, taskAndPLN) Then
+            ' Cache hit → The EntrySeqID was set by the cache lookup
+            igcDetails.EntrySeqID = taskAndPLN.Item1
+            igcDetails.PLNXML = taskAndPLN.Item2
+        Else
+            ' Cache miss → server lookup
+            response = Await FetchEntrySeqIDFromServer()
+            If String.IsNullOrEmpty(response) Then
+                taskAndPLN = New Tuple(Of Integer, String)(igcDetails.EntrySeqID, igcDetails.PLNXML)
+                taskCache.Add(igcDetails.CacheKey, taskAndPLN)
+            End If
+        End If
+
+        Return response
+
+    End Function
+
 End Class

@@ -3,6 +3,8 @@
     Public Property EntrySeqID As Integer
     Public Property AlreadyUploaded As Boolean
     Public Property AlreadyUploadedChecked As Boolean = False
+    Public Property CacheKey As String = String.Empty
+    Public Property PLNXML As String = String.Empty
     Public Property TaskTitle As String
     Public Property WSGUserID As Integer = 0
 

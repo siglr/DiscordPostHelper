@@ -26,6 +26,7 @@ Partial Class IGCFileUpload
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IGCFileUpload))
         Me.browser = New CefSharp.WinForms.ChromiumWebBrowser()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.btnMoveIGCToProcessed = New System.Windows.Forms.Button()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.pnlResults = New System.Windows.Forms.Panel()
@@ -56,9 +57,10 @@ Partial Class IGCFileUpload
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lstbxIGCFiles = New System.Windows.Forms.ListBox()
         Me.lblProcessing = New System.Windows.Forms.Label()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnMoveIGCToProcessed = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtIGCEntrySeqID = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -74,7 +76,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(0, 0)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(724, 670)
+        Me.browser.Size = New System.Drawing.Size(723, 670)
         Me.browser.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.browser, "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
         "zoom level.")
@@ -91,6 +93,8 @@ Partial Class IGCFileUpload
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.txtIGCEntrySeqID)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label8)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnMoveIGCToProcessed)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnDelete)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnClose)
@@ -120,11 +124,23 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
         '
+        'btnMoveIGCToProcessed
+        '
+        Me.btnMoveIGCToProcessed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnMoveIGCToProcessed.Location = New System.Drawing.Point(4, 299)
+        Me.btnMoveIGCToProcessed.Name = "btnMoveIGCToProcessed"
+        Me.btnMoveIGCToProcessed.Size = New System.Drawing.Size(239, 32)
+        Me.btnMoveIGCToProcessed.TabIndex = 20
+        Me.btnMoveIGCToProcessed.Text = "Move to Processed"
+        Me.ToolTip1.SetToolTip(Me.btnMoveIGCToProcessed, "Click to move this IGC file to the ""Processed"" folder.")
+        Me.btnMoveIGCToProcessed.UseVisualStyleBackColor = True
+        '
         'btnDelete
         '
         Me.btnDelete.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Location = New System.Drawing.Point(4, 311)
+        Me.btnDelete.Location = New System.Drawing.Point(4, 337)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(239, 32)
         Me.btnDelete.TabIndex = 17
@@ -204,6 +220,7 @@ Partial Class IGCFileUpload
         Me.txtDistance.ReadOnly = True
         Me.txtDistance.Size = New System.Drawing.Size(144, 20)
         Me.txtDistance.TabIndex = 12
+        Me.ToolTip1.SetToolTip(Me.txtDistance, "Calculated distance achieved extracted from the results.")
         '
         'Label15
         '
@@ -225,6 +242,7 @@ Partial Class IGCFileUpload
         Me.txtTime.ReadOnly = True
         Me.txtTime.Size = New System.Drawing.Size(144, 20)
         Me.txtTime.TabIndex = 10
+        Me.ToolTip1.SetToolTip(Me.txtTime, "Calculated time extracted from the results.")
         '
         'Label14
         '
@@ -246,6 +264,7 @@ Partial Class IGCFileUpload
         Me.txtSpeed.ReadOnly = True
         Me.txtSpeed.Size = New System.Drawing.Size(144, 20)
         Me.txtSpeed.TabIndex = 8
+        Me.ToolTip1.SetToolTip(Me.txtSpeed, "Calculated speed extracted from the results.")
         '
         'Label13
         '
@@ -267,6 +286,7 @@ Partial Class IGCFileUpload
         Me.txtLocalDateTime.ReadOnly = True
         Me.txtLocalDateTime.Size = New System.Drawing.Size(144, 20)
         Me.txtLocalDateTime.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.txtLocalDateTime, "Local date and time extracted from the results in the IGC file.")
         '
         'Label11
         '
@@ -298,6 +318,7 @@ Partial Class IGCFileUpload
         Me.txtFlags.ReadOnly = True
         Me.txtFlags.Size = New System.Drawing.Size(144, 20)
         Me.txtFlags.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.txtFlags, "All flags for the results in this IGC file.")
         '
         'Label9
         '
@@ -314,16 +335,17 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtWSGStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtWSGStatus.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtWSGStatus.Location = New System.Drawing.Point(99, 247)
+        Me.txtWSGStatus.Location = New System.Drawing.Point(99, 273)
         Me.txtWSGStatus.Name = "txtWSGStatus"
         Me.txtWSGStatus.ReadOnly = True
         Me.txtWSGStatus.Size = New System.Drawing.Size(144, 20)
         Me.txtWSGStatus.TabIndex = 14
+        Me.ToolTip1.SetToolTip(Me.txtWSGStatus, "Status of this IGC file on WeSimGlide.org")
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(3, 247)
+        Me.Label7.Location = New System.Drawing.Point(3, 273)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(86, 20)
         Me.Label7.TabIndex = 13
@@ -340,6 +362,7 @@ Partial Class IGCFileUpload
         Me.txtRecordDate.ReadOnly = True
         Me.txtRecordDate.Size = New System.Drawing.Size(144, 20)
         Me.txtRecordDate.TabIndex = 12
+        Me.ToolTip1.SetToolTip(Me.txtRecordDate, "Date and time the IGC file was recorded.")
         '
         'Label6
         '
@@ -361,6 +384,7 @@ Partial Class IGCFileUpload
         Me.txtSim.ReadOnly = True
         Me.txtSim.Size = New System.Drawing.Size(144, 20)
         Me.txtSim.TabIndex = 10
+        Me.ToolTip1.SetToolTip(Me.txtSim, "Sim version extracted from IGC file")
         '
         'Label5
         '
@@ -382,6 +406,7 @@ Partial Class IGCFileUpload
         Me.txtGlider.ReadOnly = True
         Me.txtGlider.Size = New System.Drawing.Size(144, 20)
         Me.txtGlider.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.txtGlider, "Glider type extracted from IGC file")
         '
         'Label3
         '
@@ -403,6 +428,7 @@ Partial Class IGCFileUpload
         Me.txtCompID.ReadOnly = True
         Me.txtCompID.Size = New System.Drawing.Size(144, 20)
         Me.txtCompID.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.txtCompID, "Competition ID extracted from IGC file")
         '
         'Label2
         '
@@ -424,6 +450,7 @@ Partial Class IGCFileUpload
         Me.txtPilot.ReadOnly = True
         Me.txtPilot.Size = New System.Drawing.Size(144, 20)
         Me.txtPilot.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.txtPilot, "Pilot name extracted from IGC file")
         '
         'Label1
         '
@@ -455,22 +482,10 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(724, 695)
+        Me.lblProcessing.Size = New System.Drawing.Size(723, 695)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnMoveIGCToProcessed
-        '
-        Me.btnMoveIGCToProcessed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnMoveIGCToProcessed.Location = New System.Drawing.Point(4, 273)
-        Me.btnMoveIGCToProcessed.Name = "btnMoveIGCToProcessed"
-        Me.btnMoveIGCToProcessed.Size = New System.Drawing.Size(239, 32)
-        Me.btnMoveIGCToProcessed.TabIndex = 20
-        Me.btnMoveIGCToProcessed.Text = "Move to Processed"
-        Me.ToolTip1.SetToolTip(Me.btnMoveIGCToProcessed, "Click to move this IGC file to the ""Processed"" folder.")
-        Me.btnMoveIGCToProcessed.UseVisualStyleBackColor = True
         '
         'Label4
         '
@@ -478,11 +493,33 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.Location = New System.Drawing.Point(3, 671)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(717, 20)
+        Me.Label4.Size = New System.Drawing.Size(716, 20)
         Me.Label4.TabIndex = 10
         Me.Label4.Text = "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
     "zoom level."
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'txtIGCEntrySeqID
+        '
+        Me.txtIGCEntrySeqID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtIGCEntrySeqID.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtIGCEntrySeqID.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtIGCEntrySeqID.Location = New System.Drawing.Point(99, 247)
+        Me.txtIGCEntrySeqID.Name = "txtIGCEntrySeqID"
+        Me.txtIGCEntrySeqID.ReadOnly = True
+        Me.txtIGCEntrySeqID.Size = New System.Drawing.Size(144, 20)
+        Me.txtIGCEntrySeqID.TabIndex = 22
+        Me.ToolTip1.SetToolTip(Me.txtIGCEntrySeqID, "The task ID from WeSimGlide.org")
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(3, 247)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(49, 20)
+        Me.Label8.TabIndex = 21
+        Me.Label8.Text = "Task #"
         '
         'IGCFileUpload
         '
@@ -544,4 +581,6 @@ Partial Class IGCFileUpload
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents btnMoveIGCToProcessed As Button
     Friend WithEvents Label4 As Label
+    Friend WithEvents txtIGCEntrySeqID As TextBox
+    Friend WithEvents Label8 As Label
 End Class
