@@ -78,7 +78,6 @@ Public Class IGCFileUpload
         txtPilot.Text = igcDetails.Pilot
         txtCompID.Text = igcDetails.CompetitionID
         txtGlider.Text = igcDetails.GliderType
-        txtNB21.Text = igcDetails.NB21Version
         txtSim.Text = igcDetails.Sim
 
         Dim rawUtc = igcDetails.IGCRecordDateTimeUTC
@@ -100,7 +99,7 @@ Public Class IGCFileUpload
         End If
 
         txtWSGStatus.Text = String.Empty
-        txtTaskPlannerStatus.Text = String.Empty
+        lblProcessing.Text = String.Empty
 
         If Not igcDetails.AlreadyUploadedChecked Then
             'Check if already uploaded
@@ -118,7 +117,7 @@ Public Class IGCFileUpload
         If String.IsNullOrEmpty(txtWSGStatus.Text) Then
             If igcDetails.AlreadyUploaded Then
                 txtWSGStatus.Text = "Already uploaded"
-                txtTaskPlannerStatus.Text = "N/A"
+                lblProcessing.Text = "Already uploaded - N/A"
                 Return
             Else
                 txtWSGStatus.Text = $"Can upload - WSG User: {igcDetails.WSGUserID}"
@@ -128,7 +127,7 @@ Public Class IGCFileUpload
         If igcDetails.Results Is Nothing Then
             Await ExtractionFromTaskPlanner()
         Else
-            txtTaskPlannerStatus.Text = "Results already available"
+            lblProcessing.Text = "Results already available"
         End If
         If igcDetails.Results Is Nothing Then
             'Still nothing - error processing?
@@ -160,7 +159,6 @@ Public Class IGCFileUpload
         End If
         txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"
         txtLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.LocalDate, igcDetails.LocalTime)
-        txtTaskLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(simLocalDateTime)
 
         Select Case SupportingFeatures.PrefUnits.Speed
             Case PreferredUnits.SpeedUnits.Imperial
@@ -181,7 +179,6 @@ Public Class IGCFileUpload
         End Select
 
         txtTime.Text = igcDetails.Results.Duration
-        txtTPVersion.Text = igcDetails.Results.TPVersion
 
     End Function
 
@@ -198,11 +195,11 @@ Public Class IGCFileUpload
             'All fine
             lblProcessing.Visible = False
             browser.Enabled = True
-            txtTaskPlannerStatus.Text = "Results extracted"
+            lblProcessing.Text = "Results extracted"
         Else
             'Error
             lblProcessing.Visible = True
-            txtTaskPlannerStatus.Text = resultExctractMsg
+            lblProcessing.Text = resultExctractMsg
         End If
 
     End Function
@@ -216,12 +213,11 @@ Public Class IGCFileUpload
 
             ' Finish with the post‐upload steps
             txtWSGStatus.Text = "Already uploaded"
-            txtTaskPlannerStatus.Text = "N/A"
+            lblProcessing.Text = "Already uploaded - N/A"
             igcDetails.AlreadyUploaded = True
             igcDetails.Results = Nothing
             pnlResults.Visible = False
             lblProcessing.Visible = True
-            lblProcessing.Text = String.Empty
 
             FinishUp()
 
@@ -745,4 +741,39 @@ Public Class IGCFileUpload
         End Using
     End Sub
 
+    Private Sub btnMoveIGCToProcessed_Click(sender As Object, e As EventArgs) Handles btnMoveIGCToProcessed.Click
+        ' Ask confirmation and “move” the selected IGC file into a subfolder "Processed"
+        If lstbxIGCFiles.SelectedIndex < 0 Then
+            Return
+        End If
+
+        ' Grab file name & path
+        Dim igcFileName = igcDetails.IGCFileName
+        Dim sourcePath = igcDetails.IGCLocalFilePath
+
+        ' Ensure the "Processed" subfolder exists
+        Dim processedFolder = Path.Combine(
+            Path.GetDirectoryName(sourcePath),
+            "Processed"
+        )
+        If Not Directory.Exists(processedFolder) Then
+            Directory.CreateDirectory(processedFolder)
+        End If
+
+        ' Compute destination path and move
+        Dim destPath = Path.Combine(processedFolder, igcFileName)
+        File.Move(sourcePath, destPath)
+
+        ' Remove from our collections and UI (same as delete)
+        dictIGCDetails.Remove(igcFileName)
+        igcFiles.Remove(igcFileName)
+        lstbxIGCFiles.Items.Remove(igcFileName)
+
+        ' Select next or close
+        If lstbxIGCFiles.Items.Count > 0 Then
+            lstbxIGCFiles.SelectedIndex = 0
+        Else
+            Me.Close()
+        End If
+    End Sub
 End Class

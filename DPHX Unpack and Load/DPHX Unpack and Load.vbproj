@@ -257,6 +257,9 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
     <Content Include="logowithouttext.png" />
+    <Content Include="Refresh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8.1">
