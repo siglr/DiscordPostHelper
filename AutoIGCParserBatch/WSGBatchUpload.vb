@@ -146,7 +146,65 @@ Public Class WSGBatchUpload
         ' 4) Already uploaded?
         Dim alreadyUploaded As Boolean = Await ParseIGCFileAndCheckIfAlreadyUploaded()
         If Not alreadyUploaded Then
-            ' … rest of your upload logic unchanged …
+            If ForcedTaskId > 0 Then
+                'Load the flight plan first
+                ' Tell our handler which file to feed in
+                uploadHandler.FileToUpload = $"{tempFolder}\{ForcedTaskId}.pln"
+
+                ' Fire the JS “Choose file(s)” click
+                Await ClickElementByIdAsync("drop_zone_choose_button")
+
+                ' Wait for the file input to be populated
+                Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+                If Not gotPlnFile Then
+                    txtLog.AppendText("  ❌ PLN File never made it into the input!" & Environment.NewLine)
+                    Return
+                End If
+            End If
+            ' Tell our handler which file to feed in
+            uploadHandler.FileToUpload = igcDetails.IGCLocalFilePath
+
+            ' Fire the JS “Choose file(s)” click
+            Await ClickElementByIdAsync("drop_zone_choose_button")
+
+            ' Wait for the file input to be populated
+            Dim gotFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+            If Not gotFile Then
+                txtLog.AppendText("  ❌ File never made it into the input!" & Environment.NewLine)
+                Return
+            End If
+
+            ' 4) Now wait for at least one tracklogs entry
+            Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table tr.tracklogs_entry_current').length > 0", timeoutSeconds:=10)
+            If Not hasRows Then
+                txtLog.AppendText("  ❌ No tracklogs entries detected!" & Environment.NewLine)
+                Return
+            End If
+
+            ' 5) Click the first tracklog
+            Await ClickElementAsync("#tracklogs_table tr.tracklogs_entry_current")
+
+            ' 6) Click Load Task
+            Await ClickElementAsync("#tracklog_info_load_task")
+
+            ' 7) Switch back to the Tracklogs tab (the Load Task button never hides)
+            Await browser.EvaluateScriptAsync("b21_task_planner.tab_tracklogs_click()")
+
+            ' 8) Wait for the Tracklogs panel to be visible again
+            Dim tabVisible = Await WaitForConditionAsync(
+      "document.getElementById('tracklogs').style.display != 'none'",
+      timeoutSeconds:=5)
+
+            If Not tabVisible Then
+                txtLog.AppendText("  ❌ Tracklogs tab never re-appeared!" & Environment.NewLine)
+                Return
+            End If
+
+            ' 9) Extract IGCDetails
+            Await ExtractResults()
+
+            ' 10) Click Reset
+            Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
         End If
 
         ' 5) Move on to the next file
