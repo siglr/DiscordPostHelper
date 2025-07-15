@@ -335,6 +335,46 @@ Public Class BriefingControl
             btnGotoDiscordTaskThread.Enabled = True
         End If
 
+        'Generate the Setup tab
+        BuildSetupTab()
+
+    End Sub
+
+    Private Sub BuildSetupTab()
+
+        Dim dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
+        Dim dateFormat As String
+        If _sessionData.IncludeYear Then
+            dateFormat = "MMMM dd, yyyy"
+        Else
+            dateFormat = "MMMM dd"
+        End If
+
+        lblTaskTitle.Text = $"{_sessionData.Title}"
+        lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
+        lblTaskName.Text = $"{Path.GetFileNameWithoutExtension(_sessionData.FlightPlanFilename)}"
+        lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"
+        lblWeatherProfile.Text = _WeatherDetails.PresetName
+        lblRecGliders.Text = _sessionData.RecommendedGliders
+
+        'Unstandard Barometric pressure
+        If Not _WeatherDetails.IsStandardMSLPressure Then
+            pnlSetupBaroWarning.Visible = True
+            lblBaroNote.Text = _WeatherDetails.MSLPressure(_sessionData.BaroPressureExtraInfo, _sessionData.SuppressBaroPressureWarningSymbol, PrefUnits, False)
+        Else
+            pnlSetupBaroWarning.Visible = False
+        End If
+
+        If SupportingFeatures.IsEventActive(_sessionData) Then
+            pnlSetupEventTitle.Visible = True
+            pnlSetupServer.Visible = True
+            lblGroupEventTitle.Text = $"{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}"
+            lblEventMSFSServer.Text = _SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)
+        Else
+            pnlSetupEventTitle.Visible = False
+            pnlSetupServer.Visible = False
+        End If
+
     End Sub
 
     Public Sub AdjustRTBoxControls()
@@ -351,19 +391,19 @@ Public Class BriefingControl
 
         If _SF IsNot Nothing Then
             Select Case tabsBriefing.SelectedIndex
-                Case 0 'Main Task Info
+                Case 1 'Main Task Info
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtBriefing)
-                Case 1 'Map
+                Case 2 'Map
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtFullDescription)
-                Case 2 'Event Info
+                Case 3 'Event Info
                     SupportingFeatures.SetZoomFactorOfRichTextBox(txtEventInfo)
-                Case 3 'Images
-                Case 4 'All Waypoints
-                Case 5 'Weather
+                Case 4 'Images
+                Case 5 'All Waypoints
+                Case 6 'Weather
                     FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
                     FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
-                Case 6 'Add-ons
-                Case 7 'Units
+                Case 7 'Add-ons
+                Case 8 'Units
                     _onUnitsTab = True
             End Select
         End If
@@ -1109,6 +1149,13 @@ Public Class BriefingControl
                                                                                             txtBriefing.LinkClicked,
                                                                                             txtEventInfo.LinkClicked
         Process.Start(e.LinkText)
+    End Sub
+
+    Private Sub flowSetup_Layout(sender As Object, e As LayoutEventArgs) Handles flowSetup.Layout
+        For Each ctrl As Control In flowSetup.Controls
+            ' Subtract margins so you don't get a horizontal scrollbar
+            ctrl.Width = flowSetup.ClientSize.Width - ctrl.Margin.Left - ctrl.Margin.Right
+        Next
     End Sub
 
 #End Region

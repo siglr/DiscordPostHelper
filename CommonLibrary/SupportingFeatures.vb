@@ -2996,6 +2996,33 @@ Public Class SupportingFeatures
         Return dt.ToString(pattern, culture)
     End Function
 
+    ''' <summary>
+    ''' Returns True if the event is still “active” (i.e. enabled and not more than 
+    ''' 90 minutes past its anchor point), False if no event or it’s older than 90 min.
+    ''' </summary>
+    Public Shared Function IsEventActive(sessionData As AllData) As Boolean
+        ' 1) No event at all?
+        If Not sessionData.EventEnabled Then
+            Return False
+        End If
+
+        ' 2) Pick the correct anchor time
+        Dim anchor As DateTime
+        If sessionData.UseEventLaunch Then
+            anchor = sessionData.LaunchLocalDateTime
+        ElseIf sessionData.UseEventSyncFly Then
+            anchor = sessionData.SyncFlyLocalDateTime
+        Else
+            anchor = sessionData.MeetLocalDateTime
+        End If
+
+        ' 3) Compute minutes difference: positive if in the future, negative if past
+        Dim minutesDiff = (anchor - DateTime.Now).TotalMinutes
+
+        ' 4) Active if ≥ –90 (i.e. up to 90 minutes in the past) or any time in the future
+        Return minutesDiff >= -90
+
+    End Function
 
     Public Shared Function FetchTaskIDUsingEntrySeqID(entrySeqID As String, Optional ByRef taskTitle As String = "", Optional onlyAvailable As Boolean = True) As String
 
