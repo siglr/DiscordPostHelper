@@ -111,12 +111,12 @@ Public Class IGCFileUpload
             Return
         Else
             'Check if the task is the same as the current DPHX task
-            If igcDetails.MatchedTask.EntrySeqID <> currentDPHXEntrySeqID Then
+            If (igcDetails.MatchedTask.EntrySeqID <> currentDPHXEntrySeqID) And currentDPHXEntrySeqID > 0 Then
                 'Set a different color for the EntrySeqID - red if different
                 txtIGCEntrySeqID.Text = $"{igcDetails.MatchedTask.EntrySeqID.ToString} <> current DPHX"
             Else
                 'Set a different color for the EntrySeqID - WindowText if same
-                txtIGCEntrySeqID.Text = igcDetails.MatchedTask.ToString
+                txtIGCEntrySeqID.Text = igcDetails.MatchedTask.EntrySeqID.ToString
             End If
         End If
 
