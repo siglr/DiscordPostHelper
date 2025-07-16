@@ -272,7 +272,8 @@ Public Class IGCFileUpload
 
     Private Async Function ProcessIGCFileStep1Parsing() As Task
 
-        Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
+        'Reset the planner and make sure the units are set to metric
+        Await ResetTaskPlanner()
 
         'Parse everything out of the .igc
         Dim doc As JToken = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
@@ -746,11 +747,22 @@ Public Class IGCFileUpload
         End If
     End Sub
 
+    Private Async Function ResetTaskPlanner() As Task
+        Dim currentZoomLevel As Double = Await browser.GetZoomLevelAsync()
+        browser.SetZoomLevel(0.0)
+        Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
+        Await ClickElementAsync("button[title=""Choose units for distance, elevation etc.""]")
+        Await ClickElementByIdAsync("setting_speed_units_kph")
+        Await ClickElementByIdAsync("setting_distance_units_km")
+        Await ClickElementAsync("button[title=""Choose units for distance, elevation etc.""]")
+        browser.SetZoomLevel(currentZoomLevel)
+    End Function
+
     Private Async Sub btnRecalculate_Click(sender As Object, e As EventArgs) Handles btnRecalculate.Click
         Try
             If lstbxIGCFiles.SelectedIndex >= 0 Then
                 lstbxIGCFiles.Enabled = False
-                Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
+                Await ResetTaskPlanner()
                 Await ExtractionFromTaskPlanner()
                 Await FillResultsPanel()
                 lstbxIGCFiles.Enabled = True
