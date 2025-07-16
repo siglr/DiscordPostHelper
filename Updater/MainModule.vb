@@ -26,7 +26,7 @@ Module MainModule
             updateForm.lblChkMarkParameters.Visible = True
         Else
             Dim sb As New StringBuilder()
-            sb.AppendLine("An error occured! Incomplete update! You should get the latest release by yourself and copy the files over manually!")
+            sb.AppendLine("An error occurred! Incomplete update! You should get the latest release by yourself and copy the files over manually!")
             sb.AppendLine()
             sb.AppendLine("Incorrect number of parameters passed to the Updater process.")
             MessageBox.Show(sb.ToString, "MSFS Soaring Task Tools Updater", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -37,15 +37,15 @@ Module MainModule
             argNo += 1
             Select Case argNo
                 Case 1
-                    'Zip file
+                    ' Zip file
                     zipFilename = arg
                     updateForm.txtZipFile.Text = zipFilename
                 Case 2
-                    'Process ID
+                    ' Process ID
                     processID = CInt(arg)
                     updateForm.txtProcessID.Text = processID.ToString
                 Case 3
-                    'Program to start after update
+                    ' Program to start after update
                     programToStart = arg
                     updateForm.txtApplication.Text = programToStart
             End Select
@@ -53,47 +53,93 @@ Module MainModule
 
         updateForm.Refresh()
 
-        If Not processID = 0 Then
+        ' Wait for the main process to exit
+        If processID <> 0 Then
             Try
                 Dim callingProcess As Process = Process.GetProcessById(processID)
-                If updateForm.ShowWaitingForProcess(callingProcess) Then
-                    'Exited cleanly
-                Else
-                    'Aborted
+                If Not updateForm.ShowWaitingForProcess(callingProcess) Then
                     Exit Sub
                 End If
-
             Catch ex As Exception
-                'Process is already closed
+                ' Already exited
             End Try
         End If
         updateForm.CallerIsTerminated()
 
-        'Discord Post Helper
+        ' Wait for DiscordPostHelper
         For Each relatedProcess In Process.GetProcessesByName("DiscordPostHelper")
-            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(System.AppDomain.CurrentDomain.BaseDirectory) Then
-                If updateForm.ShowWaitingForProcess(relatedProcess) Then
-                    'Exited cleanly
-                Else
-                    'Aborted
+            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory) Then
+                If Not updateForm.ShowWaitingForProcess(relatedProcess) Then
                     Exit Sub
                 End If
             End If
         Next
-        'DPHX Unpack & Load
+
+        ' Wait for DPHX Unpack and Load
         For Each relatedProcess In Process.GetProcessesByName("DPHX Unpack and Load")
-            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(System.AppDomain.CurrentDomain.BaseDirectory) Then
-                If updateForm.ShowWaitingForProcess(relatedProcess) Then
-                    'Exited cleanly
-                Else
-                    'Aborted
+            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory) Then
+                If Not updateForm.ShowWaitingForProcess(relatedProcess) Then
                     Exit Sub
                 End If
             End If
         Next
+
         updateForm.OtherProcessesTerminated()
 
         Try
+            ' --- 1) Build normalized base directory path ---
+            Dim baseDir As String = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)
+            If Not baseDir.EndsWith(Path.DirectorySeparatorChar) Then
+                baseDir &= Path.DirectorySeparatorChar
+            End If
+
+            ' --- 2) Read cleanup list from the ZIP ---
+            Dim toRemove As New List(Of String)
+            Using archive As ZipArchive = ZipFile.OpenRead(zipFilename)
+                Dim cleanupEntry = archive.GetEntry("_FilesToRemove.txt")
+                If cleanupEntry IsNot Nothing Then
+                    Using sr As New StreamReader(cleanupEntry.Open())
+                        While Not sr.EndOfStream
+                            Dim line = sr.ReadLine().Trim()
+                            If line <> String.Empty Then
+                                toRemove.Add(line)
+                            End If
+                        End While
+                    End Using
+                End If
+            End Using
+
+            ' --- 3) Delete files/folders safely ---
+            For Each relPath In toRemove
+                ' Skip empty or absolute paths
+                If String.IsNullOrWhiteSpace(relPath) OrElse Path.IsPathRooted(relPath) Then
+                    updateForm.AddUnzippedFile($"Skipping invalid removal entry `{relPath}`")
+                    Continue For
+                End If
+
+                ' Resolve to full path
+                Dim candidate As String = Path.GetFullPath(Path.Combine(baseDir, relPath))
+
+                ' Verify it’s still under baseDir
+                If Not candidate.StartsWith(baseDir, StringComparison.OrdinalIgnoreCase) Then
+                    updateForm.AddUnzippedFile($"Unsafe removal entry skipped: `{relPath}`")
+                    Continue For
+                End If
+
+                ' Perform deletion
+                If File.Exists(candidate) Then
+                    File.Delete(candidate)
+                    updateForm.AddUnzippedFile($"Deleted file {relPath}")
+                ElseIf Directory.Exists(candidate) Then
+                    Directory.Delete(candidate, recursive:=True)
+                    updateForm.AddUnzippedFile($"Deleted folder {relPath}")
+                End If
+
+                updateForm.Refresh()
+                Application.DoEvents()
+            Next
+
+            ' --- 4) Extract ZIP (skipping Updater.exe and respecting filesToSkip) ---
             Using archive As ZipArchive = ZipFile.OpenRead(zipFilename)
                 For Each entry As ZipArchiveEntry In archive.Entries
                     If entry.Name <> "Updater.exe" Then
@@ -146,7 +192,7 @@ Module MainModule
         Catch ex As Exception
 
             Dim sb As New StringBuilder()
-            sb.appendline("An error occured! Incomplete update! You should get the latest release by yourself and copy the files over manually!")
+            sb.AppendLine("An error occured! Incomplete update! You should get the latest release by yourself and copy the files over manually!")
             sb.AppendLine()
             sb.AppendLine(ex.Message.ToString)
             MessageBox.Show(sb.ToString, "MSFS Soaring Task Tools Updater", MessageBoxButtons.OK, MessageBoxIcon.Error)

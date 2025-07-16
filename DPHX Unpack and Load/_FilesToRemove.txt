@@ -1,0 +1,11 @@
+﻿x64\
+x86\
+Calendar.png
+DBUpdates.db
+Glider.png
+LoudSpeaker.png
+Microsoft.Web.WebView2.Core.dll
+Microsoft.Web.WebView2.WinForms.dll
+System.Data.SQLite.dll
+TasksDatabase.db
+WebView2Loader.dll

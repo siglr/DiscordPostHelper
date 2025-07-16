@@ -323,15 +323,12 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub ChkMSFS_Tick(sender As Object, e As EventArgs) Handles ChkMSFS.Tick
-        Dim processList As Process() = Process.GetProcessesByName("FlightSimulator")
-        If processList.Length > 0 Then
-            warningMSFSRunningToolStrip.Visible = True
-        Else
-            warningMSFSRunningToolStrip.Visible = False
-        End If
+        ' look for either the old or the new process name
+        Dim running As Boolean = Process.GetProcessesByName("FlightSimulator").Any() _
+                          OrElse Process.GetProcessesByName("FlightSimulator2024").Any()
 
+        warningMSFSRunningToolStrip.Visible = running
     End Sub
-
 
     Private Sub DiscordInviteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DiscordInviteToolStripMenuItem.Click
 
