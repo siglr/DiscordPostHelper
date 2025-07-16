@@ -575,7 +575,6 @@ Public Class DPHXUnpackAndLoad
         toolStripCleanup.Enabled = False
         toolStripB21Planner.Enabled = False
         toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
-        toolStripWSGUploadIGC.Enabled = False
     End Sub
 
     Private Sub SetFilesToUnpack()
@@ -670,7 +669,6 @@ Public Class DPHXUnpackAndLoad
         toolStripUnpack.Enabled = True
         toolStripCleanup.Enabled = True
         toolStripB21Planner.Enabled = True
-        toolStripWSGUploadIGC.Enabled = True
 
         SetFilesToUnpack()
 
@@ -1218,7 +1216,11 @@ Public Class DPHXUnpackAndLoad
         If listOfIGCFiles.Count > 0 Then
             'Present the IGCUpload dialog with the list of IGC files
             Dim igcUploadDialog As New IGCFileUpload
-            igcUploadDialog.Display(Me, listOfIGCFiles, _allDPHData.EntrySeqID, _allDPHData.SimLocalDateTime)
+            If _allDPHData IsNot Nothing Then
+                igcUploadDialog.Display(Me, listOfIGCFiles, _allDPHData.EntrySeqID)
+            Else
+                igcUploadDialog.Display(Me, listOfIGCFiles, Nothing)
+            End If
         Else
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("No IGC files found in the NB21 IGC folder that match the flight plan.", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)

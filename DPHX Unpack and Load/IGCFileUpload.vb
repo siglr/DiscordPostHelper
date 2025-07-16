@@ -15,16 +15,14 @@ Public Class IGCFileUpload
     Private uploadHandler As UploadFileDialogHandler
     Private igcFiles As List(Of String)
     Private currentDPHXEntrySeqID As Integer = 0
-    Private simLocalDateTime As DateTime = Nothing
     Private alreadyUploaded As Boolean = False
     Private dictIGCDetails As New Dictionary(Of String, IGCLookupDetails)
     Private igcDetails As IGCLookupDetails = Nothing
-    Private taskCache As New Dictionary(Of String, Tuple(Of Integer, String))
+    Private taskCache As New Dictionary(Of String, IGCCacheTaskObject)
 
-    Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer, pSimLocalDateTime As DateTime)
+    Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer)
         currentDPHXEntrySeqID = pEntrySeqID
         igcFiles = pIGCFiles
-        simLocalDateTime = pSimLocalDateTime
 
         uploadHandler = New UploadFileDialogHandler()
         browser.DialogHandler = uploadHandler
@@ -105,7 +103,7 @@ Public Class IGCFileUpload
             'CacheKey is not set, so look for the EntrySeqID for this IGC file
             Dim matchErr As String = Await GetOrFetchEntrySeqID()
         End If
-        If igcDetails.EntrySeqID = 0 Then
+        If (igcDetails.MatchedTask Is Nothing) OrElse igcDetails.MatchedTask.EntrySeqID = 0 Then
             'No task matched!
             txtWSGStatus.Text = "No task found!"
             txtIGCEntrySeqID.Text = "Task not found"
@@ -113,12 +111,12 @@ Public Class IGCFileUpload
             Return
         Else
             'Check if the task is the same as the current DPHX task
-            If igcDetails.EntrySeqID <> currentDPHXEntrySeqID Then
+            If igcDetails.MatchedTask.EntrySeqID <> currentDPHXEntrySeqID Then
                 'Set a different color for the EntrySeqID - red if different
-                txtIGCEntrySeqID.Text = $"{igcDetails.EntrySeqID.ToString} <> current DPHX"
+                txtIGCEntrySeqID.Text = $"{igcDetails.MatchedTask.EntrySeqID.ToString} <> current DPHX"
             Else
                 'Set a different color for the EntrySeqID - WindowText if same
-                txtIGCEntrySeqID.Text = igcDetails.EntrySeqID.ToString
+                txtIGCEntrySeqID.Text = igcDetails.MatchedTask.ToString
             End If
         End If
 
@@ -158,6 +156,10 @@ Public Class IGCFileUpload
 
     Private Async Function FillResultsPanel() As Task
 
+        If SupportingFeatures.PrefUnits Is Nothing Then
+            SupportingFeatures.PrefUnits = New PreferredUnits
+        End If
+
         'Fill results
         pnlResults.Visible = True
         Dim flagValid As String = "❗"
@@ -170,7 +172,7 @@ Public Class IGCFileUpload
         If igcDetails.Results.TaskCompleted Then
             flagCompleted = "🏁"
         End If
-        If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, simLocalDateTime) Then
+        If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, igcDetails.MatchedTask.MSFSLocalDateTime) Then
             flagDateTime = "⌚"
         End If
         If igcDetails.Results.Penalties Then
@@ -178,6 +180,7 @@ Public Class IGCFileUpload
         End If
         txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"
         txtLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.LocalDate, igcDetails.LocalTime)
+        txtTaskLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.MatchedTask.MSFSLocalDateTime)
 
         If igcDetails.Results.Speed Is Nothing Then
             txtSpeed.Text = String.Empty
@@ -326,12 +329,12 @@ Public Class IGCFileUpload
 
         'Load the flight plan first - we need to save the content from igcDetails.PLNXML to disk in a temporary location first
         ' 1) Build a temp .pln filename based on the EntrySeqID
-        Dim plnFileName = $"{igcDetails.EntrySeqID}.pln"
+        Dim plnFileName = $"{igcDetails.MatchedTask.EntrySeqID}.pln"
         Dim tempPlnPath = Path.Combine(Path.GetTempPath(), plnFileName)
 
         ' 2) Write out the PLNXML only if it isn’t already on disk
         If Not File.Exists(tempPlnPath) Then
-            File.WriteAllText(tempPlnPath, igcDetails.PLNXML, Encoding.UTF8)
+            File.WriteAllText(tempPlnPath, igcDetails.MatchedTask.PLNXML, Encoding.UTF8)
         End If
 
         ' 3) Point the upload handler at that file
@@ -572,7 +575,7 @@ Public Class IGCFileUpload
                 ' Build form values, including the new PilotName and CompID
                 Dim values As New Dictionary(Of String, String) From {
                 {"IGCKey", igcDetails.IGCKeyFilename},
-                {"EntrySeqID", igcDetails.EntrySeqID.ToString()},
+                {"EntrySeqID", igcDetails.MatchedTask.EntrySeqID.ToString()},
                 {"PilotName", igcDetails.Pilot},
                 {"CompID", igcDetails.CompetitionID}
             }
@@ -627,7 +630,7 @@ Public Class IGCFileUpload
 
                     ' --- IGC metadata (never Nothing) ---
                     content.Add(New StringContent(safe(igcDetails.IGCKeyFilename)), "IGCKey")
-                    content.Add(New StringContent(igcDetails.EntrySeqID.ToString()), "EntrySeqID")
+                    content.Add(New StringContent(igcDetails.MatchedTask.EntrySeqID.ToString()), "EntrySeqID")
                     content.Add(New StringContent(safe(igcDetails.IGCRecordDateTimeUTC)), "IGCRecordDateTimeUTC")
                     content.Add(New StringContent(safe(igcDetails.IGCUploadDateTimeUTC)), "IGCUploadDateTimeUTC")
                     content.Add(New StringContent(safe(igcDetails.LocalDate)), "LocalDate")
@@ -868,9 +871,18 @@ Public Class IGCFileUpload
                     Dim body = Await resp.Content.ReadAsStringAsync()
                     Dim j = JObject.Parse(body)
                     If j("status")?.ToString() = "found" Then
-                        ' Found a match, extract the EntrySeqID and store it into the current igcDetails
-                        Integer.TryParse(j("EntrySeqID")?.ToString(), igcDetails.EntrySeqID)
-                        igcDetails.PLNXML = j("PLNXML")?.ToString()
+                        ' Found a match, extract the EntrySeqID and store it into a new IGCCacheTaskObject and then in the current igcDetails
+                        Dim entrySeqID As Integer = 0
+                        Dim plnXML As String = String.Empty
+                        Dim simDateTime As DateTime = DateTime.MinValue
+
+                        Integer.TryParse(j("EntrySeqID")?.ToString(), entrySeqID)
+                        plnXML = j("PLNXML")?.ToString()
+                        Dim simDTstr = j("SimDateTime")?.ToString()
+                        If Not String.IsNullOrEmpty(simDTstr) Then
+                            DateTime.TryParseExact(simDTstr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
+                        End If
+                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime)
                     End If
                 End If
             End Using
@@ -894,17 +906,15 @@ Public Class IGCFileUpload
         igcDetails.CacheKey = ExtractIgcRecordCacheKey(igcDetails.IGCLocalFilePath)
 
         ' Cache hit?
-        Dim taskAndPLN As Tuple(Of Integer, String) = Nothing
-        If taskCache.TryGetValue(igcDetails.CacheKey, taskAndPLN) Then
+        Dim matchedTask As IGCCacheTaskObject = Nothing
+        If taskCache.TryGetValue(igcDetails.CacheKey, matchedTask) Then
             ' Cache hit → The EntrySeqID was set by the cache lookup
-            igcDetails.EntrySeqID = taskAndPLN.Item1
-            igcDetails.PLNXML = taskAndPLN.Item2
+            igcDetails.MatchedTask = matchedTask
         Else
             ' Cache miss → server lookup
             response = Await FetchEntrySeqIDFromServer()
             If String.IsNullOrEmpty(response) Then
-                taskAndPLN = New Tuple(Of Integer, String)(igcDetails.EntrySeqID, igcDetails.PLNXML)
-                taskCache.Add(igcDetails.CacheKey, taskAndPLN)
+                taskCache.Add(igcDetails.CacheKey, igcDetails.MatchedTask)
             End If
         End If
 

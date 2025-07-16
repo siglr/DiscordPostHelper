@@ -1,17 +1,16 @@
 ﻿Public Class IGCLookupDetails
     ' — from your matching step —
-    Public Property EntrySeqID As Integer
     Public Property AlreadyUploaded As Boolean
     Public Property AlreadyUploadedChecked As Boolean = False
     Public Property CacheKey As String = String.Empty
-    Public Property PLNXML As String = String.Empty
+    Public Property MatchedTask As IGCCacheTaskObject = Nothing
     Public Property TaskTitle As String
     Public Property WSGUserID As Integer = 0
 
     ' — constructed key/filename —
     Public ReadOnly Property IGCKeyFilename As String
         Get
-            Return $"{EntrySeqID}_{CompetitionID}_{GliderType}_{IGCRecordDateTimeUTC}"
+            Return $"{MatchedTask.EntrySeqID}_{CompetitionID}_{GliderType}_{IGCRecordDateTimeUTC}"
         End Get
     End Property
 

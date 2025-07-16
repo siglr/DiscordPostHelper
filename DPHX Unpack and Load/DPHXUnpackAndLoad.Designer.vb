@@ -167,7 +167,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'toolStripWSGUploadIGC
         '
-        Me.toolStripWSGUploadIGC.Enabled = False
+        Me.toolStripWSGUploadIGC.Enabled = True
         Me.toolStripWSGUploadIGC.Image = CType(resources.GetObject("toolStripWSGUploadIGC.Image"), System.Drawing.Image)
         Me.toolStripWSGUploadIGC.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGUploadIGC.Name = "toolStripWSGUploadIGC"

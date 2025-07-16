@@ -26,6 +26,8 @@ Partial Class IGCFileUpload
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IGCFileUpload))
         Me.browser = New CefSharp.WinForms.ChromiumWebBrowser()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.txtIGCEntrySeqID = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.btnMoveIGCToProcessed = New System.Windows.Forms.Button()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
@@ -59,8 +61,8 @@ Partial Class IGCFileUpload
         Me.lblProcessing = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.txtIGCEntrySeqID = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.txtTaskLocalDateTime = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -76,7 +78,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(0, 0)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(723, 670)
+        Me.browser.Size = New System.Drawing.Size(722, 670)
         Me.browser.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.browser, "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
         "zoom level.")
@@ -124,6 +126,28 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
         '
+        'txtIGCEntrySeqID
+        '
+        Me.txtIGCEntrySeqID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtIGCEntrySeqID.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtIGCEntrySeqID.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtIGCEntrySeqID.Location = New System.Drawing.Point(99, 247)
+        Me.txtIGCEntrySeqID.Name = "txtIGCEntrySeqID"
+        Me.txtIGCEntrySeqID.ReadOnly = True
+        Me.txtIGCEntrySeqID.Size = New System.Drawing.Size(144, 20)
+        Me.txtIGCEntrySeqID.TabIndex = 22
+        Me.ToolTip1.SetToolTip(Me.txtIGCEntrySeqID, "The task ID from WeSimGlide.org")
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(3, 247)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(49, 20)
+        Me.Label8.TabIndex = 21
+        Me.Label8.Text = "Task #"
+        '
         'btnMoveIGCToProcessed
         '
         Me.btnMoveIGCToProcessed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -165,6 +189,8 @@ Partial Class IGCFileUpload
         '
         Me.pnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlResults.Controls.Add(Me.txtTaskLocalDateTime)
+        Me.pnlResults.Controls.Add(Me.Label12)
         Me.pnlResults.Controls.Add(Me.btnUpload)
         Me.pnlResults.Controls.Add(Me.btnRecalculate)
         Me.pnlResults.Controls.Add(Me.txtDistance)
@@ -180,15 +206,15 @@ Partial Class IGCFileUpload
         Me.pnlResults.Controls.Add(Me.Label9)
         Me.pnlResults.Location = New System.Drawing.Point(0, 375)
         Me.pnlResults.Name = "pnlResults"
-        Me.pnlResults.Size = New System.Drawing.Size(249, 193)
+        Me.pnlResults.Size = New System.Drawing.Size(249, 220)
         Me.pnlResults.TabIndex = 18
         Me.pnlResults.Visible = False
         '
         'btnUpload
         '
-        Me.btnUpload.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.btnUpload.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnUpload.Location = New System.Drawing.Point(4, 155)
+        Me.btnUpload.Location = New System.Drawing.Point(4, 182)
         Me.btnUpload.Name = "btnUpload"
         Me.btnUpload.Size = New System.Drawing.Size(239, 32)
         Me.btnUpload.TabIndex = 16
@@ -215,7 +241,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDistance.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtDistance.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtDistance.Location = New System.Drawing.Point(99, 129)
+        Me.txtDistance.Location = New System.Drawing.Point(99, 155)
         Me.txtDistance.Name = "txtDistance"
         Me.txtDistance.ReadOnly = True
         Me.txtDistance.Size = New System.Drawing.Size(144, 20)
@@ -225,7 +251,7 @@ Partial Class IGCFileUpload
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(3, 129)
+        Me.Label15.Location = New System.Drawing.Point(3, 155)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(65, 20)
         Me.Label15.TabIndex = 11
@@ -237,7 +263,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtTime.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtTime.Location = New System.Drawing.Point(99, 103)
+        Me.txtTime.Location = New System.Drawing.Point(99, 129)
         Me.txtTime.Name = "txtTime"
         Me.txtTime.ReadOnly = True
         Me.txtTime.Size = New System.Drawing.Size(144, 20)
@@ -247,7 +273,7 @@ Partial Class IGCFileUpload
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(3, 103)
+        Me.Label14.Location = New System.Drawing.Point(3, 129)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(41, 20)
         Me.Label14.TabIndex = 9
@@ -259,7 +285,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSpeed.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtSpeed.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtSpeed.Location = New System.Drawing.Point(99, 77)
+        Me.txtSpeed.Location = New System.Drawing.Point(99, 103)
         Me.txtSpeed.Name = "txtSpeed"
         Me.txtSpeed.ReadOnly = True
         Me.txtSpeed.Size = New System.Drawing.Size(144, 20)
@@ -269,7 +295,7 @@ Partial Class IGCFileUpload
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(3, 77)
+        Me.Label13.Location = New System.Drawing.Point(3, 103)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(51, 20)
         Me.Label13.TabIndex = 7
@@ -482,7 +508,7 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(723, 695)
+        Me.lblProcessing.Size = New System.Drawing.Size(722, 695)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -493,33 +519,33 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.Location = New System.Drawing.Point(3, 671)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(716, 20)
+        Me.Label4.Size = New System.Drawing.Size(715, 20)
         Me.Label4.TabIndex = 10
         Me.Label4.Text = "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
     "zoom level."
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'txtIGCEntrySeqID
+        'txtTaskLocalDateTime
         '
-        Me.txtIGCEntrySeqID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.txtTaskLocalDateTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtIGCEntrySeqID.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtIGCEntrySeqID.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
-        Me.txtIGCEntrySeqID.Location = New System.Drawing.Point(99, 247)
-        Me.txtIGCEntrySeqID.Name = "txtIGCEntrySeqID"
-        Me.txtIGCEntrySeqID.ReadOnly = True
-        Me.txtIGCEntrySeqID.Size = New System.Drawing.Size(144, 20)
-        Me.txtIGCEntrySeqID.TabIndex = 22
-        Me.ToolTip1.SetToolTip(Me.txtIGCEntrySeqID, "The task ID from WeSimGlide.org")
+        Me.txtTaskLocalDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTaskLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtTaskLocalDateTime.Location = New System.Drawing.Point(99, 77)
+        Me.txtTaskLocalDateTime.Name = "txtTaskLocalDateTime"
+        Me.txtTaskLocalDateTime.ReadOnly = True
+        Me.txtTaskLocalDateTime.Size = New System.Drawing.Size(144, 20)
+        Me.txtTaskLocalDateTime.TabIndex = 18
+        Me.ToolTip1.SetToolTip(Me.txtTaskLocalDateTime, "Local date and time specified by the task.")
         '
-        'Label8
+        'Label12
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(3, 247)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(49, 20)
-        Me.Label8.TabIndex = 21
-        Me.Label8.Text = "Task #"
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(3, 77)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(47, 20)
+        Me.Label12.TabIndex = 17
+        Me.Label12.Text = " (task)"
         '
         'IGCFileUpload
         '
@@ -583,4 +609,6 @@ Partial Class IGCFileUpload
     Friend WithEvents Label4 As Label
     Friend WithEvents txtIGCEntrySeqID As TextBox
     Friend WithEvents Label8 As Label
+    Friend WithEvents txtTaskLocalDateTime As TextBox
+    Friend WithEvents Label12 As Label
 End Class
