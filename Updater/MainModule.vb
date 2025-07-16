@@ -142,7 +142,7 @@ Module MainModule
             ' --- 4) Extract ZIP (skipping Updater.exe and respecting filesToSkip) ---
             Using archive As ZipArchive = ZipFile.OpenRead(zipFilename)
                 For Each entry As ZipArchiveEntry In archive.Entries
-                    If entry.Name <> "Updater.exe" Then
+                    If entry.Name <> "Updater.exe" AndAlso entry.Name <> "_FilesToRemove.txt" Then
                         Dim entryFullName As String = entry.FullName
                         Dim entryDirectory As String = Path.GetDirectoryName(entryFullName.Replace("/", "\"))
 
@@ -177,6 +177,14 @@ Module MainModule
                 Next
             End Using
             updateForm.AllFilesUpdated()
+
+            Dim cleanupOnDisk = Path.Combine(baseDir, "_FilesToRemove.txt")
+            If File.Exists(cleanupOnDisk) Then
+                File.Delete(cleanupOnDisk)
+                updateForm.AddUnzippedFile("Deleted cleanup definition file _FilesToRemove.txt")
+                updateForm.Refresh()
+                Application.DoEvents()
+            End If
 
             If File.Exists(zipFilename) Then
                 File.Delete(zipFilename)
