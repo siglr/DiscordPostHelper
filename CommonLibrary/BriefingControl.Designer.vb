@@ -27,6 +27,7 @@ Partial Class BriefingControl
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgSetup = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.flowSetup = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnlSetupTaskTitle = New System.Windows.Forms.Panel()
         Me.lblTaskTitle = New System.Windows.Forms.Label()
@@ -48,6 +49,12 @@ Partial Class BriefingControl
         Me.pnlSetupFlightplan = New System.Windows.Forms.Panel()
         Me.lblTaskName = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.pnlSetupSeparator = New System.Windows.Forms.Panel()
+        Me.pnlSetupEventTitle = New System.Windows.Forms.Panel()
+        Me.lblGroupEventTitle = New System.Windows.Forms.Label()
+        Me.pnlSetupServer = New System.Windows.Forms.Panel()
+        Me.lblEventMSFSServer = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
         Me.btnGotoDiscordTaskThread = New System.Windows.Forms.Button()
         Me.countryFlagsLayoutPanel = New System.Windows.Forms.FlowLayoutPanel()
@@ -70,9 +77,13 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
         Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
@@ -83,6 +94,7 @@ Partial Class BriefingControl
         Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgWeather = New System.Windows.Forms.TabPage()
+        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.chkShowGraph = New System.Windows.Forms.CheckBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -133,18 +145,9 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.pnlSetupSeparator = New System.Windows.Forms.Panel()
-        Me.pnlSetupEventTitle = New System.Windows.Forms.Panel()
-        Me.lblGroupEventTitle = New System.Windows.Forms.Label()
-        Me.pnlSetupServer = New System.Windows.Forms.Panel()
-        Me.lblEventMSFSServer = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.pnlSetupTrackerGroup = New System.Windows.Forms.Panel()
+        Me.lblEventTrackerGroup = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgSetup.SuspendLayout()
@@ -157,6 +160,8 @@ Partial Class BriefingControl
         Me.pnlSetupBaroWarning.SuspendLayout()
         Me.pnlSetupGliders.SuspendLayout()
         Me.pnlSetupFlightplan.SuspendLayout()
+        Me.pnlSetupEventTitle.SuspendLayout()
+        Me.pnlSetupServer.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
         Me.tbpgMap.SuspendLayout()
         CType(Me.mapSplitterUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -212,8 +217,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
-        Me.pnlSetupEventTitle.SuspendLayout()
-        Me.pnlSetupServer.SuspendLayout()
+        Me.pnlSetupTrackerGroup.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -270,6 +274,18 @@ Partial Class BriefingControl
         Me.Panel2.Size = New System.Drawing.Size(832, 682)
         Me.Panel2.TabIndex = 1
         '
+        'Label8
+        '
+        Me.Label8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(3, 643)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(824, 37)
+        Me.Label8.TabIndex = 12
+        Me.Label8.Text = "Don't forget to review information on the other tabs!"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'flowSetup
         '
         Me.flowSetup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
@@ -283,6 +299,7 @@ Partial Class BriefingControl
         Me.flowSetup.Controls.Add(Me.pnlSetupSeparator)
         Me.flowSetup.Controls.Add(Me.pnlSetupEventTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupServer)
+        Me.flowSetup.Controls.Add(Me.pnlSetupTrackerGroup)
         Me.flowSetup.Dock = System.Windows.Forms.DockStyle.Top
         Me.flowSetup.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flowSetup.Location = New System.Drawing.Point(0, 0)
@@ -490,6 +507,64 @@ Partial Class BriefingControl
         Me.Label12.Size = New System.Drawing.Size(66, 37)
         Me.Label12.TabIndex = 0
         Me.Label12.Text = "PLN"
+        '
+        'pnlSetupSeparator
+        '
+        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 287)
+        Me.pnlSetupSeparator.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupSeparator.Name = "pnlSetupSeparator"
+        Me.pnlSetupSeparator.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupSeparator.TabIndex = 7
+        '
+        'pnlSetupEventTitle
+        '
+        Me.pnlSetupEventTitle.Controls.Add(Me.lblGroupEventTitle)
+        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 328)
+        Me.pnlSetupEventTitle.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupEventTitle.Name = "pnlSetupEventTitle"
+        Me.pnlSetupEventTitle.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupEventTitle.TabIndex = 8
+        '
+        'lblGroupEventTitle
+        '
+        Me.lblGroupEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblGroupEventTitle.AutoEllipsis = True
+        Me.lblGroupEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblGroupEventTitle.Location = New System.Drawing.Point(-1, 0)
+        Me.lblGroupEventTitle.Name = "lblGroupEventTitle"
+        Me.lblGroupEventTitle.Size = New System.Drawing.Size(832, 41)
+        Me.lblGroupEventTitle.TabIndex = 1
+        '
+        'pnlSetupServer
+        '
+        Me.pnlSetupServer.Controls.Add(Me.lblEventMSFSServer)
+        Me.pnlSetupServer.Controls.Add(Me.Label14)
+        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 369)
+        Me.pnlSetupServer.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupServer.Name = "pnlSetupServer"
+        Me.pnlSetupServer.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupServer.TabIndex = 9
+        '
+        'lblEventMSFSServer
+        '
+        Me.lblEventMSFSServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblEventMSFSServer.AutoEllipsis = True
+        Me.lblEventMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblEventMSFSServer.Location = New System.Drawing.Point(175, 0)
+        Me.lblEventMSFSServer.Name = "lblEventMSFSServer"
+        Me.lblEventMSFSServer.Size = New System.Drawing.Size(656, 41)
+        Me.lblEventMSFSServer.TabIndex = 1
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(0, 0)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(97, 37)
+        Me.Label14.TabIndex = 0
+        Me.Label14.Text = "Server"
         '
         'tbpgMainTaskInfo
         '
@@ -789,6 +864,17 @@ Partial Class BriefingControl
         Me.Label5.Text = "Start task in"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownTaskStart
+        '
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.PlayAudioCues = False
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(4, 189)
@@ -797,6 +883,17 @@ Partial Class BriefingControl
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Launch in"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.PlayAudioCues = False
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
         '
         'Label3
         '
@@ -807,6 +904,17 @@ Partial Class BriefingControl
         Me.Label3.Text = "Sync Fly in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.PlayAudioCues = False
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 4)
@@ -815,6 +923,17 @@ Partial Class BriefingControl
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Meet in"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.PlayAudioCues = False
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
         '
         'tbpgImages
         '
@@ -943,6 +1062,18 @@ Partial Class BriefingControl
         Me.tbpgWeather.TabIndex = 7
         Me.tbpgWeather.Text = "Weather"
         Me.tbpgWeather.UseVisualStyleBackColor = True
+        '
+        'FullWeatherGraphPanel1
+        '
+        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
+        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
+        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(963, 656)
+        Me.FullWeatherGraphPanel1.TabIndex = 6
         '
         'Panel1
         '
@@ -1513,131 +1644,35 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'pnlSetupSeparator
+        'pnlSetupTrackerGroup
         '
-        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 287)
-        Me.pnlSetupSeparator.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlSetupSeparator.Name = "pnlSetupSeparator"
-        Me.pnlSetupSeparator.Size = New System.Drawing.Size(830, 41)
-        Me.pnlSetupSeparator.TabIndex = 7
+        Me.pnlSetupTrackerGroup.Controls.Add(Me.lblEventTrackerGroup)
+        Me.pnlSetupTrackerGroup.Controls.Add(Me.Label16)
+        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 410)
+        Me.pnlSetupTrackerGroup.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupTrackerGroup.Name = "pnlSetupTrackerGroup"
+        Me.pnlSetupTrackerGroup.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupTrackerGroup.TabIndex = 10
         '
-        'pnlSetupEventTitle
+        'lblEventTrackerGroup
         '
-        Me.pnlSetupEventTitle.Controls.Add(Me.lblGroupEventTitle)
-        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 328)
-        Me.pnlSetupEventTitle.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlSetupEventTitle.Name = "pnlSetupEventTitle"
-        Me.pnlSetupEventTitle.Size = New System.Drawing.Size(830, 41)
-        Me.pnlSetupEventTitle.TabIndex = 8
-        '
-        'lblGroupEventTitle
-        '
-        Me.lblGroupEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblEventTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblGroupEventTitle.AutoEllipsis = True
-        Me.lblGroupEventTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGroupEventTitle.Location = New System.Drawing.Point(-1, 0)
-        Me.lblGroupEventTitle.Name = "lblGroupEventTitle"
-        Me.lblGroupEventTitle.Size = New System.Drawing.Size(832, 41)
-        Me.lblGroupEventTitle.TabIndex = 1
+        Me.lblEventTrackerGroup.AutoEllipsis = True
+        Me.lblEventTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblEventTrackerGroup.Location = New System.Drawing.Point(175, 0)
+        Me.lblEventTrackerGroup.Name = "lblEventTrackerGroup"
+        Me.lblEventTrackerGroup.Size = New System.Drawing.Size(656, 41)
+        Me.lblEventTrackerGroup.TabIndex = 1
         '
-        'pnlSetupServer
+        'Label16
         '
-        Me.pnlSetupServer.Controls.Add(Me.lblEventMSFSServer)
-        Me.pnlSetupServer.Controls.Add(Me.Label14)
-        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 369)
-        Me.pnlSetupServer.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlSetupServer.Name = "pnlSetupServer"
-        Me.pnlSetupServer.Size = New System.Drawing.Size(830, 41)
-        Me.pnlSetupServer.TabIndex = 9
-        '
-        'lblEventMSFSServer
-        '
-        Me.lblEventMSFSServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblEventMSFSServer.AutoEllipsis = True
-        Me.lblEventMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventMSFSServer.Location = New System.Drawing.Point(175, 0)
-        Me.lblEventMSFSServer.Name = "lblEventMSFSServer"
-        Me.lblEventMSFSServer.Size = New System.Drawing.Size(656, 41)
-        Me.lblEventMSFSServer.TabIndex = 1
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(0, 0)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(97, 37)
-        Me.Label14.TabIndex = 0
-        Me.Label14.Text = "Server"
-        '
-        'countDownTaskStart
-        '
-        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
-        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownTaskStart.Name = "countDownTaskStart"
-        Me.countDownTaskStart.PlayAudioCues = False
-        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
-        Me.countDownTaskStart.TabIndex = 6
-        Me.countDownTaskStart.ZoomFactor = 2.0!
-        '
-        'countDownToLaunch
-        '
-        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
-        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToLaunch.Name = "countDownToLaunch"
-        Me.countDownToLaunch.PlayAudioCues = False
-        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToLaunch.TabIndex = 4
-        Me.countDownToLaunch.ZoomFactor = 2.0!
-        '
-        'countDownToSyncFly
-        '
-        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
-        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToSyncFly.Name = "countDownToSyncFly"
-        Me.countDownToSyncFly.PlayAudioCues = False
-        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToSyncFly.TabIndex = 2
-        Me.countDownToSyncFly.ZoomFactor = 2.0!
-        '
-        'countDownToMeet
-        '
-        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
-        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToMeet.Name = "countDownToMeet"
-        Me.countDownToMeet.PlayAudioCues = False
-        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToMeet.TabIndex = 0
-        Me.countDownToMeet.ZoomFactor = 2.0!
-        '
-        'FullWeatherGraphPanel1
-        '
-        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
-        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
-        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(963, 656)
-        Me.FullWeatherGraphPanel1.TabIndex = 6
-        '
-        'Label8
-        '
-        Me.Label8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(3, 643)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(824, 37)
-        Me.Label8.TabIndex = 12
-        Me.Label8.Text = "Don't forget to review information on the other tabs!"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(0, 0)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(106, 37)
+        Me.Label16.TabIndex = 0
+        Me.Label16.Text = "Tracker"
         '
         'BriefingControl
         '
@@ -1667,6 +1702,9 @@ Partial Class BriefingControl
         Me.pnlSetupGliders.PerformLayout()
         Me.pnlSetupFlightplan.ResumeLayout(False)
         Me.pnlSetupFlightplan.PerformLayout()
+        Me.pnlSetupEventTitle.ResumeLayout(False)
+        Me.pnlSetupServer.ResumeLayout(False)
+        Me.pnlSetupServer.PerformLayout()
         Me.tbpgMainTaskInfo.ResumeLayout(False)
         Me.tbpgMap.ResumeLayout(False)
         Me.mapSplitterUpDown.Panel1.ResumeLayout(False)
@@ -1733,9 +1771,8 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
-        Me.pnlSetupEventTitle.ResumeLayout(False)
-        Me.pnlSetupServer.ResumeLayout(False)
-        Me.pnlSetupServer.PerformLayout()
+        Me.pnlSetupTrackerGroup.ResumeLayout(False)
+        Me.pnlSetupTrackerGroup.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1862,4 +1899,7 @@ Partial Class BriefingControl
     Friend WithEvents lblEventMSFSServer As Windows.Forms.Label
     Friend WithEvents Label14 As Windows.Forms.Label
     Friend WithEvents Label8 As Windows.Forms.Label
+    Friend WithEvents pnlSetupTrackerGroup As Windows.Forms.Panel
+    Friend WithEvents lblEventTrackerGroup As Windows.Forms.Label
+    Friend WithEvents Label16 As Windows.Forms.Label
 End Class

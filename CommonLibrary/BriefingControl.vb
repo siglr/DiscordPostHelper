@@ -370,9 +370,16 @@ Public Class BriefingControl
             pnlSetupServer.Visible = True
             lblGroupEventTitle.Text = $"{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}"
             lblEventMSFSServer.Text = _SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)
+            If _sessionData.TrackerGroup.Trim <> String.Empty Then
+                pnlSetupTrackerGroup.Visible = True
+                lblEventTrackerGroup.Text = _sessionData.TrackerGroup
+            Else
+                pnlSetupTrackerGroup.Visible = False
+            End If
         Else
             pnlSetupEventTitle.Visible = False
             pnlSetupServer.Visible = False
+            pnlSetupTrackerGroup.Visible = False
         End If
 
     End Sub
