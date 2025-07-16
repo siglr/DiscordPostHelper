@@ -77,7 +77,7 @@ Public Class WSGBatchUpload
             Await CallSetUnassignedIGCRecordUserAsync()
             Await CallUpdateLatestIGCLeadersAsync()
 
-            browser.Load($"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={igcDetails.EntrySeqID}&only_unassigned=1")
+            browser.Load($"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={igcDetails.MatchedTask.EntrySeqID}&only_unassigned=1")
             Return
         End If
 
@@ -129,19 +129,20 @@ Public Class WSGBatchUpload
 
         ' 3) Determine EntrySeqID
         If ForcedTaskId > 0 Then
-            igcDetails.EntrySeqID = ForcedTaskId
+            igcDetails.MatchedTask = New IGCCacheTaskObject(ForcedTaskId, String.Empty, Nothing)
         Else
-            igcDetails.EntrySeqID = Await GetOrFetchEntrySeqID()
+            igcDetails.MatchedTask = New IGCCacheTaskObject(0, String.Empty, Nothing)
+            igcDetails.MatchedTask.EntrySeqID = Await GetOrFetchEntrySeqID()
         End If
 
-        If igcDetails.EntrySeqID = 0 Then
+        If igcDetails.MatchedTask.EntrySeqID = 0 Then
             txtLog.AppendText($"❌ No matching task for IGC: {Path.GetFileName(igcDetails.IGCLocalFilePath)}. Skipping." & vbCrLf)
             currentIdx += 1
             ProcessNextFileAsync()
             Return
         End If
 
-        txtLog.AppendText($"✔ Found EntrySeqID {igcDetails.EntrySeqID} for this IGC." & vbCrLf)
+        txtLog.AppendText($"✔ Found EntrySeqID {igcDetails.MatchedTask.EntrySeqID} for this IGC." & vbCrLf)
 
         ' 4) Already uploaded?
         Dim alreadyUploaded As Boolean = Await ParseIGCFileAndCheckIfAlreadyUploaded()
@@ -558,7 +559,7 @@ Public Class WSGBatchUpload
                 ' Build form values
                 Dim values As New Dictionary(Of String, String) From {
                 {"IGCKey", igcDetails.IGCKeyFilename},
-                {"EntrySeqID", igcDetails.EntrySeqID.ToString()},
+                {"EntrySeqID", igcDetails.MatchedTask.EntrySeqID.ToString()},
                 {"PilotName", igcDetails.Pilot},
                 {"CompID", igcDetails.CompetitionID}
             }
@@ -624,7 +625,7 @@ Public Class WSGBatchUpload
 
                     ' --- IGC metadata (never Nothing) ---
                     content.Add(New StringContent(safe(igcDetails.IGCKeyFilename)), "IGCKey")
-                    content.Add(New StringContent(igcDetails.EntrySeqID.ToString()), "EntrySeqID")
+                    content.Add(New StringContent(igcDetails.MatchedTask.EntrySeqID.ToString()), "EntrySeqID")
                     content.Add(New StringContent(safe(igcDetails.IGCRecordDateTimeUTC)), "IGCRecordDateTimeUTC")
                     content.Add(New StringContent(safe(igcDetails.IGCUploadDateTimeUTC)), "IGCUploadDateTimeUTC")
                     content.Add(New StringContent(safe(igcDetails.LocalDate)), "LocalDate")
