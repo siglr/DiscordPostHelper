@@ -126,16 +126,20 @@ Public Class DPHXUnpackAndLoad
             SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
             Dim doUnpack As Boolean = False
+            Dim ignoreWSGIntegration As Boolean = False
+
             If My.Application.CommandLineArgs.Count > 0 Then
                 ' Open the file passed as an argument
                 _currentFile = My.Application.CommandLineArgs(0)
                 doUnpack = True
+                ignoreWSGIntegration = Settings.SessionSettings.WSGIgnoreWhenOpeningDPHX
             Else
                 ' Check the last file that was opened
                 If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
                     _currentFile = Settings.SessionSettings.LastDPHXOpened
                 End If
             End If
+
 
             If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
                 LoadDPHXPackage(_currentFile)
@@ -151,20 +155,22 @@ Public Class DPHXUnpackAndLoad
             _DPHXWS = New DPHXLocalWS(Settings.SessionSettings.LocalWebServerPort)
             _DPHXWS.Start()
 
-            'Check WSG integration
-            Select Case Settings.SessionSettings.WSGIntegration
-                Case AllSettings.WSGIntegrationOptions.None
+            If Not ignoreWSGIntegration Then
+                'Check WSG integration
+                Select Case Settings.SessionSettings.WSGIntegration
+                    Case AllSettings.WSGIntegrationOptions.None
                     'Do nothing
-                Case AllSettings.WSGIntegrationOptions.OpenHome
-                    'Open map in WSG
-                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
-                Case AllSettings.WSGIntegrationOptions.OpenMap
-                    'Open map in WSG
-                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
-                Case AllSettings.WSGIntegrationOptions.OpenEvents
-                    'Open events in WSG
-                    SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
-            End Select
+                    Case AllSettings.WSGIntegrationOptions.OpenHome
+                        'Open map in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
+                    Case AllSettings.WSGIntegrationOptions.OpenMap
+                        'Open map in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
+                    Case AllSettings.WSGIntegrationOptions.OpenEvents
+                        'Open events in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
+                End Select
+            End If
         End If
 
     End Sub
