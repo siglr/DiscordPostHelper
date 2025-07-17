@@ -98,7 +98,7 @@
             this.zoomLevel.Maximum = 500;
             this.zoomLevel.Minimum = 10;
             this.zoomLevel.Name = "zoomLevel";
-            this.zoomLevel.Size = new System.Drawing.Size(675, 50);
+            this.zoomLevel.Size = new System.Drawing.Size(689, 50);
             this.zoomLevel.SmallChange = 5;
             this.zoomLevel.TabIndex = 2;
             this.zoomLevel.TickStyle = System.Windows.Forms.TickStyle.None;

@@ -203,6 +203,9 @@
     <Compile Include="IGCFileUpload.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ZoomForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CleaningTool.resx">

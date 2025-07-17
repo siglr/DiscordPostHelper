@@ -2,7 +2,7 @@
 
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DPHXUnpackAndLoad
-    Inherits System.Windows.Forms.Form
+    Inherits ZoomForm
 
     'Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()>
@@ -167,7 +167,6 @@ Partial Class DPHXUnpackAndLoad
         '
         'toolStripWSGUploadIGC
         '
-        Me.toolStripWSGUploadIGC.Enabled = True
         Me.toolStripWSGUploadIGC.Image = CType(resources.GetObject("toolStripWSGUploadIGC.Image"), System.Drawing.Image)
         Me.toolStripWSGUploadIGC.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGUploadIGC.Name = "toolStripWSGUploadIGC"
@@ -324,7 +323,6 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2024AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2024AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lbl2024AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2024AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2024AllFilesStatus.Name = "lbl2024AllFilesStatus"
         Me.lbl2024AllFilesStatus.Size = New System.Drawing.Size(700, 25)
@@ -390,7 +388,6 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2020AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2020AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lbl2020AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2020AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2020AllFilesStatus.Name = "lbl2020AllFilesStatus"
         Me.lbl2020AllFilesStatus.Size = New System.Drawing.Size(700, 25)
