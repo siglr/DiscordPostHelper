@@ -261,6 +261,9 @@ Public Class AllSettings
     <XmlElement("WSGIgnoreWhenOpeningDPHX")>
     Public Property WSGIgnoreWhenOpeningDPHX As Boolean
 
+    <XmlElement("WSGListenerAutoStart")>
+    Public Property WSGListenerAutoStart As Boolean
+
     Public ReadOnly Property Is2020Installed As Boolean
         Get
             Return MSFS2020Microsoft OrElse MSFS2020Steam
