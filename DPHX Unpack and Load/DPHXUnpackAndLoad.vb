@@ -94,6 +94,8 @@ Public Class DPHXUnpackAndLoad
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
         SetFormCaption(_currentFile)
 
+        Rescale()
+
         RestoreMainFormLocationAndSize()
 
         Me.Show()

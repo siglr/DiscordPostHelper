@@ -10,6 +10,8 @@ Public Class Settings
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        Rescale()
+
         okCancelPanel.Top = Me.Height - 103
 
         If SessionSettings.MSFS2020Microsoft OrElse SessionSettings.MSFS2020Steam Then

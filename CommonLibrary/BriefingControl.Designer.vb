@@ -27,7 +27,6 @@ Partial Class BriefingControl
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgSetup = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.flowSetup = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnlSetupTaskTitle = New System.Windows.Forms.Panel()
         Me.lblTaskTitle = New System.Windows.Forms.Label()
@@ -55,6 +54,9 @@ Partial Class BriefingControl
         Me.pnlSetupServer = New System.Windows.Forms.Panel()
         Me.lblEventMSFSServer = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
+        Me.pnlSetupTrackerGroup = New System.Windows.Forms.Panel()
+        Me.lblEventTrackerGroup = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
         Me.tbpgMainTaskInfo = New System.Windows.Forms.TabPage()
         Me.btnGotoDiscordTaskThread = New System.Windows.Forms.Button()
         Me.countryFlagsLayoutPanel = New System.Windows.Forms.FlowLayoutPanel()
@@ -77,13 +79,9 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
         Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
@@ -94,7 +92,6 @@ Partial Class BriefingControl
         Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgWeather = New System.Windows.Forms.TabPage()
-        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.chkShowGraph = New System.Windows.Forms.CheckBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -145,9 +142,12 @@ Partial Class BriefingControl
         Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.pnlSetupTrackerGroup = New System.Windows.Forms.Panel()
-        Me.lblEventTrackerGroup = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
+        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgSetup.SuspendLayout()
@@ -162,6 +162,7 @@ Partial Class BriefingControl
         Me.pnlSetupFlightplan.SuspendLayout()
         Me.pnlSetupEventTitle.SuspendLayout()
         Me.pnlSetupServer.SuspendLayout()
+        Me.pnlSetupTrackerGroup.SuspendLayout()
         Me.tbpgMainTaskInfo.SuspendLayout()
         Me.tbpgMap.SuspendLayout()
         CType(Me.mapSplitterUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -217,7 +218,6 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.grbAltitudes.SuspendLayout()
         Me.FlowLayoutPanel3.SuspendLayout()
-        Me.pnlSetupTrackerGroup.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -233,6 +233,9 @@ Partial Class BriefingControl
         '
         'tabsBriefing
         '
+        Me.tabsBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabsBriefing.Controls.Add(Me.tbpgSetup)
         Me.tabsBriefing.Controls.Add(Me.tbpgMainTaskInfo)
         Me.tabsBriefing.Controls.Add(Me.tbpgMap)
@@ -242,8 +245,7 @@ Partial Class BriefingControl
         Me.tabsBriefing.Controls.Add(Me.tbpgWeather)
         Me.tabsBriefing.Controls.Add(Me.tbpgAddOns)
         Me.tabsBriefing.Controls.Add(Me.tabUnits)
-        Me.tabsBriefing.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tabsBriefing.ItemSize = New System.Drawing.Size(90, 25)
+        Me.tabsBriefing.ItemSize = New System.Drawing.Size(100, 28)
         Me.tabsBriefing.Location = New System.Drawing.Point(7, 8)
         Me.tabsBriefing.Name = "tabsBriefing"
         Me.tabsBriefing.SelectedIndex = 0
@@ -253,41 +255,33 @@ Partial Class BriefingControl
         '
         'tbpgSetup
         '
+        Me.tbpgSetup.Controls.Add(Me.Label8)
         Me.tbpgSetup.Controls.Add(Me.Panel2)
-        Me.tbpgSetup.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgSetup.Location = New System.Drawing.Point(4, 32)
         Me.tbpgSetup.Name = "tbpgSetup"
         Me.tbpgSetup.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpgSetup.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgSetup.Size = New System.Drawing.Size(838, 685)
         Me.tbpgSetup.TabIndex = 8
         Me.tbpgSetup.Text = "Setup"
         Me.tbpgSetup.UseVisualStyleBackColor = True
         '
         'Panel2
         '
+        Me.Panel2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel2.Controls.Add(Me.Label8)
         Me.Panel2.Controls.Add(Me.flowSetup)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel2.Location = New System.Drawing.Point(3, 3)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(832, 682)
+        Me.Panel2.Size = New System.Drawing.Size(832, 639)
         Me.Panel2.TabIndex = 1
-        '
-        'Label8
-        '
-        Me.Label8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(3, 643)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(824, 37)
-        Me.Label8.TabIndex = 12
-        Me.Label8.Text = "Don't forget to review information on the other tabs!"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'flowSetup
         '
+        Me.flowSetup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.flowSetup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.flowSetup.Controls.Add(Me.pnlSetupTaskTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupDeparture)
@@ -300,7 +294,6 @@ Partial Class BriefingControl
         Me.flowSetup.Controls.Add(Me.pnlSetupEventTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupServer)
         Me.flowSetup.Controls.Add(Me.pnlSetupTrackerGroup)
-        Me.flowSetup.Dock = System.Windows.Forms.DockStyle.Top
         Me.flowSetup.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flowSetup.Location = New System.Drawing.Point(0, 0)
         Me.flowSetup.Margin = New System.Windows.Forms.Padding(0)
@@ -320,8 +313,9 @@ Partial Class BriefingControl
         '
         'lblTaskTitle
         '
+        Me.lblTaskTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTaskTitle.AutoEllipsis = True
-        Me.lblTaskTitle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblTaskTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTaskTitle.Location = New System.Drawing.Point(0, 0)
         Me.lblTaskTitle.Name = "lblTaskTitle"
@@ -330,6 +324,8 @@ Partial Class BriefingControl
         '
         'pnlSetupDeparture
         '
+        Me.pnlSetupDeparture.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupDeparture.Controls.Add(Me.lblDeparture)
         Me.pnlSetupDeparture.Controls.Add(Me.Label7)
         Me.pnlSetupDeparture.Location = New System.Drawing.Point(0, 41)
@@ -360,6 +356,8 @@ Partial Class BriefingControl
         '
         'pnlSetupLocalTime
         '
+        Me.pnlSetupLocalTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupLocalTime.Controls.Add(Me.lblSimLocalDateTime)
         Me.pnlSetupLocalTime.Controls.Add(Me.Label11)
         Me.pnlSetupLocalTime.Location = New System.Drawing.Point(0, 82)
@@ -390,6 +388,8 @@ Partial Class BriefingControl
         '
         'pnlSetupWeather
         '
+        Me.pnlSetupWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupWeather.Controls.Add(Me.lblWeatherProfile)
         Me.pnlSetupWeather.Controls.Add(Me.Label9)
         Me.pnlSetupWeather.Location = New System.Drawing.Point(0, 123)
@@ -420,6 +420,8 @@ Partial Class BriefingControl
         '
         'pnlSetupBaroWarning
         '
+        Me.pnlSetupBaroWarning.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupBaroWarning.Controls.Add(Me.lblBaroNote)
         Me.pnlSetupBaroWarning.Controls.Add(Me.Label13)
         Me.pnlSetupBaroWarning.Location = New System.Drawing.Point(0, 164)
@@ -450,6 +452,8 @@ Partial Class BriefingControl
         '
         'pnlSetupGliders
         '
+        Me.pnlSetupGliders.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupGliders.Controls.Add(Me.lblRecGliders)
         Me.pnlSetupGliders.Controls.Add(Me.Label10)
         Me.pnlSetupGliders.Location = New System.Drawing.Point(0, 205)
@@ -480,6 +484,8 @@ Partial Class BriefingControl
         '
         'pnlSetupFlightplan
         '
+        Me.pnlSetupFlightplan.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupFlightplan.Controls.Add(Me.lblTaskName)
         Me.pnlSetupFlightplan.Controls.Add(Me.Label12)
         Me.pnlSetupFlightplan.Location = New System.Drawing.Point(0, 246)
@@ -510,6 +516,8 @@ Partial Class BriefingControl
         '
         'pnlSetupSeparator
         '
+        Me.pnlSetupSeparator.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 287)
         Me.pnlSetupSeparator.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupSeparator.Name = "pnlSetupSeparator"
@@ -518,6 +526,8 @@ Partial Class BriefingControl
         '
         'pnlSetupEventTitle
         '
+        Me.pnlSetupEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupEventTitle.Controls.Add(Me.lblGroupEventTitle)
         Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 328)
         Me.pnlSetupEventTitle.Margin = New System.Windows.Forms.Padding(0)
@@ -538,6 +548,8 @@ Partial Class BriefingControl
         '
         'pnlSetupServer
         '
+        Me.pnlSetupServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupServer.Controls.Add(Me.lblEventMSFSServer)
         Me.pnlSetupServer.Controls.Add(Me.Label14)
         Me.pnlSetupServer.Location = New System.Drawing.Point(0, 369)
@@ -566,16 +578,48 @@ Partial Class BriefingControl
         Me.Label14.TabIndex = 0
         Me.Label14.Text = "Server"
         '
+        'pnlSetupTrackerGroup
+        '
+        Me.pnlSetupTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlSetupTrackerGroup.Controls.Add(Me.lblEventTrackerGroup)
+        Me.pnlSetupTrackerGroup.Controls.Add(Me.Label16)
+        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 410)
+        Me.pnlSetupTrackerGroup.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupTrackerGroup.Name = "pnlSetupTrackerGroup"
+        Me.pnlSetupTrackerGroup.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupTrackerGroup.TabIndex = 10
+        '
+        'lblEventTrackerGroup
+        '
+        Me.lblEventTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblEventTrackerGroup.AutoEllipsis = True
+        Me.lblEventTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblEventTrackerGroup.Location = New System.Drawing.Point(175, 0)
+        Me.lblEventTrackerGroup.Name = "lblEventTrackerGroup"
+        Me.lblEventTrackerGroup.Size = New System.Drawing.Size(656, 41)
+        Me.lblEventTrackerGroup.TabIndex = 1
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(0, 0)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(106, 37)
+        Me.Label16.TabIndex = 0
+        Me.Label16.Text = "Tracker"
+        '
         'tbpgMainTaskInfo
         '
         Me.tbpgMainTaskInfo.AutoScroll = True
         Me.tbpgMainTaskInfo.Controls.Add(Me.btnGotoDiscordTaskThread)
         Me.tbpgMainTaskInfo.Controls.Add(Me.countryFlagsLayoutPanel)
         Me.tbpgMainTaskInfo.Controls.Add(Me.txtBriefing)
-        Me.tbpgMainTaskInfo.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgMainTaskInfo.Location = New System.Drawing.Point(4, 32)
         Me.tbpgMainTaskInfo.Name = "tbpgMainTaskInfo"
         Me.tbpgMainTaskInfo.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpgMainTaskInfo.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgMainTaskInfo.Size = New System.Drawing.Size(838, 685)
         Me.tbpgMainTaskInfo.TabIndex = 0
         Me.tbpgMainTaskInfo.Text = "Task"
         Me.tbpgMainTaskInfo.UseVisualStyleBackColor = True
@@ -584,7 +628,7 @@ Partial Class BriefingControl
         '
         Me.btnGotoDiscordTaskThread.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.btnGotoDiscordTaskThread.Enabled = False
-        Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 651)
+        Me.btnGotoDiscordTaskThread.Location = New System.Drawing.Point(3, 648)
         Me.btnGotoDiscordTaskThread.Name = "btnGotoDiscordTaskThread"
         Me.btnGotoDiscordTaskThread.Size = New System.Drawing.Size(832, 34)
         Me.btnGotoDiscordTaskThread.TabIndex = 7
@@ -608,7 +652,7 @@ Partial Class BriefingControl
         Me.txtBriefing.Location = New System.Drawing.Point(3, 54)
         Me.txtBriefing.Name = "txtBriefing"
         Me.txtBriefing.ReadOnly = True
-        Me.txtBriefing.Size = New System.Drawing.Size(950, 591)
+        Me.txtBriefing.Size = New System.Drawing.Size(832, 591)
         Me.txtBriefing.TabIndex = 4
         Me.txtBriefing.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtBriefing, "Use CTRL-MouseWheel to make the content smaller or larger.")
@@ -617,10 +661,10 @@ Partial Class BriefingControl
         '
         Me.tbpgMap.AutoScroll = True
         Me.tbpgMap.Controls.Add(Me.mapSplitterUpDown)
-        Me.tbpgMap.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgMap.Location = New System.Drawing.Point(4, 32)
         Me.tbpgMap.Name = "tbpgMap"
         Me.tbpgMap.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpgMap.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgMap.Size = New System.Drawing.Size(838, 685)
         Me.tbpgMap.TabIndex = 1
         Me.tbpgMap.Text = "Map"
         Me.tbpgMap.UseVisualStyleBackColor = True
@@ -640,8 +684,8 @@ Partial Class BriefingControl
         'mapSplitterUpDown.Panel2
         '
         Me.mapSplitterUpDown.Panel2.Controls.Add(Me.mapSplitterLeftRight)
-        Me.mapSplitterUpDown.Size = New System.Drawing.Size(832, 682)
-        Me.mapSplitterUpDown.SplitterDistance = 312
+        Me.mapSplitterUpDown.Size = New System.Drawing.Size(832, 679)
+        Me.mapSplitterUpDown.SplitterDistance = 310
         Me.mapSplitterUpDown.TabIndex = 0
         '
         'mapAndWindLayersSplitter
@@ -661,7 +705,7 @@ Partial Class BriefingControl
         '
         Me.mapAndWindLayersSplitter.Panel2.Controls.Add(Me.windLayersFlowLayoutPnl)
         Me.mapAndWindLayersSplitter.Panel2MinSize = 100
-        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(832, 312)
+        Me.mapAndWindLayersSplitter.Size = New System.Drawing.Size(832, 310)
         Me.mapAndWindLayersSplitter.SplitterDistance = 525
         Me.mapAndWindLayersSplitter.TabIndex = 0
         '
@@ -672,7 +716,7 @@ Partial Class BriefingControl
         Me.imageViewer.Location = New System.Drawing.Point(0, 0)
         Me.imageViewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imageViewer.Name = "imageViewer"
-        Me.imageViewer.Size = New System.Drawing.Size(525, 312)
+        Me.imageViewer.Size = New System.Drawing.Size(525, 310)
         Me.imageViewer.TabIndex = 1
         '
         'windLayersFlowLayoutPnl
@@ -683,7 +727,7 @@ Partial Class BriefingControl
         Me.windLayersFlowLayoutPnl.AutoScroll = True
         Me.windLayersFlowLayoutPnl.Location = New System.Drawing.Point(0, 0)
         Me.windLayersFlowLayoutPnl.Name = "windLayersFlowLayoutPnl"
-        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(303, 312)
+        Me.windLayersFlowLayoutPnl.Size = New System.Drawing.Size(303, 310)
         Me.windLayersFlowLayoutPnl.TabIndex = 0
         '
         'mapSplitterLeftRight
@@ -699,7 +743,7 @@ Partial Class BriefingControl
         'mapSplitterLeftRight.Panel2
         '
         Me.mapSplitterLeftRight.Panel2.Controls.Add(Me.restrictionsDataGrid)
-        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(832, 366)
+        Me.mapSplitterLeftRight.Size = New System.Drawing.Size(832, 365)
         Me.mapSplitterLeftRight.SplitterDistance = 552
         Me.mapSplitterLeftRight.TabIndex = 0
         '
@@ -710,7 +754,7 @@ Partial Class BriefingControl
         Me.txtFullDescription.Location = New System.Drawing.Point(0, 0)
         Me.txtFullDescription.Name = "txtFullDescription"
         Me.txtFullDescription.ReadOnly = True
-        Me.txtFullDescription.Size = New System.Drawing.Size(552, 366)
+        Me.txtFullDescription.Size = New System.Drawing.Size(552, 365)
         Me.txtFullDescription.TabIndex = 0
         Me.txtFullDescription.Text = ""
         '
@@ -729,16 +773,16 @@ Partial Class BriefingControl
         Me.restrictionsDataGrid.RowHeadersVisible = False
         Me.restrictionsDataGrid.RowHeadersWidth = 47
         Me.restrictionsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.restrictionsDataGrid.Size = New System.Drawing.Size(276, 366)
+        Me.restrictionsDataGrid.Size = New System.Drawing.Size(276, 365)
         Me.restrictionsDataGrid.TabIndex = 1
         '
         'tbpgEventInfo
         '
         Me.tbpgEventInfo.AutoScroll = True
         Me.tbpgEventInfo.Controls.Add(Me.eventInfoSplitContainer)
-        Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgEventInfo.Location = New System.Drawing.Point(4, 32)
         Me.tbpgEventInfo.Name = "tbpgEventInfo"
-        Me.tbpgEventInfo.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgEventInfo.Size = New System.Drawing.Size(838, 685)
         Me.tbpgEventInfo.TabIndex = 3
         Me.tbpgEventInfo.Text = "Event"
         Me.tbpgEventInfo.UseVisualStyleBackColor = True
@@ -772,7 +816,7 @@ Partial Class BriefingControl
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToSyncFly)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.Label1)
         Me.eventInfoSplitContainer.Panel2.Controls.Add(Me.countDownToMeet)
-        Me.eventInfoSplitContainer.Size = New System.Drawing.Size(838, 688)
+        Me.eventInfoSplitContainer.Size = New System.Drawing.Size(838, 685)
         Me.eventInfoSplitContainer.SplitterDistance = 643
         Me.eventInfoSplitContainer.TabIndex = 0
         '
@@ -783,7 +827,7 @@ Partial Class BriefingControl
         Me.txtEventInfo.Location = New System.Drawing.Point(0, 0)
         Me.txtEventInfo.Name = "txtEventInfo"
         Me.txtEventInfo.ReadOnly = True
-        Me.txtEventInfo.Size = New System.Drawing.Size(643, 688)
+        Me.txtEventInfo.Size = New System.Drawing.Size(643, 685)
         Me.txtEventInfo.TabIndex = 6
         Me.txtEventInfo.Text = ""
         Me.ToolTip1.SetToolTip(Me.txtEventInfo, "Use CTRL-MouseWheel to make the content smaller or larger.")
@@ -864,17 +908,6 @@ Partial Class BriefingControl
         Me.Label5.Text = "Start task in"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'countDownTaskStart
-        '
-        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
-        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownTaskStart.Name = "countDownTaskStart"
-        Me.countDownTaskStart.PlayAudioCues = False
-        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
-        Me.countDownTaskStart.TabIndex = 6
-        Me.countDownTaskStart.ZoomFactor = 2.0!
-        '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(4, 189)
@@ -883,17 +916,6 @@ Partial Class BriefingControl
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Launch in"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'countDownToLaunch
-        '
-        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
-        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToLaunch.Name = "countDownToLaunch"
-        Me.countDownToLaunch.PlayAudioCues = False
-        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToLaunch.TabIndex = 4
-        Me.countDownToLaunch.ZoomFactor = 2.0!
         '
         'Label3
         '
@@ -904,17 +926,6 @@ Partial Class BriefingControl
         Me.Label3.Text = "Sync Fly in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'countDownToSyncFly
-        '
-        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
-        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToSyncFly.Name = "countDownToSyncFly"
-        Me.countDownToSyncFly.PlayAudioCues = False
-        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToSyncFly.TabIndex = 2
-        Me.countDownToSyncFly.ZoomFactor = 2.0!
-        '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 4)
@@ -924,24 +935,13 @@ Partial Class BriefingControl
         Me.Label1.Text = "Meet in"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'countDownToMeet
-        '
-        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
-        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToMeet.Name = "countDownToMeet"
-        Me.countDownToMeet.PlayAudioCues = False
-        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToMeet.TabIndex = 0
-        Me.countDownToMeet.ZoomFactor = 2.0!
-        '
         'tbpgImages
         '
         Me.tbpgImages.AutoScroll = True
         Me.tbpgImages.Controls.Add(Me.imagesTabDivider)
-        Me.tbpgImages.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgImages.Location = New System.Drawing.Point(4, 32)
         Me.tbpgImages.Name = "tbpgImages"
-        Me.tbpgImages.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgImages.Size = New System.Drawing.Size(838, 685)
         Me.tbpgImages.TabIndex = 2
         Me.tbpgImages.Text = "Images"
         Me.tbpgImages.UseVisualStyleBackColor = True
@@ -962,7 +962,7 @@ Partial Class BriefingControl
         '
         Me.imagesTabDivider.Panel2.Controls.Add(Me.imagesListView)
         Me.imagesTabDivider.Panel2MinSize = 100
-        Me.imagesTabDivider.Size = New System.Drawing.Size(838, 688)
+        Me.imagesTabDivider.Size = New System.Drawing.Size(838, 685)
         Me.imagesTabDivider.SplitterDistance = 670
         Me.imagesTabDivider.TabIndex = 0
         '
@@ -973,7 +973,7 @@ Partial Class BriefingControl
         Me.imagesTabViewerControl.Location = New System.Drawing.Point(0, 0)
         Me.imagesTabViewerControl.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.imagesTabViewerControl.Name = "imagesTabViewerControl"
-        Me.imagesTabViewerControl.Size = New System.Drawing.Size(670, 688)
+        Me.imagesTabViewerControl.Size = New System.Drawing.Size(670, 685)
         Me.imagesTabViewerControl.TabIndex = 0
         '
         'imagesListView
@@ -984,7 +984,7 @@ Partial Class BriefingControl
         Me.imagesListView.Location = New System.Drawing.Point(0, 0)
         Me.imagesListView.MultiSelect = False
         Me.imagesListView.Name = "imagesListView"
-        Me.imagesListView.Size = New System.Drawing.Size(164, 688)
+        Me.imagesListView.Size = New System.Drawing.Size(164, 685)
         Me.imagesListView.TabIndex = 0
         Me.imagesListView.UseCompatibleStateImageBehavior = False
         '
@@ -994,9 +994,9 @@ Partial Class BriefingControl
         Me.tbpgXBOX.Controls.Add(Me.Label2)
         Me.tbpgXBOX.Controls.Add(Me.cboWayPointDistances)
         Me.tbpgXBOX.Controls.Add(Me.waypointCoordinatesDataGrid)
-        Me.tbpgXBOX.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgXBOX.Location = New System.Drawing.Point(4, 32)
         Me.tbpgXBOX.Name = "tbpgXBOX"
-        Me.tbpgXBOX.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgXBOX.Size = New System.Drawing.Size(838, 685)
         Me.tbpgXBOX.TabIndex = 4
         Me.tbpgXBOX.Text = "Waypoints"
         Me.tbpgXBOX.UseVisualStyleBackColor = True
@@ -1047,7 +1047,7 @@ Partial Class BriefingControl
         Me.waypointCoordinatesDataGrid.Location = New System.Drawing.Point(0, 41)
         Me.waypointCoordinatesDataGrid.Name = "waypointCoordinatesDataGrid"
         Me.waypointCoordinatesDataGrid.RowHeadersWidth = 47
-        Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(982, 669)
+        Me.waypointCoordinatesDataGrid.Size = New System.Drawing.Size(835, 641)
         Me.waypointCoordinatesDataGrid.TabIndex = 0
         '
         'tbpgWeather
@@ -1055,25 +1055,13 @@ Partial Class BriefingControl
         Me.tbpgWeather.Controls.Add(Me.FullWeatherGraphPanel1)
         Me.tbpgWeather.Controls.Add(Me.Panel1)
         Me.tbpgWeather.Controls.Add(Me.SplitContainer1)
-        Me.tbpgWeather.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgWeather.Location = New System.Drawing.Point(4, 32)
         Me.tbpgWeather.Margin = New System.Windows.Forms.Padding(0)
         Me.tbpgWeather.Name = "tbpgWeather"
-        Me.tbpgWeather.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgWeather.Size = New System.Drawing.Size(838, 685)
         Me.tbpgWeather.TabIndex = 7
         Me.tbpgWeather.Text = "Weather"
         Me.tbpgWeather.UseVisualStyleBackColor = True
-        '
-        'FullWeatherGraphPanel1
-        '
-        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
-        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
-        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(963, 656)
-        Me.FullWeatherGraphPanel1.TabIndex = 6
         '
         'Panel1
         '
@@ -1112,7 +1100,7 @@ Partial Class BriefingControl
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.windLayersDatagrid)
-        Me.SplitContainer1.Size = New System.Drawing.Size(963, 655)
+        Me.SplitContainer1.Size = New System.Drawing.Size(838, 655)
         Me.SplitContainer1.SplitterDistance = 294
         Me.SplitContainer1.TabIndex = 0
         '
@@ -1129,7 +1117,7 @@ Partial Class BriefingControl
         Me.cloudLayersDatagrid.ReadOnly = True
         Me.cloudLayersDatagrid.RowHeadersWidth = 47
         Me.cloudLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(963, 294)
+        Me.cloudLayersDatagrid.Size = New System.Drawing.Size(838, 294)
         Me.cloudLayersDatagrid.TabIndex = 1
         '
         'windLayersDatagrid
@@ -1145,15 +1133,15 @@ Partial Class BriefingControl
         Me.windLayersDatagrid.ReadOnly = True
         Me.windLayersDatagrid.RowHeadersWidth = 47
         Me.windLayersDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.windLayersDatagrid.Size = New System.Drawing.Size(963, 357)
+        Me.windLayersDatagrid.Size = New System.Drawing.Size(838, 357)
         Me.windLayersDatagrid.TabIndex = 2
         '
         'tbpgAddOns
         '
         Me.tbpgAddOns.Controls.Add(Me.AddOnsDataGrid)
-        Me.tbpgAddOns.Location = New System.Drawing.Point(4, 29)
+        Me.tbpgAddOns.Location = New System.Drawing.Point(4, 32)
         Me.tbpgAddOns.Name = "tbpgAddOns"
-        Me.tbpgAddOns.Size = New System.Drawing.Size(838, 688)
+        Me.tbpgAddOns.Size = New System.Drawing.Size(838, 685)
         Me.tbpgAddOns.TabIndex = 5
         Me.tbpgAddOns.Text = "Add-ons"
         Me.tbpgAddOns.UseVisualStyleBackColor = True
@@ -1172,35 +1160,33 @@ Partial Class BriefingControl
         Me.AddOnsDataGrid.RowHeadersVisible = False
         Me.AddOnsDataGrid.RowHeadersWidth = 47
         Me.AddOnsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.AddOnsDataGrid.Size = New System.Drawing.Size(838, 688)
+        Me.AddOnsDataGrid.Size = New System.Drawing.Size(838, 685)
         Me.AddOnsDataGrid.TabIndex = 2
         '
         'tabUnits
         '
+        Me.tabUnits.Controls.Add(Me.grbAltitudes)
+        Me.tabUnits.Controls.Add(Me.grbDistances)
         Me.tabUnits.Controls.Add(Me.grbSpeed)
         Me.tabUnits.Controls.Add(Me.grbGateDiameterOrRadius)
         Me.tabUnits.Controls.Add(Me.lblPrefUnitsMessage)
         Me.tabUnits.Controls.Add(Me.grbTemperature)
         Me.tabUnits.Controls.Add(Me.grbWindSpeed)
         Me.tabUnits.Controls.Add(Me.grbGateDiameter)
-        Me.tabUnits.Controls.Add(Me.grbDistances)
         Me.tabUnits.Controls.Add(Me.grbBarometric)
-        Me.tabUnits.Controls.Add(Me.grbAltitudes)
-        Me.tabUnits.Location = New System.Drawing.Point(4, 29)
+        Me.tabUnits.Location = New System.Drawing.Point(4, 32)
         Me.tabUnits.Name = "tabUnits"
-        Me.tabUnits.Size = New System.Drawing.Size(838, 688)
+        Me.tabUnits.Size = New System.Drawing.Size(838, 685)
         Me.tabUnits.TabIndex = 6
         Me.tabUnits.Text = "Units"
         Me.tabUnits.UseVisualStyleBackColor = True
         '
         'grbSpeed
         '
-        Me.grbSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbSpeed.Controls.Add(Me.FlowLayoutPanel8)
-        Me.grbSpeed.Location = New System.Drawing.Point(3, 126)
+        Me.grbSpeed.Location = New System.Drawing.Point(3, 66)
         Me.grbSpeed.Name = "grbSpeed"
-        Me.grbSpeed.Size = New System.Drawing.Size(947, 57)
+        Me.grbSpeed.Size = New System.Drawing.Size(412, 57)
         Me.grbSpeed.TabIndex = 2
         Me.grbSpeed.TabStop = False
         Me.grbSpeed.Text = "Speed"
@@ -1213,7 +1199,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel8.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel8.Name = "FlowLayoutPanel8"
-        Me.FlowLayoutPanel8.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel8.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel8.TabIndex = 0
         '
         'radioSpeedMetric
@@ -1251,12 +1237,10 @@ Partial Class BriefingControl
         '
         'grbGateDiameterOrRadius
         '
-        Me.grbGateDiameterOrRadius.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbGateDiameterOrRadius.Controls.Add(Me.FlowLayoutPanel7)
-        Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 189)
+        Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 129)
         Me.grbGateDiameterOrRadius.Name = "grbGateDiameterOrRadius"
-        Me.grbGateDiameterOrRadius.Size = New System.Drawing.Size(947, 57)
+        Me.grbGateDiameterOrRadius.Size = New System.Drawing.Size(412, 57)
         Me.grbGateDiameterOrRadius.TabIndex = 3
         Me.grbGateDiameterOrRadius.TabStop = False
         Me.grbGateDiameterOrRadius.Text = "Gate Size Format"
@@ -1268,7 +1252,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel7.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel7.Name = "FlowLayoutPanel7"
-        Me.FlowLayoutPanel7.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel7.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel7.TabIndex = 0
         '
         'radioGateMeasurementDiameter
@@ -1296,9 +1280,9 @@ Partial Class BriefingControl
         'lblPrefUnitsMessage
         '
         Me.lblPrefUnitsMessage.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 584)
+        Me.lblPrefUnitsMessage.Location = New System.Drawing.Point(0, 635)
         Me.lblPrefUnitsMessage.Name = "lblPrefUnitsMessage"
-        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(838, 104)
+        Me.lblPrefUnitsMessage.Size = New System.Drawing.Size(838, 50)
         Me.lblPrefUnitsMessage.TabIndex = 8
         Me.lblPrefUnitsMessage.Text = "Units selected here are only used for YOUR briefing tabs." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Any data specified in " &
     "description fields is excluded and will appear as it is."
@@ -1306,12 +1290,10 @@ Partial Class BriefingControl
         '
         'grbTemperature
         '
-        Me.grbTemperature.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbTemperature.Controls.Add(Me.FlowLayoutPanel6)
-        Me.grbTemperature.Location = New System.Drawing.Point(3, 441)
+        Me.grbTemperature.Location = New System.Drawing.Point(421, 192)
         Me.grbTemperature.Name = "grbTemperature"
-        Me.grbTemperature.Size = New System.Drawing.Size(947, 57)
+        Me.grbTemperature.Size = New System.Drawing.Size(412, 57)
         Me.grbTemperature.TabIndex = 7
         Me.grbTemperature.TabStop = False
         Me.grbTemperature.Text = "Temperature"
@@ -1324,7 +1306,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel6.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel6.Name = "FlowLayoutPanel6"
-        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel6.TabIndex = 0
         '
         'radioTemperatureCelsius
@@ -1362,12 +1344,10 @@ Partial Class BriefingControl
         '
         'grbWindSpeed
         '
-        Me.grbWindSpeed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbWindSpeed.Controls.Add(Me.FlowLayoutPanel5)
-        Me.grbWindSpeed.Location = New System.Drawing.Point(3, 315)
+        Me.grbWindSpeed.Location = New System.Drawing.Point(421, 66)
         Me.grbWindSpeed.Name = "grbWindSpeed"
-        Me.grbWindSpeed.Size = New System.Drawing.Size(947, 57)
+        Me.grbWindSpeed.Size = New System.Drawing.Size(412, 57)
         Me.grbWindSpeed.TabIndex = 5
         Me.grbWindSpeed.TabStop = False
         Me.grbWindSpeed.Text = "Wind Speed"
@@ -1380,7 +1360,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel5.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
-        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel5.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel5.TabIndex = 0
         '
         'radioWindSpeedMps
@@ -1418,12 +1398,10 @@ Partial Class BriefingControl
         '
         'grbGateDiameter
         '
-        Me.grbGateDiameter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbGateDiameter.Controls.Add(Me.FlowLayoutPanel4)
-        Me.grbGateDiameter.Location = New System.Drawing.Point(3, 252)
+        Me.grbGateDiameter.Location = New System.Drawing.Point(421, 129)
         Me.grbGateDiameter.Name = "grbGateDiameter"
-        Me.grbGateDiameter.Size = New System.Drawing.Size(947, 57)
+        Me.grbGateDiameter.Size = New System.Drawing.Size(412, 57)
         Me.grbGateDiameter.TabIndex = 4
         Me.grbGateDiameter.TabStop = False
         Me.grbGateDiameter.Text = "Gate Measurement"
@@ -1436,7 +1414,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
-        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel4.TabIndex = 0
         '
         'radioGateDiameterMetric
@@ -1474,25 +1452,24 @@ Partial Class BriefingControl
         '
         'grbDistances
         '
-        Me.grbDistances.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbDistances.Controls.Add(Me.FlowLayoutPanel2)
-        Me.grbDistances.Location = New System.Drawing.Point(3, 66)
+        Me.grbDistances.Location = New System.Drawing.Point(421, 3)
         Me.grbDistances.Name = "grbDistances"
-        Me.grbDistances.Size = New System.Drawing.Size(947, 57)
+        Me.grbDistances.Size = New System.Drawing.Size(412, 57)
         Me.grbDistances.TabIndex = 1
         Me.grbDistances.TabStop = False
         Me.grbDistances.Text = "Distance"
         '
         'FlowLayoutPanel2
         '
+        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceMetric)
         Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceImperial)
         Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceBoth)
-        Me.FlowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel2.TabIndex = 0
         '
         'radioDistanceMetric
@@ -1530,12 +1507,10 @@ Partial Class BriefingControl
         '
         'grbBarometric
         '
-        Me.grbBarometric.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbBarometric.Controls.Add(Me.FlowLayoutPanel1)
-        Me.grbBarometric.Location = New System.Drawing.Point(3, 378)
+        Me.grbBarometric.Location = New System.Drawing.Point(3, 192)
         Me.grbBarometric.Name = "grbBarometric"
-        Me.grbBarometric.Size = New System.Drawing.Size(947, 57)
+        Me.grbBarometric.Size = New System.Drawing.Size(412, 57)
         Me.grbBarometric.TabIndex = 6
         Me.grbBarometric.TabStop = False
         Me.grbBarometric.Text = "Barometric Pressure"
@@ -1548,7 +1523,7 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel1.TabIndex = 0
         '
         'radioBaroHPa
@@ -1586,25 +1561,24 @@ Partial Class BriefingControl
         '
         'grbAltitudes
         '
-        Me.grbAltitudes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grbAltitudes.Controls.Add(Me.FlowLayoutPanel3)
         Me.grbAltitudes.Location = New System.Drawing.Point(3, 3)
         Me.grbAltitudes.Name = "grbAltitudes"
-        Me.grbAltitudes.Size = New System.Drawing.Size(947, 57)
+        Me.grbAltitudes.Size = New System.Drawing.Size(412, 57)
         Me.grbAltitudes.TabIndex = 0
         Me.grbAltitudes.TabStop = False
         Me.grbAltitudes.Text = "Altitude"
         '
         'FlowLayoutPanel3
         '
+        Me.FlowLayoutPanel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeMeters)
         Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeFeet)
         Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeBoth)
-        Me.FlowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 23)
         Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
-        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(941, 31)
+        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(406, 31)
         Me.FlowLayoutPanel3.TabIndex = 0
         '
         'radioAltitudeMeters
@@ -1644,35 +1618,72 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
-        'pnlSetupTrackerGroup
+        'Label8
         '
-        Me.pnlSetupTrackerGroup.Controls.Add(Me.lblEventTrackerGroup)
-        Me.pnlSetupTrackerGroup.Controls.Add(Me.Label16)
-        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 410)
-        Me.pnlSetupTrackerGroup.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlSetupTrackerGroup.Name = "pnlSetupTrackerGroup"
-        Me.pnlSetupTrackerGroup.Size = New System.Drawing.Size(830, 41)
-        Me.pnlSetupTrackerGroup.TabIndex = 10
+        Me.Label8.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(3, 645)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(832, 37)
+        Me.Label8.TabIndex = 13
+        Me.Label8.Text = "Don't forget to review information on the other tabs!"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'lblEventTrackerGroup
+        'countDownTaskStart
         '
-        Me.lblEventTrackerGroup.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.PlayAudioCues = False
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.PlayAudioCues = False
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
+        '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.PlayAudioCues = False
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.PlayAudioCues = False
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
+        '
+        'FullWeatherGraphPanel1
+        '
+        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblEventTrackerGroup.AutoEllipsis = True
-        Me.lblEventTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTrackerGroup.Location = New System.Drawing.Point(175, 0)
-        Me.lblEventTrackerGroup.Name = "lblEventTrackerGroup"
-        Me.lblEventTrackerGroup.Size = New System.Drawing.Size(656, 41)
-        Me.lblEventTrackerGroup.TabIndex = 1
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(0, 0)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(106, 37)
-        Me.Label16.TabIndex = 0
-        Me.Label16.Text = "Tracker"
+        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
+        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
+        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(838, 656)
+        Me.FullWeatherGraphPanel1.TabIndex = 6
         '
         'BriefingControl
         '
@@ -1705,6 +1716,8 @@ Partial Class BriefingControl
         Me.pnlSetupEventTitle.ResumeLayout(False)
         Me.pnlSetupServer.ResumeLayout(False)
         Me.pnlSetupServer.PerformLayout()
+        Me.pnlSetupTrackerGroup.ResumeLayout(False)
+        Me.pnlSetupTrackerGroup.PerformLayout()
         Me.tbpgMainTaskInfo.ResumeLayout(False)
         Me.tbpgMap.ResumeLayout(False)
         Me.mapSplitterUpDown.Panel1.ResumeLayout(False)
@@ -1771,8 +1784,6 @@ Partial Class BriefingControl
         Me.grbAltitudes.ResumeLayout(False)
         Me.FlowLayoutPanel3.ResumeLayout(False)
         Me.FlowLayoutPanel3.PerformLayout()
-        Me.pnlSetupTrackerGroup.ResumeLayout(False)
-        Me.pnlSetupTrackerGroup.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1898,8 +1909,8 @@ Partial Class BriefingControl
     Friend WithEvents pnlSetupServer As Windows.Forms.Panel
     Friend WithEvents lblEventMSFSServer As Windows.Forms.Label
     Friend WithEvents Label14 As Windows.Forms.Label
-    Friend WithEvents Label8 As Windows.Forms.Label
     Friend WithEvents pnlSetupTrackerGroup As Windows.Forms.Panel
     Friend WithEvents lblEventTrackerGroup As Windows.Forms.Label
     Friend WithEvents Label16 As Windows.Forms.Label
+    Friend WithEvents Label8 As Windows.Forms.Label
 End Class

@@ -21,6 +21,9 @@ Public Class IGCFileUpload
     Private taskCache As New Dictionary(Of String, IGCCacheTaskObject)
 
     Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer)
+
+        Rescale()
+
         currentDPHXEntrySeqID = pEntrySeqID
         igcFiles = pIGCFiles
 

@@ -171,13 +171,13 @@ Partial Class Settings
         Me.okCancelPanel.Name = "okCancelPanel"
         Me.okCancelPanel.RowCount = 1
         Me.okCancelPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.okCancelPanel.Size = New System.Drawing.Size(195, 64)
+        Me.okCancelPanel.Size = New System.Drawing.Size(195, 59)
         Me.okCancelPanel.TabIndex = 7
         '
         'OK_Button
         '
         Me.OK_Button.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.OK_Button.Location = New System.Drawing.Point(4, 14)
+        Me.OK_Button.Location = New System.Drawing.Point(4, 12)
         Me.OK_Button.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New System.Drawing.Size(89, 35)
@@ -188,7 +188,7 @@ Partial Class Settings
         '
         Me.Cancel_Button.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Cancel_Button.Location = New System.Drawing.Point(101, 14)
+        Me.Cancel_Button.Location = New System.Drawing.Point(101, 12)
         Me.Cancel_Button.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New System.Drawing.Size(89, 35)
@@ -207,7 +207,7 @@ Partial Class Settings
         Me.pnlMSFS2020FlightPlanFilesFolder.Location = New System.Drawing.Point(0, 45)
         Me.pnlMSFS2020FlightPlanFilesFolder.Name = "pnlMSFS2020FlightPlanFilesFolder"
         Me.pnlMSFS2020FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlMSFS2020FlightPlanFilesFolder.TabIndex = 1
         '
         'separator1
@@ -222,7 +222,7 @@ Partial Class Settings
         '
         Me.chkExclude2020FlightPlanFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExclude2020FlightPlanFromCleanup.AutoSize = True
-        Me.chkExclude2020FlightPlanFromCleanup.Location = New System.Drawing.Point(670, 18)
+        Me.chkExclude2020FlightPlanFromCleanup.Location = New System.Drawing.Point(670, 13)
         Me.chkExclude2020FlightPlanFromCleanup.Name = "chkExclude2020FlightPlanFromCleanup"
         Me.chkExclude2020FlightPlanFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExclude2020FlightPlanFromCleanup.TabIndex = 3
@@ -231,10 +231,11 @@ Partial Class Settings
         '
         'btn2020FlightPlansFolderPaste
         '
-        Me.btn2020FlightPlansFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn2020FlightPlansFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn2020FlightPlansFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btn2020FlightPlansFolderPaste.Name = "btn2020FlightPlansFolderPaste"
-        Me.btn2020FlightPlansFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btn2020FlightPlansFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btn2020FlightPlansFolderPaste.TabIndex = 2
         Me.btn2020FlightPlansFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btn2020FlightPlansFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -249,7 +250,7 @@ Partial Class Settings
         Me.btnMSFS2020FlightPlanFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnMSFS2020FlightPlanFilesFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnMSFS2020FlightPlanFilesFolder.Name = "btnMSFS2020FlightPlanFilesFolder"
-        Me.btnMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(470, 37)
+        Me.btnMSFS2020FlightPlanFilesFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2020FlightPlanFilesFolder.TabIndex = 1
         Me.btnMSFS2020FlightPlanFilesFolder.Text = "Select the MSFS 2020 folder for the flight plan files (.pln)"
         Me.btnMSFS2020FlightPlanFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -274,7 +275,7 @@ Partial Class Settings
         Me.btnMSFS2020WeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnMSFS2020WeatherPresetsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnMSFS2020WeatherPresetsFolder.Name = "btnMSFS2020WeatherPresetsFolder"
-        Me.btnMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(470, 37)
+        Me.btnMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2020WeatherPresetsFolder.TabIndex = 1
         Me.btnMSFS2020WeatherPresetsFolder.Text = "Select the MSFS 2020 folder containing weather presets (.wpr)"
         Me.btnMSFS2020WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -290,7 +291,7 @@ Partial Class Settings
         Me.btnUnpackingFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUnpackingFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnUnpackingFolder.Name = "btnUnpackingFolder"
-        Me.btnUnpackingFolder.Size = New System.Drawing.Size(491, 37)
+        Me.btnUnpackingFolder.Size = New System.Drawing.Size(491, 32)
         Me.btnUnpackingFolder.TabIndex = 1
         Me.btnUnpackingFolder.Text = "Select the folder where to temporary unpack DPHX packages"
         Me.btnUnpackingFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -299,10 +300,11 @@ Partial Class Settings
         '
         'btn2020WeatherPresetsFolderPaste
         '
-        Me.btn2020WeatherPresetsFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn2020WeatherPresetsFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn2020WeatherPresetsFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btn2020WeatherPresetsFolderPaste.Name = "btn2020WeatherPresetsFolderPaste"
-        Me.btn2020WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btn2020WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btn2020WeatherPresetsFolderPaste.TabIndex = 2
         Me.btn2020WeatherPresetsFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btn2020WeatherPresetsFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -310,10 +312,11 @@ Partial Class Settings
         '
         'btnTempFolderPaste
         '
-        Me.btnTempFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTempFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTempFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnTempFolderPaste.Name = "btnTempFolderPaste"
-        Me.btnTempFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnTempFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnTempFolderPaste.TabIndex = 2
         Me.btnTempFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnTempFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -321,10 +324,11 @@ Partial Class Settings
         '
         'btnPackagesFolderPaste
         '
-        Me.btnPackagesFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPackagesFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPackagesFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnPackagesFolderPaste.Name = "btnPackagesFolderPaste"
-        Me.btnPackagesFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnPackagesFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnPackagesFolderPaste.TabIndex = 2
         Me.btnPackagesFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnPackagesFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -339,7 +343,7 @@ Partial Class Settings
         Me.btnPackagesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnPackagesFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnPackagesFolder.Name = "btnPackagesFolder"
-        Me.btnPackagesFolder.Size = New System.Drawing.Size(491, 37)
+        Me.btnPackagesFolder.Size = New System.Drawing.Size(491, 32)
         Me.btnPackagesFolder.TabIndex = 1
         Me.btnPackagesFolder.Text = "Select the folder where your DPHX packages are stored"
         Me.btnPackagesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -351,7 +355,7 @@ Partial Class Settings
         Me.chkEnableAutoUnpack.AutoSize = True
         Me.chkEnableAutoUnpack.Checked = True
         Me.chkEnableAutoUnpack.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(194, 7)
+        Me.chkEnableAutoUnpack.Location = New System.Drawing.Point(194, 4)
         Me.chkEnableAutoUnpack.Name = "chkEnableAutoUnpack"
         Me.chkEnableAutoUnpack.Size = New System.Drawing.Size(70, 24)
         Me.chkEnableAutoUnpack.TabIndex = 1
@@ -362,10 +366,11 @@ Partial Class Settings
         '
         'btnXCSoarTasksFolderPaste
         '
-        Me.btnXCSoarTasksFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarTasksFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarTasksFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnXCSoarTasksFolderPaste.Name = "btnXCSoarTasksFolderPaste"
-        Me.btnXCSoarTasksFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnXCSoarTasksFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnXCSoarTasksFolderPaste.TabIndex = 4
         Me.btnXCSoarTasksFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -380,7 +385,7 @@ Partial Class Settings
         Me.btnXCSoarTasksFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnXCSoarTasksFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnXCSoarTasksFolder.Name = "btnXCSoarTasksFolder"
-        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(426, 37)
+        Me.btnXCSoarTasksFolder.Size = New System.Drawing.Size(426, 32)
         Me.btnXCSoarTasksFolder.TabIndex = 1
         Me.btnXCSoarTasksFolder.Text = "Select the folder containing XCSoar tasks (.tsk) (optional)"
         Me.btnXCSoarTasksFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -389,10 +394,11 @@ Partial Class Settings
         '
         'btnXCSoarMapsFolderPaste
         '
-        Me.btnXCSoarMapsFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarMapsFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnXCSoarMapsFolderPaste.Name = "btnXCSoarMapsFolderPaste"
-        Me.btnXCSoarMapsFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnXCSoarMapsFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnXCSoarMapsFolderPaste.TabIndex = 4
         Me.btnXCSoarMapsFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -407,7 +413,7 @@ Partial Class Settings
         Me.btnXCSoarMapsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnXCSoarMapsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnXCSoarMapsFolder.Name = "btnXCSoarMapsFolder"
-        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(426, 37)
+        Me.btnXCSoarMapsFolder.Size = New System.Drawing.Size(426, 32)
         Me.btnXCSoarMapsFolder.TabIndex = 1
         Me.btnXCSoarMapsFolder.Text = "Select the folder containing XCSoar maps (.xcm) (optional)"
         Me.btnXCSoarMapsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -418,7 +424,7 @@ Partial Class Settings
         '
         Me.chkExclude2020WeatherFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExclude2020WeatherFileFromCleanup.AutoSize = True
-        Me.chkExclude2020WeatherFileFromCleanup.Location = New System.Drawing.Point(670, 16)
+        Me.chkExclude2020WeatherFileFromCleanup.Location = New System.Drawing.Point(670, 11)
         Me.chkExclude2020WeatherFileFromCleanup.Name = "chkExclude2020WeatherFileFromCleanup"
         Me.chkExclude2020WeatherFileFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExclude2020WeatherFileFromCleanup.TabIndex = 4
@@ -429,7 +435,7 @@ Partial Class Settings
         '
         Me.chkExcludeXCSoarTaskFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeXCSoarTaskFileFromCleanup.AutoSize = True
-        Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(670, 18)
+        Me.chkExcludeXCSoarTaskFileFromCleanup.Location = New System.Drawing.Point(670, 13)
         Me.chkExcludeXCSoarTaskFileFromCleanup.Name = "chkExcludeXCSoarTaskFileFromCleanup"
         Me.chkExcludeXCSoarTaskFileFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExcludeXCSoarTaskFileFromCleanup.TabIndex = 3
@@ -440,7 +446,7 @@ Partial Class Settings
         '
         Me.chkExcludeXCSoarMapFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExcludeXCSoarMapFileFromCleanup.AutoSize = True
-        Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(670, 16)
+        Me.chkExcludeXCSoarMapFileFromCleanup.Location = New System.Drawing.Point(670, 11)
         Me.chkExcludeXCSoarMapFileFromCleanup.Name = "chkExcludeXCSoarMapFileFromCleanup"
         Me.chkExcludeXCSoarMapFileFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExcludeXCSoarMapFileFromCleanup.TabIndex = 3
@@ -449,10 +455,11 @@ Partial Class Settings
         '
         'btnNB21IGCFolderPaste
         '
-        Me.btnNB21IGCFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
-        Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnNB21IGCFolderPaste.TabIndex = 3
         Me.btnNB21IGCFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -467,7 +474,7 @@ Partial Class Settings
         Me.btnNB21IGCFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnNB21IGCFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
-        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(447, 37)
+        Me.btnNB21IGCFolder.Size = New System.Drawing.Size(447, 32)
         Me.btnNB21IGCFolder.TabIndex = 1
         Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files (optional)"
         Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -476,10 +483,11 @@ Partial Class Settings
         '
         'btnXCSoarTasksFolderClear
         '
-        Me.btnXCSoarTasksFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarTasksFolderClear.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarTasksFolderClear.Location = New System.Drawing.Point(626, 4)
         Me.btnXCSoarTasksFolderClear.Name = "btnXCSoarTasksFolderClear"
-        Me.btnXCSoarTasksFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnXCSoarTasksFolderClear.Size = New System.Drawing.Size(38, 33)
         Me.btnXCSoarTasksFolderClear.TabIndex = 2
         Me.btnXCSoarTasksFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarTasksFolderClear, "Click this button to delete the optional XC Soar Tasks folder")
@@ -487,10 +495,11 @@ Partial Class Settings
         '
         'btnXCSoarMapsFolderClear
         '
-        Me.btnXCSoarMapsFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnXCSoarMapsFolderClear.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnXCSoarMapsFolderClear.Location = New System.Drawing.Point(626, 4)
         Me.btnXCSoarMapsFolderClear.Name = "btnXCSoarMapsFolderClear"
-        Me.btnXCSoarMapsFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnXCSoarMapsFolderClear.Size = New System.Drawing.Size(38, 33)
         Me.btnXCSoarMapsFolderClear.TabIndex = 2
         Me.btnXCSoarMapsFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnXCSoarMapsFolderClear, "Click this button to delete the optional XC Soar Maps folder")
@@ -498,10 +507,11 @@ Partial Class Settings
         '
         'btnNB21IGCFolderClear
         '
-        Me.btnNB21IGCFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21IGCFolderClear.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21IGCFolderClear.Location = New System.Drawing.Point(647, 4)
         Me.btnNB21IGCFolderClear.Name = "btnNB21IGCFolderClear"
-        Me.btnNB21IGCFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnNB21IGCFolderClear.Size = New System.Drawing.Size(38, 33)
         Me.btnNB21IGCFolderClear.TabIndex = 2
         Me.btnNB21IGCFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderClear, "Click this button to delete the optional NB21 Log Flights folder")
@@ -511,7 +521,7 @@ Partial Class Settings
         '
         Me.chkExclude2024WeatherFileFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExclude2024WeatherFileFromCleanup.AutoSize = True
-        Me.chkExclude2024WeatherFileFromCleanup.Location = New System.Drawing.Point(670, 16)
+        Me.chkExclude2024WeatherFileFromCleanup.Location = New System.Drawing.Point(670, 11)
         Me.chkExclude2024WeatherFileFromCleanup.Name = "chkExclude2024WeatherFileFromCleanup"
         Me.chkExclude2024WeatherFileFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExclude2024WeatherFileFromCleanup.TabIndex = 4
@@ -520,10 +530,11 @@ Partial Class Settings
         '
         'btn2024WeatherPresetsFolderPaste
         '
-        Me.btn2024WeatherPresetsFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn2024WeatherPresetsFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn2024WeatherPresetsFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btn2024WeatherPresetsFolderPaste.Name = "btn2024WeatherPresetsFolderPaste"
-        Me.btn2024WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btn2024WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btn2024WeatherPresetsFolderPaste.TabIndex = 2
         Me.btn2024WeatherPresetsFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btn2024WeatherPresetsFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -538,7 +549,7 @@ Partial Class Settings
         Me.btnMSFS2024WeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnMSFS2024WeatherPresetsFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnMSFS2024WeatherPresetsFolder.Name = "btnMSFS2024WeatherPresetsFolder"
-        Me.btnMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(470, 37)
+        Me.btnMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2024WeatherPresetsFolder.TabIndex = 1
         Me.btnMSFS2024WeatherPresetsFolder.Text = "Select the MSFS 2024 folder containing weather presets (.wpr)"
         Me.btnMSFS2024WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -549,7 +560,7 @@ Partial Class Settings
         '
         Me.chkExclude2024FlightPlanFromCleanup.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkExclude2024FlightPlanFromCleanup.AutoSize = True
-        Me.chkExclude2024FlightPlanFromCleanup.Location = New System.Drawing.Point(670, 18)
+        Me.chkExclude2024FlightPlanFromCleanup.Location = New System.Drawing.Point(670, 13)
         Me.chkExclude2024FlightPlanFromCleanup.Name = "chkExclude2024FlightPlanFromCleanup"
         Me.chkExclude2024FlightPlanFromCleanup.Size = New System.Drawing.Size(15, 14)
         Me.chkExclude2024FlightPlanFromCleanup.TabIndex = 3
@@ -558,10 +569,11 @@ Partial Class Settings
         '
         'btn2024FlightPlansFolderPaste
         '
-        Me.btn2024FlightPlansFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn2024FlightPlansFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn2024FlightPlansFolderPaste.Location = New System.Drawing.Point(691, 4)
         Me.btn2024FlightPlansFolderPaste.Name = "btn2024FlightPlansFolderPaste"
-        Me.btn2024FlightPlansFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btn2024FlightPlansFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btn2024FlightPlansFolderPaste.TabIndex = 2
         Me.btn2024FlightPlansFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btn2024FlightPlansFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -576,7 +588,7 @@ Partial Class Settings
         Me.btnMSFS2024FlightPlanFilesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnMSFS2024FlightPlanFilesFolder.Location = New System.Drawing.Point(194, 4)
         Me.btnMSFS2024FlightPlanFilesFolder.Name = "btnMSFS2024FlightPlanFilesFolder"
-        Me.btnMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(470, 37)
+        Me.btnMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2024FlightPlanFilesFolder.TabIndex = 1
         Me.btnMSFS2024FlightPlanFilesFolder.Text = "Select the MSFS 2024 folder for the flight plan files (.pln)"
         Me.btnMSFS2024FlightPlanFilesFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -666,7 +678,7 @@ Partial Class Settings
         Me.btnNB21EXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21EXEFolderClear.Location = New System.Drawing.Point(647, 33)
         Me.btnNB21EXEFolderClear.Name = "btnNB21EXEFolderClear"
-        Me.btnNB21EXEFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnNB21EXEFolderClear.Size = New System.Drawing.Size(38, 33)
         Me.btnNB21EXEFolderClear.TabIndex = 7
         Me.btnNB21EXEFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderClear, "Click this button to delete the optional NB21 EXE folder")
@@ -677,7 +689,7 @@ Partial Class Settings
         Me.btnNB21EXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21EXEFolderPaste.Location = New System.Drawing.Point(691, 33)
         Me.btnNB21EXEFolderPaste.Name = "btnNB21EXEFolderPaste"
-        Me.btnNB21EXEFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnNB21EXEFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnNB21EXEFolderPaste.TabIndex = 8
         Me.btnNB21EXEFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -691,7 +703,7 @@ Partial Class Settings
         Me.btnNB21EXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnNB21EXEFolder.Location = New System.Drawing.Point(194, 33)
         Me.btnNB21EXEFolder.Name = "btnNB21EXEFolder"
-        Me.btnNB21EXEFolder.Size = New System.Drawing.Size(447, 37)
+        Me.btnNB21EXEFolder.Size = New System.Drawing.Size(447, 32)
         Me.btnNB21EXEFolder.TabIndex = 6
         Me.btnNB21EXEFolder.Text = "Select the folder containing the logger's EXE file (optional)"
         Me.btnNB21EXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -734,7 +746,7 @@ Partial Class Settings
         '
         'btnResetDPHXLocalPort
         '
-        Me.btnResetDPHXLocalPort.Location = New System.Drawing.Point(280, 7)
+        Me.btnResetDPHXLocalPort.Location = New System.Drawing.Point(280, 6)
         Me.btnResetDPHXLocalPort.Name = "btnResetDPHXLocalPort"
         Me.btnResetDPHXLocalPort.Size = New System.Drawing.Size(75, 31)
         Me.btnResetDPHXLocalPort.TabIndex = 6
@@ -744,7 +756,7 @@ Partial Class Settings
         '
         'txtDPHXLocalPort
         '
-        Me.txtDPHXLocalPort.Location = New System.Drawing.Point(194, 9)
+        Me.txtDPHXLocalPort.Location = New System.Drawing.Point(194, 8)
         Me.txtDPHXLocalPort.MaxLength = 5
         Me.txtDPHXLocalPort.Name = "txtDPHXLocalPort"
         Me.txtDPHXLocalPort.Size = New System.Drawing.Size(80, 27)
@@ -792,7 +804,7 @@ Partial Class Settings
         Me.btnTrackerEXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTrackerEXEFolderClear.Location = New System.Drawing.Point(647, 33)
         Me.btnTrackerEXEFolderClear.Name = "btnTrackerEXEFolderClear"
-        Me.btnTrackerEXEFolderClear.Size = New System.Drawing.Size(38, 37)
+        Me.btnTrackerEXEFolderClear.Size = New System.Drawing.Size(38, 33)
         Me.btnTrackerEXEFolderClear.TabIndex = 7
         Me.btnTrackerEXEFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderClear, "Click this button to delete the optional Tracker EXE folder")
@@ -803,7 +815,7 @@ Partial Class Settings
         Me.btnTrackerEXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTrackerEXEFolderPaste.Location = New System.Drawing.Point(691, 33)
         Me.btnTrackerEXEFolderPaste.Name = "btnTrackerEXEFolderPaste"
-        Me.btnTrackerEXEFolderPaste.Size = New System.Drawing.Size(75, 37)
+        Me.btnTrackerEXEFolderPaste.Size = New System.Drawing.Size(75, 33)
         Me.btnTrackerEXEFolderPaste.TabIndex = 8
         Me.btnTrackerEXEFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderPaste, "Click this button to paste a folder from your clipboard")
@@ -817,7 +829,7 @@ Partial Class Settings
         Me.btnTrackerEXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnTrackerEXEFolder.Location = New System.Drawing.Point(194, 33)
         Me.btnTrackerEXEFolder.Name = "btnTrackerEXEFolder"
-        Me.btnTrackerEXEFolder.Size = New System.Drawing.Size(447, 37)
+        Me.btnTrackerEXEFolder.Size = New System.Drawing.Size(447, 32)
         Me.btnTrackerEXEFolder.TabIndex = 6
         Me.btnTrackerEXEFolder.Text = "Select the folder containing the tracker's EXE file (optional)"
         Me.btnTrackerEXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -827,7 +839,7 @@ Partial Class Settings
         'optOverwriteAlwaysOverwrite
         '
         Me.optOverwriteAlwaysOverwrite.AutoSize = True
-        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 6)
+        Me.optOverwriteAlwaysOverwrite.Location = New System.Drawing.Point(194, 4)
         Me.optOverwriteAlwaysOverwrite.Name = "optOverwriteAlwaysOverwrite"
         Me.optOverwriteAlwaysOverwrite.Size = New System.Drawing.Size(138, 24)
         Me.optOverwriteAlwaysOverwrite.TabIndex = 1
@@ -838,7 +850,7 @@ Partial Class Settings
         'optOverwriteAlwaysSkip
         '
         Me.optOverwriteAlwaysSkip.AutoSize = True
-        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 6)
+        Me.optOverwriteAlwaysSkip.Location = New System.Drawing.Point(338, 4)
         Me.optOverwriteAlwaysSkip.Name = "optOverwriteAlwaysSkip"
         Me.optOverwriteAlwaysSkip.Size = New System.Drawing.Size(103, 24)
         Me.optOverwriteAlwaysSkip.TabIndex = 2
@@ -850,7 +862,7 @@ Partial Class Settings
         '
         Me.optOverwriteAlwaysAsk.AutoSize = True
         Me.optOverwriteAlwaysAsk.Checked = True
-        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 6)
+        Me.optOverwriteAlwaysAsk.Location = New System.Drawing.Point(447, 4)
         Me.optOverwriteAlwaysAsk.Name = "optOverwriteAlwaysAsk"
         Me.optOverwriteAlwaysAsk.Size = New System.Drawing.Size(98, 24)
         Me.optOverwriteAlwaysAsk.TabIndex = 3
@@ -881,10 +893,10 @@ Partial Class Settings
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.Label2)
         Me.pnlMSFS2020WeatherPresetsFolder.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlMSFS2020WeatherPresetsFolder.Enabled = False
-        Me.pnlMSFS2020WeatherPresetsFolder.Location = New System.Drawing.Point(0, 90)
+        Me.pnlMSFS2020WeatherPresetsFolder.Location = New System.Drawing.Point(0, 85)
         Me.pnlMSFS2020WeatherPresetsFolder.Name = "pnlMSFS2020WeatherPresetsFolder"
         Me.pnlMSFS2020WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlMSFS2020WeatherPresetsFolder.TabIndex = 2
         '
         'Label2
@@ -905,10 +917,10 @@ Partial Class Settings
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.btnXCSoarTasksFolder)
         Me.pnlXCSoarTasksFolder.Controls.Add(Me.Label8)
         Me.pnlXCSoarTasksFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlXCSoarTasksFolder.Location = New System.Drawing.Point(0, 225)
+        Me.pnlXCSoarTasksFolder.Location = New System.Drawing.Point(0, 205)
         Me.pnlXCSoarTasksFolder.Name = "pnlXCSoarTasksFolder"
         Me.pnlXCSoarTasksFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlXCSoarTasksFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlXCSoarTasksFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlXCSoarTasksFolder.TabIndex = 5
         '
         'separator3
@@ -935,10 +947,10 @@ Partial Class Settings
         Me.pnlUnpackingFolder.Controls.Add(Me.btnUnpackingFolder)
         Me.pnlUnpackingFolder.Controls.Add(Me.Label3)
         Me.pnlUnpackingFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlUnpackingFolder.Location = New System.Drawing.Point(0, 315)
+        Me.pnlUnpackingFolder.Location = New System.Drawing.Point(0, 285)
         Me.pnlUnpackingFolder.Name = "pnlUnpackingFolder"
         Me.pnlUnpackingFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlUnpackingFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlUnpackingFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlUnpackingFolder.TabIndex = 7
         '
         'separator4
@@ -964,10 +976,10 @@ Partial Class Settings
         Me.pnlPackagesFolder.Controls.Add(Me.btnPackagesFolder)
         Me.pnlPackagesFolder.Controls.Add(Me.Label5)
         Me.pnlPackagesFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlPackagesFolder.Location = New System.Drawing.Point(0, 360)
+        Me.pnlPackagesFolder.Location = New System.Drawing.Point(0, 325)
         Me.pnlPackagesFolder.Name = "pnlPackagesFolder"
         Me.pnlPackagesFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlPackagesFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlPackagesFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlPackagesFolder.TabIndex = 8
         '
         'Label5
@@ -987,10 +999,10 @@ Partial Class Settings
         Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.btnNB21IGCFolder)
         Me.pnlNB21LoggerFlightsFolder.Controls.Add(Me.Label10)
         Me.pnlNB21LoggerFlightsFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNB21LoggerFlightsFolder.Location = New System.Drawing.Point(0, 405)
+        Me.pnlNB21LoggerFlightsFolder.Location = New System.Drawing.Point(0, 365)
         Me.pnlNB21LoggerFlightsFolder.Name = "pnlNB21LoggerFlightsFolder"
         Me.pnlNB21LoggerFlightsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlNB21LoggerFlightsFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlNB21LoggerFlightsFolder.TabIndex = 9
         '
         'separator5
@@ -1015,16 +1027,16 @@ Partial Class Settings
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 637)
+        Me.pnlAutoUnpack.Location = New System.Drawing.Point(0, 576)
         Me.pnlAutoUnpack.Name = "pnlAutoUnpack"
         Me.pnlAutoUnpack.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 39)
+        Me.pnlAutoUnpack.Size = New System.Drawing.Size(769, 30)
         Me.pnlAutoUnpack.TabIndex = 13
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(5, 8)
+        Me.Label6.Location = New System.Drawing.Point(5, 5)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(97, 20)
         Me.Label6.TabIndex = 0
@@ -1038,9 +1050,9 @@ Partial Class Settings
         Me.pnlXCSoarMapsFolder.Controls.Add(Me.btnXCSoarMapsFolder)
         Me.pnlXCSoarMapsFolder.Controls.Add(Me.Label9)
         Me.pnlXCSoarMapsFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlXCSoarMapsFolder.Location = New System.Drawing.Point(0, 270)
+        Me.pnlXCSoarMapsFolder.Location = New System.Drawing.Point(0, 245)
         Me.pnlXCSoarMapsFolder.Name = "pnlXCSoarMapsFolder"
-        Me.pnlXCSoarMapsFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlXCSoarMapsFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlXCSoarMapsFolder.TabIndex = 6
         '
         'Label9
@@ -1058,10 +1070,10 @@ Partial Class Settings
         Me.pnlNoticeAndButtons.Controls.Add(Me.Label7)
         Me.pnlNoticeAndButtons.Controls.Add(Me.okCancelPanel)
         Me.pnlNoticeAndButtons.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 760)
+        Me.pnlNoticeAndButtons.Location = New System.Drawing.Point(0, 682)
         Me.pnlNoticeAndButtons.Name = "pnlNoticeAndButtons"
         Me.pnlNoticeAndButtons.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 68)
+        Me.pnlNoticeAndButtons.Size = New System.Drawing.Size(769, 63)
         Me.pnlNoticeAndButtons.TabIndex = 16
         '
         'separator9
@@ -1076,9 +1088,10 @@ Partial Class Settings
         '
         Me.Label7.AutoSize = True
         Me.Label7.Dock = System.Windows.Forms.DockStyle.Left
+        Me.Label7.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.163636!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(2, 2)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(269, 60)
+        Me.Label7.Size = New System.Drawing.Size(248, 57)
         Me.Label7.TabIndex = 9
         Me.Label7.Text = "For paths on this screen, you can either:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Left-Click to open the folder select" &
     "ion" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Right-Click to open the folder itself"
@@ -1092,10 +1105,10 @@ Partial Class Settings
         Me.pnlMSFS2024WeatherPresetsFolder.Controls.Add(Me.Label11)
         Me.pnlMSFS2024WeatherPresetsFolder.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlMSFS2024WeatherPresetsFolder.Enabled = False
-        Me.pnlMSFS2024WeatherPresetsFolder.Location = New System.Drawing.Point(0, 180)
+        Me.pnlMSFS2024WeatherPresetsFolder.Location = New System.Drawing.Point(0, 165)
         Me.pnlMSFS2024WeatherPresetsFolder.Name = "pnlMSFS2024WeatherPresetsFolder"
         Me.pnlMSFS2024WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlMSFS2024WeatherPresetsFolder.TabIndex = 4
         '
         'Label11
@@ -1116,10 +1129,10 @@ Partial Class Settings
         Me.pnlMSFS2024FlightPlanFilesFolder.Controls.Add(Me.Label12)
         Me.pnlMSFS2024FlightPlanFilesFolder.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlMSFS2024FlightPlanFilesFolder.Enabled = False
-        Me.pnlMSFS2024FlightPlanFilesFolder.Location = New System.Drawing.Point(0, 135)
+        Me.pnlMSFS2024FlightPlanFilesFolder.Location = New System.Drawing.Point(0, 125)
         Me.pnlMSFS2024FlightPlanFilesFolder.Name = "pnlMSFS2024FlightPlanFilesFolder"
         Me.pnlMSFS2024FlightPlanFilesFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 45)
+        Me.pnlMSFS2024FlightPlanFilesFolder.Size = New System.Drawing.Size(769, 40)
         Me.pnlMSFS2024FlightPlanFilesFolder.TabIndex = 3
         '
         'separator2
@@ -1213,10 +1226,10 @@ Partial Class Settings
         Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21EXEFolder)
         Me.pnlNB21LoggerExe.Controls.Add(Me.Label14)
         Me.pnlNB21LoggerExe.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlNB21LoggerExe.Location = New System.Drawing.Point(0, 450)
+        Me.pnlNB21LoggerExe.Location = New System.Drawing.Point(0, 405)
         Me.pnlNB21LoggerExe.Name = "pnlNB21LoggerExe"
         Me.pnlNB21LoggerExe.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlNB21LoggerExe.Size = New System.Drawing.Size(769, 74)
+        Me.pnlNB21LoggerExe.Size = New System.Drawing.Size(769, 69)
         Me.pnlNB21LoggerExe.TabIndex = 10
         '
         'Label16
@@ -1240,7 +1253,7 @@ Partial Class Settings
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(5, 41)
+        Me.Label14.Location = New System.Drawing.Point(5, 39)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(146, 20)
         Me.Label14.TabIndex = 5
@@ -1252,16 +1265,16 @@ Partial Class Settings
         Me.pnlLocalWSPort.Controls.Add(Me.txtDPHXLocalPort)
         Me.pnlLocalWSPort.Controls.Add(Me.Label17)
         Me.pnlLocalWSPort.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 715)
+        Me.pnlLocalWSPort.Location = New System.Drawing.Point(0, 644)
         Me.pnlLocalWSPort.Name = "pnlLocalWSPort"
         Me.pnlLocalWSPort.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlLocalWSPort.Size = New System.Drawing.Size(769, 45)
+        Me.pnlLocalWSPort.Size = New System.Drawing.Size(769, 38)
         Me.pnlLocalWSPort.TabIndex = 15
         '
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(5, 12)
+        Me.Label17.Location = New System.Drawing.Point(5, 11)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(142, 20)
         Me.Label17.TabIndex = 0
@@ -1280,10 +1293,10 @@ Partial Class Settings
         Me.pnlTrackerExe.Controls.Add(Me.btnTrackerEXEFolder)
         Me.pnlTrackerExe.Controls.Add(Me.Label20)
         Me.pnlTrackerExe.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlTrackerExe.Location = New System.Drawing.Point(0, 524)
+        Me.pnlTrackerExe.Location = New System.Drawing.Point(0, 474)
         Me.pnlTrackerExe.Name = "pnlTrackerExe"
         Me.pnlTrackerExe.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlTrackerExe.Size = New System.Drawing.Size(769, 74)
+        Me.pnlTrackerExe.Size = New System.Drawing.Size(769, 69)
         Me.pnlTrackerExe.TabIndex = 11
         '
         'separator6
@@ -1315,7 +1328,7 @@ Partial Class Settings
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(5, 41)
+        Me.Label20.Location = New System.Drawing.Point(5, 39)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(131, 20)
         Me.Label20.TabIndex = 5
@@ -1324,7 +1337,7 @@ Partial Class Settings
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(5, 8)
+        Me.Label4.Location = New System.Drawing.Point(5, 6)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(147, 20)
         Me.Label4.TabIndex = 0
@@ -1355,10 +1368,10 @@ Partial Class Settings
         Me.pnlAutoOverwrite.Controls.Add(Me.optOverwriteAlwaysOverwrite)
         Me.pnlAutoOverwrite.Controls.Add(Me.Label4)
         Me.pnlAutoOverwrite.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 598)
+        Me.pnlAutoOverwrite.Location = New System.Drawing.Point(0, 543)
         Me.pnlAutoOverwrite.Name = "pnlAutoOverwrite"
         Me.pnlAutoOverwrite.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 39)
+        Me.pnlAutoOverwrite.Size = New System.Drawing.Size(769, 33)
         Me.pnlAutoOverwrite.TabIndex = 12
         '
         'pnlWSGAutoLaunch
@@ -1367,10 +1380,10 @@ Partial Class Settings
         Me.pnlWSGAutoLaunch.Controls.Add(Me.cboWSGIntegration)
         Me.pnlWSGAutoLaunch.Controls.Add(Me.Label21)
         Me.pnlWSGAutoLaunch.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlWSGAutoLaunch.Location = New System.Drawing.Point(0, 676)
+        Me.pnlWSGAutoLaunch.Location = New System.Drawing.Point(0, 606)
         Me.pnlWSGAutoLaunch.Name = "pnlWSGAutoLaunch"
         Me.pnlWSGAutoLaunch.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlWSGAutoLaunch.Size = New System.Drawing.Size(769, 39)
+        Me.pnlWSGAutoLaunch.Size = New System.Drawing.Size(769, 38)
         Me.pnlWSGAutoLaunch.TabIndex = 14
         '
         'cboWSGIntegration
@@ -1398,7 +1411,7 @@ Partial Class Settings
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(769, 831)
+        Me.ClientSize = New System.Drawing.Size(769, 746)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnlNoticeAndButtons)
         Me.Controls.Add(Me.pnlLocalWSPort)
@@ -1421,9 +1434,9 @@ Partial Class Settings
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 875)
+        Me.MaximumSize = New System.Drawing.Size(5000, 790)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(787, 875)
+        Me.MinimumSize = New System.Drawing.Size(787, 790)
         Me.Name = "Settings"
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show

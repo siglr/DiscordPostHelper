@@ -6,6 +6,8 @@ Public Class CleaningTool
 
     Private Sub CleaningTool_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
+        Rescale()
+
         If Settings.SessionSettings.Is2024Installed Then
             tabFlights2024.Enabled = True
             tabWeather2024.Enabled = True
@@ -634,6 +636,10 @@ Public Class CleaningTool
                 MessageBox.Show($"An error occurred: {ex.Message}")
             End Using
         End Try
+    End Sub
+
+    Private Sub CleaningTool_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Rescale()
     End Sub
 
 #End Region

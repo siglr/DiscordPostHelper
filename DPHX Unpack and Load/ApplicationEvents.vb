@@ -14,6 +14,12 @@ Namespace My
                 ' Base folder where your EXE and all the CefSharp bits live
                 Dim baseDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase
 
+                ' Delete the cache directory if it exists
+                Dim cacheDir = Path.Combine(baseDir, "cef_cache_DPHX")
+                If Directory.Exists(cacheDir) Then
+                    Directory.Delete(cacheDir, recursive:=True)
+                End If
+
                 ' Configure CefSettings
                 Dim settings = New CefSettings With {
                     .CachePath = Path.Combine(baseDir, "cef_cache_DPHX"),
