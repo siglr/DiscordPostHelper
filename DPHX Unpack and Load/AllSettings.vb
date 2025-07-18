@@ -398,20 +398,3 @@ Public Class AllSettings
         _TrackerEXEFolder = Nothing
     End Sub
 End Class
-
-Public Class TBColumnSetting
-    Public Property Name As String
-    Public Property DisplayIndex As Integer
-    Public Property Visible As Boolean
-    Public Property ColumnWidth As Integer
-
-    Public Sub New()
-    End Sub
-
-    Public Sub New(name As String, displayIndex As Integer, visible As Boolean, columnWidth As Integer)
-        Me.Name = name
-        Me.DisplayIndex = displayIndex
-        Me.Visible = visible
-        Me.ColumnWidth = columnWidth
-    End Sub
-End Class
