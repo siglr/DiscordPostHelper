@@ -290,11 +290,11 @@ Public Class DPHXUnpackAndLoad
         If warningMSFSRunningToolStrip.Visible Then
             Using New Centered_MessageBox(Me)
                 If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    CleaningTool.ShowDialog(Me)
+                    ShowFileBrowserForm()
                 End If
             End Using
         Else
-            CleaningTool.ShowDialog(Me)
+            ShowFileBrowserForm()
         End If
 
         'Recheck files
@@ -304,6 +304,12 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Private Sub ShowFileBrowserForm()
+        Dim formCleanup As New CleaningTool
+        formCleanup.ShowDialog(Me)
+        formCleanup.Dispose()
+        formCleanup = Nothing
+    End Sub
 
     Private Sub btnLoadB21_Click(sender As Object, e As EventArgs) Handles toolStripB21Planner.Click
 

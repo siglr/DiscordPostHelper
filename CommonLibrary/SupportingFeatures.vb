@@ -81,6 +81,12 @@ Public Class SupportingFeatures
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
     End Function
 
+    Public Shared Sub CenterFormOnOwner(ownerForm As Form, childForm As Form)
+        'Center on parent form
+        Dim ownerRect = If(ownerForm IsNot Nothing, ownerForm.Bounds, Screen.FromControl(childForm).WorkingArea)
+        childForm.Location = New Point(ownerRect.Left + (ownerRect.Width - childForm.Width) \ 2, ownerRect.Top + (ownerRect.Height - childForm.Height) \ 2)
+    End Sub
+
     Public Shared Function GetTaskThreadURLFromGroupURL(discordMessageUrl As String) As String
         Try
             ' Split the URL by slashes

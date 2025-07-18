@@ -46,6 +46,7 @@ Public Class IGCFileUpload
         AddHandler browser.FrameLoadEnd, AddressOf OnBrowserFrameLoadEnd
         Me.Width = parentForm.Width
         Me.Height = parentForm.Height
+        SupportingFeatures.CenterFormOnOwner(parentForm, Me)
         Me.ShowDialog(parentForm)
 
     End Sub

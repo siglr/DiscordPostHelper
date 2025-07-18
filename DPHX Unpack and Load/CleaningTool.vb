@@ -4,31 +4,6 @@ Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class CleaningTool
 
-    Private Sub CleaningTool_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-
-        Rescale()
-
-        If Settings.SessionSettings.Is2024Installed Then
-            tabFlights2024.Enabled = True
-            tabWeather2024.Enabled = True
-            tabCtrlCleaningTool.SelectTab(tabFlights2024)
-            TabSelected(tabFlights2024)
-        Else
-            tabFlights2024.Enabled = False
-            tabWeather2024.Enabled = False
-        End If
-
-        If Settings.SessionSettings.Is2020Installed Then
-            tabFlights2020.Enabled = True
-            tabWeather2020.Enabled = True
-            tabCtrlCleaningTool.SelectTab(tabFlights2020)
-            TabSelected(tabFlights2020)
-        Else
-            tabFlights2020.Enabled = False
-            tabWeather2020.Enabled = False
-        End If
-
-    End Sub
 
     Private Sub tabCtrlCleaningTool_Selected(sender As Object, e As TabControlEventArgs) Handles tabCtrlCleaningTool.Selected
 
@@ -639,7 +614,39 @@ Public Class CleaningTool
     End Sub
 
     Private Sub CleaningTool_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         Rescale()
+        SupportingFeatures.CenterFormOnOwner(Owner, Me)
+
+        lstFlights2020.Width = lstWeather2020.Width
+        lstFlights2020.Height = lstWeather2020.Height
+        btnFlights2020Refresh.Left = btnWeather2020Refresh.Left
+        btnFlights2020SelectAll.Left = btnWeather2020SelectAll.Left
+        btnFlights2020Delete.Left = btnWeather2020Delete.Left
+
+        If Settings.SessionSettings.Is2024Installed Then
+            tabFlights2024.Enabled = True
+            tabWeather2024.Enabled = True
+            tabCtrlCleaningTool.SelectTab(tabFlights2024)
+            TabSelected(tabFlights2024)
+        Else
+            tabFlights2024.Enabled = False
+            tabWeather2024.Enabled = False
+        End If
+
+        If Settings.SessionSettings.Is2020Installed Then
+            tabFlights2020.Enabled = True
+            tabWeather2020.Enabled = True
+            tabCtrlCleaningTool.SelectTab(tabFlights2020)
+            TabSelected(tabFlights2020)
+        Else
+            tabFlights2020.Enabled = False
+            tabWeather2020.Enabled = False
+        End If
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+        Close()
     End Sub
 
 #End Region

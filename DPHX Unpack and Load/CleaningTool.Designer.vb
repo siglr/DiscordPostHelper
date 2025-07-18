@@ -415,7 +415,7 @@ Partial Class CleaningTool
         'btnPackagesSelectAll
         '
         Me.btnPackagesSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPackagesSelectAll.Location = New System.Drawing.Point(742, 77)
+        Me.btnPackagesSelectAll.Location = New System.Drawing.Point(729, 77)
         Me.btnPackagesSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesSelectAll.Name = "btnPackagesSelectAll"
         Me.btnPackagesSelectAll.Size = New System.Drawing.Size(109, 35)
@@ -426,7 +426,7 @@ Partial Class CleaningTool
         'btnPackagesDelete
         '
         Me.btnPackagesDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPackagesDelete.Location = New System.Drawing.Point(742, 122)
+        Me.btnPackagesDelete.Location = New System.Drawing.Point(729, 122)
         Me.btnPackagesDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesDelete.Name = "btnPackagesDelete"
         Me.btnPackagesDelete.Size = New System.Drawing.Size(109, 35)
@@ -444,7 +444,7 @@ Partial Class CleaningTool
         Me.lstPackages.Location = New System.Drawing.Point(6, 33)
         Me.lstPackages.Name = "lstPackages"
         Me.lstPackages.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstPackages.Size = New System.Drawing.Size(729, 444)
+        Me.lstPackages.Size = New System.Drawing.Size(716, 404)
         Me.lstPackages.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.lstPackages, "List of package files currently in your folder.")
         '
@@ -462,7 +462,7 @@ Partial Class CleaningTool
         'btnPackagesRefresh
         '
         Me.btnPackagesRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPackagesRefresh.Location = New System.Drawing.Point(742, 32)
+        Me.btnPackagesRefresh.Location = New System.Drawing.Point(729, 32)
         Me.btnPackagesRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnPackagesRefresh.Name = "btnPackagesRefresh"
         Me.btnPackagesRefresh.Size = New System.Drawing.Size(109, 35)
@@ -487,7 +487,7 @@ Partial Class CleaningTool
         'btnNB21LogsSelectAll
         '
         Me.btnNB21LogsSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21LogsSelectAll.Location = New System.Drawing.Point(742, 77)
+        Me.btnNB21LogsSelectAll.Location = New System.Drawing.Point(729, 77)
         Me.btnNB21LogsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsSelectAll.Name = "btnNB21LogsSelectAll"
         Me.btnNB21LogsSelectAll.Size = New System.Drawing.Size(109, 35)
@@ -498,7 +498,7 @@ Partial Class CleaningTool
         'btnNB21LogsDelete
         '
         Me.btnNB21LogsDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21LogsDelete.Location = New System.Drawing.Point(742, 122)
+        Me.btnNB21LogsDelete.Location = New System.Drawing.Point(729, 122)
         Me.btnNB21LogsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsDelete.Name = "btnNB21LogsDelete"
         Me.btnNB21LogsDelete.Size = New System.Drawing.Size(109, 35)
@@ -516,7 +516,7 @@ Partial Class CleaningTool
         Me.lstNB21Logs.Location = New System.Drawing.Point(6, 33)
         Me.lstNB21Logs.Name = "lstNB21Logs"
         Me.lstNB21Logs.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstNB21Logs.Size = New System.Drawing.Size(729, 444)
+        Me.lstNB21Logs.Size = New System.Drawing.Size(716, 404)
         Me.lstNB21Logs.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.lstNB21Logs, "List of log files currently in your folder.")
         '
@@ -534,7 +534,7 @@ Partial Class CleaningTool
         'btnNB21LogsRefresh
         '
         Me.btnNB21LogsRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21LogsRefresh.Location = New System.Drawing.Point(742, 32)
+        Me.btnNB21LogsRefresh.Location = New System.Drawing.Point(729, 32)
         Me.btnNB21LogsRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnNB21LogsRefresh.Name = "btnNB21LogsRefresh"
         Me.btnNB21LogsRefresh.Size = New System.Drawing.Size(109, 35)
@@ -559,7 +559,7 @@ Partial Class CleaningTool
         'btnXCSoarTasksSelectAll
         '
         Me.btnXCSoarTasksSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarTasksSelectAll.Location = New System.Drawing.Point(742, 77)
+        Me.btnXCSoarTasksSelectAll.Location = New System.Drawing.Point(729, 77)
         Me.btnXCSoarTasksSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksSelectAll.Name = "btnXCSoarTasksSelectAll"
         Me.btnXCSoarTasksSelectAll.Size = New System.Drawing.Size(109, 35)
@@ -570,7 +570,7 @@ Partial Class CleaningTool
         'btnXCSoarTasksDelete
         '
         Me.btnXCSoarTasksDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarTasksDelete.Location = New System.Drawing.Point(742, 122)
+        Me.btnXCSoarTasksDelete.Location = New System.Drawing.Point(729, 122)
         Me.btnXCSoarTasksDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksDelete.Name = "btnXCSoarTasksDelete"
         Me.btnXCSoarTasksDelete.Size = New System.Drawing.Size(109, 35)
@@ -588,7 +588,7 @@ Partial Class CleaningTool
         Me.lstXCSoarTasks.Location = New System.Drawing.Point(6, 33)
         Me.lstXCSoarTasks.Name = "lstXCSoarTasks"
         Me.lstXCSoarTasks.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstXCSoarTasks.Size = New System.Drawing.Size(729, 444)
+        Me.lstXCSoarTasks.Size = New System.Drawing.Size(716, 404)
         Me.lstXCSoarTasks.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.lstXCSoarTasks, "List of XC Soar task files currently in your folder.")
         '
@@ -606,7 +606,7 @@ Partial Class CleaningTool
         'btnXCSoarTasksRefresh
         '
         Me.btnXCSoarTasksRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarTasksRefresh.Location = New System.Drawing.Point(742, 32)
+        Me.btnXCSoarTasksRefresh.Location = New System.Drawing.Point(729, 32)
         Me.btnXCSoarTasksRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarTasksRefresh.Name = "btnXCSoarTasksRefresh"
         Me.btnXCSoarTasksRefresh.Size = New System.Drawing.Size(109, 35)
@@ -631,7 +631,7 @@ Partial Class CleaningTool
         'btnXCSoarMapsSelectAll
         '
         Me.btnXCSoarMapsSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsSelectAll.Location = New System.Drawing.Point(742, 77)
+        Me.btnXCSoarMapsSelectAll.Location = New System.Drawing.Point(729, 77)
         Me.btnXCSoarMapsSelectAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarMapsSelectAll.Name = "btnXCSoarMapsSelectAll"
         Me.btnXCSoarMapsSelectAll.Size = New System.Drawing.Size(109, 35)
@@ -642,7 +642,7 @@ Partial Class CleaningTool
         'btnXCSoarMapsDelete
         '
         Me.btnXCSoarMapsDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsDelete.Location = New System.Drawing.Point(742, 122)
+        Me.btnXCSoarMapsDelete.Location = New System.Drawing.Point(729, 122)
         Me.btnXCSoarMapsDelete.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarMapsDelete.Name = "btnXCSoarMapsDelete"
         Me.btnXCSoarMapsDelete.Size = New System.Drawing.Size(109, 35)
@@ -660,7 +660,7 @@ Partial Class CleaningTool
         Me.lstXCSoarMaps.Location = New System.Drawing.Point(6, 33)
         Me.lstXCSoarMaps.Name = "lstXCSoarMaps"
         Me.lstXCSoarMaps.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstXCSoarMaps.Size = New System.Drawing.Size(729, 444)
+        Me.lstXCSoarMaps.Size = New System.Drawing.Size(716, 404)
         Me.lstXCSoarMaps.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.lstXCSoarMaps, "List of XC Soar map files currently in your folder.")
         '
@@ -678,7 +678,7 @@ Partial Class CleaningTool
         'btnXCSoarMapsRefresh
         '
         Me.btnXCSoarMapsRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnXCSoarMapsRefresh.Location = New System.Drawing.Point(742, 32)
+        Me.btnXCSoarMapsRefresh.Location = New System.Drawing.Point(729, 32)
         Me.btnXCSoarMapsRefresh.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnXCSoarMapsRefresh.Name = "btnXCSoarMapsRefresh"
         Me.btnXCSoarMapsRefresh.Size = New System.Drawing.Size(109, 35)
