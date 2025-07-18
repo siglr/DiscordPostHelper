@@ -26,6 +26,7 @@ Partial Class BriefingControl
         Me.pnlTaskBriefing = New System.Windows.Forms.Panel()
         Me.tabsBriefing = New System.Windows.Forms.TabControl()
         Me.tbpgSetup = New System.Windows.Forms.TabPage()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.flowSetup = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnlSetupTaskTitle = New System.Windows.Forms.Panel()
@@ -79,9 +80,13 @@ Partial Class BriefingControl
         Me.msfsLocalTimeToSet = New System.Windows.Forms.Label()
         Me.msfsLocalDateToSet = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
         Me.tbpgImages = New System.Windows.Forms.TabPage()
         Me.imagesTabDivider = New System.Windows.Forms.SplitContainer()
         Me.imagesTabViewerControl = New SIGLR.SoaringTools.ImageViewer.ImageViewerControl()
@@ -92,6 +97,7 @@ Partial Class BriefingControl
         Me.cboWayPointDistances = New System.Windows.Forms.ComboBox()
         Me.waypointCoordinatesDataGrid = New System.Windows.Forms.DataGridView()
         Me.tbpgWeather = New System.Windows.Forms.TabPage()
+        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.chkShowGraph = New System.Windows.Forms.CheckBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -100,6 +106,16 @@ Partial Class BriefingControl
         Me.tbpgAddOns = New System.Windows.Forms.TabPage()
         Me.AddOnsDataGrid = New System.Windows.Forms.DataGridView()
         Me.tabUnits = New System.Windows.Forms.TabPage()
+        Me.grbAltitudes = New System.Windows.Forms.GroupBox()
+        Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.radioAltitudeMeters = New System.Windows.Forms.RadioButton()
+        Me.radioAltitudeFeet = New System.Windows.Forms.RadioButton()
+        Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
+        Me.grbDistances = New System.Windows.Forms.GroupBox()
+        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.radioDistanceMetric = New System.Windows.Forms.RadioButton()
+        Me.radioDistanceImperial = New System.Windows.Forms.RadioButton()
+        Me.radioDistanceBoth = New System.Windows.Forms.RadioButton()
         Me.grbSpeed = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel8 = New System.Windows.Forms.FlowLayoutPanel()
         Me.radioSpeedMetric = New System.Windows.Forms.RadioButton()
@@ -125,29 +141,13 @@ Partial Class BriefingControl
         Me.radioGateDiameterMetric = New System.Windows.Forms.RadioButton()
         Me.radioGateDiameterImperial = New System.Windows.Forms.RadioButton()
         Me.radioGateDiameterBoth = New System.Windows.Forms.RadioButton()
-        Me.grbDistances = New System.Windows.Forms.GroupBox()
-        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.radioDistanceMetric = New System.Windows.Forms.RadioButton()
-        Me.radioDistanceImperial = New System.Windows.Forms.RadioButton()
-        Me.radioDistanceBoth = New System.Windows.Forms.RadioButton()
         Me.grbBarometric = New System.Windows.Forms.GroupBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.radioBaroHPa = New System.Windows.Forms.RadioButton()
         Me.radioBaroInHg = New System.Windows.Forms.RadioButton()
         Me.radioBaroBoth = New System.Windows.Forms.RadioButton()
-        Me.grbAltitudes = New System.Windows.Forms.GroupBox()
-        Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.radioAltitudeMeters = New System.Windows.Forms.RadioButton()
-        Me.radioAltitudeFeet = New System.Windows.Forms.RadioButton()
-        Me.radioAltitudeBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.countDownTaskStart = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToLaunch = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToSyncFly = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.countDownToMeet = New SIGLR.SoaringTools.CommonLibrary.Countdown()
-        Me.FullWeatherGraphPanel1 = New SIGLR.SoaringTools.CommonLibrary.FullWeatherGraphPanel()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgSetup.SuspendLayout()
@@ -202,6 +202,10 @@ Partial Class BriefingControl
         Me.tbpgAddOns.SuspendLayout()
         CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabUnits.SuspendLayout()
+        Me.grbAltitudes.SuspendLayout()
+        Me.FlowLayoutPanel3.SuspendLayout()
+        Me.grbDistances.SuspendLayout()
+        Me.FlowLayoutPanel2.SuspendLayout()
         Me.grbSpeed.SuspendLayout()
         Me.FlowLayoutPanel8.SuspendLayout()
         Me.grbGateDiameterOrRadius.SuspendLayout()
@@ -212,12 +216,8 @@ Partial Class BriefingControl
         Me.FlowLayoutPanel5.SuspendLayout()
         Me.grbGateDiameter.SuspendLayout()
         Me.FlowLayoutPanel4.SuspendLayout()
-        Me.grbDistances.SuspendLayout()
-        Me.FlowLayoutPanel2.SuspendLayout()
         Me.grbBarometric.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
-        Me.grbAltitudes.SuspendLayout()
-        Me.FlowLayoutPanel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlTaskBriefing
@@ -264,6 +264,17 @@ Partial Class BriefingControl
         Me.tbpgSetup.TabIndex = 8
         Me.tbpgSetup.Text = "Setup"
         Me.tbpgSetup.UseVisualStyleBackColor = True
+        '
+        'Label8
+        '
+        Me.Label8.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(3, 645)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(832, 37)
+        Me.Label8.TabIndex = 13
+        Me.Label8.Text = "Don't forget to review information on the other tabs!"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Panel2
         '
@@ -908,6 +919,17 @@ Partial Class BriefingControl
         Me.Label5.Text = "Start task in"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownTaskStart
+        '
+        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
+        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownTaskStart.Name = "countDownTaskStart"
+        Me.countDownTaskStart.PlayAudioCues = False
+        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
+        Me.countDownTaskStart.TabIndex = 6
+        Me.countDownTaskStart.ZoomFactor = 2.0!
+        '
         'Label4
         '
         Me.Label4.Location = New System.Drawing.Point(4, 189)
@@ -916,6 +938,17 @@ Partial Class BriefingControl
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Launch in"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToLaunch
+        '
+        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
+        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToLaunch.Name = "countDownToLaunch"
+        Me.countDownToLaunch.PlayAudioCues = False
+        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToLaunch.TabIndex = 4
+        Me.countDownToLaunch.ZoomFactor = 2.0!
         '
         'Label3
         '
@@ -926,6 +959,17 @@ Partial Class BriefingControl
         Me.Label3.Text = "Sync Fly in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'countDownToSyncFly
+        '
+        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
+        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToSyncFly.Name = "countDownToSyncFly"
+        Me.countDownToSyncFly.PlayAudioCues = False
+        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToSyncFly.TabIndex = 2
+        Me.countDownToSyncFly.ZoomFactor = 2.0!
+        '
         'Label1
         '
         Me.Label1.Location = New System.Drawing.Point(4, 4)
@@ -934,6 +978,17 @@ Partial Class BriefingControl
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Meet in"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'countDownToMeet
+        '
+        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
+        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.countDownToMeet.Name = "countDownToMeet"
+        Me.countDownToMeet.PlayAudioCues = False
+        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
+        Me.countDownToMeet.TabIndex = 0
+        Me.countDownToMeet.ZoomFactor = 2.0!
         '
         'tbpgImages
         '
@@ -1063,6 +1118,18 @@ Partial Class BriefingControl
         Me.tbpgWeather.Text = "Weather"
         Me.tbpgWeather.UseVisualStyleBackColor = True
         '
+        'FullWeatherGraphPanel1
+        '
+        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
+        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
+        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(838, 656)
+        Me.FullWeatherGraphPanel1.TabIndex = 6
+        '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.chkShowGraph)
@@ -1181,6 +1248,116 @@ Partial Class BriefingControl
         Me.tabUnits.Text = "Units"
         Me.tabUnits.UseVisualStyleBackColor = True
         '
+        'grbAltitudes
+        '
+        Me.grbAltitudes.Controls.Add(Me.FlowLayoutPanel3)
+        Me.grbAltitudes.Location = New System.Drawing.Point(3, 3)
+        Me.grbAltitudes.Name = "grbAltitudes"
+        Me.grbAltitudes.Size = New System.Drawing.Size(412, 57)
+        Me.grbAltitudes.TabIndex = 0
+        Me.grbAltitudes.TabStop = False
+        Me.grbAltitudes.Text = "Altitude"
+        '
+        'FlowLayoutPanel3
+        '
+        Me.FlowLayoutPanel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeMeters)
+        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeFeet)
+        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeBoth)
+        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 23)
+        Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
+        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(406, 31)
+        Me.FlowLayoutPanel3.TabIndex = 0
+        '
+        'radioAltitudeMeters
+        '
+        Me.radioAltitudeMeters.AutoSize = True
+        Me.radioAltitudeMeters.Location = New System.Drawing.Point(3, 3)
+        Me.radioAltitudeMeters.Name = "radioAltitudeMeters"
+        Me.radioAltitudeMeters.Size = New System.Drawing.Size(127, 24)
+        Me.radioAltitudeMeters.TabIndex = 1
+        Me.radioAltitudeMeters.Tag = "0"
+        Me.radioAltitudeMeters.Text = "Metric (Meters)"
+        Me.radioAltitudeMeters.UseVisualStyleBackColor = True
+        '
+        'radioAltitudeFeet
+        '
+        Me.radioAltitudeFeet.AutoSize = True
+        Me.radioAltitudeFeet.Location = New System.Drawing.Point(136, 3)
+        Me.radioAltitudeFeet.Name = "radioAltitudeFeet"
+        Me.radioAltitudeFeet.Size = New System.Drawing.Size(119, 24)
+        Me.radioAltitudeFeet.TabIndex = 0
+        Me.radioAltitudeFeet.Tag = "1"
+        Me.radioAltitudeFeet.Text = "Imperial (Feet)"
+        Me.radioAltitudeFeet.UseVisualStyleBackColor = True
+        '
+        'radioAltitudeBoth
+        '
+        Me.radioAltitudeBoth.AutoSize = True
+        Me.radioAltitudeBoth.Location = New System.Drawing.Point(261, 3)
+        Me.radioAltitudeBoth.Name = "radioAltitudeBoth"
+        Me.radioAltitudeBoth.Size = New System.Drawing.Size(57, 24)
+        Me.radioAltitudeBoth.TabIndex = 2
+        Me.radioAltitudeBoth.Tag = "2"
+        Me.radioAltitudeBoth.Text = "Both"
+        Me.radioAltitudeBoth.UseVisualStyleBackColor = True
+        '
+        'grbDistances
+        '
+        Me.grbDistances.Controls.Add(Me.FlowLayoutPanel2)
+        Me.grbDistances.Location = New System.Drawing.Point(421, 3)
+        Me.grbDistances.Name = "grbDistances"
+        Me.grbDistances.Size = New System.Drawing.Size(412, 57)
+        Me.grbDistances.TabIndex = 1
+        Me.grbDistances.TabStop = False
+        Me.grbDistances.Text = "Distance"
+        '
+        'FlowLayoutPanel2
+        '
+        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceMetric)
+        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceImperial)
+        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceBoth)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 23)
+        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(406, 31)
+        Me.FlowLayoutPanel2.TabIndex = 0
+        '
+        'radioDistanceMetric
+        '
+        Me.radioDistanceMetric.AutoSize = True
+        Me.radioDistanceMetric.Location = New System.Drawing.Point(3, 3)
+        Me.radioDistanceMetric.Name = "radioDistanceMetric"
+        Me.radioDistanceMetric.Size = New System.Drawing.Size(151, 24)
+        Me.radioDistanceMetric.TabIndex = 0
+        Me.radioDistanceMetric.Tag = "0"
+        Me.radioDistanceMetric.Text = "Metric (Kilometers)"
+        Me.radioDistanceMetric.UseVisualStyleBackColor = True
+        '
+        'radioDistanceImperial
+        '
+        Me.radioDistanceImperial.AutoSize = True
+        Me.radioDistanceImperial.Location = New System.Drawing.Point(160, 3)
+        Me.radioDistanceImperial.Name = "radioDistanceImperial"
+        Me.radioDistanceImperial.Size = New System.Drawing.Size(125, 24)
+        Me.radioDistanceImperial.TabIndex = 1
+        Me.radioDistanceImperial.Tag = "1"
+        Me.radioDistanceImperial.Text = "Imperial (Miles)"
+        Me.radioDistanceImperial.UseVisualStyleBackColor = True
+        '
+        'radioDistanceBoth
+        '
+        Me.radioDistanceBoth.AutoSize = True
+        Me.radioDistanceBoth.Location = New System.Drawing.Point(291, 3)
+        Me.radioDistanceBoth.Name = "radioDistanceBoth"
+        Me.radioDistanceBoth.Size = New System.Drawing.Size(57, 24)
+        Me.radioDistanceBoth.TabIndex = 2
+        Me.radioDistanceBoth.Tag = "2"
+        Me.radioDistanceBoth.Text = "Both"
+        Me.radioDistanceBoth.UseVisualStyleBackColor = True
+        '
         'grbSpeed
         '
         Me.grbSpeed.Controls.Add(Me.FlowLayoutPanel8)
@@ -1241,7 +1418,7 @@ Partial Class BriefingControl
         Me.grbGateDiameterOrRadius.Location = New System.Drawing.Point(3, 129)
         Me.grbGateDiameterOrRadius.Name = "grbGateDiameterOrRadius"
         Me.grbGateDiameterOrRadius.Size = New System.Drawing.Size(412, 57)
-        Me.grbGateDiameterOrRadius.TabIndex = 3
+        Me.grbGateDiameterOrRadius.TabIndex = 4
         Me.grbGateDiameterOrRadius.TabStop = False
         Me.grbGateDiameterOrRadius.Text = "Gate Size Format"
         '
@@ -1348,7 +1525,7 @@ Partial Class BriefingControl
         Me.grbWindSpeed.Location = New System.Drawing.Point(421, 66)
         Me.grbWindSpeed.Name = "grbWindSpeed"
         Me.grbWindSpeed.Size = New System.Drawing.Size(412, 57)
-        Me.grbWindSpeed.TabIndex = 5
+        Me.grbWindSpeed.TabIndex = 3
         Me.grbWindSpeed.TabStop = False
         Me.grbWindSpeed.Text = "Wind Speed"
         '
@@ -1402,7 +1579,7 @@ Partial Class BriefingControl
         Me.grbGateDiameter.Location = New System.Drawing.Point(421, 129)
         Me.grbGateDiameter.Name = "grbGateDiameter"
         Me.grbGateDiameter.Size = New System.Drawing.Size(412, 57)
-        Me.grbGateDiameter.TabIndex = 4
+        Me.grbGateDiameter.TabIndex = 5
         Me.grbGateDiameter.TabStop = False
         Me.grbGateDiameter.Text = "Gate Measurement"
         '
@@ -1449,61 +1626,6 @@ Partial Class BriefingControl
         Me.radioGateDiameterBoth.Tag = "2"
         Me.radioGateDiameterBoth.Text = "Both"
         Me.radioGateDiameterBoth.UseVisualStyleBackColor = True
-        '
-        'grbDistances
-        '
-        Me.grbDistances.Controls.Add(Me.FlowLayoutPanel2)
-        Me.grbDistances.Location = New System.Drawing.Point(421, 3)
-        Me.grbDistances.Name = "grbDistances"
-        Me.grbDistances.Size = New System.Drawing.Size(412, 57)
-        Me.grbDistances.TabIndex = 1
-        Me.grbDistances.TabStop = False
-        Me.grbDistances.Text = "Distance"
-        '
-        'FlowLayoutPanel2
-        '
-        Me.FlowLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceMetric)
-        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceImperial)
-        Me.FlowLayoutPanel2.Controls.Add(Me.radioDistanceBoth)
-        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 23)
-        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(406, 31)
-        Me.FlowLayoutPanel2.TabIndex = 0
-        '
-        'radioDistanceMetric
-        '
-        Me.radioDistanceMetric.AutoSize = True
-        Me.radioDistanceMetric.Location = New System.Drawing.Point(3, 3)
-        Me.radioDistanceMetric.Name = "radioDistanceMetric"
-        Me.radioDistanceMetric.Size = New System.Drawing.Size(151, 24)
-        Me.radioDistanceMetric.TabIndex = 0
-        Me.radioDistanceMetric.Tag = "0"
-        Me.radioDistanceMetric.Text = "Metric (Kilometers)"
-        Me.radioDistanceMetric.UseVisualStyleBackColor = True
-        '
-        'radioDistanceImperial
-        '
-        Me.radioDistanceImperial.AutoSize = True
-        Me.radioDistanceImperial.Location = New System.Drawing.Point(160, 3)
-        Me.radioDistanceImperial.Name = "radioDistanceImperial"
-        Me.radioDistanceImperial.Size = New System.Drawing.Size(125, 24)
-        Me.radioDistanceImperial.TabIndex = 1
-        Me.radioDistanceImperial.Tag = "1"
-        Me.radioDistanceImperial.Text = "Imperial (Miles)"
-        Me.radioDistanceImperial.UseVisualStyleBackColor = True
-        '
-        'radioDistanceBoth
-        '
-        Me.radioDistanceBoth.AutoSize = True
-        Me.radioDistanceBoth.Location = New System.Drawing.Point(291, 3)
-        Me.radioDistanceBoth.Name = "radioDistanceBoth"
-        Me.radioDistanceBoth.Size = New System.Drawing.Size(57, 24)
-        Me.radioDistanceBoth.TabIndex = 2
-        Me.radioDistanceBoth.Tag = "2"
-        Me.radioDistanceBoth.Text = "Both"
-        Me.radioDistanceBoth.UseVisualStyleBackColor = True
         '
         'grbBarometric
         '
@@ -1559,131 +1681,9 @@ Partial Class BriefingControl
         Me.radioBaroBoth.Text = "Both"
         Me.radioBaroBoth.UseVisualStyleBackColor = True
         '
-        'grbAltitudes
-        '
-        Me.grbAltitudes.Controls.Add(Me.FlowLayoutPanel3)
-        Me.grbAltitudes.Location = New System.Drawing.Point(3, 3)
-        Me.grbAltitudes.Name = "grbAltitudes"
-        Me.grbAltitudes.Size = New System.Drawing.Size(412, 57)
-        Me.grbAltitudes.TabIndex = 0
-        Me.grbAltitudes.TabStop = False
-        Me.grbAltitudes.Text = "Altitude"
-        '
-        'FlowLayoutPanel3
-        '
-        Me.FlowLayoutPanel3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeMeters)
-        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeFeet)
-        Me.FlowLayoutPanel3.Controls.Add(Me.radioAltitudeBoth)
-        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 23)
-        Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
-        Me.FlowLayoutPanel3.Size = New System.Drawing.Size(406, 31)
-        Me.FlowLayoutPanel3.TabIndex = 0
-        '
-        'radioAltitudeMeters
-        '
-        Me.radioAltitudeMeters.AutoSize = True
-        Me.radioAltitudeMeters.Location = New System.Drawing.Point(3, 3)
-        Me.radioAltitudeMeters.Name = "radioAltitudeMeters"
-        Me.radioAltitudeMeters.Size = New System.Drawing.Size(127, 24)
-        Me.radioAltitudeMeters.TabIndex = 1
-        Me.radioAltitudeMeters.Tag = "0"
-        Me.radioAltitudeMeters.Text = "Metric (Meters)"
-        Me.radioAltitudeMeters.UseVisualStyleBackColor = True
-        '
-        'radioAltitudeFeet
-        '
-        Me.radioAltitudeFeet.AutoSize = True
-        Me.radioAltitudeFeet.Location = New System.Drawing.Point(136, 3)
-        Me.radioAltitudeFeet.Name = "radioAltitudeFeet"
-        Me.radioAltitudeFeet.Size = New System.Drawing.Size(119, 24)
-        Me.radioAltitudeFeet.TabIndex = 0
-        Me.radioAltitudeFeet.Tag = "1"
-        Me.radioAltitudeFeet.Text = "Imperial (Feet)"
-        Me.radioAltitudeFeet.UseVisualStyleBackColor = True
-        '
-        'radioAltitudeBoth
-        '
-        Me.radioAltitudeBoth.AutoSize = True
-        Me.radioAltitudeBoth.Location = New System.Drawing.Point(261, 3)
-        Me.radioAltitudeBoth.Name = "radioAltitudeBoth"
-        Me.radioAltitudeBoth.Size = New System.Drawing.Size(57, 24)
-        Me.radioAltitudeBoth.TabIndex = 2
-        Me.radioAltitudeBoth.Tag = "2"
-        Me.radioAltitudeBoth.Text = "Both"
-        Me.radioAltitudeBoth.UseVisualStyleBackColor = True
-        '
         'Timer1
         '
         Me.Timer1.Interval = 1000
-        '
-        'Label8
-        '
-        Me.Label8.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI Variable Display", 15.70909!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(3, 645)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(832, 37)
-        Me.Label8.TabIndex = 13
-        Me.Label8.Text = "Don't forget to review information on the other tabs!"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'countDownTaskStart
-        '
-        Me.countDownTaskStart.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownTaskStart.Location = New System.Drawing.Point(7, 316)
-        Me.countDownTaskStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownTaskStart.Name = "countDownTaskStart"
-        Me.countDownTaskStart.PlayAudioCues = False
-        Me.countDownTaskStart.Size = New System.Drawing.Size(173, 52)
-        Me.countDownTaskStart.TabIndex = 6
-        Me.countDownTaskStart.ZoomFactor = 2.0!
-        '
-        'countDownToLaunch
-        '
-        Me.countDownToLaunch.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToLaunch.Location = New System.Drawing.Point(7, 224)
-        Me.countDownToLaunch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToLaunch.Name = "countDownToLaunch"
-        Me.countDownToLaunch.PlayAudioCues = False
-        Me.countDownToLaunch.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToLaunch.TabIndex = 4
-        Me.countDownToLaunch.ZoomFactor = 2.0!
-        '
-        'countDownToSyncFly
-        '
-        Me.countDownToSyncFly.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToSyncFly.Location = New System.Drawing.Point(7, 132)
-        Me.countDownToSyncFly.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToSyncFly.Name = "countDownToSyncFly"
-        Me.countDownToSyncFly.PlayAudioCues = False
-        Me.countDownToSyncFly.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToSyncFly.TabIndex = 2
-        Me.countDownToSyncFly.ZoomFactor = 2.0!
-        '
-        'countDownToMeet
-        '
-        Me.countDownToMeet.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.countDownToMeet.Location = New System.Drawing.Point(7, 39)
-        Me.countDownToMeet.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.countDownToMeet.Name = "countDownToMeet"
-        Me.countDownToMeet.PlayAudioCues = False
-        Me.countDownToMeet.Size = New System.Drawing.Size(173, 52)
-        Me.countDownToMeet.TabIndex = 0
-        Me.countDownToMeet.ZoomFactor = 2.0!
-        '
-        'FullWeatherGraphPanel1
-        '
-        Me.FullWeatherGraphPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.FullWeatherGraphPanel1.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
-        Me.FullWeatherGraphPanel1.Location = New System.Drawing.Point(0, 32)
-        Me.FullWeatherGraphPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.FullWeatherGraphPanel1.Name = "FullWeatherGraphPanel1"
-        Me.FullWeatherGraphPanel1.Size = New System.Drawing.Size(838, 656)
-        Me.FullWeatherGraphPanel1.TabIndex = 6
         '
         'BriefingControl
         '
@@ -1760,6 +1760,12 @@ Partial Class BriefingControl
         Me.tbpgAddOns.ResumeLayout(False)
         CType(Me.AddOnsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabUnits.ResumeLayout(False)
+        Me.grbAltitudes.ResumeLayout(False)
+        Me.FlowLayoutPanel3.ResumeLayout(False)
+        Me.FlowLayoutPanel3.PerformLayout()
+        Me.grbDistances.ResumeLayout(False)
+        Me.FlowLayoutPanel2.ResumeLayout(False)
+        Me.FlowLayoutPanel2.PerformLayout()
         Me.grbSpeed.ResumeLayout(False)
         Me.FlowLayoutPanel8.ResumeLayout(False)
         Me.FlowLayoutPanel8.PerformLayout()
@@ -1775,15 +1781,9 @@ Partial Class BriefingControl
         Me.grbGateDiameter.ResumeLayout(False)
         Me.FlowLayoutPanel4.ResumeLayout(False)
         Me.FlowLayoutPanel4.PerformLayout()
-        Me.grbDistances.ResumeLayout(False)
-        Me.FlowLayoutPanel2.ResumeLayout(False)
-        Me.FlowLayoutPanel2.PerformLayout()
         Me.grbBarometric.ResumeLayout(False)
         Me.FlowLayoutPanel1.ResumeLayout(False)
         Me.FlowLayoutPanel1.PerformLayout()
-        Me.grbAltitudes.ResumeLayout(False)
-        Me.FlowLayoutPanel3.ResumeLayout(False)
-        Me.FlowLayoutPanel3.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
