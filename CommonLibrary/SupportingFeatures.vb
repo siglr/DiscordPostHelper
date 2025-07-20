@@ -66,6 +66,20 @@ Public Class SupportingFeatures
     Public Const WS_VSCROLL As Integer = &H200000
     Public Const WS_HSCROLL As Integer = &H100000
 
+    Public Shared Function WaitForProcessExit(processName As String, timeoutMs As Integer, Optional checkIntervalMs As Integer = 100) As Boolean
+
+        Dim sw = Stopwatch.StartNew()
+        While sw.ElapsedMilliseconds < timeoutMs
+            If Not Process.GetProcessesByName(processName).Any() Then
+                Return True
+            End If
+            Threading.Thread.Sleep(checkIntervalMs)
+        End While
+
+        Return Not Process.GetProcessesByName(processName).Any()
+
+    End Function
+
     Public Shared Function TaskLibraryDiscordURL(Optional testMode As Boolean = False) As String
         If testMode Then
             Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsTestingID}"

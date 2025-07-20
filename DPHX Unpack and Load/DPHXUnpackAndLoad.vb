@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Diagnostics.Eventing.Reader
+Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Reflection
@@ -159,8 +160,8 @@ Public Class DPHXUnpackAndLoad
             AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
             _pipeServer.Start()
 
-            ' Is the listener running? TODO: Check the auto-start setting
-            Dim listenerStartupResult = MakeSureWSGListenerIsRunning(True)
+            ' Is the listener running?
+            Dim listenerStartupResult = MakeSureWSGListenerIsRunning(Not Settings.SessionSettings.WSGListenerAutoStart)
 
             If Not ignoreWSGIntegration Then
                 'Check WSG integration
@@ -197,8 +198,8 @@ Public Class DPHXUnpackAndLoad
                 End If
             Loop
 
-            'TODO: Send the "shutdown" message to the WSG Listener - if we started it and if the Auto-Start is disabled
-            If _wsgListenerStartedAsTransient Then
+            'Send the "shutdown" message to the WSG Listener - if we started it and if the Auto-Start is disabled
+            If _wsgListenerStartedAsTransient AndAlso (Not Settings.SessionSettings.WSGListenerAutoStart) Then
                 SendCommandToWSG("shutdown")
             End If
 
@@ -443,7 +444,22 @@ Public Class DPHXUnpackAndLoad
     Private Function OpenSettingsWindow() As DialogResult
         Dim formSettings As New Settings
 
-        Return formSettings.ShowDialog(Me)
+        Dim result As DialogResult = formSettings.ShowDialog(Me)
+
+        ' Check if the WSG Listener should be re-started (transient vs auto-start setting)
+        If _wsgListenerStartedAsTransient AndAlso Settings.SessionSettings.WSGListenerAutoStart Then
+            'Was started as transient, but now auto-start is enabled - shutdown and restart in permanent mode
+            SendCommandToWSG("shutdown")
+            SupportingFeatures.WaitForProcessExit("WSGListener", 5000)
+            MakeSureWSGListenerIsRunning(False)
+        ElseIf (Not _wsgListenerStartedAsTransient) AndAlso (Not Settings.SessionSettings.WSGListenerAutoStart) Then
+            'Was started as permanent, but now auto-start is disabled - shutdown and restart in transient mode
+            SendCommandToWSG("shutdown")
+            SupportingFeatures.WaitForProcessExit("WSGListener", 5000)
+            MakeSureWSGListenerIsRunning(True)
+        End If
+
+        Return result
 
     End Function
 
@@ -1243,7 +1259,7 @@ Public Class DPHXUnpackAndLoad
                     Dim args As String = If(isTransient, "--transient", "")
                     Dim psi As New ProcessStartInfo(exe) With {
                     .Arguments = args,
-                    .UseShellExecute = False,
+                    .UseShellExecute = True,
                     .CreateNoWindow = True
                 }
                     Process.Start(psi)
