@@ -343,6 +343,7 @@ Public Class AllSettings
             ExcludeXCSoarMapFileFromCleanup = settingsInFile.ExcludeXCSoarMapFileFromCleanup
             WSGIntegration = settingsInFile.WSGIntegration
             WSGIgnoreWhenOpeningDPHX = settingsInFile.WSGIgnoreWhenOpeningDPHX
+            WSGListenerAutoStart = settingsInFile.WSGListenerAutoStart
 
             'Check if at least one installation
             If Not (MSFS2020Microsoft OrElse MSFS2020Steam OrElse MSFS2024Microsoft OrElse MSFS2024Steam) Then

@@ -133,6 +133,7 @@ Partial Class Settings
         Me.pnlWSGAutoLaunch = New System.Windows.Forms.Panel()
         Me.cboWSGIntegration = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
+        Me.chkWSGListenerAutoStart = New System.Windows.Forms.CheckBox()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -1261,6 +1262,7 @@ Partial Class Settings
         '
         'pnlLocalWSPort
         '
+        Me.pnlLocalWSPort.Controls.Add(Me.chkWSGListenerAutoStart)
         Me.pnlLocalWSPort.Controls.Add(Me.btnResetDPHXLocalPort)
         Me.pnlLocalWSPort.Controls.Add(Me.txtDPHXLocalPort)
         Me.pnlLocalWSPort.Controls.Add(Me.Label17)
@@ -1276,9 +1278,9 @@ Partial Class Settings
         Me.Label17.AutoSize = True
         Me.Label17.Location = New System.Drawing.Point(5, 11)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(142, 20)
+        Me.Label17.Size = New System.Drawing.Size(181, 20)
         Me.Label17.TabIndex = 0
-        Me.Label17.Text = "DPHX Listening Port:"
+        Me.Label17.Text = "WSG/DPHX Listening Port:"
         '
         'pnlTrackerExe
         '
@@ -1404,6 +1406,20 @@ Partial Class Settings
         Me.Label21.Size = New System.Drawing.Size(166, 20)
         Me.Label21.TabIndex = 0
         Me.Label21.Text = "WeSimGlide Integration:"
+        '
+        'chkWSGListenerAutoStart
+        '
+        Me.chkWSGListenerAutoStart.AutoSize = True
+        Me.chkWSGListenerAutoStart.Location = New System.Drawing.Point(361, 9)
+        Me.chkWSGListenerAutoStart.Name = "chkWSGListenerAutoStart"
+        Me.chkWSGListenerAutoStart.Size = New System.Drawing.Size(309, 24)
+        Me.chkWSGListenerAutoStart.TabIndex = 7
+        Me.chkWSGListenerAutoStart.Tag = "Enable this to have the WSG Listener auto start with Windows and keep running in " &
+    "your system tray."
+        Me.chkWSGListenerAutoStart.Text = "Auto-Start with Windows and keep running"
+        Me.ToolTip1.SetToolTip(Me.chkWSGListenerAutoStart, "Enable this to ignore the WSG integration option when starting the tool through a" &
+        " DPHX file.")
+        Me.chkWSGListenerAutoStart.UseVisualStyleBackColor = True
         '
         'Settings
         '
@@ -1599,4 +1615,5 @@ Partial Class Settings
     Friend WithEvents cboWSGIntegration As ComboBox
     Friend WithEvents Panel3 As Panel
     Friend WithEvents chkWSGExceptOpeningDPHX As CheckBox
+    Friend WithEvents chkWSGListenerAutoStart As CheckBox
 End Class

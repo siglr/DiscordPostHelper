@@ -5,6 +5,7 @@ Imports System.Reflection
 Imports System.Text
 Imports System.Threading
 Imports System.Xml.Serialization
+Imports CefSharp.DevTools.Page
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -29,8 +30,8 @@ Public Class DPHXUnpackAndLoad
     Private _lastLoadSuccess As Boolean = False
     Private _status As New frmStatus()
     Private _taskDiscordPostID As String = String.Empty
-
-    Private WithEvents _DPHXWS As DPHXLocalWS
+    Private _pipeServer As PipeCommandServer
+    Private _wsgListenerStartedAsTransient As Boolean = False
 
 #End Region
 
@@ -154,8 +155,12 @@ Public Class DPHXUnpackAndLoad
             msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
 
             ' Start the server
-            _DPHXWS = New DPHXLocalWS(Settings.SessionSettings.LocalWebServerPort)
-            _DPHXWS.Start()
+            _pipeServer = New PipeCommandServer()
+            AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
+            _pipeServer.Start()
+
+            ' Is the listener running? TODO: Check the auto-start setting
+            Dim listenerStartupResult = MakeSureWSGListenerIsRunning(True)
 
             If Not ignoreWSGIntegration Then
                 'Check WSG integration
@@ -191,10 +196,13 @@ Public Class DPHXUnpackAndLoad
                     Application.DoEvents()
                 End If
             Loop
-            If _DPHXWS IsNot Nothing Then
-                _DPHXWS.Stop()
-                _DPHXWS.Dispose()
+
+            'TODO: Send the "shutdown" message to the WSG Listener - if we started it and if the Auto-Start is disabled
+            If _wsgListenerStartedAsTransient Then
+                SendCommandToWSG("shutdown")
             End If
+
+            _pipeServer.Stop()
             Settings.SessionSettings.MainFormSize = Me.Size.ToString()
             Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
             Settings.SessionSettings.Save()
@@ -211,6 +219,8 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles toolStripSettings.Click
 
+        Dim oldPort As Integer = Integer.Parse(Settings.SessionSettings.LocalWebServerPort)
+
         OpenSettingsWindow()
 
         msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
@@ -221,10 +231,12 @@ Public Class DPHXUnpackAndLoad
             EnableUnpackButton()
         End If
 
-        'Restart local web server
-        _DPHXWS.Stop()
-        _DPHXWS.Port = Settings.SessionSettings.LocalWebServerPort
-        _DPHXWS.Start()
+        Dim newPort As Integer = Integer.Parse(Settings.SessionSettings.LocalWebServerPort)
+        If oldPort <> newPort Then
+            'Port has changed, send the set-port command to the WSG Listener
+            SendCommandToWSG("set-port", $"port={newPort}", oldPort)
+        End If
+
 
     End Sub
 
@@ -366,51 +378,27 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Sub _DPHXWS_RequestReceived(sender As Object, e As RequestReceivedEventArgs) _
-    Handles _DPHXWS.RequestReceived
-
-        Dim context = e.Context
-        Dim request = context.Request
-
-        ' 1. Check if it's a preflight OPTIONS request
-        If request.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
-            ' Send an appropriate CORS response if needed
-            context.Response.AddHeader("Access-Control-Allow-Origin", "*")  ' or specific domain
-            context.Response.AddHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-            context.Response.StatusCode = 204 ' No Content
-            context.Response.OutputStream.Close()
-            Return
+    Private Sub OnPipeCommand(sender As Object, e As CommandEventArgs)
+        If e.Action = "download-task" Then
+            ' Boolean fromEventTab = (e.Source = "event")
+            Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
+        ElseIf e.Action = "foreground" Then
+            Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
         End If
+    End Sub
 
-        ' 2. If it's a GET, handle your logic
-        If request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
-            Dim taskId As String = request.QueryString("taskID")
-            Dim taskTitle As String = request.QueryString("title")
-            Dim fromEventTab As Boolean = False
-            If request.QueryString("source") IsNot Nothing AndAlso request.QueryString("source") <> String.Empty Then
-                fromEventTab = (request.QueryString("source") = "event")
+    Private Sub RequestReceivedFromWSGListener(taskId As String, taskTitle As String, fromEventTab As Boolean)
+        Dim downloaded = SupportingFeatures.DownloadTaskFile(
+                      taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
+
+        SupportingFeatures.BringWindowToFront(Me)
+
+        If downloaded <> String.Empty Then
+            LoadDPHXPackage(downloaded)
+            If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> "" AndAlso _lastLoadSuccess Then
+                UnpackFiles(fromEventTab)
             End If
-
-            Console.WriteLine($"Incoming GET request for taskId = {taskId}, title = {taskTitle}")
-
-            Dim DownloadedFilePath As String = SupportingFeatures.DownloadTaskFile(taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
-            If DownloadedFilePath <> String.Empty Then
-                _DPHXWS.SendResponse(context, $"Task received: {taskId}, Title: {taskTitle}", 200)
-                ' Because LoadDPHXPackage likely does UI-related work,
-                ' we must call it via Invoke on the main form:
-                Me.Invoke(Sub()
-                              LoadDPHXPackage(DownloadedFilePath)
-                              If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
-                                  UnpackFiles(fromEventTab)
-                              End If
-                          End Sub)
-            End If
-        Else
-            ' Optional: handle other methods or return 405 (Method Not Allowed)
-            context.Response.StatusCode = 405
-            context.Response.OutputStream.Close()
         End If
-
     End Sub
 
 #End Region
@@ -1242,6 +1230,66 @@ Public Class DPHXUnpackAndLoad
         End If
 
     End Sub
+
+    Private Function MakeSureWSGListenerIsRunning(isTransient As Boolean) As String
+        Dim result As String = String.Empty
+
+        ' Look for any running instances
+        Dim procs = Process.GetProcessesByName("WSGListener")
+        If procs.Length = 0 Then
+            Dim exe = Path.Combine(Application.StartupPath, "WSGListener.exe")
+            If File.Exists(exe) Then
+                Try
+                    Dim args As String = If(isTransient, "--transient", "")
+                    Dim psi As New ProcessStartInfo(exe) With {
+                    .Arguments = args,
+                    .UseShellExecute = False,
+                    .CreateNoWindow = True
+                }
+                    Process.Start(psi)
+                    ' Remember how we launched it
+                    _wsgListenerStartedAsTransient = isTransient
+                Catch ex As Exception
+                    result = $"Could not start WSGListener (transient={isTransient}): {ex.Message}"
+                End Try
+            Else
+                result = "WSGListener.exe not found next to DPHX Unpack & Load."
+            End If
+        End If
+
+        Return result
+    End Function
+
+    Private Function SendCommandToWSG(endpoint As String, Optional query As String = "", Optional oldPortToUse As Integer = 0) As String
+        Dim resultMsg As String = String.Empty
+
+        Dim port As Integer
+        If oldPortToUse > 0 Then
+            port = oldPortToUse
+        Else
+            If Not Integer.TryParse(Settings.SessionSettings.LocalWebServerPort, port) Then
+                resultMsg = "Invalid WSGListener port in settings."
+                Return resultMsg
+            End If
+        End If
+
+        Dim url = $"http://localhost:{port}/{endpoint}"
+        If Not String.IsNullOrEmpty(query) Then
+            url &= "?" & query
+        End If
+
+        Try
+            Using wc As New WebClient()
+                wc.Headers.Add("User-Agent", "DPHX Unpack & Load")
+                wc.DownloadString(url)
+            End Using
+        Catch ex As Exception
+            resultMsg = $"Failed to send '{endpoint}' to WSGListener:{vbCrLf}{ex.Message}"
+        End Try
+
+        Return resultMsg
+
+    End Function
 
 #End Region
 

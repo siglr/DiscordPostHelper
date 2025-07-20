@@ -1,9 +1,10 @@
 ﻿Imports System
 Imports System.Diagnostics
+Imports System.Drawing
 Imports System.IO
 Imports System.IO.Pipes
+Imports System.Threading
 Imports System.Windows.Forms
-Imports System.Drawing
 
 Public Class ListenerContext
     Inherits ApplicationContext
@@ -55,52 +56,69 @@ Public Class ListenerContext
 
     Private Sub OnHttpRequest(sender As Object, e As RequestReceivedEventArgs)
         Dim req = e.Context.Request
-        Dim path = req.Url.AbsolutePath.ToLowerInvariant().TrimStart("/"c)
+        Dim ctx = e.Context
+
+        ' Handle CORS preflight
+        If req.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
+            ctx.Response.AddHeader("Access-Control-Allow-Origin", "*")
+            ctx.Response.AddHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+            ctx.Response.StatusCode = 204
+            ctx.Response.OutputStream.Close()
+            Return
+        End If
+
+        If Not req.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
+            ctx.Response.StatusCode = 405
+            ctx.Response.OutputStream.Close()
+            Return
+        End If
+
+        Dim path = req.Url.AbsolutePath.Trim("/"c).ToLowerInvariant()
 
         Select Case path
-            Case "open"
-                Dim fileParam = req.QueryString("file")
-                If String.IsNullOrEmpty(fileParam) Then
-                    _listener.SendResponse(e.Context, "Missing file parameter", 400)
+            Case "", "download-task"
+                Dim taskId = req.QueryString("taskID")
+                Dim title = req.QueryString("title")
+                Dim sourceVal = req.QueryString("source")
+                Dim fromEvent = String.Equals(sourceVal, "event", StringComparison.OrdinalIgnoreCase)
+
+                If String.IsNullOrEmpty(taskId) OrElse String.IsNullOrEmpty(title) Then
+                    _listener.SendResponse(ctx, "Missing taskID or title", 400)
                     Return
                 End If
-                HandleOpen(fileParam)
-                _listener.SendResponse(e.Context, "OK")
+
+                ' Properly formatted JSON payload:
+                Dim payload = $"{{""action"":""download-task"",""taskID"":""{taskId}"",""title"":""{title}"",""source"":""{If(fromEvent, "event", "")}""}}"
+                SendToDPHX(payload)
+                _listener.SendResponse(ctx, "OK")
 
             Case "shutdown"
-                _listener.SendResponse(e.Context, "Shutting down")
+                _listener.SendResponse(ctx, "Shutting down")
                 StopListener()
                 Application.Exit()
 
             Case "set-port"
-                Dim newPort = 0
+                Dim newPort As Integer
                 If Integer.TryParse(req.QueryString("port"), newPort) Then
-                    _listener.SendResponse(e.Context, $"Port set to {newPort}")
+                    _listener.SendResponse(ctx, $"Port set to {newPort}")
                     _listener.Stop()
                     _listener.Port = newPort
                     _listener.Start()
                 Else
-                    _listener.SendResponse(e.Context, "Invalid port", 400)
+                    _listener.SendResponse(ctx, "Invalid port", 400)
                 End If
 
             Case Else
-                _listener.SendResponse(e.Context, "Unknown command", 404)
+                _listener.SendResponse(ctx, "Unknown command", 404)
         End Select
     End Sub
 
     Private Sub OnOpenDPHX(sender As Object, e As EventArgs)
-        HandleOpen(Nothing)
+        HandleOpen()
     End Sub
 
-    Private Sub HandleOpen(filePath As String)
-        EnsureDPHXRunning()
-        Dim msg As String
-        If Not String.IsNullOrEmpty(filePath) Then
-            msg = $"{{ ""action"": ""open-dphx"", ""filePath"": ""{filePath.Replace("\", "\\")}"" }}"
-        Else
-            msg = "{ ""action"": ""foreground"" }"
-        End If
-        SendToDPHX(msg)
+    Private Sub HandleOpen()
+        SendToDPHX("{""action"":""foreground""}")
     End Sub
 
     Private Sub EnsureDPHXRunning()
@@ -114,6 +132,7 @@ Public Class ListenerContext
 
     Private Sub SendToDPHX(message As String)
         Try
+            EnsureDPHXRunning()
             Using client = New NamedPipeClientStream(".", "DPHXPipe", PipeDirection.Out)
                 client.Connect(2000)
                 Using writer = New StreamWriter(client)

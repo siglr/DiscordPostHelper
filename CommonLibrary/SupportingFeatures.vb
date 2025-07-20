@@ -2452,6 +2452,12 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Sub BringWindowToFront(theForm As Form)
+        If theForm.WindowState = FormWindowState.Minimized Then theForm.WindowState = FormWindowState.Normal
+        theForm.BringToFront()
+        theForm.Activate()
+    End Sub
+
     ' Function to bring a specific window to the top and unminimize it if minimized
     Public Shared Function BringWindowToTopWithPartialTitle(partialTitle As String) As IntPtr
         Dim targetHandle As IntPtr = IntPtr.Zero

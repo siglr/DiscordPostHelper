@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Windows.Forms
+Imports Microsoft.Win32
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
 
@@ -107,6 +108,7 @@ Public Class Settings
 
         cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
         chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
+        chkWSGListenerAutoStart.Checked = SessionSettings.WSGListenerAutoStart
 
     End Sub
 
@@ -253,6 +255,16 @@ Public Class Settings
             End If
             SessionSettings.WSGIntegration = cboWSGIntegration.SelectedIndex
             SessionSettings.WSGIgnoreWhenOpeningDPHX = chkWSGExceptOpeningDPHX.Checked
+
+            'If the auto-start setting has changed, we need to add or remove the listener from the auto-run with Windows
+            If chkWSGListenerAutoStart.Checked AndAlso Not SessionSettings.WSGListenerAutoStart Then
+                ' The Auto-Start has been enabled, make sure we set the listener to auto-start with Windows
+                SetWSGListenerAutoStart(True)
+            ElseIf Not chkWSGListenerAutoStart.Checked AndAlso SessionSettings.WSGListenerAutoStart Then
+                ' The Auto-Start has been disabled, make sure we remove the listener from auto-start with Windows
+                SetWSGListenerAutoStart(False)
+            End If
+            SessionSettings.WSGListenerAutoStart = chkWSGListenerAutoStart.Checked
 
             If optOverwriteAlwaysOverwrite.Checked Then
                 SessionSettings.AutoOverwriteFiles = AllSettings.AutoOverwriteOptions.AlwaysOverwrite
@@ -835,6 +847,28 @@ Public Class Settings
             End Using
         End If
 
+    End Sub
+
+    ''' <summary>
+    ''' Toggles WSGListener.exe auto-start in HKCU\...\Run
+    ''' </summary>
+    ''' <param name="enable">True to add; False to remove.</param>
+    Private Sub SetWSGListenerAutoStart(enable As Boolean)
+        Const runKeyPath As String = "Software\Microsoft\Windows\CurrentVersion\Run"
+        Dim exePath = Path.Combine(Application.StartupPath, "WSGListener.exe")
+        Dim regValue = $"""{exePath}"""
+
+        Using runKey = Registry.CurrentUser.OpenSubKey(runKeyPath, writable:=True)
+            If runKey Is Nothing Then
+                Throw New InvalidOperationException("Could not open registry key for auto-start.")
+            End If
+
+            If enable Then
+                runKey.SetValue("WSGListener", regValue)
+            Else
+                runKey.DeleteValue("WSGListener", throwOnMissingValue:=False)
+            End If
+        End Using
     End Sub
 
 End Class
