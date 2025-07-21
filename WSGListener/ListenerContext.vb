@@ -89,6 +89,7 @@ Public Class ListenerContext
 
                 ' Properly formatted JSON payload:
                 Dim payload = $"{{""action"":""download-task"",""taskID"":""{taskId}"",""title"":""{title}"",""source"":""{If(fromEvent, "event", "")}""}}"
+                SendToDPHX("{""action"":""foreground""}")
                 SendToDPHX(payload)
                 _listener.SendResponse(ctx, "OK")
 
