@@ -84,6 +84,15 @@ Module MainModule
             End If
         Next
 
+        ' Wait for WSGListener
+        For Each relatedProcess In Process.GetProcessesByName("WSGListener")
+            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory) Then
+                If Not updateForm.ShowWaitingForProcess(relatedProcess) Then
+                    Exit Sub
+                End If
+            End If
+        Next
+
         updateForm.OtherProcessesTerminated()
 
         Try

@@ -24,15 +24,15 @@ Public Class ListenerContext
         Dim icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wsglistener.ico")
         _notifyIcon.Icon = New Icon(icoPath)
         _notifyIcon.Text = "WeSimGlide DPHX Listener"
+        ' Wire up click events:
+        AddHandler _notifyIcon.MouseClick, AddressOf OnNotifyIconClick
+        AddHandler _notifyIcon.MouseDoubleClick, AddressOf OnNotifyIconDoubleClick
 
         Dim menu = New ContextMenuStrip()
         menu.ShowImageMargin = False
         menu.ShowCheckMargin = False
 
-        ' 1) Open DPHX
         menu.Items.Add("Open DPHX Unpack && Load", Nothing, AddressOf OnOpenDPHX)
-
-        ' 2) WeSimGlide.org submenu
         Dim wsg = New ToolStripMenuItem("WeSimGlide.org")
         ' Turn off the image/check margins on its drop-down:
         Dim dd = CType(wsg.DropDown, ToolStripDropDownMenu)
@@ -42,21 +42,26 @@ Public Class ListenerContext
         wsg.DropDownItems.Add("📆 Events", Nothing, AddressOf OnWSGOpenEvents)
         wsg.DropDownItems.Add("🌐 Map", Nothing, AddressOf OnWSGOpenMap)
         menu.Items.Add(wsg)
-
-        ' 3) Separator
         menu.Items.Add(New ToolStripSeparator())
-
-        ' 4) Restart
         menu.Items.Add("Restart Listener", Nothing, AddressOf OnRestart)
-
-        ' 5) Separator
         menu.Items.Add(New ToolStripSeparator())
-
-        ' 6) Exit
         menu.Items.Add("End Listener", Nothing, AddressOf OnExit)
 
         _notifyIcon.ContextMenuStrip = menu
         _notifyIcon.Visible = True
+    End Sub
+
+    Private Sub OnNotifyIconClick(sender As Object, e As MouseEventArgs)
+        If e.Button = MouseButtons.Left Then
+            ' single‐click behavior - nothing
+        End If
+    End Sub
+
+    Private Sub OnNotifyIconDoubleClick(sender As Object, e As MouseEventArgs)
+        If e.Button = MouseButtons.Left Then
+            ' double‐click behavior
+            OnWSGOpenHome(sender, e)
+        End If
     End Sub
 
     Private Sub OnWSGOpenHome(sender As Object, e As EventArgs)
