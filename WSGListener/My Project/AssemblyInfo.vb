@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Listener tool for integration between WeSimGlide and DPHX")>
 <Assembly: AssemblyCompany("SIGLR Soaring Tools")>
 <Assembly: AssemblyProduct("WSG Listener")>
-<Assembly: AssemblyCopyright("Copyright ©  2025")>
+<Assembly: AssemblyCopyright("Copyright �  2025")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -28,5 +28,5 @@ Imports System.Runtime.InteropServices
 '      Revision
 '
 
-<Assembly: AssemblyVersion("25.7.18.1")>
-<Assembly: AssemblyFileVersion("25.7.18.1")>
+<Assembly: AssemblyVersion("25.7.20.1")>
+<Assembly: AssemblyFileVersion("25.7.20.1")>
