@@ -246,8 +246,8 @@ Public Class IGCFileUpload
         If String.IsNullOrEmpty(saveResults) Then
 
             ' Finish with the post‐upload steps
-            txtWSGStatus.Text = "Already uploaded"
-            lblProcessing.Text = "Already uploaded - N/A"
+            txtWSGStatus.Text = "Uploaded"
+            lblProcessing.Text = "Uploaded"
             igcDetails.AlreadyUploaded = True
             igcDetails.Results = Nothing
             pnlResults.Visible = False
