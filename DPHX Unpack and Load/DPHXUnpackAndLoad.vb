@@ -1244,7 +1244,7 @@ Public Class DPHXUnpackAndLoad
             End If
         Else
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("No IGC files found in the NB21 IGC folder that match the flight plan.", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show($"No IGC file found in the NB21 IGC folder ({Settings.SessionSettings.NB21IGCFolder})", "No IGC files found", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
         End If
 
