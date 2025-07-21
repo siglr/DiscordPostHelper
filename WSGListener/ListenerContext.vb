@@ -24,14 +24,51 @@ Public Class ListenerContext
         Dim icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wsglistener.ico")
         _notifyIcon.Icon = New Icon(icoPath)
         _notifyIcon.Text = "WeSimGlide DPHX Listener"
+
         Dim menu = New ContextMenuStrip()
         menu.ShowImageMargin = False
         menu.ShowCheckMargin = False
+
+        ' 1) Open DPHX
         menu.Items.Add("Open DPHX Unpack && Load", Nothing, AddressOf OnOpenDPHX)
+
+        ' 2) WeSimGlide.org submenu
+        Dim wsg = New ToolStripMenuItem("WeSimGlide.org")
+        ' Turn off the image/check margins on its drop-down:
+        Dim dd = CType(wsg.DropDown, ToolStripDropDownMenu)
+        dd.ShowImageMargin = False
+        dd.ShowCheckMargin = False
+        wsg.DropDownItems.Add("🏠 Home", Nothing, AddressOf OnWSGOpenHome)
+        wsg.DropDownItems.Add("📆 Events", Nothing, AddressOf OnWSGOpenEvents)
+        wsg.DropDownItems.Add("🌐 Map", Nothing, AddressOf OnWSGOpenMap)
+        menu.Items.Add(wsg)
+
+        ' 3) Separator
+        menu.Items.Add(New ToolStripSeparator())
+
+        ' 4) Restart
         menu.Items.Add("Restart Listener", Nothing, AddressOf OnRestart)
+
+        ' 5) Separator
+        menu.Items.Add(New ToolStripSeparator())
+
+        ' 6) Exit
         menu.Items.Add("End Listener", Nothing, AddressOf OnExit)
+
         _notifyIcon.ContextMenuStrip = menu
         _notifyIcon.Visible = True
+    End Sub
+
+    Private Sub OnWSGOpenHome(sender As Object, e As EventArgs)
+        Process.Start("https://wesimglide.org/index.html?tab=home")
+    End Sub
+
+    Private Sub OnWSGOpenEvents(sender As Object, e As EventArgs)
+        Process.Start("https://wesimglide.org/index.html?tab=events")
+    End Sub
+
+    Private Sub OnWSGOpenMap(sender As Object, e As EventArgs)
+        Process.Start("https://wesimglide.org/index.html?tab=map")
     End Sub
 
     Private Sub StartListener()
@@ -89,8 +126,8 @@ Public Class ListenerContext
 
                 ' Properly formatted JSON payload:
                 Dim payload = $"{{""action"":""download-task"",""taskID"":""{taskId}"",""title"":""{title}"",""source"":""{If(fromEvent, "event", "")}""}}"
-                SendToDPHX("{""action"":""foreground""}")
-                SendToDPHX(payload)
+                SendToDPHX("{""action"":""foreground""}", True)
+                SendToDPHX(payload, True)
                 _listener.SendResponse(ctx, "OK")
 
             Case "shutdown"
@@ -119,21 +156,34 @@ Public Class ListenerContext
     End Sub
 
     Private Sub HandleOpen()
-        SendToDPHX("{""action"":""foreground""}")
+        SendToDPHX("{""action"":""foreground""}", False)
     End Sub
 
-    Private Sub EnsureDPHXRunning()
+    Private Sub EnsureDPHXRunning(preventWSGFromOpening As Boolean)
+        ' Look for any existing instance
         Dim procs = Process.GetProcessesByName("DPHX Unpack and Load")
         If procs.Length = 0 Then
             Dim exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DPHX Unpack and Load.exe")
-            Process.Start(exe)
-            Threading.Thread.Sleep(1000)
+            Dim args = If(preventWSGFromOpening, "--prevent-wsg", String.Empty)
+
+            Dim psi As New ProcessStartInfo(exe) With {
+            .Arguments = args,
+            .UseShellExecute = True,
+            .WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+        }
+            Try
+                Process.Start(psi)
+                Threading.Thread.Sleep(1000)
+            Catch ex As Exception
+                MessageBox.Show($"Could not start DPHX Unpack and Load: {ex.Message}",
+                            "WSGListener Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
     End Sub
 
-    Private Sub SendToDPHX(message As String)
+    Private Sub SendToDPHX(message As String, preventWSGFromOpening As Boolean)
         Try
-            EnsureDPHXRunning()
+            EnsureDPHXRunning(preventWSGFromOpening)
             Using client = New NamedPipeClientStream(".", "DPHXPipe", PipeDirection.Out)
                 client.Connect(2000)
                 Using writer = New StreamWriter(client)

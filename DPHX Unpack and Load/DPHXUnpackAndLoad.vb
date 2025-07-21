@@ -132,7 +132,11 @@ Public Class DPHXUnpackAndLoad
             Dim doUnpack As Boolean = False
             Dim ignoreWSGIntegration As Boolean = False
 
-            If My.Application.CommandLineArgs.Count > 0 Then
+            Dim args = My.Application.CommandLineArgs
+            Dim preventWSG As Boolean = args.Any(Function(a) a.Equals("--prevent-wsg", StringComparison.OrdinalIgnoreCase))
+            Dim fileArg As String = args.FirstOrDefault(Function(a) Not a.StartsWith("--"))
+
+            If Not String.IsNullOrEmpty(fileArg) Then
                 ' Open the file passed as an argument
                 _currentFile = My.Application.CommandLineArgs(0)
                 doUnpack = True
@@ -143,7 +147,6 @@ Public Class DPHXUnpackAndLoad
                     _currentFile = Settings.SessionSettings.LastDPHXOpened
                 End If
             End If
-
 
             If Not _currentFile = String.Empty AndAlso Path.GetExtension(_currentFile) = ".dphx" Then
                 LoadDPHXPackage(_currentFile)
@@ -163,7 +166,7 @@ Public Class DPHXUnpackAndLoad
             ' Is the listener running?
             Dim listenerStartupResult = MakeSureWSGListenerIsRunning(Not Settings.SessionSettings.WSGListenerAutoStart)
 
-            If Not ignoreWSGIntegration Then
+            If Not ignoreWSGIntegration AndAlso Not preventWSG Then
                 'Check WSG integration
                 Select Case Settings.SessionSettings.WSGIntegration
                     Case AllSettings.WSGIntegrationOptions.None
