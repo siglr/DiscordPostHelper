@@ -4065,20 +4065,12 @@ Public Class Main
         Else
             dateFormat = "MMMM dd"
         End If
-        Dim theLocalTime As String = String.Empty
-        If chkUseSyncFly.Checked Then
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        ElseIf chkUseLaunch.Checked Then
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        Else
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        End If
 
         logisticInstructions.AppendLine("## Event Logistics")
         logisticInstructions.AppendLine($":wsg: WeSimGlide.org: **[{txtEventTitle.Text.Trim}](<{WSGEventLink}>)**")
         logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
         logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
-        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local **(when it is {theLocalTime} in your own local time){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** (adjust if you join early/late){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
 
         If chkUseSyncFly.Checked Then
             logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
