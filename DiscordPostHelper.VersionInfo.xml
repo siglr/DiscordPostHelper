@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.5.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.24.1</ReleaseVersion>
+      <ReleaseTitle>Small fixes and keeping sync with new DPHX</ReleaseTitle>
+      <ReleaseNotes>
+        Added validation of altitudes inside a WPR file to fix invalid entries
+        Adjusted the Event Logistics post to replace the "when it is ... in your own local time" with a more simple "adjust if you join early/late"
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.5.22.1</ReleaseVersion>
       <ReleaseTitle>Better weather file compatibility</ReleaseTitle>
