@@ -1,6 +1,18 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.5.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.24.1</ReleaseVersion>
+      <ReleaseTitle>Major redesign of the tool</ReleaseTitle>
+      <ReleaseNotes>
+        Made the tool lighter and more integrated directly with WeSimGlide.org
+        New scaling and resizing behavior
+        New section with most important setup information at a glance
+        IGC file upload to WeSimGlide.org
+        Added listener tool always running in background
+        Lots of other small fixes and improvements
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.5.22.1</ReleaseVersion>
       <ReleaseTitle>Better weather file compatibility</ReleaseTitle>
