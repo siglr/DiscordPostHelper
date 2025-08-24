@@ -5,7 +5,7 @@ Imports System.Text.RegularExpressions
 
 Module IgcParser
 
-    Public Function FindGliderType(titleStr As String) As String
+    Public Function FindGliderType(titleStr As String, competitionClass As String) As String
         Dim lc = titleStr.ToLowerInvariant()
         Dim rxOpts = RegexOptions.IgnoreCase Or RegexOptions.CultureInvariant
 
@@ -37,6 +37,15 @@ Module IgcParser
                 End If
             Next
         Next
+
+        ' Fallback: disambiguate the GotFriends AS-33 ME by CompetitionClass
+        If lc = "gotfriends_schleicher_as_33_me" Then
+            Dim cc = If(competitionClass, String.Empty).ToLowerInvariant().Trim()
+            ' collapse whitespace so "18 m flapped" still matches
+            cc = Regex.Replace(cc, "\s+", "")
+            If cc.StartsWith("18m") Then Return "AS33-18"
+            If cc.StartsWith("15m") Then Return "AS33-15"
+        End If
 
         Return "Unknown"
 
@@ -151,7 +160,7 @@ Module IgcParser
         Next
 
         ' normalize glider type
-        Dim norm = FindGliderType(gliderType)
+        Dim norm = FindGliderType(gliderType, competitionClass)
         If norm <> "" Then gliderType = norm
 
         ' 2) Try to read a real C-header + waypoints
