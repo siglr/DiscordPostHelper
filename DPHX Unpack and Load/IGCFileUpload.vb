@@ -179,7 +179,7 @@ Public Class IGCFileUpload
         If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, igcDetails.MatchedTask.MSFSLocalDateTime) Then
             flagDateTime = "⌚"
         End If
-        If igcDetails.Results.Penalties Then
+        If Not igcDetails.Results.Penalties Then
             flagPenalties = "✅"
         End If
         txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"

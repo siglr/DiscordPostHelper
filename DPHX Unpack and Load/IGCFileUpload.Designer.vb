@@ -78,7 +78,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(0, 0)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(721, 670)
+        Me.browser.Size = New System.Drawing.Size(717, 670)
         Me.browser.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.browser, "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
         "zoom level.")
@@ -136,7 +136,7 @@ Partial Class IGCFileUpload
         Me.txtIGCEntrySeqID.Name = "txtIGCEntrySeqID"
         Me.txtIGCEntrySeqID.ReadOnly = True
         Me.txtIGCEntrySeqID.Size = New System.Drawing.Size(144, 20)
-        Me.txtIGCEntrySeqID.TabIndex = 22
+        Me.txtIGCEntrySeqID.TabIndex = 12
         Me.ToolTip1.SetToolTip(Me.txtIGCEntrySeqID, "The task ID from WeSimGlide.org")
         '
         'Label8
@@ -146,17 +146,17 @@ Partial Class IGCFileUpload
         Me.Label8.Location = New System.Drawing.Point(3, 304)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(49, 20)
-        Me.Label8.TabIndex = 21
+        Me.Label8.TabIndex = 11
         Me.Label8.Text = "Task #"
         '
         'btnMoveIGCToProcessed
         '
         Me.btnMoveIGCToProcessed.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnMoveIGCToProcessed.Location = New System.Drawing.Point(4, 356)
+        Me.btnMoveIGCToProcessed.Location = New System.Drawing.Point(4, 582)
         Me.btnMoveIGCToProcessed.Name = "btnMoveIGCToProcessed"
         Me.btnMoveIGCToProcessed.Size = New System.Drawing.Size(239, 32)
-        Me.btnMoveIGCToProcessed.TabIndex = 20
+        Me.btnMoveIGCToProcessed.TabIndex = 16
         Me.btnMoveIGCToProcessed.Text = "Move to Processed"
         Me.ToolTip1.SetToolTip(Me.btnMoveIGCToProcessed, "Click to move this IGC file to the ""Processed"" folder.")
         Me.btnMoveIGCToProcessed.UseVisualStyleBackColor = True
@@ -165,7 +165,7 @@ Partial Class IGCFileUpload
         '
         Me.btnDelete.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Location = New System.Drawing.Point(4, 394)
+        Me.btnDelete.Location = New System.Drawing.Point(4, 620)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(239, 32)
         Me.btnDelete.TabIndex = 17
@@ -181,7 +181,7 @@ Partial Class IGCFileUpload
         Me.btnClose.Location = New System.Drawing.Point(4, 659)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(239, 32)
-        Me.btnClose.TabIndex = 19
+        Me.btnClose.TabIndex = 18
         Me.btnClose.Text = "Close"
         Me.ToolTip1.SetToolTip(Me.btnClose, "Click to close this form.")
         Me.btnClose.UseVisualStyleBackColor = True
@@ -205,10 +205,10 @@ Partial Class IGCFileUpload
         Me.pnlResults.Controls.Add(Me.Label10)
         Me.pnlResults.Controls.Add(Me.txtFlags)
         Me.pnlResults.Controls.Add(Me.Label9)
-        Me.pnlResults.Location = New System.Drawing.Point(0, 432)
+        Me.pnlResults.Location = New System.Drawing.Point(0, 358)
         Me.pnlResults.Name = "pnlResults"
         Me.pnlResults.Size = New System.Drawing.Size(249, 221)
-        Me.pnlResults.TabIndex = 18
+        Me.pnlResults.TabIndex = 15
         Me.pnlResults.Visible = False
         '
         'txtTaskLocalDateTime
@@ -221,7 +221,7 @@ Partial Class IGCFileUpload
         Me.txtTaskLocalDateTime.Name = "txtTaskLocalDateTime"
         Me.txtTaskLocalDateTime.ReadOnly = True
         Me.txtTaskLocalDateTime.Size = New System.Drawing.Size(144, 20)
-        Me.txtTaskLocalDateTime.TabIndex = 18
+        Me.txtTaskLocalDateTime.TabIndex = 7
         Me.ToolTip1.SetToolTip(Me.txtTaskLocalDateTime, "Local date and time specified by the task.")
         '
         'Label12
@@ -230,7 +230,7 @@ Partial Class IGCFileUpload
         Me.Label12.Location = New System.Drawing.Point(3, 77)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(47, 20)
-        Me.Label12.TabIndex = 17
+        Me.Label12.TabIndex = 6
         Me.Label12.Text = " (task)"
         '
         'btnUpload
@@ -240,7 +240,7 @@ Partial Class IGCFileUpload
         Me.btnUpload.Location = New System.Drawing.Point(4, 183)
         Me.btnUpload.Name = "btnUpload"
         Me.btnUpload.Size = New System.Drawing.Size(239, 32)
-        Me.btnUpload.TabIndex = 16
+        Me.btnUpload.TabIndex = 14
         Me.btnUpload.Text = "Upload to WSG"
         Me.ToolTip1.SetToolTip(Me.btnUpload, "Click to upload this IGC file to WeSimGlide.org")
         Me.btnUpload.UseVisualStyleBackColor = True
@@ -254,7 +254,7 @@ Partial Class IGCFileUpload
         Me.btnRecalculate.Location = New System.Drawing.Point(206, 0)
         Me.btnRecalculate.Name = "btnRecalculate"
         Me.btnRecalculate.Size = New System.Drawing.Size(37, 37)
-        Me.btnRecalculate.TabIndex = 15
+        Me.btnRecalculate.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.btnRecalculate, "Click to re-extract the results from this IGC file.")
         Me.btnRecalculate.UseVisualStyleBackColor = True
         '
@@ -268,7 +268,7 @@ Partial Class IGCFileUpload
         Me.txtDistance.Name = "txtDistance"
         Me.txtDistance.ReadOnly = True
         Me.txtDistance.Size = New System.Drawing.Size(144, 20)
-        Me.txtDistance.TabIndex = 12
+        Me.txtDistance.TabIndex = 13
         Me.ToolTip1.SetToolTip(Me.txtDistance, "Calculated distance achieved extracted from the results.")
         '
         'Label15
@@ -277,7 +277,7 @@ Partial Class IGCFileUpload
         Me.Label15.Location = New System.Drawing.Point(3, 155)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(65, 20)
-        Me.Label15.TabIndex = 11
+        Me.Label15.TabIndex = 12
         Me.Label15.Text = "Distance"
         '
         'txtTime
@@ -290,7 +290,7 @@ Partial Class IGCFileUpload
         Me.txtTime.Name = "txtTime"
         Me.txtTime.ReadOnly = True
         Me.txtTime.Size = New System.Drawing.Size(144, 20)
-        Me.txtTime.TabIndex = 10
+        Me.txtTime.TabIndex = 11
         Me.ToolTip1.SetToolTip(Me.txtTime, "Calculated time extracted from the results.")
         '
         'Label14
@@ -299,7 +299,7 @@ Partial Class IGCFileUpload
         Me.Label14.Location = New System.Drawing.Point(3, 129)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(41, 20)
-        Me.Label14.TabIndex = 9
+        Me.Label14.TabIndex = 10
         Me.Label14.Text = "Time"
         '
         'txtSpeed
@@ -312,7 +312,7 @@ Partial Class IGCFileUpload
         Me.txtSpeed.Name = "txtSpeed"
         Me.txtSpeed.ReadOnly = True
         Me.txtSpeed.Size = New System.Drawing.Size(144, 20)
-        Me.txtSpeed.TabIndex = 8
+        Me.txtSpeed.TabIndex = 9
         Me.ToolTip1.SetToolTip(Me.txtSpeed, "Calculated speed extracted from the results.")
         '
         'Label13
@@ -321,7 +321,7 @@ Partial Class IGCFileUpload
         Me.Label13.Location = New System.Drawing.Point(3, 103)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(51, 20)
-        Me.Label13.TabIndex = 7
+        Me.Label13.TabIndex = 8
         Me.Label13.Text = "Speed"
         '
         'txtLocalDateTime
@@ -334,7 +334,7 @@ Partial Class IGCFileUpload
         Me.txtLocalDateTime.Name = "txtLocalDateTime"
         Me.txtLocalDateTime.ReadOnly = True
         Me.txtLocalDateTime.Size = New System.Drawing.Size(144, 20)
-        Me.txtLocalDateTime.TabIndex = 4
+        Me.txtLocalDateTime.TabIndex = 5
         Me.ToolTip1.SetToolTip(Me.txtLocalDateTime, "Local date and time extracted from the results in the IGC file.")
         '
         'Label11
@@ -343,7 +343,7 @@ Partial Class IGCFileUpload
         Me.Label11.Location = New System.Drawing.Point(3, 51)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(76, 20)
-        Me.Label11.TabIndex = 3
+        Me.Label11.TabIndex = 4
         Me.Label11.Text = "Local time"
         '
         'Label10
@@ -366,7 +366,7 @@ Partial Class IGCFileUpload
         Me.txtFlags.Name = "txtFlags"
         Me.txtFlags.ReadOnly = True
         Me.txtFlags.Size = New System.Drawing.Size(144, 20)
-        Me.txtFlags.TabIndex = 2
+        Me.txtFlags.TabIndex = 3
         Me.ToolTip1.SetToolTip(Me.txtFlags, "All flags for the results in this IGC file.")
         '
         'Label9
@@ -375,7 +375,7 @@ Partial Class IGCFileUpload
         Me.Label9.Location = New System.Drawing.Point(3, 25)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(42, 20)
-        Me.Label9.TabIndex = 1
+        Me.Label9.TabIndex = 2
         Me.Label9.Text = "Flags"
         '
         'txtWSGStatus
@@ -411,7 +411,7 @@ Partial Class IGCFileUpload
         Me.txtRecordDate.Name = "txtRecordDate"
         Me.txtRecordDate.ReadOnly = True
         Me.txtRecordDate.Size = New System.Drawing.Size(144, 20)
-        Me.txtRecordDate.TabIndex = 12
+        Me.txtRecordDate.TabIndex = 10
         Me.ToolTip1.SetToolTip(Me.txtRecordDate, "Date and time the IGC file was recorded.")
         '
         'Label6
@@ -421,7 +421,7 @@ Partial Class IGCFileUpload
         Me.Label6.Location = New System.Drawing.Point(3, 278)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(90, 20)
-        Me.Label6.TabIndex = 11
+        Me.Label6.TabIndex = 9
         Me.Label6.Text = "Record date"
         '
         'txtSim
@@ -434,7 +434,7 @@ Partial Class IGCFileUpload
         Me.txtSim.Name = "txtSim"
         Me.txtSim.ReadOnly = True
         Me.txtSim.Size = New System.Drawing.Size(144, 20)
-        Me.txtSim.TabIndex = 10
+        Me.txtSim.TabIndex = 8
         Me.ToolTip1.SetToolTip(Me.txtSim, "Sim version extracted from IGC file")
         '
         'Label5
@@ -444,7 +444,7 @@ Partial Class IGCFileUpload
         Me.Label5.Location = New System.Drawing.Point(3, 252)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(33, 20)
-        Me.Label5.TabIndex = 9
+        Me.Label5.TabIndex = 7
         Me.Label5.Text = "Sim"
         '
         'txtGlider
@@ -539,7 +539,7 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(721, 695)
+        Me.lblProcessing.Size = New System.Drawing.Size(717, 695)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -550,8 +550,8 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.Location = New System.Drawing.Point(3, 671)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(714, 20)
-        Me.Label4.TabIndex = 10
+        Me.Label4.Size = New System.Drawing.Size(710, 20)
+        Me.Label4.TabIndex = 1
         Me.Label4.Text = "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
     "zoom level."
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
