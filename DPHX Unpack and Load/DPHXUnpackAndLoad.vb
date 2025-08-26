@@ -122,6 +122,11 @@ Public Class DPHXUnpackAndLoad
         End If
 
         If Not _abortingFirstRun Then
+            ' Start the server
+            _pipeServer = New PipeCommandServer()
+            AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
+            _pipeServer.Start()
+
             CheckForNewVersion()
 
             lbl2020AllFilesStatus.Text = String.Empty
@@ -158,11 +163,6 @@ Public Class DPHXUnpackAndLoad
             msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
             msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
 
-            ' Start the server
-            _pipeServer = New PipeCommandServer()
-            AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
-            _pipeServer.Start()
-
             ' Is the listener running?
             Dim listenerStartupResult = MakeSureWSGListenerIsRunning(Not Settings.SessionSettings.WSGListenerAutoStart)
 
@@ -174,22 +174,22 @@ Public Class DPHXUnpackAndLoad
             End If
 
             If Not ignoreWSGIntegration AndAlso Not preventWSG Then
-                    'Check WSG integration
-                    Select Case Settings.SessionSettings.WSGIntegration
-                        Case AllSettings.WSGIntegrationOptions.None
+                'Check WSG integration
+                Select Case Settings.SessionSettings.WSGIntegration
+                    Case AllSettings.WSGIntegrationOptions.None
                     'Do nothing
-                        Case AllSettings.WSGIntegrationOptions.OpenHome
-                            'Open map in WSG
-                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
-                        Case AllSettings.WSGIntegrationOptions.OpenMap
-                            'Open map in WSG
-                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
-                        Case AllSettings.WSGIntegrationOptions.OpenEvents
-                            'Open events in WSG
-                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
-                    End Select
-                End If
+                    Case AllSettings.WSGIntegrationOptions.OpenHome
+                        'Open map in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
+                    Case AllSettings.WSGIntegrationOptions.OpenMap
+                        'Open map in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
+                    Case AllSettings.WSGIntegrationOptions.OpenEvents
+                        'Open events in WSG
+                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
+                End Select
             End If
+        End If
 
     End Sub
 
