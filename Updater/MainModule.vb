@@ -53,6 +53,11 @@ Module MainModule
 
         updateForm.Refresh()
 
+        Dim baseDir As String = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)
+        If Not baseDir.EndsWith(Path.DirectorySeparatorChar) Then
+            baseDir &= Path.DirectorySeparatorChar
+        End If
+
         ' Wait for the main process to exit
         If processID <> 0 Then
             Try
@@ -84,23 +89,24 @@ Module MainModule
             End If
         Next
 
-        ' Wait for WSGListener
-        For Each relatedProcess In Process.GetProcessesByName("WSGListener")
-            If $"{Path.GetDirectoryName(relatedProcess.MainModule.FileName)}\" = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory) Then
-                If Not updateForm.ShowWaitingForProcess(relatedProcess) Then
-                    Exit Sub
-                End If
-            End If
-        Next
+        ' Force-stop any WSGListener running from our folder
+        If Not TerminateProcessesInFolder("WSGListener", baseDir) Then
+            ' (Optional) show a wait UI for any stubborn survivors in our folder
+            For Each p In Process.GetProcessesByName("WSGListener")
+                Try
+                    Dim dir = Path.GetFullPath(Path.GetDirectoryName(p.MainModule.FileName)) & Path.DirectorySeparatorChar
+                    If String.Equals(dir, baseDir, StringComparison.OrdinalIgnoreCase) Then
+                        If Not updateForm.ShowWaitingForProcess(p) Then Exit Sub
+                    End If
+                Catch
+                    ' ignore access denied / race
+                End Try
+            Next
+        End If
 
         updateForm.OtherProcessesTerminated()
 
         Try
-            ' --- 1) Build normalized base directory path ---
-            Dim baseDir As String = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)
-            If Not baseDir.EndsWith(Path.DirectorySeparatorChar) Then
-                baseDir &= Path.DirectorySeparatorChar
-            End If
 
             ' --- 2) Read cleanup list from the ZIP ---
             Dim toRemove As New List(Of String)
@@ -232,5 +238,53 @@ Module MainModule
         End Try
 
     End Sub
+
+    Private Function TerminateProcessesInFolder(processName As String,
+                                                baseDir As String,
+                                                Optional gracefulWaitMs As Integer = 4000,
+                                                Optional killWaitMs As Integer = 3000) As Boolean
+
+        Dim ok As Boolean = True
+        Dim normBase = Path.GetFullPath(baseDir)
+        If Not normBase.EndsWith(Path.DirectorySeparatorChar) Then normBase &= Path.DirectorySeparatorChar
+
+        For Each p In Process.GetProcessesByName(processName)
+            Try
+                Dim exeDir As String = ""
+                Try
+                    exeDir = Path.GetDirectoryName(p.MainModule.FileName)
+                Catch
+                    ' Access denied (different user/elevation). Skip this one.
+                    Continue For
+                End Try
+
+                ' Only touch the instance running from our update folder
+                If String.Equals(Path.GetFullPath(exeDir) & Path.DirectorySeparatorChar, normBase, StringComparison.OrdinalIgnoreCase) Then
+                    If p.HasExited Then Continue For
+
+                    ' 1) Try graceful close (if it has a message loop / main window)
+                    If p.MainWindowHandle <> IntPtr.Zero Then
+                        If p.CloseMainWindow() Then
+                            If p.WaitForExit(gracefulWaitMs) Then Continue For
+                        End If
+                    End If
+
+                    ' 2) Last resort: kill
+                    Try
+                        p.Kill()
+                        p.WaitForExit(killWaitMs)
+                    Catch
+                        ok = False
+                    End Try
+
+                    If Not p.HasExited Then ok = False
+                End If
+            Catch
+                ok = False
+            End Try
+        Next
+
+        Return ok
+    End Function
 
 End Module
