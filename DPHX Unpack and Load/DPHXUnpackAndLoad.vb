@@ -136,7 +136,9 @@ Public Class DPHXUnpackAndLoad
             AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
             _pipeServer.Start()
 
-            CheckForNewVersion()
+            If CheckForNewVersion() Then
+                Exit Sub
+            End If
 
             lbl2020AllFilesStatus.Text = String.Empty
             lbl2024AllFilesStatus.Text = String.Empty
@@ -461,7 +463,7 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Sub CheckForNewVersion()
+    Private Function CheckForNewVersion() As Boolean
         Dim myVersionInfo As VersionInfo = _SF.GetVersionInfo()
         Dim message As String = String.Empty
 
@@ -472,7 +474,9 @@ Public Class DPHXUnpackAndLoad
                     'update
                     'Download the file
                     If _SF.DownloadLatestUpdate(myVersionInfo.CurrentLatestVersion, message) Then
+                        Try : SendCommandToWSG("shutdown") : Catch : End Try
                         Application.Exit()
+                        Return True
                     Else
                         'Show error updating
                         Using New Centered_MessageBox(Me)
@@ -483,7 +487,9 @@ Public Class DPHXUnpackAndLoad
             End If
         End If
 
-    End Sub
+        Return False
+
+    End Function
 
     Private Function OpenSettingsWindow() As DialogResult
         Dim formSettings As New Settings
