@@ -9,6 +9,8 @@ Imports System.Windows.Forms
 Public Class ListenerContext
     Inherits ApplicationContext
 
+    Private Const READY_EVENT_NAME As String = "WSG_DPHX_READY"
+
     Private _listener As DPHXLocalWS
     Private _notifyIcon As NotifyIcon
     Public Shared SessionSettings As New AllSettings
@@ -189,18 +191,51 @@ Public Class ListenerContext
         End If
     End Sub
 
+    Private Function WaitUntilDPHXReady(preventWSGFromOpening As Boolean, Optional timeoutMs As Integer = 30000) As Boolean
+        ' Make sure DPHX is launched (it creates the event in UNSIGNALED state)
+        EnsureDPHXRunning(preventWSGFromOpening)
+
+        Dim sw = Stopwatch.StartNew()
+        Do
+            Try
+                Using ev = EventWaitHandle.OpenExisting(READY_EVENT_NAME)
+                    ' Quick check; if not ready, block in small slices until either signaled or timeout
+                    If ev.WaitOne(0) Then Return True
+                    Dim remaining = CInt(Math.Max(0, timeoutMs - sw.ElapsedMilliseconds))
+                    Dim slice = Math.Min(500, remaining)
+                    If slice <= 0 Then Exit Do
+                    If ev.WaitOne(slice) Then Return True
+                End Using
+            Catch ex As WaitHandleCannotBeOpenedException
+                ' Event not created yet (DPHX still starting) → brief backoff
+                Thread.Sleep(200)
+            Catch ex As UnauthorizedAccessException
+                ' Very rare for same-user apps; treat as not ready
+                Exit Do
+            End Try
+        Loop While sw.ElapsedMilliseconds < timeoutMs
+
+        Return False
+    End Function
+
     Private Sub SendToDPHX(message As String, preventWSGFromOpening As Boolean)
         Try
-            EnsureDPHXRunning(preventWSGFromOpening)
+            If Not WaitUntilDPHXReady(preventWSGFromOpening, 2) Then
+                Return
+            End If
+
             Using client = New NamedPipeClientStream(".", "DPHXPipe", PipeDirection.Out)
                 client.Connect(2000)
                 Using writer = New StreamWriter(client)
                     writer.AutoFlush = True
-                    writer.Write(message)
+                    writer.Write(message)   ' keep Write because DPHX reads ReadToEnd()
                 End Using
             End Using
+
         Catch ex As Exception
-            MessageBox.Show("Unable to contact DPHX: " & ex.Message, "WeSimGlide DPHX Listener", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Unable to contact DPHX: " & ex.Message,
+                        "WeSimGlide DPHX Listener",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

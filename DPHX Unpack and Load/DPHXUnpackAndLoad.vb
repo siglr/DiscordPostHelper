@@ -1,4 +1,5 @@
-﻿Imports System.Diagnostics.Eventing.Reader
+﻿Imports System.Diagnostics.Eventing
+Imports System.Diagnostics.Eventing.Reader
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -17,6 +18,7 @@ Public Class DPHXUnpackAndLoad
 #Region "Constants and other global variables"
 
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
+    Private Const READY_EVENT_NAME As String = "WSG_DPHX_READY"
 
     Private ReadOnly _SF As New SupportingFeatures(SupportingFeatures.ClientApp.DPHXUnpackAndLoad)
     Private _currentFile As String = String.Empty
@@ -33,6 +35,8 @@ Public Class DPHXUnpackAndLoad
     Private _taskDiscordPostID As String = String.Empty
     Private _pipeServer As PipeCommandServer
     Private _wsgListenerStartedAsTransient As Boolean = False
+    Private _readySignalForListener As EventWaitHandle
+    Private _isClosing As Boolean = False
 
 #End Region
 
@@ -122,6 +126,11 @@ Public Class DPHXUnpackAndLoad
         End If
 
         If Not _abortingFirstRun Then
+            Dim createdNew As Boolean
+            _readySignalForListener = New EventWaitHandle(False, EventResetMode.ManualReset, READY_EVENT_NAME, createdNew)
+            ' Ensure not-ready on startup even if a prior run left it signaled
+            _readySignalForListener.Reset()
+
             ' Start the server
             _pipeServer = New PipeCommandServer()
             AddHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
@@ -189,39 +198,63 @@ Public Class DPHXUnpackAndLoad
                         SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
                 End Select
             End If
+
+            _readySignalForListener.Set()
+
         End If
 
     End Sub
 
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        _isClosing = True
+
+        ' Block new commands from the listener
+        Try : _readySignalForListener?.Reset() : Catch : End Try
 
         If Not _abortingFirstRun Then
             ctrlBriefing.Closing()
-            Dim nbrTries As Integer = 0
-            Do Until nbrTries = 10
-                nbrTries += 1
-                If SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder) Then
-                    nbrTries = 10
-                Else
-                    Me.Refresh()
-                    Application.DoEvents()
-                End If
+
+            ' best-effort temp cleanup
+            Dim tries As Integer = 0
+            Do While tries < 10 AndAlso Not SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+                tries += 1
+                Me.Refresh()
+                Application.DoEvents()
             Loop
 
-            'Send the "shutdown" message to the WSG Listener - if we started it and if the Auto-Start is disabled
-            If _wsgListenerStartedAsTransient AndAlso (Not Settings.SessionSettings.WSGListenerAutoStart) Then
-                SendCommandToWSG("shutdown")
-            End If
-
-            _pipeServer.Stop()
-            Settings.SessionSettings.MainFormSize = Me.Size.ToString()
-            Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
-            Settings.SessionSettings.Save()
-            If _status IsNot Nothing Then
-                _status.Close()
+            ' Politely stop the listener if we started it transiently
+            If _wsgListenerStartedAsTransient AndAlso Not Settings.SessionSettings.WSGListenerAutoStart Then
+                Try : SendCommandToWSG("shutdown") : Catch : End Try
             End If
         End If
 
+        ' Stop pipe server early to avoid commands racing during teardown
+        If _pipeServer IsNot Nothing Then
+            Try
+                RemoveHandler _pipeServer.CommandReceived, AddressOf OnPipeCommand
+                _pipeServer.Stop()
+            Catch
+            Finally
+                _pipeServer = Nothing
+            End Try
+        End If
+
+        ' Persist UI state (best-effort)
+        Try
+            Settings.SessionSettings.MainFormSize = Me.Size.ToString()
+            Settings.SessionSettings.MainFormLocation = Me.Location.ToString()
+            Settings.SessionSettings.Save()
+        Catch
+        End Try
+
+        If _status IsNot Nothing Then
+            Try : _status.Close() : Catch : End Try
+        End If
+    End Sub
+
+    Private Sub DPHXUnpackAndLoad_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        ' Release the named event
+        Try : _readySignalForListener?.Dispose() : Catch : End Try
     End Sub
 
     Private Sub DPHXUnpackAndLoad_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
@@ -390,6 +423,7 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub OnPipeCommand(sender As Object, e As CommandEventArgs)
+        If _isClosing OrElse Me.IsDisposed OrElse Not Me.IsHandleCreated Then Return
         If e.Action = "download-task" Then
             ' Boolean fromEventTab = (e.Source = "event")
             Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
