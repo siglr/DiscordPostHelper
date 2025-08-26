@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.25.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.25.1</ReleaseVersion>
+      <ReleaseTitle>Hotfix for last release</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the penalties icon when no visible penalties detected
+        Moved buttons on the IGC Upload screen to match a normal upload workflow
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.24.1</ReleaseVersion>
       <ReleaseTitle>Major redesign of the tool</ReleaseTitle>
