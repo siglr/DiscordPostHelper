@@ -130,9 +130,6 @@ Public Class AllData
     <XmlElement("ExtraFiles")>
     Public Property ExtraFiles As List(Of String) = New List(Of String)
 
-    <XmlElement("LockCountries")>
-    Public Property LockCountries As Boolean
-
     <XmlElement("Countries")>
     Public Property Countries As List(Of String) = New List(Of String)
 

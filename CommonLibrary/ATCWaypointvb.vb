@@ -98,9 +98,10 @@ Public Class ATCWaypoint
 
         SetLatitudeAndLongitude(strWorldPosition, Latitude, Longitude, _wpelevation)
 
-        If (Not SupportingFeatures.useTestServer) AndAlso SupportingFeatures.ClientRunning = SupportingFeatures.ClientApp.DiscordPostHelper Then
-            CountryISO3166Code = CountryGeo.GetCountryFromCoordinatesAzure(Latitude, Longitude)
-        End If
+        ' REMOVING AUTOMATIC COUNTRY DETECTION TO MAKE IT MANUAL
+        ' If (Not SupportingFeatures.useTestServer) AndAlso SupportingFeatures.ClientRunning = SupportingFeatures.ClientApp.DiscordPostHelper Then
+        '     CountryISO3166Code = CountryGeo.GetCountryFromCoordinatesAzure(Latitude, Longitude)
+        ' End If
 
         'Check if AAT waypoint and remove that bit if so
         If strFullATCId.ToUpper.Contains(";AAT") Then
