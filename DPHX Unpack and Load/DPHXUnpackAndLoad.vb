@@ -166,23 +166,30 @@ Public Class DPHXUnpackAndLoad
             ' Is the listener running?
             Dim listenerStartupResult = MakeSureWSGListenerIsRunning(Not Settings.SessionSettings.WSGListenerAutoStart)
 
-            If Not ignoreWSGIntegration AndAlso Not preventWSG Then
-                'Check WSG integration
-                Select Case Settings.SessionSettings.WSGIntegration
-                    Case AllSettings.WSGIntegrationOptions.None
-                    'Do nothing
-                    Case AllSettings.WSGIntegrationOptions.OpenHome
-                        'Open map in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
-                    Case AllSettings.WSGIntegrationOptions.OpenMap
-                        'Open map in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
-                    Case AllSettings.WSGIntegrationOptions.OpenEvents
-                        'Open events in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
-                End Select
+            If listenerStartupResult <> String.Empty Then
+                MessageBox.Show(listenerStartupResult, "Error launching WSGListener", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                _abortingFirstRun = True
+                Application.Exit()
+                Exit Sub
             End If
-        End If
+
+            If Not ignoreWSGIntegration AndAlso Not preventWSG Then
+                    'Check WSG integration
+                    Select Case Settings.SessionSettings.WSGIntegration
+                        Case AllSettings.WSGIntegrationOptions.None
+                    'Do nothing
+                        Case AllSettings.WSGIntegrationOptions.OpenHome
+                            'Open map in WSG
+                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
+                        Case AllSettings.WSGIntegrationOptions.OpenMap
+                            'Open map in WSG
+                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
+                        Case AllSettings.WSGIntegrationOptions.OpenEvents
+                            'Open events in WSG
+                            SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
+                    End Select
+                End If
+            End If
 
     End Sub
 
@@ -1253,61 +1260,136 @@ Public Class DPHXUnpackAndLoad
     Private Function MakeSureWSGListenerIsRunning(isTransient As Boolean) As String
         Dim result As String = String.Empty
 
-        ' Look for any running instances
+        ' Already running?
         Dim procs = Process.GetProcessesByName("WSGListener")
-        If procs.Length = 0 Then
-            Dim exe = Path.Combine(Application.StartupPath, "WSGListener.exe")
-            If File.Exists(exe) Then
-                Try
-                    Dim args As String = If(isTransient, "--transient", "")
-                    Dim psi As New ProcessStartInfo(exe) With {
-                    .Arguments = args,
-                    .UseShellExecute = True,
-                    .CreateNoWindow = True
-                }
-                    Process.Start(psi)
-                    ' Remember how we launched it
-                    _wsgListenerStartedAsTransient = isTransient
-                Catch ex As Exception
-                    result = $"Could not start WSGListener (transient={isTransient}): {ex.Message}"
-                End Try
-            Else
-                result = "WSGListener.exe not found next to DPHX Unpack & Load."
-            End If
+        If procs.Length > 0 Then Return result
+
+        Dim exe = Path.Combine(Application.StartupPath, "WSGListener.exe")
+        If Not File.Exists(exe) Then
+            Return "WSGListener.exe not found next to DPHX Unpack & Load."
         End If
+
+        Try
+            Dim args As String = If(isTransient, "--transient", "")
+            Dim psi As New ProcessStartInfo(exe) With {
+            .Arguments = args,
+            .UseShellExecute = True,
+            .CreateNoWindow = True
+        }
+            Process.Start(psi)
+
+            ' --- SmartScreen / blocked-launch detection ---
+            ' Poll for a short time to see if the process truly came up.
+            Dim started As Boolean = False
+            Dim deadline As Date = Date.UtcNow.AddSeconds(6) ' small grace period
+
+            Do While Date.UtcNow < deadline
+                Threading.Thread.Sleep(300)
+                If Process.GetProcessesByName("WSGListener").Length > 0 Then
+                    If SendCommandToWSG("health") = String.Empty Then
+                        started = True
+                        Exit Do
+                    End If
+                End If
+            Loop
+
+            If started Then
+                _wsgListenerStartedAsTransient = isTransient
+                Return result
+            End If
+
+            ' If we get here, Windows likely blocked it (SmartScreen on first run).
+            Dim msg As String = $"Windows SmartScreen probably blocked the first launch of the WSGListener app.{Environment.NewLine}Please start it once manually so Windows shows the SmartScreen prompt.{Environment.NewLine}{Environment.NewLine}• In the next window, double-click WSGListener.exe{Environment.NewLine}• When SmartScreen appears, choose ""More info"" → ""Run anyway"""
+
+            Dim choice = MessageBox.Show(
+                msg,
+                "WSGListener needs first-run approval",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            )
+
+            ' Help the user by opening Explorer with the file selected.
+            Try
+                Process.Start("explorer.exe", "/select,""" & exe & """")
+            Catch
+                ' non-fatal
+            End Try
+
+            ' Wait a bit longer for the user to do the manual launch.
+            Dim retryStarted As Boolean = False
+            Dim retryDeadline As Date = Date.UtcNow.AddSeconds(30)
+            Do While Date.UtcNow < retryDeadline
+                Threading.Thread.Sleep(300)
+                If Process.GetProcessesByName("WSGListener").Length > 0 Then
+                    ' confirm it's answering
+                    If SendCommandToWSG("health") = String.Empty Then
+                        retryStarted = True
+                        Exit Do
+                    End If
+                End If
+            Loop
+
+            If retryStarted Then
+                _wsgListenerStartedAsTransient = isTransient
+                Return result
+            Else
+                result = "WSGListener still not detected. Please run it once manually, authorize via SmartScreen, then try again."
+            End If
+
+        Catch ex As Exception
+            result = $"Could not start WSGListener (transient={isTransient}): {ex.Message}"
+        End Try
 
         Return result
     End Function
 
     Private Function SendCommandToWSG(endpoint As String, Optional query As String = "", Optional oldPortToUse As Integer = 0) As String
-        Dim resultMsg As String = String.Empty
-
         Dim port As Integer
         If oldPortToUse > 0 Then
             port = oldPortToUse
-        Else
-            If Not Integer.TryParse(Settings.SessionSettings.LocalWebServerPort, port) Then
-                resultMsg = "Invalid WSGListener port in settings."
-                Return resultMsg
-            End If
+        ElseIf Not Integer.TryParse(Settings.SessionSettings.LocalWebServerPort, port) Then
+            Return "Invalid WSGListener port in settings."
         End If
 
         Dim url = $"http://localhost:{port}/{endpoint}"
-        If Not String.IsNullOrEmpty(query) Then
-            url &= "?" & query
-        End If
+        If Not String.IsNullOrEmpty(query) Then url &= "?" & query  ' ensure caller URL-encodes values
 
         Try
-            Using wc As New WebClient()
-                wc.Headers.Add("User-Agent", "DPHX Unpack & Load")
-                wc.DownloadString(url)
+            Dim req = DirectCast(WebRequest.Create(url), HttpWebRequest)
+            req.Method = "GET"
+            req.UserAgent = "DPHX Unpack & Load"
+            req.Timeout = 3000 ' ms
+
+            Using resp = DirectCast(req.GetResponse(), HttpWebResponse)
+                Using sr As New IO.StreamReader(resp.GetResponseStream())
+                    Dim body = sr.ReadToEnd()
+                    ' Return empty on success to keep your current semantics, OR return body if you prefer:
+                    ' Return body
+                    Return String.Empty
+                End Using
             End Using
+
+        Catch wex As WebException
+            Dim statusText As String = wex.Message
+            Dim body As String = ""
+            Dim code As Integer = -1
+
+            Dim httpResp = TryCast(wex.Response, HttpWebResponse)
+            If httpResp IsNot Nothing Then
+                code = CInt(httpResp.StatusCode)
+                Try
+                    Using sr As New IO.StreamReader(httpResp.GetResponseStream())
+                        body = sr.ReadToEnd()
+                    End Using
+                Catch
+                End Try
+            End If
+
+            Return $"Failed to send '{endpoint}' to WSGListener:{vbCrLf}HTTP {(If(code <> -1, code.ToString(), "n/a"))} {statusText}{If(String.IsNullOrEmpty(body), "", vbCrLf & body)}"
+
         Catch ex As Exception
-            resultMsg = $"Failed to send '{endpoint}' to WSGListener:{vbCrLf}{ex.Message}"
+            Return $"Failed to send '{endpoint}' to WSGListener:{vbCrLf}{ex.Message}"
         End Try
-
-        Return resultMsg
-
     End Function
 
 #End Region

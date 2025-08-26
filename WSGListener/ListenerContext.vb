@@ -140,6 +140,9 @@ Public Class ListenerContext
                 StopListener()
                 Application.Exit()
 
+            Case "health"
+                _listener.SendResponse(ctx, "Ok")
+
             Case "set-port"
                 Dim newPort As Integer
                 If Integer.TryParse(req.QueryString("port"), newPort) Then
