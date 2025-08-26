@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.26.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.26.2</ReleaseVersion>
+      <ReleaseTitle>Hotfix for small issues in the last version</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the penalties icon when no visible penalties detected
+        Moved buttons on the IGC Upload screen to match a normal upload workflow
+        Solving the auto-update problem
+        Added check if listener is running after launch of DPHX - if not, ask user to run it manually for Smart Screen
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.24.1</ReleaseVersion>
       <ReleaseTitle>Major redesign of the tool</ReleaseTitle>
