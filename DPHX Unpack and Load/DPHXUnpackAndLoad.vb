@@ -428,6 +428,7 @@ Public Class DPHXUnpackAndLoad
         If _isClosing OrElse Me.IsDisposed OrElse Not Me.IsHandleCreated Then Return
         If e.Action = "download-task" Then
             ' Boolean fromEventTab = (e.Source = "event")
+            Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
             Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
         ElseIf e.Action = "foreground" Then
             Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
