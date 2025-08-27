@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.27.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.27.1</ReleaseVersion>
+      <ReleaseTitle>Country and duplicate task detection</ReleaseTitle>
+      <ReleaseNotes>
+        Replaced the automatic country detection by a button to click
+        Added checks to detect if a very similar task already exists on WSG
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.24.1</ReleaseVersion>
       <ReleaseTitle>Small fixes and keeping sync with new DPHX</ReleaseTitle>
