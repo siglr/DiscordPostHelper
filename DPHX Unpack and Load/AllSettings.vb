@@ -223,6 +223,9 @@ Public Class AllSettings
     <XmlElement("AutoUnpack")>
     Public Property AutoUnpack As Boolean
 
+    <XmlElement("EnableEFBFlightPlanCreation")>
+    Public Property EnableEFBFlightPlanCreation As Boolean
+
     <XmlElement("ExcludeFlightPlanFromCleanup")>
     Public Property Exclude2020FlightPlanFromCleanup As Boolean
 
@@ -334,6 +337,7 @@ Public Class AllSettings
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
             AutoUnpack = settingsInFile.AutoUnpack
+            EnableEFBFlightPlanCreation = settingsInFile.EnableEFBFlightPlanCreation
             LastDPHXOpened = settingsInFile.LastDPHXOpened
             Exclude2020FlightPlanFromCleanup = settingsInFile.Exclude2020FlightPlanFromCleanup
             Exclude2020WeatherFileFromCleanup = settingsInFile.Exclude2020WeatherFileFromCleanup

@@ -99,6 +99,7 @@ Public Class Settings
         End Select
 
         chkEnableAutoUnpack.Checked = SessionSettings.AutoUnpack
+        chkEnableEFBFlightPlanCreation.Checked = SessionSettings.EnableEFBFlightPlanCreation
         chkExclude2020FlightPlanFromCleanup.Checked = SessionSettings.Exclude2020FlightPlanFromCleanup
         chkExclude2020WeatherFileFromCleanup.Checked = SessionSettings.Exclude2020WeatherFileFromCleanup
         chkExclude2024FlightPlanFromCleanup.Checked = SessionSettings.Exclude2024FlightPlanFromCleanup
@@ -244,6 +245,7 @@ Public Class Settings
             SessionSettings.TrackerStartAndFeed = chkEnableTrackerStartAndFeed.Checked
             SessionSettings.LocalWebServerPort = txtDPHXLocalPort.Text
             SessionSettings.AutoUnpack = chkEnableAutoUnpack.Checked
+            SessionSettings.EnableEFBFlightPlanCreation = chkEnableEFBFlightPlanCreation.Checked
             SessionSettings.Exclude2020FlightPlanFromCleanup = chkExclude2020FlightPlanFromCleanup.Checked
             SessionSettings.Exclude2020WeatherFileFromCleanup = chkExclude2020WeatherFileFromCleanup.Checked
             SessionSettings.Exclude2024FlightPlanFromCleanup = chkExclude2024FlightPlanFromCleanup.Checked
@@ -722,12 +724,14 @@ Public Class Settings
             pnl2024Options.Enabled = True
             pnlMSFS2024FlightPlanFilesFolder.Enabled = True
             pnlMSFS2024WeatherPresetsFolder.Enabled = True
+            chkEnableEFBFlightPlanCreation.Enabled = True
         Else
             pnl2024Options.Enabled = False
             opt2024Microsoft.Checked = False
             opt2024Steam.Checked = False
             pnlMSFS2024FlightPlanFilesFolder.Enabled = False
             pnlMSFS2024WeatherPresetsFolder.Enabled = False
+            chkEnableEFBFlightPlanCreation.Enabled = False
         End If
 
         If chkMSFS2020.Checked OrElse chkMSFS2024.Checked Then

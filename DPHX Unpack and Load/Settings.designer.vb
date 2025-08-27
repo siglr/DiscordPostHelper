@@ -83,6 +83,8 @@ Partial Class Settings
         Me.optOverwriteAlwaysSkip = New System.Windows.Forms.RadioButton()
         Me.optOverwriteAlwaysAsk = New System.Windows.Forms.RadioButton()
         Me.chkWSGExceptOpeningDPHX = New System.Windows.Forms.CheckBox()
+        Me.chkWSGListenerAutoStart = New System.Windows.Forms.CheckBox()
+        Me.chkEnableEFBFlightPlanCreation = New System.Windows.Forms.CheckBox()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -133,7 +135,6 @@ Partial Class Settings
         Me.pnlWSGAutoLaunch = New System.Windows.Forms.Panel()
         Me.cboWSGIntegration = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.chkWSGListenerAutoStart = New System.Windows.Forms.CheckBox()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
@@ -886,6 +887,32 @@ Partial Class Settings
         " DPHX file.")
         Me.chkWSGExceptOpeningDPHX.UseVisualStyleBackColor = True
         '
+        'chkWSGListenerAutoStart
+        '
+        Me.chkWSGListenerAutoStart.AutoSize = True
+        Me.chkWSGListenerAutoStart.Location = New System.Drawing.Point(361, 9)
+        Me.chkWSGListenerAutoStart.Name = "chkWSGListenerAutoStart"
+        Me.chkWSGListenerAutoStart.Size = New System.Drawing.Size(309, 24)
+        Me.chkWSGListenerAutoStart.TabIndex = 7
+        Me.chkWSGListenerAutoStart.Tag = "Enable this to have the WSG Listener auto start with Windows and keep running in " &
+    "your system tray."
+        Me.chkWSGListenerAutoStart.Text = "Auto-Start with Windows and keep running"
+        Me.ToolTip1.SetToolTip(Me.chkWSGListenerAutoStart, "Enable this to ignore the WSG integration option when starting the tool through a" &
+        " DPHX file.")
+        Me.chkWSGListenerAutoStart.UseVisualStyleBackColor = True
+        '
+        'chkEnableEFBFlightPlanCreation
+        '
+        Me.chkEnableEFBFlightPlanCreation.AutoSize = True
+        Me.chkEnableEFBFlightPlanCreation.Location = New System.Drawing.Point(270, 4)
+        Me.chkEnableEFBFlightPlanCreation.Name = "chkEnableEFBFlightPlanCreation"
+        Me.chkEnableEFBFlightPlanCreation.Size = New System.Drawing.Size(368, 24)
+        Me.chkEnableEFBFlightPlanCreation.TabIndex = 2
+        Me.chkEnableEFBFlightPlanCreation.Text = "Include an EFB compatible PLN file (MSFS 2024 only)"
+        Me.ToolTip1.SetToolTip(Me.chkEnableEFBFlightPlanCreation, "When enabled (checked), an EFB compatible PLN file will be created alongside the " &
+        "original.")
+        Me.chkEnableEFBFlightPlanCreation.UseVisualStyleBackColor = True
+        '
         'pnlMSFS2020WeatherPresetsFolder
         '
         Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
@@ -1025,6 +1052,7 @@ Partial Class Settings
         '
         'pnlAutoUnpack
         '
+        Me.pnlAutoUnpack.Controls.Add(Me.chkEnableEFBFlightPlanCreation)
         Me.pnlAutoUnpack.Controls.Add(Me.chkEnableAutoUnpack)
         Me.pnlAutoUnpack.Controls.Add(Me.Label6)
         Me.pnlAutoUnpack.Dock = System.Windows.Forms.DockStyle.Top
@@ -1407,20 +1435,6 @@ Partial Class Settings
         Me.Label21.TabIndex = 0
         Me.Label21.Text = "WeSimGlide Integration:"
         '
-        'chkWSGListenerAutoStart
-        '
-        Me.chkWSGListenerAutoStart.AutoSize = True
-        Me.chkWSGListenerAutoStart.Location = New System.Drawing.Point(361, 9)
-        Me.chkWSGListenerAutoStart.Name = "chkWSGListenerAutoStart"
-        Me.chkWSGListenerAutoStart.Size = New System.Drawing.Size(309, 24)
-        Me.chkWSGListenerAutoStart.TabIndex = 7
-        Me.chkWSGListenerAutoStart.Tag = "Enable this to have the WSG Listener auto start with Windows and keep running in " &
-    "your system tray."
-        Me.chkWSGListenerAutoStart.Text = "Auto-Start with Windows and keep running"
-        Me.ToolTip1.SetToolTip(Me.chkWSGListenerAutoStart, "Enable this to ignore the WSG integration option when starting the tool through a" &
-        " DPHX file.")
-        Me.chkWSGListenerAutoStart.UseVisualStyleBackColor = True
-        '
         'Settings
         '
         Me.AcceptButton = Me.OK_Button
@@ -1616,4 +1630,5 @@ Partial Class Settings
     Friend WithEvents Panel3 As Panel
     Friend WithEvents chkWSGExceptOpeningDPHX As CheckBox
     Friend WithEvents chkWSGListenerAutoStart As CheckBox
+    Friend WithEvents chkEnableEFBFlightPlanCreation As CheckBox
 End Class

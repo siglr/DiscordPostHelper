@@ -892,6 +892,14 @@ Public Class DPHXUnpackAndLoad
                  Settings.SessionSettings.MSFS2024FlightPlansFolder,
                  "Flight Plan for MSFS 2024"), True)
 
+            If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
+                'Copy of flight plan but for the EFB (without extra soaring information on the waypoints)
+                _status.AppendStatusLine(CreatePLNForEFB(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                 "EFB Flight Plan for MSFS 2024"), True)
+            End If
+
             'Weather file
             _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
                  TempDPHXUnpackFolder,
@@ -1132,6 +1140,68 @@ Public Class DPHXUnpackAndLoad
         End Try
     End Sub
 
+    Private Function CreatePLNForEFB(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
+
+        Try
+            Dim fullSourceFilename = Path.Combine(sourcePath, filename)
+            If Not File.Exists(fullSourceFilename) Then
+                Return $"❌ Source file not found: {fullSourceFilename}"
+            End If
+
+            ' Read the original PLN file as XML (preserve whitespace to avoid reformat surprises)
+            Dim xdoc = XDocument.Load(fullSourceFilename, LoadOptions.PreserveWhitespace)
+
+            ' Parse all waypoints and remove the extra information from each ATCWaypoint id
+            Dim changed As Integer = 0
+            For Each wp In xdoc.Descendants("ATCWaypoint")
+                Dim idAttr = wp.Attribute("id")
+                If idAttr Is Nothing Then Continue For
+                Dim original = idAttr.Value
+                Dim cleaned = CleanWaypointId(original)
+                If cleaned <> original Then
+                    idAttr.Value = cleaned
+                    changed += 1
+                End If
+            Next
+
+            ' Write the new PLN file with _EFB suffix in the same folder
+            Dim efbName = Path.GetFileNameWithoutExtension(fullSourceFilename) & "_EFB" & Path.GetExtension(fullSourceFilename)
+            Dim efbPath = Path.Combine(sourcePath, efbName)
+
+            Dim settings As New Xml.XmlWriterSettings With {
+            .Indent = True,
+            .Encoding = New UTF8Encoding(False) ' UTF-8, no BOM
+        }
+            Using w = Xml.XmlWriter.Create(efbPath, settings)
+                xdoc.Save(w)
+            End Using
+
+            ' Copy the file to the destination folder (uses your existing CopyFile)
+            If Not String.IsNullOrWhiteSpace(destPath) Then
+                Return CopyFile(efbName, sourcePath, destPath, msgToAsk)
+            End If
+
+            Return "No destination folder set for EFB version of task!"
+
+        Catch ex As Exception
+            Return $"❌ CreatePLNForEFB failed: {ex.Message}"
+        End Try
+    End Function
+
+    Private Function CleanWaypointId(value As String) As String
+        If String.IsNullOrEmpty(value) Then Return value
+        Dim s = value.Trim()
+
+        ' Remove leading asterisks (e.g., *Start, *Finish)
+        s = s.TrimStart("*"c)
+
+        ' Remove everything from the first '+' onward (e.g., +6378|7200x500, +7497x2000, etc.)
+        Dim plusIdx = s.IndexOf("+"c)
+        If plusIdx >= 0 Then s = s.Substring(0, plusIdx)
+
+        Return s.Trim()
+    End Function
+
     Private Function CopyFile(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
         Dim fullSourceFilename As String
         Dim fullDestFilename As String
@@ -1236,6 +1306,22 @@ Public Class DPHXUnpackAndLoad
                  "Flight Plan for MSFS 2024",
                  Settings.SessionSettings.Exclude2024FlightPlanFromCleanup))
             sb.AppendLine()
+
+            If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
+                'Delete EFB compatible flight plan
+                Dim nameOnly = Path.GetFileName(_allDPHData.FlightPlanFilename)
+                Dim baseName = Path.GetFileNameWithoutExtension(nameOnly)
+                Dim ext = Path.GetExtension(nameOnly)
+                Dim efbName = If(baseName.EndsWith("_EFB", StringComparison.OrdinalIgnoreCase),
+                     baseName & ext,
+                     baseName & "_EFB" & ext)
+
+                sb.AppendLine(DeleteFile(efbName,
+                             Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                             "EFB Flight Plan for MSFS 2024",
+                             Settings.SessionSettings.Exclude2024FlightPlanFromCleanup))
+                sb.AppendLine()
+            End If
 
             'Weather file
             sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
