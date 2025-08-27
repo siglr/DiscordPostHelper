@@ -484,8 +484,6 @@ Public Class Main
         Else
             txtEventDescription.Text = SessionSettings.EventDescriptionTemplate.Replace("($*$)", Environment.NewLine)
         End If
-        chkLockCountries.Checked = _useTestMode
-        chkLockCountries.Enabled = Not _useTestMode
         txtWeatherSummary.Text = String.Empty
         txtAltRestrictions.Text = String.Empty
         txtWeatherFirstPart.Text = String.Empty
@@ -1123,7 +1121,6 @@ Public Class Main
                                                                           chkDepartureLock.CheckedChanged,
                                                                           chkArrivalLock.CheckedChanged,
                                                                           chkDescriptionLock.CheckedChanged,
-                                                                          chkLockCountries.CheckedChanged,
                                                                           chkIncludeYear.CheckedChanged,
                                                                           chkSoaringTypeRidge.CheckedChanged,
                                                                           chkSuppressWarningForBaroPressure.CheckedChanged,
@@ -1806,6 +1803,51 @@ Public Class Main
 
 #Region "Country controls events"
 
+    Private Sub btnDetectCountries_Click(sender As Object, e As EventArgs) Handles btnDetectCountries.Click
+
+        If _useTestMode Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "Country detection is disabled in test mode.", "Country detection disabled", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+            Exit Sub
+        End If
+
+        Dim currentAllCountriesForComparison As String = String.Empty
+        Dim newAllCountriesForComparison As String = String.Empty
+        Dim country As String
+
+        If lstAllCountries.Items.Count > 0 Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "There is already a list of countries. Are you sure you want to run the detection again?", "Country detection", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
+        End If
+
+        For Each country In lstAllCountries.Items
+            currentAllCountriesForComparison = $"{currentAllCountriesForComparison};{country}"
+        Next
+
+        'Build countries
+        lstAllCountries.Items.Clear()
+        For Each waypoint As ATCWaypoint In _SF.AllWaypoints
+            waypoint.CountryISO3166Code = CountryGeo.GetCountryFromCoordinatesAzure(waypoint.Latitude, waypoint.Longitude)
+            If _SF.CountryISO3166Codes.ContainsKey(waypoint.CountryISO3166Code) Then
+                country = _SF.CountryISO3166Codes(waypoint.CountryISO3166Code)
+                If _SF.CountryFlagCodes.ContainsKey(country) AndAlso Not lstAllCountries.Items.Contains(country) Then
+                    lstAllCountries.Items.Add(country)
+                    newAllCountriesForComparison = $"{newAllCountriesForComparison};{country}"
+                End If
+            End If
+        Next
+
+        'Are there any changes?
+        If currentAllCountriesForComparison <> newAllCountriesForComparison Then
+            SessionModified(SourceOfChange.TaskTab)
+        End If
+
+    End Sub
+
     Private Sub btnAddCountry_Click(sender As Object, e As EventArgs) Handles btnAddCountry.Click
         If cboCountryFlag.SelectedIndex > 0 AndAlso Not lstAllCountries.Items.Contains(cboCountryFlag.Text) Then
             lstAllCountries.Items.Add(cboCountryFlag.Text)
@@ -2237,19 +2279,6 @@ Public Class Main
         End If
         txtDistanceTrack.Text = FormatNumber(_TaskTotalDistanceInKm, 0)
 
-        'Build countries
-        Dim country As String
-        If Not chkLockCountries.Checked Then
-            lstAllCountries.Items.Clear()
-            For Each waypoint As ATCWaypoint In _SF.AllWaypoints
-                If _SF.CountryISO3166Codes.ContainsKey(waypoint.CountryISO3166Code) Then
-                    country = _SF.CountryISO3166Codes(waypoint.CountryISO3166Code)
-                    If _SF.CountryFlagCodes.ContainsKey(country) AndAlso Not lstAllCountries.Items.Contains(country) Then
-                        lstAllCountries.Items.Add(country)
-                    End If
-                End If
-            Next
-        End If
         HighlightExpectedFields()
 
         'BuildFPResults()
@@ -4593,7 +4622,7 @@ Public Class Main
             Case 17 'Countries
                 SetGuidePanelToRight()
                 pnlGuide.Top = 28
-                lblGuideInstructions.Text = "Countries to show in the topic should be read from the waypoints, but you can optionally specify them yourself here."
+                lblGuideInstructions.Text = "Countries to show in the topic can be detected from the waypoints, but you can optionally specify them yourself here."
                 SetFocusOnField(cboCountryFlag, fromF1Key)
             Case 18 'Weather summary
                 SetGuidePanelToRight()
@@ -5301,7 +5330,6 @@ Public Class Main
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
                 .ExtraFiles.Add(lstAllFiles.Items(i))
             Next
-            .LockCountries = chkLockCountries.Checked
             For i As Integer = 0 To lstAllCountries.Items.Count - 1
                 .Countries.Add(lstAllCountries.Items(i))
             Next
@@ -5394,7 +5422,6 @@ Public Class Main
                 End If
                 txtFlightPlanFile.Text = .FlightPlanFilename
                 Me.Update()
-                chkLockCountries.Checked = .LockCountries
                 LoadFlightPlan(txtFlightPlanFile.Text)
 
                 If File.Exists(.WeatherFilename) Then
@@ -7312,16 +7339,9 @@ Public Class Main
 
     End Sub
 
-    Private Sub lblCountriesTestModeMsg_VisibleChanged(sender As Object, e As EventArgs) Handles lblCountriesTestModeMsg.VisibleChanged
-
-
-    End Sub
-
     Private Sub ToggleTestMode(testMode As Boolean)
         _useTestMode = testMode
         lblCountriesTestModeMsg.Visible = testMode
-        chkLockCountries.Enabled = Not testMode
-        chkLockCountries.Checked = testMode
     End Sub
 
     Private ReadOnly Property WSGEventID As String

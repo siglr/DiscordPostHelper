@@ -36,6 +36,7 @@ Partial Class Main
         Me.pnlArrow = New System.Windows.Forms.Panel()
         Me.pnlFlightPlanRightSide = New System.Windows.Forms.Panel()
         Me.grbTaskPart2 = New System.Windows.Forms.GroupBox()
+        Me.btnDetectCountries = New System.Windows.Forms.Button()
         Me.lblCountriesTestModeMsg = New System.Windows.Forms.Label()
         Me.chkSuppressWarningForBaroPressure = New System.Windows.Forms.CheckBox()
         Me.grpRepost = New System.Windows.Forms.GroupBox()
@@ -64,7 +65,6 @@ Partial Class Main
         Me.btnAddRecAddOn = New System.Windows.Forms.Button()
         Me.btnAddOnUp = New System.Windows.Forms.Button()
         Me.btnEditSelectedAddOn = New System.Windows.Forms.Button()
-        Me.chkLockCountries = New System.Windows.Forms.CheckBox()
         Me.btnMoveCountryDown = New System.Windows.Forms.Button()
         Me.btnMoveCountryUp = New System.Windows.Forms.Button()
         Me.txtDPHXPackageFilename = New System.Windows.Forms.TextBox()
@@ -149,6 +149,7 @@ Partial Class Main
         Me.lblEventGuideInstructions = New System.Windows.Forms.Label()
         Me.pnlEventArrow = New System.Windows.Forms.Panel()
         Me.grpGroupEventPost = New System.Windows.Forms.GroupBox()
+        Me.lblEventClubNotAuthorized = New System.Windows.Forms.Label()
         Me.btnGroupEventURLGo = New System.Windows.Forms.Button()
         Me.btnEventSelectPrevWeek = New System.Windows.Forms.Button()
         Me.btnEventSelectNextWeek = New System.Windows.Forms.Button()
@@ -357,7 +358,6 @@ Partial Class Main
         Me.GetNowTimeStampOnly = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileDropZone1 = New SIGLR.SoaringTools.CommonLibrary.FileDropZone()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
-        Me.lblEventClubNotAuthorized = New System.Windows.Forms.Label()
         Me.chkcboSharedWithUsers = New SIGLR.SoaringTools.DiscordPostHelper.CheckedListComboBox()
         Me.pnlScrollableSurface.SuspendLayout()
         Me.mainTabControl.SuspendLayout()
@@ -531,6 +531,7 @@ Partial Class Main
         '
         Me.grbTaskPart2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grbTaskPart2.Controls.Add(Me.btnDetectCountries)
         Me.grbTaskPart2.Controls.Add(Me.lblCountriesTestModeMsg)
         Me.grbTaskPart2.Controls.Add(Me.chkSuppressWarningForBaroPressure)
         Me.grbTaskPart2.Controls.Add(Me.grpRepost)
@@ -538,7 +539,6 @@ Partial Class Main
         Me.grbTaskPart2.Controls.Add(Me.lblNonStdBaroPressure)
         Me.grbTaskPart2.Controls.Add(Me.GroupBox3)
         Me.grbTaskPart2.Controls.Add(Me.GroupBox2)
-        Me.grbTaskPart2.Controls.Add(Me.chkLockCountries)
         Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryDown)
         Me.grbTaskPart2.Controls.Add(Me.btnMoveCountryUp)
         Me.grbTaskPart2.Controls.Add(Me.txtDPHXPackageFilename)
@@ -557,10 +557,22 @@ Partial Class Main
         Me.grbTaskPart2.TabStop = False
         Me.grbTaskPart2.Tag = "17"
         '
+        'btnDetectCountries
+        '
+        Me.btnDetectCountries.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDetectCountries.Location = New System.Drawing.Point(26, 61)
+        Me.btnDetectCountries.Name = "btnDetectCountries"
+        Me.btnDetectCountries.Size = New System.Drawing.Size(137, 29)
+        Me.btnDetectCountries.TabIndex = 2
+        Me.btnDetectCountries.Tag = "17"
+        Me.btnDetectCountries.Text = "Detect"
+        Me.ToolTip1.SetToolTip(Me.btnDetectCountries, "Click to detect all countries from this task")
+        Me.btnDetectCountries.UseVisualStyleBackColor = True
+        '
         'lblCountriesTestModeMsg
         '
         Me.lblCountriesTestModeMsg.Font = New System.Drawing.Font("Segoe UI Variable Display", 7.854546!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCountriesTestModeMsg.Location = New System.Drawing.Point(3, 59)
+        Me.lblCountriesTestModeMsg.Location = New System.Drawing.Point(15, 87)
         Me.lblCountriesTestModeMsg.Name = "lblCountriesTestModeMsg"
         Me.lblCountriesTestModeMsg.Size = New System.Drawing.Size(159, 40)
         Me.lblCountriesTestModeMsg.TabIndex = 96
@@ -927,17 +939,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnEditSelectedAddOn, "Click to edit the selected add-on.")
         Me.btnEditSelectedAddOn.UseVisualStyleBackColor = True
         '
-        'chkLockCountries
-        '
-        Me.chkLockCountries.AutoSize = True
-        Me.chkLockCountries.Location = New System.Drawing.Point(168, 70)
-        Me.chkLockCountries.Name = "chkLockCountries"
-        Me.chkLockCountries.Size = New System.Drawing.Size(15, 14)
-        Me.chkLockCountries.TabIndex = 2
-        Me.chkLockCountries.Tag = ""
-        Me.ToolTip1.SetToolTip(Me.chkLockCountries, "When checked, countries will not be automatically loaded from flight plan.")
-        Me.chkLockCountries.UseVisualStyleBackColor = True
-        '
         'btnMoveCountryDown
         '
         Me.btnMoveCountryDown.Enabled = False
@@ -967,7 +968,7 @@ Partial Class Main
         'txtDPHXPackageFilename
         '
         Me.txtDPHXPackageFilename.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(8, 102)
+        Me.txtDPHXPackageFilename.Location = New System.Drawing.Point(8, 3)
         Me.txtDPHXPackageFilename.Name = "txtDPHXPackageFilename"
         Me.txtDPHXPackageFilename.ReadOnly = True
         Me.txtDPHXPackageFilename.Size = New System.Drawing.Size(43, 32)
@@ -1174,7 +1175,7 @@ Partial Class Main
         Me.grbTaskInfo.MinimumSize = New System.Drawing.Size(700, 796)
         Me.grbTaskInfo.Name = "grbTaskInfo"
         Me.grbTaskInfo.Size = New System.Drawing.Size(729, 796)
-        Me.grbTaskInfo.TabIndex = 2
+        Me.grbTaskInfo.TabIndex = 3
         Me.grbTaskInfo.TabStop = False
         '
         'btnSyncWeatherTitle
@@ -1900,7 +1901,7 @@ Partial Class Main
         Me.btnSyncFlightPlanTitle.Location = New System.Drawing.Point(663, 18)
         Me.btnSyncFlightPlanTitle.Name = "btnSyncFlightPlanTitle"
         Me.btnSyncFlightPlanTitle.Size = New System.Drawing.Size(66, 32)
-        Me.btnSyncFlightPlanTitle.TabIndex = 6
+        Me.btnSyncFlightPlanTitle.TabIndex = 2
         Me.btnSyncFlightPlanTitle.Tag = "22"
         Me.btnSyncFlightPlanTitle.Text = "Sync"
         Me.ToolTip1.SetToolTip(Me.btnSyncFlightPlanTitle, "Click this button to harmonize the flight plan's title and filename with the task" &
@@ -2046,6 +2047,19 @@ Partial Class Main
         Me.grpGroupEventPost.Size = New System.Drawing.Size(1455, 850)
         Me.grpGroupEventPost.TabIndex = 0
         Me.grpGroupEventPost.TabStop = False
+        '
+        'lblEventClubNotAuthorized
+        '
+        Me.lblEventClubNotAuthorized.AutoSize = True
+        Me.lblEventClubNotAuthorized.Enabled = False
+        Me.lblEventClubNotAuthorized.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblEventClubNotAuthorized.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblEventClubNotAuthorized.Location = New System.Drawing.Point(845, 64)
+        Me.lblEventClubNotAuthorized.Name = "lblEventClubNotAuthorized"
+        Me.lblEventClubNotAuthorized.Size = New System.Drawing.Size(475, 26)
+        Me.lblEventClubNotAuthorized.TabIndex = 104
+        Me.lblEventClubNotAuthorized.Text = "⚠️You are not authorized to publish events for this club"
+        Me.lblEventClubNotAuthorized.Visible = False
         '
         'btnGroupEventURLGo
         '
@@ -4500,19 +4514,6 @@ Partial Class Main
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"
         '
-        'lblEventClubNotAuthorized
-        '
-        Me.lblEventClubNotAuthorized.AutoSize = True
-        Me.lblEventClubNotAuthorized.Enabled = False
-        Me.lblEventClubNotAuthorized.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventClubNotAuthorized.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblEventClubNotAuthorized.Location = New System.Drawing.Point(845, 64)
-        Me.lblEventClubNotAuthorized.Name = "lblEventClubNotAuthorized"
-        Me.lblEventClubNotAuthorized.Size = New System.Drawing.Size(475, 26)
-        Me.lblEventClubNotAuthorized.TabIndex = 104
-        Me.lblEventClubNotAuthorized.Text = "⚠️You are not authorized to publish events for this club"
-        Me.lblEventClubNotAuthorized.Visible = False
-        '
         'chkcboSharedWithUsers
         '
         Me.chkcboSharedWithUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -4754,7 +4755,6 @@ Partial Class Main
     Friend WithEvents txtWeatherClouds As TextBox
     Friend WithEvents txtAltRestrictions As TextBox
     Friend WithEvents grbTaskPart2 As GroupBox
-    Friend WithEvents chkLockCountries As CheckBox
     Friend WithEvents btnMoveCountryDown As Button
     Friend WithEvents btnMoveCountryUp As Button
     Friend WithEvents btnRemoveCountry As Button
@@ -4965,4 +4965,5 @@ Partial Class Main
     Friend WithEvents chkDGPOAltRestrictions As CheckBox
     Friend WithEvents btnSyncWeatherTitle As Button
     Friend WithEvents lblEventClubNotAuthorized As Label
+    Friend WithEvents btnDetectCountries As Button
 End Class
