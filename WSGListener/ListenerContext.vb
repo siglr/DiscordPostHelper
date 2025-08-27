@@ -133,7 +133,7 @@ Public Class ListenerContext
 
                 ' Properly formatted JSON payload:
                 Dim payload = $"{{""action"":""download-task"",""taskID"":""{taskId}"",""title"":""{title}"",""source"":""{If(fromEvent, "event", "")}""}}"
-                SendToDPHX("{""action"":""foreground""}", True)
+                'SendToDPHX("{""action"":""foreground""}", True)
                 SendToDPHX(payload, True)
                 _listener.SendResponse(ctx, "OK")
 
@@ -220,7 +220,7 @@ Public Class ListenerContext
 
     Private Sub SendToDPHX(message As String, preventWSGFromOpening As Boolean)
         Try
-            If Not WaitUntilDPHXReady(preventWSGFromOpening, 2) Then
+            If Not WaitUntilDPHXReady(preventWSGFromOpening, 5000) Then
                 Return
             End If
 
