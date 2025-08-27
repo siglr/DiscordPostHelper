@@ -3161,6 +3161,21 @@ Public Class SupportingFeatures
         Return Nothing
     End Function
 
+    ' Distance in meters between two waypoints (uses your Conversions helper)
+    Public Shared Function HaversineMeters(a As ATCWaypoint, b As ATCWaypoint) As Double
+        Return Conversions.GetDistanceInKm(a.Latitude, a.Longitude, b.Latitude, b.Longitude) * 1000.0
+    End Function
+
+    ' Very lightweight XML normalization for “identical” test
+    Public shared Function NormalizeXml(xml As String) As String
+        If String.IsNullOrWhiteSpace(xml) Then Return String.Empty
+        ' Trim + collapse runs of whitespace between tags; normalize newlines
+        Dim s = xml.Replace(vbCr, "").Replace(vbLf, "\n").Trim()
+        s = Regex.Replace(s, ">\s+<", "><")
+        s = Regex.Replace(s, "\s{2,}", " ")
+        Return s
+    End Function
+
 End Class
 
 

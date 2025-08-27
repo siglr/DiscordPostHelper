@@ -728,7 +728,7 @@ Public Class Main
 
         If txtTitle.Text.Trim = String.Empty Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "A title is required before saving!", "Title required", vbOKOnly, vbCritical)
+                MessageBox.Show(Me, "currentTaskWayPoints title is required before saving!", "Title required", vbOKOnly, vbCritical)
             End Using
             Return
         End If
@@ -932,7 +932,7 @@ Public Class Main
                 (droppedFlightPlan <> String.Empty OrElse
                 droppedWeather <> String.Empty OrElse
                 droppedOtherFiles.Count > 0) Then
-            invalidMessage = "A DPH or DPHX file cannot be dropped along with any other files."
+            invalidMessage = "currentTaskWayPoints DPH or DPHX file cannot be dropped along with any other files."
         End If
         If Not grbTaskInfo.Enabled AndAlso droppedFlightPlan = String.Empty AndAlso (droppedWeather <> String.Empty OrElse droppedOtherFiles.Count > 0) Then
             invalidMessage = "There is no flight plan loaded or dropped to load, so no other files can be specified in an empty session."
@@ -1903,7 +1903,7 @@ Public Class Main
         Dim cannotContinue As Boolean = False
 
         If txtTitle.Text.Trim = String.Empty Then
-            SetLabelFormat(lblTitle, LabelFormat.BoldRed, requiredText, "A title is required!")
+            SetLabelFormat(lblTitle, LabelFormat.BoldRed, requiredText, "currentTaskWayPoints title is required!")
             cannotContinue = True
         Else
             SetLabelFormat(lblTitle, LabelFormat.Regular)
@@ -6046,6 +6046,63 @@ Public Class Main
         Dim longitudeMax As Double
         _SF.GetTaskBoundaries(longitudeMin, longitudeMax, latitudeMin, latitudeMax)
 
+        ' 1) Check for possible duplicates (title OR bbox)
+        Dim candidates = FetchPossibleDuplicates(taskInfo.Title, latitudeMin, latitudeMax, longitudeMin, longitudeMax)
+
+        ' 1a) Hard-stop on exact title match (case-insensitive)
+        If candidates IsNot Nothing AndAlso candidates.Any(Function(c) String.Equals(c.Title, taskInfo.Title, StringComparison.OrdinalIgnoreCase)) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"currentTaskWayPoints task named ""{taskInfo.Title}"" already exists.{Environment.NewLine}Please change the title before publishing.",
+                                "Duplicate title", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return False
+        End If
+
+        ' 1b) Soft-stop on identical waypoints (same geometry)
+        '     If any candidate has identical waypoints, warn and ask confirmation.
+        Dim identical As CandidateTask = Nothing
+        Dim currentTaskCandidate As New CandidateTask With {
+            .Title = taskInfo.Title,
+            .PLNXML = _XmlDocFlightPlan.InnerXml,
+            .WPRXML = _XmlDocWeatherPreset.InnerXml
+            }
+        currentTaskCandidate.CompleteTaskData()
+
+        Dim epsilonMeters As Double = 100.0 ' matches your bbox epsilon of 0.001° (~100 m)
+        Dim diffSummary As String = Nothing
+        For Each candidate As CandidateTask In candidates
+            candidate.CompleteTaskData()
+
+            Dim cmp = CompareTasksForDuplicate(currentTaskCandidate, candidate, epsilonMeters)
+
+            If Not cmp.GeometryEqual Then
+                ' hard difference: skip this candidate
+                Continue For
+            End If
+
+            If cmp.ExactMatch Then
+                ' Same geometry + no soft diffs -> reject creation outright
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show($"An identical task already exists:{Environment.NewLine}""{candidate.Title}"" ({candidate.EntrySeqID}){Environment.NewLine}Please update the existing task instead.",
+                                    "Duplicate task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                End Using
+                Return False
+            Else
+                ' Same geometry but with soft differences -> ask for confirmation (keep the first)
+                identical = candidate
+                diffSummary = String.Join(Environment.NewLine, cmp.Differences)
+                Exit For
+            End If
+        Next
+
+        If identical IsNot Nothing Then
+            Using New Centered_MessageBox(Me)
+                Dim ask = MessageBox.Show($"A task with the same waypoints already exists:{Environment.NewLine}• {identical.Title} ({identical.EntrySeqID}){Environment.NewLine}{Environment.NewLine}Differences detected:{Environment.NewLine}{diffSummary}{Environment.NewLine}{Environment.NewLine}Do you still want to publish?",
+                    "Possible duplicate (waypoints)", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                If ask = DialogResult.No Then Return False
+            End Using
+        End If
+
         ' Update the taskData dictionary with minimal fields for creation
         Dim taskData As New Dictionary(Of String, Object) From {
             {"TemporaryTaskID", taskInfo.TemporaryTaskID},
@@ -6069,6 +6126,12 @@ Public Class Main
             {"Mode", "CreateTask"}
         }
 
+        'TODO: Call the script that checks if a similar task already exists (based on title and boundaries)
+        'If the script returns potential tasks, we must iterate through them and validate title and all waypoints
+        'First, no task can have the same title as an existing one - the user will need to change it
+        'Second, no task can have all the same waypoints as an existing one - we must warn the user and ask confirmation to proceed (different weather or altitude restrictions may make it a different task)
+        'Finally, if the script returns no potential tasks, we can proceed with creation
+
         Dim result As Boolean = CallScriptToCreateWSGTaskPart1(taskData)
 
         If result Then
@@ -6080,6 +6143,97 @@ Public Class Main
         End If
 
         Return result
+
+    End Function
+
+    Private Function CompareTasksForDuplicate(currentTask As CandidateTask,
+                                          candidate As CandidateTask,
+                                          epsilonMeters As Double) As DuplicateCheckResult
+        Dim res As New DuplicateCheckResult()
+
+        Dim currentTaskWayPoints = currentTask.AllWaypoints
+        Dim candidateWayPoints = candidate.AllWaypoints
+
+        ' 1) Count must match
+        If currentTaskWayPoints.Count <> candidateWayPoints.Count Then
+            res.GeometryEqual = False
+            res.HardDifference = $"Different number of waypoints ({currentTaskWayPoints.Count} vs {candidateWayPoints.Count})."
+            Return res
+        End If
+
+        ' 2) Positions must all match within epsilon (sequence order)
+        For i = 0 To currentTaskWayPoints.Count - 1
+            Dim distanceBetweenWaypoints = SupportingFeatures.HaversineMeters(currentTaskWayPoints(i), candidateWayPoints(i))
+            If distanceBetweenWaypoints > epsilonMeters Then
+                res.GeometryEqual = False
+                res.HardDifference = $"Waypoint #{i + 1} ""{currentTaskWayPoints(i).WaypointName}"" differs by ~{Math.Round(distanceBetweenWaypoints)} m."
+                Return res
+            End If
+        Next
+        res.GeometryEqual = True
+
+        ' 3) Soft differences (need confirmation)
+        ' 3a) Altitude restrictions (per waypoint)
+        For i = 0 To currentTaskWayPoints.Count - 1
+            Dim aMin = currentTaskWayPoints(i).MinAltFeet
+            Dim aMax = currentTaskWayPoints(i).MaxAltFeet
+            Dim bMin = candidateWayPoints(i).MinAltFeet
+            Dim bMax = candidateWayPoints(i).MaxAltFeet
+
+            If aMin.GetValueOrDefault(Integer.MinValue) <> bMin.GetValueOrDefault(Integer.MinValue) OrElse aMax.GetValueOrDefault(Integer.MinValue) <> bMax.GetValueOrDefault(Integer.MinValue) Then
+                Dim aTxt = If(aMin.HasValue Or aMax.HasValue, $"min {If(aMin, CInt(0))}', max {If(aMax, CInt(0))}'", "none")
+                Dim bTxt = If(bMin.HasValue Or bMax.HasValue, $"min {If(bMin, CInt(0))}', max {If(bMax, CInt(0))}'", "none")
+                res.Differences.Add($"• Waypoint #{i + 1} ""{currentTaskWayPoints(i).WaypointName}"": altitude restriction differs ({aTxt} vs {bTxt}).")
+            End If
+        Next
+
+        ' 3b) Diameter differences (per waypoint)
+        For i = 0 To currentTaskWayPoints.Count - 1
+            If currentTaskWayPoints(i).DiameterMeters <> candidateWayPoints(i).DiameterMeters Then
+                res.Differences.Add($"• Waypoint #{i + 1} ""{currentTaskWayPoints(i).WaypointName}"": gate diameter differs ({currentTaskWayPoints(i).DiameterMeters} m vs {candidateWayPoints(i).DiameterMeters} m).")
+            End If
+        Next
+
+        ' 3c) Weather XML identical?
+        Dim wxA = SupportingFeatures.NormalizeXml(currentTask.WPRXML)
+        Dim wxB = SupportingFeatures.NormalizeXml(candidate.WPRXML)
+        If wxA <> wxB Then
+            res.Differences.Add("• Weather preset differs (WPR XML not identical).")
+        End If
+
+        ' 3d) AAT Minimum Duration difference?
+        For i = 0 To currentTaskWayPoints.Count - 1
+            If currentTaskWayPoints(i).AATMinDuration <> candidateWayPoints(i).AATMinDuration Then
+                res.Differences.Add($"• AAT Minimum Duration differs ({SupportingFeatures.FormatTimeSpanAsText(currentTaskWayPoints(i).AATMinDuration)} vs {SupportingFeatures.FormatTimeSpanAsText(candidateWayPoints(i).AATMinDuration)}).")
+            End If
+        Next
+
+        ' 4) Exact or not
+        res.ExactMatch = (res.GeometryEqual AndAlso res.Differences.Count = 0)
+        Return res
+    End Function
+
+    Private Function FetchPossibleDuplicates(title As String,
+                                         latMin As Double, latMax As Double,
+                                         lonMin As Double, lonMax As Double,
+                                         Optional epsilon As Double = 0.0005) As List(Of CandidateTask)
+        If _useTestMode Then
+            Throw New Exception("Test mode is active. WSG connection should not be possible!")
+        End If
+
+        Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}GetPossibleDuplicateTasks.php" &
+              $"?Title={Uri.EscapeDataString(title)}" &
+              $"&LatMin={latMin.ToString(CultureInfo.InvariantCulture)}" &
+              $"&LatMax={latMax.ToString(CultureInfo.InvariantCulture)}" &
+              $"&LongMin={lonMin.ToString(CultureInfo.InvariantCulture)}" &
+              $"&LongMax={lonMax.ToString(CultureInfo.InvariantCulture)}" &
+              $"&Epsilon={epsilon.ToString(CultureInfo.InvariantCulture)}"
+
+        Using http As New Http.HttpClient()
+            http.Timeout = TimeSpan.FromSeconds(15)
+            Dim json = http.GetStringAsync(apiUrl).GetAwaiter().GetResult()
+            Return JsonConvert.DeserializeObject(Of List(Of CandidateTask))(json)
+        End Using
 
     End Function
 

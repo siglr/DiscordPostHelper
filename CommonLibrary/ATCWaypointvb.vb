@@ -364,4 +364,22 @@ Public Class ATCWaypoint
         Return _AATMinDuration
     End Function
 
+    Public ReadOnly Property MinAltFeet As Integer?
+        Get
+            Return _MinAlt
+        End Get
+    End Property
+
+    Public ReadOnly Property MaxAltFeet As Integer?
+        Get
+            Return _MaxAlt
+        End Get
+    End Property
+
+    Public ReadOnly Property DiameterMeters As Integer
+        Get
+            Return _Diameter
+        End Get
+    End Property
+
 End Class
