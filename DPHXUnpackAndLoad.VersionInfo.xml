@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.26.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.8.26.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.8.26.3</ReleaseVersion>
+      <ReleaseTitle>Hotfix #2 for DPHX not opening from WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the DPHX file not opening when main tool is not running
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.26.2</ReleaseVersion>
       <ReleaseTitle>Hotfix for small issues in the last version</ReleaseTitle>
