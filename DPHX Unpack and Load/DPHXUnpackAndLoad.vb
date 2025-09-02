@@ -1262,7 +1262,7 @@ Public Class DPHXUnpackAndLoad
                         messageToReturn = $"{msgToAsk} ""{filename}"" excluded from cleanup"
                     End If
                 Catch ex As Exception
-                    messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to deleted it:{Environment.NewLine}{ex.Message}"
+                    messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to delete it:{Environment.NewLine}{ex.Message}"
                 End Try
             Else
                 messageToReturn = $"{msgToAsk} ""{filename}"" not found"
@@ -1277,84 +1277,122 @@ Public Class DPHXUnpackAndLoad
     End Function
 
     Private Sub CleanupFiles()
-
         Dim sb As New StringBuilder
-
         sb.AppendLine("Cleanup Results:")
         sb.AppendLine()
 
+        ' 1) Build a list of candidates that *would* be deleted
+        Dim candidates As New List(Of (Display As String, FileName As String, SourcePath As String, Label As String, Excluded As Boolean))
+
+        ' Helper local to add a candidate if it truly would be deleted
+        Dim addCand = Sub(fileName As String, folder As String, label As String, shortLabel As String, excluded As Boolean)
+                          If String.IsNullOrWhiteSpace(fileName) Then Exit Sub
+                          If excluded Then Exit Sub
+                          If Not Directory.Exists(folder) Then Exit Sub
+                          Dim full = Path.Combine(folder, fileName)
+                          If Not File.Exists(full) Then Exit Sub
+                          candidates.Add(($"{shortLabel} — {fileName}", fileName, folder, label, excluded))
+                      End Sub
+
         If Settings.SessionSettings.Is2020Installed Then
-            'Flight plan
-            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 Settings.SessionSettings.MSFS2020FlightPlansFolder,
-                 "Flight Plan for MSFS 2020",
-                 Settings.SessionSettings.Exclude2020FlightPlanFromCleanup))
-            sb.AppendLine()
+            addCand(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                Settings.SessionSettings.MSFS2020FlightPlansFolder,
+                "Flight Plan for MSFS 2020",
+                "PLN 2020",
+                Settings.SessionSettings.Exclude2020FlightPlanFromCleanup)
 
-            'Weather file
-            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2020",
-                 Settings.SessionSettings.Exclude2020WeatherFileFromCleanup))
-            sb.AppendLine()
-
+            addCand(Path.GetFileName(_allDPHData.WeatherFilename),
+                Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                "Weather Preset for MSFS 2020",
+                "WPR 2020",
+                Settings.SessionSettings.Exclude2020WeatherFileFromCleanup)
         End If
+
         If Settings.SessionSettings.Is2024Installed Then
-            'Flight plan
-            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
-                 "Flight Plan for MSFS 2024",
-                 Settings.SessionSettings.Exclude2024FlightPlanFromCleanup))
-            sb.AppendLine()
+            addCand(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                "Flight Plan for MSFS 2024",
+                "PLN 2024",
+                Settings.SessionSettings.Exclude2024FlightPlanFromCleanup)
 
             If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
-                'Delete EFB compatible flight plan
                 Dim nameOnly = Path.GetFileName(_allDPHData.FlightPlanFilename)
                 Dim baseName = Path.GetFileNameWithoutExtension(nameOnly)
                 Dim ext = Path.GetExtension(nameOnly)
                 Dim efbName = If(baseName.EndsWith("_EFB", StringComparison.OrdinalIgnoreCase),
-                     baseName & ext,
-                     baseName & "_EFB" & ext)
+                             baseName & ext,
+                             baseName & "_EFB" & ext)
 
-                sb.AppendLine(DeleteFile(efbName,
-                             Settings.SessionSettings.MSFS2024FlightPlansFolder,
-                             "EFB Flight Plan for MSFS 2024",
-                             Settings.SessionSettings.Exclude2024FlightPlanFromCleanup))
-                sb.AppendLine()
+                addCand(efbName,
+                    Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                    "EFB Flight Plan for MSFS 2024",
+                    "EFB 2024",
+                    Settings.SessionSettings.Exclude2024FlightPlanFromCleanup)
             End If
 
-            'Weather file
-            sb.AppendLine(DeleteFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2024",
-                 Settings.SessionSettings.Exclude2024WeatherFileFromCleanup))
-            sb.AppendLine()
-
+            addCand(Path.GetFileName(_allDPHData.WeatherFilename),
+                Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                "Weather Preset for MSFS 2024",
+                "WPR 2024",
+                Settings.SessionSettings.Exclude2024WeatherFileFromCleanup)
         End If
 
-        'Look in the other files for xcsoar file
+        ' XCSoar (only stage .tsk/.xcm in their respective folders if present and not excluded)
         For Each filepath As String In _allDPHData.ExtraFiles
-            If Path.GetExtension(filepath) = ".tsk" Then
-                'XCSoar task
-                sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
-                                    Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task",
-                                    Settings.SessionSettings.ExcludeXCSoarTaskFileFromCleanup))
-            End If
-            If Path.GetExtension(filepath) = ".xcm" Then
-                'XCSoar map
-                sb.AppendLine(DeleteFile(Path.GetFileName(filepath),
-                                    Settings.SessionSettings.XCSoarMapsFolder,
-                                    "XCSoar Map",
-                                    Settings.SessionSettings.ExcludeXCSoarMapFileFromCleanup))
+            If String.IsNullOrWhiteSpace(filepath) Then Continue For
+            Dim ext = Path.GetExtension(filepath)
+            If ext Is Nothing Then Continue For
+            If ext.Equals(".tsk", StringComparison.OrdinalIgnoreCase) Then
+                addCand(Path.GetFileName(filepath),
+                    Settings.SessionSettings.XCSoarTasksFolder,
+                    "XCSoar Task",
+                    "XCSoar Task",
+                    Settings.SessionSettings.ExcludeXCSoarTaskFileFromCleanup)
+            ElseIf ext.Equals(".xcm", StringComparison.OrdinalIgnoreCase) Then
+                addCand(Path.GetFileName(filepath),
+                    Settings.SessionSettings.XCSoarMapsFolder,
+                    "XCSoar Map",
+                    "XCSoar Map",
+                    Settings.SessionSettings.ExcludeXCSoarMapFileFromCleanup)
             End If
         Next
 
+        ' If nothing would actually be deleted, bail early
+        If candidates.Count = 0 Then
+            Using New Centered_MessageBox()
+                MessageBox.Show(Me, "No files eligible for deletion.", "Cleanup", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+            EnableUnpackButton()
+            Return
+        End If
+
+        ' 2) Show confirmation dialog
+        Dim displayList = candidates.Select(Function(c) c.Display).ToList()
+        Dim approvedDisplays As List(Of String)
+        Using dlg As New CleanupConfirmForm(displayList)
+            If dlg.ShowDialog(Me) <> DialogResult.OK Then
+                EnableUnpackButton()
+                Return ' user canceled
+            End If
+            approvedDisplays = dlg.GetApprovedItems()
+        End Using
+
+        ' 3) Execute deletions only for approved items
+        For Each c In candidates
+            If approvedDisplays.Contains(c.Display) Then
+                ' reuse your existing message/permissions logic
+                sb.AppendLine(DeleteFile(c.FileName, c.SourcePath, c.Label, False))
+            Else
+                sb.AppendLine($"{c.Label} ""{c.FileName}"" skipped by user")
+            End If
+            sb.AppendLine()
+        Next
+
+        ' 4) Show results (unchanged)
         Using New Centered_MessageBox()
-            MessageBox.Show(Me, sb.ToString, "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show(Me, sb.ToString(), "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
         EnableUnpackButton()
-
     End Sub
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
