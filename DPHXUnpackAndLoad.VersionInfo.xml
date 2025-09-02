@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.26.3</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.2.1</ReleaseVersion>
+      <ReleaseTitle>File for EFB and cleanup enhancement</ReleaseTitle>
+      <ReleaseNotes>
+        Added option to create EFB compatible (simplified) PLN file to load in MSFS 2024
+        Added dialog box to select/confirm cleanup choices
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.26.3</ReleaseVersion>
       <ReleaseTitle>Hotfix #2 for DPHX not opening from WSG</ReleaseTitle>
