@@ -1277,21 +1277,22 @@ Public Class DPHXUnpackAndLoad
     End Function
 
     Private Sub CleanupFiles()
-        Dim sb As New StringBuilder
-        sb.AppendLine("Cleanup Results:")
-        sb.AppendLine()
-
         ' 1) Build a list of candidates that *would* be deleted
-        Dim candidates As New List(Of (Display As String, FileName As String, SourcePath As String, Label As String, Excluded As Boolean))
+        Dim candidates As New List(Of CleanupCandidate)
 
-        ' Helper local to add a candidate if it truly would be deleted
+        ' Helper: add a candidate only if it truly exists and is not excluded
         Dim addCand = Sub(fileName As String, folder As String, label As String, shortLabel As String, excluded As Boolean)
                           If String.IsNullOrWhiteSpace(fileName) Then Exit Sub
                           If excluded Then Exit Sub
                           If Not Directory.Exists(folder) Then Exit Sub
                           Dim full = Path.Combine(folder, fileName)
                           If Not File.Exists(full) Then Exit Sub
-                          candidates.Add(($"{shortLabel} — {fileName}", fileName, folder, label, excluded))
+                          candidates.Add(New CleanupCandidate With {
+                          .Display = $"{shortLabel} — {fileName}",
+                          .FileName = fileName,
+                          .SourcePath = folder,
+                          .Label = label
+                      })
                       End Sub
 
         If Settings.SessionSettings.Is2020Installed Then
@@ -1337,7 +1338,7 @@ Public Class DPHXUnpackAndLoad
                 Settings.SessionSettings.Exclude2024WeatherFileFromCleanup)
         End If
 
-        ' XCSoar (only stage .tsk/.xcm in their respective folders if present and not excluded)
+        ' XCSoar (.tsk/.xcm)
         For Each filepath As String In _allDPHData.ExtraFiles
             If String.IsNullOrWhiteSpace(filepath) Then Continue For
             Dim ext = Path.GetExtension(filepath)
@@ -1366,32 +1367,11 @@ Public Class DPHXUnpackAndLoad
             Return
         End If
 
-        ' 2) Show confirmation dialog
-        Dim displayList = candidates.Select(Function(c) c.Display).ToList()
-        Dim approvedDisplays As List(Of String)
-        Using dlg As New CleanupConfirmForm(displayList)
-            If dlg.ShowDialog(Me) <> DialogResult.OK Then
-                EnableUnpackButton()
-                Return ' user canceled
-            End If
-            approvedDisplays = dlg.GetApprovedItems()
+        ' 2) One dialog to confirm AND show results (it calls DeleteFile internally)
+        Using dlg As New CleanupConfirmForm(candidates, AddressOf DeleteFile)
+            dlg.ShowDialog(Me)
         End Using
 
-        ' 3) Execute deletions only for approved items
-        For Each c In candidates
-            If approvedDisplays.Contains(c.Display) Then
-                ' reuse your existing message/permissions logic
-                sb.AppendLine(DeleteFile(c.FileName, c.SourcePath, c.Label, False))
-            Else
-                sb.AppendLine($"{c.Label} ""{c.FileName}"" skipped by user")
-            End If
-            sb.AppendLine()
-        Next
-
-        ' 4) Show results (unchanged)
-        Using New Centered_MessageBox()
-            MessageBox.Show(Me, sb.ToString(), "Cleanup results", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End Using
         EnableUnpackButton()
     End Sub
 

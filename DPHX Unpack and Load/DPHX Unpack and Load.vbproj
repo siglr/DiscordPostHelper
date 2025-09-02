@@ -161,6 +161,7 @@
     <Compile Include="CleaningTool.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="CleanupCandidate.vb" />
     <Compile Include="CleanupConfirmForm.Designer.vb">
       <DependentUpon>CleanupConfirmForm.vb</DependentUpon>
     </Compile>
