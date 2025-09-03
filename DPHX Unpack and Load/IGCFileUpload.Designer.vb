@@ -78,7 +78,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(0, 0)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(717, 670)
+        Me.browser.Size = New System.Drawing.Size(715, 670)
         Me.browser.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.browser, "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
         "zoom level.")
@@ -539,7 +539,7 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(717, 695)
+        Me.lblProcessing.Size = New System.Drawing.Size(715, 695)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -550,7 +550,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.Location = New System.Drawing.Point(3, 671)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(710, 20)
+        Me.Label4.Size = New System.Drawing.Size(708, 20)
         Me.Label4.TabIndex = 1
         Me.Label4.Text = "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
     "zoom level."

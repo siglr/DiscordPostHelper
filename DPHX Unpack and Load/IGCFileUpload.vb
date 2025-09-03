@@ -567,6 +567,37 @@ Public Class IGCFileUpload
 
     End Function
 
+    ''' <summary>
+    ''' Finds the first <button> whose visible text matches exactly the given text
+    ''' and sends a real mouse click to it.
+    ''' </summary>
+    Private Async Function ClickButtonByTextAsync(buttonText As String) As Task
+    Dim rectScript = $"
+      (function(){{
+        var buttons = document.querySelectorAll('button');
+        for (var i=0;i<buttons.length;i++) {{
+          if (buttons[i].textContent.trim() === '{buttonText}') {{
+            var r = buttons[i].getBoundingClientRect();
+            return {{ x:r.left + r.width/2, y:r.top + r.height/2 }};
+          }}
+        }}
+        return null;
+      }})();
+    "
+
+    Dim rectResp = Await browser.EvaluateScriptAsync(rectScript)
+    If Not rectResp.Success OrElse rectResp.Result Is Nothing Then Return
+
+    Dim dict = DirectCast(rectResp.Result, IDictionary(Of String, Object))
+    Dim x = Convert.ToDouble(dict("x"))
+    Dim y = Convert.ToDouble(dict("y"))
+
+    Dim host = browser.GetBrowser().GetHost()
+    Dim mevt As New MouseEvent(CInt(x), CInt(y), CefEventFlags.None)
+    host.SendMouseClickEvent(mevt, MouseButtonType.Left, False, 1)
+    host.SendMouseClickEvent(mevt, MouseButtonType.Left, True, 1)
+End Function
+
 #End Region
 
     Private Async Function CheckIGCAlreadyUploaded() As Task(Of String)
@@ -758,7 +789,7 @@ Public Class IGCFileUpload
         Await ClickElementAsync("button[title=""Choose units for distance, elevation etc.""]")
         Await ClickElementByIdAsync("setting_speed_units_kph")
         Await ClickElementByIdAsync("setting_distance_units_km")
-        Await ClickElementAsync("button[title=""Choose units for distance, elevation etc.""]")
+        Await ClickButtonByTextAsync("Close Settings")
         browser.SetZoomLevel(currentZoomLevel)
     End Function
 
