@@ -3027,6 +3027,37 @@ Public Class SupportingFeatures
         Return dt.ToString(pattern, culture)
     End Function
 
+    Public Shared Function FormatUserDateTime(dt As DateTime, isUtc As Boolean) As String
+        Dim localDt As DateTime =
+            If(isUtc,
+               DateTime.SpecifyKind(dt, DateTimeKind.Utc).ToLocalTime(),
+               DateTime.SpecifyKind(dt, DateTimeKind.Local))
+
+        Dim c = CultureInfo.CurrentCulture
+        Dim df = c.DateTimeFormat
+
+        ' Date: keep user's style, ensure year, remove weekday if present
+        Dim dateP = df.ShortDatePattern
+        dateP = Regex.Replace(dateP, "\s*,?\s*(dddd|ddd)", "", RegexOptions.IgnoreCase)
+        If dateP.IndexOf("y"c) = -1 Then dateP &= df.DateSeparator & "yyyy"
+
+        ' Time: user's style, remove seconds + trailing separator
+        Dim timeP = df.ShortTimePattern
+        timeP = Regex.Replace(timeP, "(\s*[:\.]\s*)s{1,2}(\.f+)?", "", RegexOptions.IgnoreCase)
+        timeP = Regex.Replace(timeP, "[:\.]\s*$", "").Trim()
+
+        Dim pattern = (dateP & " " & timeP).Trim()
+        Return localDt.ToString(pattern, c)
+    End Function
+
+    ' Overload: input as "yyyy-MM-dd HH:mm:ss"
+    Public Shared Function FormatUserDateTime(dtText As String, isUtc As Boolean) As String
+        Dim dt = DateTime.ParseExact(dtText, "yyyy-MM-dd HH:mm:ss",
+                                     CultureInfo.InvariantCulture, DateTimeStyles.None)
+        Return FormatUserDateTime(dt, isUtc)
+    End Function
+
+
     ''' <summary>
     ''' Returns True if the event is still “active” (i.e. enabled and not more than 
     ''' 90 minutes past its anchor point), False if no event or it’s older than 90 min.

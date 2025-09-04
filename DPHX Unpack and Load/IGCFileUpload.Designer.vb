@@ -60,14 +60,38 @@ Partial Class IGCFileUpload
         Me.txtPilot = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lstbxIGCFiles = New System.Windows.Forms.ListBox()
+        Me.tabIGCTabs = New System.Windows.Forms.TabControl()
+        Me.tabpgResults = New System.Windows.Forms.TabPage()
         Me.lblProcessing = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.tabpgRatings = New System.Windows.Forms.TabPage()
+        Me.lblTaskIDAndTitle = New System.Windows.Forms.Label()
+        Me.grpTaskUserData = New System.Windows.Forms.GroupBox()
+        Me.txtTaskPrivateNotes = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.txtTaskPublicFeedback = New System.Windows.Forms.TextBox()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.cboQuality = New System.Windows.Forms.ComboBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.lblFavoritesDateTime = New System.Windows.Forms.Label()
+        Me.lblFlyNextDateTime = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.cboDifficulty = New System.Windows.Forms.ComboBox()
+        Me.chkFavorites = New System.Windows.Forms.CheckBox()
+        Me.chkFlyNext = New System.Windows.Forms.CheckBox()
+        Me.grpIGCUserComment = New System.Windows.Forms.GroupBox()
+        Me.txtUserIGCComment = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.pnlResults.SuspendLayout()
+        Me.tabIGCTabs.SuspendLayout()
+        Me.tabpgResults.SuspendLayout()
+        Me.tabpgRatings.SuspendLayout()
+        Me.grpTaskUserData.SuspendLayout()
+        Me.grpIGCUserComment.SuspendLayout()
         Me.SuspendLayout()
         '
         'browser
@@ -78,7 +102,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.browser.Location = New System.Drawing.Point(0, 0)
         Me.browser.Name = "browser"
-        Me.browser.Size = New System.Drawing.Size(715, 670)
+        Me.browser.Size = New System.Drawing.Size(716, 636)
         Me.browser.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.browser, "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
         "zoom level.")
@@ -118,9 +142,7 @@ Partial Class IGCFileUpload
         '
         'SplitContainer1.Panel2
         '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.lblProcessing)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label4)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.browser)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.tabIGCTabs)
         Me.SplitContainer1.Size = New System.Drawing.Size(980, 696)
         Me.SplitContainer1.SplitterDistance = 250
         Me.SplitContainer1.SplitterWidth = 5
@@ -531,6 +553,32 @@ Partial Class IGCFileUpload
         Me.lstbxIGCFiles.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.lstbxIGCFiles, "Select an IGC file from the list.")
         '
+        'tabIGCTabs
+        '
+        Me.tabIGCTabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tabIGCTabs.Controls.Add(Me.tabpgResults)
+        Me.tabIGCTabs.Controls.Add(Me.tabpgRatings)
+        Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
+        Me.tabIGCTabs.Name = "tabIGCTabs"
+        Me.tabIGCTabs.SelectedIndex = 0
+        Me.tabIGCTabs.Size = New System.Drawing.Size(706, 695)
+        Me.tabIGCTabs.TabIndex = 2
+        '
+        'tabpgResults
+        '
+        Me.tabpgResults.Controls.Add(Me.lblProcessing)
+        Me.tabpgResults.Controls.Add(Me.Label4)
+        Me.tabpgResults.Controls.Add(Me.browser)
+        Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
+        Me.tabpgResults.Name = "tabpgResults"
+        Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabpgResults.Size = New System.Drawing.Size(698, 662)
+        Me.tabpgResults.TabIndex = 0
+        Me.tabpgResults.Text = "Results"
+        Me.tabpgResults.UseVisualStyleBackColor = True
+        '
         'lblProcessing
         '
         Me.lblProcessing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -539,7 +587,7 @@ Partial Class IGCFileUpload
         Me.lblProcessing.Font = New System.Drawing.Font("Segoe UI Variable Display", 20.29091!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProcessing.Location = New System.Drawing.Point(0, 0)
         Me.lblProcessing.Name = "lblProcessing"
-        Me.lblProcessing.Size = New System.Drawing.Size(715, 695)
+        Me.lblProcessing.Size = New System.Drawing.Size(716, 662)
         Me.lblProcessing.TabIndex = 0
         Me.lblProcessing.Text = "Processing"
         Me.lblProcessing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -548,13 +596,205 @@ Partial Class IGCFileUpload
         '
         Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label4.Location = New System.Drawing.Point(3, 671)
+        Me.Label4.Location = New System.Drawing.Point(3, 639)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(708, 20)
+        Me.Label4.Size = New System.Drawing.Size(710, 20)
         Me.Label4.TabIndex = 1
         Me.Label4.Text = "You can browse this page like a normal web page. Use CTRL and mouse wheel to set " &
     "zoom level."
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'tabpgRatings
+        '
+        Me.tabpgRatings.Controls.Add(Me.lblTaskIDAndTitle)
+        Me.tabpgRatings.Controls.Add(Me.grpTaskUserData)
+        Me.tabpgRatings.Controls.Add(Me.grpIGCUserComment)
+        Me.tabpgRatings.Location = New System.Drawing.Point(4, 29)
+        Me.tabpgRatings.Name = "tabpgRatings"
+        Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabpgRatings.Size = New System.Drawing.Size(698, 662)
+        Me.tabpgRatings.TabIndex = 1
+        Me.tabpgRatings.Text = "Ratings & Comments"
+        Me.tabpgRatings.UseVisualStyleBackColor = True
+        '
+        'lblTaskIDAndTitle
+        '
+        Me.lblTaskIDAndTitle.AutoSize = True
+        Me.lblTaskIDAndTitle.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.lblTaskIDAndTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTaskIDAndTitle.Location = New System.Drawing.Point(3, 3)
+        Me.lblTaskIDAndTitle.Name = "lblTaskIDAndTitle"
+        Me.lblTaskIDAndTitle.Size = New System.Drawing.Size(16, 26)
+        Me.lblTaskIDAndTitle.TabIndex = 2
+        Me.lblTaskIDAndTitle.Text = " "
+        Me.ToolTip1.SetToolTip(Me.lblTaskIDAndTitle, "Click to open this task on WeSimGlide.org")
+        '
+        'grpTaskUserData
+        '
+        Me.grpTaskUserData.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpTaskUserData.Controls.Add(Me.txtTaskPrivateNotes)
+        Me.grpTaskUserData.Controls.Add(Me.Label19)
+        Me.grpTaskUserData.Controls.Add(Me.txtTaskPublicFeedback)
+        Me.grpTaskUserData.Controls.Add(Me.Label18)
+        Me.grpTaskUserData.Controls.Add(Me.cboQuality)
+        Me.grpTaskUserData.Controls.Add(Me.Label17)
+        Me.grpTaskUserData.Controls.Add(Me.lblFavoritesDateTime)
+        Me.grpTaskUserData.Controls.Add(Me.lblFlyNextDateTime)
+        Me.grpTaskUserData.Controls.Add(Me.Label16)
+        Me.grpTaskUserData.Controls.Add(Me.cboDifficulty)
+        Me.grpTaskUserData.Controls.Add(Me.chkFavorites)
+        Me.grpTaskUserData.Controls.Add(Me.chkFlyNext)
+        Me.grpTaskUserData.Location = New System.Drawing.Point(6, 109)
+        Me.grpTaskUserData.Name = "grpTaskUserData"
+        Me.grpTaskUserData.Size = New System.Drawing.Size(686, 402)
+        Me.grpTaskUserData.TabIndex = 1
+        Me.grpTaskUserData.TabStop = False
+        Me.grpTaskUserData.Text = "My Stuff for this task"
+        '
+        'txtTaskPrivateNotes
+        '
+        Me.txtTaskPrivateNotes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTaskPrivateNotes.Location = New System.Drawing.Point(6, 300)
+        Me.txtTaskPrivateNotes.Multiline = True
+        Me.txtTaskPrivateNotes.Name = "txtTaskPrivateNotes"
+        Me.txtTaskPrivateNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtTaskPrivateNotes.Size = New System.Drawing.Size(674, 91)
+        Me.txtTaskPrivateNotes.TabIndex = 11
+        Me.ToolTip1.SetToolTip(Me.txtTaskPrivateNotes, "You can save a private note about this task")
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(3, 277)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(96, 20)
+        Me.Label19.TabIndex = 10
+        Me.Label19.Text = "Private Notes"
+        '
+        'txtTaskPublicFeedback
+        '
+        Me.txtTaskPublicFeedback.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTaskPublicFeedback.Location = New System.Drawing.Point(6, 181)
+        Me.txtTaskPublicFeedback.Multiline = True
+        Me.txtTaskPublicFeedback.Name = "txtTaskPublicFeedback"
+        Me.txtTaskPublicFeedback.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtTaskPublicFeedback.Size = New System.Drawing.Size(674, 91)
+        Me.txtTaskPublicFeedback.TabIndex = 9
+        Me.ToolTip1.SetToolTip(Me.txtTaskPublicFeedback, "Provide public feedback for this task")
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(3, 158)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(115, 20)
+        Me.Label18.TabIndex = 8
+        Me.Label18.Text = "Public Feedback"
+        '
+        'cboQuality
+        '
+        Me.cboQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboQuality.FormattingEnabled = True
+        Me.cboQuality.Items.AddRange(New Object() {"Not set", "★", "★★", "★★★", "★★★★", "★★★★★"})
+        Me.cboQuality.Location = New System.Drawing.Point(82, 117)
+        Me.cboQuality.Name = "cboQuality"
+        Me.cboQuality.Size = New System.Drawing.Size(108, 28)
+        Me.cboQuality.TabIndex = 7
+        Me.ToolTip1.SetToolTip(Me.cboQuality, "Rate the quality and fun factor of this task")
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(2, 120)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(57, 20)
+        Me.Label17.TabIndex = 6
+        Me.Label17.Text = "Quality:"
+        '
+        'lblFavoritesDateTime
+        '
+        Me.lblFavoritesDateTime.AutoSize = True
+        Me.lblFavoritesDateTime.Location = New System.Drawing.Point(119, 57)
+        Me.lblFavoritesDateTime.Name = "lblFavoritesDateTime"
+        Me.lblFavoritesDateTime.Size = New System.Drawing.Size(13, 20)
+        Me.lblFavoritesDateTime.TabIndex = 3
+        Me.lblFavoritesDateTime.Text = " "
+        '
+        'lblFlyNextDateTime
+        '
+        Me.lblFlyNextDateTime.AutoSize = True
+        Me.lblFlyNextDateTime.Location = New System.Drawing.Point(119, 27)
+        Me.lblFlyNextDateTime.Name = "lblFlyNextDateTime"
+        Me.lblFlyNextDateTime.Size = New System.Drawing.Size(13, 20)
+        Me.lblFlyNextDateTime.TabIndex = 1
+        Me.lblFlyNextDateTime.Text = " "
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(2, 86)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(70, 20)
+        Me.Label16.TabIndex = 4
+        Me.Label16.Text = "Difficulty:"
+        '
+        'cboDifficulty
+        '
+        Me.cboDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDifficulty.FormattingEnabled = True
+        Me.cboDifficulty.Items.AddRange(New Object() {"0. Not set", "1. Beginner", "2. Student", "3. Experienced", "4. Professional", "5. Champion"})
+        Me.cboDifficulty.Location = New System.Drawing.Point(82, 83)
+        Me.cboDifficulty.Name = "cboDifficulty"
+        Me.cboDifficulty.Size = New System.Drawing.Size(125, 28)
+        Me.cboDifficulty.TabIndex = 5
+        Me.ToolTip1.SetToolTip(Me.cboDifficulty, "Rate the difficulty level of this task")
+        '
+        'chkFavorites
+        '
+        Me.chkFavorites.AutoSize = True
+        Me.chkFavorites.Location = New System.Drawing.Point(7, 56)
+        Me.chkFavorites.Name = "chkFavorites"
+        Me.chkFavorites.Size = New System.Drawing.Size(114, 24)
+        Me.chkFavorites.TabIndex = 2
+        Me.chkFavorites.Text = "🌟 Favorites "
+        Me.ToolTip1.SetToolTip(Me.chkFavorites, "Check this box to add this task to your list of Favorites")
+        Me.chkFavorites.UseVisualStyleBackColor = True
+        '
+        'chkFlyNext
+        '
+        Me.chkFlyNext.AutoSize = True
+        Me.chkFlyNext.Location = New System.Drawing.Point(7, 26)
+        Me.chkFlyNext.Name = "chkFlyNext"
+        Me.chkFlyNext.Size = New System.Drawing.Size(106, 24)
+        Me.chkFlyNext.TabIndex = 0
+        Me.chkFlyNext.Text = "🔜 Fly Next"
+        Me.ToolTip1.SetToolTip(Me.chkFlyNext, "Check this box to add this task to your ""Fly Next"" list")
+        Me.chkFlyNext.UseVisualStyleBackColor = True
+        '
+        'grpIGCUserComment
+        '
+        Me.grpIGCUserComment.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpIGCUserComment.Controls.Add(Me.txtUserIGCComment)
+        Me.grpIGCUserComment.Location = New System.Drawing.Point(6, 35)
+        Me.grpIGCUserComment.Name = "grpIGCUserComment"
+        Me.grpIGCUserComment.Size = New System.Drawing.Size(686, 68)
+        Me.grpIGCUserComment.TabIndex = 0
+        Me.grpIGCUserComment.TabStop = False
+        Me.grpIGCUserComment.Text = "IGC Comment"
+        '
+        'txtUserIGCComment
+        '
+        Me.txtUserIGCComment.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtUserIGCComment.Location = New System.Drawing.Point(6, 26)
+        Me.txtUserIGCComment.Name = "txtUserIGCComment"
+        Me.txtUserIGCComment.Size = New System.Drawing.Size(674, 27)
+        Me.txtUserIGCComment.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.txtUserIGCComment, "Provide comments for this specific IGC flight")
         '
         'IGCFileUpload
         '
@@ -577,6 +817,14 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.ResumeLayout(False)
         Me.pnlResults.ResumeLayout(False)
         Me.pnlResults.PerformLayout()
+        Me.tabIGCTabs.ResumeLayout(False)
+        Me.tabpgResults.ResumeLayout(False)
+        Me.tabpgRatings.ResumeLayout(False)
+        Me.tabpgRatings.PerformLayout()
+        Me.grpTaskUserData.ResumeLayout(False)
+        Me.grpTaskUserData.PerformLayout()
+        Me.grpIGCUserComment.ResumeLayout(False)
+        Me.grpIGCUserComment.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -620,4 +868,23 @@ Partial Class IGCFileUpload
     Friend WithEvents Label8 As Label
     Friend WithEvents txtTaskLocalDateTime As TextBox
     Friend WithEvents Label12 As Label
+    Friend WithEvents tabIGCTabs As TabControl
+    Friend WithEvents tabpgResults As TabPage
+    Friend WithEvents tabpgRatings As TabPage
+    Friend WithEvents txtUserIGCComment As TextBox
+    Friend WithEvents grpIGCUserComment As GroupBox
+    Friend WithEvents grpTaskUserData As GroupBox
+    Friend WithEvents chkFlyNext As CheckBox
+    Friend WithEvents Label16 As Label
+    Friend WithEvents cboDifficulty As ComboBox
+    Friend WithEvents chkFavorites As CheckBox
+    Friend WithEvents lblFavoritesDateTime As Label
+    Friend WithEvents lblFlyNextDateTime As Label
+    Friend WithEvents cboQuality As ComboBox
+    Friend WithEvents Label17 As Label
+    Friend WithEvents txtTaskPrivateNotes As TextBox
+    Friend WithEvents Label19 As Label
+    Friend WithEvents txtTaskPublicFeedback As TextBox
+    Friend WithEvents Label18 As Label
+    Friend WithEvents lblTaskIDAndTitle As Label
 End Class

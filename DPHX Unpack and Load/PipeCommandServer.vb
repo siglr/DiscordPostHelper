@@ -2,7 +2,7 @@
 Imports System.IO.Pipes
 Imports System.Text
 Imports System.Threading
-Imports System.Web.Script.Serialization  ' requires reference to System.Web.Extensions
+Imports Newtonsoft.Json.Linq   ' add NuGet: Newtonsoft.Json
 
 Public Class PipeCommandServer
     Private Const PIPE_NAME As String = "DPHXPipe"
@@ -21,11 +21,10 @@ Public Class PipeCommandServer
     Public Sub [Stop]()
         _running = False
         Try
-            ' connect once to unblock WaitForConnection
             Using temp = New NamedPipeClientStream(".", PIPE_NAME, PipeDirection.Out)
-                temp.Connect(100)
+                temp.Connect(100) ' unblock WaitForConnection
             End Using
-        Catch ex As Exception
+        Catch
         End Try
     End Sub
 
@@ -39,8 +38,11 @@ Public Class PipeCommandServer
                     Using reader As New StreamReader(server, Encoding.UTF8)
                         Dim payload = reader.ReadToEnd()
                         If Not String.IsNullOrWhiteSpace(payload) Then
-                            Dim cmd = ParseCommand(payload)
-                            RaiseEvent CommandReceived(Me, New CommandEventArgs(cmd.Action, cmd.TaskID, cmd.Title, cmd.Source))
+                            Dim act As String = ""
+                            Dim data As JObject = Nothing
+                            If TryParse(payload, act, data) Then
+                                RaiseEvent CommandReceived(Me, New CommandEventArgs(act, data))
+                            End If
                         End If
                     End Using
                 Catch ex As IOException
@@ -50,21 +52,15 @@ Public Class PipeCommandServer
         End While
     End Sub
 
-    Private Function ParseCommand(json As String) _
-      As (Action As String, TaskID As String, Title As String, Source As String)
-
+    Private Function TryParse(json As String, ByRef action As String, ByRef data As JObject) As Boolean
         Try
-            Dim js = New JavaScriptSerializer()
-            Dim dict = js.Deserialize(Of Dictionary(Of String, String))(json)
-
-            Dim act = If(dict.ContainsKey("action"), dict("action"), "")
-            Dim id = If(dict.ContainsKey("taskID"), dict("taskID"), "")
-            Dim title = If(dict.ContainsKey("title"), dict("title"), "")
-            Dim source = If(dict.ContainsKey("source"), dict("source"), "")
-
-            Return (act, id, title, source)
+            data = JObject.Parse(json)
+            action = If(data.Value(Of String)("action"), String.Empty)
+            Return Not String.IsNullOrEmpty(action)
         Catch
-            Return ("", "", "", "")
+            action = ""
+            data = Nothing
+            Return False
         End Try
     End Function
 
@@ -74,14 +70,36 @@ Public Class CommandEventArgs
     Inherits EventArgs
 
     Public ReadOnly Property Action As String
-    Public ReadOnly Property TaskID As String
-    Public ReadOnly Property Title As String
-    Public ReadOnly Property Source As String
+    Public ReadOnly Property Data As JObject
 
-    Public Sub New(action As String, taskID As String, title As String, source As String)
+    ' --- Convenience (keeps current callers working for download-task) ---
+    Public ReadOnly Property TaskID As String
+        Get
+            Return Data?.Value(Of String)("taskID")
+        End Get
+    End Property
+
+    Public ReadOnly Property Title As String
+        Get
+            Return Data?.Value(Of String)("title")
+        End Get
+    End Property
+
+    Public ReadOnly Property Source As String
+        Get
+            Return Data?.Value(Of String)("source")
+        End Get
+    End Property
+
+    ' Optional convenience for user-info payloads:
+    Public ReadOnly Property User As JObject
+        Get
+            Return TryCast(Data?("user"), JObject)
+        End Get
+    End Property
+
+    Public Sub New(action As String, data As JObject)
         Me.Action = action
-        Me.TaskID = taskID
-        Me.Title = title
-        Me.Source = source
+        Me.Data = data
     End Sub
 End Class
