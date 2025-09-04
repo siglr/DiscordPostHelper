@@ -40,6 +40,20 @@
 
     Public Property Results As IGCResults
 
+    Public Property IsOwnedByCurrentUser As Boolean = False
+
+    ' UsersTasks info
+    Public Property UT_MarkedFlyNextUTC As String
+    Public Property UT_MarkedFavoritesUTC As String
+    Public Property UT_DifficultyRating As Integer
+    Public Property UT_QualityRating As Integer
+    Public Property UT_PrivateNote As String
+    Public Property UT_PublicNote As String
+    Public Property UT_InfoFetched As Boolean = False
+
+    ' User IGC comment
+    Public Property IGCUserComment As String
+
     Public ReadOnly Property IGCFileName As String
         Get
             Return System.IO.Path.GetFileNameWithoutExtension(IGCLocalFilePath)

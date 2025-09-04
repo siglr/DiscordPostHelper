@@ -426,13 +426,17 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub OnPipeCommand(sender As Object, e As CommandEventArgs)
         If _isClosing OrElse Me.IsDisposed OrElse Not Me.IsHandleCreated Then Return
-        If e.Action = "download-task" Then
-            ' Boolean fromEventTab = (e.Source = "event")
-            Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
-            Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
-        ElseIf e.Action = "foreground" Then
-            Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
-        End If
+
+        Select Case e.Action
+            Case "download-task"
+                ' Boolean fromEventTab = (e.Source = "event")
+                Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
+                Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
+            Case "foreground"
+                Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
+            Case "reload-user-info"
+                Me.Invoke(Sub() ReloadSettings())
+        End Select
     End Sub
 
     Private Sub RequestReceivedFromWSGListener(taskId As String, taskTitle As String, fromEventTab As Boolean)
@@ -1385,6 +1389,14 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub toolStripWSGUploadIGC_Click(sender As Object, e As EventArgs) Handles toolStripWSGUploadIGC.Click
 
+        ' Check that we have the user info on WSG
+        If Settings.SessionSettings.WSGUserID = 0 Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Please log in to WeSimGlide.org first before uploading IGC files!", "Not logged in to WeSimGlide.org", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Exit Sub
+        End If
+
         Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(Nothing, Settings.SessionSettings.NB21IGCFolder)
         If listOfIGCFiles.Count > 0 Then
             'Present the IGCUpload dialog with the list of IGC files
@@ -1536,6 +1548,10 @@ Public Class DPHXUnpackAndLoad
             Return $"Failed to send '{endpoint}' to WSGListener:{vbCrLf}{ex.Message}"
         End Try
     End Function
+
+    Private Sub ReloadSettings()
+        Settings.SessionSettings.Load()
+    End Sub
 
 #End Region
 

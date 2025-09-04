@@ -1,5 +1,7 @@
-﻿Imports System.Globalization
+﻿Imports System.Drawing.Drawing2D
+Imports System.Globalization
 Imports System.IO
+Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
@@ -102,6 +104,9 @@ Public Class IGCFileUpload
         txtWSGStatus.Text = String.Empty
         lblProcessing.Text = String.Empty
         pnlResults.Visible = False
+        tabIGCTabs.SelectedTab = tabpgResults
+        grpIGCUserComment.Enabled = False
+        grpTaskUserData.Enabled = False
 
         If igcDetails.CacheKey Is Nothing OrElse igcDetails.CacheKey = String.Empty Then
             'CacheKey is not set, so look for the EntrySeqID for this IGC file
@@ -141,7 +146,15 @@ Public Class IGCFileUpload
                 lblProcessing.Text = "Already uploaded"
                 Return
             Else
-                txtWSGStatus.Text = $"Can upload - WSG User: {igcDetails.WSGUserID}"
+                Dim userInfo As String = String.Empty
+                If igcDetails.WSGUserID = Settings.SessionSettings.WSGUserID Then
+                    userInfo = $"You ({Settings.SessionSettings.WSGPilotName})"
+                    igcDetails.IsOwnedByCurrentUser = True
+                Else
+                    userInfo = $"Not you ({igcDetails.WSGUserID})"
+                    igcDetails.IsOwnedByCurrentUser = False
+                End If
+                txtWSGStatus.Text = $"Can upload - WSG User: {userInfo}"
             End If
         End If
 
@@ -166,6 +179,9 @@ Public Class IGCFileUpload
 
         'Fill results
         pnlResults.Visible = True
+        tabIGCTabs.SelectedTab = tabpgResults
+        grpIGCUserComment.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
+        grpTaskUserData.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
         Dim flagValid As String = "❗"
         Dim flagCompleted As String = "❌"
         Dim flagDateTime As String = "❌"
@@ -251,6 +267,9 @@ Public Class IGCFileUpload
             igcDetails.AlreadyUploaded = True
             igcDetails.Results = Nothing
             pnlResults.Visible = False
+            tabIGCTabs.SelectedTab = tabpgResults
+            grpIGCUserComment.Enabled = False
+            grpTaskUserData.Enabled = False
             lblProcessing.Visible = True
 
             FinishUp()
@@ -659,6 +678,7 @@ End Function
         Try
             Using client As New HttpClient()
                 client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
+                client.DefaultRequestHeaders.ExpectContinue = False
 
                 Using content As New MultipartFormDataContent()
                     ' Helper to avoid passing Nothing into StringContent
@@ -680,6 +700,7 @@ End Function
                     content.Add(New StringContent(safe(igcDetails.NB21Version)), "NB21Version")
                     content.Add(New StringContent(safe(igcDetails.Sim)), "Sim")
                     content.Add(New StringContent(safe(igcDetails.WSGUserID)), "WSGUserID")
+                    content.Add(New StringContent(safe(If(String.IsNullOrWhiteSpace(igcDetails.IGCUserComment), "", igcDetails.IGCUserComment))), "IGCUserComment")
 
                     ' --- parsed results ---
                     content.Add(New StringContent(If(igcDetails.Results.TaskCompleted, "1", "0")), "TaskCompleted")
@@ -689,6 +710,22 @@ End Function
                     content.Add(New StringContent(safe(igcDetails.Results.Speed)), "Speed")
                     content.Add(New StringContent(If(igcDetails.Results.IGCValid, "1", "0")), "IGCValid")
                     content.Add(New StringContent(safe(igcDetails.Results.TPVersion)), "TPVersion")
+
+                    ' --- UsersTasks (only meaningful if user is known) ---
+                    Dim userIdVal As Integer
+                    Integer.TryParse(igcDetails.WSGUserID, userIdVal)
+
+                    If userIdVal > 0 Then
+                        content.Add(New StringContent("1"), "UT_InfoFetched")
+                        content.Add(New StringContent(If(String.IsNullOrWhiteSpace(igcDetails.UT_MarkedFlyNextUTC), "", igcDetails.UT_MarkedFlyNextUTC)), "UT_MarkedFlyNextUTC")
+                        content.Add(New StringContent(If(String.IsNullOrWhiteSpace(igcDetails.UT_MarkedFavoritesUTC), "", igcDetails.UT_MarkedFavoritesUTC)), "UT_MarkedFavoritesUTC")
+                        content.Add(New StringContent(If(igcDetails.UT_DifficultyRating > 0, igcDetails.UT_DifficultyRating.ToString(), "0")), "UT_DifficultyRating")
+                        content.Add(New StringContent(If(igcDetails.UT_QualityRating > 0, igcDetails.UT_QualityRating.ToString(), "0")), "UT_QualityRating")
+                        content.Add(New StringContent(safe(If(String.IsNullOrWhiteSpace(igcDetails.UT_PrivateNote), "", igcDetails.UT_PrivateNote))), "UT_PrivateNote")
+                        content.Add(New StringContent(safe(If(String.IsNullOrWhiteSpace(igcDetails.UT_PublicNote), "", igcDetails.UT_PublicNote))), "UT_PublicNote")
+                    Else
+                        content.Add(New StringContent("0"), "UT_InfoFetched")
+                    End If
 
                     ' --- attach the .igc file ---
                     Using fs = File.OpenRead(igcDetails.IGCLocalFilePath)
@@ -926,10 +963,11 @@ End Function
                         Integer.TryParse(j("EntrySeqID")?.ToString(), entrySeqID)
                         plnXML = j("PLNXML")?.ToString()
                         Dim simDTstr = j("SimDateTime")?.ToString()
+                        Dim taskTitle = j("Title")?.ToString()
                         If Not String.IsNullOrEmpty(simDTstr) Then
                             DateTime.TryParseExact(simDTstr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
                         End If
-                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime)
+                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime, taskTitle)
                     End If
                 End If
             End Using
@@ -969,4 +1007,172 @@ End Function
 
     End Function
 
+    Private Sub MakeAvatarCircular(pb As PictureBox)
+        Dim gp As New GraphicsPath()
+        gp.AddEllipse(0, 0, pb.Width - 1, pb.Height - 1)
+        pb.Region = New Region(gp)
+    End Sub
+
+    Private Sub tabIGCTabs_Selected(sender As Object, e As TabControlEventArgs) Handles tabIGCTabs.Selected
+        If tabIGCTabs.SelectedTab Is tabpgRatings Then
+            ' Reset all fields to default values
+            cboDifficulty.SelectedIndex = 0
+            cboQuality.SelectedIndex = 0
+            txtUserIGCComment.Text = String.Empty
+            txtTaskPrivateNotes.Text = String.Empty
+            txtTaskPublicFeedback.Text = String.Empty
+            chkFavorites.Checked = False
+            chkFlyNext.Checked = False
+            lblFlyNextDateTime.Text = String.Empty
+            lblFavoritesDateTime.Text = String.Empty
+            lblTaskIDAndTitle.Text = String.Empty
+
+            ' WSG User info
+            lblCompID.Text = Settings.SessionSettings.WSGCompID
+            lblPilotName.Text = Settings.SessionSettings.WSGPilotName
+            lblDisplayName.Text = Settings.SessionSettings.WSGDisplayName
+            lblUserID.Text = Settings.SessionSettings.WSGUserID
+            Dim url As String = Settings.SessionSettings.WSGAvatar
+            If Not String.IsNullOrWhiteSpace(url) Then
+                Using wc As New WebClient()
+                    Using ms As New MemoryStream(wc.DownloadData(url))
+                        imgAvatar.Image = Image.FromStream(ms)
+                        MakeAvatarCircular(imgAvatar)
+                    End Using
+                End Using
+            Else
+                imgAvatar.Image = Nothing
+            End If
+
+            If grpTaskUserData.Enabled Then
+                If Not igcDetails.UT_InfoFetched Then
+                    ' If the User/Task info have not been retrieved, fetch them.
+                    igcDetails.UT_InfoFetched = GetUsersTask(igcDetails.WSGUserID, igcDetails.MatchedTask.EntrySeqID)
+                End If
+                lblTaskIDAndTitle.Text = $"{igcDetails.MatchedTask.TaskTitle} (#{igcDetails.MatchedTask.EntrySeqID.ToString()})"
+                If igcDetails.UT_MarkedFavoritesUTC = String.Empty Then
+                    lblFavoritesDateTime.Text = String.Empty
+                    chkFavorites.Checked = False
+                Else
+                    lblFavoritesDateTime.Text = SupportingFeatures.FormatUserDateTime(igcDetails.UT_MarkedFavoritesUTC, True)
+                    chkFavorites.Checked = True
+                End If
+                If igcDetails.UT_MarkedFlyNextUTC = String.Empty Then
+                    lblFlyNextDateTime.Text = String.Empty
+                    chkFlyNext.Checked = False
+                Else
+                    lblFlyNextDateTime.Text = SupportingFeatures.FormatUserDateTime(igcDetails.UT_MarkedFlyNextUTC, True)
+                    chkFlyNext.Checked = True
+                End If
+                cboDifficulty.SelectedIndex = igcDetails.UT_DifficultyRating
+                cboQuality.SelectedIndex = igcDetails.UT_QualityRating
+                txtUserIGCComment.Text = igcDetails.IGCUserComment
+                txtTaskPrivateNotes.Text = igcDetails.UT_PrivateNote
+                txtTaskPublicFeedback.Text = igcDetails.UT_PublicNote
+
+            End If
+
+        End If
+    End Sub
+
+    Private Function GetUsersTask(wsgUserId As Integer, entrySeqID As Integer) As Boolean
+        Try
+            Dim usersTaskUrl As String =
+            $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}GetUserTaskInfo.php?WSGUserID={wsgUserId}&EntrySeqID={entrySeqID}"
+
+            Dim request As HttpWebRequest = CType(WebRequest.Create(usersTaskUrl), HttpWebRequest)
+            request.Method = "GET"
+            request.ContentType = "application/json"
+
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    Dim jsonResponse As String = reader.ReadToEnd()
+                    Dim result As JObject = JObject.Parse(jsonResponse)
+
+                    If result("status").ToString() = "success" Then
+                        Dim usersTask As JObject = result("usersTask")
+
+                        ' Example: pull fields from the JSON
+                        Dim privateNotes As String = usersTask.Value(Of String)("PrivateNotes")
+                        Dim tags As String = usersTask.Value(Of String)("Tags")
+                        Dim difficulty As Integer = usersTask.Value(Of Integer?)("DifficultyRating").GetValueOrDefault(0)
+                        Dim quality As Integer = usersTask.Value(Of Integer?)("QualityRating").GetValueOrDefault(0)
+                        Dim flyNextDate As String = usersTask.Value(Of String)("MarkedFlyNextUTC")
+                        Dim favoritesDate As String = usersTask.Value(Of String)("MarkedFavoritesUTC")
+                        Dim publicFeedback As String = usersTask.Value(Of String)("PublicFeedback")
+
+                        igcDetails.UT_DifficultyRating = difficulty
+                        igcDetails.UT_QualityRating = quality
+                        igcDetails.UT_MarkedFlyNextUTC = flyNextDate
+                        igcDetails.UT_MarkedFavoritesUTC = favoritesDate
+                        igcDetails.UT_PrivateNote = privateNotes
+                        igcDetails.UT_PublicNote = publicFeedback
+
+                        Return True
+
+                    ElseIf result("message").ToString().Contains("not found") Then
+                        ' Normal case: record does not exist
+                        Return False
+                    Else
+                        ' Unexpected error message → treat as exception
+                        Throw New Exception("Error retrieving user task: " & result("message").ToString())
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            ' Only unexpected issues (connection, parse, etc.) end up here
+            Throw New Exception("Error: " & ex.Message)
+        End Try
+    End Function
+
+    Private Sub chkFlyNext_CheckedChanged(sender As Object, e As EventArgs) Handles chkFlyNext.CheckedChanged
+        If chkFlyNext.Checked Then
+            If igcDetails.UT_MarkedFlyNextUTC = String.Empty Then
+                igcDetails.UT_MarkedFlyNextUTC = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+            End If
+        Else
+            igcDetails.UT_MarkedFlyNextUTC = String.Empty
+        End If
+        lblFlyNextDateTime.Text = If(chkFlyNext.Checked, SupportingFeatures.FormatUserDateTime(igcDetails.UT_MarkedFlyNextUTC, True), "")
+    End Sub
+
+    Private Sub chkFavorites_CheckedChanged(sender As Object, e As EventArgs) Handles chkFavorites.CheckedChanged
+        If chkFavorites.Checked Then
+            If igcDetails.UT_MarkedFavoritesUTC = String.Empty Then
+                igcDetails.UT_MarkedFavoritesUTC = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+            End If
+        Else
+            igcDetails.UT_MarkedFavoritesUTC = String.Empty
+        End If
+        lblFavoritesDateTime.Text = If(chkFavorites.Checked, SupportingFeatures.FormatUserDateTime(igcDetails.UT_MarkedFavoritesUTC, True), "")
+    End Sub
+
+    Private Sub txtUserIGCComment_Leave(sender As Object, e As EventArgs) Handles txtUserIGCComment.Leave
+        igcDetails.IGCUserComment = txtUserIGCComment.Text.Trim()
+    End Sub
+
+    Private Sub txtTaskPublicFeedback_Leave(sender As Object, e As EventArgs) Handles txtTaskPublicFeedback.Leave
+        igcDetails.UT_PublicNote = txtTaskPublicFeedback.Text.Trim()
+    End Sub
+
+    Private Sub txtTaskPrivateNotes_Leave(sender As Object, e As EventArgs) Handles txtTaskPrivateNotes.Leave
+        igcDetails.UT_PrivateNote = txtTaskPrivateNotes.Text.Trim()
+    End Sub
+
+    Private Sub cboDifficulty_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDifficulty.SelectedIndexChanged
+        igcDetails.UT_DifficultyRating = cboDifficulty.SelectedIndex
+    End Sub
+
+    Private Sub cboQuality_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboQuality.SelectedIndexChanged
+        igcDetails.UT_QualityRating = cboQuality.SelectedIndex
+    End Sub
+
+    Private Sub lblTaskIDAndTitle_Click(sender As Object, e As EventArgs) Handles lblTaskIDAndTitle.Click
+        If lblTaskIDAndTitle.Text = String.Empty Then
+            Return
+        End If
+        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?task={igcDetails.MatchedTask.EntrySeqID.ToString()}")
+
+    End Sub
 End Class

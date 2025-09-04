@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\GetPossibleDuplicateTasks.php = Main PHP Scripts\GetPossibleDuplicateTasks.php
 		Main PHP Scripts\GetUpdatedDownloads.php = Main PHP Scripts\GetUpdatedDownloads.php
 		Main PHP Scripts\GetUpdatedTasks.php = Main PHP Scripts\GetUpdatedTasks.php
+		Main PHP Scripts\GetUserTaskInfo.php = Main PHP Scripts\GetUserTaskInfo.php
 		Main PHP Scripts\IncrementDownloadForTask.php = Main PHP Scripts\IncrementDownloadForTask.php
 		Main PHP Scripts\IncrementThreadAccessForTask.php = Main PHP Scripts\IncrementThreadAccessForTask.php
 		Main PHP Scripts\ManageNews.php = Main PHP Scripts\ManageNews.php

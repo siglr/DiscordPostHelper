@@ -5,6 +5,7 @@ Imports System.IO
 Imports System.IO.Pipes
 Imports System.Threading
 Imports System.Windows.Forms
+Imports Newtonsoft.Json.Linq
 
 Public Class ListenerContext
     Inherits ApplicationContext
@@ -26,6 +27,9 @@ Public Class ListenerContext
         Dim icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wsglistener.ico")
         _notifyIcon.Icon = New Icon(icoPath)
         _notifyIcon.Text = "WeSimGlide DPHX Listener"
+
+        SessionSettings.Load()
+
         ' Wire up click events:
         AddHandler _notifyIcon.MouseClick, AddressOf OnNotifyIconClick
         AddHandler _notifyIcon.MouseDoubleClick, AddressOf OnNotifyIconDoubleClick
@@ -137,6 +141,56 @@ Public Class ListenerContext
                 SendToDPHX(payload, True)
                 _listener.SendResponse(ctx, "OK")
 
+            Case "receive-user-info"
+                Dim raw = req.QueryString("user-info")
+                If String.IsNullOrEmpty(raw) Then
+                    _listener.SendResponse(ctx, "Missing user info", 400) : Return
+                End If
+
+                Dim jsonStr = Uri.UnescapeDataString(raw)
+
+                Dim jo As JObject
+                Try
+                    jo = JObject.Parse(jsonStr)
+                Catch
+                    _listener.SendResponse(ctx, "Invalid JSON", 400) : Return
+                End Try
+
+                ' --- extract incoming values (with safe defaults) ---
+                Dim newId As Integer = (If(jo.Value(Of Integer?)("id"), 0))
+                Dim newComp As String = If(jo.Value(Of String)("compId"), String.Empty)
+                Dim newPilot As String = If(jo.Value(Of String)("pilotName"), String.Empty)
+                Dim newDisplay As String = If(jo.Value(Of String)("displayName"), String.Empty)
+                Dim newAvatar As String = If(jo.Value(Of String)("avatar"), String.Empty)
+
+                ' --- detect change against current settings ---
+                Dim changed As Boolean =
+                    (SessionSettings.WSGUserID <> newId) OrElse
+                    Not String.Equals(SessionSettings.WSGCompID, newComp, StringComparison.Ordinal) OrElse
+                    Not String.Equals(SessionSettings.WSGPilotName, newPilot, StringComparison.Ordinal) OrElse
+                    Not String.Equals(SessionSettings.WSGDisplayName, newDisplay, StringComparison.Ordinal) OrElse
+                    Not String.Equals(SessionSettings.WSGAvatar, newAvatar, StringComparison.Ordinal)
+
+
+                ' --- update settings ---
+                If changed Then
+                    SessionSettings.WSGUserID = newId
+                    SessionSettings.WSGCompID = newComp
+                    SessionSettings.WSGPilotName = newPilot
+                    SessionSettings.WSGDisplayName = newDisplay
+                    SessionSettings.WSGAvatar = newAvatar
+                    SessionSettings.Save()
+
+                    ' --- notify DPHX only if something changed ---
+                    Dim reloadPayload = New JObject(
+                            New JProperty("action", "reload-user-info"),
+                            New JProperty("user", jo)
+                        ).ToString()
+                    SendToDPHX(reloadPayload, True, False)
+                End If
+
+                _listener.SendResponse(ctx, "OK")
+
             Case "shutdown"
                 _listener.SendResponse(ctx, "Shutting down")
                 StopListener()
@@ -191,36 +245,46 @@ Public Class ListenerContext
         End If
     End Sub
 
-    Private Function WaitUntilDPHXReady(preventWSGFromOpening As Boolean, Optional timeoutMs As Integer = 30000) As Boolean
-        ' Make sure DPHX is launched (it creates the event in UNSIGNALED state)
-        EnsureDPHXRunning(preventWSGFromOpening)
+    Private Function WaitUntilDPHXReady(preventWSGFromOpening As Boolean,
+                                    Optional timeoutMs As Integer = 30000,
+                                    Optional allowAutoLaunch As Boolean = True) As Boolean
+        ' Only auto-launch when allowed
+        If allowAutoLaunch Then
+            EnsureDPHXRunning(preventWSGFromOpening)
+        End If
 
         Dim sw = Stopwatch.StartNew()
         Do
             Try
                 Using ev = EventWaitHandle.OpenExisting(READY_EVENT_NAME)
-                    ' Quick check; if not ready, block in small slices until either signaled or timeout
                     If ev.WaitOne(0) Then Return True
+
+                    If Not allowAutoLaunch Then
+                        ' No spinning when we’re not allowed to launch/wait
+                        Return False
+                    End If
+
                     Dim remaining = CInt(Math.Max(0, timeoutMs - sw.ElapsedMilliseconds))
                     Dim slice = Math.Min(500, remaining)
                     If slice <= 0 Then Exit Do
                     If ev.WaitOne(slice) Then Return True
                 End Using
             Catch ex As WaitHandleCannotBeOpenedException
-                ' Event not created yet (DPHX still starting) → brief backoff
-                Thread.Sleep(200)
+                If Not allowAutoLaunch Then Return False
+                Thread.Sleep(200) ' backoff only if we might be launching
             Catch ex As UnauthorizedAccessException
-                ' Very rare for same-user apps; treat as not ready
-                Exit Do
+                Return False
             End Try
         Loop While sw.ElapsedMilliseconds < timeoutMs
 
         Return False
     End Function
 
-    Private Sub SendToDPHX(message As String, preventWSGFromOpening As Boolean)
+    Private Sub SendToDPHX(message As String,
+                       preventWSGFromOpening As Boolean,
+                       Optional allowAutoLaunch As Boolean = True)
         Try
-            If Not WaitUntilDPHXReady(preventWSGFromOpening, 5000) Then
+            If Not WaitUntilDPHXReady(preventWSGFromOpening, 5000, allowAutoLaunch) Then
                 Return
             End If
 
@@ -228,14 +292,16 @@ Public Class ListenerContext
                 client.Connect(2000)
                 Using writer = New StreamWriter(client)
                     writer.AutoFlush = True
-                    writer.Write(message)   ' keep Write because DPHX reads ReadToEnd()
+                    writer.Write(message) ' DPHX reads ReadToEnd()
                 End Using
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("Unable to contact DPHX: " & ex.Message,
-                        "WeSimGlide DPHX Listener",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If allowAutoLaunch Then
+                MessageBox.Show("Unable to contact DPHX: " & ex.Message,
+                            "WeSimGlide DPHX Listener",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         End Try
     End Sub
 

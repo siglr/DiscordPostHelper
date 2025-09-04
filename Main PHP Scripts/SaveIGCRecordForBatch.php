@@ -36,6 +36,16 @@ try {
     // Optional user ID; skip UsersTasks if zero or absent
     $WSGUserID            = isset($_POST['WSGUserID']) ? (int) $_POST['WSGUserID'] : 0;
 
+    // UsersTasks payload + IGC comment
+    $UT_InfoFetched       = isset($_POST['UT_InfoFetched']) ? (int) $_POST['UT_InfoFetched'] : 0; // 1 if a row exists
+    $UT_MarkedFlyNextUTC  = trim($_POST['UT_MarkedFlyNextUTC']  ?? '');
+    $UT_MarkedFavoritesUTC= trim($_POST['UT_MarkedFavoritesUTC']?? '');
+    $UT_DifficultyRating  = isset($_POST['UT_DifficultyRating']) ? (int) $_POST['UT_DifficultyRating'] : 0;
+    $UT_QualityRating     = isset($_POST['UT_QualityRating'])    ? (int) $_POST['UT_QualityRating']    : 0;
+    $UT_PrivateNote       = trim($_POST['UT_PrivateNote'] ?? '');
+    $UT_PublicNote        = trim($_POST['UT_PublicNote']  ?? '');
+    $IGCUserComment       = trim($_POST['IGCUserComment'] ?? '');
+
     // 3) Optional parsed‐results fields
     $TaskCompletedInt     = isset($_POST['TaskCompleted']) 
         ? (int) $_POST['TaskCompleted'] 
@@ -87,12 +97,12 @@ try {
         IGCKey, EntrySeqID, IGCRecordDateTimeUTC, IGCUploadDateTimeUTC,
         LocalTime, BeginTimeUTC, Pilot, GliderType, GliderID, CompetitionID,
         CompetitionClass, NB21Version, Sim, WSGUserID, TaskCompleted, Penalties,
-        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate
+        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment
       ) VALUES (
         :IGCKey, :EntrySeqID, :IGCRecordDateTimeUTC, :IGCUploadDateTimeUTC,
         :LocalTime, :BeginTimeUTC, :Pilot, :GliderType, :GliderID, :CompetitionID,
         :CompetitionClass, :NB21Version, :Sim, :WSGUserID, :TaskCompleted, :Penalties,
-        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate
+        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment
       )
     ";
     $stmt = $pdo->prepare($insertQ);
@@ -118,12 +128,13 @@ try {
       ':Speed'                => $SpeedFloat,
       ':IGCValid'             => $IGCValidInt,
       ':TPVersion'            => $TPVersion,
-      ':LocalDate'            => $LocalDate
+      ':LocalDate'            => $LocalDate,
+      ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null)
     ]);
 
-    // 6) Update UsersTasks only when WSGUserID > 0
+    // 6) UsersTasks upsert whenever WSGUserID > 0 (IGC upload implies "flown")
     if ($WSGUserID > 0) {
-        // build MarkedFlownDateUTC from IGCRecordDateTimeUTC (YYMMDDHHMMSS)
+        // Build MarkedFlownDateUTC from IGCRecordDateTimeUTC (YYMMDDHHMMSS); fallback to now-UTC
         if (strlen($IGCRecordDateTimeUTC) === 12) {
             $y  = 2000 + (int)substr($IGCRecordDateTimeUTC, 0, 2);
             $m  = (int)substr($IGCRecordDateTimeUTC, 2, 2);
@@ -135,29 +146,56 @@ try {
             $markedDate = gmdate('Y-m-d H:i:s');
         }
 
-        // check existing
-        $checkQ = "SELECT MarkedFlownDateUTC FROM UsersTasks
-                   WHERE WSGUserID=:u AND EntrySeqID=:e";
+        // Normalize optional UT fields (null keeps existing on update)
+        $valFlyNext = ($UT_MarkedFlyNextUTC   !== '') ? $UT_MarkedFlyNextUTC   : null;
+        $valFav     = ($UT_MarkedFavoritesUTC !== '') ? $UT_MarkedFavoritesUTC : null;
+        $valDiff    = ($UT_DifficultyRating   > 0)    ? $UT_DifficultyRating   : null;
+        $valQual    = ($UT_QualityRating      > 0)    ? $UT_QualityRating      : null;
+        $valPriv    = ($UT_PrivateNote        !== '') ? $UT_PrivateNote        : null;
+        $valPub     = ($UT_PublicNote         !== '') ? $UT_PublicNote         : null;
+
+        // Check if a row already exists
+        $checkQ = "SELECT MarkedFlownDateUTC FROM UsersTasks WHERE WSGUserID=:u AND EntrySeqID=:e";
         $stmt   = $pdo->prepare($checkQ);
-        $stmt->execute([':u'=>$WSGUserID,':e'=>$EntrySeqID]);
+        $stmt->execute([':u'=>$WSGUserID, ':e'=>$EntrySeqID]);
         $row    = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
-            if (empty($row['MarkedFlownDateUTC'])
-             || strtotime($markedDate) > strtotime($row['MarkedFlownDateUTC'])) {
-                $updQ = "UPDATE UsersTasks
-                         SET MarkedFlownDateUTC=:md
-                         WHERE WSGUserID=:u AND EntrySeqID=:e";
+            // Update MarkedFlownDateUTC only if empty or older, and apply any provided UT fields
+            $updateParts = [];
+            $params = [':u'=>$WSGUserID, ':e'=>$EntrySeqID];
+
+            // MarkedFlownDateUTC: only advance it
+            if (empty($row['MarkedFlownDateUTC']) || strtotime($markedDate) > strtotime($row['MarkedFlownDateUTC'])) {
+                $updateParts[] = "MarkedFlownDateUTC = :md";
+                $params[':md'] = $markedDate;
+            }
+
+            // Optional UT fields: only set when provided (non-null)
+            if ($valPriv !== null) { $updateParts[] = "PrivateNotes = :priv"; $params[':priv'] = $valPriv; }
+            if ($valPub  !== null) { $updateParts[] = "PublicFeedback = :pub"; $params[':pub'] = $valPub; }
+            if ($valDiff !== null) { $updateParts[] = "DifficultyRating = :diff"; $params[':diff'] = $valDiff; }
+            if ($valQual !== null) { $updateParts[] = "QualityRating = :qual"; $params[':qual'] = $valQual; }
+            if ($valFlyNext !== null) { $updateParts[] = "MarkedFlyNextUTC = :flyn"; $params[':flyn'] = $valFlyNext; }
+            if ($valFav    !== null) { $updateParts[] = "MarkedFavoritesUTC = :fav"; $params[':fav'] = $valFav; }
+
+            if (!empty($updateParts)) {
+                $updQ = "UPDATE UsersTasks SET " . implode(", ", $updateParts) . " WHERE WSGUserID=:u AND EntrySeqID=:e";
                 $uStmt = $pdo->prepare($updQ);
-                $uStmt->execute([':md'=>$markedDate,':u'=>$WSGUserID,':e'=>$EntrySeqID]);
+                $uStmt->execute($params);
             }
         } else {
+            // Insert new row, always setting MarkedFlownDateUTC; include any provided UT fields
             $insQ = "INSERT INTO UsersTasks
-                      (WSGUserID,EntrySeqID,MarkedFlownDateUTC)
-                     VALUES
-                      (:u,:e,:md)";
+                     (WSGUserID, EntrySeqID, MarkedFlownDateUTC, PrivateNotes, PublicFeedback,
+                      DifficultyRating, QualityRating, MarkedFlyNextUTC, MarkedFavoritesUTC)
+                     VALUES (:u, :e, :md, :priv, :pub, :diff, :qual, :flyn, :fav)";
             $iStmt = $pdo->prepare($insQ);
-            $iStmt->execute([':u'=>$WSGUserID,':e'=>$EntrySeqID,':md'=>$markedDate]);
+            $iStmt->execute([
+                ':u'=>$WSGUserID, ':e'=>$EntrySeqID, ':md'=>$markedDate,
+                ':priv'=>$valPriv, ':pub'=>$valPub, ':diff'=>$valDiff, ':qual'=>$valQual,
+                ':flyn'=>$valFlyNext, ':fav'=>$valFav
+            ]);
         }
     }
 

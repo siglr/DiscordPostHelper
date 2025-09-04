@@ -23,7 +23,7 @@ try {
     $entrySeqID = isset($data['entrySeqID']) ? (int)$data['entrySeqID'] : 0;
     if ($entrySeqID > 0) {
         $stmt = $pdo->prepare("
-            SELECT EntrySeqID, PLNXML, SimDateTime
+            SELECT EntrySeqID, Title, PLNXML, SimDateTime
               FROM Tasks
              WHERE EntrySeqID = :EntrySeqID
         ");
@@ -46,7 +46,7 @@ try {
         $igcWaypoints = $data['igcWaypoints'];
 
         $stmt = $pdo->prepare(
-            "SELECT EntrySeqID, PLNXML, SimDateTime FROM Tasks WHERE PLNXML LIKE :titleClause"
+            "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE PLNXML LIKE :titleClause"
         );
         $titleClause = '%<Title>' . $igcTitle . '</Title>%';
         $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
@@ -74,7 +74,7 @@ try {
             $params[]  = '%<ATCWaypoint id="' . $wpID . '">%';
         }
         if (!empty($clauses)) {
-            $sql  = "SELECT EntrySeqID, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             $wpResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -100,7 +100,7 @@ try {
                 $clauses[] = "PLNXML LIKE ?";
                 $params[]  = '%<ATCWaypoint id="' . $wpID . '">%';
             }
-            $sql  = "SELECT EntrySeqID, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             $cands = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -119,6 +119,7 @@ try {
         echo json_encode([
             'status'     => 'found',
             'EntrySeqID' => $foundTask['EntrySeqID'],
+            'Title' => $foundTask['Title'],
             'PLNXML' => $foundTask['PLNXML'],
             'SimDateTime'  => $foundTask['SimDateTime']
         ]);

@@ -267,6 +267,21 @@ Public Class AllSettings
     <XmlElement("WSGListenerAutoStart")>
     Public Property WSGListenerAutoStart As Boolean
 
+    <XmlElement("WSGUserID")>
+    Public Property WSGUserID As Integer
+
+    <XmlElement("WSGCompID")>
+    Public Property WSGCompID As String
+
+    <XmlElement("WSGPilotName")>
+    Public Property WSGPilotName As String
+
+    <XmlElement("WSGDisplayName")>
+    Public Property WSGDisplayName As String
+
+    <XmlElement("WSGAvatar")>
+    Public Property WSGAvatar As String
+
     Public ReadOnly Property Is2020Installed As Boolean
         Get
             Return MSFS2020Microsoft OrElse MSFS2020Steam
@@ -348,6 +363,11 @@ Public Class AllSettings
             WSGIntegration = settingsInFile.WSGIntegration
             WSGIgnoreWhenOpeningDPHX = settingsInFile.WSGIgnoreWhenOpeningDPHX
             WSGListenerAutoStart = settingsInFile.WSGListenerAutoStart
+            WSGUserID = settingsInFile.WSGUserID
+            WSGPilotName = settingsInFile.WSGPilotName
+            WSGCompID = settingsInFile.WSGCompID
+            WSGDisplayName = settingsInFile.WSGDisplayName
+            WSGAvatar = settingsInFile.WSGAvatar
 
             'Check if at least one installation
             If Not (MSFS2020Microsoft OrElse MSFS2020Steam OrElse MSFS2024Microsoft OrElse MSFS2024Steam) Then
