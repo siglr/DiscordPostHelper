@@ -65,6 +65,16 @@ Partial Class IGCFileUpload
         Me.lblProcessing = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.tabpgRatings = New System.Windows.Forms.TabPage()
+        Me.grpWhoAreYou = New System.Windows.Forms.GroupBox()
+        Me.imgAvatar = New System.Windows.Forms.PictureBox()
+        Me.lblCompID = New System.Windows.Forms.Label()
+        Me.lblPilotName = New System.Windows.Forms.Label()
+        Me.lblUserID = New System.Windows.Forms.Label()
+        Me.lblDisplayName = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.lblTaskIDAndTitle = New System.Windows.Forms.Label()
         Me.grpTaskUserData = New System.Windows.Forms.GroupBox()
         Me.txtTaskPrivateNotes = New System.Windows.Forms.TextBox()
@@ -90,6 +100,8 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.SuspendLayout()
         Me.tabpgResults.SuspendLayout()
         Me.tabpgRatings.SuspendLayout()
+        Me.grpWhoAreYou.SuspendLayout()
+        CType(Me.imgAvatar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpTaskUserData.SuspendLayout()
         Me.grpIGCUserComment.SuspendLayout()
         Me.SuspendLayout()
@@ -563,7 +575,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(706, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(704, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -574,7 +586,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(698, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(696, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -606,16 +618,118 @@ Partial Class IGCFileUpload
         '
         'tabpgRatings
         '
+        Me.tabpgRatings.Controls.Add(Me.grpWhoAreYou)
         Me.tabpgRatings.Controls.Add(Me.lblTaskIDAndTitle)
         Me.tabpgRatings.Controls.Add(Me.grpTaskUserData)
         Me.tabpgRatings.Controls.Add(Me.grpIGCUserComment)
         Me.tabpgRatings.Location = New System.Drawing.Point(4, 29)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(698, 662)
+        Me.tabpgRatings.Size = New System.Drawing.Size(696, 662)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
+        '
+        'grpWhoAreYou
+        '
+        Me.grpWhoAreYou.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpWhoAreYou.Controls.Add(Me.imgAvatar)
+        Me.grpWhoAreYou.Controls.Add(Me.lblCompID)
+        Me.grpWhoAreYou.Controls.Add(Me.lblPilotName)
+        Me.grpWhoAreYou.Controls.Add(Me.lblUserID)
+        Me.grpWhoAreYou.Controls.Add(Me.lblDisplayName)
+        Me.grpWhoAreYou.Controls.Add(Me.Label23)
+        Me.grpWhoAreYou.Controls.Add(Me.Label22)
+        Me.grpWhoAreYou.Controls.Add(Me.Label21)
+        Me.grpWhoAreYou.Controls.Add(Me.Label20)
+        Me.grpWhoAreYou.Location = New System.Drawing.Point(6, 517)
+        Me.grpWhoAreYou.Name = "grpWhoAreYou"
+        Me.grpWhoAreYou.Size = New System.Drawing.Size(686, 139)
+        Me.grpWhoAreYou.TabIndex = 3
+        Me.grpWhoAreYou.TabStop = False
+        Me.grpWhoAreYou.Text = "Who Are You on WeSimGlide.org ?"
+        '
+        'imgAvatar
+        '
+        Me.imgAvatar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.imgAvatar.Location = New System.Drawing.Point(580, 26)
+        Me.imgAvatar.Name = "imgAvatar"
+        Me.imgAvatar.Size = New System.Drawing.Size(100, 100)
+        Me.imgAvatar.TabIndex = 15
+        Me.imgAvatar.TabStop = False
+        '
+        'lblCompID
+        '
+        Me.lblCompID.AutoSize = True
+        Me.lblCompID.Location = New System.Drawing.Point(111, 106)
+        Me.lblCompID.Name = "lblCompID"
+        Me.lblCompID.Size = New System.Drawing.Size(13, 20)
+        Me.lblCompID.TabIndex = 14
+        Me.lblCompID.Text = " "
+        '
+        'lblPilotName
+        '
+        Me.lblPilotName.AutoSize = True
+        Me.lblPilotName.Location = New System.Drawing.Point(111, 77)
+        Me.lblPilotName.Name = "lblPilotName"
+        Me.lblPilotName.Size = New System.Drawing.Size(13, 20)
+        Me.lblPilotName.TabIndex = 13
+        Me.lblPilotName.Text = " "
+        '
+        'lblUserID
+        '
+        Me.lblUserID.AutoSize = True
+        Me.lblUserID.Location = New System.Drawing.Point(111, 26)
+        Me.lblUserID.Name = "lblUserID"
+        Me.lblUserID.Size = New System.Drawing.Size(13, 20)
+        Me.lblUserID.TabIndex = 12
+        Me.lblUserID.Text = " "
+        '
+        'lblDisplayName
+        '
+        Me.lblDisplayName.AutoSize = True
+        Me.lblDisplayName.Location = New System.Drawing.Point(111, 51)
+        Me.lblDisplayName.Name = "lblDisplayName"
+        Me.lblDisplayName.Size = New System.Drawing.Size(13, 20)
+        Me.lblDisplayName.TabIndex = 11
+        Me.lblDisplayName.Text = " "
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(6, 106)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(75, 20)
+        Me.Label23.TabIndex = 10
+        Me.Label23.Text = "Comp. ID:"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(6, 77)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(83, 20)
+        Me.Label22.TabIndex = 9
+        Me.Label22.Text = "Pilot Name:"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(6, 51)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(99, 20)
+        Me.Label21.TabIndex = 8
+        Me.Label21.Text = "Display name:"
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(6, 26)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(60, 20)
+        Me.Label20.TabIndex = 7
+        Me.Label20.Text = "User ID:"
         '
         'lblTaskIDAndTitle
         '
@@ -821,6 +935,9 @@ Partial Class IGCFileUpload
         Me.tabpgResults.ResumeLayout(False)
         Me.tabpgRatings.ResumeLayout(False)
         Me.tabpgRatings.PerformLayout()
+        Me.grpWhoAreYou.ResumeLayout(False)
+        Me.grpWhoAreYou.PerformLayout()
+        CType(Me.imgAvatar, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpTaskUserData.ResumeLayout(False)
         Me.grpTaskUserData.PerformLayout()
         Me.grpIGCUserComment.ResumeLayout(False)
@@ -887,4 +1004,14 @@ Partial Class IGCFileUpload
     Friend WithEvents txtTaskPublicFeedback As TextBox
     Friend WithEvents Label18 As Label
     Friend WithEvents lblTaskIDAndTitle As Label
+    Friend WithEvents grpWhoAreYou As GroupBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label22 As Label
+    Friend WithEvents Label21 As Label
+    Friend WithEvents Label20 As Label
+    Friend WithEvents lblCompID As Label
+    Friend WithEvents lblPilotName As Label
+    Friend WithEvents lblUserID As Label
+    Friend WithEvents lblDisplayName As Label
+    Friend WithEvents imgAvatar As PictureBox
 End Class

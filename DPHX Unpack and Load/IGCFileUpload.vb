@@ -1,4 +1,5 @@
-﻿Imports System.Globalization
+﻿Imports System.Drawing.Drawing2D
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -1003,6 +1004,12 @@ End Function
 
     End Function
 
+    Private Sub MakeAvatarCircular(pb As PictureBox)
+        Dim gp As New GraphicsPath()
+        gp.AddEllipse(0, 0, pb.Width - 1, pb.Height - 1)
+        pb.Region = New Region(gp)
+    End Sub
+
     Private Sub tabIGCTabs_Selected(sender As Object, e As TabControlEventArgs) Handles tabIGCTabs.Selected
         If tabIGCTabs.SelectedTab Is tabpgRatings Then
             ' Reset all fields to default values
@@ -1016,6 +1023,23 @@ End Function
             lblFlyNextDateTime.Text = String.Empty
             lblFavoritesDateTime.Text = String.Empty
             lblTaskIDAndTitle.Text = String.Empty
+
+            ' WSG User info
+            lblCompID.Text = Settings.SessionSettings.WSGCompID
+            lblPilotName.Text = Settings.SessionSettings.WSGPilotName
+            lblDisplayName.Text = Settings.SessionSettings.WSGDisplayName
+            lblUserID.Text = Settings.SessionSettings.WSGUserID
+            Dim url As String = Settings.SessionSettings.WSGAvatar
+            If Not String.IsNullOrWhiteSpace(url) Then
+                Using wc As New WebClient()
+                    Using ms As New MemoryStream(wc.DownloadData(url))
+                        imgAvatar.Image = Image.FromStream(ms)
+                        MakeAvatarCircular(imgAvatar)
+                    End Using
+                End Using
+            Else
+                imgAvatar.Image = Nothing
+            End If
 
             If tabpgRatings.Enabled Then
                 If Not igcDetails.UT_InfoFetched Then
@@ -1042,6 +1066,7 @@ End Function
                 txtUserIGCComment.Text = igcDetails.IGCUserComment
                 txtTaskPrivateNotes.Text = igcDetails.UT_PrivateNote
                 txtTaskPublicFeedback.Text = igcDetails.UT_PublicNote
+
             End If
 
         End If

@@ -161,13 +161,16 @@ Public Class ListenerContext
                 Dim newComp As String = If(jo.Value(Of String)("compId"), String.Empty)
                 Dim newPilot As String = If(jo.Value(Of String)("pilotName"), String.Empty)
                 Dim newDisplay As String = If(jo.Value(Of String)("displayName"), String.Empty)
+                Dim newAvatar As String = If(jo.Value(Of String)("avatar"), String.Empty)
 
                 ' --- detect change against current settings ---
                 Dim changed As Boolean =
                     (SessionSettings.WSGUserID <> newId) OrElse
                     Not String.Equals(SessionSettings.WSGCompID, newComp, StringComparison.Ordinal) OrElse
                     Not String.Equals(SessionSettings.WSGPilotName, newPilot, StringComparison.Ordinal) OrElse
-                    Not String.Equals(SessionSettings.WSGDisplayName, newDisplay, StringComparison.Ordinal)
+                    Not String.Equals(SessionSettings.WSGDisplayName, newDisplay, StringComparison.Ordinal) OrElse
+                    Not String.Equals(SessionSettings.WSGAvatar, newAvatar, StringComparison.Ordinal)
+
 
                 ' --- update settings ---
                 If changed Then
@@ -175,6 +178,7 @@ Public Class ListenerContext
                     SessionSettings.WSGCompID = newComp
                     SessionSettings.WSGPilotName = newPilot
                     SessionSettings.WSGDisplayName = newDisplay
+                    SessionSettings.WSGAvatar = newAvatar
                     SessionSettings.Save()
 
                     ' --- notify DPHX only if something changed ---

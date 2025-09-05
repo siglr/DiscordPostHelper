@@ -129,9 +129,9 @@ Public Class WSGBatchUpload
 
         ' 3) Determine EntrySeqID
         If ForcedTaskId > 0 Then
-            igcDetails.MatchedTask = New IGCCacheTaskObject(ForcedTaskId, String.Empty, Nothing)
+            igcDetails.MatchedTask = New IGCCacheTaskObject(ForcedTaskId, String.Empty, Nothing, String.Empty)
         Else
-            igcDetails.MatchedTask = New IGCCacheTaskObject(0, String.Empty, Nothing)
+            igcDetails.MatchedTask = New IGCCacheTaskObject(0, String.Empty, Nothing, String.Empty)
             igcDetails.MatchedTask.EntrySeqID = Await GetOrFetchEntrySeqID()
         End If
 
