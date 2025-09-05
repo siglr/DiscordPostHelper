@@ -105,7 +105,8 @@ Public Class IGCFileUpload
         lblProcessing.Text = String.Empty
         pnlResults.Visible = False
         tabIGCTabs.SelectedTab = tabpgResults
-        tabpgRatings.Enabled = False
+        grpIGCUserComment.Enabled = False
+        grpTaskUserData.Enabled = False
 
         If igcDetails.CacheKey Is Nothing OrElse igcDetails.CacheKey = String.Empty Then
             'CacheKey is not set, so look for the EntrySeqID for this IGC file
@@ -179,7 +180,8 @@ Public Class IGCFileUpload
         'Fill results
         pnlResults.Visible = True
         tabIGCTabs.SelectedTab = tabpgResults
-        tabpgRatings.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
+        grpIGCUserComment.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
+        grpTaskUserData.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
         Dim flagValid As String = "❗"
         Dim flagCompleted As String = "❌"
         Dim flagDateTime As String = "❌"
@@ -266,7 +268,8 @@ Public Class IGCFileUpload
             igcDetails.Results = Nothing
             pnlResults.Visible = False
             tabIGCTabs.SelectedTab = tabpgResults
-            tabpgRatings.Enabled = False
+            grpIGCUserComment.Enabled = False
+            grpTaskUserData.Enabled = False
             lblProcessing.Visible = True
 
             FinishUp()
@@ -1041,7 +1044,7 @@ End Function
                 imgAvatar.Image = Nothing
             End If
 
-            If tabpgRatings.Enabled Then
+            If grpTaskUserData.Enabled Then
                 If Not igcDetails.UT_InfoFetched Then
                     ' If the User/Task info have not been retrieved, fetch them.
                     igcDetails.UT_InfoFetched = GetUsersTask(igcDetails.WSGUserID, igcDetails.MatchedTask.EntrySeqID)

@@ -66,6 +66,7 @@ Partial Class IGCFileUpload
         Me.Label4 = New System.Windows.Forms.Label()
         Me.tabpgRatings = New System.Windows.Forms.TabPage()
         Me.grpWhoAreYou = New System.Windows.Forms.GroupBox()
+        Me.Label24 = New System.Windows.Forms.Label()
         Me.imgAvatar = New System.Windows.Forms.PictureBox()
         Me.lblCompID = New System.Windows.Forms.Label()
         Me.lblPilotName = New System.Windows.Forms.Label()
@@ -77,6 +78,7 @@ Partial Class IGCFileUpload
         Me.Label20 = New System.Windows.Forms.Label()
         Me.lblTaskIDAndTitle = New System.Windows.Forms.Label()
         Me.grpTaskUserData = New System.Windows.Forms.GroupBox()
+        Me.Label25 = New System.Windows.Forms.Label()
         Me.txtTaskPrivateNotes = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.txtTaskPublicFeedback = New System.Windows.Forms.TextBox()
@@ -575,7 +577,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(704, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(722, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -586,7 +588,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(696, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(714, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -625,7 +627,7 @@ Partial Class IGCFileUpload
         Me.tabpgRatings.Location = New System.Drawing.Point(4, 29)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(696, 662)
+        Me.tabpgRatings.Size = New System.Drawing.Size(714, 662)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
@@ -634,6 +636,7 @@ Partial Class IGCFileUpload
         '
         Me.grpWhoAreYou.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpWhoAreYou.Controls.Add(Me.Label24)
         Me.grpWhoAreYou.Controls.Add(Me.imgAvatar)
         Me.grpWhoAreYou.Controls.Add(Me.lblCompID)
         Me.grpWhoAreYou.Controls.Add(Me.lblPilotName)
@@ -643,17 +646,28 @@ Partial Class IGCFileUpload
         Me.grpWhoAreYou.Controls.Add(Me.Label22)
         Me.grpWhoAreYou.Controls.Add(Me.Label21)
         Me.grpWhoAreYou.Controls.Add(Me.Label20)
-        Me.grpWhoAreYou.Location = New System.Drawing.Point(6, 517)
+        Me.grpWhoAreYou.Location = New System.Drawing.Point(6, 510)
         Me.grpWhoAreYou.Name = "grpWhoAreYou"
-        Me.grpWhoAreYou.Size = New System.Drawing.Size(686, 139)
+        Me.grpWhoAreYou.Size = New System.Drawing.Size(704, 146)
         Me.grpWhoAreYou.TabIndex = 3
         Me.grpWhoAreYou.TabStop = False
         Me.grpWhoAreYou.Text = "Who Are You on WeSimGlide.org ?"
         '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Font = New System.Drawing.Font("Segoe UI Variable Display", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label24.Location = New System.Drawing.Point(6, 126)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(649, 17)
+        Me.Label24.TabIndex = 16
+        Me.Label24.Text = "If this info is not right, make sure you use the correct Discord user on WeSimGli" &
+    "de and provide your profile info."
+        '
         'imgAvatar
         '
         Me.imgAvatar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.imgAvatar.Location = New System.Drawing.Point(580, 26)
+        Me.imgAvatar.Location = New System.Drawing.Point(598, 21)
         Me.imgAvatar.Name = "imgAvatar"
         Me.imgAvatar.Size = New System.Drawing.Size(100, 100)
         Me.imgAvatar.TabIndex = 15
@@ -662,7 +676,7 @@ Partial Class IGCFileUpload
         'lblCompID
         '
         Me.lblCompID.AutoSize = True
-        Me.lblCompID.Location = New System.Drawing.Point(111, 106)
+        Me.lblCompID.Location = New System.Drawing.Point(111, 100)
         Me.lblCompID.Name = "lblCompID"
         Me.lblCompID.Size = New System.Drawing.Size(13, 20)
         Me.lblCompID.TabIndex = 14
@@ -671,7 +685,7 @@ Partial Class IGCFileUpload
         'lblPilotName
         '
         Me.lblPilotName.AutoSize = True
-        Me.lblPilotName.Location = New System.Drawing.Point(111, 77)
+        Me.lblPilotName.Location = New System.Drawing.Point(111, 75)
         Me.lblPilotName.Name = "lblPilotName"
         Me.lblPilotName.Size = New System.Drawing.Size(13, 20)
         Me.lblPilotName.TabIndex = 13
@@ -689,7 +703,7 @@ Partial Class IGCFileUpload
         'lblDisplayName
         '
         Me.lblDisplayName.AutoSize = True
-        Me.lblDisplayName.Location = New System.Drawing.Point(111, 51)
+        Me.lblDisplayName.Location = New System.Drawing.Point(111, 50)
         Me.lblDisplayName.Name = "lblDisplayName"
         Me.lblDisplayName.Size = New System.Drawing.Size(13, 20)
         Me.lblDisplayName.TabIndex = 11
@@ -698,7 +712,7 @@ Partial Class IGCFileUpload
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(6, 106)
+        Me.Label23.Location = New System.Drawing.Point(6, 100)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(75, 20)
         Me.Label23.TabIndex = 10
@@ -707,7 +721,7 @@ Partial Class IGCFileUpload
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(6, 77)
+        Me.Label22.Location = New System.Drawing.Point(6, 75)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(83, 20)
         Me.Label22.TabIndex = 9
@@ -716,7 +730,7 @@ Partial Class IGCFileUpload
         'Label21
         '
         Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(6, 51)
+        Me.Label21.Location = New System.Drawing.Point(6, 50)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(99, 20)
         Me.Label21.TabIndex = 8
@@ -747,6 +761,7 @@ Partial Class IGCFileUpload
         '
         Me.grpTaskUserData.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpTaskUserData.Controls.Add(Me.Label25)
         Me.grpTaskUserData.Controls.Add(Me.txtTaskPrivateNotes)
         Me.grpTaskUserData.Controls.Add(Me.Label19)
         Me.grpTaskUserData.Controls.Add(Me.txtTaskPublicFeedback)
@@ -761,27 +776,38 @@ Partial Class IGCFileUpload
         Me.grpTaskUserData.Controls.Add(Me.chkFlyNext)
         Me.grpTaskUserData.Location = New System.Drawing.Point(6, 109)
         Me.grpTaskUserData.Name = "grpTaskUserData"
-        Me.grpTaskUserData.Size = New System.Drawing.Size(686, 402)
+        Me.grpTaskUserData.Size = New System.Drawing.Size(704, 395)
         Me.grpTaskUserData.TabIndex = 1
         Me.grpTaskUserData.TabStop = False
         Me.grpTaskUserData.Text = "My Stuff for this task"
+        '
+        'Label25
+        '
+        Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.Label25.Location = New System.Drawing.Point(296, 26)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(332, 133)
+        Me.Label25.TabIndex = 17
+        Me.Label25.Text = "Any changes made on this screen will only be saved when actually uploading your I" &
+    "GC file."
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtTaskPrivateNotes
         '
         Me.txtTaskPrivateNotes.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTaskPrivateNotes.Location = New System.Drawing.Point(6, 300)
+        Me.txtTaskPrivateNotes.Location = New System.Drawing.Point(6, 296)
         Me.txtTaskPrivateNotes.Multiline = True
         Me.txtTaskPrivateNotes.Name = "txtTaskPrivateNotes"
         Me.txtTaskPrivateNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtTaskPrivateNotes.Size = New System.Drawing.Size(674, 91)
+        Me.txtTaskPrivateNotes.Size = New System.Drawing.Size(692, 91)
         Me.txtTaskPrivateNotes.TabIndex = 11
         Me.ToolTip1.SetToolTip(Me.txtTaskPrivateNotes, "You can save a private note about this task")
         '
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(3, 277)
+        Me.Label19.Location = New System.Drawing.Point(3, 273)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(96, 20)
         Me.Label19.TabIndex = 10
@@ -791,18 +817,18 @@ Partial Class IGCFileUpload
         '
         Me.txtTaskPublicFeedback.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTaskPublicFeedback.Location = New System.Drawing.Point(6, 181)
+        Me.txtTaskPublicFeedback.Location = New System.Drawing.Point(6, 177)
         Me.txtTaskPublicFeedback.Multiline = True
         Me.txtTaskPublicFeedback.Name = "txtTaskPublicFeedback"
         Me.txtTaskPublicFeedback.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtTaskPublicFeedback.Size = New System.Drawing.Size(674, 91)
+        Me.txtTaskPublicFeedback.Size = New System.Drawing.Size(692, 91)
         Me.txtTaskPublicFeedback.TabIndex = 9
         Me.ToolTip1.SetToolTip(Me.txtTaskPublicFeedback, "Provide public feedback for this task")
         '
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(3, 158)
+        Me.Label18.Location = New System.Drawing.Point(3, 154)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(115, 20)
         Me.Label18.TabIndex = 8
@@ -895,7 +921,7 @@ Partial Class IGCFileUpload
         Me.grpIGCUserComment.Controls.Add(Me.txtUserIGCComment)
         Me.grpIGCUserComment.Location = New System.Drawing.Point(6, 35)
         Me.grpIGCUserComment.Name = "grpIGCUserComment"
-        Me.grpIGCUserComment.Size = New System.Drawing.Size(686, 68)
+        Me.grpIGCUserComment.Size = New System.Drawing.Size(704, 68)
         Me.grpIGCUserComment.TabIndex = 0
         Me.grpIGCUserComment.TabStop = False
         Me.grpIGCUserComment.Text = "IGC Comment"
@@ -906,7 +932,7 @@ Partial Class IGCFileUpload
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtUserIGCComment.Location = New System.Drawing.Point(6, 26)
         Me.txtUserIGCComment.Name = "txtUserIGCComment"
-        Me.txtUserIGCComment.Size = New System.Drawing.Size(674, 27)
+        Me.txtUserIGCComment.Size = New System.Drawing.Size(692, 27)
         Me.txtUserIGCComment.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtUserIGCComment, "Provide comments for this specific IGC flight")
         '
@@ -1014,4 +1040,6 @@ Partial Class IGCFileUpload
     Friend WithEvents lblUserID As Label
     Friend WithEvents lblDisplayName As Label
     Friend WithEvents imgAvatar As PictureBox
+    Friend WithEvents Label24 As Label
+    Friend WithEvents Label25 As Label
 End Class
