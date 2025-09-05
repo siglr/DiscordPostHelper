@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.3.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.5.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.5.1</ReleaseVersion>
+      <ReleaseTitle>Comments and ratings on IGC upload</ReleaseTitle>
+      <ReleaseNotes>
+        Added comments and task ratings on IGC upload screen
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.3.1</ReleaseVersion>
       <ReleaseTitle>Hotfix for new task planner version</ReleaseTitle>
