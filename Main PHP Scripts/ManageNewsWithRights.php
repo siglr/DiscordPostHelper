@@ -8,6 +8,9 @@ try {
     $pdo = new PDO("sqlite:$newsDBPath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // attach the tasks DB to this connection
+    $pdo->exec("ATTACH DATABASE " . $pdo->quote($databasePath) . " AS TasksDB");
+
     // Call the cleanup function
     cleanUpNewsEntries($pdo);
 
@@ -114,114 +117,162 @@ try {
                 $existingAnnouncementID = $row['WSGAnnouncementID'];
             }
 
-            // Delete existing entries in both News and Events tables
-            $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
-            $pdo->prepare("DELETE FROM Events WHERE EventKey = ?")->execute([$key]);
+            $pdo->beginTransaction();
+            try {
+                // Delete existing entries in both News and Events tables
+                $pdo->prepare("DELETE FROM News WHERE NewsType = 1 AND Key = ?")->execute([$key]);
+                $pdo->prepare("DELETE FROM Events WHERE EventKey = ?")->execute([$key]);
 
-            // Insert new Event entry into News table
-            $stmt = $pdo->prepare("
-                INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, NewsType, EntrySeqID, URLToGo, Expiration)
-                VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, 1, :EntrySeqID, :URLToGo, :Expiration)
-            ");
-            $stmt->execute([
-                ':Key'        => $key,
-                ':Published'  => formatDatetime($_POST['Published']),
-                ':Title'      => $_POST['Title'],
-                ':Subtitle'   => $_POST['Subtitle'],
-                ':Comments'   => $_POST['Comments'],
-                ':Credits'    => $_POST['Credits'],
-                ':EventDate'  => formatDatetime($_POST['EventDate']),
-                ':EntrySeqID' => $_POST['EntrySeqID'],
-                ':URLToGo'    => $_POST['URLToGo'],
-                ':Expiration' => formatDatetime($_POST['Expiration'])
-            ]);
+                // Insert new Event entry into News table
+                $stmt = $pdo->prepare("
+                    INSERT INTO News (Key, Published, Title, Subtitle, Comments, Credits, EventDate, NewsType, EntrySeqID, URLToGo, Expiration)
+                    VALUES (:Key, :Published, :Title, :Subtitle, :Comments, :Credits, :EventDate, 1, :EntrySeqID, :URLToGo, :Expiration)
+                ");
+                $stmt->execute([
+                    ':Key'        => $key,
+                    ':Published'  => formatDatetime($_POST['Published']),
+                    ':Title'      => $_POST['Title'],
+                    ':Subtitle'   => $_POST['Subtitle'],
+                    ':Comments'   => $_POST['Comments'],
+                    ':Credits'    => $_POST['Credits'],
+                    ':EventDate'  => formatDatetime($_POST['EventDate']),
+                    ':EntrySeqID' => $_POST['EntrySeqID'],
+                    ':URLToGo'    => $_POST['URLToGo'],
+                    ':Expiration' => formatDatetime($_POST['Expiration'])
+                ]);
 
-            // Process Discord announcement if EventMeetDateTime is provided
-            $wsgAnnouncementID = "";
-            if (isset($_POST['EventMeetDateTime']) && !empty($_POST['EventMeetDateTime'])) {
-                if (isset($_POST['WSGAnnouncement'])) {
-                    $newAnnouncement = trim($_POST['WSGAnnouncement']);
-                    // Case 1: New announcement is blank
-                    if ($newAnnouncement === "") {
-                        // If there is an existing Discord post, delete it.
-                        if (!empty($existingAnnouncementID)) {
-                            $result = manageDiscordPost($disWHAnnouncements, "", $existingAnnouncementID, true);
-                            $resultObj = json_decode($result, true);
-                            if ($resultObj['result'] !== "success") {
-                                logMessage("Failed to delete Discord post with ID $existingAnnouncementID for event key $key due to blank announcement. Error: " . $resultObj['error']);
+                // Process Discord announcement if EventMeetDateTime is provided
+                $wsgAnnouncementID = "";
+                if (isset($_POST['EventMeetDateTime']) && !empty($_POST['EventMeetDateTime'])) {
+                    if (isset($_POST['WSGAnnouncement'])) {
+                        $newAnnouncement = trim($_POST['WSGAnnouncement']);
+                        // Case 1: New announcement is blank
+                        if ($newAnnouncement === "") {
+                            // If there is an existing Discord post, delete it.
+                            if (!empty($existingAnnouncementID)) {
+                                $result = manageDiscordPost($disWHAnnouncements, "", $existingAnnouncementID, true);
+                                $resultObj = json_decode($result, true);
+                                if ($resultObj['result'] !== "success") {
+                                    logMessage("Failed to delete Discord post with ID $existingAnnouncementID for event key $key due to blank announcement. Error: " . $resultObj['error']);
+                                }
                             }
+                            $wsgAnnouncementID = "";
                         }
-                        $wsgAnnouncementID = "";
-                    }
-                    // Case 2: New announcement is non-blank
-                    else {
-                        $discordPostID = "";
-                        if (!empty($existingAnnouncementID)) {
-                            // There is an existing Discord post.
-                            if ($existingAnnouncement !== null && $existingAnnouncement === $newAnnouncement) {
-                                // Content unchanged; reuse the existing Discord post ID.
-                                $discordPostID = $existingAnnouncementID;
+                        // Case 2: New announcement is non-blank
+                        else {
+                            $discordPostID = "";
+                            if (!empty($existingAnnouncementID)) {
+                                // There is an existing Discord post.
+                                if ($existingAnnouncement !== null && $existingAnnouncement === $newAnnouncement) {
+                                    // Content unchanged; reuse the existing Discord post ID.
+                                    $discordPostID = $existingAnnouncementID;
+                                } else {
+                                    // Content changed; update the Discord post.
+                                    $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, $existingAnnouncementID, false);
+                                    $resultObj = json_decode($result, true);
+                                    if ($resultObj['result'] === "success") {
+                                        $discordPostID = $resultObj['postID'];
+                                    }
+                                }
                             } else {
-                                // Content changed; update the Discord post.
-                                $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, $existingAnnouncementID, false);
+                                // No existing Discord post; create a new one.
+                                $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, null, false);
                                 $resultObj = json_decode($result, true);
                                 if ($resultObj['result'] === "success") {
                                     $discordPostID = $resultObj['postID'];
                                 }
                             }
-                        } else {
-                            // No existing Discord post; create a new one.
-                            $result = manageDiscordPost($disWHAnnouncements, $newAnnouncement, null, false);
-                            $resultObj = json_decode($result, true);
-                            if ($resultObj['result'] === "success") {
-                                $discordPostID = $resultObj['postID'];
-                            }
+                            $wsgAnnouncementID = $discordPostID;
                         }
-                        $wsgAnnouncementID = $discordPostID;
                     }
                 }
+
+                // Insert new entry into Events table, including the Discord announcement info
+                $stmt = $pdo->prepare("
+                    INSERT INTO Events (
+                        EventKey, EventMeetDateTime, UseEventSyncFly, SyncFlyDateTime, UseEventLaunch,
+                        EventLaunchDateTime, UseEventStartTask, EventStartTaskDateTime, EventDescription, 
+                        GroupEventTeaserEnabled, GroupEventTeaserMessage, GroupEventTeaserImage, VoiceChannel,
+                        MSFSServer, TrackerGroup, EligibleAward, BeginnersGuide, Notam, Availability, Refly, WSGAnnouncement, WSGAnnouncementID
+                    )
+                    VALUES (
+                        :EventKey, :EventMeetDateTime, :UseEventSyncFly, :SyncFlyDateTime, :UseEventLaunch,
+                        :EventLaunchDateTime, :UseEventStartTask, :EventStartTaskDateTime, :EventDescription, 
+                        :GroupEventTeaserEnabled, :GroupEventTeaserMessage, :GroupEventTeaserImage, :VoiceChannel,
+                        :MSFSServer, :TrackerGroup, :EligibleAward, :BeginnersGuide, :Notam, :Availability, :Refly, :WSGAnnouncement, :WSGAnnouncementID
+                    )
+                ");
+
+                $stmt->execute([
+                    ':EventKey'                => $key,
+                    ':EventMeetDateTime'       => formatDatetime($_POST['EventMeetDateTime']),
+                    ':UseEventSyncFly'         => isset($_POST['UseEventSyncFly']) ? (int)$_POST['UseEventSyncFly'] : 0,
+                    ':SyncFlyDateTime'         => formatDatetime($_POST['SyncFlyDateTime']),
+                    ':UseEventLaunch'          => isset($_POST['UseEventLaunch']) ? (int)$_POST['UseEventLaunch'] : 0,
+                    ':EventLaunchDateTime'     => formatDatetime($_POST['EventLaunchDateTime']),
+                    ':UseEventStartTask'       => isset($_POST['UseEventStartTask']) ? (int)$_POST['UseEventStartTask'] : 0,
+                    ':EventStartTaskDateTime'  => formatDatetime($_POST['EventStartTaskDateTime']),
+                    ':EventDescription'        => $_POST['EventDescription'] ?? '',
+                    ':GroupEventTeaserEnabled' => isset($_POST['GroupEventTeaserEnabled']) ? (int)$_POST['GroupEventTeaserEnabled'] : 0,
+                    ':GroupEventTeaserMessage' => $_POST['GroupEventTeaserMessage'] ?? '',
+                    ':GroupEventTeaserImage'   => isset($teaserImage) ? $teaserImage : null,
+                    ':VoiceChannel'            => $_POST['VoiceChannel'] ?? '',
+                    ':MSFSServer'              => $_POST['MSFSServer'] ?? '',
+                    ':TrackerGroup'            => $_POST['TrackerGroup'] ?? '',
+                    ':EligibleAward'           => $_POST['EligibleAward'] ?? '',
+                    ':BeginnersGuide'          => $_POST['BeginnersGuide'] ?? '',
+                    ':Notam'                   => $_POST['Notam'] ?? '',
+                    ':Availability'            => formatDatetime($_POST['Availability']),
+                    ':Refly'                   => $_POST['Refly'] ?? '',
+                    ':WSGAnnouncement'         => $_POST['WSGAnnouncement'] ?? '',
+                    ':WSGAnnouncementID'       => $wsgAnnouncementID
+                ]);
+
+                // ---- TaskEvents maintenance ----
+
+                // Always clear any previous links for this EventKey (event can be recreated or re-assigned)
+                $pdo->prepare("DELETE FROM TasksDB.TaskEvents WHERE EventKey = ?")->execute([$key]);
+
+                // Only add a TaskEvents row if the event has a task assigned
+                $entrySeqID = $_POST['EntrySeqID'] ?? null;
+                if (!empty($entrySeqID)) {
+                    // Extract ClubEventNewsID from EventKey: "E-<ClubEventNewsID><yyyyMMdd>"
+                    $clubEventNewsID = '';
+                    if (preg_match('/^E-(.+)(\d{8})$/', $key, $m)) {
+                        $clubEventNewsID = $m[1];
+                    } else {
+                        // fallback: strip "E-" prefix and trailing 8-digit date if present
+                        $clubEventNewsID = substr($key, 2, -8);
+                    }
+
+                    // Always use MeetDateTime for TaskEvents (date only)
+                    $eventDTForLink = formatDatetime($_POST['EventMeetDateTime'] ?? '');
+                    if (!empty($eventDTForLink)) {
+                        // keep only the date (YYYY-MM-DD)
+                        $eventDTForLink = substr($eventDTForLink, 0, 10);
+                    }
+
+                    if (!empty($eventDTForLink)) {
+                        $stmtTE = $pdo->prepare('
+                            INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey)
+                            VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey)
+                        ');
+                        $stmtTE->execute([
+                            ':EntrySeqID'       => $entrySeqID,
+                            ':ClubEventNewsID'  => $clubEventNewsID,
+                            ':EventDateTime'    => $eventDTForLink,
+                            ':EventKey'         => $key
+                        ]);
+                    }
+                }
+                // ---- end TaskEvents maintenance ----
+
+                $pdo->commit();
+            } catch (Throwable $e) {
+                $pdo->rollBack();
+                throw $e;
             }
 
-            // Insert new entry into Events table, including the Discord announcement info
-            $stmt = $pdo->prepare("
-                INSERT INTO Events (
-                    EventKey, EventMeetDateTime, UseEventSyncFly, SyncFlyDateTime, UseEventLaunch,
-                    EventLaunchDateTime, UseEventStartTask, EventStartTaskDateTime, EventDescription, 
-                    GroupEventTeaserEnabled, GroupEventTeaserMessage, GroupEventTeaserImage, VoiceChannel,
-                    MSFSServer, TrackerGroup, EligibleAward, BeginnersGuide, Notam, Availability, Refly, WSGAnnouncement, WSGAnnouncementID
-                )
-                VALUES (
-                    :EventKey, :EventMeetDateTime, :UseEventSyncFly, :SyncFlyDateTime, :UseEventLaunch,
-                    :EventLaunchDateTime, :UseEventStartTask, :EventStartTaskDateTime, :EventDescription, 
-                    :GroupEventTeaserEnabled, :GroupEventTeaserMessage, :GroupEventTeaserImage, :VoiceChannel,
-                    :MSFSServer, :TrackerGroup, :EligibleAward, :BeginnersGuide, :Notam, :Availability, :Refly, :WSGAnnouncement, :WSGAnnouncementID
-                )
-            ");
-
-            $stmt->execute([
-                ':EventKey'                => $key,
-                ':EventMeetDateTime'       => formatDatetime($_POST['EventMeetDateTime']),
-                ':UseEventSyncFly'         => isset($_POST['UseEventSyncFly']) ? (int)$_POST['UseEventSyncFly'] : 0,
-                ':SyncFlyDateTime'         => formatDatetime($_POST['SyncFlyDateTime']),
-                ':UseEventLaunch'          => isset($_POST['UseEventLaunch']) ? (int)$_POST['UseEventLaunch'] : 0,
-                ':EventLaunchDateTime'     => formatDatetime($_POST['EventLaunchDateTime']),
-                ':UseEventStartTask'       => isset($_POST['UseEventStartTask']) ? (int)$_POST['UseEventStartTask'] : 0,
-                ':EventStartTaskDateTime'  => formatDatetime($_POST['EventStartTaskDateTime']),
-                ':EventDescription'        => $_POST['EventDescription'] ?? '',
-                ':GroupEventTeaserEnabled' => isset($_POST['GroupEventTeaserEnabled']) ? (int)$_POST['GroupEventTeaserEnabled'] : 0,
-                ':GroupEventTeaserMessage' => $_POST['GroupEventTeaserMessage'] ?? '',
-                ':GroupEventTeaserImage'   => isset($teaserImage) ? $teaserImage : null,
-                ':VoiceChannel'            => $_POST['VoiceChannel'] ?? '',
-                ':MSFSServer'              => $_POST['MSFSServer'] ?? '',
-                ':TrackerGroup'            => $_POST['TrackerGroup'] ?? '',
-                ':EligibleAward'           => $_POST['EligibleAward'] ?? '',
-                ':BeginnersGuide'          => $_POST['BeginnersGuide'] ?? '',
-                ':Notam'                   => $_POST['Notam'] ?? '',
-                ':Availability'            => formatDatetime($_POST['Availability']),
-                ':Refly'                   => $_POST['Refly'] ?? '',
-                ':WSGAnnouncement'         => $_POST['WSGAnnouncement'] ?? '',
-                ':WSGAnnouncementID'       => $wsgAnnouncementID
-            ]);
             logMessage("Created Event News entry: $key");
             break;
 
@@ -260,7 +311,11 @@ try {
             $stmtEvent->execute([$key]);
             $affectedEventRows = $stmtEvent->rowCount();
 
-            if ($affectedNewsRows === 0) {
+            // Delete TaskEvents link(s) for this event
+            $pdo->prepare("DELETE FROM TasksDB.TaskEvents WHERE EventKey = ?")->execute([$key]);
+
+            // after both deletes
+            if ($affectedNewsRows === 0 && $affectedEventRows === 0) {
                 throw new Exception('No event found with the specified Key.');
             }
             logMessage("Deleted Event News entry: $key");
