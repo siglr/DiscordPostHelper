@@ -26,6 +26,9 @@ try {
 
     $action = $_POST['action'];
     $userID = $_POST['UserID'];
+    $pastEventOnly = isset($_POST['PastEventOnly'])
+        ? filter_var($_POST['PastEventOnly'], FILTER_VALIDATE_BOOLEAN)
+        : false;
 
     // Permission map for actions
     $permissions = [
@@ -106,6 +109,65 @@ try {
                 throw new Exception('Key missing.');
             }
             $key = $_POST['Key'];
+
+            // ---- PastEventOnly mode: only create TaskEvents link and exit ----
+            if ($pastEventOnly === true) {
+                // REQUIREMENTS for TaskEvents row
+                $entrySeqID = $_POST['EntrySeqID'] ?? '';
+                $meetDT     = $_POST['EventMeetDateTime'] ?? '';
+
+                if (empty($entrySeqID)) {
+                    throw new Exception('EntrySeqID is required when PastEventOnly is true.');
+                }
+                if (empty($meetDT)) {
+                    throw new Exception('EventMeetDateTime is required when PastEventOnly is true.');
+                }
+
+                // Extract ClubEventNewsID from EventKey: "E-<ClubEventNewsID><yyyyMMdd>"
+                $clubEventNewsID = '';
+                if (preg_match('/^E-(.+)(\d{8})$/', $key, $m)) {
+                    $clubEventNewsID = $m[1];
+                } else {
+                    // fallback: strip "E-" prefix and trailing 8-digit date if present
+                    $clubEventNewsID = substr($key, 2, -8);
+                }
+
+                // Keep only the date part (YYYY-MM-DD) for TaskEvents.EventDateTime
+                $eventDTForLink = formatDatetime($meetDT);
+                if (!empty($eventDTForLink)) {
+                    $eventDTForLink = substr($eventDTForLink, 0, 10);
+                }
+
+                if (empty($eventDTForLink)) {
+                    throw new Exception('Invalid EventMeetDateTime (date part could not be determined).');
+                }
+
+                // Maintain TaskEvents like normal flow: clear previous links for this EventKey, then insert
+                $pdo->beginTransaction();
+                try {
+                    $pdo->prepare("DELETE FROM TasksDB.TaskEvents WHERE EventKey = ?")->execute([$key]);
+
+                    $stmtTE = $pdo->prepare('
+                        INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey)
+                        VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey)
+                    ');
+                    $stmtTE->execute([
+                        ':EntrySeqID'      => $entrySeqID,
+                        ':ClubEventNewsID' => $clubEventNewsID,
+                        ':EventDateTime'   => $eventDTForLink,
+                        ':EventKey'        => $key
+                    ]);
+
+                    $pdo->commit();
+                    logMessage("PastEventOnly: Created TaskEvents entry for event key $key");
+                } catch (Throwable $e) {
+                    $pdo->rollBack();
+                    throw $e;
+                }
+
+                // Short-circuit the normal CreateEvent flow
+                break;
+            }
 
             // Retrieve existing Discord announcement info (if any) before deletion
             $existingAnnouncement = null;

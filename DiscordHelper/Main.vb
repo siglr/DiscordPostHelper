@@ -68,6 +68,7 @@ Public Class Main
     Private _isInitiatizing As Boolean = True
     Private _directChange As Boolean = True
     Private _eventDateTimeChangeInProgress As Boolean = False
+    Private _pastEventConfirmed As Boolean = False
 
     ' User related variables
     Private _userPermissionID As String
@@ -549,6 +550,7 @@ Public Class Main
         chkAvailabilityRefly.Checked = False
         btnSyncFlightPlanTitle.Enabled = False
         btnSyncWeatherTitle.Enabled = False
+        lstEventsFeaturingTask.Items.Clear()
 
         _SF.PopulateSoaringClubList(cboGroupOrClubName.Items)
         _SF.PopulateKnownDesignersList(cboKnownTaskDesigners.Items)
@@ -3774,12 +3776,21 @@ Public Class Main
         End If
 
         'Check if event is in the past
+        _pastEventConfirmed = False
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
         If fullMeetDateTimeLocal < Now() Then
+            Dim groupEventURLMsg As String = String.Empty
+            If txtGroupEventPostURL.Text.Trim.Length = 0 Then
+                groupEventURLMsg = $"{Environment.NewLine}The group event URL is also empty! When creating a past event, it is recommended (but not required) to include the link to the past event.{Environment.NewLine}"
+            End If
+            Dim confirmPastEvent As DialogResult
             Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "The group event date is in the past!", "Invalid group event date", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                confirmPastEvent = MessageBox.Show(Me, $"The group event date is in the past! Do you still want to proceed?{Environment.NewLine}{groupEventURLMsg}{Environment.NewLine}If you proceed, be advised you will not get any feedback confirming any event creation.", "Group event date in the past", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
             End Using
-            Exit Sub
+            If confirmPastEvent = DialogResult.No Then
+                Exit Sub
+            End If
+            _pastEventConfirmed = True
         End If
 
         If _useTestMode AndAlso txtGroupEventPostURL.Text.Trim.Length > 0 Then
@@ -3791,7 +3802,9 @@ Public Class Main
             End Using
         End If
 
-        If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
+        If Not _pastEventConfirmed Then
+            If Not FirstPartOfGroupPost(autoContinue) Then Exit Sub
+        End If
 
         'Need to go for the task now
         If Not fromGroupOnly Then
@@ -3800,12 +3813,14 @@ Public Class Main
             End If
         End If
 
-        If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
+        If Not _pastEventConfirmed Then
+            If (chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked) OrElse
            (chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked) OrElse
            (chkDGPOAltRestrictions.Enabled AndAlso chkDGPOAltRestrictions.Checked) OrElse
            (chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked) OrElse
            (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked) Then
-            If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
+                If Not SecondPartOfGroupPost(autoContinue) Then Exit Sub
+            End If
         End If
 
         If Not _useTestMode Then
@@ -5725,6 +5740,34 @@ Public Class Main
 
 #Region "Event Handlers"
 
+    Private Sub btnRetrieveEventsFeaturingTask_Click(sender As Object, e As EventArgs) Handles btnRetrieveEventsFeaturingTask.Click
+        Dim taskEvents As List(Of String) = FetchTaskEventSummaries(_TaskEntrySeqID)
+
+        lstEventsFeaturingTask.Items.Clear()
+
+        ' Add results
+        For Each result As String In taskEvents
+            lstEventsFeaturingTask.Items.Add(result)
+        Next
+
+        ' Enable horizontal scrollbar
+        lstEventsFeaturingTask.HorizontalScrollbar = True
+
+        ' Measure widest string in pixels
+        Dim maxWidth As Integer = 0
+        Using g As Graphics = lstEventsFeaturingTask.CreateGraphics()
+            For Each item As String In lstEventsFeaturingTask.Items
+                Dim itemWidth As Integer = CInt(g.MeasureString(item, lstEventsFeaturingTask.Font).Width)
+                If itemWidth > maxWidth Then
+                    maxWidth = itemWidth
+                End If
+            Next
+        End Using
+
+        ' Apply the horizontal extent so the scrollbar works
+        lstEventsFeaturingTask.HorizontalExtent = maxWidth
+    End Sub
+
     Private Sub btnDeleteFromTaskBrowser_Click(sender As Object, e As EventArgs) Handles btnDeleteFromTaskBrowser.Click
         If UserCanDeleteTask Then
             'Ask confirmation
@@ -6696,6 +6739,7 @@ Public Class Main
 
         txtLastUpdateDescription.Enabled = False
         btnDeleteFromTaskBrowser.Enabled = False
+        grbEventsFeaturingTask.Enabled = False
         btnStartTaskPost.Enabled = False
 
         If _TaskEntrySeqID > 0 Then
@@ -6743,6 +6787,7 @@ Public Class Main
             lblWSGTaskEntrySeqID.Text = $"✅ WeSimGlide.org ID: {_TaskEntrySeqID}"
 
             btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask AndAlso IsOwnerOrShared
+            grbEventsFeaturingTask.Enabled = True
         Else
             lblWSGTaskEntrySeqID.Text = $"❌ WeSimGlide.org ID: None"
             btnStartTaskPost.Text = "Start Task Creation Workflow"
@@ -6848,7 +6893,8 @@ Public Class Main
                 {"UserID", _userPermissionID},
                 {"Availability", availability},
                 {"Refly", refly},
-                {"WSGAnnouncement", wsgAnnouncement}
+                {"WSGAnnouncement", wsgAnnouncement},
+                {"PastEventOnly", If(_pastEventConfirmed, "true", "false")}
             }
 
                 For Each field In fields
@@ -7520,6 +7566,115 @@ Public Class Main
         lblEventClubNotAuthorized.Enabled = lblEventClubNotAuthorized.Visible
         grpDiscordGroupFlight.Enabled = chkActivateEvent.Checked AndAlso IsClubAuthorizedEventOrganizer
     End Sub
+
+    Public Function FetchTaskEventSummaries(entrySeqID As Integer) As List(Of String)
+
+        Dim results As New List(Of String)
+
+        Try
+            Dim apiUrl As String = $"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}FetchTaskEventsByEntrySeqID.php"
+            Dim request As HttpWebRequest = CType(WebRequest.Create(apiUrl), HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "application/x-www-form-urlencoded"
+
+            ' POST body
+            Dim postData As String = $"EntrySeqID={entrySeqID}"
+            Dim postBytes As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
+            request.ContentLength = postBytes.Length
+            Using reqStream As Stream = request.GetRequestStream()
+                reqStream.Write(postBytes, 0, postBytes.Length)
+            End Using
+
+            ' Read the response
+            Dim jsonResponse As String
+            Using response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+                Using reader As New StreamReader(response.GetResponseStream())
+                    jsonResponse = reader.ReadToEnd()
+                End Using
+            End Using
+
+            ' Parse the JSON
+            Dim parsed As Dictionary(Of String, Object) =
+            JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
+
+            If parsed("status").ToString() <> "success" Then
+                Throw New Exception(parsed("message").ToString())
+            End If
+
+            Dim data = DirectCast(parsed("data"), Newtonsoft.Json.Linq.JArray)
+            For Each row As Newtonsoft.Json.Linq.JObject In data
+                Dim clubEventNewsID As String = row("ClubEventNewsID")?.ToString()
+                Dim eventDateStr As String = row("EventDateTime")?.ToString()
+
+                Dim localDate As DateTime
+                If Not DateTime.TryParse(eventDateStr, localDate) Then
+                    Continue For
+                End If
+
+                ' Try to match with a PresetEvent
+                Dim matchedClub As PresetEvent = Nothing
+                For Each club As PresetEvent In _SF.DefaultKnownClubEvents.Values
+                    If String.Equals(club.EventNewsID, clubEventNewsID, StringComparison.OrdinalIgnoreCase) Then
+                        matchedClub = club
+                        Exit For
+                    End If
+                Next
+
+                If matchedClub IsNot Nothing Then
+                    ' 1) Parse the Zulu DATE (no time) from TaskEvents
+                    Dim eventDateOnly As Date
+                    If Not Date.TryParse(eventDateStr, eventDateOnly) Then
+                        ' If parsing fails, fallback to raw
+                        results.Add($"{clubEventNewsID} of {eventDateStr}")
+                        Continue For
+                    End If
+
+                    ' 2) Ask the club which Zulu time-of-day applies on that DATE (DST-aware via club timezone)
+                    '    GetZuluTimeForDate returns a DateTime whose TIME part we need.
+                    Dim zuluTemplate As DateTime = matchedClub.GetZuluTimeForDate(eventDateOnly, forceStandard:=False)
+
+                    ' 3) Build the full UTC timestamp: [DATE from TaskEvents] + [TIME from template], explicitly UTC
+                    Dim eventZulu As New DateTime(
+                            eventDateOnly.Year, eventDateOnly.Month, eventDateOnly.Day,
+                            zuluTemplate.Hour, zuluTemplate.Minute, zuluTemplate.Second,
+                            DateTimeKind.Utc
+                        )
+
+                    ' 4) Convert to local time (your machine’s local zone; or fix to "America/Toronto" if you prefer)
+                    Dim localTz As TimeZoneInfo = TimeZoneInfo.Local
+                    ' Dim localTz As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("America/Toronto")
+                    Dim localDT As DateTime = TimeZoneInfo.ConvertTimeFromUtc(eventZulu, localTz)
+
+                    ' 5) Build display name: ClubFullName [+ ClubName if not already contained]
+                    Dim displayName As String = matchedClub.ClubFullName
+                    If Not String.IsNullOrWhiteSpace(matchedClub.ClubName) AndAlso
+                           matchedClub.ClubFullName.IndexOf(matchedClub.ClubName, StringComparison.OrdinalIgnoreCase) < 0 Then
+                        displayName &= " " & matchedClub.ClubName
+                    End If
+
+                    ' 6) Final label (use local DATE part)
+                    Dim label As String = $"{displayName} of {localDT:yyyy-MM-dd}"
+                    results.Add(label)
+                Else
+                    ' Fallback: just output the ID and the (parsed) date as given if possible
+                    Dim eventDateOnly As Date
+                    If Date.TryParse(eventDateStr, eventDateOnly) Then
+                        results.Add($"{clubEventNewsID} of {eventDateOnly:yyyy-MM-dd}")
+                    Else
+                        results.Add($"{clubEventNewsID} of {eventDateStr}")
+                    End If
+                End If
+            Next
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, $"Error fetching TaskEvents: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End Try
+
+        Return results
+    End Function
 
 #End Region
 
