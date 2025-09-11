@@ -110,6 +110,8 @@ try {
             }
             $key = $_POST['Key'];
 
+            $eventURL = (isset($_POST['URLToGo']) && trim($_POST['URLToGo']) !== '') ? trim($_POST['URLToGo']) : null;
+
             // ---- PastEventOnly mode: only create TaskEvents link and exit ----
             if ($pastEventOnly === true) {
                 // REQUIREMENTS for TaskEvents row
@@ -148,16 +150,16 @@ try {
                     $pdo->prepare("DELETE FROM TasksDB.TaskEvents WHERE EventKey = ?")->execute([$key]);
 
                     $stmtTE = $pdo->prepare('
-                        INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey)
-                        VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey)
+                        INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey, EventURL)
+                        VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey, :EventURL)
                     ');
                     $stmtTE->execute([
                         ':EntrySeqID'      => $entrySeqID,
                         ':ClubEventNewsID' => $clubEventNewsID,
                         ':EventDateTime'   => $eventDTForLink,
-                        ':EventKey'        => $key
+                        ':EventKey'        => $key,
+                        ':EventURL'        => $eventURL
                     ]);
-
                     $pdo->commit();
                     logMessage("PastEventOnly: Created TaskEvents entry for event key $key");
                 } catch (Throwable $e) {
@@ -316,14 +318,15 @@ try {
 
                     if (!empty($eventDTForLink)) {
                         $stmtTE = $pdo->prepare('
-                            INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey)
-                            VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey)
+                            INSERT INTO TasksDB.TaskEvents (EntrySeqID, ClubEventNewsID, EventDateTime, EventKey, EventURL)
+                            VALUES (:EntrySeqID, :ClubEventNewsID, :EventDateTime, :EventKey, :EventURL)
                         ');
                         $stmtTE->execute([
                             ':EntrySeqID'       => $entrySeqID,
                             ':ClubEventNewsID'  => $clubEventNewsID,
                             ':EventDateTime'    => $eventDTForLink,
-                            ':EventKey'         => $key
+                            ':EventKey'         => $key,
+                            ':EventURL'         => $eventURL
                         ]);
                     }
                 }
