@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.8.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.12.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.12.1</ReleaseVersion>
+      <ReleaseTitle>Events History</ReleaseTitle>
+      <ReleaseNotes>
+        Added possibility to create past events (only to create an entry in the new TaskEvents table)
+        Added listbox to display events featuring the current task
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.8.27.1</ReleaseVersion>
       <ReleaseTitle>Country and duplicate task detection</ReleaseTitle>
