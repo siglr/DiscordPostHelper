@@ -2516,6 +2516,8 @@ Public Class Main
             Exit Sub
         End If
 
+        chkDateTimeUTC.Enabled = True
+
         If cboGroupOrClubName.Text <> cboGroupOrClubName.Text.Trim Then
             cboGroupOrClubName.Text = cboGroupOrClubName.Text.Trim
         End If
@@ -2550,6 +2552,7 @@ Public Class Main
             cboVoiceChannel.Text = _ClubPreset.VoiceChannel
             CheckAndSetEventAward()
             chkDateTimeUTC.Checked = True
+            chkDateTimeUTC.Enabled = False
 
             'Try with standard time first
             dtEventMeetDate.Value = _SF.FindNextDate(Now, _ClubPreset.EventDayOfWeek, _ClubPreset.ZuluTime)
