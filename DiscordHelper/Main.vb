@@ -5538,9 +5538,13 @@ Public Class Main
                     _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                 End If
                 txtTaskID.Text = .TaskID
-                If txtTaskID.Text.StartsWith("T") Then
+                If txtTaskID.Text.StartsWith("T") OrElse chkTestMode.Checked Then
                     ToggleTestMode(True)
+                    _TaskEntrySeqID = 0
+                    _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
                     _taskDiscordPostID = .TestDiscordTaskID
+                    txtTemporaryTaskID.Text = String.Empty
+                    txtTaskID.Text = String.Empty
                 End If
                 lblCountriesTestModeMsg.Visible = _useTestMode
                 If _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation Then
@@ -7287,7 +7291,7 @@ Public Class Main
         If _userPermissionID = String.Empty Then
             chkTestMode.Checked = True
         End If
-        If _useTestMode And Not chkTestMode.Checked Then
+        If _useTestMode AndAlso Not chkTestMode.Checked Then
             'Going from test mode to real mode - the group event should be emptied if not
             If txtGroupEventPostURL.Text.Trim.Length > 0 Then
                 txtGroupEventPostURL.Text = String.Empty
@@ -7298,6 +7302,26 @@ Public Class Main
             End If
             _taskDiscordPostID = String.Empty
             SetTBTaskDetailsLabel()
+        ElseIf Not _useTestMode AndAlso chkTestMode.Checked Then
+            'Going from real mode to test mode - reset WSG event and task IDs
+            Dim continueSwitch As Boolean = True
+            If _TaskEntrySeqID > 0 Then
+                'If there was a task, we should warn the user that it will be lost
+                continueSwitch = False
+                Using New Centered_MessageBox(Me)
+                    continueSwitch = (MessageBox.Show("Switching to test mode will reset the WeSimGlide.org task ID and status. You will need to create a new task in test mode.", "Switching to test mode", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = vbYes)
+                End Using
+            End If
+            If continueSwitch Then
+                _TaskEntrySeqID = 0
+                _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
+                _taskDiscordPostID = String.Empty
+                txtTemporaryTaskID.Text = String.Empty
+                txtTaskID.Text = String.Empty
+                SetTBTaskDetailsLabel()
+            Else
+                chkTestMode.Checked = False
+            End If
         End If
         ToggleTestMode(chkTestMode.Checked)
         CheckTestModes()
