@@ -39,7 +39,8 @@ Public Class Main
     Private Const B21PlannerURL As String = "https://xp-soaring.github.io/tasks/b21_task_planner/index.html"
     Private Const DefaultMapImageWidth As Integer = 1647
     Private Const DefaultMapImageHeight As Integer = 639
-    Private Const WSGEmoji As String = "<:wsg:1296813102893105203>"
+    Private Const WSGEmojiForBot As String = "<:wsg:1296813102893105203>"
+    Private Const WSGEmojiForUser As String = ":wsg:"
 
     Private ReadOnly _SF As New SupportingFeatures
     Private ReadOnly _CurrentDistanceUnit As Integer
@@ -2100,6 +2101,7 @@ Public Class Main
 
         sb.AppendLine()
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
+        Dim WSGEmoji As String = If(fromGroup, WSGEmojiForUser, WSGEmojiForBot)
         sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
         sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
         If fromGroup Then
@@ -7145,7 +7147,7 @@ Public Class Main
             groupEmoji = $"<{lblGroupEmoji.Text}{_SF.DiscordNameIDPair(lblGroupEmoji.Text.Trim)}> "
         End If
         If _TaskEntrySeqID > 0 AndAlso (Not IsDelayedAvailability) Then
-            msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### {WSGEmoji} [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
+            msgForEventHunters = $"<{roleTaskBrowserID}> <{roleEventHunterID}> {Environment.NewLine}# {groupEmoji}{_SF.GetDiscordTimeStampForDate(eventDate, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)}{Environment.NewLine}## [{txtClubFullName.Text.Trim} - {txtEventTitle.Text.Trim}](<{SupportingFeatures.GetWeSimGlideEventURL(key)}>){Environment.NewLine}### {WSGEmojiForBot} [Task #{_TaskEntrySeqID.ToString.Trim}](<{SupportingFeatures.GetWeSimGlideTaskURL(_TaskEntrySeqID)}>)"
         Else
             Dim taskUnavailableMsg As String = String.Empty
             If _TaskEntrySeqID > 0 Then
