@@ -319,28 +319,13 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles toolStripUnpack.Click
 
-        If warningMSFSRunningToolStrip.Visible Then
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be copied but weather preset will not be available in MSFS until it is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    UnpackFiles()
-                End If
-            End Using
-        Else
-            UnpackFiles()
-        End If
+        UnpackFiles()
+
     End Sub
 
     Private Sub btnCleanup_Click(sender As Object, e As EventArgs) Handles toolStripCleanup.Click
 
-        If warningMSFSRunningToolStrip.Visible Then
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show($"{warningMSFSRunningToolStrip.Text}{Environment.NewLine}{Environment.NewLine}Files can be deleted but weather preset will remain available until MSFS is restarted.{Environment.NewLine}{Environment.NewLine}Do you still want to proceed?", "MSFS is running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                    CleanupFiles()
-                End If
-            End Using
-        Else
-            CleanupFiles()
-        End If
+        CleanupFiles()
 
     End Sub
 
@@ -1207,6 +1192,17 @@ Public Class DPHXUnpackAndLoad
         Return s.Trim()
     End Function
 
+    Private Sub AppendMsfsRunningNoteForWpr(ByRef msg As String, fileName As String, isDelete As Boolean)
+        If Not warningMSFSRunningToolStrip.Visible Then Exit Sub
+        If Not fileName.EndsWith(".wpr", StringComparison.OrdinalIgnoreCase) Then Exit Sub
+
+        If isDelete Then
+            msg &= $"{Environment.NewLine}⚠️MSFS is running: the preset may remain visible/usable until MSFS is restarted."
+        Else
+            msg &= $"{Environment.NewLine}⚠️MSFS is running: the new/updated preset will not appear until MSFS is restarted."
+        End If
+    End Sub
+
     Private Function CopyFile(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
         Dim fullSourceFilename As String
         Dim fullDestFilename As String
@@ -1275,6 +1271,7 @@ Public Class DPHXUnpackAndLoad
         If proceed Then
             Try
                 File.Copy(fullSourceFilename, fullDestFilename, True)
+                AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=False)
             Catch ex As Exception
                 messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy: {ex.Message}"
             End Try
@@ -1294,6 +1291,7 @@ Public Class DPHXUnpackAndLoad
                     If Not excludeFromCleanup Then
                         File.Delete(fullSourceFilename)
                         messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
+                        AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=True)
                     Else
                         messageToReturn = $"{msgToAsk} ""{filename}"" excluded from cleanup"
                     End If
@@ -1434,19 +1432,6 @@ Public Class DPHXUnpackAndLoad
 
         EnableUnpackButton()
     End Sub
-
-    Private Function GetSha256Hex(path As String) As String
-        Using fs = New FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)
-            Using sha = SHA256.Create()
-                Dim hashBytes = sha.ComputeHash(fs)
-                Dim sb As New StringBuilder(hashBytes.Length * 2)
-                For Each b In hashBytes
-                    sb.Append(b.ToString("x2"))
-                Next
-                Return sb.ToString()
-            End Using
-        End Using
-    End Function
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
         SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
