@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.5.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.16.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.16.1</ReleaseVersion>
+      <ReleaseTitle>Whitelist folder</ReleaseTitle>
+      <ReleaseNotes>
+        Improved file comparison to avoid unnecessary overwrites
+        Added a "whitelist" folder of files to never overwrite or delete (like weather presets)
+        Included the SSC weather presets in the whitelist by default
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.5.1</ReleaseVersion>
       <ReleaseTitle>Comments and ratings on IGC upload</ReleaseTitle>

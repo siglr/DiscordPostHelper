@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.16.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.16.1</ReleaseVersion>
+      <ReleaseTitle>Several small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Made UTC checkbox readonly when selecting a club on the event tab
+        Protected WSG published tasks when using Test Mode
+        Attempt to fix the WSG emoji not showing in some situations on other Discords
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.12.1</ReleaseVersion>
       <ReleaseTitle>Events History</ReleaseTitle>
