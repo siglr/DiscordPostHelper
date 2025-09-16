@@ -374,39 +374,35 @@ Public Class CleaningTool
     Private Sub LoadWeatherProfiles2020()
         Dim folderPath As String = lblWeather2020FolderPath.Text
 
-        'Check if path is legal
         Try
-            If Not Directory.Exists(folderPath) Then
-                Return
-            End If
-
-        Catch ex As Exception
-            Return
+            If Not Directory.Exists(folderPath) Then Return
+        Catch : Return
         End Try
 
         Try
-            ' Get all .wpr files from the specified folder.
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
-
-            ' Clear existing items in the ListBox.
             lstWeather2020.Items.Clear()
 
-            ' Process each .wpr file.
+            Dim whitelistDir As String = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Whitelist")
+
             For Each filePath In wprFiles
-                ' Load the XML content of the .wpr file.
+                Dim filename As String = System.IO.Path.GetFileName(filePath)
+
+                ' --- skip if identical to a Whitelist copy ---
+                If Directory.Exists(whitelistDir) Then
+                    Dim wlPath As String = System.IO.Path.Combine(whitelistDir, filename)
+                    If System.IO.File.Exists(wlPath) AndAlso SupportingFeatures.FilesAreEquivalent(filePath, wlPath) Then
+                        Continue For
+                    End If
+                End If
+
+                ' Load name only for items that pass the whitelist filter
                 Dim doc As XDocument = XDocument.Load(filePath)
-
-                ' Extract the <Name> element value.
-                Dim name As String = doc.Descendants("Name").First().Value
-
-                ' Get the filename without the path.
-                Dim filename As String = Path.GetFileName(filePath)
-
-                ' Add the filename and name to the ListBox.
+                Dim nameElem = doc.Descendants("Name").FirstOrDefault()
+                Dim name As String = If(nameElem IsNot Nothing, nameElem.Value, "")
                 lstWeather2020.Items.Add($"{filename} : ""{name}""")
             Next
         Catch ex As Exception
-            ' Handle any errors that might occur.
             Using New Centered_MessageBox()
                 MessageBox.Show($"An error occurred: {ex.Message}")
             End Using
@@ -416,39 +412,34 @@ Public Class CleaningTool
     Private Sub LoadWeatherProfiles2024()
         Dim folderPath As String = lblWeather2024FolderPath.Text
 
-        'Check if path is legal
         Try
-            If Not Directory.Exists(folderPath) Then
-                Return
-            End If
-
-        Catch ex As Exception
-            Return
+            If Not Directory.Exists(folderPath) Then Return
+        Catch : Return
         End Try
 
         Try
-            ' Get all .wpr files from the specified folder.
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
-
-            ' Clear existing items in the ListBox.
             lstWeather2024.Items.Clear()
 
-            ' Process each .wpr file.
+            Dim whitelistDir As String = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Whitelist")
+
             For Each filePath In wprFiles
-                ' Load the XML content of the .wpr file.
+                Dim filename As String = System.IO.Path.GetFileName(filePath)
+
+                ' --- skip if identical to a Whitelist copy ---
+                If Directory.Exists(whitelistDir) Then
+                    Dim wlPath As String = System.IO.Path.Combine(whitelistDir, filename)
+                    If System.IO.File.Exists(wlPath) AndAlso SupportingFeatures.FilesAreEquivalent(filePath, wlPath) Then
+                        Continue For
+                    End If
+                End If
+
                 Dim doc As XDocument = XDocument.Load(filePath)
-
-                ' Extract the <Name> element value.
-                Dim name As String = doc.Descendants("Name").First().Value
-
-                ' Get the filename without the path.
-                Dim filename As String = Path.GetFileName(filePath)
-
-                ' Add the filename and name to the ListBox.
+                Dim nameElem = doc.Descendants("Name").FirstOrDefault()
+                Dim name As String = If(nameElem IsNot Nothing, nameElem.Value, "")
                 lstWeather2024.Items.Add($"{filename} : ""{name}""")
             Next
         Catch ex As Exception
-            ' Handle any errors that might occur.
             Using New Centered_MessageBox()
                 MessageBox.Show($"An error occurred: {ex.Message}")
             End Using
