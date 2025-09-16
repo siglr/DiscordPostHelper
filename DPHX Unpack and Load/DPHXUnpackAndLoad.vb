@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Reflection
+Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Threading
 Imports System.Xml.Serialization
@@ -1212,43 +1213,74 @@ Public Class DPHXUnpackAndLoad
         Dim proceed As Boolean = False
         Dim messageToReturn As String = String.Empty
 
-        If Directory.Exists(destPath) Then
-            fullSourceFilename = Path.Combine(sourcePath, filename)
-            fullDestFilename = Path.Combine(destPath, filename)
-            If File.Exists(fullDestFilename) Then
-                'Check what to do
+        If Not Directory.Exists(destPath) Then
+            Return $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
+        End If
+
+        fullSourceFilename = Path.Combine(sourcePath, filename)
+        fullDestFilename = Path.Combine(destPath, filename)
+
+        ' --- WHITELIST GUARD (untouchable if dest matches whitelist copy) ---
+        ' Whitelist folder sits next to the DPHX executable.
+        Dim whitelistDir = Path.Combine(Application.StartupPath, "Whitelist")
+        Dim whitelistFile = Path.Combine(whitelistDir, filename)
+        If File.Exists(whitelistFile) AndAlso File.Exists(fullDestFilename) Then
+            ' Only protect when dest content exactly matches the whitelist content
+            If SupportingFeatures.FilesAreEquivalent(whitelistFile, fullDestFilename) Then
+                Return $"{msgToAsk} ""{filename}"" skipped (protected by Whitelist)"
+            End If
+        End If
+
+        ' --- normal logic (identical => skip; different => apply policy) ---
+        If File.Exists(fullDestFilename) Then
+            Dim srcInfo = New FileInfo(fullSourceFilename)
+            Dim dstInfo = New FileInfo(fullDestFilename)
+
+            Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
+                                   AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
+
+            If identical Then
+                proceed = False
+                messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
+            Else
                 Select Case Settings.SessionSettings.AutoOverwriteFiles
                     Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
                         proceed = True
-                        messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
+                        messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
                     Case AllSettings.AutoOverwriteOptions.AlwaysSkip
                         proceed = False
-                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped - already exists"
+                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
                     Case AllSettings.AutoOverwriteOptions.AlwaysAsk
                         Using New Centered_MessageBox(Me)
-                            If MessageBox.Show($"The {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Do you want to overwrite it?", "File already exists!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                            If MessageBox.Show(
+                            $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
+                            "File already exists",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question
+                        ) = DialogResult.Yes Then
                                 proceed = True
-                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over existing one"
+                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
                             Else
                                 proceed = False
-                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user - already exists"
+                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
                             End If
                         End Using
                 End Select
-            Else
-                proceed = True
-                messageToReturn = $"{msgToAsk} ""{filename}"" copied"
-            End If
-            If proceed Then
-                File.Copy(fullSourceFilename, fullDestFilename, True)
             End If
         Else
-            messageToReturn = $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
+            proceed = True
+            messageToReturn = $"{msgToAsk} ""{filename}"" copied"
         End If
 
+        If proceed Then
+            Try
+                File.Copy(fullSourceFilename, fullDestFilename, True)
+            Catch ex As Exception
+                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy: {ex.Message}"
+            End Try
+        End If
 
         Return messageToReturn
-
     End Function
 
     Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String, excludeFromCleanup As Boolean) As String
@@ -1289,13 +1321,37 @@ Public Class DPHXUnpackAndLoad
                           If String.IsNullOrWhiteSpace(fileName) Then Exit Sub
                           If excluded Then Exit Sub
                           If Not Directory.Exists(folder) Then Exit Sub
-                          Dim full = Path.Combine(folder, fileName)
+
+                          Dim full As String = Path.Combine(folder, fileName)
                           If Not File.Exists(full) Then Exit Sub
+
+                          Dim whitelistDir As String = Path.Combine(Application.StartupPath, "Whitelist")
+
+                          ' ----- Whitelist match? -> start unchecked -----
+                          Dim defaultChecked As Boolean = True
+                          If Directory.Exists(whitelistDir) Then
+                              Dim wlPath As String = Path.Combine(whitelistDir, fileName)
+                              If File.Exists(wlPath) Then
+                                  ' Uses your XML-aware comparer for PLN/WPR
+                                  If SupportingFeatures.FilesAreEquivalent(full, wlPath) Then
+                                      defaultChecked = False
+                                  End If
+                              End If
+                          End If
+
+                          Dim disp As String = $"{shortLabel} : {fileName}"
+                          Dim isWL As Boolean = Not defaultChecked
+                          If Not defaultChecked Then
+                              disp &= " (whitelist)"
+                          End If
+
                           candidates.Add(New CleanupCandidate With {
-                          .Display = $"{shortLabel} — {fileName}",
+                          .Display = disp,
                           .FileName = fileName,
                           .SourcePath = folder,
-                          .Label = label
+                          .Label = label,
+                          .DefaultChecked = defaultChecked,
+                          .IsWhitelistProtected = isWL
                       })
                       End Sub
 
@@ -1378,6 +1434,19 @@ Public Class DPHXUnpackAndLoad
 
         EnableUnpackButton()
     End Sub
+
+    Private Function GetSha256Hex(path As String) As String
+        Using fs = New FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+            Using sha = SHA256.Create()
+                Dim hashBytes = sha.ComputeHash(fs)
+                Dim sb As New StringBuilder(hashBytes.Length * 2)
+                For Each b In hashBytes
+                    sb.Append(b.ToString("x2"))
+                Next
+                Return sb.ToString()
+            End Using
+        End Using
+    End Function
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
         SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")

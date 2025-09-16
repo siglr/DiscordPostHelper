@@ -3198,13 +3198,110 @@ Public Class SupportingFeatures
     End Function
 
     ' Very lightweight XML normalization for “identical” test
-    Public shared Function NormalizeXml(xml As String) As String
+    Public Shared Function NormalizeXml(xml As String) As String
         If String.IsNullOrWhiteSpace(xml) Then Return String.Empty
         ' Trim + collapse runs of whitespace between tags; normalize newlines
         Dim s = xml.Replace(vbCr, "").Replace(vbLf, "\n").Trim()
         s = Regex.Replace(s, ">\s+<", "><")
         s = Regex.Replace(s, "\s{2,}", " ")
         Return s
+    End Function
+
+    Public Shared Function FilesAreEquivalent(pathA As String, pathB As String) As Boolean
+        If String.IsNullOrWhiteSpace(pathA) OrElse String.IsNullOrWhiteSpace(pathB) Then Return False
+        If String.Equals(System.IO.Path.GetFullPath(pathA), System.IO.Path.GetFullPath(pathB), StringComparison.OrdinalIgnoreCase) Then Return True
+        If Not File.Exists(pathA) OrElse Not File.Exists(pathB) Then Return False
+        If ByteIdentical(pathA, pathB) Then Return True
+        If IsXmlCompareCandidate(pathA) AndAlso IsXmlCompareCandidate(pathB) Then
+            Return XmlSemanticallyEqual(pathA, pathB)
+        End If
+        Return False
+    End Function
+
+    Private Shared Function IsXmlCompareCandidate(path As String) As Boolean
+        Dim ext As String = System.IO.Path.GetExtension(path)
+        If String.IsNullOrEmpty(ext) Then Return False
+        ext = ext.ToLowerInvariant()
+        Return (ext = ".pln" OrElse ext = ".wpr")
+    End Function
+
+    Private Shared Function ByteIdentical(pathA As String, pathB As String) As Boolean
+        Dim ia As New FileInfo(pathA)
+        Dim ib As New FileInfo(pathB)
+        If Not ia.Exists OrElse Not ib.Exists Then Return False
+        If ia.Length <> ib.Length Then Return False
+        Return String.Equals(GetSha256Hex(pathA), GetSha256Hex(pathB), StringComparison.Ordinal)
+    End Function
+
+    Private Shared Function GetSha256Hex(path As String) As String
+        Using fs As New FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+            Using sha As SHA256 = SHA256.Create()
+                Dim bytes = sha.ComputeHash(fs)
+                Dim sb As New StringBuilder(bytes.Length * 2)
+                For Each b As Byte In bytes : sb.Append(b.ToString("x2")) : Next
+                Return sb.ToString()
+            End Using
+        End Using
+    End Function
+
+    Private Shared Function XmlSemanticallyEqual(pathA As String, pathB As String) As Boolean
+        Try
+            Dim settings As New XmlReaderSettings() With {
+                .IgnoreWhitespace = True,
+                .IgnoreComments = True,
+                .IgnoreProcessingInstructions = True
+            }
+            Dim aDoc As XDocument, bDoc As XDocument
+            Using ra = XmlReader.Create(pathA, settings) : aDoc = XDocument.Load(ra, LoadOptions.None) : End Using
+            Using rb = XmlReader.Create(pathB, settings) : bDoc = XDocument.Load(rb, LoadOptions.None) : End Using
+            Dim aCanon As String = CanonicalizeElement(aDoc.Root)
+            Dim bCanon As String = CanonicalizeElement(bDoc.Root)
+            Return String.Equals(aCanon, bCanon, StringComparison.Ordinal)
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Shared Function CanonicalizeElement(el As XElement) As String
+        Dim sb As New StringBuilder(4096)
+        CanonicalizeElementRec(el, sb)
+        Return sb.ToString()
+    End Function
+
+    Private Shared Sub CanonicalizeElementRec(el As XElement, sb As StringBuilder)
+        sb.Append("E(").Append(el.Name.ToString()).Append(")")
+
+        Dim attrs = el.Attributes().
+            Where(Function(a) Not a.IsNamespaceDeclaration).
+            OrderBy(Function(a) a.Name.NamespaceName).
+            ThenBy(Function(a) a.Name.LocalName)
+
+        For Each a In attrs
+            sb.Append("|A(").Append(a.Name.ToString()).
+               Append("="c).Append(EscapeForCanon(NormalizeWhitespace(a.Value))).
+               Append(")")
+        Next
+
+        If Not el.HasElements Then
+            Dim tv As String = NormalizeWhitespace(el.Value)
+            If tv.Length > 0 Then sb.Append("|T(").Append(EscapeForCanon(tv)).Append(")")
+        End If
+
+        For Each child As XElement In el.Elements()
+            sb.Append("|")
+            CanonicalizeElementRec(child, sb)
+        Next
+
+        sb.Append("|/E")
+    End Sub
+
+    Private Shared Function NormalizeWhitespace(s As String) As String
+        If String.IsNullOrEmpty(s) Then Return String.Empty
+        Return Regex.Replace(s, "\s+", " ").Trim()
+    End Function
+
+    Private Shared Function EscapeForCanon(s As String) As String
+        Return s.Replace("\", "\\").Replace(")", "\)")
     End Function
 
 End Class
