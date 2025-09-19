@@ -2,50 +2,70 @@
 require __DIR__ . '/CommonFunctions.php';
 
 try {
-    // Ensure the request method is POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception('Invalid request method.');
     }
-
-    // Check if user_id is set
     if (!isset($_POST['user_id'])) {
         throw new Exception('User ID missing.');
     }
+    $userID = trim((string)$_POST['user_id']);
 
-    // Get the user ID
-    $userID = $_POST['user_id'];
+    // Open DB
+    $pdo = new PDO("sqlite:$databasePath");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Get user permissions for the specified user
-    $userPermissions = getUserPermissions($userID);
+    // 1) Fetch the single user by UserRightsID
+    $sql = "
+        SELECT
+            UserRightsName,
+            CreateTask, UpdateTask, DeleteTask,
+            CreateEvent, UpdateEvent, DeleteEvent,
+            CreateNews,  UpdateNews,  DeleteNews
+        FROM Users
+        WHERE UserRightsID = :rid
+        LIMIT 1
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':rid' => $userID]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($userPermissions === null) {
+    if (!$row) {
         throw new Exception('User not found.');
     }
 
-    // Extract user rights
-    $userRights = getUserRights($userPermissions);
+    // 2) Build rights object (true/false like the XML version)
+    $rights = [
+        'CreateTask'  => (bool)$row['CreateTask'],
+        'UpdateTask'  => (bool)$row['UpdateTask'],
+        'DeleteTask'  => (bool)$row['DeleteTask'],
+        'CreateEvent' => (bool)$row['CreateEvent'],
+        'UpdateEvent' => (bool)$row['UpdateEvent'],
+        'DeleteEvent' => (bool)$row['DeleteEvent'],
+        'CreateNews'  => (bool)$row['CreateNews'],
+        'UpdateNews'  => (bool)$row['UpdateNews'],
+        'DeleteNews'  => (bool)$row['DeleteNews'],
+    ];
 
-    // Extract the specified user's name
-    $userName = (string)$userPermissions->Name;
+    // 3) Collect all user names (equivalent to iterating the XML <User><Name>)
+    $namesStmt = $pdo->query("
+        SELECT UserRightsName
+        FROM Users
+        WHERE UserRightsName IS NOT NULL AND UserRightsName <> ''
+        ORDER BY UserRightsName COLLATE NOCASE
+    ");
+    $allUserNames = array_map(
+        fn($r) => $r['UserRightsName'],
+        $namesStmt->fetchAll(PDO::FETCH_ASSOC)
+    );
 
-    // Extract all user names from the XML
-    $allUserNames = [];
-    $xml = simplexml_load_file($userPermissionsPath);
-    if ($xml !== false) {
-        foreach ($xml->User as $user) {
-            $allUserNames[] = (string)$user->Name;
-        }
-    } else {
-        throw new Exception('Failed to load user permissions file.');
-    }
-
-    // Return the user rights, user's name, and all user names
     echo json_encode([
-        'status' => 'success',
-        'name' => $userName,
-        'rights' => $userRights,
+        'status'       => 'success',
+        'name'         => (string)$row['UserRightsName'],
+        'rights'       => $rights,
         'allUserNames' => $allUserNames
     ]);
+
 } catch (Exception $e) {
+    // Optional: logMessage("RetrieveUserRights error: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }

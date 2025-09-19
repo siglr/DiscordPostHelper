@@ -3,85 +3,112 @@ header('Content-Type: application/json');
 require __DIR__ . '/CommonFunctions.php';
 
 try {
-    // Check if the XML file exists
-    if (!file_exists($soaringClubsPath)) {
-        throw new Exception("The XML file does not exist.");
-    }
+    // Open DB
+    $pdo = new PDO("sqlite:$databasePath");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Load the XML file
-    $xml = simplexml_load_file($soaringClubsPath);
-    if ($xml === false) {
-        throw new Exception("Failed to load the XML file.");
-    }
-
-    // Convert KnownSoaringClubs to an array
+    // 1) Load all clubs
     $clubs = [];
-    foreach ($xml->KnownSoaringClubs->KnownSoaringClub as $club) {
-        // --- Shared publishers
-        $sharedPublishers = [];
-        if (isset($club->SharedPublishers->Name)) {
-            foreach ($club->SharedPublishers->Name as $publisher) {
-                $sharedPublishers[] = (string)$publisher;
-            }
-        }
+    $clubStmt = $pdo->query("
+        SELECT
+          ClubID, ClubName, ClubFullName, TrackerGroup, Emoji, EmojiID, EventNewsID,
+          MSFSServer, VoiceChannel, ZuluDayOfWeek, ZuluTime,
+          SummerZuluDayOfWeek, SummerZuluTime, TimeZoneID,
+          SyncFlyDelay, LaunchDelay, StartTaskDelay, EligibleAward,
+          BeginnerLinkURL, BeginnerLink, ForceSyncFly, ForceLaunch, ForceStartTask,
+          DiscordURL
+        FROM Clubs
+        ORDER BY ClubID
+    ");
+    $clubRows = $clubStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // --- Authorized publishers
-        $authorizedPublishers = [];
-        if (isset($club->AuthorizedPublishers->Name)) {
-            foreach ($club->AuthorizedPublishers->Name as $publisher) {
-                $authorizedPublishers[] = (string)$publisher;
-            }
+    // 2) Load publishers once (resolve names through Users)
+    $pubStmt = $pdo->query("
+        SELECT
+          p.ClubID, p.Shared, p.Authorized,
+          u.UserRightsName
+        FROM ClubPublishers p
+        JOIN Users u ON u.WSGUserID = p.WSGUserID
+        ORDER BY p.ClubID, u.UserRightsName COLLATE NOCASE
+    ");
+    $pubRows = $pubStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Build quick lookup: clubId => ['shared'=>[], 'authorized'=>[]]
+    $pubByClub = [];
+    foreach ($pubRows as $r) {
+        $cid = $r['ClubID'];
+        if (!isset($pubByClub[$cid])) {
+            $pubByClub[$cid] = ['shared' => [], 'authorized' => []];
         }
+        if (!empty($r['Shared']))     { $pubByClub[$cid]['shared'][]     = (string)$r['UserRightsName']; }
+        if (!empty($r['Authorized'])) { $pubByClub[$cid]['authorized'][] = (string)$r['UserRightsName']; }
+    }
+
+    // 3) Assemble club payload (exact same fields & booleans as before)
+    foreach ($clubRows as $c) {
+        $cid = $c['ClubID'];
+        $shared     = $pubByClub[$cid]['shared']     ?? [];
+        $authorized = $pubByClub[$cid]['authorized'] ?? [];
 
         $clubs[] = [
-            'ClubId' => (string)$club->ClubId,
-            'ClubName' => (string)$club->ClubName,
-            'ClubFullName' => (string)$club->ClubFullName,
-            'TrackerGroup' => (string)$club->TrackerGroup,
-            'Emoji' => (string)$club->Emoji,
-            'EmojiID' => (string)$club->EmojiID,
-            'EventNewsID' => (string)$club->EventNewsID,
-            'MSFSServer' => (string)$club->MSFSServer,
-            'VoiceChannel' => (string)$club->VoiceChannel,
-            'ZuluDayOfWeek' => (string)$club->ZuluDayOfWeek,
-            'ZuluTime' => (string)$club->ZuluTime,
-            'SummerZuluDayOfWeek' => (string)$club->SummerZuluDayOfWeek,
-            'SummerZuluTime' => (string)$club->SummerZuluTime,
-            'TimeZoneID' => (string)$club->TimeZoneID,
-            'SyncFlyDelay' => (int)$club->SyncFlyDelay,
-            'LaunchDelay' => (int)$club->LaunchDelay,
-            'StartTaskDelay' => (int)$club->StartTaskDelay,
-            'EligibleAward' => filter_var($club->EligibleAward, FILTER_VALIDATE_BOOLEAN),
-            'BeginnerLink' => (string)$club->BeginnerLink,
-            'BeginnerLinkURL' => (string)$club->BeginnerLinkURL,
-            'ForceSyncFly' => filter_var($club->ForceSyncFly, FILTER_VALIDATE_BOOLEAN),
-            'ForceLaunch' => filter_var($club->ForceLaunch, FILTER_VALIDATE_BOOLEAN),
-            'ForceStartTask' => filter_var($club->ForceStartTask, FILTER_VALIDATE_BOOLEAN),
-            'DiscordURL' => (string)$club->DiscordURL,
-            'SharedPublishers' => $sharedPublishers,
-            'AuthorizedPublishers' => $authorizedPublishers
+            'ClubId'                => (string)$c['ClubID'],
+            'ClubName'              => (string)$c['ClubName'],
+            'ClubFullName'          => (string)$c['ClubFullName'],
+            'TrackerGroup'          => (string)$c['TrackerGroup'],
+            'Emoji'                 => (string)$c['Emoji'],
+            'EmojiID'               => (string)$c['EmojiID'],
+            'EventNewsID'           => (string)$c['EventNewsID'],
+            'MSFSServer'            => (string)$c['MSFSServer'],
+            'VoiceChannel'          => (string)$c['VoiceChannel'],
+            'ZuluDayOfWeek'         => (string)$c['ZuluDayOfWeek'],
+            'ZuluTime'              => (string)$c['ZuluTime'],
+            'SummerZuluDayOfWeek'   => (string)$c['SummerZuluDayOfWeek'],
+            'SummerZuluTime'        => (string)$c['SummerZuluTime'],
+            'TimeZoneID'            => (string)$c['TimeZoneID'],
+            'SyncFlyDelay'          => (int)$c['SyncFlyDelay'],
+            'LaunchDelay'           => (int)$c['LaunchDelay'],
+            'StartTaskDelay'        => (int)$c['StartTaskDelay'],
+            'EligibleAward'         => (bool)$c['EligibleAward'],
+            'BeginnerLink'          => (string)$c['BeginnerLink'],
+            'BeginnerLinkURL'       => (string)$c['BeginnerLinkURL'],
+            'ForceSyncFly'          => (bool)$c['ForceSyncFly'],
+            'ForceLaunch'           => (bool)$c['ForceLaunch'],
+            'ForceStartTask'        => (bool)$c['ForceStartTask'],
+            'DiscordURL'            => (string)$c['DiscordURL'],
+            'SharedPublishers'      => $shared,      // array of names
+            'AuthorizedPublishers'  => $authorized   // array of names
         ];
     }
 
-    // Convert KnownDesigners to an array of strings for backward compatibility,
-    // and also build an extended array with extra info.
-    $designersAsStrings = [];
+    // 4) Designers: only return those with a DiscordID
+    $designersStrings  = [];
     $designersExtended = [];
-    foreach ($xml->KnownDesigners->KnownDesigner as $designer) {
-        $name = (string)$designer->Name;
-        $discordID = (string)$designer->DiscordID;
-        $designersAsStrings[] = $name;  // Original behavior: just the name.
+    
+    $desStmt = $pdo->query("
+        SELECT
+          COALESCE(NULLIF(u.DesignerName,''), u.UserRightsName) AS DesignerDisplay,
+          ud.DiscordID
+        FROM Users u
+        JOIN UsersDiscord ud ON ud.WSGUserID = u.WSGUserID
+        WHERE u.KnownDesigner = 1
+          AND ud.DiscordID IS NOT NULL
+          AND ud.DiscordID <> ''
+        ORDER BY DesignerDisplay COLLATE NOCASE
+    ");
+    foreach ($desStmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        $name = (string)$r['DesignerDisplay'];
+        $designersStrings[] = $name;
         $designersExtended[] = [
             'Name'      => $name,
-            'DiscordID' => $discordID
+            'DiscordID' => (string)$r['DiscordID'],
         ];
     }
 
     echo json_encode([
-        'status' => 'success', 
-        'clubs' => $clubs, 
-        'designers' => $designersAsStrings,      // For current deployments
-        'designersExtended' => $designersExtended  // For new versions that need DiscordID
+        'status'            => 'success',
+        'clubs'             => $clubs,
+        'designers'         => $designersStrings,   // legacy consumers
+        'designersExtended' => $designersExtended   // newer consumers
     ]);
 
 } catch (Exception $e) {
