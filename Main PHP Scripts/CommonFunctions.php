@@ -13,8 +13,6 @@ $logFile = preg_replace(
     $config['logFile']
 );
 
-$userPermissionsPath = $config['userPermissionsPath'];
-$soaringClubsPath = $config['soaringClubsPath'];
 $fileRootPath = $config['fileRootPath'];
 $wsgRoot = $config['wsgRoot'];
 $blesstok = $config['blesstok'];
@@ -63,32 +61,78 @@ function prettyPrintXml($xmlString) {
     }
 }
 
-// Function to get user permissions
+// --- DB-backed: fetch one user's permissions by UserRightsID (or fallback by UserRightsName)
 function getUserPermissions($userID) {
-    global $userPermissionsPath;
-    if (!file_exists($userPermissionsPath)) {
-        logMessage("User permissions file not found: $userPermissionsPath");
-        return null;
-    }
-    $xml = simplexml_load_file($userPermissionsPath);
-    if ($xml === false) {
-        logMessage("Failed to load user permissions file: $userPermissionsPath");
-        return null;
-    }
-    foreach ($xml->User as $user) {
-        if ((string)$user->ID === $userID) {
-            return $user;
+    global $databasePath;
+
+    try {
+        $pdo = new PDO("sqlite:$databasePath");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // 1) Try by UserRightsID (this is what callers pass)
+        $sql = "SELECT UserRightsID, UserRightsName,
+                       CreateTask, UpdateTask, DeleteTask,
+                       CreateEvent, UpdateEvent, DeleteEvent,
+                       CreateNews,  UpdateNews,  DeleteNews
+                FROM Users
+                WHERE UserRightsID = :rid
+                LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':rid' => (string)$userID]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // 2) Fallback: allow callers to pass the name (legacy callers)
+        if (!$row) {
+            $sql2 = str_replace('UserRightsID = :rid', 'UserRightsName = :rname COLLATE NOCASE', $sql);
+            $stmt = $pdo->prepare($sql2);
+            $stmt->execute([':rname' => (string)$userID]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
+        if (!$row) {
+            logMessage("No permissions found (DB) for identifier: $userID");
+            return null;
+        }
+
+        // Build an object that mimics the old SimpleXMLElement shape:
+        // ->ID, ->Name, then each right as 'True'/'False' strings
+        $o = new stdClass();
+        $o->ID   = (string)$row['UserRightsID'];
+        $o->Name = (string)$row['UserRightsName'];
+
+        $rights = [
+            'CreateTask','UpdateTask','DeleteTask',
+            'CreateEvent','UpdateEvent','DeleteEvent',
+            'CreateNews','UpdateNews','DeleteNews'
+        ];
+        foreach ($rights as $r) {
+            $o->{$r} = ((int)$row[$r] === 1) ? 'True' : 'False';
+        }
+        return $o;
+
+    } catch (Exception $e) {
+        logMessage("getUserPermissions DB error: " . $e->getMessage());
+        return null;
     }
-    return null;
 }
 
-// Function to retrieve user rights
+// Works with BOTH SimpleXMLElement (old) and stdClass (new)
 function getUserRights($userPermissions) {
-    if ($userPermissions === null) {
-        return null;
-    }
+    if ($userPermissions === null) return null;
+
     $rights = [];
+
+    // New stdClass path
+    if (!($userPermissions instanceof SimpleXMLElement)) {
+        foreach (get_object_vars($userPermissions) as $key => $value) {
+            if ($key !== 'ID' && $key !== 'Name') {
+                $rights[$key] = (string)$value;   // 'True' or 'False'
+            }
+        }
+        return $rights;
+    }
+
+    // Legacy XML path (kept for compatibility)
     foreach ($userPermissions->children() as $key => $value) {
         if ($key !== 'ID' && $key !== 'Name') {
             $rights[$key] = (string)$value;
@@ -97,28 +141,28 @@ function getUserRights($userPermissions) {
     return $rights;
 }
 
-// Function to check user right
+// Works with BOTH shapes
 function checkUserRight($userPermissions, $right) {
-    if ($userPermissions === null) {
-        return false;
+    if ($userPermissions === null) return false;
+
+    if (!($userPermissions instanceof SimpleXMLElement)) {
+        // stdClass
+        $val = isset($userPermissions->{$right}) ? (string)$userPermissions->{$right} : 'False';
+        return $val === 'True';
     }
+    // XML
     return (string)$userPermissions->$right === 'True';
 }
 
-// Function to check user permissions directly
+// Unchanged signature; now uses the DB-backed getUserPermissions()
 function checkUserPermission($userID, $permission) {
-
-    // Get user permissions
     $userPermissions = getUserPermissions($userID);
     if ($userPermissions === null) {
         logMessage("No permissions found for userID: $userID");
         return false;
     }
-
-    // Check the specified permission
     $hasRight = checkUserRight($userPermissions, $permission);
     logMessage("Permission check result for userID: $userID, Permission: $permission, HasRight: " . ($hasRight ? 'True' : 'False'));
-
     return $hasRight;
 }
 
