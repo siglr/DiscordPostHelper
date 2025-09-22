@@ -648,7 +648,7 @@ Public Class DPHXUnpackAndLoad
         If Settings.SessionSettings.Is2020Installed Then
             'Flight plan
             _filesToUnpack2020.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
-            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2020FlightPlansFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
@@ -657,7 +657,7 @@ Public Class DPHXUnpackAndLoad
 
             'Weather file
             _filesToUnpack2020.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
-            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename))) Then
@@ -667,7 +667,7 @@ Public Class DPHXUnpackAndLoad
         If Settings.SessionSettings.Is2024Installed Then
             'Flight plan
             _filesToUnpack2024.Add("Flight Plan", Path.GetFileName(_allDPHData.FlightPlanFilename))
-            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2024FlightPlansFolder,
                                                 Path.GetFileName(_allDPHData.FlightPlanFilename))) Then
@@ -676,7 +676,7 @@ Public Class DPHXUnpackAndLoad
 
             'Weather file
             _filesToUnpack2024.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
-            If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename)),
                                                 Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
                                                 Path.GetFileName(_allDPHData.WeatherFilename))) Then
@@ -692,7 +692,7 @@ Public Class DPHXUnpackAndLoad
                     'XCSoar task
                     _filesToUnpack2020.Add("XCSoar Task", Path.GetFileName(filepath))
                     _filesToUnpack2024.Add("XCSoar Task", Path.GetFileName(filepath))
-                    If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                    If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                             Path.GetFileName(filepath)),
                                                             Path.Combine(Settings.SessionSettings.XCSoarTasksFolder,
                                                             Path.GetFileName(filepath))) Then
@@ -711,7 +711,7 @@ Public Class DPHXUnpackAndLoad
                     'XCSoar map
                     _filesToUnpack2020.Add("XCSoar Map", Path.GetFileName(filepath))
                     _filesToUnpack2024.Add("XCSoar Map", Path.GetFileName(filepath))
-                    If SupportingFeatures.AreFilesIdentical(Path.Combine(TempDPHXUnpackFolder,
+                    If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
                                                             Path.GetFileName(filepath)),
                                                             Path.Combine(Settings.SessionSettings.XCSoarMapsFolder,
                                                             Path.GetFileName(filepath))) Then

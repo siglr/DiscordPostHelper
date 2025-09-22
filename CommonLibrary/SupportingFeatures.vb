@@ -2397,40 +2397,6 @@ Public Class SupportingFeatures
         End Get
     End Property
 
-    Public Shared Function AreFilesIdentical(file1Path As String, file2Path As String) As Boolean
-        ' Check if the file paths are the same
-        If String.Equals(file1Path, file2Path, StringComparison.OrdinalIgnoreCase) Then
-            Return True ' The file paths are the same, so they are considered identical.
-        End If
-
-        ' Check if both files exist
-        If Not File.Exists(file1Path) OrElse Not File.Exists(file2Path) Then
-            Return False ' One or both of the files do not exist, so they cannot be identical.
-        End If
-
-        ' Get file attributes
-        Dim file1Info As New FileInfo(file1Path)
-        Dim file2Info As New FileInfo(file2Path)
-
-        ' Compare file size
-        If file1Info.Length <> file2Info.Length Then
-            Return False ' The files have different sizes, so they are not identical.
-        End If
-
-        ' Read the contents of both files
-        Dim file1Bytes() As Byte = File.ReadAllBytes(file1Path)
-        Dim file2Bytes() As Byte = File.ReadAllBytes(file2Path)
-
-        For i As Integer = 0 To file1Bytes.Length - 1
-            If file1Bytes(i) <> file2Bytes(i) Then
-                Return False ' Found a byte that doesn't match, so the files are not identical.
-            End If
-        Next
-
-        ' If all checks passed, the files are considered identical.
-        Return True
-    End Function
-
     Public Shared Function ReturnDiscordServer(urlExtract As String, Optional forceMSFSSoaringTools As Boolean = False) As String
 
         If urlExtract.Contains("channels/793376245915189268/1097354088892596234") Then
