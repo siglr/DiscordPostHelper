@@ -70,6 +70,7 @@ Public Class Main
     Private _directChange As Boolean = True
     Private _eventDateTimeChangeInProgress As Boolean = False
     Private _pastEventConfirmed As Boolean = False
+    Private _temporaryRightToUpdateTask As Boolean = False
 
     ' User related variables
     Private _userPermissionID As String
@@ -3812,10 +3813,19 @@ Public Class Main
         End If
 
         'Need to go for the task now
-        If Not fromGroupOnly Then
+        If Not fromGroupOnly OrElse _TaskEntrySeqID > 0 Then
+            If _TaskEntrySeqID > 0 Then
+                'Since the task already exists - we can grant temporary rights to post the task in the library
+                _temporaryRightToUpdateTask = True
+                If txtLastUpdateDescription.TextLength = 0 Then
+                    txtLastUpdateDescription.Text = "Event"
+                End If
+            End If
             If Not PostTaskInLibrary(autoContinue) Then
+                _temporaryRightToUpdateTask = False
                 Exit Sub
             End If
+            _temporaryRightToUpdateTask = False
         End If
 
         If Not _pastEventConfirmed Then
@@ -5821,7 +5831,10 @@ Public Class Main
     End Property
     Private ReadOnly Property UserCanUpdateTask As Boolean
         Get
-            If _userPermissions.ContainsKey("UpdateTask") AndAlso IsOwnerOrShared() Then
+            If _temporaryRightToUpdateTask Then
+                Return True
+            End If
+            If (_userPermissions.ContainsKey("UpdateTask") AndAlso IsOwnerOrShared()) Then
                 Return _userPermissions("UpdateTask")
             Else
                 Return False
