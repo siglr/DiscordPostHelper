@@ -6127,7 +6127,7 @@ Public Class Main
         ' 1a) Hard-stop on exact title match (case-insensitive)
         If candidates IsNot Nothing AndAlso candidates.Any(Function(c) String.Equals(c.Title, taskInfo.Title, StringComparison.OrdinalIgnoreCase)) Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show($"currentTaskWayPoints task named ""{taskInfo.Title}"" already exists.{Environment.NewLine}Please change the title before publishing.",
+                MessageBox.Show($"Task named ""{taskInfo.Title}"" already exists.{Environment.NewLine}Please change the title before publishing.",
                                 "Duplicate title", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Using
             Return False
