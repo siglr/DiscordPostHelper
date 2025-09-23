@@ -3181,7 +3181,7 @@ Public Class Main
                 'Scenario 3 - The task status is > 10 (it's neither PendingCreation (10) or NotCreated (0))
                 '             This is a true Update of an existing active task. - Check User rights for UPDATE!
                 If UserCanUpdateTask Then
-                    If _hasLeaderBoard Then
+                    If _hasLeaderBoard AndAlso IsOwnerOrShared() Then
                         Using New Centered_MessageBox(Me)
                             If MessageBox.Show(Me, $"This task has IGC records. Updating some elements of the task could lead to valid IGC results becoming invalid!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Leader Board exists for this task", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                                 Return False
@@ -6844,7 +6844,7 @@ Public Class Main
         lblTaskBrowserIDAndDate.Text = labelString
 
         'Check if task has a leader board and set lblPrePublishingWarning accordingly
-        lblPrePublishingWarning.Visible = _hasLeaderBoard
+        lblPrePublishingWarning.Visible = _hasLeaderBoard AndAlso IsOwnerOrShared()
 
     End Sub
 
