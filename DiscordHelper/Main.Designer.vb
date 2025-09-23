@@ -4431,6 +4431,7 @@ Partial Class Main
         Me.toolStripClone.Name = "toolStripClone"
         Me.toolStripClone.Size = New System.Drawing.Size(72, 25)
         Me.toolStripClone.Text = "&Clone"
+        Me.toolStripClone.ToolTipText = "Click to clone (duplicate) the current DPH session to a new version."
         Me.toolStripClone.Visible = False
         '
         'toolStripResetAll
