@@ -3017,14 +3017,6 @@ Public Class Main
             End If
         End If
 
-        If _hasLeaderBoard Then
-            Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, $"This task has IGC records. Updating some elements of the task could lead to valid IGC results becoming invalid!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Leader Board exists for this task", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
-                    Exit Sub
-                End If
-            End Using
-        End If
-
         If Not PostTaskInLibrary(autoContinue) Then
             Exit Sub
         End If
@@ -3189,6 +3181,13 @@ Public Class Main
                 'Scenario 3 - The task status is > 10 (it's neither PendingCreation (10) or NotCreated (0))
                 '             This is a true Update of an existing active task. - Check User rights for UPDATE!
                 If UserCanUpdateTask Then
+                    If _hasLeaderBoard Then
+                        Using New Centered_MessageBox(Me)
+                            If MessageBox.Show(Me, $"This task has IGC records. Updating some elements of the task could lead to valid IGC results becoming invalid!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Leader Board exists for this task", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                                Return False
+                            End If
+                        End Using
+                    End If
                     If txtLastUpdateDescription.TextLength = 0 Then
                         Using New Centered_MessageBox(Me)
                             MessageBox.Show("Please provide a description for this task update!", "Publishing task update", MessageBoxButtons.OK, MessageBoxIcon.Error)
