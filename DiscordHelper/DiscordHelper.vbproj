@@ -220,6 +220,7 @@
     <Content Include="CreateTaskThread.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Clone.png" />
     <Content Include="StartTaskWorkflow.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

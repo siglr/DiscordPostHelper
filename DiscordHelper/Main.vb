@@ -5233,6 +5233,40 @@ Public Class Main
 
     End Sub
 
+    Private Sub btnClone_Click(sender As Object, e As EventArgs) Handles toolStripClone.Click
+
+        'Remove any IDs from the data
+        _loadingFile = True
+        txtTaskID.Text = String.Empty
+        txtTemporaryTaskID.Text = String.Empty
+        _TaskEntrySeqID = 0
+        _TaskStatus = SupportingFeatures.WSGTaskStatus.NotCreated
+        _taskDiscordPostID = String.Empty
+
+        'Try to rename the task title with the next version number (if any, or else v2)
+        Dim t = txtTitle.Text
+        Dim m = Regex.Match(t, "\bv(\d+)\s*$", RegexOptions.IgnoreCase)
+
+        If m.Success Then
+            Dim n = Integer.Parse(m.Groups(1).Value) + 1
+            txtTitle.Text = Regex.Replace(t, "\bv\d+\s*$", $"v{n}", RegexOptions.IgnoreCase)
+        Else
+            txtTitle.Text = t.TrimEnd() & " v2"
+        End If
+
+        _loadingFile = False
+        SaveSession()
+        Dim currentFile As String = _CurrentSessionFile
+        ResetForm()
+
+        _loadingFile = True
+        _CurrentSessionFile = currentFile
+        LoadSessionData(currentFile)
+        SessionUntouched()
+        _loadingFile = False
+
+    End Sub
+
     Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles toolStripSharePackage.Click
 
         If _CurrentSessionFile <> String.Empty Then
@@ -6821,7 +6855,7 @@ Public Class Main
 
             btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask AndAlso IsOwnerOrShared
             grbEventsFeaturingTask.Enabled = True
-
+            toolStripClone.Visible = True
         Else
             lblPrePublishingWarning.Visible = False
             lblWSGTaskEntrySeqID.Text = $"❌ WeSimGlide.org ID: None"
@@ -6833,6 +6867,7 @@ Public Class Main
             Else
                 btnStartTaskPost.Enabled = False
             End If
+            toolStripClone.Visible = False
         End If
 
         If _taskDiscordPostID = String.Empty Then
