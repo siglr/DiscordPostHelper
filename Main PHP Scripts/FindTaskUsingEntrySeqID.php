@@ -17,9 +17,10 @@ try {
     $onlyAvailable = isset($_GET['OnlyAvailable']) ? (int)$_GET['OnlyAvailable'] : 0;
 
     // Prepare the SQL statement
-    $stmt = $pdo->prepare("SELECT TaskID, Title, EntrySeqID, LastUpdate, DBEntryUpdate, Status, OwnerName, SharedWith, Availability, DiscordPostID FROM Tasks WHERE EntrySeqID = :EntrySeqID");
+    $stmt = $pdo->prepare("SELECT TaskID, Title, EntrySeqID, LastUpdate, DBEntryUpdate, Status, OwnerName, SharedWith, Availability, DiscordPostID, EXISTS(SELECT 1 FROM IGCRecords r WHERE r.EntrySeqID = Tasks.EntrySeqID) AS HasLeaderBoard FROM Tasks WHERE EntrySeqID = :EntrySeqID");
     $stmt->execute([':EntrySeqID' => $entrySeqID]);
     $taskDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($taskDetails) { $taskDetails['HasLeaderBoard'] = (bool)$taskDetails['HasLeaderBoard']; }
 
     if ($taskDetails) {
         if ($onlyAvailable === 1) { // Ensure OnlyAvailable is treated as a boolean flag

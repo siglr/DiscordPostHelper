@@ -71,6 +71,7 @@ Public Class Main
     Private _eventDateTimeChangeInProgress As Boolean = False
     Private _pastEventConfirmed As Boolean = False
     Private _temporaryRightToUpdateTask As Boolean = False
+    Private _hasLeaderBoard As Boolean = False
 
     ' User related variables
     Private _userPermissionID As String
@@ -434,6 +435,8 @@ Public Class Main
         lblDiscordTaskPostID.Text = "❌ Discord Post ID"
         lblWSGTaskEntrySeqID.Text = "❌ WeSimGlide.org ID: None"
         lblEventClubNotAuthorized.Visible = False
+        lblPrePublishingWarning.Visible = False
+        _hasLeaderBoard = False
 
         cboDifficulty.SelectedIndex = 0
         cboVoiceChannel.Items.Clear()
@@ -3012,6 +3015,14 @@ Public Class Main
             If Not ValidPostingRequirements() Then
                 Exit Sub
             End If
+        End If
+
+        If _hasLeaderBoard Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, $"This task has IGC records. Updating some elements of the task could lead to valid IGC results becoming invalid!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Leader Board exists for this task", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Exit Sub
+                End If
+            End Using
         End If
 
         If Not PostTaskInLibrary(autoContinue) Then
@@ -6713,6 +6724,7 @@ Public Class Main
                         ' Retrieve OwnerName and SharedWith info
                         _currentWSGTaskOwner = result("taskDetails")("OwnerName").ToString()
                         cboTaskOwner.SelectedItem = _currentWSGTaskOwner
+                        Boolean.TryParse(result("taskDetails")("HasLeaderBoard"), _hasLeaderBoard)
 
                         ' Check if SharedWith is a JSON string that represents an array
                         Dim sharedWithRaw As String = result("taskDetails")("SharedWith").ToString()
@@ -6810,7 +6822,9 @@ Public Class Main
 
             btnDeleteFromTaskBrowser.Enabled = UserCanDeleteTask AndAlso IsOwnerOrShared
             grbEventsFeaturingTask.Enabled = True
+
         Else
+            lblPrePublishingWarning.Visible = False
             lblWSGTaskEntrySeqID.Text = $"❌ WeSimGlide.org ID: None"
             btnStartTaskPost.Text = "Start Task Creation Workflow"
             labelString = "Task does not exist on WeSimGlide.org"
@@ -6829,6 +6843,9 @@ Public Class Main
         End If
 
         lblTaskBrowserIDAndDate.Text = labelString
+
+        'Check if task has a leader board and set lblPrePublishingWarning accordingly
+        lblPrePublishingWarning.Visible = _hasLeaderBoard
 
     End Sub
 
