@@ -2401,7 +2401,7 @@ Partial Class Main
         '
         Me.lblLocalDSTWarning.AutoSize = True
         Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(553, 284)
+        Me.lblLocalDSTWarning.Location = New System.Drawing.Point(188, 284)
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
         Me.lblLocalDSTWarning.Size = New System.Drawing.Size(289, 26)
         Me.lblLocalDSTWarning.TabIndex = 18
@@ -2647,9 +2647,9 @@ Partial Class Main
         Me.Label25.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label25.Location = New System.Drawing.Point(7, 284)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(155, 26)
+        Me.Label25.Size = New System.Drawing.Size(148, 26)
         Me.Label25.TabIndex = 16
-        Me.Label25.Text = "UTC/Zulu or local"
+        Me.Label25.Text = "Dates and Times"
         '
         'chkDateTimeUTC
         '
@@ -2657,14 +2657,15 @@ Partial Class Main
         Me.chkDateTimeUTC.Checked = True
         Me.chkDateTimeUTC.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkDateTimeUTC.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDateTimeUTC.Location = New System.Drawing.Point(192, 282)
+        Me.chkDateTimeUTC.Location = New System.Drawing.Point(1217, 298)
         Me.chkDateTimeUTC.Name = "chkDateTimeUTC"
-        Me.chkDateTimeUTC.Size = New System.Drawing.Size(355, 30)
+        Me.chkDateTimeUTC.Size = New System.Drawing.Size(227, 30)
         Me.chkDateTimeUTC.TabIndex = 17
         Me.chkDateTimeUTC.Tag = "65"
-        Me.chkDateTimeUTC.Text = "UTC / Zulu (local time if left unchecked)"
+        Me.chkDateTimeUTC.Text = "UTC / Zulu (old unused)"
         Me.ToolTip1.SetToolTip(Me.chkDateTimeUTC, "When checked, the specified date and time are considered as UTC or Zulu.")
         Me.chkDateTimeUTC.UseVisualStyleBackColor = True
+        Me.chkDateTimeUTC.Visible = False
         '
         'Label26
         '
