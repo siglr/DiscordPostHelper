@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.16.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.24.1</ReleaseVersion>
+      <ReleaseTitle>Another set of small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Removed the UTC/ZULU checkbox on the event tab
+        Put up a warning when a leaderboard exists for a task before updating it
+        Added a "clone" feature
+        Fixed: the DPHX file was not updated on WSG when posting only the event
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.16.1</ReleaseVersion>
       <ReleaseTitle>Several small enhancements</ReleaseTitle>

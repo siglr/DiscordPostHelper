@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.16.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.9.24.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.9.24.1</ReleaseVersion>
+      <ReleaseTitle>Small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Sorted the list of IGC files from the most recent on top to the oldest at the bottom
+        Fixed warning for weather file even if they are the same
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.16.1</ReleaseVersion>
       <ReleaseTitle>Whitelist folder</ReleaseTitle>
