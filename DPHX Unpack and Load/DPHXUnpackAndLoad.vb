@@ -1216,64 +1216,105 @@ Public Class DPHXUnpackAndLoad
         fullSourceFilename = Path.Combine(sourcePath, filename)
         fullDestFilename = Path.Combine(destPath, filename)
 
-        ' --- WHITELIST GUARD (untouchable if dest matches whitelist copy) ---
-        ' Whitelist folder sits next to the DPHX executable.
+        ' We'll copy from this path; default to the incoming package file
+        Dim sourceToCopy As String = fullSourceFilename
+
+        ' --- WHITELIST ENFORCEMENT ---
         Dim whitelistDir = Path.Combine(Application.StartupPath, "Whitelist")
         Dim whitelistFile = Path.Combine(whitelistDir, filename)
-        If File.Exists(whitelistFile) AndAlso File.Exists(fullDestFilename) Then
-            ' Only protect when dest content exactly matches the whitelist content
-            If SupportingFeatures.FilesAreEquivalent(whitelistFile, fullDestFilename) Then
+        If File.Exists(whitelistFile) Then
+            ' If dest exists and already matches Whitelist -> skip
+            If File.Exists(fullDestFilename) AndAlso SupportingFeatures.FilesAreEquivalent(whitelistFile, fullDestFilename) Then
                 Return $"{msgToAsk} ""{filename}"" skipped (protected by Whitelist)"
             End If
-        End If
 
-        ' --- normal logic (identical => skip; different => apply policy) ---
-        If File.Exists(fullDestFilename) Then
-            Dim srcInfo = New FileInfo(fullSourceFilename)
-            Dim dstInfo = New FileInfo(fullDestFilename)
-
-            Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
-                                   AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
-
-            If identical Then
-                proceed = False
-                messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
+            ' Otherwise, enforce Whitelist content (overwrite or create) regardless of policy
+            sourceToCopy = whitelistFile
+            proceed = True
+            If File.Exists(fullDestFilename) Then
+                messageToReturn = $"{msgToAsk} ""{filename}"" replaced with Whitelist copy"
             Else
-                Select Case Settings.SessionSettings.AutoOverwriteFiles
-                    Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                        proceed = True
-                        messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
-                    Case AllSettings.AutoOverwriteOptions.AlwaysSkip
-                        proceed = False
-                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
-                    Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                        Using New Centered_MessageBox(Me)
-                            If MessageBox.Show(
-                            $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
-                            "File already exists",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question
-                        ) = DialogResult.Yes Then
-                                proceed = True
-                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
-                            Else
-                                proceed = False
-                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
-                            End If
-                        End Using
-                End Select
+                messageToReturn = $"{msgToAsk} ""{filename}"" copied (from Whitelist)"
             End If
         Else
-            proceed = True
-            messageToReturn = $"{msgToAsk} ""{filename}"" copied"
+            ' --- normal logic (identical => skip; different => apply policy) ---
+            If File.Exists(fullDestFilename) Then
+                Dim srcInfo = New FileInfo(fullSourceFilename)
+                Dim dstInfo = New FileInfo(fullDestFilename)
+
+                Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
+                                   AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
+
+                If identical Then
+                    proceed = False
+                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
+                Else
+                    Select Case Settings.SessionSettings.AutoOverwriteFiles
+                        Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
+                            proceed = True
+                            messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
+                        Case AllSettings.AutoOverwriteOptions.AlwaysSkip
+                            proceed = False
+                            messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
+                        Case AllSettings.AutoOverwriteOptions.AlwaysAsk
+                            Using New Centered_MessageBox(Me)
+                                If MessageBox.Show(
+                                $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
+                                "File already exists",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question
+                            ) = DialogResult.Yes Then
+                                    proceed = True
+                                    messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
+                                Else
+                                    proceed = False
+                                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
+                                End If
+                            End Using
+                    End Select
+                End If
+            Else
+                proceed = True
+                messageToReturn = $"{msgToAsk} ""{filename}"" copied"
+            End If
         End If
 
         If proceed Then
+            Dim destWasReadOnly As Boolean = False
+            Dim originalAttrs As FileAttributes = CType(0, FileAttributes)
+
             Try
-                File.Copy(fullSourceFilename, fullDestFilename, True)
+                ' If destination exists and is ReadOnly, clear that flag temporarily
+                If File.Exists(fullDestFilename) Then
+                    originalAttrs = File.GetAttributes(fullDestFilename)
+                    If (originalAttrs And FileAttributes.ReadOnly) <> 0 Then
+                        destWasReadOnly = True
+                        File.SetAttributes(fullDestFilename, originalAttrs And Not FileAttributes.ReadOnly)
+                    End If
+                End If
+
+                ' Copy from the selected source (Whitelist or package)
+                File.Copy(sourceToCopy, fullDestFilename, True)
+
+                ' Optional: restore ReadOnly if it was set before
+                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
+                    Dim newAttrs = File.GetAttributes(fullDestFilename)
+                    File.SetAttributes(fullDestFilename, newAttrs Or FileAttributes.ReadOnly)
+                End If
+
                 AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=False)
+
+            Catch ex As UnauthorizedAccessException
+                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy (access denied): {ex.Message}"
+                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
+                    Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
+                End If
+
             Catch ex As Exception
                 messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy: {ex.Message}"
+                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
+                    Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
+                End If
             End Try
         End If
 
