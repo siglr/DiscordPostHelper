@@ -334,6 +334,7 @@ Partial Class Main
         Me.btnBriefingGuideNext = New System.Windows.Forms.Button()
         Me.BriefingControl1 = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
         Me.lblTaskBrowserIDAndDate = New System.Windows.Forms.Label()
+        Me.lblPostingToWSGMessage = New System.Windows.Forms.Label()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -4383,6 +4384,20 @@ Partial Class Main
         Me.lblTaskBrowserIDAndDate.Text = "Task does not exist on WeSimGlide.org"
         Me.lblTaskBrowserIDAndDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'lblPostingToWSGMessage
+        '
+        Me.lblPostingToWSGMessage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblPostingToWSGMessage.Font = New System.Drawing.Font("Segoe UI Variable Display", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblPostingToWSGMessage.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblPostingToWSGMessage.Location = New System.Drawing.Point(734, 28)
+        Me.lblPostingToWSGMessage.Name = "lblPostingToWSGMessage"
+        Me.lblPostingToWSGMessage.Size = New System.Drawing.Size(725, 29)
+        Me.lblPostingToWSGMessage.TabIndex = 97
+        Me.lblPostingToWSGMessage.Text = "Pushing task to WeSimGlide.org"
+        Me.lblPostingToWSGMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblPostingToWSGMessage.Visible = False
+        '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
@@ -4605,6 +4620,7 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(1494, 923)
+        Me.Controls.Add(Me.lblPostingToWSGMessage)
         Me.Controls.Add(Me.lblTaskBrowserIDAndDate)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.pnlScrollableSurface)
@@ -4976,6 +4992,7 @@ Partial Class Main
     Friend WithEvents grbWSGExtras As GroupBox
     Friend WithEvents btnDeleteFromTaskBrowser As Button
     Friend WithEvents lblTaskBrowserIDAndDate As Label
+    Friend WithEvents lblPostingToWSGMessage As Label
     Friend WithEvents btnDeleteEventNews As Button
     Friend WithEvents btnRepostOriginalURLPaste As Button
     Friend WithEvents txtRepostOriginalURL As TextBox

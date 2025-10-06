@@ -3402,7 +3402,9 @@ Public Class Main
         'Update the WSG task
         SetAndRetrieveSessionData()
         SaveSession()
+        SetPostingToWSGLabelVisibility(True)
         Dim autoContinue As Boolean = CreateWSGTaskPart2(True)
+        SetPostingToWSGLabelVisibility(False)
         If Not autoContinue Then
             'Something went wrong trying to updated the task!!
             Using New Centered_MessageBox(Me)
@@ -3417,10 +3419,12 @@ Public Class Main
 
     Private Function PrepareCreateWSGTaskPart2() As Boolean
         'Then we can complete the entry on WSG with the files and correct TaskID
+        SetPostingToWSGLabelVisibility(True)
         _TaskStatus = SupportingFeatures.WSGTaskStatus.Active
         SetAndRetrieveSessionData()
         SaveSession()
         Dim autoContinue As Boolean = CreateWSGTaskPart2()
+        SetPostingToWSGLabelVisibility(False)
         If Not autoContinue Then
             'Something went wrong on the second part!!
             _TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
@@ -3435,6 +3439,12 @@ Public Class Main
         Return autoContinue
 
     End Function
+
+    Private Sub SetPostingToWSGLabelVisibility(visible As Boolean)
+        lblPostingToWSGMessage.Visible = visible
+        Me.Refresh()
+        Application.DoEvents()
+    End Sub
 
     Private Sub SetWarningIconOnPostOptions()
 
