@@ -6245,12 +6245,6 @@ Public Class Main
             {"Mode", "CreateTask"}
         }
 
-        'TODO: Call the script that checks if a similar task already exists (based on title and boundaries)
-        'If the script returns potential tasks, we must iterate through them and validate title and all waypoints
-        'First, no task can have the same title as an existing one - the user will need to change it
-        'Second, no task can have all the same waypoints as an existing one - we must warn the user and ask confirmation to proceed (different weather or altitude restrictions may make it a different task)
-        'Finally, if the script returns no potential tasks, we can proceed with creation
-
         Dim result As Boolean = CallScriptToCreateWSGTaskPart1(taskData)
 
         If result Then
