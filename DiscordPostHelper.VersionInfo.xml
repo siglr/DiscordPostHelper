@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.10.6.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.10.6.1</ReleaseVersion>
+      <ReleaseTitle>Message added while uploading to WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Added message displaying that it is pushing the task to WSG
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.24.1</ReleaseVersion>
       <ReleaseTitle>Another set of small enhancements</ReleaseTitle>

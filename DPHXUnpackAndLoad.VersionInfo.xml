@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.9.24.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.10.6.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.10.6.1</ReleaseVersion>
+      <ReleaseTitle>Whitelist enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Made sure to always copy from whitelist when different and also bypass any read-only flag and put it back
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.9.24.1</ReleaseVersion>
       <ReleaseTitle>Small enhancements</ReleaseTitle>
