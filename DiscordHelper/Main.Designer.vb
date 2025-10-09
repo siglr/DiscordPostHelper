@@ -2071,13 +2071,14 @@ Partial Class Main
         '
         'lblEventClubNotAuthorized
         '
-        Me.lblEventClubNotAuthorized.AutoSize = True
+        Me.lblEventClubNotAuthorized.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEventClubNotAuthorized.Enabled = False
         Me.lblEventClubNotAuthorized.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblEventClubNotAuthorized.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.lblEventClubNotAuthorized.Location = New System.Drawing.Point(845, 64)
         Me.lblEventClubNotAuthorized.Name = "lblEventClubNotAuthorized"
-        Me.lblEventClubNotAuthorized.Size = New System.Drawing.Size(475, 26)
+        Me.lblEventClubNotAuthorized.Size = New System.Drawing.Size(610, 26)
         Me.lblEventClubNotAuthorized.TabIndex = 104
         Me.lblEventClubNotAuthorized.Text = "⚠️You are not authorized to publish events for this club"
         Me.lblEventClubNotAuthorized.Visible = False
