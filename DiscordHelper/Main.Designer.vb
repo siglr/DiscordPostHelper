@@ -2402,11 +2402,10 @@ Partial Class Main
         '
         'lblLocalDSTWarning
         '
-        Me.lblLocalDSTWarning.AutoSize = True
         Me.lblLocalDSTWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblLocalDSTWarning.Location = New System.Drawing.Point(188, 284)
         Me.lblLocalDSTWarning.Name = "lblLocalDSTWarning"
-        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(289, 26)
+        Me.lblLocalDSTWarning.Size = New System.Drawing.Size(801, 26)
         Me.lblLocalDSTWarning.TabIndex = 18
         Me.lblLocalDSTWarning.Text = "⚠️Club summer time in effect⚠️"
         Me.lblLocalDSTWarning.Visible = False
