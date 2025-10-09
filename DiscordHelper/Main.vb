@@ -6035,6 +6035,9 @@ Public Class Main
         '   content: the text to post (or edit)
         '   discordID: the existing Discord post ID (if editing or deleting)
         '   delete: a string "true" if deleting, otherwise "false"
+        If discordID Is Nothing Then
+            discordID = String.Empty
+        End If
         Dim postData As String = $"content={Uri.EscapeDataString(content)}&discordID={Uri.EscapeDataString(discordID)}&delete={Uri.EscapeDataString(deletePost.ToString().ToLower())}"
         Dim data As Byte() = Encoding.UTF8.GetBytes(postData)
         request.ContentLength = data.Length
