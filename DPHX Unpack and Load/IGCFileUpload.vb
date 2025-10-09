@@ -21,6 +21,7 @@ Public Class IGCFileUpload
     Private dictIGCDetails As New Dictionary(Of String, IGCLookupDetails)
     Private igcDetails As IGCLookupDetails = Nothing
     Private taskCache As New Dictionary(Of String, IGCCacheTaskObject)
+    Private _tabpgRatingsVisited As Boolean = False
 
     Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer)
 
@@ -805,6 +806,7 @@ End Function
                 Await ProcessSelectedIGCFile()
                 lstbxIGCFiles.Enabled = True
                 lstbxIGCFiles.Focus()
+                _tabpgRatingsVisited = False
             End If
 
         Catch ex As Exception
@@ -851,6 +853,22 @@ End Function
 
     Private Async Sub btnUpload_Click(sender As Object, e As EventArgs) Handles btnUpload.Click
 
+        'If nothing's been entered in the Ratings & Comments tab, ask the user to confirm
+        If igcDetails.IsOwnedByCurrentUser AndAlso
+           (txtUserIGCComment.Text.Trim = String.Empty AndAlso Not _tabpgRatingsVisited) OrElse
+           (txtTaskPublicFeedback.Text.Trim = String.Empty AndAlso
+           txtTaskPrivateNotes.Text.Trim = String.Empty AndAlso
+           Not chkFlyNext.Checked AndAlso
+           Not chkFavorites.Checked AndAlso
+           cboDifficulty.SelectedIndex = 0 AndAlso
+           cboQuality.SelectedIndex = 0 AndAlso Not _tabpgRatingsVisited) Then
+            Using New Centered_MessageBox(Me)
+                tabIGCTabs.SelectTab(tabpgRatings.TabIndex)
+                If MessageBox.Show("You haven't entered any comments or ratings. Are you sure you want to proceed with the upload?", "No Comments or Ratings", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                    Return
+                End If
+            End Using
+        End If
         Await UploadIGCResults()
 
     End Sub
@@ -1026,6 +1044,7 @@ End Function
             lblFlyNextDateTime.Text = String.Empty
             lblFavoritesDateTime.Text = String.Empty
             lblTaskIDAndTitle.Text = String.Empty
+            _tabpgRatingsVisited = True
 
             ' WSG User info
             lblCompID.Text = Settings.SessionSettings.WSGCompID
