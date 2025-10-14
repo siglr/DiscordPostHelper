@@ -167,12 +167,10 @@ try {
             $secret = $clubCache[$eid]['secret'];
 
             if ($group === '') {
-                logMessage("Cron: skip '$eventKey' (no Clubs.TrackerGroup for '$eid').");
                 continue;
             }
             if ($secret === '') {
-                logMessage("Cron: skip '$eventKey' (no Clubs.TrackerSecret for '$eid').");
-                continue; // do not consider events with missing secret
+                continue; 
             }
 
             $byGroup[$group][] = [
