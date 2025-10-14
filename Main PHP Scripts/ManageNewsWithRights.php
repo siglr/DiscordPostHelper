@@ -83,6 +83,18 @@ try {
                 ':EntrySeqID' => $_POST['EntrySeqID'],
                 ':URLToGo' => $_POST['URLToGo']
             ]);
+            // Reset SentToTrackerDateTime for events linked to this task's EntrySeqID
+            $resetStmt = $pdo->prepare("
+                UPDATE Events
+                SET SentToTrackerDateTime = NULL
+                WHERE EventKey IN (
+                    SELECT Key FROM News
+                    WHERE NewsType = 1              -- Event rows
+                      AND EntrySeqID = :entrySeqID  -- linked to this task
+                )
+            ");
+            $resetStmt->execute([':entrySeqID' => $_POST['EntrySeqID']]);
+
             logMessage("Created Task News entry: $key");
             break;
 
