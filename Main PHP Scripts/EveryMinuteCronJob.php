@@ -127,15 +127,25 @@ try {
     // ─────────────────────────────────────────────
     // Push available, next-up events to Tracker
     // ─────────────────────────────────────────────
+    $nowPlus24 = (new DateTime('now', new DateTimeZone('UTC')))
+        ->add(new DateInterval('PT24H'))
+        ->format('Y-m-d H:i:s');
 
     // 1) Pull candidate events (unsent & available)
     $candStmt = $pdoNews->prepare("
-        SELECT EventKey, Availability
+        SELECT EventKey, Availability, EventMeetDateTime
         FROM Events
         WHERE (SentToTrackerDateTime IS NULL OR TRIM(SentToTrackerDateTime) = '')
           AND Availability <= :nowUTC
+          AND (
+                EventMeetDateTime IS NULL
+                OR EventMeetDateTime <= :nowPlus24
+              )
     ");
-    $candStmt->execute([':nowUTC' => $nowUTC]);
+    $candStmt->execute([
+        ':nowUTC'    => $nowUTC,
+        ':nowPlus24' => $nowPlus24,
+    ]);
     $candidates = $candStmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($candidates) {
