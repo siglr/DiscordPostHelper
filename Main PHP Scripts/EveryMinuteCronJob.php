@@ -1,5 +1,7 @@
 <?php
-require __DIR__ . '/CommonFunctions.php';
+require_once __DIR__ . '/CommonFunctions.php';
+require_once __DIR__ . '/TrackerTask.php';
+require_once __DIR__ . '/SetTrackerGroup.php';
 
 try {
     // Calculate the current UTC time once
@@ -117,6 +119,101 @@ try {
                 $updateStmt = $pdoNews->prepare("UPDATE Events SET WSGAnnouncement = :wsgAnnouncement WHERE EventKey = :eventKey");
                 if (!$updateStmt->execute([':wsgAnnouncement' => $newAnnouncement, ':eventKey' => $eventKey])) {
                     logMessage("Error: Failed to update WSGAnnouncement for EventKey {$eventKey}.");
+                }
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // Push available, next-up events to Tracker
+    // ─────────────────────────────────────────────
+
+    // 1) Pull candidate events (unsent & available)
+    $candStmt = $pdoNews->prepare("
+        SELECT EventKey, Availability
+        FROM Events
+        WHERE (SentToTrackerDateTime IS NULL OR TRIM(SentToTrackerDateTime) = '')
+          AND Availability <= :nowUTC
+    ");
+    $candStmt->execute([':nowUTC' => $nowUTC]);
+    $candidates = $candStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($candidates) {
+        // 2) Group by TrackerGroup (via EventNewsID → Clubs)
+        $byGroup = [];              // [TrackerGroup] => [ [eventKey, availability], ... ]
+        $clubCache = [];            // [EventNewsID] => TrackerGroup (cache to reduce queries)
+
+        $stmtClubLookup = $pdoTasks->prepare("
+            SELECT TrackerGroup, TrackerSecret
+            FROM Clubs
+            WHERE EventNewsID = :eid
+            LIMIT 1
+        ");
+
+        foreach ($candidates as $row) {
+            $eventKey = (string)$row['EventKey'];
+            $eid = extractEventNewsId($eventKey);
+            if (!$eid) { logMessage("Cron: skip '$eventKey' (invalid EventNewsID)"); continue; }
+
+            if (!array_key_exists($eid, $clubCache)) {
+                $stmtClubLookup->execute([':eid' => $eid]);
+                $clubRow = $stmtClubLookup->fetch(PDO::FETCH_ASSOC);
+                $clubCache[$eid] = [
+                    'group'  => $clubRow ? trim((string)$clubRow['TrackerGroup'])  : '',
+                    'secret' => $clubRow ? trim((string)$clubRow['TrackerSecret']) : '',
+                ];
+            }
+            $group  = $clubCache[$eid]['group'];
+            $secret = $clubCache[$eid]['secret'];
+
+            if ($group === '') {
+                logMessage("Cron: skip '$eventKey' (no Clubs.TrackerGroup for '$eid').");
+                continue;
+            }
+            if ($secret === '') {
+                logMessage("Cron: skip '$eventKey' (no Clubs.TrackerSecret for '$eid').");
+                continue; // do not consider events with missing secret
+            }
+
+            $byGroup[$group][] = [
+                'eventKey'     => $eventKey,
+                'availability' => (string)$row['Availability'],
+            ];
+        }
+        // 3) Keep earliest (min Availability) per group
+        $toPush = [];  // list of eventKey to push
+        foreach ($byGroup as $group => $items) {
+            usort($items, function($a, $b) {
+                $cmp = strcmp($a['availability'], $b['availability']);
+                return $cmp !== 0 ? $cmp : strcmp($a['eventKey'], $b['eventKey']);
+            });
+            // earliest is first
+            if (!empty($items)) {
+                $toPush[] = $items[0]['eventKey'];
+            }
+        }
+
+        // 4) Push each selected event and stamp SentToTrackerDateTime on success
+        if ($toPush) {
+            $updStmt = $pdoNews->prepare("
+                UPDATE Events
+                SET SentToTrackerDateTime = :nowUTC
+                WHERE EventKey = :eventKey
+                  AND (SentToTrackerDateTime IS NULL OR TRIM(SentToTrackerDateTime) = '')
+            ");
+
+            foreach ($toPush as $eventKey) {
+                try {
+                    dbg("Cron: pushing EventKey $eventKey to Tracker...");
+                    $res = runTrackerPushForKey($eventKey);   // uses trackerSetSharedTask internally
+                    if (!empty($res['ok'])) {
+                        $updStmt->execute([':nowUTC' => $nowUTC, ':eventKey' => $eventKey]);
+                        logMessage("Cron: Tracker push OK and stamped SentToTrackerDateTime for $eventKey.");
+                    } else {
+                        logMessage("Cron: Tracker push FAILED for $eventKey [HTTP {$res['status']}] {$res['body']} {$res['error']}");
+                    }
+                } catch (Throwable $e) {
+                    logMessage("Cron: Exception while pushing $eventKey → " . $e->getMessage());
                 }
             }
         }

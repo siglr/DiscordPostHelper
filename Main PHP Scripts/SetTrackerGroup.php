@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/CommonFunctions.php';
-require __DIR__ . '/TrackerTask.php'; // contains Task, Waypoint, Coordinate, Line, Nav
+require_once __DIR__ . '/CommonFunctions.php';
+require_once __DIR__ . '/TrackerTask.php';
 
 /**
  * ─────────────────────────────────────────────
@@ -30,6 +30,7 @@ function extractEventNewsId(string $eventKey): ?string {
 
 /** Post task to Tracker server */
 function trackerSetSharedTask(array $opts): array {
+    global $DEBUG_LOG;
     $endpoint = $opts['endpoint'] ?? 'https://ssc-tracker.org/settask.php';
 
     $payload = [
@@ -227,22 +228,24 @@ function runTrackerPushForKey(string $eventNewsKey): array {
 }
 
 // ────────────────────────────────
-// HTTP entrypoint
+// HTTP entrypoint (only when executed directly)
 // ────────────────────────────────
-try {
-    $key = isset($_GET['key']) ? trim((string)$_GET['key']) : '';
-    if ($key === '') {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Missing required EventNewsKey (?key=...)']);
-        exit;
+if (basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
+    try {
+        $key = isset($_GET['key']) ? trim((string)$_GET['key']) : '';
+        if ($key === '') {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Missing required EventNewsKey (?key=...)']);
+            exit;
+        }
+
+        $res = runTrackerPushForKey($key);
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'success', 'result' => $res], JSON_UNESCAPED_SLASHES);
+
+    } catch (Throwable $e) {
+        logMessage('[Tracker Push ERROR] ' . $e->getMessage());
+        header('Content-Type: application/json', true, 500);
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
-
-    $res = runTrackerPushForKey($key);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'success', 'result' => $res], JSON_UNESCAPED_SLASHES);
-
-} catch (Throwable $e) {
-    logMessage('[Tracker Push ERROR] ' . $e->getMessage());
-    header('Content-Type: application/json', true, 500);
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
