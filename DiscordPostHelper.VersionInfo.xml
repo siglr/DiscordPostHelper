@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.10.6.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.10.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.10.15.1</ReleaseVersion>
+      <ReleaseTitle>Fixed Test posting</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the Test Mode postings
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.10.6.1</ReleaseVersion>
       <ReleaseTitle>Message added while uploading to WSG</ReleaseTitle>

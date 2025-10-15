@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.10.6.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.10.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.10.15.1</ReleaseVersion>
+      <ReleaseTitle>IGC upload enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a reminder to fill out ratings/comments when posting an IGC file
+        Replaced the recorded datetime of an IGC file with the takeoff time for a better and more reliable time.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.10.6.1</ReleaseVersion>
       <ReleaseTitle>Whitelist enhancements</ReleaseTitle>
