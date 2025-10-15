@@ -130,6 +130,80 @@ Module IgcParser
         Return ""
     End Function
 
+    Private Function TryGetFirstCRecordUtc(lines As IEnumerable(Of String)) As DateTime?
+        Dim c = lines.FirstOrDefault(Function(l) l.StartsWith("C"c))
+        If String.IsNullOrEmpty(c) OrElse c.Length < 13 Then Return Nothing
+        Try
+            Dim dd = Integer.Parse(c.Substring(1, 2))
+            Dim mm = Integer.Parse(c.Substring(3, 2))
+            Dim yy = 2000 + Integer.Parse(c.Substring(5, 2))
+            Dim hh = Integer.Parse(c.Substring(7, 2))
+            Dim mi = Integer.Parse(c.Substring(9, 2))
+            Dim ss = Integer.Parse(c.Substring(11, 2))
+            Return New DateTime(yy, mm, dd, hh, mi, ss, DateTimeKind.Utc)
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function TryGetNB21Time(lines As IEnumerable(Of String), keyword As String) As TimeSpan?
+        ' Accept "LNB21 HHMMSS KEYWORD" or "LNB21 HH:MM:SS KEYWORD"
+        Dim rx As New Regex($"^LNB21\s+(\d{{6}}|\d{{2}}:\d{{2}}:\d{{2}})\s+{Regex.Escape(keyword)}\b",
+                        RegexOptions.IgnoreCase)
+        For Each l In lines
+            Dim m = rx.Match(l)
+            If m.Success Then
+                Dim t = m.Groups(1).Value
+                Try
+                    If t.Contains(":"c) Then
+                        Dim p = t.Split(":"c)
+                        Return New TimeSpan(Integer.Parse(p(0)), Integer.Parse(p(1)), Integer.Parse(p(2)))
+                    Else
+                        Return New TimeSpan(Integer.Parse(t.Substring(0, 2)),
+                                        Integer.Parse(t.Substring(2, 2)),
+                                        Integer.Parse(t.Substring(4, 2)))
+                    End If
+                Catch
+                    ' ignore and keep scanning
+                End Try
+            End If
+        Next
+        Return Nothing
+    End Function
+
+    Private Function TryGetHfdteDateUtc(lines As IEnumerable(Of String)) As DateTime?
+        Dim h = lines.FirstOrDefault(Function(l) l.StartsWith("HFDTE"))
+        If String.IsNullOrEmpty(h) OrElse h.Length < 11 Then Return Nothing
+        Try
+            Dim dd = Integer.Parse(h.Substring(5, 2))
+            Dim mm = Integer.Parse(h.Substring(7, 2))
+            Dim yy = 2000 + Integer.Parse(h.Substring(9, 2))
+            Return New DateTime(yy, mm, dd, 0, 0, 0, DateTimeKind.Utc)
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function ComputeRecordedUtcFromToff(lines As IEnumerable(Of String)) As DateTime?
+        Dim cUtc = TryGetFirstCRecordUtc(lines)          ' declaration instant (UTC)
+        Dim toff = TryGetNB21Time(lines, "TOFF")         ' takeoff TOD (UTC)
+        If cUtc.HasValue AndAlso toff.HasValue Then
+            ' Same-day candidate from C-record date
+            Dim candidate = cUtc.Value.Date.Add(toff.Value)
+            ' If TOFF time-of-day < C-record time-of-day, we rolled past midnight → add a day
+            If toff.Value < cUtc.Value.TimeOfDay Then candidate = candidate.AddDays(1)
+            Return DateTime.SpecifyKind(candidate, DateTimeKind.Utc)
+        End If
+
+        ' Fallback: HFDTE date + TOFF (no C-record)
+        Dim hfdteDate = TryGetHfdteDateUtc(lines)
+        If hfdteDate.HasValue AndAlso toff.HasValue Then
+            Return DateTime.SpecifyKind(hfdteDate.Value.Add(toff.Value), DateTimeKind.Utc)
+        End If
+
+        Return Nothing
+    End Function
+
     ' ————————————————————————————————
     ' Main entry: parse the file and return a JsonDocument
     ' ————————————————————————————————
@@ -247,10 +321,17 @@ Module IgcParser
         ' 4) B-record for BeginTimeUTC
         Dim beginTimeUTC = ParseBRecord(lines)
 
-        ' 5) Build IGCRecordDateTimeUTC = YYMMDDHHMMSS
-        Dim dd2 = headerData.Value.utcDate
-        Dim tt2 = headerData.Value.utcTime
-        Dim keyDT = dd2.Substring(4, 2) & dd2.Substring(2, 2) & dd2.Substring(0, 2) & tt2
+        ' 5) Build IGCRecordDateTimeUTC from NB21 TOFF with midnight rollover against C-record
+        Dim recordedUtc As DateTime? = ComputeRecordedUtcFromToff(lines)
+        Dim keyDT As String
+        If recordedUtc.HasValue Then
+            keyDT = recordedUtc.Value.ToString("yyMMddHHmmss", Globalization.CultureInfo.InvariantCulture)
+        Else
+            ' Fallback to existing C-header timestamp (old behavior)
+            Dim dd2 = headerData.Value.utcDate
+            Dim tt2 = headerData.Value.utcTime
+            keyDT = dd2.Substring(4, 2) & dd2.Substring(2, 2) & dd2.Substring(0, 2) & tt2
+        End If
 
         ' 6) LocalTime fallback if "000000"
         Dim localTime = headerData.Value.localTime

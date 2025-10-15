@@ -3011,13 +3011,34 @@ Public Class SupportingFeatures
         Return localDt.ToString(pattern, c)
     End Function
 
-    ' Overload: input as "yyyy-MM-dd HH:mm:ss"
+    ' Overload: input as "yyyy-MM-dd HH:mm:ss" OR "yyyy-MM-dd HH:mm"
     Public Shared Function FormatUserDateTime(dtText As String, isUtc As Boolean) As String
-        Dim dt = DateTime.ParseExact(dtText, "yyyy-MM-dd HH:mm:ss",
-                                     CultureInfo.InvariantCulture, DateTimeStyles.None)
+        If String.IsNullOrWhiteSpace(dtText) Then Return String.Empty
+
+        Dim formats() As String = {
+        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-dd HH:mm"
+    }
+
+        Dim dt As DateTime
+        If Not DateTime.TryParseExact(dtText.Trim(),
+                                  formats,
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.None,
+                                  dt) Then
+            ' Last-resort: try a generic parse, otherwise return original
+            If Not DateTime.TryParse(dtText, CultureInfo.InvariantCulture, DateTimeStyles.None, dt) Then
+                Return dtText
+            End If
+        End If
+
+        ' Ensure a sensible Kind if none was present in the text
+        If dt.Kind = DateTimeKind.Unspecified Then
+            dt = DateTime.SpecifyKind(dt, If(isUtc, DateTimeKind.Utc, DateTimeKind.Local))
+        End If
+
         Return FormatUserDateTime(dt, isUtc)
     End Function
-
 
     ''' <summary>
     ''' Returns True if the event is still “active” (i.e. enabled and not more than 
