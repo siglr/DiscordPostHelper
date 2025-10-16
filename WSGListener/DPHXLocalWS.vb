@@ -132,17 +132,26 @@ Public Class DPHXLocalWS
     End Sub
 
     Private Sub SendNoContent(context As HttpListenerContext)
+        If context Is Nothing Then Exit Sub
         Dim r = context.Response
         Try
+            ' Set only what is safe; avoid ContentLength64 entirely.
             r.StatusCode = 204
             r.Headers("Access-Control-Allow-Origin") = "*"
             r.Headers("Access-Control-Allow-Methods") = "GET, OPTIONS"
             r.Headers("Access-Control-Allow-Headers") = "Content-Type"
             r.Headers("Access-Control-Allow-Private-Network") = "true"
+            r.KeepAlive = False
             r.Headers("Connection") = "close"
-            r.ContentLength64 = 0
-        Catch : End Try
-        Try : r.OutputStream.Close() : Catch : End Try
+            ' DO NOT set r.ContentLength64 here.
+        Catch
+            ' ignore – best-effort headers
+        End Try
+        Try
+            r.OutputStream.Close()   ' clean, will commit if not already committed
+        Catch
+            Try : r.Abort() : Catch : End Try   ' last resort; guarantees the socket closes
+        End Try
     End Sub
 
     ''' <summary>

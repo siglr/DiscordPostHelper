@@ -106,16 +106,6 @@ Public Class ListenerContext
         Dim req = e.Context.Request
         Dim ctx = e.Context
 
-        ' Handle CORS preflight
-        If req.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
-            e.Handled = True
-            ctx.Response.AddHeader("Access-Control-Allow-Origin", "*")
-            ctx.Response.AddHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-            ctx.Response.StatusCode = 204
-            ctx.Response.OutputStream.Close()
-            Return
-        End If
-
         If Not req.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
             e.Handled = True
             ctx.Response.StatusCode = 405
