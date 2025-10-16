@@ -108,6 +108,7 @@ Public Class ListenerContext
 
         ' Handle CORS preflight
         If req.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
+            e.Handled = True
             ctx.Response.AddHeader("Access-Control-Allow-Origin", "*")
             ctx.Response.AddHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
             ctx.Response.StatusCode = 204
@@ -116,6 +117,7 @@ Public Class ListenerContext
         End If
 
         If Not req.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
+            e.Handled = True
             ctx.Response.StatusCode = 405
             ctx.Response.OutputStream.Close()
             Return
@@ -131,6 +133,7 @@ Public Class ListenerContext
                 Dim fromEvent = String.Equals(sourceVal, "event", StringComparison.OrdinalIgnoreCase)
 
                 If String.IsNullOrEmpty(taskId) OrElse String.IsNullOrEmpty(title) Then
+                    e.Handled = True
                     _listener.SendResponse(ctx, "Missing taskID or title", 400)
                     Return
                 End If
@@ -139,11 +142,13 @@ Public Class ListenerContext
                 Dim payload = $"{{""action"":""download-task"",""taskID"":""{taskId}"",""title"":""{title}"",""source"":""{If(fromEvent, "event", "")}""}}"
                 'SendToDPHX("{""action"":""foreground""}", True)
                 SendToDPHX(payload, True)
+                e.Handled = True
                 _listener.SendResponse(ctx, "OK")
 
             Case "receive-user-info"
                 Dim raw = req.QueryString("user-info")
                 If String.IsNullOrEmpty(raw) Then
+                    e.Handled = True
                     _listener.SendResponse(ctx, "Missing user info", 400) : Return
                 End If
 
@@ -153,6 +158,7 @@ Public Class ListenerContext
                 Try
                     jo = JObject.Parse(jsonStr)
                 Catch
+                    e.Handled = True
                     _listener.SendResponse(ctx, "Invalid JSON", 400) : Return
                 End Try
 
@@ -189,28 +195,34 @@ Public Class ListenerContext
                     SendToDPHX(reloadPayload, True, False)
                 End If
 
+                e.Handled = True
                 _listener.SendResponse(ctx, "OK")
 
             Case "shutdown"
+                e.Handled = True
                 _listener.SendResponse(ctx, "Shutting down")
                 StopListener()
                 Application.Exit()
 
             Case "health"
+                e.Handled = True
                 _listener.SendResponse(ctx, "Ok")
 
             Case "set-port"
                 Dim newPort As Integer
                 If Integer.TryParse(req.QueryString("port"), newPort) Then
+                    e.Handled = True
                     _listener.SendResponse(ctx, $"Port set to {newPort}")
                     _listener.Stop()
                     _listener.Port = newPort
                     _listener.Start()
                 Else
+                    e.Handled = True
                     _listener.SendResponse(ctx, "Invalid port", 400)
                 End If
 
             Case Else
+                e.Handled = True
                 _listener.SendResponse(ctx, "Unknown command", 404)
         End Select
     End Sub

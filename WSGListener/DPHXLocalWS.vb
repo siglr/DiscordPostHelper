@@ -57,17 +57,27 @@ Public Class DPHXLocalWS
     ''' Starts the HTTP listener on the specified port (localhost only).
     ''' </summary>
     Public Sub Start()
-        If _isRunning Then
-            Exit Sub  ' Already running
-        End If
+        If _isRunning Then Exit Sub
 
         _listener = New HttpListener()
-        _listener.Prefixes.Add(String.Format("http://localhost:{0}/", _port))
+        _listener.AuthenticationSchemes = AuthenticationSchemes.Anonymous
+        _listener.IgnoreWriteExceptions = True
+
+        ' CHANGED: listen on all loopback variants so any browser target works
+        _listener.Prefixes.Add($"http://localhost:{_port}/")
+        Try : _listener.Prefixes.Add($"http://127.0.0.1:{_port}/") : Catch : End Try
+        Try : _listener.Prefixes.Add($"http://[::1]:{_port}/") : Catch : End Try
+
         _listener.Start()
         _isRunning = True
 
-        ' Asynchronously wait for requests
-        _listener.BeginGetContext(AddressOf HandleRequest, Nothing)
+        StartAccept() ' CHANGED: use helper
+    End Sub
+
+    Private Sub StartAccept()
+        If _isRunning AndAlso _listener IsNot Nothing Then
+            _listener.BeginGetContext(AddressOf HandleRequest, Nothing)
+        End If
     End Sub
 
     ''' <summary>
@@ -89,29 +99,50 @@ Public Class DPHXLocalWS
     ''' Internal callback for handling inbound HTTP requests asynchronously.
     ''' </summary>
     Private Sub HandleRequest(ar As IAsyncResult)
-        ' If we've stopped or the listener is disposed, return
-        If (Not _isRunning) OrElse (_listener Is Nothing) Then
-            Return
-        End If
+        If Not _isRunning OrElse _listener Is Nothing Then Return
 
         Dim context As HttpListenerContext = Nothing
-
         Try
-            ' Complete the context retrieval
             context = _listener.EndGetContext(ar)
-
-            ' Immediately begin waiting for the next request again
-            If _isRunning Then
-                _listener.BeginGetContext(AddressOf HandleRequest, Nothing)
-            End If
-
-            ' Raise the event so subscribers can handle the request
-            RaiseEvent RequestReceived(Me, New RequestReceivedEventArgs(context))
-
-        Catch ex As Exception
-            ' If the listener is closed or there's an error, it may throw here.
-            ' You could log the exception if needed.
+        Catch ex As HttpListenerException
+            ' transient (unsupported/aborted). Re-arm and bail.
+            StartAccept()
+            Exit Sub
+        Catch ex As ObjectDisposedException
+            Exit Sub
         End Try
+
+        ' Re-arm immediately so we don't miss the next request
+        StartAccept()
+
+        ' Preflight / quick no-content reply
+        If String.Equals(context.Request.HttpMethod, "OPTIONS", StringComparison.OrdinalIgnoreCase) Then
+            SendNoContent(context)
+            Exit Sub
+        End If
+
+        ' Hand off to subscribers (they should reply quickly)
+        Dim args = New RequestReceivedEventArgs(context)
+        RaiseEvent RequestReceived(Me, args)
+
+        If Not args.Handled Then
+            SendNoContent(context)
+        End If
+
+    End Sub
+
+    Private Sub SendNoContent(context As HttpListenerContext)
+        Dim r = context.Response
+        Try
+            r.StatusCode = 204
+            r.Headers("Access-Control-Allow-Origin") = "*"
+            r.Headers("Access-Control-Allow-Methods") = "GET, OPTIONS"
+            r.Headers("Access-Control-Allow-Headers") = "Content-Type"
+            r.Headers("Access-Control-Allow-Private-Network") = "true"
+            r.Headers("Connection") = "close"
+            r.ContentLength64 = 0
+        Catch : End Try
+        Try : r.OutputStream.Close() : Catch : End Try
     End Sub
 
     ''' <summary>
@@ -126,10 +157,11 @@ Public Class DPHXLocalWS
 
         Dim response = context.Response
         response.StatusCode = statusCode
-
-        ' If you need CORS, uncomment or customize:
-        response.Headers.Add("Access-Control-Allow-Origin", "*")
-        ' response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        response.Headers("Access-Control-Allow-Origin") = "*"
+        response.Headers("Access-Control-Allow-Methods") = "GET, OPTIONS"
+        response.Headers("Access-Control-Allow-Headers") = "Content-Type"
+        response.Headers("Access-Control-Allow-Private-Network") = "true"
+        response.Headers("Connection") = "close"
 
         Dim buffer As Byte() = Encoding.UTF8.GetBytes(message)
         response.ContentLength64 = buffer.Length
@@ -166,9 +198,8 @@ End Class
 ''' </summary>
 Public Class RequestReceivedEventArgs
     Inherits EventArgs
-
     Public ReadOnly Property Context As HttpListenerContext
-
+    Public Property Handled As Boolean
     Public Sub New(context As HttpListenerContext)
         Me.Context = context
     End Sub
