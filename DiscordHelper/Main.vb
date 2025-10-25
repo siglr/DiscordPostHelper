@@ -3306,7 +3306,7 @@ Public Class Main
                 'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
                 If answer = DialogResult.OK Then
                     Dim taskThreadURL As String
-                    taskThreadURL = Clipboard.GetText
+                    taskThreadURL = SupportingFeatures.DiscordURL(Clipboard.GetText, False)
                     _taskDiscordPostID = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
                     If _taskDiscordPostID.Trim.Length = 0 Then
                         Using New Centered_MessageBox(Me)
@@ -4042,7 +4042,7 @@ Public Class Main
             If answer = DialogResult.OK Then
                 Dim groupEventPostURL As String
                 groupEventPostURL = Clipboard.GetText
-                txtGroupEventPostURL.Text = groupEventPostURL
+                txtGroupEventPostURL.Text = SupportingFeatures.DiscordURL(groupEventPostURL, False)
                 SaveSession()
             End If
             If txtGroupEventPostURL.Text = String.Empty Then
@@ -7614,7 +7614,7 @@ Public Class Main
             'Check if the clipboard contains a valid URL, which would mean the task's URL has been copied
             If answer = DialogResult.OK Then
                 Dim taskThreadURL As String
-                taskThreadURL = Clipboard.GetText
+                taskThreadURL = SupportingFeatures.DiscordURL(Clipboard.GetText, False)
                 newTaskDiscordTaskID = SupportingFeatures.ExtractMessageIDFromDiscordURL(taskThreadURL,, _useTestMode)
                 If newTaskDiscordTaskID.Trim.Length = 0 Then
                     Using New Centered_MessageBox(Me)
