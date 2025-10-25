@@ -19,22 +19,38 @@ Public Class WaitingForURLForm
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        ' Check if the clipboard contains the desired URL
-        Dim clipboardText As String
         Try
-            clipboardText = Clipboard.GetText
-            If (Not clipboardText = String.Empty) AndAlso SupportingFeatures.IsValidURL(clipboardText) AndAlso clipboardText.Contains($"discord.com/channels/") Then
-                If _AcceptMSFSSoaringToolsOnly Then
-                    If clipboardText.Contains($"discord.com/channels/{SupportingFeatures.GetMSFSSoaringToolsDiscordID}/") Then
+            Dim clipboardText As String = Clipboard.GetText()
+
+            If clipboardText <> String.Empty AndAlso SupportingFeatures.IsValidURL(clipboardText) Then
+
+                Dim lowerText As String = clipboardText.ToLowerInvariant()
+
+                If lowerText.Contains("discord.com/channels/") OrElse
+                   lowerText.Contains("discordapp.com/channels/") Then
+
+                    If _AcceptMSFSSoaringToolsOnly Then
+                        Dim guildId As String = SupportingFeatures.GetMSFSSoaringToolsDiscordID()
+
+                        If lowerText.Contains($"discord.com/channels/{guildId}/") OrElse
+                           lowerText.Contains($"discordapp.com/channels/{guildId}/") Then
+
+                            Timer1.Enabled = False
+                            Me.DialogResult = DialogResult.OK
+                            Me.Close()
+                        End If
+                    Else
+                        Timer1.Enabled = False
                         Me.DialogResult = DialogResult.OK
                         Me.Close()
                     End If
-                Else
-                    Me.DialogResult = DialogResult.OK
-                    Me.Close()
                 End If
             End If
+
         Catch ex As Exception
+#If DEBUG Then
+            Debug.WriteLine("Timer1_Tick clipboard check failed: " & ex.Message)
+#End If
         End Try
     End Sub
 

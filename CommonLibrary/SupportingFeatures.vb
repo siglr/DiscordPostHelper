@@ -2306,14 +2306,18 @@ Public Class SupportingFeatures
 
         Try
             If isValid Then
-                If theURL.StartsWith("http://discord.com") Or theURL.StartsWith("https://discord.com") Then
-                    Dim discordURL As String = String.Empty
-                    discordURL = theURL.Replace("http://discord.com", "discord://discord.com")
-                    discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                Dim lowerUrl As String = theURL.ToLowerInvariant()
+
+                If lowerUrl.StartsWith("http://discord.com") OrElse
+                   lowerUrl.StartsWith("http://discordapp.com") OrElse
+                   lowerUrl.StartsWith("https://discord.com") OrElse
+                   lowerUrl.StartsWith("https://discordapp.com") Then
+
+                    Dim discordURL As String = SupportingFeatures.DiscordURL(theURL)
+
                     Try
                         Process.Start(discordURL)
                         discordWorked = True
-
                     Catch ex As Exception
                         discordWorked = False
                     End Try
@@ -3177,6 +3181,24 @@ Public Class SupportingFeatures
     ' Distance in meters between two waypoints (uses your Conversions helper)
     Public Shared Function HaversineMeters(a As ATCWaypoint, b As ATCWaypoint) As Double
         Return Conversions.GetDistanceInKm(a.Latitude, a.Longitude, b.Latitude, b.Longitude) * 1000.0
+    End Function
+
+    Public Shared Function DiscordURL(originalURL As String, Optional replaceHTTPWithDiscord As Boolean = True) As String
+        Dim httpOrDiscord As String = "discord"
+        If Not replaceHTTPWithDiscord Then
+            Dim lower = originalURL.ToLowerInvariant()
+            If lower.StartsWith("http://") Then
+                httpOrDiscord = "http"
+            ElseIf lower.StartsWith("https://") Then
+                httpOrDiscord = "https"
+            End If
+        End If
+        Dim computedDiscordURL As String = originalURL
+        computedDiscordURL = computedDiscordURL.Replace("http://discord.com", $"{httpOrDiscord}://discord.com")
+        computedDiscordURL = computedDiscordURL.Replace("https://discord.com", $"{httpOrDiscord}://discord.com")
+        computedDiscordURL = computedDiscordURL.Replace("http://discordapp.com", $"{httpOrDiscord}://discord.com")
+        computedDiscordURL = computedDiscordURL.Replace("https://discordapp.com", $"{httpOrDiscord}://discord.com")
+        Return computedDiscordURL
     End Function
 
     ' Very lightweight XML normalization for “identical” test

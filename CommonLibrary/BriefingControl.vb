@@ -527,8 +527,7 @@ Public Class BriefingControl
         sb.Append($"{_sessionData.Credits}($*$)")
         If _sessionData.EnableRepostInfo Then
             If _sessionData.RepostOriginalURL.Length > 0 Then
-                Dim discordURL As String = _sessionData.RepostOriginalURL.Replace("http://discord.com", "discord://discord.com")
-                discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                Dim discordURL As String = SupportingFeatures.DiscordURL(_sessionData.RepostOriginalURL)
                 sb.AppendLine($"This task was originally posted on [{SupportingFeatures.ReturnDiscordServer(_sessionData.RepostOriginalURL)}]({discordURL}) on {_sessionData.RepostOriginalDate.ToString("MMMM dd, yyyy", _EnglishCulture)}")
             Else
                 sb.AppendLine($"This task was originally posted on {_sessionData.RepostOriginalDate.ToString("MMMM dd, yyyy", _EnglishCulture)}")
@@ -743,8 +742,7 @@ Public Class BriefingControl
         Else
             'Group/Club Name
             If _sessionData.URLGroupEventPost.Length > 0 Then
-                Dim discordURL As String = _sessionData.URLGroupEventPost.Replace("http://discord.com", "discord://discord.com")
-                discordURL = discordURL.Replace("https://discord.com", "discord://discord.com")
+                Dim discordURL As String = SupportingFeatures.DiscordURL(_sessionData.URLGroupEventPost)
                 sb.Append($"**[{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}]({discordURL})**($*$)")
             Else
                 sb.Append($"**{SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.GroupClubName)} - {SupportingFeatures.ConvertToUnicodeDecimal(_sessionData.EventTopic)}**($*$)")
