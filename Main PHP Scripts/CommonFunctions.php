@@ -20,6 +20,7 @@ $blesstok = $config['blesstok'];
 // Repository paths (used by WeSimGlide.org)
 $taskBrowserPath = isset($config['taskBrowserPath']) ? $config['taskBrowserPath'] : '';
 $taskBrowserPathHTTPS = isset($config['taskBrowserPathHTTPS']) ? $config['taskBrowserPathHTTPS'] : '';
+$homeLeaderboardCacheDir = isset($config['homeLeaderboardCacheDir']) ? $config['homeLeaderboardCacheDir'] : '';
 
 $disWHPrefix = 'https://discord.com/api/webhooks/';
 $disWHFlights = $disWHPrefix . $config['disWHFlights'];

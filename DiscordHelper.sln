@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\GetUpdatedDownloads.php = Main PHP Scripts\GetUpdatedDownloads.php
 		Main PHP Scripts\GetUpdatedTasks.php = Main PHP Scripts\GetUpdatedTasks.php
 		Main PHP Scripts\GetUserTaskInfo.php = Main PHP Scripts\GetUserTaskInfo.php
+		Main PHP Scripts\HomeLeaderboardCache.php = Main PHP Scripts\HomeLeaderboardCache.php
 		Main PHP Scripts\IncrementDownloadForTask.php = Main PHP Scripts\IncrementDownloadForTask.php
 		Main PHP Scripts\IncrementThreadAccessForTask.php = Main PHP Scripts\IncrementThreadAccessForTask.php
 		Main PHP Scripts\ManageNews.php = Main PHP Scripts\ManageNews.php
@@ -56,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\SaveTextFileUnderTempFolder.php = Main PHP Scripts\SaveTextFileUnderTempFolder.php
 		Main PHP Scripts\SetTrackerGroup.php = Main PHP Scripts\SetTrackerGroup.php
 		Main PHP Scripts\TrackerTask.php = Main PHP Scripts\TrackerTask.php
+		Main PHP Scripts\UpdateLatestIGCLeaders.php = Main PHP Scripts\UpdateLatestIGCLeaders.php
 		Main PHP Scripts\VerifyNewsExists.php = Main PHP Scripts\VerifyNewsExists.php
 	EndProjectSection
 EndProject
