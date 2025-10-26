@@ -32,9 +32,23 @@ try {
             'message'=> 'No TaskEvents found for this EntrySeqID.'
         ]);
     } else {
+
+        // For the UI/consumer: expose a date-only field based on EventDateTime
+        $cleanRows = [];
+        foreach ($rows as $r) {
+            $dateOnly = $r['EventDateTime'];
+            if (!empty($dateOnly)) {
+                // Keep only YYYY-MM-DD
+                $dateOnly = substr($dateOnly, 0, 10);
+            }
+
+            $r['EventDateTimeDateOnly'] = $dateOnly;
+            $cleanRows[] = $r;
+        }
+
         echo json_encode([
             'status' => 'success',
-            'data'   => $rows
+            'data'   => $cleanRows
         ]);
     }
 
@@ -45,3 +59,4 @@ try {
         'message' => $e->getMessage()
     ]);
 }
+?>

@@ -129,6 +129,10 @@ try {
                 // REQUIREMENTS for TaskEvents row
                 $entrySeqID = $_POST['EntrySeqID'] ?? '';
                 $meetDT     = $_POST['EventMeetDateTime'] ?? '';
+                $syncDT     = $_POST['SyncFlyDateTime'] ?? '';
+                $launchDT   = $_POST['EventLaunchDateTime'] ?? '';
+                $useSync    = isset($_POST['UseEventSyncFly']) ? (int)$_POST['UseEventSyncFly'] : 0;
+                $useLaunch  = isset($_POST['UseEventLaunch'])  ? (int)$_POST['UseEventLaunch']  : 0;
 
                 if (empty($entrySeqID)) {
                     throw new Exception('EntrySeqID is required when PastEventOnly is true.');
@@ -146,14 +150,18 @@ try {
                     $clubEventNewsID = substr($key, 2, -8);
                 }
 
-                // Keep only the date part (YYYY-MM-DD) for TaskEvents.EventDateTime
-                $eventDTForLink = formatDatetime($meetDT);
-                if (!empty($eventDTForLink)) {
-                    $eventDTForLink = substr($eventDTForLink, 0, 10);
+                // Determine which datetime to use for TaskEvents (full datetime, not truncated)
+                $eventDTForLink = '';
+                if ($useLaunch === 1 && !empty($launchDT)) {
+                    $eventDTForLink = formatDatetime($launchDT);
+                } elseif ($useSync === 1 && !empty($syncDT)) {
+                    $eventDTForLink = formatDatetime($syncDT);
+                } else {
+                    $eventDTForLink = formatDatetime($meetDT);
                 }
 
                 if (empty($eventDTForLink)) {
-                    throw new Exception('Invalid EventMeetDateTime (date part could not be determined).');
+                    throw new Exception('No valid event datetime could be determined for TaskEvents.');
                 }
 
                 // Maintain TaskEvents like normal flow: clear previous links for this EventKey, then insert
@@ -321,11 +329,20 @@ try {
                         $clubEventNewsID = substr($key, 2, -8);
                     }
 
-                    // Always use MeetDateTime for TaskEvents (date only)
-                    $eventDTForLink = formatDatetime($_POST['EventMeetDateTime'] ?? '');
-                    if (!empty($eventDTForLink)) {
-                        // keep only the date (YYYY-MM-DD)
-                        $eventDTForLink = substr($eventDTForLink, 0, 10);
+                    // Determine which datetime to use for TaskEvents (full datetime, not truncated)
+                    $useLaunch  = isset($_POST['UseEventLaunch'])   ? (int)$_POST['UseEventLaunch']   : 0;
+                    $useSync    = isset($_POST['UseEventSyncFly'])  ? (int)$_POST['UseEventSyncFly']  : 0;
+                    $launchDT   = $_POST['EventLaunchDateTime']     ?? '';
+                    $syncDT     = $_POST['SyncFlyDateTime']         ?? '';
+                    $meetDT     = $_POST['EventMeetDateTime']       ?? '';
+
+                    $eventDTForLink = '';
+                    if ($useLaunch === 1 && !empty($launchDT)) {
+                        $eventDTForLink = formatDatetime($launchDT);
+                    } elseif ($useSync === 1 && !empty($syncDT)) {
+                        $eventDTForLink = formatDatetime($syncDT);
+                    } else {
+                        $eventDTForLink = formatDatetime($meetDT);
                     }
 
                     if (!empty($eventDTForLink)) {
