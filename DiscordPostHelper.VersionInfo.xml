@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.10.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.10.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.10.28.1</ReleaseVersion>
+      <ReleaseTitle>Fix for very specific situation (old Discord version)</ReleaseTitle>
+      <ReleaseNotes>
+        Added discordapp.com to possible links
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.10.15.1</ReleaseVersion>
       <ReleaseTitle>Fixed Test posting</ReleaseTitle>
