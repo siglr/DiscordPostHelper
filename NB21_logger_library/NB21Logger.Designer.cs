@@ -58,8 +58,8 @@ namespace NB21_logger
 
         private void InitializeComponent()
         {
-            this.components = (IContainer)new System.ComponentModel.Container();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(NB21Logger));
+            this.components = new Container();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(NB21Logger));
             this.tabControl1 = new TabControl();
             this.tabPage_Home = new TabPage();
             this.ui_task_button = new Button();
@@ -376,7 +376,7 @@ namespace NB21_logger
             this.ui_auto_start_checkbox.TabIndex = 11;
             this.ui_auto_start_checkbox.UseVisualStyleBackColor = true;
             this.ui_auto_start_checkbox.Click += new EventHandler(this.ui_auto_start_click);
-            this.imageList1.ImageStream = (ImageListStreamer)componentResourceManager.GetObject("imageList1.ImageStream");
+            this.imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "home.png");
             this.imageList1.Images.SetKeyName(1, "settings.png");
