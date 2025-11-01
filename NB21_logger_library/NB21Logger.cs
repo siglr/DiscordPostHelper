@@ -21,7 +21,8 @@ using System.Reflection;
 using System.Windows.Forms;
 
 #nullable enable
-namespace NB21_logger;
+namespace NB21_logger
+{
 
 public class NB21Logger : UserControl
 {
@@ -1379,5 +1380,6 @@ public class NB21Logger : UserControl
     this.ResumeLayout(false);
   }
 
-  public delegate void WsConnectDelegate();
+public delegate void WsConnectDelegate();
+}
 }
