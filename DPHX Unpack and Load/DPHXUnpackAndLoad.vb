@@ -861,61 +861,6 @@ Public Class DPHXUnpackAndLoad
 
         _status.AppendStatusLine("Unpacking Results:", True)
 
-        If Settings.SessionSettings.Is2020Installed Then
-            'Flight plan
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2020FlightPlansFolder,
-                 "Flight Plan for MSFS 2020"), True)
-
-            'Weather file
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2020"), True)
-
-        End If
-        If Settings.SessionSettings.Is2024Installed Then
-            'Flight plan
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
-                 "Flight Plan for MSFS 2024"), True)
-
-            If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
-                'Copy of flight plan but for the EFB (without extra soaring information on the waypoints)
-                _status.AppendStatusLine(CreatePLNForEFB(Path.GetFileName(_allDPHData.FlightPlanFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
-                 "EFB Flight Plan for MSFS 2024"), True)
-            End If
-
-            'Weather file
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2024"), True)
-
-        End If
-
-        'Look in the other files for xcsoar files
-        For Each filepath As String In _allDPHData.ExtraFiles
-            If Path.GetExtension(filepath) = ".tsk" Then
-                'XCSoar task
-                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
-                                    TempDPHXUnpackFolder,
-                                    Settings.SessionSettings.XCSoarTasksFolder,
-                                    "XCSoar Task"), True)
-            End If
-            If Path.GetExtension(filepath) = ".xcm" Then
-                'XCSoar map
-                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
-                                    TempDPHXUnpackFolder,
-                                    Settings.SessionSettings.XCSoarMapsFolder,
-                                    "XCSoar Map"), True)
-            End If
-        Next
-
         ' NB21 auto-start and PLN feeding
         If Settings.SessionSettings.NB21StartAndFeed Then
             Dim NB21LoggerRunning As Boolean
@@ -1016,6 +961,61 @@ Public Class DPHXUnpackAndLoad
                                  )
             End If
         End If
+
+        If Settings.SessionSettings.Is2020Installed Then
+            'Flight plan
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2020FlightPlansFolder,
+                 "Flight Plan for MSFS 2020"), True)
+
+            'Weather file
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                 "Weather Preset for MSFS 2020"), True)
+
+        End If
+        If Settings.SessionSettings.Is2024Installed Then
+            'Flight plan
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                 "Flight Plan for MSFS 2024"), True)
+
+            If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
+                'Copy of flight plan but for the EFB (without extra soaring information on the waypoints)
+                _status.AppendStatusLine(CreatePLNForEFB(Path.GetFileName(_allDPHData.FlightPlanFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024FlightPlansFolder,
+                 "EFB Flight Plan for MSFS 2024"), True)
+            End If
+
+            'Weather file
+            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
+                 TempDPHXUnpackFolder,
+                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                 "Weather Preset for MSFS 2024"), True)
+
+        End If
+
+        'Look in the other files for xcsoar files
+        For Each filepath As String In _allDPHData.ExtraFiles
+            If Path.GetExtension(filepath) = ".tsk" Then
+                'XCSoar task
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
+                                    TempDPHXUnpackFolder,
+                                    Settings.SessionSettings.XCSoarTasksFolder,
+                                    "XCSoar Task"), True)
+            End If
+            If Path.GetExtension(filepath) = ".xcm" Then
+                'XCSoar map
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(filepath),
+                                    TempDPHXUnpackFolder,
+                                    Settings.SessionSettings.XCSoarMapsFolder,
+                                    "XCSoar Map"), True)
+            End If
+        Next
 
         _status.AppendStatusLine("Unpack completed, you can click Close below.", False)
         _status.Done()
