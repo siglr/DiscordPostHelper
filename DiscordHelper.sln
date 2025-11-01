@@ -65,6 +65,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AutoIGCParserBatch", "AutoI
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WSGListener", "WSGListener\WSGListener.vbproj", "{2A9D740C-463D-4EF3-BB94-44FE6FB961D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NB21_logger", "NB21_logger\NB21_logger.csproj", "{5597FF99-BB19-42ED-97B1-55A457E91861}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{2A9D740C-463D-4EF3-BB94-44FE6FB961D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A9D740C-463D-4EF3-BB94-44FE6FB961D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A9D740C-463D-4EF3-BB94-44FE6FB961D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5597FF99-BB19-42ED-97B1-55A457E91861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5597FF99-BB19-42ED-97B1-55A457E91861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5597FF99-BB19-42ED-97B1-55A457E91861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5597FF99-BB19-42ED-97B1-55A457E91861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
