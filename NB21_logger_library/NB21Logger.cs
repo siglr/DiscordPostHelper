@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Windows.Forms;
 
 #nullable enable
@@ -24,6 +25,11 @@ namespace NB21_logger;
 
 public class NB21Logger : UserControl
 {
+  static NB21Logger()
+  {
+    AppDomain.CurrentDomain.AssemblyResolve += NB21Logger.ResolveSimConnectAssembly;
+  }
+
   public EventHandler<AppEventArgs> app_event_handler;
   private readonly Settings settings = Settings.Default;
   public string AppName;
@@ -87,6 +93,37 @@ public class NB21Logger : UserControl
   private LinkLabel ui_web_urls;
   private Button ui_task_button;
   private Label pln_drop_outline;
+
+  private static Assembly? ResolveSimConnectAssembly(object? sender, ResolveEventArgs args)
+  {
+    if (!args.Name.StartsWith("Microsoft.FlightSimulator.SimConnect", StringComparison.OrdinalIgnoreCase))
+      return (Assembly) null;
+    string? location = typeof (NB21Logger).Assembly.Location;
+    if (!string.IsNullOrEmpty(location))
+    {
+      string directoryName = Path.GetDirectoryName(location);
+      if (!string.IsNullOrEmpty(directoryName))
+      {
+        string path1 = Path.Combine(directoryName, "Microsoft.FlightSimulator.SimConnect.dll");
+        if (File.Exists(path1))
+          return Assembly.LoadFrom(path1);
+        string path2 = Path.Combine(directoryName, "lib", "Microsoft.FlightSimulator.SimConnect.dll");
+        if (File.Exists(path2))
+          return Assembly.LoadFrom(path2);
+      }
+    }
+    string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    if (!string.IsNullOrEmpty(baseDirectory))
+    {
+      string path = Path.Combine(baseDirectory, "Microsoft.FlightSimulator.SimConnect.dll");
+      if (File.Exists(path))
+        return Assembly.LoadFrom(path);
+      string str = Path.Combine(baseDirectory, "lib", "Microsoft.FlightSimulator.SimConnect.dll");
+      if (File.Exists(str))
+        return Assembly.LoadFrom(str);
+    }
+    return (Assembly) null;
+  }
 
   public NB21Logger()
     : this(false)
