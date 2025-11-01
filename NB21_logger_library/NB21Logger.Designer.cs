@@ -1,6 +1,7 @@
 #nullable disable
 
 using NB21_logger.Properties;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
