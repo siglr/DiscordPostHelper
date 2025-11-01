@@ -22,7 +22,7 @@ using System.Windows.Forms;
 #nullable enable
 namespace NB21_logger;
 
-public class NB21Logger : UserControl
+public partial class NB21Logger : UserControl
 {
   public EventHandler<AppEventArgs> app_event_handler;
   private readonly Settings settings = Settings.Default;
