@@ -34,6 +34,7 @@ public class NB21Logger : UserControl
   private readonly Image? notconnected_img = (Image) Resources.ResourceManager.GetObject("recording_tick");
   public NB21WSServer nb21_ws_server;
   public NB21WebServer nb21_web_server;
+  private readonly bool isInDesignMode;
   public SimDataConn simdata;
   public IGCFileWriter igc_file_writer;
   private string? current_igc_file_path;
@@ -95,49 +96,77 @@ public class NB21Logger : UserControl
   public NB21Logger(bool LaunchedViaStartup)
   {
     this.InitializeComponent();
-    Console.WriteLine($"NB21Logger constructor (with LaunchedViaStartup = {LaunchedViaStartup})");
+    this.isInDesignMode = NB21Logger.IsRunningInDesignMode();
+    Console.WriteLine($"NB21Logger constructor (with LaunchedViaStartup = {LaunchedViaStartup}, designMode = {this.isInDesignMode})");
     this.LaunchedViaStartup = LaunchedViaStartup;
     this.ws_connected = new NB21Logger.WsConnectDelegate(this.ui_web_urls_connected);
     this.ws_disconnected = new NB21Logger.WsConnectDelegate(this.ui_web_urls_disconnected);
-    string localIpAddress = NB21Logger.GetLocalIPAddress();
+    string localIpAddress = "127.0.0.1";
+    if (!this.isInDesignMode)
+      localIpAddress = NB21Logger.GetLocalIPAddress();
     this.AppName = this.settings.AppName;
     this.AppVersion = this.settings.AppVersion;
     Console.WriteLine($"NB21 Logger {this.AppVersion} ip address: {localIpAddress}");
     this.app_event_handler += new EventHandler<AppEventArgs>(this.handleAppEvent);
-    string str = "ws://localhost:" + 54179.ToString();
     this.nb21_ws_server = new NB21WSServer(this);
-    this.nb21_ws_server.start(54179);
-    List<string> web_addresses1 = new List<string>()
-    {
-      $"http://{localIpAddress}:{54178}/",
-      $"http://localhost:{54178}/"
-    };
-    List<string> web_addresses2 = new List<string>()
-    {
-      $"http://localhost:{54178}/"
-    };
     this.nb21_web_server = new NB21WebServer(this);
-    this.ui_web_urls_disconnected();
-    try
+    if (this.isInDesignMode)
     {
-      this.set_ui_web_urls($"{web_addresses1[1]}b21_task_planner [ip {localIpAddress} ]");
-      this.nb21_web_server.start(web_addresses1);
-      Console.WriteLine($"Administrator Mode so {web_addresses1[0]} and {web_addresses1[1]}.");
+      Console.WriteLine("NB21Logger running in design mode. Skipping network server startup.");
+      this.ui_conn_status.Text = "Design mode";
+      this.set_ui_web_urls("Design mode - services inactive");
     }
-    catch (HttpListenerException ex)
+    else
     {
-      if (ex.ErrorCode == 5)
+      try
       {
-        Console.WriteLine("Seems not Administrator Mode so data API localhost only.");
-        this.set_ui_web_urls(web_addresses2[0] + "b21_task_planner");
-        this.nb21_web_server.start(web_addresses2);
+        this.nb21_ws_server.start(54179);
       }
-      else
-        Console.WriteLine($"Unexpected Http error starting Web Server. {ex}");
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"Unexpected error starting Web Server. {ex}");
+      catch (SocketException ex)
+      {
+        Console.WriteLine($"Failed to start WebSocket server: {ex}");
+        this.AppFailure("Failed to start WebSocket server");
+      }
+      catch (InvalidOperationException ex)
+      {
+        Console.WriteLine($"Failed to start WebSocket server: {ex}");
+        this.AppFailure("Failed to start WebSocket server");
+      }
+      List<string> web_addresses1 = new List<string>()
+      {
+        $"http://{localIpAddress}:{54178}/",
+        $"http://localhost:{54178}/"
+      };
+      List<string> web_addresses2 = new List<string>()
+      {
+        $"http://localhost:{54178}/"
+      };
+      this.ui_web_urls_disconnected();
+      try
+      {
+        this.set_ui_web_urls($"{web_addresses1[1]}b21_task_planner [ip {localIpAddress} ]");
+        this.nb21_web_server.start(web_addresses1);
+        Console.WriteLine($"Administrator Mode so {web_addresses1[0]} and {web_addresses1[1]}.");
+      }
+      catch (HttpListenerException ex)
+      {
+        if (ex.ErrorCode == 5)
+        {
+          Console.WriteLine("Seems not Administrator Mode so data API localhost only.");
+          this.set_ui_web_urls(web_addresses2[0] + "b21_task_planner");
+          this.nb21_web_server.start(web_addresses2);
+        }
+        else
+        {
+          Console.WriteLine($"Unexpected Http error starting Web Server. {ex}");
+          this.AppFailure("Failed to start Web server");
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Unexpected error starting Web Server. {ex}");
+        this.AppFailure("Failed to start Web server");
+      }
     }
     this.simdata = new SimDataConn(this);
     this.igc_file_writer = new IGCFileWriter(this.simdata);
@@ -221,6 +250,11 @@ public class NB21Logger : UserControl
 
   private void Form1_Load(object sender, EventArgs e)
   {
+    if (this.isInDesignMode)
+    {
+      this.ui_conn_status.Text = "Design mode";
+      return;
+    }
     this.AttachToHostForm();
     this.pictureBox_statusImage.Image = this.notconnected_img;
     this.ui_conn_status.Text = "Waiting for MSFS.";
@@ -770,6 +804,22 @@ public class NB21Logger : UserControl
       return;
     this.shutdownHandled = true;
     Console.WriteLine("NB21 Logger closing");
+    try
+    {
+      this.nb21_ws_server?.stop();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Error stopping WebSocket server: {ex}");
+    }
+    try
+    {
+      this.nb21_web_server?.stop();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Error stopping Web server: {ex}");
+    }
     if (this.simdata != null)
     {
       int length = this.simdata.flight_data_model.get_length();
@@ -904,6 +954,22 @@ public class NB21Logger : UserControl
         return address.ToString();
     }
     return "";
+  }
+
+  private static bool IsRunningInDesignMode()
+  {
+    if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+      return true;
+    try
+    {
+      string processName = Process.GetCurrentProcess().ProcessName;
+      if (string.Equals(processName, "devenv", StringComparison.OrdinalIgnoreCase) || string.Equals(processName, "blend", StringComparison.OrdinalIgnoreCase))
+        return true;
+    }
+    catch
+    {
+    }
+    return false;
   }
 
   private void ui_auto_start_click(object sender, EventArgs e)
