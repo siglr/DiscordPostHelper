@@ -4156,7 +4156,12 @@ Public Class Main
         End If
 
         logisticInstructions.AppendLine()
-        logisticInstructions.AppendLine("*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*")
+
+        If _ClubPreset IsNot Nothing AndAlso (_ClubPreset.EventNewsID = "SSCSA" OrElse _ClubPreset.EventNewsID = "SSCWE") Then
+            logisticInstructions.AppendLine("*Reminder: Post your IGC log file in the **SSC** thread first. You can then optionally upload it to WeSimGlide.org afterward for your own records.*")
+        Else
+            logisticInstructions.AppendLine("*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*")
+        End If
 
         Return logisticInstructions.ToString()
 
