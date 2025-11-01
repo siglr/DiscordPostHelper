@@ -22,7 +22,7 @@ using System.Windows.Forms;
 #nullable enable
 namespace NB21_logger;
 
-public class NB21Logger : Form
+public class NB21Logger : UserControl
 {
   public EventHandler<AppEventArgs> app_event_handler;
   private readonly Settings settings = Settings.Default;
@@ -49,7 +49,9 @@ public class NB21Logger : Form
   private string StartupRegEntry = Application.ExecutablePath.ToString() + " %startup";
   public NB21Logger.WsConnectDelegate ws_connected;
   public NB21Logger.WsConnectDelegate ws_disconnected;
-  private 
+  private Form? hostForm;
+  private bool shutdownHandled;
+  private
   #nullable disable
   IContainer components;
   private TabControl tabControl1;
@@ -85,6 +87,11 @@ public class NB21Logger : Form
   private Button ui_task_button;
   private Label pln_drop_outline;
 
+  public NB21Logger()
+    : this(false)
+  {
+  }
+
   public NB21Logger(bool LaunchedViaStartup)
   {
     this.InitializeComponent();
@@ -96,8 +103,6 @@ public class NB21Logger : Form
     this.AppName = this.settings.AppName;
     this.AppVersion = this.settings.AppVersion;
     Console.WriteLine($"NB21 Logger {this.AppVersion} ip address: {localIpAddress}");
-    this.Icon = Resources.app_icon;
-    this.Text = this.get_title();
     this.app_event_handler += new EventHandler<AppEventArgs>(this.handleAppEvent);
     string str = "ws://localhost:" + 54179.ToString();
     this.nb21_ws_server = new NB21WSServer(this);
@@ -140,6 +145,51 @@ public class NB21Logger : Form
     Console.WriteLine($"{this.settings.AppName} version {this.settings.AppVersion} running.");
   }
 
+  [Browsable(true)]
+  [DefaultValue(false)]
+  public bool LaunchViaStartup
+  {
+    get => this.LaunchedViaStartup;
+    set => this.LaunchedViaStartup = value;
+  }
+
+  protected override void OnParentChanged(EventArgs e)
+  {
+    base.OnParentChanged(e);
+    this.AttachToHostForm();
+  }
+
+  private void AttachToHostForm()
+  {
+    Form? form = this.FindForm();
+    if (form == null || form == this.hostForm)
+      return;
+    this.DetachFromHostForm();
+    this.hostForm = form;
+    this.hostForm.Icon = Resources.app_icon;
+    this.hostForm.Text = this.get_title();
+    this.hostForm.FormClosing += new FormClosingEventHandler(this.Form1_Closing);
+    this.hostForm.Resize += new EventHandler(this.Form1_Resize);
+  }
+
+  private void DetachFromHostForm()
+  {
+    if (this.hostForm == null)
+      return;
+    this.hostForm.FormClosing -= new FormClosingEventHandler(this.Form1_Closing);
+    this.hostForm.Resize -= new EventHandler(this.Form1_Resize);
+    this.hostForm = null;
+  }
+
+  private void SetHostWindowState(FormWindowState state)
+  {
+    if (this.hostForm == null)
+      this.AttachToHostForm();
+    if (this.hostForm == null)
+      return;
+    this.hostForm.WindowState = state;
+  }
+
   private void upgrade_settings()
   {
     if (!this.settings.SettingsUpgradeRequired)
@@ -171,6 +221,7 @@ public class NB21Logger : Form
 
   private void Form1_Load(object sender, EventArgs e)
   {
+    this.AttachToHostForm();
     this.pictureBox_statusImage.Image = this.notconnected_img;
     this.ui_conn_status.Text = "Waiting for MSFS.";
     this.ui_recording_time.Visible = false;
@@ -185,9 +236,9 @@ public class NB21Logger : Form
     this.watchdogTimer.Tick += new EventHandler(this.Watchdog);
     this.watchdogTimer.Start();
     if (this.settings.WindowsStart && this.LaunchedViaStartup)
-      this.WindowState = FormWindowState.Minimized;
+      this.SetHostWindowState(FormWindowState.Minimized);
     else
-      this.WindowState = FormWindowState.Normal;
+      this.SetHostWindowState(FormWindowState.Normal);
   }
 
   private void load_settings()
@@ -348,7 +399,7 @@ public class NB21Logger : Form
     {
       case APPEVENT_ID.SimOpen:
         Console.WriteLine("APPEVENT SimOpen " + e.arg_str);
-        this.WindowState = FormWindowState.Normal;
+        this.SetHostWindowState(FormWindowState.Normal);
         this.pictureBox_statusImage.Image = this.connected_img;
         this.ui_conn_status.Text = "Connected to " + this.simdata.get_msfs_text();
         this.AppReset();
@@ -654,20 +705,25 @@ public class NB21Logger : Form
       base.WndProc(ref m);
   }
 
-  private void Form1_Resize(object sender, EventArgs e)
+  private void Form1_Resize(object? sender, EventArgs e)
   {
-    if (FormWindowState.Minimized != this.WindowState)
+    if (this.hostForm == null || this.hostForm.WindowState != FormWindowState.Minimized)
       return;
-    this.Hide();
+    this.hostForm.Hide();
   }
 
   private void ctx_showForm_Click(object sender, EventArgs e)
   {
-    this.Show();
-    this.WindowState = FormWindowState.Normal;
+    if (this.hostForm == null)
+      return;
+    this.hostForm.Show();
+    this.hostForm.WindowState = FormWindowState.Normal;
   }
 
-  private void ctx_Quit_Click(object sender, EventArgs e) => this.Close();
+  private void ctx_Quit_Click(object sender, EventArgs e)
+  {
+    this.hostForm?.Close();
+  }
 
   public void ui_web_urls_connected() => this.ui_web_urls.BackColor = System.Drawing.Color.PaleGreen;
 
@@ -703,14 +759,25 @@ public class NB21Logger : Form
     this.igc_file_write();
   }
 
-  private void Form1_Closing(object sender, FormClosingEventArgs e)
+  private void Form1_Closing(object? sender, FormClosingEventArgs e)
   {
+    this.PerformShutdownTasks();
+  }
+
+  private void PerformShutdownTasks()
+  {
+    if (this.shutdownHandled)
+      return;
+    this.shutdownHandled = true;
     Console.WriteLine("NB21 Logger closing");
-    int length = this.simdata.flight_data_model.get_length();
-    if (length > 60)
-      this.igc_file_write();
-    else
-      Console.WriteLine($"Short tracklog ({length} records) not written to file.");
+    if (this.simdata != null)
+    {
+      int length = this.simdata.flight_data_model.get_length();
+      if (length > 60)
+        this.igc_file_write();
+      else
+        Console.WriteLine($"Short tracklog ({length} records) not written to file.");
+    }
     this.save_settings();
   }
 
@@ -858,8 +925,13 @@ public class NB21Logger : Form
 
   protected override void Dispose(bool disposing)
   {
-    if (disposing && this.components != null)
-      this.components.Dispose();
+    if (disposing)
+    {
+      this.DetachFromHostForm();
+      this.PerformShutdownTasks();
+      if (this.components != null)
+        this.components.Dispose();
+    }
     base.Dispose(disposing);
   }
 
@@ -1188,15 +1260,11 @@ public class NB21Logger : Form
     this.imageList1.Images.SetKeyName(3, "settings_small.png");
     this.AutoScaleMode = AutoScaleMode.None;
     this.BackColor = System.Drawing.Color.LightCyan;
-    this.ClientSize = new Size(594, 236);
     this.Controls.Add((Control) this.tabControl1);
     this.Font = new Font("Segoe UI", 9f);
-    this.Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
     this.Margin = new Padding(3, 2, 3, 2);
-    this.MaximizeBox = false;
     this.Name = nameof (NB21Logger);
-    this.Text = "Form1";
-    this.FormClosing += new FormClosingEventHandler(this.Form1_Closing);
+    this.Size = new Size(594, 236);
     this.Load += new EventHandler(this.Form1_Load);
     this.tabControl1.ResumeLayout(false);
     this.tabPage_Home.ResumeLayout(false);
