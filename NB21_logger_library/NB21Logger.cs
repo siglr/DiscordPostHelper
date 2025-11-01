@@ -59,9 +59,9 @@ public class NB21Logger : UserControl
   public NB21Logger.WsConnectDelegate ws_disconnected;
   private Form? hostForm;
   private bool shutdownHandled;
-  private
-  #nullable disable
-  IContainer components;
+
+#nullable disable
+  private IContainer components;
   private TabControl tabControl1;
   private TabPage tabPage_Home;
   private TabPage tabPage_Settings;
@@ -94,6 +94,7 @@ public class NB21Logger : UserControl
   private LinkLabel ui_web_urls;
   private Button ui_task_button;
   private Label pln_drop_outline;
+#nullable restore
 
   private static Assembly? ResolveSimConnectAssembly(object? sender, ResolveEventArgs args)
   {
@@ -275,9 +276,7 @@ public class NB21Logger : UserControl
     }
   }
 
-  private 
-  #nullable enable
-  string get_title() => $"{this.settings.AppName} {this.settings.AppVersion}";
+  private string get_title() => $"{this.settings.AppName} {this.settings.AppVersion}";
 
   private void set_ui_web_urls(string txt)
   {
