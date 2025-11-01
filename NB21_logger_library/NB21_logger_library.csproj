@@ -58,6 +58,9 @@
     <Compile Include="IGCWaypoint.cs" />
     <Compile Include="NB21Constants.cs" />
     <Compile Include="IGCUtil.cs" />
+    <Compile Include="NB21Logger.Designer.cs">
+      <DependentUpon>NB21Logger.cs</DependentUpon>
+    </Compile>
     <Compile Include="NB21WebServer.cs" />
     <Compile Include="NB21WSServer.cs" />
     <Compile Include="Broadcaster.cs" />
