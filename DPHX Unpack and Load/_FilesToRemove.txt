@@ -10,3 +10,5 @@ Microsoft.Web.WebView2.WinForms.dll
 System.Data.SQLite.dll
 TasksDatabase.db
 WebView2Loader.dll
+naudio.xml
+DPHX Unpack and Load.exe.manifest
