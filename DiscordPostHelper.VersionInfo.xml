@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.10.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.3.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.3.2</ReleaseVersion>
+      <ReleaseTitle>Transition to 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Moved all code to 64 bits to allow future enhancements
+        For SSC posts, changed the IGC upload message
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.10.28.1</ReleaseVersion>
       <ReleaseTitle>Fix for very specific situation (old Discord version)</ReleaseTitle>

@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.10.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.3.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.3.2</ReleaseVersion>
+      <ReleaseTitle>Transition to 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Moved all code to 64 bits to allow future enhancements
+        Changed the order of unpack operations to (possibly) avoid overwritten files
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.10.15.1</ReleaseVersion>
       <ReleaseTitle>IGC upload enhancements</ReleaseTitle>
