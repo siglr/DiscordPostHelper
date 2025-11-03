@@ -292,14 +292,36 @@ Public Class ListenerContext
 
             Using client = New NamedPipeClientStream(".", "DPHXPipe", PipeDirection.Out)
                 client.Connect(2000)
-                Using writer = New StreamWriter(client)
+                Using writer = New StreamWriter(client, New System.Text.UTF8Encoding(False))
                     writer.AutoFlush = True
                     writer.Write(message) ' DPHX reads ReadToEnd()
                 End Using
             End Using
 
+        Catch ex As TimeoutException
+            ' Transient connect timeout -> suppress
+            If Not preventWSGFromOpening Then
+                ' optional: Trace.WriteLine("DPHX timeout: " & ex.Message)
+            End If
+
+        Catch ex As IOException
+            ' Check HRESULT and (optionally) inner Win32 error for locale-agnostic detection
+            Dim hr As Integer = ex.HResult
+            Dim isTransient As Boolean =
+            (hr = &H80070079) OrElse   ' ERROR_SEM_TIMEOUT (121)
+            (hr = &H800700E7) OrElse   ' ERROR_PIPE_BUSY (231)
+            (TypeOf ex.InnerException Is ComponentModel.Win32Exception AndAlso
+             ({121, 231}.Contains(DirectCast(ex.InnerException, ComponentModel.Win32Exception).NativeErrorCode)))
+
+            If Not isTransient AndAlso allowAutoLaunch AndAlso Not preventWSGFromOpening Then
+                MessageBox.Show("Unable to contact DPHX: " & ex.Message,
+                            "WeSimGlide DPHX Listener",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+            ' else: swallow transient errors silently
+
         Catch ex As Exception
-            If allowAutoLaunch AndAlso (Not ex.Message.Contains("semaphore")) Then
+            If allowAutoLaunch AndAlso Not preventWSGFromOpening Then
                 MessageBox.Show("Unable to contact DPHX: " & ex.Message,
                             "WeSimGlide DPHX Listener",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
