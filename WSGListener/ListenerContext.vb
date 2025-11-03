@@ -299,7 +299,7 @@ Public Class ListenerContext
             End Using
 
         Catch ex As Exception
-            If allowAutoLaunch Then
+            If allowAutoLaunch AndAlso (Not ex.Message.Contains("semaphore")) Then
                 MessageBox.Show("Unable to contact DPHX: " & ex.Message,
                             "WeSimGlide DPHX Listener",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
