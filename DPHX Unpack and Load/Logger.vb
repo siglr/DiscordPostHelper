@@ -299,11 +299,10 @@ Public Class Logger
         End If
     End Sub
 
-    Public Sub UpdateConfigurationFromCaller(Optional pilotName As String = Nothing,
-                                             Optional competitionID As String = Nothing,
-                                             Optional tracklogsPath As String = Nothing,
-                                             Optional flightPlanPath As String = Nothing)
-
+    Public Sub UpdateConfigurationFromCaller(Optional pilotName As String = "",
+                                             Optional competitionID As String = "",
+                                             Optional tracklogsPath As String = "",
+                                             Optional flightPlanPath As String = "")
         If InvokeRequired Then
             BeginInvoke(New Action(Sub() UpdateConfigurationFromCaller(pilotName, competitionID, tracklogsPath, flightPlanPath)))
             Return
@@ -320,7 +319,7 @@ Public Class Logger
             End If
         End If
 
-        If competitionID Is Not Nothing Then
+        If competitionID <> String.Empty Then
             Dim sanitizedCompetitionId As String = competitionID.Trim()
             If Not String.Equals(_config.PilotId, sanitizedCompetitionId, StringComparison.Ordinal) Then
                 _config.PilotId = sanitizedCompetitionId
@@ -332,13 +331,13 @@ Public Class Logger
             UpdatePilotDisplay()
         End If
 
-        If tracklogsPath Is Not Nothing Then
+        If tracklogsPath <> String.Empty Then
             Dim sanitizedTracklogsPath As String = tracklogsPath.Trim()
             _config.TracklogsDirectory = sanitizedTracklogsPath
             EnsureTracklogsFolder()
         End If
 
-        If flightPlanPath Is Not Nothing Then
+        If flightPlanPath <> String.Empty Then
             Dim sanitizedFlightPlanPath As String = flightPlanPath.Trim()
             SetFlightPlanFromCaller(sanitizedFlightPlanPath)
         End If
@@ -392,5 +391,12 @@ Public Class Logger
             ui_pilot.Text = $"{name} ({id})"
         End If
     End Sub
+
+    Public ReadOnly Property IsReady As Boolean
+        Get
+            'TODO: Define how to determine readiness
+            Return True
+        End Get
+    End Property
 
 End Class

@@ -583,8 +583,6 @@ Public Class DPHXUnpackAndLoad
         SetFormCaption(_currentFile)
         packageNameToolStrip.Text = _currentFile
 
-        UpdateLoggerFlightPlan(GetCurrentFlightPlanPath())
-
     End Sub
 
     Private Sub GetTaskDetails(taskID As String, entrySeqID As Integer)
@@ -865,10 +863,28 @@ Public Class DPHXUnpackAndLoad
         _status.AppendStatusLine("Unpacking Results:", True)
 
         Dim loggerFlightPlanPath As String = GetCurrentFlightPlanPath()
-        Dim loggerUpdatedWithPln As Boolean = False
+
+        Dim internalLoggerInUse As Boolean = False
+        If File.Exists($"{Application.StartupPath}\GiveMeTheLogger.Please") Then
+            Dim NB21LoggerRunning As Boolean
+            Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
+            NB21LoggerRunning = processList.Length > 0
+            If NB21LoggerRunning Then
+                _status.AppendStatusLine("Internal NB21 Logger requested but external already running.", False)
+            Else
+                OpenLoggerForm()
+                If _loggerForm IsNot Nothing AndAlso _loggerForm.IsReady Then
+                    'Logger started successfully
+                    _status.AppendStatusLine("Internal NB21 Logger successfully started and setup.", True)
+                    internalLoggerInUse = True
+                Else
+                    _status.AppendStatusLine("Internal NB21 Logger is not ready, possibly reverting to external.", True)
+                End If
+            End If
+        End If
 
         ' NB21 auto-start and PLN feeding
-        If Settings.SessionSettings.NB21StartAndFeed Then
+        If Settings.SessionSettings.NB21StartAndFeed AndAlso (Not internalLoggerInUse) Then
             Dim NB21LoggerRunning As Boolean
             Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
 
@@ -887,7 +903,7 @@ Public Class DPHXUnpackAndLoad
                             For i As Integer = 1 To 10
                                 If IsPortOpen("localhost", Settings.SessionSettings.NB21LocalWSPort, 500) Then
                                     NB21LoggerRunning = True
-                                    _status.AppendStatusLine("NB21 Logger successfully started.", False)
+                                    _status.AppendStatusLine("External NB21 Logger successfully started.", False)
                                     Exit For
                                 End If
                                 Thread.Sleep(500) ' Check every 500ms
@@ -904,22 +920,13 @@ Public Class DPHXUnpackAndLoad
                     _status.AppendStatusLine($"The NB21 Logger's executable file was not found in {Settings.SessionSettings.NB21EXEFolder}", True)
                 End If
             Else
-                _status.AppendStatusLine("NB21 Logger is already running.", False)
+                _status.AppendStatusLine("External NB21 Logger is already running.", False)
             End If
 
             If NB21LoggerRunning AndAlso Not String.IsNullOrWhiteSpace(loggerFlightPlanPath) Then
                 'Feed the PLN file to the logger
                 SendPLNFileToNB21Logger(loggerFlightPlanPath)
-                loggerUpdatedWithPln = True
             End If
-        End If
-
-        If Not loggerUpdatedWithPln Then
-            If String.IsNullOrWhiteSpace(loggerFlightPlanPath) Then
-                loggerFlightPlanPath = GetCurrentFlightPlanPath()
-            End If
-
-            UpdateLoggerFlightPlan(loggerFlightPlanPath)
         End If
 
         ' Tracker auto-start and data feeding
@@ -1066,11 +1073,6 @@ Public Class DPHXUnpackAndLoad
         ' Define the API endpoint and the path to the PLN file
         Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.NB21LocalWSPort}/pln_set"
 
-        If String.IsNullOrWhiteSpace(plnfilePath) OrElse Not File.Exists(plnfilePath) Then
-            UpdateLoggerFlightPlan(plnfilePath)
-            Return
-        End If
-
         Try
             ' Read the contents of the PLN file
             Dim plnContent As String = File.ReadAllText(plnfilePath)
@@ -1081,16 +1083,14 @@ Public Class DPHXUnpackAndLoad
                 Dim response As HttpResponseMessage = client.PostAsync(apiUrl, content).Result
 
                 If response.IsSuccessStatusCode Then
-                    _status.AppendStatusLine("PLN file successfully sent to NB21 Logger.", True)
+                    _status.AppendStatusLine("PLN file successfully sent to external NB21 Logger.", True)
                 Else
-                    _status.AppendStatusLine($"Failed to send PLN file to NB21 Logger. HTTP Status: {response.StatusCode}", True)
+                    _status.AppendStatusLine($"Failed to send PLN file to external NB21 Logger. HTTP Status: {response.StatusCode}", True)
                 End If
             End Using
         Catch ex As Exception
             _status.AppendStatusLine($"An error occurred while sending the PLN file: {ex.Message}", True)
         End Try
-
-        UpdateLoggerFlightPlan(plnfilePath)
 
     End Sub
 
@@ -1670,7 +1670,15 @@ Public Class DPHXUnpackAndLoad
         Settings.SessionSettings.Load()
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub OpenLoggerForm()
+
+        ' Check that we have the user info on WSG - if not, can't use the logger
+        If Settings.SessionSettings.WSGUserID = 0 Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Please log in to WeSimGlide.org first before using the logger!", "Not logged in to WeSimGlide.org", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Exit Sub
+        End If
 
         Dim pilotName As String = If(Settings.SessionSettings.WSGPilotName, String.Empty)
         Dim competitionId As String = If(Settings.SessionSettings.WSGCompID, String.Empty)
@@ -1719,18 +1727,6 @@ Public Class DPHXUnpackAndLoad
 
         Return String.Empty
     End Function
-
-    Private Sub UpdateLoggerFlightPlan(plnfilePath As String)
-        If _loggerForm Is Nothing OrElse _loggerForm.IsDisposed Then
-            Return
-        End If
-
-        _loggerForm.UpdateConfigurationFromCaller(If(Settings.SessionSettings.WSGPilotName, String.Empty),
-                                                  If(Settings.SessionSettings.WSGCompID, String.Empty),
-                                                  If(Settings.SessionSettings.NB21IGCFolder, String.Empty),
-                                                  plnfilePath)
-    End Sub
-
 
 #End Region
 

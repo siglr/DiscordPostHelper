@@ -49,7 +49,6 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.tool2024StatusOK = New System.Windows.Forms.ToolStripButton()
@@ -254,24 +253,14 @@ Partial Class DPHXUnpackAndLoad
         'pnlDPHFile
         '
         Me.pnlDPHFile.AutoSize = True
-        Me.pnlDPHFile.Controls.Add(Me.Button1)
         Me.pnlDPHFile.Controls.Add(Me.msfs2024ToolStrip)
         Me.pnlDPHFile.Controls.Add(Me.msfs2020ToolStrip)
         Me.pnlDPHFile.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlDPHFile.Location = New System.Drawing.Point(0, 45)
         Me.pnlDPHFile.Name = "pnlDPHFile"
         Me.pnlDPHFile.Padding = New System.Windows.Forms.Padding(5)
-        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 63)
+        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 60)
         Me.pnlDPHFile.TabIndex = 2
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(919, 17)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 38)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'msfs2024ToolStrip
         '
@@ -524,5 +513,4 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStripWSGHome As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents toolStripWSGUploadIGC As ToolStripButton
-    Friend WithEvents Button1 As Button
 End Class
