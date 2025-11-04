@@ -583,6 +583,8 @@ Public Class DPHXUnpackAndLoad
         SetFormCaption(_currentFile)
         packageNameToolStrip.Text = _currentFile
 
+        UpdateLoggerFlightPlan(GetCurrentFlightPlanPath())
+
     End Sub
 
     Private Sub GetTaskDetails(taskID As String, entrySeqID As Integer)
@@ -862,6 +864,9 @@ Public Class DPHXUnpackAndLoad
 
         _status.AppendStatusLine("Unpacking Results:", True)
 
+        Dim loggerFlightPlanPath As String = GetCurrentFlightPlanPath()
+        Dim loggerUpdatedWithPln As Boolean = False
+
         ' NB21 auto-start and PLN feeding
         If Settings.SessionSettings.NB21StartAndFeed Then
             Dim NB21LoggerRunning As Boolean
@@ -902,10 +907,19 @@ Public Class DPHXUnpackAndLoad
                 _status.AppendStatusLine("NB21 Logger is already running.", False)
             End If
 
-            If NB21LoggerRunning Then
+            If NB21LoggerRunning AndAlso Not String.IsNullOrWhiteSpace(loggerFlightPlanPath) Then
                 'Feed the PLN file to the logger
-                SendPLNFileToNB21Logger(Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)))
+                SendPLNFileToNB21Logger(loggerFlightPlanPath)
+                loggerUpdatedWithPln = True
             End If
+        End If
+
+        If Not loggerUpdatedWithPln Then
+            If String.IsNullOrWhiteSpace(loggerFlightPlanPath) Then
+                loggerFlightPlanPath = GetCurrentFlightPlanPath()
+            End If
+
+            UpdateLoggerFlightPlan(loggerFlightPlanPath)
         End If
 
         ' Tracker auto-start and data feeding
@@ -1052,6 +1066,11 @@ Public Class DPHXUnpackAndLoad
         ' Define the API endpoint and the path to the PLN file
         Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.NB21LocalWSPort}/pln_set"
 
+        If String.IsNullOrWhiteSpace(plnfilePath) OrElse Not File.Exists(plnfilePath) Then
+            UpdateLoggerFlightPlan(plnfilePath)
+            Return
+        End If
+
         Try
             ' Read the contents of the PLN file
             Dim plnContent As String = File.ReadAllText(plnfilePath)
@@ -1070,6 +1089,8 @@ Public Class DPHXUnpackAndLoad
         Catch ex As Exception
             _status.AppendStatusLine($"An error occurred while sending the PLN file: {ex.Message}", True)
         End Try
+
+        UpdateLoggerFlightPlan(plnfilePath)
 
     End Sub
 
@@ -1651,13 +1672,27 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If _loggerForm Is Nothing OrElse (Not _loggerForm.Visible) Then
+        Dim pilotName As String = If(Settings.SessionSettings.WSGPilotName, String.Empty)
+        Dim competitionId As String = If(Settings.SessionSettings.WSGCompID, String.Empty)
+        Dim tracklogsPath As String = If(Settings.SessionSettings.NB21IGCFolder, String.Empty)
+        Dim flightPlanPath As String = GetCurrentFlightPlanPath()
+
+        If _loggerForm Is Nothing OrElse _loggerForm.IsDisposed OrElse (Not _loggerForm.Visible) Then
             If _loggerForm IsNot Nothing Then
                 _loggerForm.Dispose()
                 _loggerForm = Nothing
             End If
-            _loggerForm = New Logger(Settings.SessionSettings.WSGPilotName, Settings.SessionSettings.WSGCompID, Settings.SessionSettings.NB21IGCFolder)
+
+            _loggerForm = New Logger(pilotName,
+                                      competitionId,
+                                      tracklogsPath,
+                                      flightPlanPath)
             _loggerForm.Show(Me)
+        Else
+            _loggerForm.UpdateConfigurationFromCaller(pilotName,
+                                                      competitionId,
+                                                      tracklogsPath,
+                                                      flightPlanPath)
         End If
 
         'Make sure the form is visible, restored if minimized and on top
@@ -1665,6 +1700,37 @@ Public Class DPHXUnpackAndLoad
         _loggerForm.BringToFront()
 
     End Sub
+
+    Private Function GetCurrentFlightPlanPath() As String
+        If _allDPHData Is Nothing OrElse String.IsNullOrWhiteSpace(_allDPHData.FlightPlanFilename) Then
+            Return String.Empty
+        End If
+
+        Dim filenameOnly As String = Path.GetFileName(_allDPHData.FlightPlanFilename)
+        Dim tempPath As String = Path.Combine(TempDPHXUnpackFolder, filenameOnly)
+
+        If File.Exists(tempPath) Then
+            Return tempPath
+        End If
+
+        If File.Exists(_allDPHData.FlightPlanFilename) Then
+            Return _allDPHData.FlightPlanFilename
+        End If
+
+        Return String.Empty
+    End Function
+
+    Private Sub UpdateLoggerFlightPlan(plnfilePath As String)
+        If _loggerForm Is Nothing OrElse _loggerForm.IsDisposed Then
+            Return
+        End If
+
+        _loggerForm.UpdateConfigurationFromCaller(If(Settings.SessionSettings.WSGPilotName, String.Empty),
+                                                  If(Settings.SessionSettings.WSGCompID, String.Empty),
+                                                  If(Settings.SessionSettings.NB21IGCFolder, String.Empty),
+                                                  plnfilePath)
+    End Sub
+
 
 #End Region
 
