@@ -19,6 +19,7 @@ public class Broadcaster : WebSocketBehavior
   protected override void OnOpen()
   {
     this.logger?.Invoke((Delegate) this.logger.ws_connected);
+    this.logger?.NotifyWebSocketConnected(this.json);
     base.OnOpen();
     Console.WriteLine("Broadcaster websocket open." + (this.json ? " (json)" : " (igc)"));
     if (this.logger == null)
@@ -38,6 +39,7 @@ public class Broadcaster : WebSocketBehavior
   protected override void OnClose(CloseEventArgs args)
   {
     this.logger?.Invoke((Delegate) this.logger.ws_disconnected);
+    this.logger?.NotifyWebSocketDisconnected(this.json);
     Console.WriteLine("Broadcaster websocket closed.");
     base.OnClose(args);
   }
