@@ -1,8 +1,6 @@
-Imports System
 Imports System.Diagnostics
 Imports System.Drawing
 Imports System.IO
-Imports System.Net.Mime.MediaTypeNames
 Imports System.Windows.Forms
 Imports NB21_logger
 
@@ -372,7 +370,7 @@ Public Class Logger
         Dim bmp As New Bitmap(48, 48)
 
         Using g = Graphics.FromImage(bmp)
-            g.Clear(color.Transparent)
+            g.Clear(Color.Transparent)
             Using brush As New SolidBrush(color)
                 g.FillEllipse(brush, 4, 4, 40, 40)
             End Using
