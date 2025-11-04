@@ -26,6 +26,7 @@ Partial Class IGCFileUpload
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IGCFileUpload))
         Me.browser = New CefSharp.WinForms.ChromiumWebBrowser()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.btnCopyToClipboard = New System.Windows.Forms.Button()
         Me.txtIGCEntrySeqID = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.btnMoveIGCToProcessed = New System.Windows.Forms.Button()
@@ -133,6 +134,7 @@ Partial Class IGCFileUpload
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnCopyToClipboard)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtIGCEntrySeqID)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label8)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnMoveIGCToProcessed)
@@ -162,6 +164,19 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
         '
+        'btnCopyToClipboard
+        '
+        Me.btnCopyToClipboard.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCopyToClipboard.Location = New System.Drawing.Point(4, 139)
+        Me.btnCopyToClipboard.Name = "btnCopyToClipboard"
+        Me.btnCopyToClipboard.Size = New System.Drawing.Size(239, 32)
+        Me.btnCopyToClipboard.TabIndex = 1
+        Me.btnCopyToClipboard.Text = "Copy to Clipboard"
+        Me.ToolTip1.SetToolTip(Me.btnCopyToClipboard, "Click to copy the selected IGC file to your clipboard for easy pasting elsewhere." &
+        "")
+        Me.btnCopyToClipboard.UseVisualStyleBackColor = True
+        '
         'txtIGCEntrySeqID
         '
         Me.txtIGCEntrySeqID.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
@@ -172,7 +187,7 @@ Partial Class IGCFileUpload
         Me.txtIGCEntrySeqID.Name = "txtIGCEntrySeqID"
         Me.txtIGCEntrySeqID.ReadOnly = True
         Me.txtIGCEntrySeqID.Size = New System.Drawing.Size(144, 20)
-        Me.txtIGCEntrySeqID.TabIndex = 12
+        Me.txtIGCEntrySeqID.TabIndex = 13
         Me.ToolTip1.SetToolTip(Me.txtIGCEntrySeqID, "The task ID from WeSimGlide.org")
         '
         'Label8
@@ -182,7 +197,7 @@ Partial Class IGCFileUpload
         Me.Label8.Location = New System.Drawing.Point(3, 304)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(49, 20)
-        Me.Label8.TabIndex = 11
+        Me.Label8.TabIndex = 12
         Me.Label8.Text = "Task #"
         '
         'btnMoveIGCToProcessed
@@ -244,7 +259,7 @@ Partial Class IGCFileUpload
         Me.pnlResults.Location = New System.Drawing.Point(0, 358)
         Me.pnlResults.Name = "pnlResults"
         Me.pnlResults.Size = New System.Drawing.Size(249, 221)
-        Me.pnlResults.TabIndex = 15
+        Me.pnlResults.TabIndex = 16
         Me.pnlResults.Visible = False
         '
         'txtTaskLocalDateTime
@@ -424,7 +439,7 @@ Partial Class IGCFileUpload
         Me.txtWSGStatus.Name = "txtWSGStatus"
         Me.txtWSGStatus.ReadOnly = True
         Me.txtWSGStatus.Size = New System.Drawing.Size(144, 20)
-        Me.txtWSGStatus.TabIndex = 14
+        Me.txtWSGStatus.TabIndex = 15
         Me.ToolTip1.SetToolTip(Me.txtWSGStatus, "Status of this IGC file on WeSimGlide.org")
         '
         'Label7
@@ -434,7 +449,7 @@ Partial Class IGCFileUpload
         Me.Label7.Location = New System.Drawing.Point(3, 330)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(86, 20)
-        Me.Label7.TabIndex = 13
+        Me.Label7.TabIndex = 14
         Me.Label7.Text = "WSG Status"
         '
         'txtRecordDate
@@ -447,7 +462,7 @@ Partial Class IGCFileUpload
         Me.txtRecordDate.Name = "txtRecordDate"
         Me.txtRecordDate.ReadOnly = True
         Me.txtRecordDate.Size = New System.Drawing.Size(144, 20)
-        Me.txtRecordDate.TabIndex = 10
+        Me.txtRecordDate.TabIndex = 11
         Me.ToolTip1.SetToolTip(Me.txtRecordDate, "Date and time the IGC file was recorded.")
         '
         'Label6
@@ -457,7 +472,7 @@ Partial Class IGCFileUpload
         Me.Label6.Location = New System.Drawing.Point(3, 278)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(90, 20)
-        Me.Label6.TabIndex = 9
+        Me.Label6.TabIndex = 10
         Me.Label6.Text = "Record date"
         '
         'txtSim
@@ -470,7 +485,7 @@ Partial Class IGCFileUpload
         Me.txtSim.Name = "txtSim"
         Me.txtSim.ReadOnly = True
         Me.txtSim.Size = New System.Drawing.Size(144, 20)
-        Me.txtSim.TabIndex = 8
+        Me.txtSim.TabIndex = 9
         Me.ToolTip1.SetToolTip(Me.txtSim, "Sim version extracted from IGC file")
         '
         'Label5
@@ -480,7 +495,7 @@ Partial Class IGCFileUpload
         Me.Label5.Location = New System.Drawing.Point(3, 252)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(33, 20)
-        Me.Label5.TabIndex = 7
+        Me.Label5.TabIndex = 8
         Me.Label5.Text = "Sim"
         '
         'txtGlider
@@ -493,7 +508,7 @@ Partial Class IGCFileUpload
         Me.txtGlider.Name = "txtGlider"
         Me.txtGlider.ReadOnly = True
         Me.txtGlider.Size = New System.Drawing.Size(144, 20)
-        Me.txtGlider.TabIndex = 6
+        Me.txtGlider.TabIndex = 7
         Me.ToolTip1.SetToolTip(Me.txtGlider, "Glider type extracted from IGC file")
         '
         'Label3
@@ -503,7 +518,7 @@ Partial Class IGCFileUpload
         Me.Label3.Location = New System.Drawing.Point(3, 226)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(48, 20)
-        Me.Label3.TabIndex = 5
+        Me.Label3.TabIndex = 6
         Me.Label3.Text = "Glider"
         '
         'txtCompID
@@ -516,7 +531,7 @@ Partial Class IGCFileUpload
         Me.txtCompID.Name = "txtCompID"
         Me.txtCompID.ReadOnly = True
         Me.txtCompID.Size = New System.Drawing.Size(144, 20)
-        Me.txtCompID.TabIndex = 4
+        Me.txtCompID.TabIndex = 5
         Me.ToolTip1.SetToolTip(Me.txtCompID, "Competition ID extracted from IGC file")
         '
         'Label2
@@ -526,7 +541,7 @@ Partial Class IGCFileUpload
         Me.Label2.Location = New System.Drawing.Point(3, 200)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 20)
-        Me.Label2.TabIndex = 3
+        Me.Label2.TabIndex = 4
         Me.Label2.Text = "Comp. ID"
         '
         'txtPilot
@@ -539,7 +554,7 @@ Partial Class IGCFileUpload
         Me.txtPilot.Name = "txtPilot"
         Me.txtPilot.ReadOnly = True
         Me.txtPilot.Size = New System.Drawing.Size(144, 20)
-        Me.txtPilot.TabIndex = 2
+        Me.txtPilot.TabIndex = 3
         Me.ToolTip1.SetToolTip(Me.txtPilot, "Pilot name extracted from IGC file")
         '
         'Label1
@@ -549,7 +564,7 @@ Partial Class IGCFileUpload
         Me.Label1.Location = New System.Drawing.Point(3, 174)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(37, 20)
-        Me.Label1.TabIndex = 1
+        Me.Label1.TabIndex = 2
         Me.Label1.Text = "Pilot"
         '
         'lstbxIGCFiles
@@ -563,7 +578,7 @@ Partial Class IGCFileUpload
         Me.lstbxIGCFiles.Location = New System.Drawing.Point(4, 5)
         Me.lstbxIGCFiles.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.lstbxIGCFiles.Name = "lstbxIGCFiles"
-        Me.lstbxIGCFiles.Size = New System.Drawing.Size(239, 161)
+        Me.lstbxIGCFiles.Size = New System.Drawing.Size(239, 131)
         Me.lstbxIGCFiles.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.lstbxIGCFiles, "Select an IGC file from the list.")
         '
@@ -577,7 +592,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(722, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(720, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -588,7 +603,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(714, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(712, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -624,10 +639,10 @@ Partial Class IGCFileUpload
         Me.tabpgRatings.Controls.Add(Me.lblTaskIDAndTitle)
         Me.tabpgRatings.Controls.Add(Me.grpTaskUserData)
         Me.tabpgRatings.Controls.Add(Me.grpIGCUserComment)
-        Me.tabpgRatings.Location = New System.Drawing.Point(4, 29)
+        Me.tabpgRatings.Location = New System.Drawing.Point(4, 22)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(714, 662)
+        Me.tabpgRatings.Size = New System.Drawing.Size(712, 669)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
@@ -1042,4 +1057,5 @@ Partial Class IGCFileUpload
     Friend WithEvents imgAvatar As PictureBox
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
+    Friend WithEvents btnCopyToClipboard As Button
 End Class

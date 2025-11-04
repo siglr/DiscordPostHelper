@@ -1194,4 +1194,38 @@ End Function
         SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?task={igcDetails.MatchedTask.EntrySeqID.ToString()}")
 
     End Sub
+
+    Private Sub btnCopyToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyToClipboard.Click
+        ' Put the selected IGC file into the clipboard as a file drop list
+        If lstbxIGCFiles.SelectedIndex < 0 Then Return
+
+        Dim sourcePath As String = igcDetails.IGCLocalFilePath
+        If String.IsNullOrWhiteSpace(sourcePath) OrElse Not File.Exists(sourcePath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Selected IGC file not found on disk.", "Copy to Clipboard", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
+        Try
+            Dim files As New System.Collections.Specialized.StringCollection()
+            files.Add(sourcePath)
+
+            ' Use a DataObject so we can request persistent clipboard
+            Dim data As New DataObject()
+            data.SetFileDropList(files)
+
+            ' True = keep data after app closes
+            Clipboard.SetDataObject(data, True)
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("IGC file copied to clipboard.", "Copy to Clipboard", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Couldn't copy the file to clipboard:" & Environment.NewLine & ex.Message, "Copy to Clipboard", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        End Try
+    End Sub
+
 End Class
