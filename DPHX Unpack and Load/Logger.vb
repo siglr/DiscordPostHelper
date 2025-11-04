@@ -20,8 +20,10 @@ Public Class Logger
     Private _recordingTickTock As Boolean
     Private _finalizedIgcPath As String = String.Empty
     Private _compactView As Boolean
+    Private ReadOnly _initialFlightPlanPath As String
+    Private _currentFlightPlanPath As String = String.Empty
 
-    Public Sub New(pilotName As String, competitionID As String, tracklogsPath As String)
+    Public Sub New(pilotName As String, competitionID As String, tracklogsPath As String, flightPlanPath As String)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -29,9 +31,10 @@ Public Class Logger
         _config = New LoggerConfiguration()
         _config.AppName = "NB21 Logger for DPHX"
         _config.AppVersion = "1.2.3"
-        _config.PilotName = pilotName
-        _config.PilotId = competitionID
-        _config.TracklogsDirectory = tracklogsPath
+        _config.PilotName = If(pilotName, String.Empty).Trim()
+        _config.PilotId = If(competitionID, String.Empty).Trim()
+        _config.TracklogsDirectory = If(tracklogsPath, String.Empty).Trim()
+        _initialFlightPlanPath = If(String.IsNullOrWhiteSpace(flightPlanPath), String.Empty, flightPlanPath)
 
         _logger = New NB21Logger(_config)
         _state = _logger.State
@@ -61,9 +64,9 @@ Public Class Logger
         SetPosition()
 
         Text = $"{_config.AppName} {_config.AppVersion}"
-        ui_pilot.Text = $"{_config.PilotName} ({_config.PilotId})"
+        UpdatePilotDisplay()
         ui_aircraft.Text = String.Empty
-        ui_task.Text = "Drop a .PLN or click Task"
+        ui_task.Text = "Awaiting task from DPHX."
         ui_local_time.Text = String.Empty
         ui_recording_time.Visible = False
         ui_recording_time.Text = "00:00:00"
@@ -77,6 +80,10 @@ Public Class Logger
         _uiRefreshTimer.Start()
 
         _logger.Start()
+
+        If Not String.IsNullOrWhiteSpace(_initialFlightPlanPath) Then
+            LoadFlightPlan(_initialFlightPlanPath, False)
+        End If
 
     End Sub
 
@@ -124,6 +131,8 @@ Public Class Logger
     End Sub
 
     Private Sub EnsureTracklogsFolder()
+        view_tracklogs_button.Visible = False
+
         If String.IsNullOrWhiteSpace(_config.TracklogsDirectory) Then
             Return
         End If
@@ -229,7 +238,7 @@ Public Class Logger
     Private Sub ApplyState(eventType As APPEVENT_ID, newState As NB21LoggerState)
         ui_conn_status.Text = newState.ConnectionStatus
         ui_aircraft.Text = If(String.IsNullOrEmpty(newState.AircraftTitle), String.Empty, newState.AircraftTitle)
-        ui_task.Text = If(String.IsNullOrEmpty(newState.FlightPlanName), "Drop a .PLN or click Task", newState.FlightPlanName)
+        ui_task.Text = If(String.IsNullOrEmpty(newState.FlightPlanName), "Awaiting task from DPHX.", newState.FlightPlanName)
         ui_local_time.Text = If(newState.SimTimeUtc.HasValue, newState.SimTimeUtc.Value.ToString("HH:mm:ss"), String.Empty)
 
         ui_recording_time.Visible = newState.IsRecording
@@ -272,64 +281,87 @@ Public Class Logger
         End If
     End Sub
 
-    Private Sub ui_task_Click(sender As Object, e As EventArgs) Handles ui_task.Click
-        Using dialog As New OpenFileDialog()
-            dialog.Filter = "Flight Plans (*.pln)|*.pln"
-            dialog.Title = "Select Flight Plan"
+    Public Sub SetFlightPlanFromCaller(filePath As String)
+        Dim pathToLoad As String = filePath
+        Dim showErrors As Boolean = True
 
-            If dialog.ShowDialog(Me) = DialogResult.OK Then
-                LoadFlightPlan(dialog.FileName)
-            End If
-        End Using
-    End Sub
+        If String.IsNullOrWhiteSpace(filePath) Then
+            pathToLoad = String.Empty
+            showErrors = False
+        ElseIf Not File.Exists(filePath) Then
+            pathToLoad = String.Empty
+        End If
 
-    Private Sub ui_task_DragEnter(sender As Object, e As DragEventArgs) Handles ui_task.DragEnter
-        If HasPlnFile(e.Data) Then
-            e.Effect = DragDropEffects.Copy
+        If InvokeRequired Then
+            BeginInvoke(New Action(Sub() LoadFlightPlan(pathToLoad, showErrors AndAlso Not String.IsNullOrWhiteSpace(pathToLoad))))
         Else
-            e.Effect = DragDropEffects.None
+            LoadFlightPlan(pathToLoad, showErrors AndAlso Not String.IsNullOrWhiteSpace(pathToLoad))
         End If
     End Sub
 
-    Private Sub ui_task_DragDrop(sender As Object, e As DragEventArgs) Handles ui_task.DragDrop
-        If Not HasPlnFile(e.Data) Then
+    Public Sub UpdateConfigurationFromCaller(Optional pilotName As String = Nothing,
+                                             Optional competitionID As String = Nothing,
+                                             Optional tracklogsPath As String = Nothing,
+                                             Optional flightPlanPath As String = Nothing)
+
+        If InvokeRequired Then
+            BeginInvoke(New Action(Sub() UpdateConfigurationFromCaller(pilotName, competitionID, tracklogsPath, flightPlanPath)))
             Return
         End If
 
-        Dim files = CType(e.Data.GetData(DataFormats.FileDrop), String())
-        If files Is Nothing OrElse files.Length = 0 Then
-            Return
-        End If
+        Dim pilotNameChanged As Boolean = False
+        Dim pilotIdChanged As Boolean = False
 
-        LoadFlightPlan(files(0))
-    End Sub
-
-    Private Function HasPlnFile(data As IDataObject) As Boolean
-        If data Is Nothing OrElse Not data.GetDataPresent(DataFormats.FileDrop) Then
-            Return False
-        End If
-
-        Dim files = CType(data.GetData(DataFormats.FileDrop), String())
-        If files Is Nothing Then
-            Return False
-        End If
-
-        For Each file In files
-            If String.Equals(Path.GetExtension(file), ".pln", StringComparison.OrdinalIgnoreCase) Then
-                Return True
+        If pilotName IsNot Nothing Then
+            Dim sanitizedPilotName As String = pilotName.Trim()
+            If Not String.Equals(_config.PilotName, sanitizedPilotName, StringComparison.Ordinal) Then
+                _config.PilotName = sanitizedPilotName
+                pilotNameChanged = True
             End If
-        Next
+        End If
 
-        Return False
-    End Function
+        If competitionID Is Not Nothing Then
+            Dim sanitizedCompetitionId As String = competitionID.Trim()
+            If Not String.Equals(_config.PilotId, sanitizedCompetitionId, StringComparison.Ordinal) Then
+                _config.PilotId = sanitizedCompetitionId
+                pilotIdChanged = True
+            End If
+        End If
 
-    Private Sub LoadFlightPlan(filePath As String)
+        If pilotNameChanged OrElse pilotIdChanged Then
+            UpdatePilotDisplay()
+        End If
+
+        If tracklogsPath Is Not Nothing Then
+            Dim sanitizedTracklogsPath As String = tracklogsPath.Trim()
+            _config.TracklogsDirectory = sanitizedTracklogsPath
+            EnsureTracklogsFolder()
+        End If
+
+        If flightPlanPath Is Not Nothing Then
+            Dim sanitizedFlightPlanPath As String = flightPlanPath.Trim()
+            SetFlightPlanFromCaller(sanitizedFlightPlanPath)
+        End If
+    End Sub
+
+    Private Sub LoadFlightPlan(filePath As String, showErrors As Boolean)
+        If String.IsNullOrWhiteSpace(filePath) Then
+            _currentFlightPlanPath = String.Empty
+            ui_task.Text = "Awaiting task from DPHX."
+            ui_message_bar.Text = "Awaiting task from DPHX."
+            Return
+        End If
+
         Try
             _logger.SetFlightPlanFromFile(filePath)
+            _currentFlightPlanPath = filePath
             ui_task.Text = Path.GetFileName(filePath)
             ui_message_bar.Text = $"Loaded {Path.GetFileName(filePath)}"
         Catch ex As Exception
-            MessageBox.Show(Me, $"Failed to load flight plan: {ex.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ui_message_bar.Text = $"Failed to load flight plan: {ex.Message}"
+            If showErrors Then
+                MessageBox.Show(Me, $"Failed to load flight plan: {ex.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         End Try
     End Sub
 
@@ -345,5 +377,20 @@ Public Class Logger
 
         Return bmp
     End Function
+
+    Private Sub UpdatePilotDisplay()
+        Dim name As String = If(String.IsNullOrWhiteSpace(_config.PilotName), String.Empty, _config.PilotName.Trim())
+        Dim id As String = If(String.IsNullOrWhiteSpace(_config.PilotId), String.Empty, _config.PilotId.Trim())
+
+        If name.Length = 0 AndAlso id.Length = 0 Then
+            ui_pilot.Text = String.Empty
+        ElseIf name.Length = 0 Then
+            ui_pilot.Text = id
+        ElseIf id.Length = 0 Then
+            ui_pilot.Text = name
+        Else
+            ui_pilot.Text = $"{name} ({id})"
+        End If
+    End Sub
 
 End Class

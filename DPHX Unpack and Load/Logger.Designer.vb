@@ -66,7 +66,8 @@ Partial Class Logger
         '
         'ui_task
         '
-        Me.ui_task.AllowDrop = True
+        Me.ui_task.AllowDrop = False
+        Me.ui_task.Cursor = System.Windows.Forms.Cursors.Default
         Me.ui_task.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.ui_task.Location = New System.Drawing.Point(130, 169)
         Me.ui_task.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
