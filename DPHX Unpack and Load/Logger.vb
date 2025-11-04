@@ -1,7 +1,4 @@
-Imports System.Diagnostics
-Imports System.Drawing
 Imports System.IO
-Imports System.Windows.Forms
 Imports NB21_logger
 
 Public Class Logger
