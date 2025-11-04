@@ -15,7 +15,7 @@ namespace NB21_logger.Properties;
 
 [CompilerGenerated]
 [GeneratedCode("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
-internal sealed class Settings : ApplicationSettingsBase
+public sealed class Settings : ApplicationSettingsBase
 {
   private static 
   #nullable disable

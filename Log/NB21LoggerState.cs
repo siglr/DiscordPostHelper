@@ -4,23 +4,23 @@ namespace NB21_logger;
 
 public sealed class NB21LoggerState
 {
-    public string ConnectionStatus { get; init; } = "Waiting for MSFS.";
+    public string ConnectionStatus { get; set; } = "Waiting for MSFS.";
 
-    public bool IsConnected { get; init; }
+    public bool IsConnected { get; set; }
 
-    public bool IsRecording { get; init; }
+    public bool IsRecording { get; set; }
 
-    public TimeSpan RecordingElapsed { get; init; }
+    public TimeSpan RecordingElapsed { get; set; }
 
-    public DateTime? SimTimeUtc { get; init; }
+    public DateTime? SimTimeUtc { get; set; }
 
-    public string? AircraftTitle { get; init; }
+    public string? AircraftTitle { get; set; }
 
-    public string? FlightPlanName { get; init; }
+    public string? FlightPlanName { get; set; }
 
-    public string? LastIgcFilePath { get; init; }
+    public string? LastIgcFilePath { get; set; }
 
-    public string TracklogsDirectory { get; init; } = string.Empty;
+    public string TracklogsDirectory { get; set; } = string.Empty;
 
     public NB21LoggerState With(
         string? connectionStatus = null,
