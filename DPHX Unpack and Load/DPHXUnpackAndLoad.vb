@@ -1,8 +1,12 @@
-﻿Imports System.Diagnostics.Eventing
+﻿Imports System
+Imports System.Collections.Generic
+Imports System.Diagnostics
+Imports System.Diagnostics.Eventing
 Imports System.Diagnostics.Eventing.Reader
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Net.Mime.MediaTypeNames
 Imports System.Reflection
 Imports System.Security.Cryptography
 Imports System.Text
@@ -1408,10 +1412,10 @@ Public Class DPHXUnpackAndLoad
 
                           candidates.Add(New CleanupCandidate With {
                           .Display = disp,
-                          .FileName = fileName,
+                          .fileName = fileName,
                           .SourcePath = folder,
-                          .Label = label,
-                          .DefaultChecked = defaultChecked,
+                          .label = label,
+                          .defaultChecked = defaultChecked,
                           .IsWhitelistProtected = isWL
                       })
                       End Sub
