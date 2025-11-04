@@ -1,3 +1,4 @@
+Imports System.Drawing
 Imports System.IO
 Imports NB21_logger
 
@@ -104,13 +105,55 @@ Public Class Logger
 
     Private Sub SetPosition()
 
-        'TODO: Try to restore previous position from registry - if not found, center on parent
+        Dim locationRestored As Boolean = False
+
+        Dim locationString As String = Settings.SessionSettings.LoggerFormLocation
+
+        If Not String.IsNullOrWhiteSpace(locationString) Then
+            Try
+                Dim locationArray As String() = locationString.TrimStart("{"c).TrimEnd("}"c).Split(","c)
+                Dim x As Integer = CInt(locationArray(0).Split("="c)(1))
+                Dim y As Integer = CInt(locationArray(1).Split("="c)(1))
+
+                Dim potentialLocation As New Point(x, y)
+                Dim formBounds As New Rectangle(potentialLocation, Size)
+                Dim isLocationVisible As Boolean = False
+
+                For Each scr As Screen In Screen.AllScreens
+                    If scr.WorkingArea.IntersectsWith(formBounds) Then
+                        isLocationVisible = True
+                        Exit For
+                    End If
+                Next
+
+                If isLocationVisible Then
+                    StartPosition = FormStartPosition.Manual
+                    Location = potentialLocation
+                    locationRestored = True
+                End If
+            Catch
+                ' Ignore and fall back to centering
+            End Try
+        End If
+
+        If Not locationRestored Then
+            If Owner IsNot Nothing Then
+                SupportingFeatures.CenterFormOnOwner(Owner, Me)
+                StartPosition = FormStartPosition.Manual
+            Else
+                StartPosition = FormStartPosition.CenterScreen
+            End If
+        End If
 
     End Sub
 
     Private Sub SavePosition()
 
-        'TODO: Save current position to registry
+        Try
+            Settings.SessionSettings.LoggerFormLocation = Location.ToString()
+            Settings.SessionSettings.Save()
+        Catch
+        End Try
 
     End Sub
 
