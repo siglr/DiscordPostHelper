@@ -60,6 +60,8 @@ Public Class Logger
 
     Private Sub Logger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        Rescale()
+
         SetSize()
         SetPosition()
 
