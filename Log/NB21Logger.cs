@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Windows.Forms;
 using NB21_logger.Properties;
 
 namespace NB21_logger;
@@ -222,9 +223,7 @@ public sealed class NB21Logger : IDisposable
         {
             simdata.CheckConnect();
         }
-        catch (FileNotFoundException ex)
-            when (ex.FileName != null &&
-                   ex.FileName.IndexOf("SimConnect", StringComparison.OrdinalIgnoreCase) >= 0)
+        catch (FileNotFoundException ex) when (ex.FileName?.Contains("SimConnect", StringComparison.OrdinalIgnoreCase) == true)
         {
             AppFailure("Missing SimConnect DLLs");
         }
