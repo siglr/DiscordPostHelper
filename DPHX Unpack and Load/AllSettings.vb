@@ -217,6 +217,9 @@ Public Class AllSettings
     <XmlElement("MainFormLocation")>
     Public Property MainFormLocation As String
 
+    <XmlElement("LoggerFormLocation")>
+    Public Property LoggerFormLocation As String
+
     <XmlElement("LastDPHXOpened")>
     Public Property LastDPHXOpened As String
 
@@ -349,6 +352,7 @@ Public Class AllSettings
                 _LocalWebServerPort = 54513
             End If
             MainFormLocation = settingsInFile.MainFormLocation
+            LoggerFormLocation = settingsInFile.LoggerFormLocation
             MainFormSize = settingsInFile.MainFormSize
             AutoOverwriteFiles = settingsInFile.AutoOverwriteFiles
             AutoUnpack = settingsInFile.AutoUnpack
