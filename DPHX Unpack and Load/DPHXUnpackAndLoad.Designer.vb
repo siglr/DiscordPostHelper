@@ -49,6 +49,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.pnlDPHFile = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.msfs2024ToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.tool2024StatusOK = New System.Windows.Forms.ToolStripButton()
@@ -253,14 +254,24 @@ Partial Class DPHXUnpackAndLoad
         'pnlDPHFile
         '
         Me.pnlDPHFile.AutoSize = True
+        Me.pnlDPHFile.Controls.Add(Me.Button1)
         Me.pnlDPHFile.Controls.Add(Me.msfs2024ToolStrip)
         Me.pnlDPHFile.Controls.Add(Me.msfs2020ToolStrip)
         Me.pnlDPHFile.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlDPHFile.Location = New System.Drawing.Point(0, 45)
         Me.pnlDPHFile.Name = "pnlDPHFile"
         Me.pnlDPHFile.Padding = New System.Windows.Forms.Padding(5)
-        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 60)
+        Me.pnlDPHFile.Size = New System.Drawing.Size(1006, 63)
         Me.pnlDPHFile.TabIndex = 2
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(919, 17)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 38)
+        Me.Button1.TabIndex = 2
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'msfs2024ToolStrip
         '
@@ -323,6 +334,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2024AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2024AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lbl2024AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2024AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2024AllFilesStatus.Name = "lbl2024AllFilesStatus"
         Me.lbl2024AllFilesStatus.Size = New System.Drawing.Size(700, 25)
@@ -388,6 +400,7 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.lbl2020AllFilesStatus.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.lbl2020AllFilesStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lbl2020AllFilesStatus.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
         Me.lbl2020AllFilesStatus.Margin = New System.Windows.Forms.Padding(5, 0, 1, 0)
         Me.lbl2020AllFilesStatus.Name = "lbl2020AllFilesStatus"
         Me.lbl2020AllFilesStatus.Size = New System.Drawing.Size(700, 25)
@@ -511,4 +524,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStripWSGHome As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents toolStripWSGUploadIGC As ToolStripButton
+    Friend WithEvents Button1 As Button
 End Class

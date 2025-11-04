@@ -177,6 +177,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IGCResults.vb" />
+    <Compile Include="Logger.Designer.vb">
+      <DependentUpon>Logger.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Logger.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PipeCommandServer.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
@@ -228,6 +234,9 @@
     <EmbeddedResource Include="frmStatus.resx">
       <DependentUpon>frmStatus.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Logger.resx">
+      <DependentUpon>Logger.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>
     </EmbeddedResource>
@@ -268,6 +277,10 @@
       <Project>{8241a955-c8e4-4cfd-ba28-eeab34f6c00c}</Project>
       <Name>ImageViewer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Log\NB21_logger.csproj">
+      <Project>{0d171791-fb59-4399-acb4-e01041358313}</Project>
+      <Name>NB21_logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Updater\Updater.vbproj">
       <Project>{ef1db017-460d-4cde-94f8-4f085b1912b0}</Project>
       <Name>Updater</Name>
@@ -276,6 +289,7 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
     <Content Include="logowithouttext.png" />
+    <Content Include="NB21Icon.ico" />
     <Content Include="Refresh.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

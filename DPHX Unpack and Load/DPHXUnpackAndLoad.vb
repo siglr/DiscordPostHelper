@@ -1648,6 +1648,13 @@ Public Class DPHXUnpackAndLoad
         Settings.SessionSettings.Load()
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim loggerForm As New Logger(Settings.SessionSettings.WSGPilotName, Settings.SessionSettings.WSGCompID, Settings.SessionSettings.NB21IGCFolder)
+        loggerForm.Show(Me)
+
+    End Sub
+
 #End Region
 
 End Class
