@@ -38,6 +38,7 @@ Public Class DPHXUnpackAndLoad
     Private _wsgListenerStartedAsTransient As Boolean = False
     Private _readySignalForListener As EventWaitHandle
     Private _isClosing As Boolean = False
+    Private _loggerForm As Logger
 
 #End Region
 
@@ -1650,8 +1651,18 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Dim loggerForm As New Logger(Settings.SessionSettings.WSGPilotName, Settings.SessionSettings.WSGCompID, Settings.SessionSettings.NB21IGCFolder)
-        loggerForm.Show(Me)
+        If _loggerForm Is Nothing OrElse (Not _loggerForm.Visible) Then
+            If _loggerForm IsNot Nothing Then
+                _loggerForm.Dispose()
+                _loggerForm = Nothing
+            End If
+            _loggerForm = New Logger(Settings.SessionSettings.WSGPilotName, Settings.SessionSettings.WSGCompID, Settings.SessionSettings.NB21IGCFolder)
+            _loggerForm.Show(Me)
+        End If
+
+        'Make sure the form is visible, restored if minimized and on top
+        _loggerForm.WindowState = FormWindowState.Normal
+        _loggerForm.BringToFront()
 
     End Sub
 

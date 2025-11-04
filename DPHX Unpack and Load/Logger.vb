@@ -30,6 +30,7 @@ Public Class Logger
     Private Sub Logger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         SetSize()
+        SetPosition()
 
         Me.Text = $"{_config.AppName} {_config.AppVersion}"
         ui_pilot.Text = $"{_config.PilotName} ({_config.PilotId})"
@@ -39,17 +40,30 @@ Public Class Logger
     End Sub
 
     Private Sub Logger_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        SavePosition()
         _logger.Stop()
         _logger.Dispose()
         _logger = Nothing
     End Sub
 
+    Private Sub SetPosition()
+
+        'TODO: Try to restore previous position from registry - if not found, center on parent
+
+    End Sub
+
+    Private Sub SavePosition()
+
+        'TODO: Save current position to registry
+
+    End Sub
+
     Private Sub SetSize()
         If _compactView Then
-            Me.Size = New Size(680, 124)
+            Me.Size = New Size(634, 124)
             ui_min_max.Text = "Full"
         Else
-            Me.Size = New Size(680, 320)
+            Me.Size = New Size(634, 320)
             ui_min_max.Text = "Compact"
         End If
     End Sub
@@ -59,4 +73,11 @@ Public Class Logger
         SetSize()
     End Sub
 
+    Private Sub ui_pilot_Click(sender As Object, e As EventArgs) Handles ui_pilot.Click
+
+    End Sub
+
+    Private Sub ui_aircraft_Click(sender As Object, e As EventArgs) Handles ui_aircraft.Click
+
+    End Sub
 End Class

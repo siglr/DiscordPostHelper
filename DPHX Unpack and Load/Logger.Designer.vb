@@ -55,7 +55,7 @@ Partial Class Logger
         '
         Me.ui_recording_time.BackColor = System.Drawing.Color.Transparent
         Me.ui_recording_time.Font = New System.Drawing.Font("Lucida Console", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.ui_recording_time.Location = New System.Drawing.Point(542, 27)
+        Me.ui_recording_time.Location = New System.Drawing.Point(498, 27)
         Me.ui_recording_time.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.ui_recording_time.MinimumSize = New System.Drawing.Size(67, 37)
         Me.ui_recording_time.Name = "ui_recording_time"
@@ -71,7 +71,7 @@ Partial Class Logger
         Me.ui_task.Location = New System.Drawing.Point(130, 169)
         Me.ui_task.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.ui_task.Name = "ui_task"
-        Me.ui_task.Size = New System.Drawing.Size(524, 31)
+        Me.ui_task.Size = New System.Drawing.Size(480, 31)
         Me.ui_task.TabIndex = 20
         Me.ui_task.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -81,7 +81,7 @@ Partial Class Logger
         Me.ui_aircraft.Location = New System.Drawing.Point(130, 138)
         Me.ui_aircraft.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.ui_aircraft.Name = "ui_aircraft"
-        Me.ui_aircraft.Size = New System.Drawing.Size(524, 31)
+        Me.ui_aircraft.Size = New System.Drawing.Size(480, 31)
         Me.ui_aircraft.TabIndex = 19
         Me.ui_aircraft.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -91,7 +91,7 @@ Partial Class Logger
         Me.ui_pilot.Location = New System.Drawing.Point(130, 76)
         Me.ui_pilot.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.ui_pilot.Name = "ui_pilot"
-        Me.ui_pilot.Size = New System.Drawing.Size(524, 31)
+        Me.ui_pilot.Size = New System.Drawing.Size(480, 31)
         Me.ui_pilot.TabIndex = 18
         Me.ui_pilot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -151,7 +151,7 @@ Partial Class Logger
         'ui_min_max
         '
         Me.ui_min_max.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ui_min_max.Location = New System.Drawing.Point(583, 7)
+        Me.ui_min_max.Location = New System.Drawing.Point(535, 7)
         Me.ui_min_max.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.ui_min_max.Name = "ui_min_max"
         Me.ui_min_max.Size = New System.Drawing.Size(71, 20)
@@ -186,7 +186,7 @@ Partial Class Logger
         Me.ui_message_bar.Font = New System.Drawing.Font("Segoe UI", 11.78182!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ui_message_bar.Location = New System.Drawing.Point(12, 242)
         Me.ui_message_bar.Name = "ui_message_bar"
-        Me.ui_message_bar.Size = New System.Drawing.Size(638, 31)
+        Me.ui_message_bar.Size = New System.Drawing.Size(594, 31)
         Me.ui_message_bar.TabIndex = 26
         Me.ui_message_bar.Tag = ""
         Me.ui_message_bar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -196,7 +196,7 @@ Partial Class Logger
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.LightCyan
-        Me.ClientSize = New System.Drawing.Size(662, 250)
+        Me.ClientSize = New System.Drawing.Size(616, 280)
         Me.Controls.Add(Me.ui_message_bar)
         Me.Controls.Add(Me.view_tracklogs_button)
         Me.Controls.Add(Me.Label1)
