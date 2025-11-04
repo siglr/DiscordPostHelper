@@ -1,6 +1,7 @@
 Imports System.Drawing
 Imports System.IO
 Imports NB21_logger
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class Logger
 
