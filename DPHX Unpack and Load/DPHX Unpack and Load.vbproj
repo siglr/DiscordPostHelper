@@ -287,9 +287,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DarkBlueDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DarkGreenDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
+    <Content Include="LightGreenDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logowithouttext.png" />
     <Content Include="NB21Icon.ico" />
+    <Content Include="RedDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Refresh.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -44,10 +44,10 @@ Public Class Logger
         AddHandler _logger.WebSocketClientDisconnected, AddressOf Logger_WebSocketClientDisconnected
         AddHandler _logger.AppEvent, AddressOf Logger_AppEvent
 
-        _notConnectedImage = CreateStatusImage(Color.DimGray)
-        _connectedImage = CreateStatusImage(Color.DodgerBlue)
-        _recordingTickImage = CreateStatusImage(Color.Red)
-        _recordingTockImage = CreateStatusImage(Color.OrangeRed)
+        _notConnectedImage = Image.FromFile($"{Application.StartupPath}\RedDot.png")
+        _connectedImage = Image.FromFile($"{Application.StartupPath}\DarkBlueDot.png")
+        _recordingTickImage = Image.FromFile($"{Application.StartupPath}\DarkGreenDot.png")
+        _recordingTockImage = Image.FromFile($"{Application.StartupPath}\LightGreenDot.png")
 
         _blinkingTimer = New Timer With {.Interval = 1000}
         AddHandler _blinkingTimer.Tick, AddressOf BlinkingTimer_Tick
@@ -407,18 +407,6 @@ Public Class Logger
         End Try
     End Sub
 
-    Private Function CreateStatusImage(color As Color) As Image
-        Dim bmp As New Bitmap(48, 48)
-
-        Using g = Graphics.FromImage(bmp)
-            g.Clear(Color.Transparent)
-            Using brush As New SolidBrush(color)
-                g.FillEllipse(brush, 4, 4, 40, 40)
-            End Using
-        End Using
-
-        Return bmp
-    End Function
 
     Private Sub UpdatePilotDisplay()
         Dim name As String = If(String.IsNullOrWhiteSpace(_config.PilotName), String.Empty, _config.PilotName.Trim())
