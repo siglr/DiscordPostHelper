@@ -28,7 +28,7 @@ Public Class Logger
         InitializeComponent()
 
         _config = New LoggerConfiguration()
-        _config.AppName = "NB21 Logger for DPHX"
+        _config.AppName = "NB21 Logger"
         _config.AppVersion = "1.2.3"
         _config.PilotName = If(pilotName, String.Empty).Trim()
         _config.PilotId = If(competitionID, String.Empty).Trim()
@@ -64,7 +64,7 @@ Public Class Logger
         SetSize()
         SetPosition()
 
-        Text = $"{_config.AppName} {_config.AppVersion}"
+        Text = $"{_config.AppName} {_config.AppVersion} - DPHX Edition"
         UpdatePilotDisplay()
         ui_aircraft.Text = String.Empty
         ui_task.Text = "Awaiting task from DPHX."
