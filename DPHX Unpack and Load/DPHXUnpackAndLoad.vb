@@ -488,6 +488,9 @@ Public Class DPHXUnpackAndLoad
 
         Dim result As DialogResult = formSettings.ShowDialog(Me)
 
+        If result = DialogResult.Abort Then
+            Return result
+        End If
         ' Check if the WSG Listener should be re-started (transient vs auto-start setting)
         If _wsgListenerStartedAsTransient AndAlso Settings.SessionSettings.WSGListenerAutoStart Then
             'Was started as transient, but now auto-start is enabled - shutdown and restart in permanent mode
@@ -1104,7 +1107,7 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub SendDataToTracker(trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
         ' Define the API endpoint
-        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
+        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask/exthostinctrl"
 
         Try
             ' Read the contents of the PLN and WPR files
