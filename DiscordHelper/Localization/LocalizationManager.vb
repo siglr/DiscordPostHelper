@@ -20,13 +20,36 @@ Namespace Localization
 
         Private Sub New()
             _loggedWarnings = New ConcurrentDictionary(Of String, Boolean)(StringComparer.OrdinalIgnoreCase)
-            Dim baseName As String = $"{GetType(LocalizationManager).Namespace}.LocalizationResources"
-            _resourceManager = New ResourceManager(baseName, GetType(LocalizationManager).Assembly)
+            _resourceManager = CreateResourceManager()
             _cultures = New Dictionary(Of SupportedLanguage, CultureInfo) From {
                 {SupportedLanguage.English, CultureInfo.GetCultureInfo("en-US")},
                 {SupportedLanguage.French, CultureInfo.GetCultureInfo("fr-FR")}
             }
         End Sub
+
+        Private Shared Function CreateResourceManager() As ResourceManager
+            Dim assembly As Reflection.Assembly = GetType(LocalizationManager).Assembly
+            Dim potentialBaseNames As String() = {
+                $"{GetType(LocalizationManager).Namespace}.LocalizationResources",
+                $"{assembly.GetName().Name}.Localization.LocalizationResources"
+            }
+
+            For Each baseName As String In potentialBaseNames
+                Try
+                    Dim candidate As New ResourceManager(baseName, assembly)
+
+                    ' Attempt to materialize the neutral resource set to ensure the manifest name is valid.
+                    Dim resourceSet As ResourceSet = candidate.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists:=False, tryParents:=False)
+                    If resourceSet IsNot Nothing Then
+                        Return candidate
+                    End If
+                Catch ex As MissingManifestResourceException
+                    ' Ignore and try the next base name.
+                End Try
+            Next
+
+            Throw New MissingManifestResourceException("Unable to locate embedded localization resources.")
+        End Function
 
         Public Shared ReadOnly Property Instance As LocalizationManager
             Get
