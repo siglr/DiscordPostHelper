@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="group.event.local_time_banner" xml:space="preserve">
+    <value>**{0} votre heure locale**</value>
+  </data>
+  <data name="group.event.meet_briefing" xml:space="preserve">
+    <value>💼 Rencontre/Briefing : **{0}**{1}C’est à ce moment que nous nous retrouvons en vocal pour nous préparer.</value>
+  </data>
+  <data name="group.event.sync_fly" xml:space="preserve">
+    <value>⏱️ Sync Fly : **{0}**{1}À ce moment, nous cliquons sur Voler simultanément pour synchroniser la météo.</value>
+  </data>
+  <data name="group.event.sync_fly_launch" xml:space="preserve">
+    <value>Nous pouvons également commencer le lancement depuis l’aérodrome à ce moment-là.</value>
+  </data>
+  <data name="group.event.launch" xml:space="preserve">
+    <value>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</value>
+  </data>
+  <data name="group.event.task_start" xml:space="preserve">
+    <value>🟢 Départ de la tâche : **{0}**{1}C’est à ce moment que nous franchissons la ligne de départ et lançons la tâche.</value>
+  </data>
+  <data name="group.event.duration" xml:space="preserve">
+    <value>⏳ Durée : **{0}{1}**</value>
+  </data>
+  <data name="group.event.badge" xml:space="preserve">
+    <value>🏆 Les pilotes qui terminent cette tâche avec succès pendant l’événement pourront demander l’insigne de vol **{0}** :{1}:</value>
+  </data>
+  <data name="group.event.files_shared" xml:space="preserve">
+    <value>📁 Tous les liens vers les fichiers sont partagés dans le fil ci-dessous</value>
+  </data>
+  <data name="group.event.files_shared_delayed" xml:space="preserve">
+    <value>📁 Tous les liens vers les fichiers seront partagés dans le fil ci-dessous quelques heures avant l’événement.</value>
+  </data>
+  <data name="group.event.beginner_guide" xml:space="preserve">
+    <value>‍:student: Si c’est votre première fois avec nous, veuillez lire le guide suivant : {0}</value>
+  </data>
+  <data name="group.event.custom_beginner_link" xml:space="preserve">
+    <value>Lien vers un guide personnalisé</value>
+  </data>
+  <data name="group.event.logistics_header" xml:space="preserve">
+    <value>## Logistique de l’événement</value>
+  </data>
+  <data name="group.event.logistics_wsg" xml:space="preserve">
+    <value><![CDATA[:wsg: WeSimGlide.org : **[{0}](<{1}>)**]]></value>
+  </data>
+  <data name="group.event.logistics_voice" xml:space="preserve">
+    <value>🗣 Voix : **{0}**</value>
+  </data>
+  <data name="group.event.logistics_server" xml:space="preserve">
+    <value>🌐 Serveur : **{0}**</value>
+  </data>
+  <data name="group.event.logistics_sim_time" xml:space="preserve">
+    <value>📆 Date et heure simulées : **{0}** (ajustez si vous arrivez tôt ou tard){1}</value>
+  </data>
+  <data name="group.event.logistics_sync_warning" xml:space="preserve">
+    <value>🛑 Restez sur la carte du monde pour synchroniser la météo 🛑</value>
+  </data>
+  <data name="group.event.logistics_reminder_ssc" xml:space="preserve">
+    <value>*Rappel : Publiez d’abord votre fichier IGC dans le fil **SSC**. Vous pourrez ensuite l’envoyer sur WeSimGlide.org pour vos archives.*</value>
+  </data>
+  <data name="group.event.logistics_reminder_default" xml:space="preserve">
+    <value>*N’oubliez pas de téléverser votre fichier IGC sur WeSimGlide.org après avoir volé cette tâche !*</value>
+  </data>
+  <data name="group.event.no_task_details" xml:space="preserve">
+    <value>Aucun détail de tâche pour le moment !</value>
+  </data>
+  <data name="group.event.map_header" xml:space="preserve">
+    <value>## 🗺️ Carte</value>
+  </data>
+  <data name="group.event.teaser_header" xml:space="preserve">
+    <value>## 🤐 Mise en bouche</value>
+  </data>
+  <data name="group.thread.task_details_header" xml:space="preserve">
+    <value>## Détails de la tâche</value>
+  </data>
+  <data name="group.thread.task_link" xml:space="preserve">
+    <value><![CDATA[[Voir tous les détails de la tâche #{0} sur WeSimGlide.org](<{1}>)]]></value>
+  </data>
+  <data name="group.thread.discord_header" xml:space="preserve">
+    <value>## 🧵Discord</value>
+  </data>
+  <data name="group.thread.discord_link" xml:space="preserve">
+    <value><![CDATA[[{0} - Tâche]({1})]]></value>
+  </data>
+  <data name="group.thread.files_header_available" xml:space="preserve">
+    <value>## 📁 Fichiers - Disponibles {0}</value>
+  </data>
+  <data name="group.thread.files_header" xml:space="preserve">
+    <value>## 📁 Fichiers</value>
+  </data>
+  <data name="group.thread.test_mode_warning" xml:space="preserve">
+    <value>***-&gt; MODE TEST UNIQUEMENT - Les liens et la couverture ne fonctionneront pas***</value>
+  </data>
+  <data name="group.thread.link_pending" xml:space="preserve">
+    <value>Lien disponible lors de sa publication</value>
+  </data>
+  <data name="group.thread.file_dphx" xml:space="preserve">
+    <value><![CDATA[**DPHX** : [{0}](<{1}>) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !]]></value>
+  </data>
+  <data name="group.thread.file_dphx_pending" xml:space="preserve">
+    <value><![CDATA[**DPHX** : [{0}](<{1}>) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !]]></value>
+  </data>
+  <data name="group.thread.file_zip" xml:space="preserve">
+    <value><![CDATA[**ZIP** : [{0}](<{1}>) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.file_zip_pending" xml:space="preserve">
+    <value><![CDATA[**ZIP** : [{0}](<{1}>) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.file_pln" xml:space="preserve">
+    <value><![CDATA[**PLN** : [{0}](<{1}>) - Plan de vol uniquement, pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.file_pln_pending" xml:space="preserve">
+    <value><![CDATA[**PLN** : [{0}](<{1}>) - Plan de vol uniquement, pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.file_wpr" xml:space="preserve">
+    <value><![CDATA[**WPR** : [{0}](<{1}>) - Préconfiguration météo uniquement, pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.file_wpr_pending" xml:space="preserve">
+    <value><![CDATA[**WPR** : [{0}](<{1}>) - Préconfiguration météo uniquement, pour une utilisation manuelle.]]></value>
+  </data>
+  <data name="group.thread.weather_note_exact" xml:space="preserve">
+    <value> 👉 *Remarque : le nom de la préconfiguration météo dans MSFS est : "{0}"*</value>
+  </data>
+  <data name="group.thread.weather_note_different" xml:space="preserve">
+    <value> 👉 *Remarque : le nom de la préconfiguration météo dans MSFS est différent du nom de fichier*</value>
+  </data>
+  <data name="group.thread.msfs_local" xml:space="preserve">
+    <value>&gt; ⌚ {0} heure locale dans MSFS{1}</value>
+  </data>
+  <data name="group.thread.altitude_restrictions" xml:space="preserve">
+    <value>Cette tâche comporte des restrictions d’altitude</value>
+  </data>
+  <data name="group.thread.full_description_header" xml:space="preserve">
+    <value>## 📖 Description complète - Briefing</value>
+  </data>
+  <data name="group.thread.full_description_none" xml:space="preserve">
+    <value>Aucune fournie</value>
+  </data>
+  <data name="common.pilots.zero" xml:space="preserve">
+    <value>aucun pilote</value>
+  </data>
+  <data name="common.pilots.one" xml:space="preserve">
+    <value>1 pilote</value>
+  </data>
+  <data name="common.pilots.many" xml:space="preserve">
+    <value>{0} pilotes</value>
+  </data>
+</root>

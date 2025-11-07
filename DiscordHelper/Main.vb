@@ -5,6 +5,7 @@ Imports System.Text
 Imports System.Threading
 Imports System.Globalization
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports SIGLR.SoaringTools.DiscordPostHelper.Localization
 Imports System.Reflection
 Imports SIGLR.SoaringTools.ImageViewer
 Imports System.Collections.Specialized
@@ -45,6 +46,8 @@ Public Class Main
     Private ReadOnly _SF As New SupportingFeatures
     Private ReadOnly _CurrentDistanceUnit As Integer
     Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
+    Private ReadOnly _FrenchCulture As New CultureInfo("fr-FR")
+    Private ReadOnly _GroupEventLanguageForTesting As SupportedLanguage = SupportedLanguage.French
 
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
@@ -2058,31 +2061,34 @@ Public Class Main
 
     End Sub
 
-    Private Sub BuildFPResults(Optional fromGroup As Boolean = False, Optional onlyFullDetailsMode As Boolean = True)
+    Private Sub BuildFPResults(Optional fromGroup As Boolean = False, Optional onlyFullDetailsMode As Boolean = True, Optional language As SupportedLanguage = SupportedLanguage.English)
 
-        txtFPResults.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, True)
+        txtFPResults.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, True, language)
         If (Not onlyFullDetailsMode) AndAlso IsDelayedAvailability Then
-            txtFPResultsDelayedAvailability.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, False)
+            txtFPResultsDelayedAvailability.Text = BuildFPResultBaseOnAvailabilityOrNot(fromGroup, False, language)
         Else
             txtFPResultsDelayedAvailability.Text = String.Empty
         End If
 
         If txtLongDescription.Text.Trim.Length > 0 Then
-            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}{txtLongDescription.Text.Trim}"
+            Dim localizer As LocalizationManager = LocalizationManager.Instance
+            txtFullDescriptionResults.Text = $"{localizer.Format("group.thread.full_description_header", language)}{Environment.NewLine}{txtLongDescription.Text.Trim}"
         Else
-            txtFullDescriptionResults.Text = $"## 📖 Full Description - Briefing{Environment.NewLine}None provided"
+            Dim localizer As LocalizationManager = LocalizationManager.Instance
+            txtFullDescriptionResults.Text = $"{localizer.Format("group.thread.full_description_header", language)}{Environment.NewLine}{localizer.Format("group.thread.full_description_none", language)}"
         End If
 
         txtWaypointsDetails.Text = _SF.GetAllWPCoordinates()
 
     End Sub
 
-    Private Function BuildFPResultBaseOnAvailabilityOrNot(fromGroup As Boolean, fullDetailsMode As Boolean) As String
+    Private Function BuildFPResultBaseOnAvailabilityOrNot(fromGroup As Boolean, fullDetailsMode As Boolean, language As SupportedLanguage) As String
 
         Dim sb As New StringBuilder()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
 
         If fromGroup Then
-            sb.AppendLine($"## Task Details")
+            sb.AppendLine(localizer.Format("group.thread.task_details_header", language))
         Else
             sb.AppendLine($"# {txtTitle.Text}{AddFlagsToTitle()}")
             If chkRepost.Checked Then
@@ -2096,7 +2102,7 @@ Public Class Main
 
         Dim altRestrictions As String = String.Empty
         If txtAltRestrictions.Text.Trim.Length > 33 Then
-            altRestrictions = "This task contains altitude restrictions"
+            altRestrictions = localizer.Format("group.thread.altitude_restrictions", language)
         End If
         Dim baroWarning As String = String.Empty
         If _WeatherDetails IsNot Nothing AndAlso (Not _WeatherDetails.IsStandardMSLPressure AndAlso (Not chkSuppressWarningForBaroPressure.Checked)) Then
@@ -2107,31 +2113,37 @@ Public Class Main
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtShortDescription.Text,,, 1))
         Dim WSGEmoji As String = If(fromGroup, WSGEmojiForUser, WSGEmojiForBot)
         sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
-        sb.AppendLine($"[See the full details for Task #{_TaskEntrySeqID} on WeSimGlide.org](<{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}>)")
+        sb.AppendLine(localizer.Format("group.thread.task_link", language, _TaskEntrySeqID, $"{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}"))
         If fromGroup Then
             If Not _taskDiscordPostID = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
-                sb.AppendLine($"## 🧵Discord")
-                sb.AppendLine($"[{txtEventTitle.Text.Trim} - Task]({SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID})")
+                sb.AppendLine(localizer.Format("group.thread.discord_header", language))
+                sb.AppendLine(localizer.Format("group.thread.discord_link", language, txtEventTitle.Text.Trim, $"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID}"))
             End If
         End If
         If fullDetailsMode Then
-            sb.AppendLine("## 📁 Files")
+            sb.AppendLine(localizer.Format("group.thread.files_header", language))
         Else
-            sb.AppendLine($"## 📁 Files - Available {_SF.GetDiscordTimeStampForDate(AvailabilityDateTimeToUse, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)}")
+            Dim availabilityText As String = _SF.GetDiscordTimeStampForDate(AvailabilityDateTimeToUse, SupportingFeatures.DiscordTimeStampFormat.LongDateTime)
+            sb.AppendLine(localizer.Format("group.thread.files_header_available", language, availabilityText))
         End If
         If _useTestMode Then
-            sb.AppendLine($"***-> TEST MODE ONLY - Links and cover will not work***")
+            sb.AppendLine(localizer.Format("group.thread.test_mode_warning", language))
             sb.AppendLine()
         End If
-        sb.AppendLine($"**DPHX** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}>) - Start the **DPHX tool** first for maximum efficiency!")
-        sb.AppendLine($"**ZIP** : [{IIf(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}>) - Contains all the important files plus extras, for manual interaction.")
-        sb.AppendLine($"**PLN** : [{IIf(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}>) - Flight plan only, for manual interaction.")
-        sb.AppendLine($"**WPR** : [{IIf(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), "Link will work when available")}](<{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}>) - Weather preset only, for manual interaction.")
+        Dim pendingText As String = localizer.Format("group.thread.link_pending", language)
+        Dim dphxLabel As String = If(fullDetailsMode, $"{txtTitle.Text.Trim}.dphx", pendingText)
+        Dim zipLabel As String = If(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", pendingText)
+        Dim plnLabel As String = If(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), pendingText)
+        Dim wprLabel As String = If(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), pendingText)
+        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_dphx", "group.thread.file_dphx_pending"), language, dphxLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_zip", "group.thread.file_zip_pending"), language, zipLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_pln", "group.thread.file_pln_pending"), language, plnLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_wpr", "group.thread.file_wpr_pending"), language, wprLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
             If fullDetailsMode Then
-                sb.AppendLine($" 👉 *Note: weather preset name in MSFS is: ""{_WeatherDetails.PresetName}""*")
+                sb.AppendLine(localizer.Format("group.thread.weather_note_exact", language, _WeatherDetails.PresetName))
             Else
-                sb.AppendLine($" 👉 *Note: weather preset name in MSFS is different than filename*")
+                sb.AppendLine(localizer.Format("group.thread.weather_note_different", language))
             End If
         End If
         sb.AppendLine()
@@ -2142,7 +2154,9 @@ Public Class Main
 
         If fullDetailsMode Then sb.AppendLine($"> 🛫 {SupportingFeatures.ValueToAppendIfNotEmpty(txtDepartureICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDepExtraInfo.Text, True, True)}")
         If fullDetailsMode Then sb.AppendLine($"> 🛬 {SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalICAO.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalName.Text, True)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtArrivalExtraInfo.Text, True, True)}")
-        sb.AppendLine($"> ⌚ {SupportingFeatures.GetEnUSFormattedDate(dtSimDate.Value, dtSimLocalTime.Value, chkIncludeYear.Checked)} local in MSFS{SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)}")
+        Dim localSimDateText As String = FormatMsfsLocalDate(language)
+        Dim simExtraInfo As String = SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text.Trim, True, True)
+        sb.AppendLine(localizer.Format("group.thread.msfs_local", language, localSimDateText, simExtraInfo))
         If fullDetailsMode Then sb.AppendLine($"> ↗️ {GetSoaringTypesSelected()}{SupportingFeatures.ValueToAppendIfNotEmpty(txtSoaringTypeExtraInfo.Text, True, True)}")
         If fullDetailsMode AndAlso txtWeatherSummary.Text.Trim.Length > 0 Then sb.AppendLine($"> ⛅ {txtWeatherSummary.Text.Trim}")
         If fullDetailsMode Then sb.AppendLine($"> 📏 {SupportingFeatures.GetDistance(txtDistanceTotal.Text, txtDistanceTrack.Text)}")
@@ -2154,7 +2168,8 @@ Public Class Main
         sb.AppendLine($"> 🎚 {SupportingFeatures.GetDifficulty(cboDifficulty.SelectedIndex, txtDifficultyExtraInfo.Text)}")
 
         If Not String.IsNullOrEmpty(altRestrictions) OrElse Not String.IsNullOrEmpty(baroWarning) Then
-            sb.AppendLine($"> ⚠️ {altRestrictions}{If(Not String.IsNullOrEmpty(altRestrictions) AndAlso Not String.IsNullOrEmpty(baroWarning), " & ", "")}{baroWarning}")
+            Dim connector As String = If(Not String.IsNullOrEmpty(altRestrictions) AndAlso Not String.IsNullOrEmpty(baroWarning), " & ", String.Empty)
+            sb.AppendLine($"> ⚠️ {altRestrictions}{connector}{baroWarning}")
         End If
 
         If Not fromGroup Then
@@ -3074,6 +3089,28 @@ Public Class Main
     Private Function PostTaskInGroupEvent(autoContinue As Boolean) As Boolean
 
         Dim msg As String = String.Empty
+        Dim language As SupportedLanguage = GetGroupEventLanguage()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
+        Dim shouldRestoreFpResults As Boolean = False
+        Dim originalFPResults As String = String.Empty
+        Dim originalFPDelayed As String = String.Empty
+        Dim originalFullDescription As String = String.Empty
+        Dim localizedMainContent As String = Nothing
+        Dim localizedFullDescription As String = Nothing
+
+        Dim needLocalizedResults As Boolean = ((chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked)) OrElse
+                                              (chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso (Not IsDelayedAvailability)))
+
+        If needLocalizedResults Then
+            originalFPResults = txtFPResults.Text
+            originalFPDelayed = txtFPResultsDelayedAvailability.Text
+            originalFullDescription = txtFullDescriptionResults.Text
+
+            BuildFPResults(True, False, language)
+            localizedMainContent = If(IsDelayedAvailability, txtFPResultsDelayedAvailability.Text.Trim, txtFPResults.Text.Trim)
+            localizedFullDescription = txtFullDescriptionResults.Text.Trim
+            shouldRestoreFpResults = True
+        End If
 
         'Event Logistics
         If chkDGPOEventLogistics.Enabled AndAlso chkDGPOEventLogistics.Checked Then
@@ -3101,20 +3138,19 @@ Public Class Main
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
             If chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked Then
-                msg = $"{msg}No task details yet!"
+                msg = $"{msg}{localizer.Format("group.event.no_task_details", language)}"
             Else
-                BuildFPResults(True, False)
-                If IsDelayedAvailability Then
-                    msg = $"{msg}{txtFPResultsDelayedAvailability.Text.Trim}"
-                Else
-                    msg = $"{msg}{txtFPResults.Text.Trim}"
+                Dim mainContentToAppend As String = localizedMainContent
+                If String.IsNullOrEmpty(mainContentToAppend) Then
+                    mainContentToAppend = If(IsDelayedAvailability, txtFPResultsDelayedAvailability.Text.Trim, txtFPResults.Text.Trim)
                 End If
+                msg = $"{msg}{mainContentToAppend}"
             End If
         End If
 
         If (chkDGPOMapImage.Enabled AndAlso chkDGPOMapImage.Checked AndAlso cboBriefingMap.Text.Trim <> String.Empty AndAlso (Not IsDelayedAvailability)) Then
             'There is a map
-            msg = $"{msg}{Environment.NewLine}## 🗺️ Map"
+            msg = $"{msg}{Environment.NewLine}{localizer.Format("group.event.map_header", language)}"
             Clipboard.SetText(msg)
             autoContinue = CopyContent.ShowContent(Me,
                             msg,
@@ -3141,7 +3177,14 @@ Public Class Main
             If msg.Trim.Length > 0 Then
                 msg = $"{msg}{Environment.NewLine}"
             End If
-            msg = $"{msg}{txtFullDescriptionResults.Text.Trim}"
+            Dim fullDescriptionToAppend As String = If(String.IsNullOrEmpty(localizedFullDescription), txtFullDescriptionResults.Text.Trim, localizedFullDescription)
+            msg = $"{msg}{fullDescriptionToAppend}"
+        End If
+
+        If shouldRestoreFpResults Then
+            txtFPResults.Text = originalFPResults
+            txtFPResultsDelayedAvailability.Text = originalFPDelayed
+            txtFullDescriptionResults.Text = originalFullDescription
         End If
 
         If msg.Trim.Length > 0 Then
@@ -4087,6 +4130,8 @@ Public Class Main
     Private Function GroupFlightEventTeaser() As Boolean
 
         Dim autoContinue As Boolean = True
+        Dim language As SupportedLanguage = GetGroupEventLanguage()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
 
         Dim imagePasted As Boolean = False
         If txtEventTeaserAreaMapImage.Text <> String.Empty AndAlso File.Exists(txtEventTeaserAreaMapImage.Text) Then
@@ -4112,7 +4157,7 @@ Public Class Main
         'Teaser message
         If txtEventTeaserMessage.Text.Trim <> String.Empty Then
             Dim teaser As New StringBuilder
-            teaser.AppendLine("## 🤐 Teaser")
+            teaser.AppendLine(localizer.Format("group.event.teaser_header", language))
             teaser.AppendLine(txtEventTeaserMessage.Text.Trim)
             Clipboard.SetText(teaser.ToString)
             autoContinue = CopyContent.ShowContent(Me,
@@ -4132,35 +4177,28 @@ Public Class Main
     Private Function GroupFlightEventThreadLogistics() As String
 
         Dim logisticInstructions As New StringBuilder
+        Dim language As SupportedLanguage = GetGroupEventLanguage()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
 
-        Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
-        Dim fullSyncFlyDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventSyncFlyDate, dtEventSyncFlyTime, chkDateTimeUTC.Checked)
-        Dim fullLaunchDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventLaunchDate, dtEventLaunchTime, chkDateTimeUTC.Checked)
-        Dim fullStartTaskDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventStartTaskDate, dtEventStartTaskTime, chkDateTimeUTC.Checked)
+        logisticInstructions.AppendLine(localizer.Format("group.event.logistics_header", language))
+        logisticInstructions.AppendLine(localizer.Format("group.event.logistics_wsg", language, txtEventTitle.Text.Trim, WSGEventLink))
+        logisticInstructions.AppendLine(localizer.Format("group.event.logistics_voice", language, cboVoiceChannel.Text))
+        logisticInstructions.AppendLine(localizer.Format("group.event.logistics_server", language, cboMSFSServer.Text))
 
-        Dim dateFormat As String
-        If chkIncludeYear.Checked Then
-            dateFormat = "MMMM dd, yyyy"
-        Else
-            dateFormat = "MMMM dd"
-        End If
-
-        logisticInstructions.AppendLine("## Event Logistics")
-        logisticInstructions.AppendLine($":wsg: WeSimGlide.org: **[{txtEventTitle.Text.Trim}](<{WSGEventLink}>)**")
-        logisticInstructions.AppendLine($"🗣 Voice: **{cboVoiceChannel.Text}**")
-        logisticInstructions.AppendLine($"🌐 Server: **{cboMSFSServer.Text}**")
-        logisticInstructions.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** (adjust if you join early/late){SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
+        Dim simDateTimeText As String = FormatSimDateTime(language, True)
+        Dim simExtraInfo As String = SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)
+        logisticInstructions.AppendLine(localizer.Format("group.event.logistics_sim_time", language, simDateTimeText, simExtraInfo))
 
         If chkUseSyncFly.Checked Then
-            logisticInstructions.AppendLine("🛑 Stay on the world map to synchronize weather 🛑")
+            logisticInstructions.AppendLine(localizer.Format("group.event.logistics_sync_warning", language))
         End If
 
         logisticInstructions.AppendLine()
 
         If _ClubPreset IsNot Nothing AndAlso (_ClubPreset.EventNewsID = "SSCSA" OrElse _ClubPreset.EventNewsID = "SSCWE") Then
-            logisticInstructions.AppendLine("*Reminder: Post your IGC log file in the **SSC** thread first. You can then optionally upload it to WeSimGlide.org afterward for your own records.*")
+            logisticInstructions.AppendLine(localizer.Format("group.event.logistics_reminder_ssc", language))
         Else
-            logisticInstructions.AppendLine("*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*")
+            logisticInstructions.AppendLine(localizer.Format("group.event.logistics_reminder_default", language))
         End If
 
         Return logisticInstructions.ToString()
@@ -4205,6 +4243,42 @@ Public Class Main
 
     End Function
 
+    Private Function GetGroupEventLanguage() As SupportedLanguage
+        Return _GroupEventLanguageForTesting
+    End Function
+
+    Private Function FormatSimDateTime(language As SupportedLanguage, includeLocalLabel As Boolean) As String
+        Dim datePortion As String
+        Dim timePortion As String
+
+        If language = SupportedLanguage.French Then
+            Dim dateFormat As String = If(chkIncludeYear.Checked, "d MMMM yyyy", "d MMMM")
+            datePortion = dtSimDate.Value.ToString(dateFormat, _FrenchCulture)
+            datePortion = _FrenchCulture.TextInfo.ToLower(datePortion)
+            timePortion = dtSimLocalTime.Value.ToString("HH 'h' mm", _FrenchCulture)
+        Else
+            Dim dateFormat As String = If(chkIncludeYear.Checked, "MMMM dd, yyyy", "MMMM dd")
+            datePortion = dtSimDate.Value.ToString(dateFormat, _EnglishCulture)
+            timePortion = dtSimLocalTime.Value.ToString("h:mm tt", _EnglishCulture)
+        End If
+
+        Dim formatted As String = $"{datePortion}, {timePortion}"
+
+        If includeLocalLabel Then
+            If language = SupportedLanguage.French Then
+                formatted &= " heure locale"
+            Else
+                formatted &= " local"
+            End If
+        End If
+
+        Return formatted
+    End Function
+
+    Private Function FormatMsfsLocalDate(language As SupportedLanguage) As String
+        Return FormatSimDateTime(language, False)
+    End Function
+
     Private Sub BuildGroupFlightPost()
 
         Dim fullMeetDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtEventMeetDate, dtEventMeetTime, chkDateTimeUTC.Checked)
@@ -4228,14 +4302,9 @@ Public Class Main
                                         fullLaunchDateTimeMSFS,
                                         fullStartTaskDateTimeMSFS)
 
-        Dim dateFormat As String
-        If chkIncludeYear.Checked Then
-            dateFormat = "MMMM dd, yyyy"
-        Else
-            dateFormat = "MMMM dd"
-        End If
-
         Dim sb As New StringBuilder
+        Dim language As SupportedLanguage = GetGroupEventLanguage()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
 
         txtGroupFlightEventPost.Text = String.Empty
 
@@ -4251,56 +4320,53 @@ Public Class Main
             sb.AppendLine()
         End If
 
-        sb.AppendLine($"**{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)} your local time**")
+        Dim meetFullTimestamp As String = _SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.FullDateTimeWithDayOfWeek)
+        sb.AppendLine(localizer.Format("group.event.local_time_banner", language, meetFullTimestamp))
         sb.AppendLine()
 
         sb.Append(SupportingFeatures.ValueToAppendIfNotEmpty(txtEventDescription.Text,,, 2))
 
-        Dim theLocalTime As String = String.Empty
-        If chkUseSyncFly.Checked Then
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        ElseIf chkUseLaunch.Checked Then
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        Else
-            theLocalTime = $"{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}"
-        End If
-
-        sb.AppendLine($"💼 Meet/Briefing: **{_SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we meet in the voice chat and get ready.")
+        Dim meetTimestamp As String = _SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
+        sb.AppendLine(localizer.Format("group.event.meet_briefing", language, meetTimestamp, Environment.NewLine))
         sb.AppendLine()
 
         If chkUseSyncFly.Checked Then
-            sb.AppendLine($"⏱️ Sync Fly: **{_SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we simultaneously click fly to sync our weather.")
+            Dim syncTimestamp As String = _SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
+            sb.AppendLine(localizer.Format("group.event.sync_fly", language, syncTimestamp, Environment.NewLine))
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
-                sb.AppendLine("At this time we can also start launching from the airfield.")
+                sb.AppendLine(localizer.Format("group.event.sync_fly_launch", language))
             End If
             sb.AppendLine()
         End If
         If chkUseLaunch.Checked AndAlso (fullSyncFlyDateTimeLocal <> fullLaunchDateTimeLocal OrElse Not chkUseSyncFly.Checked) Then
-            sb.AppendLine($"🚀 Launch: **{_SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we can start launching from the airfield.")
+            Dim launchTimestamp As String = _SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
+            sb.AppendLine(localizer.Format("group.event.launch", language, launchTimestamp, Environment.NewLine))
             sb.AppendLine()
         End If
 
         If chkUseStart.Checked Then
-            sb.AppendLine($"🟢 Task Start: **{_SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)}**{Environment.NewLine}At this time we cross the starting line and start the task.")
+            Dim startTimestamp As String = _SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
+            sb.AppendLine(localizer.Format("group.event.task_start", language, startTimestamp, Environment.NewLine))
             sb.AppendLine()
         End If
 
-        sb.AppendLine($"⏳ Duration: **{SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text)}{SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)}**")
+        Dim durationExtra As String = SupportingFeatures.ValueToAppendIfNotEmpty(txtDurationExtraInfo.Text, True, True)
+        sb.AppendLine(localizer.Format("group.event.duration", language, SupportingFeatures.GetDuration(txtDurationMin.Text, txtDurationMax.Text), durationExtra))
         If txtAATTask.Text.Length > 0 Then
             sb.AppendLine($"⚠️ **{txtAATTask.Text}**")
         End If
         sb.AppendLine()
 
         If cboEligibleAward.SelectedIndex > 0 Then
-            sb.AppendLine($"🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{cboEligibleAward.Text} Soaring Badge** :{cboEligibleAward.Text.ToLower()}:")
+            sb.AppendLine(localizer.Format("group.event.badge", language, cboEligibleAward.Text, cboEligibleAward.Text.ToLower()))
             sb.AppendLine()
         End If
 
         If (Not IsDelayedAvailability) Then
-            sb.AppendLine($"📁 All links to files are shared inside the thread below")
+            sb.AppendLine(localizer.Format("group.event.files_shared", language))
             sb.AppendLine()
         Else
-            sb.AppendLine($"📁 All links to files will be shared inside the thread below, a few hours before the actual event takes place")
+            sb.AppendLine(localizer.Format("group.event.files_shared_delayed", language))
             sb.AppendLine()
         End If
 
@@ -4308,7 +4374,8 @@ Public Class Main
         Select Case cboBeginnersGuide.Text
             Case "Other (provide link below)"
                 If SupportingFeatures.IsValidURL(txtOtherBeginnerLink.Text.Trim) Then
-                    urlBeginnerGuide = $"[Link to custom guide]({txtOtherBeginnerLink.Text.Trim})"
+                    Dim customGuideText As String = localizer.Format("group.event.custom_beginner_link", language)
+                    urlBeginnerGuide = $"[{customGuideText}]({txtOtherBeginnerLink.Text.Trim})"
                 End If
             Case Else
                 'Retrieve the link from the club
@@ -4319,7 +4386,7 @@ Public Class Main
                 Next
         End Select
         If Not urlBeginnerGuide = String.Empty Then
-            sb.AppendLine($"‍:student: If it's your first time flying with us, please make sure to read the following guide: {urlBeginnerGuide}")
+            sb.AppendLine(localizer.Format("group.event.beginner_guide", language, urlBeginnerGuide))
             sb.AppendLine()
         End If
 
