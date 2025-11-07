@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='utf-8'?>
+<localization>
+  <entry key="common.pilots.many">
+    <english>{0} pilots</english>
+    <french>{0} pilotes</french>
+  </entry>
+  <entry key="common.pilots.one">
+    <english>1 pilot</english>
+    <french>1 pilote</french>
+  </entry>
+  <entry key="common.pilots.zero">
+    <english>no pilots</english>
+    <french>aucun pilote</french>
+  </entry>
+  <entry key="group.event.badge">
+    <english>🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{0} Soaring Badge** :{1}:</english>
+    <french>🏆 Les pilotes qui terminent cette tâche avec succès pendant l’événement pourront demander l’insigne de vol **{0}** :{1}:</french>
+  </entry>
+  <entry key="group.event.beginner_guide">
+    <english>‍:student: If it's your first time flying with us, please make sure to read the following guide: {0}</english>
+    <french>‍:student: Si c’est votre première fois avec nous, veuillez lire le guide suivant : {0}</french>
+  </entry>
+  <entry key="group.event.custom_beginner_link">
+    <english>Link to custom guide</english>
+    <french>Lien vers un guide personnalisé</french>
+  </entry>
+  <entry key="group.event.duration">
+    <english>⏳ Duration: **{0}{1}**</english>
+    <french>⏳ Durée : **{0}{1}**</french>
+  </entry>
+  <entry key="group.event.files_shared">
+    <english>📁 All links to files are shared inside the thread below</english>
+    <french>📁 Tous les liens vers les fichiers sont partagés dans le fil ci-dessous</french>
+  </entry>
+  <entry key="group.event.files_shared_delayed">
+    <english>📁 All links to files will be shared inside the thread below, a few hours before the actual event takes place</english>
+    <french>📁 Tous les liens vers les fichiers seront partagés dans le fil ci-dessous quelques heures avant l’événement.</french>
+  </entry>
+  <entry key="group.event.launch">
+    <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>
+    <french>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</french>
+  </entry>
+  <entry key="group.event.local_time_banner">
+    <english>**{0} your local time**</english>
+    <french>**{0} votre heure locale**</french>
+  </entry>
+  <entry key="group.event.logistics_header">
+    <english>## Event Logistics</english>
+    <french>## Logistique de l’événement</french>
+  </entry>
+  <entry key="group.event.logistics_reminder_default">
+    <english>*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*</english>
+    <french>*N’oubliez pas de téléverser votre fichier IGC sur WeSimGlide.org après avoir volé cette tâche !*</french>
+  </entry>
+  <entry key="group.event.logistics_reminder_ssc">
+    <english>*Reminder: Post your IGC log file in the **SSC** thread first. You can then optionally upload it to WeSimGlide.org afterward for your own records.*</english>
+    <french>*Rappel : Publiez d’abord votre fichier IGC dans le fil **SSC**. Vous pourrez ensuite l’envoyer sur WeSimGlide.org pour vos archives.*</french>
+  </entry>
+  <entry key="group.event.logistics_server">
+    <english>🌐 Server: **{0}**</english>
+    <french>🌐 Serveur : **{0}**</french>
+  </entry>
+  <entry key="group.event.logistics_sim_time">
+    <english>📆 Sim date and time: **{0}** (adjust if you join early/late){1}</english>
+    <french>📆 Date et heure simulées : **{0}** (ajustez si vous arrivez tôt ou tard){1}</french>
+  </entry>
+  <entry key="group.event.logistics_sync_warning">
+    <english>🛑 Stay on the world map to synchronize weather 🛑</english>
+    <french>🛑 Restez sur la carte du monde pour synchroniser la météo 🛑</french>
+  </entry>
+  <entry key="group.event.logistics_voice">
+    <english>🗣 Voice: **{0}**</english>
+    <french>🗣 Voix : **{0}**</french>
+  </entry>
+  <entry key="group.event.logistics_wsg">
+    <english>:wsg: WeSimGlide.org: **[{0}](&lt;{1}&gt;)**</english>
+    <french>:wsg: WeSimGlide.org : **[{0}](&lt;{1}&gt;)**</french>
+  </entry>
+  <entry key="group.event.map_header">
+    <english>## 🗺️ Map</english>
+    <french>## 🗺️ Carte</french>
+  </entry>
+  <entry key="group.event.meet_briefing">
+    <english>💼 Meet/Briefing: **{0}**{1}At this time we meet in the voice chat and get ready.</english>
+    <french>💼 Rencontre/Briefing : **{0}**{1}C’est à ce moment que nous nous retrouvons en vocal pour nous préparer.</french>
+  </entry>
+  <entry key="group.event.no_task_details">
+    <english>No task details yet!</english>
+    <french>Aucun détail de tâche pour le moment !</french>
+  </entry>
+  <entry key="group.event.sync_fly">
+    <english>⏱️ Sync Fly: **{0}**{1}At this time we simultaneously click fly to sync our weather.</english>
+    <french>⏱️ Sync Fly : **{0}**{1}À ce moment, nous cliquons sur Voler simultanément pour synchroniser la météo.</french>
+  </entry>
+  <entry key="group.event.sync_fly_launch">
+    <english>At this time we can also start launching from the airfield.</english>
+    <french>Nous pouvons également commencer le lancement depuis l’aérodrome à ce moment-là.</french>
+  </entry>
+  <entry key="group.event.task_start">
+    <english>🟢 Task Start: **{0}**{1}At this time we cross the starting line and start the task.</english>
+    <french>🟢 Départ de la tâche : **{0}**{1}C’est à ce moment que nous franchissons la ligne de départ et lançons la tâche.</french>
+  </entry>
+  <entry key="group.event.teaser_header">
+    <english>## 🤐 Teaser</english>
+    <french>## 🤐 Mise en bouche</french>
+  </entry>
+  <entry key="group.thread.altitude_restrictions">
+    <english>This task contains altitude restrictions</english>
+    <french>Cette tâche comporte des restrictions d’altitude</french>
+  </entry>
+  <entry key="group.thread.discord_header">
+    <english>## 🧵Discord</english>
+    <french>## 🧵Discord</french>
+  </entry>
+  <entry key="group.thread.discord_link">
+    <english>[{0} - Task]({1})</english>
+    <french>[{0} - Tâche]({1})</french>
+  </entry>
+  <entry key="group.thread.file_dphx">
+    <english>**DPHX** : [{0}](&lt;{1}&gt;) - Start the **DPHX tool** first for maximum efficiency!</english>
+    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !</french>
+  </entry>
+  <entry key="group.thread.file_dphx_pending">
+    <english>**DPHX** : [{0}](&lt;{1}&gt;) - Start the **DPHX tool** first for maximum efficiency!</english>
+    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !</french>
+  </entry>
+  <entry key="group.thread.file_pln">
+    <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
+    <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_pln_pending">
+    <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
+    <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_wpr">
+    <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
+    <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_wpr_pending">
+    <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
+    <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_zip">
+    <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
+    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_zip_pending">
+    <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
+    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.files_header">
+    <english>## 📁 Files</english>
+    <french>## 📁 Fichiers</french>
+  </entry>
+  <entry key="group.thread.files_header_available">
+    <english>## 📁 Files - Available {0}</english>
+    <french>## 📁 Fichiers - Disponibles {0}</french>
+  </entry>
+  <entry key="group.thread.full_description_header">
+    <english>## 📖 Full Description - Briefing</english>
+    <french>## 📖 Description complète - Briefing</french>
+  </entry>
+  <entry key="group.thread.full_description_none">
+    <english>None provided</english>
+    <french>Aucune fournie</french>
+  </entry>
+  <entry key="group.thread.link_pending">
+    <english>Link will work when available</english>
+    <french>Lien disponible lors de sa publication</french>
+  </entry>
+  <entry key="group.thread.msfs_local">
+    <english>&gt; ⌚ {0} local in MSFS{1}</english>
+    <french>&gt; ⌚ {0} heure locale dans MSFS{1}</french>
+  </entry>
+  <entry key="group.thread.task_details_header">
+    <english>## Task Details</english>
+    <french>## Détails de la tâche</french>
+  </entry>
+  <entry key="group.thread.task_link">
+    <english>[See the full details for Task #{0} on WeSimGlide.org](&lt;{1}&gt;)</english>
+    <french>[Voir tous les détails de la tâche #{0} sur WeSimGlide.org](&lt;{1}&gt;)</french>
+  </entry>
+  <entry key="group.thread.test_mode_warning">
+    <english>***-&gt; TEST MODE ONLY - Links and cover will not work***</english>
+    <french>***-&gt; MODE TEST UNIQUEMENT - Les liens et la couverture ne fonctionneront pas***</french>
+  </entry>
+  <entry key="group.thread.weather_note_different">
+    <english> 👉 *Note: weather preset name in MSFS is different than filename*</english>
+    <french> 👉 *Remarque : le nom de la préconfiguration météo dans MSFS est différent du nom de fichier*</french>
+  </entry>
+  <entry key="group.thread.weather_note_exact">
+    <english> 👉 *Note: weather preset name in MSFS is: "{0}"*</english>
+    <french> 👉 *Remarque : le nom de la préconfiguration météo dans MSFS est : "{0}"*</french>
+  </entry>
+</localization>
