@@ -39,7 +39,7 @@ Namespace Localization
                     Dim candidate As New ResourceManager(baseName, assembly)
 
                     ' Attempt to materialize the neutral resource set to ensure the manifest name is valid.
-                    Dim resourceSet As ResourceSet = candidate.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists:=False, tryParents:=False)
+                    Dim resourceSet As ResourceSet = candidate.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists:=True, tryParents:=False)
                     If resourceSet IsNot Nothing Then
                         Return candidate
                     End If
