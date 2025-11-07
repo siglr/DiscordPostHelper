@@ -269,7 +269,11 @@ Public Class SupportingFeatures
         Return Math.Ceiling(minutes / 15.0) * 15
     End Function
 
-    Public Shared Function GetDistance(totalDistanceKm As String, trackDistanceKm As String, Optional prefUnits As PreferredUnits = Nothing) As String
+    Public Shared Function GetDistance(totalDistanceKm As String,
+                                       trackDistanceKm As String,
+                                       Optional prefUnits As PreferredUnits = Nothing,
+                                       Optional taskTxt As String = "task",
+                                       Optional totalTxt As String = "total") As String
 
         Dim totalDistKm As Decimal
         Dim trackDistKm As Decimal
@@ -282,13 +286,13 @@ Public Class SupportingFeatures
         trackDistMiles = Conversions.KmToMiles(trackDistKm)
 
         If prefUnits Is Nothing OrElse prefUnits.Distance = PreferredUnits.DistanceUnits.Both Then
-            Return String.Format("{0:N0} km total ({1:N0} km task) / {2:N0} mi total ({3:N0} mi task)", totalDistKm, trackDistKm, totalDistMiles, trackDistMiles)
+            Return String.Format($"{totalDistKm:N0} km {totalTxt} ({trackDistKm:N0} km {taskTxt}) / {totalDistMiles:N0} mi {totalTxt} ({trackDistMiles:N0} mi {taskTxt})")
         Else
             Select Case prefUnits.Distance
                 Case DistanceUnits.Imperial
-                    Return String.Format("{0:N0} mi total ({1:N0} mi task)", totalDistMiles, trackDistMiles)
+                    Return String.Format($"{totalDistMiles:N0} mi {totalTxt} ({trackDistMiles:N0} mi {taskTxt})")
                 Case DistanceUnits.Metric
-                    Return String.Format("{0:N0} km total ({1:N0} km task)", totalDistKm, trackDistKm)
+                    Return String.Format($"{totalDistKm:N0} km {totalTxt} ({trackDistKm:N0} km {taskTxt})")
             End Select
         End If
 
@@ -296,7 +300,13 @@ Public Class SupportingFeatures
 
     End Function
 
-    Public Shared Function GetDuration(durationMin As String, durationMax As String) As String
+    Public Shared Function GetDuration(durationMin As String,
+                                       durationMax As String,
+                                       Optional notSpecifiedTxt As String = "Not specified",
+                                       Optional arroundTxt As String = "Around",
+                                       Optional minutesTxt As String = "minutes",
+                                       Optional toTxt As String = "to") As String
+
         Dim minHoursM As String = String.Empty
         Dim maxHoursM As String = String.Empty
         Dim minMinutes As Integer = 0
@@ -325,13 +335,13 @@ Public Class SupportingFeatures
         End If
 
         If minMinutes = 0 AndAlso maxMinutes = 0 Then
-            Return $"Not specified"
+            Return $"{notSpecifiedTxt}"
         ElseIf minMinutes > 0 AndAlso maxMinutes = 0 Then
-            Return $"Around {minMinutes} minutes ({minHoursH:D2}{minHoursM:D2})"
+            Return $"{arroundTxt} {minMinutes} {minutesTxt} ({minHoursH:D2}{minHoursM:D2})"
         ElseIf (minMinutes = 0 AndAlso maxMinutes > 0) OrElse (minMinutes = maxMinutes) Then
-            Return $"Around {maxMinutes} minutes ({maxHoursH:D2}{maxHoursM:D2})"
+            Return $"{arroundTxt} {maxMinutes} {minutesTxt} ({maxHoursH:D2}{maxHoursM:D2})"
         Else
-            Return $"{minMinutes} to {maxMinutes} minutes ({minHoursH:D2}{minHoursM:D2} to {maxHoursH:D2}{maxHoursM:D2})"
+            Return $"{minMinutes} {toTxt} {maxMinutes} {minutesTxt} ({minHoursH:D2}{minHoursM:D2} {toTxt} {maxHoursH:D2}{maxHoursM:D2})"
         End If
 
 

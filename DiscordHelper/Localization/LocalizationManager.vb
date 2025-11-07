@@ -18,6 +18,7 @@ Namespace Localization
         Private ReadOnly _translations As IReadOnlyDictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String))
         Private ReadOnly _loggedWarnings As ConcurrentDictionary(Of String, Boolean)
         Private ReadOnly _cultures As IReadOnlyDictionary(Of SupportedLanguage, CultureInfo)
+        Public Language As SupportedLanguage = SupportedLanguage.English
 
         Private Sub New()
             _loggedWarnings = New ConcurrentDictionary(Of String, Boolean)(StringComparer.OrdinalIgnoreCase)
@@ -26,23 +27,11 @@ Namespace Localization
                 {SupportedLanguage.English, CultureInfo.GetCultureInfo("en-US")},
                 {SupportedLanguage.French, CultureInfo.GetCultureInfo("fr-FR")}
             }
+            'Default to English
+            Language = SupportedLanguage.English
         End Sub
 
         Private Shared Function LoadTranslations() As IReadOnlyDictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String))
-            Dim assembly As Reflection.Assembly = GetType(LocalizationManager).Assembly
-            Dim potentialResourceNames As String() = {
-                $"{GetType(LocalizationManager).Namespace}.LocalizationResources.xml",
-                $"{assembly.GetName().Name}.Localization.LocalizationResources.xml"
-            }
-
-            For Each resourceName As String In potentialResourceNames
-                Dim resourceStream As Stream = assembly.GetManifestResourceStream(resourceName)
-                If resourceStream IsNot Nothing Then
-                    Using resourceStream
-                        Return ParseTranslationStream(resourceStream)
-                    End Using
-                End If
-            Next
 
             Dim fallbackPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Localization", "LocalizationResources.xml")
             If File.Exists(fallbackPath) Then
@@ -92,9 +81,9 @@ Namespace Localization
             End Get
         End Property
 
-        Public Function Format(key As String, language As SupportedLanguage, ParamArray args() As Object) As String
-            Dim template As String = GetStringInternal(key, language)
-            Dim culture As CultureInfo = GetCulture(language)
+        Public Function Format(key As String, ParamArray args() As Object) As String
+            Dim template As String = GetStringInternal(key)
+            Dim culture As CultureInfo = GetCulture(Language)
             Dim formatArgs As Object() = args
             If formatArgs Is Nothing Then
                 formatArgs = New Object() {}
@@ -102,7 +91,7 @@ Namespace Localization
             Return String.Format(culture, template, formatArgs)
         End Function
 
-        Public Function FormatPlural(key As String, language As SupportedLanguage, count As Integer, ParamArray args() As Object) As String
+        Public Function FormatPlural(key As String, count As Integer, ParamArray args() As Object) As String
             Dim formKey As String
             If count = 0 Then
                 formKey = $"{key}.zero"
@@ -112,7 +101,7 @@ Namespace Localization
                 formKey = $"{key}.many"
             End If
 
-            Dim template As String = GetStringInternal(formKey, language)
+            Dim template As String = GetStringInternal(formKey)
             Dim finalArgs As Object()
 
             If args Is Nothing OrElse args.Length = 0 Then
@@ -123,25 +112,25 @@ Namespace Localization
                 Array.Copy(args, 0, finalArgs, 1, args.Length)
             End If
 
-            Return String.Format(GetCulture(language), template, finalArgs)
+            Return String.Format(GetCulture(Language), template, finalArgs)
         End Function
 
-        Public Function GetCulture(language As SupportedLanguage) As CultureInfo
-            Return _cultures(language)
+        Public Function GetCulture(pLanguage) As CultureInfo
+            Return _cultures(pLanguage)
         End Function
 
-        Private Function GetStringInternal(key As String, language As SupportedLanguage) As String
-            Dim culture As CultureInfo = GetCulture(language)
+        Private Function GetStringInternal(key As String) As String
+            Dim culture As CultureInfo = GetCulture(Language)
             Dim languageTranslations As IReadOnlyDictionary(Of String, String) = Nothing
             Dim value As String = Nothing
 
-            If _translations.TryGetValue(language, languageTranslations) AndAlso languageTranslations.TryGetValue(key, value) Then
+            If _translations.TryGetValue(Language, languageTranslations) AndAlso languageTranslations.TryGetValue(key, value) Then
                 Return value
             End If
 
             LogMissingKey(key, culture)
 
-            If language <> SupportedLanguage.English Then
+            If Language <> SupportedLanguage.English Then
                 Dim fallbackCulture As CultureInfo = GetCulture(SupportedLanguage.English)
                 Dim fallbackTranslations As IReadOnlyDictionary(Of String, String) = Nothing
                 Dim fallbackValue As String = Nothing

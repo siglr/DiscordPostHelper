@@ -203,11 +203,9 @@
     <EmbeddedResource Include="RecommendedAddOnsScreen.resx">
       <DependentUpon>RecommendedAddOnsScreen.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Localization\LocalizationResources.resx" />
-    <EmbeddedResource Include="Localization\LocalizationResources.fr.resx">
-      <DependentUpon>LocalizationResources.resx</DependentUpon>
+    <EmbeddedResource Include="Localization\LocalizationResources.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Localization\LocalizationResources.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\app.manifest" />
