@@ -207,6 +207,7 @@
     <EmbeddedResource Include="Localization\LocalizationResources.fr.resx">
       <DependentUpon>LocalizationResources.resx</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Localization\LocalizationResources.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\app.manifest" />

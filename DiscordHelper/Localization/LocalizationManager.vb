@@ -2,7 +2,8 @@ Imports System.Collections.Concurrent
 Imports System.Collections.Generic
 Imports System.Diagnostics
 Imports System.Globalization
-Imports System.Resources
+Imports System.IO
+Imports System.Xml.Linq
 
 Namespace Localization
 
@@ -14,41 +15,75 @@ Namespace Localization
     Public NotInheritable Class LocalizationManager
 
         Private Shared ReadOnly _instance As New LocalizationManager()
-        Private ReadOnly _resourceManager As ResourceManager
+        Private ReadOnly _translations As IReadOnlyDictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String))
         Private ReadOnly _loggedWarnings As ConcurrentDictionary(Of String, Boolean)
         Private ReadOnly _cultures As IReadOnlyDictionary(Of SupportedLanguage, CultureInfo)
 
         Private Sub New()
             _loggedWarnings = New ConcurrentDictionary(Of String, Boolean)(StringComparer.OrdinalIgnoreCase)
-            _resourceManager = CreateResourceManager()
+            _translations = LoadTranslations()
             _cultures = New Dictionary(Of SupportedLanguage, CultureInfo) From {
                 {SupportedLanguage.English, CultureInfo.GetCultureInfo("en-US")},
                 {SupportedLanguage.French, CultureInfo.GetCultureInfo("fr-FR")}
             }
         End Sub
 
-        Private Shared Function CreateResourceManager() As ResourceManager
+        Private Shared Function LoadTranslations() As IReadOnlyDictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String))
             Dim assembly As Reflection.Assembly = GetType(LocalizationManager).Assembly
-            Dim potentialBaseNames As String() = {
-                $"{GetType(LocalizationManager).Namespace}.LocalizationResources",
-                $"{assembly.GetName().Name}.Localization.LocalizationResources"
+            Dim potentialResourceNames As String() = {
+                $"{GetType(LocalizationManager).Namespace}.LocalizationResources.xml",
+                $"{assembly.GetName().Name}.Localization.LocalizationResources.xml"
             }
 
-            For Each baseName As String In potentialBaseNames
-                Try
-                    Dim candidate As New ResourceManager(baseName, assembly)
-
-                    ' Attempt to materialize the neutral resource set to ensure the manifest name is valid.
-                    Dim resourceSet As ResourceSet = candidate.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists:=False, tryParents:=False)
-                    If resourceSet IsNot Nothing Then
-                        Return candidate
-                    End If
-                Catch ex As MissingManifestResourceException
-                    ' Ignore and try the next base name.
-                End Try
+            For Each resourceName As String In potentialResourceNames
+                Dim resourceStream As Stream = assembly.GetManifestResourceStream(resourceName)
+                If resourceStream IsNot Nothing Then
+                    Using resourceStream
+                        Return ParseTranslationStream(resourceStream)
+                    End Using
+                End If
             Next
 
-            Throw New MissingManifestResourceException("Unable to locate embedded localization resources.")
+            Dim fallbackPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Localization", "LocalizationResources.xml")
+            If File.Exists(fallbackPath) Then
+                Using fileStream As FileStream = File.OpenRead(fallbackPath)
+                    Return ParseTranslationStream(fileStream)
+                End Using
+            End If
+
+            Throw New FileNotFoundException("Unable to locate localization manifest 'LocalizationResources.xml'.")
+        End Function
+
+        Private Shared Function ParseTranslationStream(stream As Stream) As IReadOnlyDictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String))
+            Dim document As XDocument = XDocument.Load(stream)
+            Dim root As XElement = document.Root
+
+            If root Is Nothing OrElse Not String.Equals(root.Name.LocalName, "localization", StringComparison.OrdinalIgnoreCase) Then
+                Throw New InvalidDataException("Localization manifest is missing the root 'localization' element.")
+            End If
+
+            Dim english As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+            Dim french As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+
+            For Each entry As XElement In root.Elements("entry")
+                Dim keyAttribute As XAttribute = entry.Attribute("key")
+                Dim key As String = keyAttribute?.Value
+
+                If String.IsNullOrWhiteSpace(key) Then
+                    Continue For
+                End If
+
+                Dim englishValue As String = entry.Element("english")?.Value
+                Dim frenchValue As String = entry.Element("french")?.Value
+
+                english(key) = If(englishValue, String.Empty)
+                french(key) = If(frenchValue, String.Empty)
+            Next
+
+            Return New Dictionary(Of SupportedLanguage, IReadOnlyDictionary(Of String, String)) From {
+                {SupportedLanguage.English, english},
+                {SupportedLanguage.French, french}
+            }
         End Function
 
         Public Shared ReadOnly Property Instance As LocalizationManager
@@ -97,9 +132,10 @@ Namespace Localization
 
         Private Function GetStringInternal(key As String, language As SupportedLanguage) As String
             Dim culture As CultureInfo = GetCulture(language)
-            Dim value As String = _resourceManager.GetString(key, culture)
+            Dim languageTranslations As IReadOnlyDictionary(Of String, String) = Nothing
+            Dim value As String = Nothing
 
-            If value IsNot Nothing Then
+            If _translations.TryGetValue(language, languageTranslations) AndAlso languageTranslations.TryGetValue(key, value) Then
                 Return value
             End If
 
@@ -107,16 +143,18 @@ Namespace Localization
 
             If language <> SupportedLanguage.English Then
                 Dim fallbackCulture As CultureInfo = GetCulture(SupportedLanguage.English)
-                Dim fallbackValue As String = _resourceManager.GetString(key, fallbackCulture)
-                If fallbackValue IsNot Nothing Then
+                Dim fallbackTranslations As IReadOnlyDictionary(Of String, String) = Nothing
+                Dim fallbackValue As String = Nothing
+
+                If _translations.TryGetValue(SupportedLanguage.English, fallbackTranslations) AndAlso fallbackTranslations.TryGetValue(key, fallbackValue) Then
                     Return fallbackValue
                 End If
+
                 LogMissingKey(key, fallbackCulture)
             End If
 
             Return key
         End Function
-
         Private Sub LogMissingKey(key As String, culture As CultureInfo)
             Dim logKey As String = $"{culture.Name}:{key}"
             If _loggedWarnings.TryAdd(logKey, True) Then
