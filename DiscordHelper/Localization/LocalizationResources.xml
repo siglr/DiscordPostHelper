@@ -1,17 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <localization>
-  <entry key="common.pilots.many">
-    <english>{0} pilots</english>
-    <french>{0} pilotes</french>
-  </entry>
-  <entry key="common.pilots.one">
-    <english>1 pilot</english>
-    <french>1 pilote</french>
-  </entry>
-  <entry key="common.pilots.zero">
-    <english>no pilots</english>
-    <french>aucun pilote</french>
-  </entry>
   <entry key="group.event.badge">
     <english>🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{0} Soaring Badge** :{1}:</english>
     <french>🏆 Les pilotes qui terminent cette tâche avec succès pendant l’événement pourront demander l’insigne de vol **{0}** :{1}:</french>
@@ -55,10 +43,6 @@
   <entry key="group.event.files_shared_delayed">
     <english>📁 All links to files will be shared inside the thread below, a few hours before the actual event takes place</english>
     <french>📁 Tous les liens vers les fichiers seront partagés dans le fil ci-dessous quelques heures avant l’événement.</french>
-  </entry>
-  <entry key="group.event.launch">
-    <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>
-    <french>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</french>
   </entry>
   <entry key="group.event.local_time_banner">
     <english>**{0} your local time**</english>
@@ -156,15 +140,7 @@
     <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
     <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
   </entry>
-  <entry key="group.thread.file_pln_pending">
-    <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
-    <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
-  </entry>
   <entry key="group.thread.file_wpr">
-    <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
-    <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
-  </entry>
-  <entry key="group.thread.file_wpr_pending">
     <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
     <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
   </entry>
