@@ -207,6 +207,10 @@
     <EmbeddedResource Include="WindLayerControl.resx">
       <DependentUpon>WindLayerControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Localization/LocalizationResources.resx" />
+    <EmbeddedResource Include="Localization/LocalizationResources.fr.resx">
+      <DependentUpon>LocalizationResources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
