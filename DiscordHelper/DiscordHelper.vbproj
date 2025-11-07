@@ -206,6 +206,7 @@
     <EmbeddedResource Include="Localization\LocalizationResources.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Localization\LocalizationResources.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\app.manifest" />

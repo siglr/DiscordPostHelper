@@ -130,7 +130,7 @@ Namespace Localization
 
             LogMissingKey(key, culture)
 
-            If Language <> SupportedLanguage.English Then
+            If language <> SupportedLanguage.English Then
                 Dim fallbackCulture As CultureInfo = GetCulture(SupportedLanguage.English)
                 Dim fallbackTranslations As IReadOnlyDictionary(Of String, String) = Nothing
                 Dim fallbackValue As String = Nothing
