@@ -4,7 +4,7 @@ Imports System.Diagnostics
 Imports System.Globalization
 Imports System.Resources
 
-Namespace SIGLR.SoaringTools.DiscordPostHelper.Localization
+Namespace Localization
 
     Public Enum SupportedLanguage
         English
@@ -20,7 +20,8 @@ Namespace SIGLR.SoaringTools.DiscordPostHelper.Localization
 
         Private Sub New()
             _loggedWarnings = New ConcurrentDictionary(Of String, Boolean)(StringComparer.OrdinalIgnoreCase)
-            _resourceManager = New ResourceManager("SIGLR.SoaringTools.DiscordPostHelper.Localization.LocalizationResources", GetType(LocalizationManager).Assembly)
+            Dim baseName As String = $"{GetType(LocalizationManager).Namespace}.LocalizationResources"
+            _resourceManager = New ResourceManager(baseName, GetType(LocalizationManager).Assembly)
             _cultures = New Dictionary(Of SupportedLanguage, CultureInfo) From {
                 {SupportedLanguage.English, CultureInfo.GetCultureInfo("en-US")},
                 {SupportedLanguage.French, CultureInfo.GetCultureInfo("fr-FR")}
