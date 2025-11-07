@@ -1107,7 +1107,7 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub SendDataToTracker(trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
         ' Define the API endpoint
-        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask/exthostinctrl"
+        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
 
         Try
             ' Read the contents of the PLN and WPR files
