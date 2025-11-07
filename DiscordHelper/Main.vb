@@ -2139,10 +2139,10 @@ Public Class Main
         Dim zipLabel As String = If(fullDetailsMode, $"{txtTitle.Text.Trim}.zip", pendingText)
         Dim plnLabel As String = If(fullDetailsMode, Path.GetFileName(txtFlightPlanFile.Text), pendingText)
         Dim wprLabel As String = If(fullDetailsMode, Path.GetFileName(txtWeatherFile.Text), pendingText)
-        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_dphx", "group.thread.file_dphx_pending"), dphxLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}"))
-        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_zip", "group.thread.file_zip_pending"), zipLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}"))
-        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_pln", "group.thread.file_pln_pending"), plnLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}"))
-        sb.AppendLine(localizer.Format(If(fullDetailsMode, "group.thread.file_wpr", "group.thread.file_wpr_pending"), wprLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format("group.thread.file_dphx", dphxLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=dphx&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format("group.thread.file_zip", zipLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format("group.thread.file_pln", plnLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}"))
+        sb.AppendLine(localizer.Format("group.thread.file_wpr", wprLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
         If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
             If fullDetailsMode Then
                 sb.AppendLine(localizer.Format("group.thread.weather_note_exact", _WeatherDetails.PresetName))

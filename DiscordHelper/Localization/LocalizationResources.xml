@@ -10,10 +10,10 @@
   </entry>
   <entry key="group.event.custom_beginner_link">
     <english>Link to custom guide</english>
-    <french>Lien vers un guide personnalisé</french>
+    <french>Lien vers le guide personnalisé</french>
   </entry>
   <entry key="duration.not_specified">
-    <english>Not Not specified</english>
+    <english>Not specified</english>
     <french>Non spécifiée</french>
   </entry>
   <entry key="duration.around">
@@ -44,10 +44,6 @@
     <english>📁 All links to files will be shared inside the thread below, a few hours before the actual event takes place</english>
     <french>📁 Tous les liens vers les fichiers seront partagés dans le fil ci-dessous quelques heures avant l’événement.</french>
   </entry>
-  <entry key="group.event.launch">
-    <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>
-    <french>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</french>
-  </entry>
   <entry key="group.event.local_time_banner">
     <english>**{0} your local time**</english>
     <french>**{0} votre heure locale**</french>
@@ -58,7 +54,7 @@
   </entry>
   <entry key="group.event.logistics_reminder_default">
     <english>*Don't forget to upload your IGC log file to WeSimGlide.org after flying this task!*</english>
-    <french>*N’oubliez pas de téléverser votre fichier IGC sur WeSimGlide.org après avoir volé cette tâche !*</french>
+    <french>*N’oubliez pas de téléverser votre fichier IGC sur WeSimGlide.org après avoir volé cette tâche!*</french>
   </entry>
   <entry key="group.event.logistics_reminder_ssc">
     <english>*Reminder: Post your IGC log file in the **SSC** thread first. You can then optionally upload it to WeSimGlide.org afterward for your own records.*</english>
@@ -77,8 +73,8 @@
     <french>🌐 Serveur : **{0}**</french>
   </entry>
   <entry key="group.event.logistics_sim_time">
-    <english>📆 Sim locale date and time: **{0}** {1}</english>
-    <french>📆 Date et heure locale MSFS : **{0}** {1}</french>
+    <english>📆 Sim date and time: **{0}** {1}</english>
+    <french>📆 Date et heure MSFS : **{0}** {1}</french>
   </entry>
   <entry key="group.event.logistics_sync_warning">
     <english>🛑 Stay on the world map to synchronize weather 🛑</english>
@@ -102,19 +98,23 @@
   </entry>
   <entry key="group.event.no_task_details">
     <english>No task details yet!</english>
-    <french>Aucun détail de tâche pour le moment !</french>
+    <french>Aucun détail de tâche pour le moment!</french>
   </entry>
   <entry key="group.event.sync_fly">
     <english>⏱️ Sync Fly: **{0}**{1}At this time we simultaneously click fly to sync our weather.</english>
-    <french>⏱️ Sync Fly : **{0}**{1}À ce moment, nous cliquons sur Voler simultanément pour synchroniser la météo.</french>
+    <french>⏱️ Synchro Vol : **{0}**{1}À ce moment, nous cliquons simultanément sur Voler pour synchroniser la météo.</french>
   </entry>
   <entry key="group.event.sync_fly_launch">
-    <english>At this time we can also start launching from the airfield.</english>
-    <french>Nous pouvons également commencer le lancement depuis l’aérodrome à ce moment-là.</french>
+    <english>We can also start launching from the airfield.</english>
+    <french>Nous pouvons également commencer le lancement depuis l’aérodrome.</french>
+  </entry>
+  <entry key="group.event.launch">
+    <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>
+    <french>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</french>
   </entry>
   <entry key="group.event.task_start">
     <english>🟢 Task Start: **{0}**{1}At this time we cross the starting line and start the task.</english>
-    <french>🟢 Départ de la tâche : **{0}**{1}C’est à ce moment que nous franchissons la ligne de départ et lançons la tâche.</french>
+    <french>🟢 Départ de la tâche : **{0}**{1}C’est à ce moment que nous franchissons la ligne de départ et débutons la tâche.</french>
   </entry>
   <entry key="group.event.teaser_header">
     <english>## 🤐 Teaser</english>
@@ -134,17 +134,9 @@
   </entry>
   <entry key="group.thread.file_dphx">
     <english>**DPHX** : [{0}](&lt;{1}&gt;) - Start the **DPHX tool** first for maximum efficiency!</english>
-    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !</french>
-  </entry>
-  <entry key="group.thread.file_dphx_pending">
-    <english>**DPHX** : [{0}](&lt;{1}&gt;) - Start the **DPHX tool** first for maximum efficiency!</english>
-    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale !</french>
+    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale!</french>
   </entry>
   <entry key="group.thread.file_pln">
-    <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
-    <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
-  </entry>
-  <entry key="group.thread.file_pln_pending">
     <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
     <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
   </entry>
@@ -152,17 +144,9 @@
     <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
     <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
   </entry>
-  <entry key="group.thread.file_wpr_pending">
-    <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
-    <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
-  </entry>
   <entry key="group.thread.file_zip">
     <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
-    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.</french>
-  </entry>
-  <entry key="group.thread.file_zip_pending">
-    <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
-    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras pour une utilisation manuelle.</french>
+    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras, pour une utilisation manuelle.</french>
   </entry>
   <entry key="group.thread.files_header">
     <english>## 📁 Files</english>
