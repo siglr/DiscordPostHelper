@@ -5,7 +5,7 @@ Imports System.Text
 Imports System.Threading
 Imports System.Globalization
 Imports SIGLR.SoaringTools.CommonLibrary
-Imports SIGLR.SoaringTools.CommonLibrary.Localization
+Imports SIGLR.SoaringTools.DiscordPostHelper.Localization
 Imports System.Reflection
 Imports SIGLR.SoaringTools.ImageViewer
 Imports System.Collections.Specialized

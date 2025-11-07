@@ -166,6 +166,7 @@
     <Compile Include="RecommendedAddOnsScreen.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Localization\LocalizationManager.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CheckedListComboBox.resx">
@@ -201,6 +202,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RecommendedAddOnsScreen.resx">
       <DependentUpon>RecommendedAddOnsScreen.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization\LocalizationResources.resx" />
+    <EmbeddedResource Include="Localization\LocalizationResources.fr.resx">
+      <DependentUpon>LocalizationResources.resx</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
