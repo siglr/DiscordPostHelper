@@ -28,7 +28,7 @@ function extractEventNewsId(string $eventKey): ?string {
     return null;
 }
 
-/** Post task to Tracker server */
+/*
 function trackerSetSharedTask(array $opts): array {
     global $DEBUG_LOG;
     $endpoint = $opts['endpoint'] ?? 'https://ssc-tracker.org/settask.php';
@@ -78,6 +78,19 @@ function trackerSetSharedTask(array $opts): array {
         'body'   => $body,
         'error'  => $err ?: null,
         'sent'   => $payload,
+    ];
+}
+*/
+
+/** Post task to Tracker server (temporarily disabled) */
+function trackerSetSharedTask(array $opts): array {
+    logMessage("Skipped: trackerSetSharedTask for group '{$opts['groupName']}' / task '{$opts['taskTitle']}'");
+    return [
+        'ok'     => true,
+        'status' => 0,
+        'body'   => 'Skipped',
+        'error'  => null,
+        'sent'   => [],
     ];
 }
 
