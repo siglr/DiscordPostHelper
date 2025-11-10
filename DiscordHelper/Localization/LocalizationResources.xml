@@ -1,5 +1,29 @@
 <?xml version='1.0' encoding='utf-8'?>
 <localization>
+  <entry key="credits.text">
+    <english>All credits to @{0} for this task.</english>
+    <french>Tous les crédits à @{0} pour cette tâche.</french>
+  </entry>
+  <entry key="lifttype.ridge">
+    <english>Ridge</english>
+    <french>Pente</french>
+  </entry>
+  <entry key="lifttype.thermal">
+    <english>Thermal</english>
+    <french>Thermique</french>
+  </entry>
+  <entry key="lifttype.wave">
+    <english>Wave</english>
+    <french>Onde</french>
+  </entry>
+  <entry key="lifttype.dynamic">
+    <english>Dynamic</english>
+    <french>Dynamique</french>
+  </entry>
+  <entry key="task.details.restrictions">
+    <english>## ⚠️ Altitude Restrictions</english>
+    <french>## ⚠️ Restrictions d'altitude</french>
+  </entry>
   <entry key="group.event.badge">
     <english>🏆 Pilots who finish this task successfully during the event will be eligible to apply for the **{0} Soaring Badge** :{1}:</english>
     <french>🏆 Les pilotes qui terminent cette tâche avec succès pendant l’événement pourront demander l’insigne de vol **{0}** :{1}:</french>

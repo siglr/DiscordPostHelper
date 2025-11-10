@@ -2238,21 +2238,22 @@ Public Class Main
 
     Private Function GetSoaringTypesSelected() As String
         Dim selectedTypes As New List(Of String)
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
 
         If chkSoaringTypeRidge.Checked Then
-            selectedTypes.Add("Ridge")
+            selectedTypes.Add(localizer.Format("lifttype.ridge"))
         End If
 
         If chkSoaringTypeThermal.Checked Then
-            selectedTypes.Add("Thermal")
+            selectedTypes.Add(localizer.Format("lifttype.thermal"))
         End If
 
         If chkSoaringTypeWave.Checked Then
-            selectedTypes.Add("Wave")
+            selectedTypes.Add(localizer.Format("lifttype.wave"))
         End If
 
         If chkSoaringTypeDynamic.Checked Then
-            selectedTypes.Add("Dynamic")
+            selectedTypes.Add(localizer.Format("lifttype.dynamic"))
         End If
 
         ' Join the selected types into a single string, separated by ", "
@@ -3186,7 +3187,7 @@ Public Class Main
             If msg.Trim.Length > 0 Then
                 msg = $"{msg}{Environment.NewLine}"
             End If
-            msg = $"{msg}{txtAltRestrictions.Text.Trim}"
+            msg = $"{msg}{GetLocalizedAltitudeRestrictions()}"
         End If
 
         'Full Description
@@ -4333,7 +4334,7 @@ Public Class Main
         End If
 
         If txtCredits.Text <> String.Empty Then
-            sb.AppendLine(txtCredits.Text)
+            sb.AppendLine(GetLocalizedCredits())
             sb.AppendLine()
         End If
 
@@ -5260,6 +5261,39 @@ Public Class Main
         Return result
     End Function
 
+    Private Function GetLocalizedCredits() As String
+        'Check if txtCredits.Text contains the regular "All credits to @Designer for this task." format. 
+        'If not, keep the text as is. If yes, localize it.
+
+        Dim result As String = txtCredits.Text.Trim()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
+
+        'Match pattern like "All credits to @MajorDad for this task."
+        Dim pattern As String = "^All credits to @([A-Za-z0-9_]+) for this task\.$"
+        Dim m As Match = Regex.Match(result, pattern, RegexOptions.IgnoreCase)
+
+        If m.Success Then
+            Dim designer As String = m.Groups(1).Value
+            'Assumes your localization key "credits.text" expects something like "{0}"
+            result = localizer.Format("credits.text", designer)
+        End If
+
+        Return result
+    End Function
+
+    Public Function GetLocalizedAltitudeRestrictions() As String
+        Dim result As String = txtAltRestrictions.Text.Trim()
+        Dim localizer As LocalizationManager = LocalizationManager.Instance
+
+        'Change only the start "## ⚠️ Altitude Restrictions" to its localized equivalent, keeping the rest
+        Dim prefix As String = "## ⚠️ Altitude Restrictions"
+        If result.StartsWith(prefix) Then
+            Dim localizedPrefix As String = localizer.Format("task.details.restrictions")
+            result = localizedPrefix & result.Substring(prefix.Length)
+        End If
+
+        Return result
+    End Function
 #End Region
 
 #Region "Call to B21 Online Planner"
