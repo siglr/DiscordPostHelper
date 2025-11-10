@@ -199,6 +199,7 @@ Public Class SupportingFeatures
                                 Boolean.Parse(club("ForceLaunch").ToString()),
                                 Boolean.Parse(club("ForceStartTask").ToString()),
                                 club("DiscordURL").ToString(),
+                                Integer.Parse(club("Language").ToString()),
                                 sharedPublishers,
                                 authorizedPublishers
                                 )

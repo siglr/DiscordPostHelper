@@ -48,7 +48,6 @@ Public Class Main
     Private ReadOnly _CurrentDistanceUnit As Integer
     Private ReadOnly _EnglishCulture As New CultureInfo("en-US")
     Private ReadOnly _FrenchCulture As New CultureInfo("fr-FR")
-    Private ReadOnly _GroupEventLanguageForTesting As SupportedLanguage = SupportedLanguage.French
 
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
@@ -2671,8 +2670,8 @@ Public Class Main
             _ClubPreset = Nothing
             lblEventClubNotAuthorized.Visible = False
         End If
-        'TOPO: Correctly assign
-        LocalizationManager.Instance.Language = SupportedLanguage.French
+        'Correctly assign
+        LocalizationManager.Instance.Language = _ClubPreset.Language
     End Sub
     Private Sub btnEventSelectNextWeekClicked(sender As Object, e As EventArgs) Handles btnEventSelectNextWeek.Click
 
@@ -4262,7 +4261,8 @@ Public Class Main
     End Function
 
     Private Function GetGroupEventLanguage() As SupportedLanguage
-        Return _GroupEventLanguageForTesting
+        'Get the language from the club preset
+        Return _ClubPreset.Language
     End Function
 
     Private Function FormatSimDateTime(language As SupportedLanguage, includeLocalLabel As Boolean) As String

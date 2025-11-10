@@ -16,7 +16,7 @@ try {
           SummerZuluDayOfWeek, SummerZuluTime, TimeZoneID,
           SyncFlyDelay, LaunchDelay, StartTaskDelay, EligibleAward,
           BeginnerLinkURL, BeginnerLink, ForceSyncFly, ForceLaunch, ForceStartTask,
-          DiscordURL
+          DiscordURL, Language
         FROM Clubs
         ORDER BY ClubID
     ");
@@ -75,6 +75,7 @@ try {
             'ForceLaunch'           => (bool)$c['ForceLaunch'],
             'ForceStartTask'        => (bool)$c['ForceStartTask'],
             'DiscordURL'            => (string)$c['DiscordURL'],
+            'Language'              => (int)$c['Language'],
             'SharedPublishers'      => $shared,      // array of names
             'AuthorizedPublishers'  => $authorized   // array of names
         ];
