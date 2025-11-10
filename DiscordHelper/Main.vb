@@ -1919,6 +1919,12 @@ Public Class Main
         Else
             SetLabelFormat(lblTitle, LabelFormat.Regular)
         End If
+        If txtWeatherFile.Text.Trim = String.Empty OrElse (Not File.Exists(txtWeatherFile.Text)) Then
+            requiredText.AppendLine("A weather file is required!")
+            cannotContinue = True
+        Else
+            SetLabelFormat(lblTitle, LabelFormat.Regular)
+        End If
         If chkSoaringTypeRidge.Checked = False AndAlso chkSoaringTypeThermal.Checked = False AndAlso chkSoaringTypeWave.Checked = False AndAlso chkSoaringTypeDynamic.Checked = False Then
             SetLabelFormat(lblSoaringType, LabelFormat.BoldRed, requiredText, "At least one soaring type is required!")
             cannotContinue = True
