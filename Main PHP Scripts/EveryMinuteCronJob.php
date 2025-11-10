@@ -68,6 +68,140 @@ try {
     }
 
     /*
+     * Process queued task deletions
+     */
+    $pendingDeletesStmt = $pdoTasks->prepare("SELECT EntrySeqID, UserID FROM DeletedTasks WHERE Completed = 0 ORDER BY DeletionDate ASC, EntrySeqID ASC");
+    $pendingDeletesStmt->execute();
+    $pendingDeletes = $pendingDeletesStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($pendingDeletes) {
+        $fetchTaskStmt = $pdoTasks->prepare("SELECT TaskID, DiscordPostID FROM Tasks WHERE EntrySeqID = :EntrySeqID LIMIT 1");
+        $deleteTaskStmt = $pdoTasks->prepare("DELETE FROM Tasks WHERE EntrySeqID = :EntrySeqID");
+        $markCompletedStmt = $pdoTasks->prepare("UPDATE DeletedTasks SET Completed = 1 WHERE EntrySeqID = :EntrySeqID");
+        $fetchGuardStmt = $pdoTasks->prepare("SELECT Enabled FROM GuardFlags WHERE Name = :name LIMIT 1");
+        $updateGuardStmt = $pdoTasks->prepare("UPDATE GuardFlags SET Enabled = :enabled WHERE Name = :name");
+
+        foreach ($pendingDeletes as $deleteRequest) {
+            $entrySeqID = (int)$deleteRequest['EntrySeqID'];
+            $requestUser = isset($deleteRequest['UserID']) ? $deleteRequest['UserID'] : '';
+            logMessage("Cron: Processing queued deletion for EntrySeqID {$entrySeqID} (requested by {$requestUser}).");
+
+            $fetchTaskStmt->execute([':EntrySeqID' => $entrySeqID]);
+            $taskRow = $fetchTaskStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$taskRow) {
+                logMessage("Cron: Task EntrySeqID {$entrySeqID} not found. Marking deletion request as completed.");
+                $markCompletedStmt->execute([':EntrySeqID' => $entrySeqID]);
+                continue;
+            }
+
+            $taskID = $taskRow['TaskID'];
+            $discordPostID = $taskRow['DiscordPostID'];
+            $fatalError = false;
+            $restoreGuard = false;
+            $originalGuardState = 0;
+
+            try {
+                $fetchGuardStmt->execute([':name' => 'AdminDelete']);
+                $guardRow = $fetchGuardStmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$guardRow) {
+                    throw new Exception('AdminDelete guard flag not found.');
+                }
+
+                $originalGuardState = (int)$guardRow['Enabled'];
+
+                if ($originalGuardState !== 1) {
+                    if (!$updateGuardStmt->execute([':enabled' => 1, ':name' => 'AdminDelete'])) {
+                        throw new Exception('Failed to enable AdminDelete guard flag.');
+                    }
+                    $restoreGuard = true;
+                } else {
+                    $restoreGuard = true; // ensure we restore to the original state later even if already enabled
+                }
+
+                if (!$deleteTaskStmt->execute([':EntrySeqID' => $entrySeqID]) || $deleteTaskStmt->rowCount() === 0) {
+                    throw new Exception('Deleting task from Tasks table failed.');
+                }
+            } catch (Exception $ex) {
+                $fatalError = true;
+                logMessage("Cron: Failed to delete task EntrySeqID {$entrySeqID}: " . $ex->getMessage());
+            } finally {
+                if ($restoreGuard) {
+                    $updateGuardStmt->execute([':enabled' => $originalGuardState, ':name' => 'AdminDelete']);
+                }
+            }
+
+            if ($fatalError) {
+                logMessage("Cron: Leaving deletion request pending for EntrySeqID {$entrySeqID} due to fatal error.");
+                continue;
+            }
+
+            // Delete associated news entries
+            try {
+                deleteTaskNewsEntries($taskID);
+            } catch (Exception $ex) {
+                logMessage("Cron: Failed to delete news entries for TaskID {$taskID}: " . $ex->getMessage());
+            }
+
+            // Delete DPHX file
+            $dphxDir = $fileRootPath . 'TaskBrowser/Tasks/';
+            $dphxFile = $dphxDir . basename($taskID . '.dphx');
+            if (file_exists($dphxFile)) {
+                if (!unlink($dphxFile)) {
+                    logMessage("Cron: Failed to delete DPHX file {$dphxFile}.");
+                } else {
+                    logMessage("Cron: Deleted DPHX file {$dphxFile}.");
+                }
+            } else {
+                logMessage("Cron: DPHX file not found {$dphxFile}.");
+            }
+
+            // Delete weather chart
+            $weatherDir = $fileRootPath . 'TaskBrowser/WeatherCharts/';
+            $weatherFile = $weatherDir . basename($entrySeqID . '.jpg');
+            if (file_exists($weatherFile)) {
+                if (!unlink($weatherFile)) {
+                    logMessage("Cron: Failed to delete weather chart {$weatherFile}.");
+                } else {
+                    logMessage("Cron: Deleted weather chart {$weatherFile}.");
+                }
+            } else {
+                logMessage("Cron: Weather chart not found {$weatherFile}.");
+            }
+
+            // Delete cover image
+            $coverDir = $fileRootPath . 'TaskBrowser/Covers/';
+            $coverFile = $coverDir . basename($entrySeqID . '.jpg');
+            if (file_exists($coverFile)) {
+                if (!unlink($coverFile)) {
+                    logMessage("Cron: Failed to delete cover image {$coverFile}.");
+                } else {
+                    logMessage("Cron: Deleted cover image {$coverFile}.");
+                }
+            } else {
+                logMessage("Cron: Cover image not found {$coverFile}.");
+            }
+
+            // Delete Discord post, if any
+            if (!empty($discordPostID)) {
+                $discordResult = manageDiscordPost($disWHFlights, "", $discordPostID, true);
+                $discordResponse = json_decode($discordResult, true);
+
+                if (!isset($discordResponse['result']) || $discordResponse['result'] !== 'success') {
+                    $discordError = isset($discordResponse['error']) ? $discordResponse['error'] : 'Unknown error';
+                    logMessage("Cron: Failed to delete Discord post {$discordPostID}. Error: {$discordError}");
+                } else {
+                    logMessage("Cron: Deleted Discord post {$discordPostID}.");
+                }
+            }
+
+            $markCompletedStmt->execute([':EntrySeqID' => $entrySeqID]);
+            logMessage("Cron: Completed queued deletion for EntrySeqID {$entrySeqID}.");
+        }
+    }
+
+    /*
      * Update Announcements Routine:
      * Modify the WSGAnnouncement in the News database for events that need to be updated on Discord.
      */

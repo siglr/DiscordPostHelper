@@ -5946,7 +5946,8 @@ Public Class Main
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
         Dim discordDeleted As Boolean = False
-        Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID, discordDeleted)
+        Dim serverMessage As String = String.Empty
+        Dim result As Boolean = DeleteTaskFromServer(taskInfo.EntrySeqID, discordDeleted, serverMessage)
 
         If result Then
             Dim discordTaskIDToRemove As String = _taskDiscordPostID
@@ -5958,7 +5959,10 @@ Public Class Main
             SetAndRetrieveSessionData()
             SaveSession()
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Task removed from database successfully.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                If String.IsNullOrWhiteSpace(serverMessage) Then
+                    serverMessage = "Task deletion request has been queued and will be processed shortly."
+                End If
+                MessageBox.Show(serverMessage, "Removal Request Submitted", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
             'Bring user to Discord to delete task!
             If Not discordDeleted AndAlso discordTaskIDToRemove.Length > 0 Then
@@ -5978,13 +5982,17 @@ Public Class Main
 
         Else
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Failed to remove the task.", "Removal Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim failureMessage As String = serverMessage
+                If String.IsNullOrWhiteSpace(failureMessage) Then
+                    failureMessage = "Failed to submit the task deletion request."
+                End If
+                MessageBox.Show(failureMessage, "Removal Request Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
 
     End Sub
 
-    Public Function DeleteTaskFromServer(entrySeqID As Integer, ByRef discordDeleted As Boolean) As Boolean
+    Public Function DeleteTaskFromServer(entrySeqID As Integer, ByRef discordDeleted As Boolean, ByRef serverMessage As String) As Boolean
 
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
@@ -6010,8 +6018,12 @@ Public Class Main
                     Dim jsonResponse As String = reader.ReadToEnd()
                     ' Assuming the response is a JSON object with a "status" field
                     Dim result As Dictionary(Of String, Object) = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(jsonResponse)
-                    discordDeleted = (Not result.ContainsKey("discordError")) OrElse result("discordError") = String.Empty
-                    Return result("status").ToString() = "success"
+                    If result.ContainsKey("message") AndAlso result("message") IsNot Nothing Then
+                        serverMessage = result("message").ToString()
+                    End If
+                    Dim isSuccess As Boolean = result("status").ToString() = "success"
+                    discordDeleted = isSuccess OrElse (Not result.ContainsKey("discordError")) OrElse result("discordError") = String.Empty
+                    Return isSuccess
                 End Using
             End Using
             Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
@@ -6020,6 +6032,7 @@ Public Class Main
             Windows.Forms.Cursor.Current = Windows.Forms.Cursors.Default
             ' Handle the exception
             ' Log the error or display a message
+            serverMessage = ex.Message
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, $"Error deleting task: {ex.Message}", "Task deletion error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
