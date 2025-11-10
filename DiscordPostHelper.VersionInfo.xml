@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.3.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.10.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.10.1</ReleaseVersion>
+      <ReleaseTitle>Small but significant new stuff</ReleaseTitle>
+      <ReleaseNotes>
+        Enabled task deletion rights
+        Prevented tasks from being published when the weather file is missing
+        Added the possibility to get the group event posts in French (limited, will not translate user provided text)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.3.2</ReleaseVersion>
       <ReleaseTitle>Transition to 64 bits</ReleaseTitle>

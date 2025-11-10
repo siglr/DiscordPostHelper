@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.3.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.10.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.10.1</ReleaseVersion>
+      <ReleaseTitle>Easier first-time setup</ReleaseTitle>
+      <ReleaseNotes>
+        Improved first-time experience by creating default folders and providing a batch file to run the first time
+        Added a "Copy file" button to the IGC screen to facilitate pasting on Discord when needed
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.3.2</ReleaseVersion>
       <ReleaseTitle>Transition to 64 bits</ReleaseTitle>
