@@ -190,7 +190,12 @@
     <Compile Include="Settings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpcomingEventPrompt.vb" />
+    <Compile Include="UpcomingEventPrompt.Designer.vb">
+      <DependentUpon>UpcomingEventPrompt.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UpcomingEventPrompt.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DPHXUnpackAndLoad.vb">
       <SubType>Form</SubType>
     </Compile>
