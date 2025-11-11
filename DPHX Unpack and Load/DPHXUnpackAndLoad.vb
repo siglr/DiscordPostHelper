@@ -552,7 +552,7 @@ Public Class DPHXUnpackAndLoad
         _upcomingEventCheckAttempted = True
 
         Try
-            Await Task.Delay(TimeSpan.FromSeconds(2))
+            Await Task.Delay(TimeSpan.FromSeconds(1))
 
             If _isClosing OrElse Me.IsDisposed Then
                 CompleteUpcomingEventDecision(False)
