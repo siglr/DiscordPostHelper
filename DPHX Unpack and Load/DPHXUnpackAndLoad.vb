@@ -592,7 +592,7 @@ Public Class DPHXUnpackAndLoad
 
                     Dim entrySeqToken = item("EntrySeqID")?.ToString()
                     Dim entrySeqId As Integer
-                    If String.IsNullOrWhiteSpace(entrySeqToken) OrElse Not Integer.TryParse(entrySeqToken, entrySeqId) OrElse entrySeqId <= 0 Then
+                    If String.IsNullOrWhiteSpace(entrySeqToken) OrElse Not Integer.TryParse(entrySeqToken, entrySeqId) OrElse entrySeqId <= 0 OrElse entrySeqId = _allDPHData.EntrySeqID Then
                         Continue For
                     End If
 
