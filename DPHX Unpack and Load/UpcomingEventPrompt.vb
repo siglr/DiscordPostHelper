@@ -4,16 +4,16 @@ Imports System.Windows.Forms
 Public Class UpcomingEventInfo
     Public Property Title As String = String.Empty
     Public Property Subtitle As String = String.Empty
-    Public Property Comments As String = String.Empty
-    Public Property EventDateUtc As DateTime
-    Public Property EntrySeqID As Integer
-    Public Property TaskID As String = String.Empty
+Public Property Comments As String = String.Empty
+Public Property EventDateUtc As DateTime
+Public Property EntrySeqID As Integer
+Public Property TaskID As String = String.Empty
 
-    Public ReadOnly Property EventDateLocal As DateTime
-        Get
-            Return EventDateUtc.ToLocalTime()
-        End Get
-    End Property
+Public ReadOnly Property EventDateLocal As DateTime
+    Get
+        Return EventDateUtc.ToLocalTime()
+    End Get
+End Property
 End Class
 
 Public Class UpcomingEventPrompt
