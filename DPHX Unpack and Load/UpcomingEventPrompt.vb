@@ -1,7 +1,7 @@
 Imports System.Drawing
 Imports System.Windows.Forms
 
-Friend Class UpcomingEventInfo
+Public Class UpcomingEventInfo
     Public Property Title As String = String.Empty
     Public Property Subtitle As String = String.Empty
     Public Property Comments As String = String.Empty
