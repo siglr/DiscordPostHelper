@@ -933,32 +933,72 @@ Public Class BriefingControl
 
         Dim imageFilenameList As New List(Of String)
 
-        Dim imgList As New ImageList
-        For Each filename As String In _sessionData.ExtraFiles
-            If Path.GetExtension(filename.ToLower) = ".png" OrElse Path.GetExtension(filename.ToLower) = ".jpg" Then
+        imagesListView.BeginUpdate()
+
+        Dim previousImageList As ImageList = imagesListView.LargeImageList
+        imagesListView.LargeImageList = Nothing
+        imagesListView.Items.Clear()
+
+        If previousImageList IsNot Nothing Then
+            For Each existingImage As Image In previousImageList.Images
+                existingImage.Dispose()
+            Next
+            previousImageList.Dispose()
+        End If
+
+        Dim imgList As New ImageList With {.ImageSize = New Size(64, 64)}
+
+        For Each extraFile As String In _sessionData.ExtraFiles
+            Dim filename As String = extraFile
+            Dim extension As String = Path.GetExtension(filename.ToLowerInvariant)
+
+            If extension = ".png" OrElse extension = ".jpg" Then
                 If _unpackFolder <> String.Empty Then
                     filename = Path.Combine(_unpackFolder, Path.GetFileName(filename))
                 End If
-                imgList.Images.Add(Image.FromFile(filename))
-                imageFilenameList.Add(filename)
+
+                If File.Exists(filename) Then
+                    Dim imageToAdd As Image = Nothing
+
+                    Try
+                        Using fileStream As New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+                            Using memoryStream As New MemoryStream()
+                                fileStream.CopyTo(memoryStream)
+                                memoryStream.Position = 0
+
+                                Using loadedImage As Image = Image.FromStream(memoryStream)
+                                    imageToAdd = CType(loadedImage.Clone(), Image)
+                                End Using
+                            End Using
+                        End Using
+                    Catch ex As Exception
+                        imageToAdd = Nothing
+                    End Try
+
+                    If imageToAdd IsNot Nothing Then
+                        imgList.Images.Add(imageToAdd)
+                        imageFilenameList.Add(filename)
+                    End If
+                End If
             End If
         Next
-        imgList.ImageSize = New Size(64, 64) 'set the size of the icons
 
         imagesListView.View = View.LargeIcon
         imagesListView.LargeImageList = imgList
 
         For i = 0 To imgList.Images.Count - 1
-            Dim item1 As New ListViewItem($"")
-            item1.ImageIndex = i
-            item1.Text = i + 1.ToString
-            item1.Tag = imageFilenameList(i)
-            imagesListView.Items.Add(item1)
+            Dim item As New ListViewItem(String.Empty)
+            item.ImageIndex = i
+            item.Text = (i + 1).ToString()
+            item.Tag = imageFilenameList(i)
+            imagesListView.Items.Add(item)
         Next
 
         If imagesListView.Items.Count > 0 Then
             imagesListView.Items(0).Selected = True
         End If
+
+        imagesListView.EndUpdate()
 
     End Sub
 
