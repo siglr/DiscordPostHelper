@@ -509,7 +509,7 @@ Public Class DPHXUnpackAndLoad
         _upcomingEventCheckAttempted = True
 
         Try
-            Await Task.Delay(TimeSpan.FromSeconds(5))
+            Await Task.Delay(TimeSpan.FromSeconds(2))
 
             If _isClosing OrElse Me.IsDisposed Then
                 Return
@@ -580,8 +580,6 @@ Public Class DPHXUnpackAndLoad
                 End If
 
                 Dim nowUtc = DateTime.UtcNow
-                Dim windowStart = nowUtc.AddMinutes(-60)
-                Dim windowEnd = nowUtc.AddMinutes(30)
 
                 Dim candidates As New List(Of UpcomingEventInfo)()
 
@@ -616,8 +614,10 @@ Public Class DPHXUnpackAndLoad
                             Continue For
                         End If
                     End If
+                    Dim windowStart = eventDateUtc.AddMinutes(-60)
+                    Dim windowEnd = eventDateUtc.AddMinutes(30)
 
-                    If eventDateUtc < windowStart OrElse eventDateUtc > windowEnd Then
+                    If nowUtc < windowStart OrElse nowUtc > windowEnd Then
                         Continue For
                     End If
 

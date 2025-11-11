@@ -259,6 +259,9 @@
     <EmbeddedResource Include="IGCFileUpload.resx">
       <DependentUpon>IGCFileUpload.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UpcomingEventPrompt.resx">
+      <DependentUpon>UpcomingEventPrompt.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">
