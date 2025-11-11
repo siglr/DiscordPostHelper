@@ -1,5 +1,6 @@
 ﻿Imports System.Diagnostics.Eventing
 Imports System.Diagnostics.Eventing.Reader
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -7,6 +8,7 @@ Imports System.Reflection
 Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Threading
+Imports System.Threading.Tasks
 Imports System.Xml.Serialization
 Imports CefSharp.DevTools.Page
 Imports Newtonsoft.Json
@@ -39,6 +41,7 @@ Public Class DPHXUnpackAndLoad
     Private _readySignalForListener As EventWaitHandle
     Private _isClosing As Boolean = False
     Private _loggerForm As Logger
+    Private _upcomingEventCheckAttempted As Boolean = False
 
 #End Region
 
@@ -149,8 +152,10 @@ Public Class DPHXUnpackAndLoad
 
             Dim doUnpack As Boolean = False
             Dim ignoreWSGIntegration As Boolean = False
+            Dim shouldCheckForUpcomingEvent As Boolean = False
 
             Dim args = My.Application.CommandLineArgs
+            Dim hasCommandLineArguments As Boolean = args.Count > 0
             Dim preventWSG As Boolean = args.Any(Function(a) a.Equals("--prevent-wsg", StringComparison.OrdinalIgnoreCase))
             Dim fileArg As String = args.FirstOrDefault(Function(a) Not a.StartsWith("--"))
 
@@ -160,6 +165,7 @@ Public Class DPHXUnpackAndLoad
                 doUnpack = True
                 ignoreWSGIntegration = Settings.SessionSettings.WSGIgnoreWhenOpeningDPHX
             Else
+                shouldCheckForUpcomingEvent = Not hasCommandLineArguments
                 ' Check the last file that was opened
                 If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
                     _currentFile = Settings.SessionSettings.LastDPHXOpened
@@ -204,6 +210,10 @@ Public Class DPHXUnpackAndLoad
             End If
 
             _readySignalForListener.Set()
+
+            If shouldCheckForUpcomingEvent AndAlso Not preventWSG AndAlso Not ignoreWSGIntegration Then
+                CheckForUpcomingEventAsync()
+            End If
 
         End If
 
@@ -482,6 +492,186 @@ Public Class DPHXUnpackAndLoad
         Return False
 
     End Function
+
+    Private Async Sub CheckForUpcomingEventAsync()
+        If _upcomingEventCheckAttempted Then
+            Return
+        End If
+
+        _upcomingEventCheckAttempted = True
+
+        Try
+            Await Task.Delay(TimeSpan.FromSeconds(5))
+
+            If _isClosing OrElse Me.IsDisposed Then
+                Return
+            End If
+
+            If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+                Return
+            End If
+
+            Dim upcoming = Await FetchUpcomingEventAsync()
+
+            If upcoming Is Nothing Then
+                Return
+            End If
+
+            If _isClosing OrElse Me.IsDisposed Then
+                Return
+            End If
+
+            If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+                Return
+            End If
+
+            If Not Me.IsHandleCreated Then
+                Return
+            End If
+
+            Me.BeginInvoke(Sub()
+                                If _isClosing OrElse Me.IsDisposed Then
+                                    Return
+                                End If
+
+                                If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+                                    Return
+                                End If
+
+                                Using prompt As New UpcomingEventPrompt(upcoming)
+                                    If prompt.ShowDialog(Me) = DialogResult.OK Then
+                                        JoinUpcomingEvent(upcoming)
+                                    End If
+                                End Using
+                            End Sub)
+        Catch
+            ' Ignore any errors when retrieving upcoming events
+        End Try
+    End Sub
+
+    Private Async Function FetchUpcomingEventAsync() As Task(Of UpcomingEventInfo)
+        Try
+            Using client As New HttpClient()
+                Dim response = Await client.GetAsync($"{SupportingFeatures.SIGLRDiscordPostHelperFolder()}RetrieveNews.php?fullText=true")
+                response.EnsureSuccessStatusCode()
+
+                Dim content = Await response.Content.ReadAsStringAsync()
+                Dim root As JObject = JObject.Parse(content)
+
+                If Not String.Equals(root("status")?.ToString(), "success", StringComparison.OrdinalIgnoreCase) Then
+                    Return Nothing
+                End If
+
+                Dim data = TryCast(root("data"), JArray)
+                If data Is Nothing OrElse data.Count = 0 Then
+                    Return Nothing
+                End If
+
+                Dim nowUtc = DateTime.UtcNow
+                Dim windowStart = nowUtc.AddMinutes(-60)
+                Dim windowEnd = nowUtc.AddMinutes(30)
+
+                Dim candidates As New List(Of UpcomingEventInfo)()
+
+                For Each item As JObject In data.OfType(Of JObject)()
+                    Dim newsTypeToken = item("NewsType")
+                    Dim newsType As Integer
+                    If newsTypeToken Is Nothing OrElse Not Integer.TryParse(newsTypeToken.ToString(), newsType) OrElse newsType <> 1 Then
+                        Continue For
+                    End If
+
+                    Dim entrySeqToken = item("EntrySeqID")?.ToString()
+                    Dim entrySeqId As Integer
+                    If String.IsNullOrWhiteSpace(entrySeqToken) OrElse Not Integer.TryParse(entrySeqToken, entrySeqId) OrElse entrySeqId <= 0 Then
+                        Continue For
+                    End If
+
+                    Dim eventDateStr = item("EventDate")?.ToString()
+                    If String.IsNullOrWhiteSpace(eventDateStr) Then
+                        Continue For
+                    End If
+
+                    Dim eventDateUtc As DateTime
+                    If Not DateTime.TryParseExact(eventDateStr,
+                                                 "yyyy-MM-dd HH:mm:ss",
+                                                 CultureInfo.InvariantCulture,
+                                                 DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                                 eventDateUtc) Then
+                        If Not DateTime.TryParse(eventDateStr,
+                                                 CultureInfo.InvariantCulture,
+                                                 DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                                 eventDateUtc) Then
+                            Continue For
+                        End If
+                    End If
+
+                    If eventDateUtc < windowStart OrElse eventDateUtc > windowEnd Then
+                        Continue For
+                    End If
+
+                    Dim info As New UpcomingEventInfo With {
+                        .Title = item("Title")?.ToString(),
+                        .Subtitle = item("Subtitle")?.ToString(),
+                        .Comments = item("Comments")?.ToString(),
+                        .EventDateUtc = eventDateUtc,
+                        .EntrySeqID = entrySeqId,
+                        .TaskID = item("TaskID")?.ToString()
+                    }
+
+                    candidates.Add(info)
+                Next
+
+                If candidates.Count = 0 Then
+                    Return Nothing
+                End If
+
+                Return candidates.OrderBy(Function(c) Math.Abs((c.EventDateUtc - nowUtc).TotalMinutes)).ThenBy(Function(c) c.EventDateUtc).FirstOrDefault()
+            End Using
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Sub JoinUpcomingEvent(info As UpcomingEventInfo)
+        If info Is Nothing Then
+            Return
+        End If
+
+        Dim taskTitle As String = String.Empty
+        Dim taskId As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(info.EntrySeqID.ToString(), taskTitle)
+
+        If String.IsNullOrEmpty(taskId) AndAlso Not String.IsNullOrEmpty(info.TaskID) Then
+            taskId = info.TaskID
+            If String.IsNullOrEmpty(taskTitle) Then
+                taskTitle = info.Title
+            End If
+        End If
+
+        If String.IsNullOrEmpty(taskId) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me,
+                                "Unable to retrieve the task associated with this event at the moment.",
+                                "Join Event",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information)
+            End Using
+            Return
+        End If
+
+        Dim downloaded = SupportingFeatures.DownloadTaskFile(taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
+
+        If downloaded = String.Empty Then
+            Return
+        End If
+
+        SupportingFeatures.BringWindowToFront(Me)
+
+        LoadDPHXPackage(downloaded)
+
+        If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
+            UnpackFiles(True)
+        End If
+    End Sub
 
     Private Function OpenSettingsWindow() As DialogResult
         Dim formSettings As New Settings
