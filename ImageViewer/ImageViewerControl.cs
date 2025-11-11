@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using SIGLR.SoaringTools.ImageViewer;
@@ -101,7 +102,22 @@ namespace SIGLR.SoaringTools.ImageViewer
 
         public void LoadImage(string filePath)
         {
-            imageBox.Image = Image.FromFile(filePath);
+            imageBox.ClearImage();
+
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    fileStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+
+                    using (Image loadedImage = Image.FromStream(memoryStream))
+                    {
+                        imageBox.Image = new Bitmap(loadedImage);
+                    }
+                }
+            }
+
             imageFilenameStatusLabel.Text = filePath;
             imageBox.SizeToFit = true;
             imageBox.Refresh();
