@@ -44,6 +44,8 @@ Public Class DPHXUnpackAndLoad
     Private _upcomingEventCheckAttempted As Boolean = False
     Private _launchedWithDPHXArgument As Boolean = False
     Private _taskFetchRequestedByListener As Boolean = False
+    Private _pendingWSGIntegration As Nullable(Of AllSettings.WSGIntegrationOptions) = Nothing
+    Private _awaitingUpcomingEventDecision As Boolean = False
 
 #End Region
 
@@ -197,27 +199,24 @@ Public Class DPHXUnpackAndLoad
                 Exit Sub
             End If
 
-            If Not ignoreWSGIntegration AndAlso Not preventWSG Then
-                'Check WSG integration
-                Select Case Settings.SessionSettings.WSGIntegration
-                    Case AllSettings.WSGIntegrationOptions.None
-                    'Do nothing
-                    Case AllSettings.WSGIntegrationOptions.OpenHome
-                        'Open map in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
-                    Case AllSettings.WSGIntegrationOptions.OpenMap
-                        'Open map in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
-                    Case AllSettings.WSGIntegrationOptions.OpenEvents
-                        'Open events in WSG
-                        SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
-                End Select
+            If Not ignoreWSGIntegration AndAlso Not preventWSG AndAlso Not _taskFetchRequestedByListener Then
+                Dim integrationOption = Settings.SessionSettings.WSGIntegration
+                If integrationOption <> AllSettings.WSGIntegrationOptions.None Then
+                    _pendingWSGIntegration = integrationOption
+                Else
+                    _pendingWSGIntegration = Nothing
+                End If
+            Else
+                _pendingWSGIntegration = Nothing
             End If
 
             _readySignalForListener.Set()
 
             If shouldCheckForUpcomingEvent Then
+                _awaitingUpcomingEventDecision = True
                 CheckForUpcomingEventAsync()
+            Else
+                TryLaunchWSGIntegration()
             End If
 
         End If
@@ -432,6 +431,7 @@ Public Class DPHXUnpackAndLoad
         Select Case e.Action
             Case "download-task"
                 _taskFetchRequestedByListener = True
+                _pendingWSGIntegration = Nothing
                 ' Boolean fromEventTab = (e.Source = "event")
                 Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
                 Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
@@ -444,6 +444,7 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub RequestReceivedFromWSGListener(taskId As String, taskTitle As String, fromEventTab As Boolean)
         _taskFetchRequestedByListener = True
+        _pendingWSGIntegration = Nothing
 
         Dim downloaded = SupportingFeatures.DownloadTaskFile(
                       taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
@@ -501,6 +502,48 @@ Public Class DPHXUnpackAndLoad
 
     End Function
 
+    Private Sub TryLaunchWSGIntegration()
+        If Not _pendingWSGIntegration.HasValue Then
+            Return
+        End If
+
+        If _awaitingUpcomingEventDecision OrElse _taskFetchRequestedByListener Then
+            Return
+        End If
+
+        If _isClosing OrElse Me.IsDisposed Then
+            _pendingWSGIntegration = Nothing
+            Return
+        End If
+
+        If Me.InvokeRequired Then
+            Me.BeginInvoke(Sub() TryLaunchWSGIntegration())
+            Return
+        End If
+
+        Dim integrationOption = _pendingWSGIntegration.Value
+        _pendingWSGIntegration = Nothing
+
+        Select Case integrationOption
+            Case AllSettings.WSGIntegrationOptions.OpenHome
+                SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=home")
+            Case AllSettings.WSGIntegrationOptions.OpenMap
+                SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=map")
+            Case AllSettings.WSGIntegrationOptions.OpenEvents
+                SupportingFeatures.LaunchDiscordURL($"{SupportingFeatures.WeSimGlide}index.html?tab=events")
+        End Select
+    End Sub
+
+    Private Sub CompleteUpcomingEventDecision(joinedUpcomingEvent As Boolean)
+        If joinedUpcomingEvent Then
+            _pendingWSGIntegration = Nothing
+        End If
+
+        _awaitingUpcomingEventDecision = False
+
+        TryLaunchWSGIntegration()
+    End Sub
+
     Private Async Sub CheckForUpcomingEventAsync()
         If _upcomingEventCheckAttempted Then
             Return
@@ -512,48 +555,61 @@ Public Class DPHXUnpackAndLoad
             Await Task.Delay(TimeSpan.FromSeconds(2))
 
             If _isClosing OrElse Me.IsDisposed Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             If ShouldSuppressUpcomingEventPrompt() Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             Dim upcoming = Await FetchUpcomingEventAsync()
 
             If upcoming Is Nothing Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             If _isClosing OrElse Me.IsDisposed Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             If ShouldSuppressUpcomingEventPrompt() Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             If Not Me.IsHandleCreated Then
+                CompleteUpcomingEventDecision(False)
                 Return
             End If
 
             Me.BeginInvoke(Sub()
                                 If _isClosing OrElse Me.IsDisposed Then
+                                    CompleteUpcomingEventDecision(False)
                                     Return
                                 End If
 
                                 If ShouldSuppressUpcomingEventPrompt() Then
+                                    CompleteUpcomingEventDecision(False)
                                     Return
                                 End If
 
+                                Dim joined = False
+
                                 Using prompt As New UpcomingEventPrompt(upcoming)
                                     If prompt.ShowDialog(Me) = DialogResult.OK Then
+                                        joined = True
                                         JoinUpcomingEvent(upcoming)
                                     End If
                                 End Using
+
+                                CompleteUpcomingEventDecision(joined)
                             End Sub)
         Catch
-            ' Ignore any errors when retrieving upcoming events
+            CompleteUpcomingEventDecision(False)
         End Try
     End Sub
 
