@@ -16,6 +16,7 @@ Partial Class UpcomingEventPrompt
 
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.btnJoin = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.FlowLayoutPanelButtons = New System.Windows.Forms.FlowLayoutPanel()
@@ -23,6 +24,7 @@ Partial Class UpcomingEventPrompt
         Me.lblSubtitleValue = New System.Windows.Forms.Label()
         Me.lblTitleValue = New System.Windows.Forms.Label()
         Me.txtComments = New System.Windows.Forms.TextBox()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.FlowLayoutPanelButtons.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -36,6 +38,7 @@ Partial Class UpcomingEventPrompt
         Me.btnJoin.Size = New System.Drawing.Size(80, 38)
         Me.btnJoin.TabIndex = 0
         Me.btnJoin.Text = "Join"
+        Me.ToolTip1.SetToolTip(Me.btnJoin, "Click to download the DPHX file for this group event.")
         Me.btnJoin.UseVisualStyleBackColor = True
         '
         'btnCancel
@@ -48,6 +51,7 @@ Partial Class UpcomingEventPrompt
         Me.btnCancel.Size = New System.Drawing.Size(80, 38)
         Me.btnCancel.TabIndex = 1
         Me.btnCancel.Text = "Cancel"
+        Me.ToolTip1.SetToolTip(Me.btnCancel, "Click to close this prompt without further action.")
         Me.btnCancel.UseVisualStyleBackColor = True
         '
         'FlowLayoutPanelButtons
@@ -128,7 +132,7 @@ Partial Class UpcomingEventPrompt
         Me.Name = "UpcomingEventPrompt"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Upcoming Event"
+        Me.Text = "Do you want to join this upcoming group event ?"
         Me.FlowLayoutPanelButtons.ResumeLayout(False)
         Me.FlowLayoutPanelButtons.PerformLayout()
         Me.ResumeLayout(False)
@@ -143,4 +147,5 @@ Partial Class UpcomingEventPrompt
     Friend WithEvents lblSubtitleValue As Label
     Friend WithEvents lblTitleValue As Label
     Friend WithEvents txtComments As TextBox
+    Friend WithEvents ToolTip1 As ToolTip
 End Class
