@@ -42,6 +42,8 @@ Public Class DPHXUnpackAndLoad
     Private _isClosing As Boolean = False
     Private _loggerForm As Logger
     Private _upcomingEventCheckAttempted As Boolean = False
+    Private _launchedWithDPHXArgument As Boolean = False
+    Private _taskFetchRequestedByListener As Boolean = False
 
 #End Region
 
@@ -152,20 +154,23 @@ Public Class DPHXUnpackAndLoad
 
             Dim doUnpack As Boolean = False
             Dim ignoreWSGIntegration As Boolean = False
-            Dim shouldCheckForUpcomingEvent As Boolean = False
+            Dim shouldCheckForUpcomingEvent As Boolean = True
 
             Dim args = My.Application.CommandLineArgs
-            Dim hasCommandLineArguments As Boolean = args.Count > 0
             Dim preventWSG As Boolean = args.Any(Function(a) a.Equals("--prevent-wsg", StringComparison.OrdinalIgnoreCase))
             Dim fileArg As String = args.FirstOrDefault(Function(a) Not a.StartsWith("--"))
 
             If Not String.IsNullOrEmpty(fileArg) Then
                 ' Open the file passed as an argument
-                _currentFile = My.Application.CommandLineArgs(0)
+                _currentFile = fileArg
                 doUnpack = True
                 ignoreWSGIntegration = Settings.SessionSettings.WSGIgnoreWhenOpeningDPHX
+                _launchedWithDPHXArgument = String.Equals(Path.GetExtension(fileArg), ".dphx", StringComparison.OrdinalIgnoreCase)
+                If _launchedWithDPHXArgument Then
+                    shouldCheckForUpcomingEvent = False
+                End If
             Else
-                shouldCheckForUpcomingEvent = Not hasCommandLineArguments
+                _launchedWithDPHXArgument = False
                 ' Check the last file that was opened
                 If Not Settings.SessionSettings.LastDPHXOpened = String.Empty AndAlso File.Exists(Settings.SessionSettings.LastDPHXOpened) Then
                     _currentFile = Settings.SessionSettings.LastDPHXOpened
@@ -211,7 +216,7 @@ Public Class DPHXUnpackAndLoad
 
             _readySignalForListener.Set()
 
-            If shouldCheckForUpcomingEvent AndAlso Not preventWSG AndAlso Not ignoreWSGIntegration Then
+            If shouldCheckForUpcomingEvent Then
                 CheckForUpcomingEventAsync()
             End If
 
@@ -426,6 +431,7 @@ Public Class DPHXUnpackAndLoad
 
         Select Case e.Action
             Case "download-task"
+                _taskFetchRequestedByListener = True
                 ' Boolean fromEventTab = (e.Source = "event")
                 Me.Invoke(Sub() SupportingFeatures.BringWindowToFront(Me))
                 Me.Invoke(Sub() RequestReceivedFromWSGListener(e.TaskID, e.Title, e.Source = "event"))
@@ -437,6 +443,8 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub RequestReceivedFromWSGListener(taskId As String, taskTitle As String, fromEventTab As Boolean)
+        _taskFetchRequestedByListener = True
+
         Dim downloaded = SupportingFeatures.DownloadTaskFile(
                       taskId, taskTitle, Settings.SessionSettings.PackagesFolder)
 
@@ -507,7 +515,7 @@ Public Class DPHXUnpackAndLoad
                 Return
             End If
 
-            If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+            If ShouldSuppressUpcomingEventPrompt() Then
                 Return
             End If
 
@@ -521,7 +529,7 @@ Public Class DPHXUnpackAndLoad
                 Return
             End If
 
-            If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+            If ShouldSuppressUpcomingEventPrompt() Then
                 Return
             End If
 
@@ -534,7 +542,7 @@ Public Class DPHXUnpackAndLoad
                                     Return
                                 End If
 
-                                If _lastLoadSuccess OrElse Not String.IsNullOrEmpty(_currentFile) Then
+                                If ShouldSuppressUpcomingEventPrompt() Then
                                     Return
                                 End If
 
@@ -548,6 +556,10 @@ Public Class DPHXUnpackAndLoad
             ' Ignore any errors when retrieving upcoming events
         End Try
     End Sub
+
+    Private Function ShouldSuppressUpcomingEventPrompt() As Boolean
+        Return _launchedWithDPHXArgument OrElse _taskFetchRequestedByListener
+    End Function
 
     Private Async Function FetchUpcomingEventAsync() As Task(Of UpcomingEventInfo)
         Try
