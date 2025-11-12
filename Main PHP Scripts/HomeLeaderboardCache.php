@@ -91,6 +91,33 @@ if (!function_exists('normalizeHomeLeaderboardMode')) {
     }
 }
 
+if (!function_exists('formatClubEventDisplayName')) {
+    function formatClubEventDisplayName(?string $clubFullName, ?string $clubShortName, ?string $fallbackId): string
+    {
+        $full = $clubFullName !== null ? trim($clubFullName) : '';
+        $short = $clubShortName !== null ? trim($clubShortName) : '';
+        $fallback = $fallbackId !== null ? trim($fallbackId) : '';
+
+        if ($full === '' && $short === '') {
+            return $fallback;
+        }
+
+        if ($full === '') {
+            return $short;
+        }
+
+        if ($short === '') {
+            return $full;
+        }
+
+        if (stripos($full, $short) !== false) {
+            return $full;
+        }
+
+        return sprintf('%s – %s', $full, $short);
+    }
+}
+
 if (!function_exists('getHomeLeaderboardCachePath')) {
     function getHomeLeaderboardCachePath(
         $sim = 'All',
@@ -311,11 +338,56 @@ if (!function_exists('computeHomeLeaderboardFilters')) {
         }
         unset($list);
 
+        $clubsStmt = $pdo->query(<<<'SQL'
+            SELECT DISTINCT
+                ir.ClubEventNewsID AS ClubEventNewsID,
+                c.ClubFullName     AS ClubFullName,
+                c.ClubName         AS ClubShortName
+            FROM TaskBestPerformances tbp
+            JOIN IGCRecords ir ON tbp.IGCKey = ir.IGCKey
+            LEFT JOIN Clubs c ON c.EventNewsID = ir.ClubEventNewsID
+            WHERE ir.ClubEventNewsID IS NOT NULL
+              AND ir.ClubEventNewsID != ''
+        SQL);
+
+        $clubRows = $clubsStmt->fetchAll(PDO::FETCH_ASSOC);
+        $clubs = [];
+
+        foreach ($clubRows as $row) {
+            $eventId = isset($row['ClubEventNewsID']) ? trim((string) $row['ClubEventNewsID']) : '';
+            if ($eventId === '') {
+                continue;
+            }
+
+            $display = formatClubEventDisplayName(
+                $row['ClubFullName'] ?? null,
+                $row['ClubShortName'] ?? null,
+                $eventId
+            );
+
+            $clubs[] = [
+                'ClubEventNewsID' => $eventId,
+                'ClubName' => $display !== '' ? $display : $eventId,
+            ];
+        }
+
+        usort($clubs, function (array $a, array $b): int {
+            $cmp = strcasecmp($a['ClubName'], $b['ClubName']);
+            if ($cmp !== 0) {
+                return $cmp;
+            }
+
+            return strcasecmp($a['ClubEventNewsID'], $b['ClubEventNewsID']);
+        });
+
+        $clubs = array_values($clubs);
+
         return [
             'sims' => $sims,
             'competitionClasses' => $classes,
             'gliders' => $gliders,
             'glidersByClass' => $glidersByClass,
+            'clubs' => $clubs,
         ];
     }
 }
@@ -363,13 +435,17 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
                     ir.GliderID,
                     ir.Speed,
                     ir.IGCUploadDateTimeUTC,
-                    t.Title
+                    t.Title,
+                    ir.ClubEventNewsID,
+                    c.ClubFullName AS ClubFullName,
+                    c.ClubName AS ClubShortName
                 FROM TaskBestPerformances tbp
                 JOIN IGCRecords ir ON tbp.IGCKey = ir.IGCKey
+                LEFT JOIN Clubs c ON c.EventNewsID = ir.ClubEventNewsID
                 JOIN Tasks t ON tbp.EntrySeqID = t.EntrySeqID
                 $whereClause
                 ORDER BY ir.IGCUploadDateTimeUTC DESC
-                LIMIT 10
+                LIMIT 200
             SQL;
         } else {
             $innerConditions = [
@@ -412,13 +488,17 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
                     ir.GliderID,
                     ir.Speed,
                     ir.IGCUploadDateTimeUTC,
-                    t.Title
+                    t.Title,
+                    ir.ClubEventNewsID,
+                    c.ClubFullName AS ClubFullName,
+                    c.ClubName AS ClubShortName
                 FROM TaskBestPerformances tbp
                 JOIN IGCRecords ir ON tbp.IGCKey = ir.IGCKey
+                LEFT JOIN Clubs c ON c.EventNewsID = ir.ClubEventNewsID
                 JOIN Tasks t ON tbp.EntrySeqID = t.EntrySeqID
                 $whereClause
                 ORDER BY ir.IGCUploadDateTimeUTC DESC
-                LIMIT 10
+                LIMIT 200
             SQL;
         }
 
@@ -427,6 +507,13 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
         $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function (array $row): array {
+            $eventId = $row['ClubEventNewsID'] ?? null;
+            $clubDisplay = formatClubEventDisplayName(
+                $row['ClubFullName'] ?? null,
+                $row['ClubShortName'] ?? null,
+                $eventId
+            );
+
             return [
                 'igcKey' => $row['IGCKey'],
                 'entrySeqID' => isset($row['EntrySeqID']) ? (int) $row['EntrySeqID'] : null,
@@ -438,6 +525,8 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
                 'speed' => $row['Speed'] !== null ? round((float) $row['Speed'], 1) : null,
                 'sim' => $row['Sim'],
                 'igcUploadDateTimeUTC' => $row['IGCUploadDateTimeUTC'],
+                'clubEventNewsID' => $eventId !== null && $eventId !== '' ? $eventId : null,
+                'clubName' => $clubDisplay !== '' ? $clubDisplay : ($eventId ?? null),
             ];
         }, $records);
     }

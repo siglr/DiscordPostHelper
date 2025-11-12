@@ -7,6 +7,12 @@ header('Content-Type: application/json');
 $loggingEnabled = false;
 
 // ─────────────────────────────────────────────
+// Event match window (same as SaveIGCRecord.php)
+// ─────────────────────────────────────────────
+const EVENT_MATCH_WINDOW_BEFORE_SECONDS = 15 * 60; // 15 minutes
+const EVENT_MATCH_WINDOW_AFTER_SECONDS  = 30 * 60; // 30 minutes
+
+// ─────────────────────────────────────────────
 // Helper functions brought in from SaveIGCRecord.php
 // ─────────────────────────────────────────────
 
@@ -17,6 +23,93 @@ function bindNullableString($stmt, string $parameter, $value): void
     } else {
         $stmt->bindValue($parameter, $value, PDO::PARAM_STR);
     }
+}
+
+function normalizeUtcDateTime(string $value): ?string
+{
+    $value = trim($value);
+    if ($value === '') {
+        return null;
+    }
+
+    // Handle compact YYMMDDhhmmss format (e.g. 231103205320 → 2023-11-03 20:53:20)
+    if (preg_match('/^\d{12}$/', $value) === 1) {
+        $yy = substr($value, 0, 2);
+        $mm = substr($value, 2, 2);
+        $dd = substr($value, 4, 2);
+        $hh = substr($value, 6, 2);
+        $mi = substr($value, 8, 2);
+        $ss = substr($value, 10, 2);
+
+        $year = 2000 + (int) $yy;
+
+        try {
+            $dt = new DateTimeImmutable(
+                sprintf('%04d-%02d-%02d %02d:%02d:%02d', $year, $mm, $dd, $hh, $mi, $ss),
+                new DateTimeZone('UTC')
+            );
+            return $dt->format('Y-m-d H:i:s');
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    $timestamp = strtotime($value);
+    if ($timestamp === false) {
+        return null;
+    }
+    return gmdate('Y-m-d H:i:s', $timestamp);
+}
+
+function findMatchingClubEvent(PDO $pdo, int $entrySeqId, string $igcRecordDateTimeUtc): ?string
+{
+    $normalizedIgcTime = normalizeUtcDateTime($igcRecordDateTimeUtc);
+    if ($normalizedIgcTime === null) {
+        return null;
+    }
+
+    $dt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $normalizedIgcTime, new DateTimeZone('UTC'));
+    if ($dt === false) {
+        return null;
+    }
+
+    $igcEpoch = $dt->getTimestamp();
+
+    $sql = <<<SQL
+        SELECT
+            ClubEventNewsID,
+            EventDateTime,
+            abs(:IgcEpoch - strftime('%s', EventDateTime)) AS TimeDifference
+        FROM TaskEvents
+        WHERE EntrySeqID = :EntrySeqID
+          AND ClubEventNewsID IS NOT NULL
+          AND trim(ClubEventNewsID) != ''
+          AND :IgcEpoch BETWEEN (strftime('%s', EventDateTime) - :BeforeWindow)
+                           AND (strftime('%s', EventDateTime) + :AfterWindow)
+        ORDER BY TimeDifference ASC,
+                 EventDateTime ASC,
+                 ClubEventNewsID ASC
+        LIMIT 1
+SQL;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':EntrySeqID', $entrySeqId, PDO::PARAM_INT);
+    $stmt->bindValue(':IgcEpoch', $igcEpoch, PDO::PARAM_INT);
+    $stmt->bindValue(':BeforeWindow', EVENT_MATCH_WINDOW_BEFORE_SECONDS, PDO::PARAM_INT);
+    $stmt->bindValue(':AfterWindow', EVENT_MATCH_WINDOW_AFTER_SECONDS, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$row) {
+        return null;
+    }
+
+    $clubEventNewsId = $row['ClubEventNewsID'] ?? null;
+    if ($clubEventNewsId === null || trim($clubEventNewsId) === '') {
+        return null;
+    }
+
+    return $clubEventNewsId;
 }
 
 function isIgcRecordEligible(PDO $pdo, string $igcKey): bool
@@ -204,7 +297,7 @@ try {
         logMessage("IGC file saved to $destPath");
     }
 
-    // 5) Insert into IGCRecords
+    // 5) Insert into IGCRecords (now with ClubEventNewsID)
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -217,17 +310,20 @@ try {
         exit;
     }
 
+    // Detect matching club/event for this IGC
+    $matchedClubEventNewsID = findMatchingClubEvent($pdo, $EntrySeqID, $IGCRecordDateTimeUTC);
+
     $insertQ = "
       INSERT INTO IGCRecords (
         IGCKey, EntrySeqID, IGCRecordDateTimeUTC, IGCUploadDateTimeUTC,
         LocalTime, BeginTimeUTC, Pilot, GliderType, GliderID, CompetitionID,
         CompetitionClass, NB21Version, Sim, WSGUserID, TaskCompleted, Penalties,
-        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment
+        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID
       ) VALUES (
         :IGCKey, :EntrySeqID, :IGCRecordDateTimeUTC, :IGCUploadDateTimeUTC,
         :LocalTime, :BeginTimeUTC, :Pilot, :GliderType, :GliderID, :CompetitionID,
         :CompetitionClass, :NB21Version, :Sim, :WSGUserID, :TaskCompleted, :Penalties,
-        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment
+        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID
       )
     ";
     $stmt = $pdo->prepare($insertQ);
@@ -254,7 +350,8 @@ try {
       ':IGCValid'             => $IGCValidInt,
       ':TPVersion'            => $TPVersion,
       ':LocalDate'            => $LocalDate,
-      ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null)
+      ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null),
+      ':ClubEventNewsID'      => $matchedClubEventNewsID
     ]);
 
     // ─────────────────────────────────────────
