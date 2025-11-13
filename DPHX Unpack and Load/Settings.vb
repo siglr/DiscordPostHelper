@@ -922,13 +922,13 @@ Public Class Settings
 
         If String.IsNullOrWhiteSpace(SessionSettings.WSGCompID) OrElse String.IsNullOrWhiteSpace(SessionSettings.WSGPilotName) Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("We need your competition ID and pilot name from WeSimGlide.org before installing the NB21 Logger.", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show($"We need your competition ID and pilot name from WeSimGlide.org before installing the NB21 Logger.{Environment.NewLine}{Environment.NewLine}Please set the information on WeSimGlide then try again (you may need to restart the app).", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Using
             Return
         End If
 
         Using New Centered_MessageBox(Me)
-            If MessageBox.Show(Me, "Download and configure the NB21 Logger?", "Install NB21 Logger", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If MessageBox.Show("Download and configure the NB21 Logger?", "Install NB21 Logger", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Return
             End If
         End Using
@@ -1002,12 +1002,14 @@ Public Class Settings
 
             SessionSettings.NB21EXEFolder = nb21Folder
             SessionSettings.NB21IGCFolder = tracklogsFolder
+            SessionSettings.NB21StartAndFeed = True
             SessionSettings.Save()
 
             btnNB21EXEFolder.Text = nb21Folder
             ToolTip1.SetToolTip(btnNB21EXEFolder, nb21Folder)
             btnNB21IGCFolder.Text = tracklogsFolder
             ToolTip1.SetToolTip(btnNB21IGCFolder, tracklogsFolder)
+            chkEnableNB21StartAndFeed.Checked = True
 
             UpdateToolButtonStates()
 
@@ -1043,20 +1045,20 @@ Public Class Settings
 
         If SessionSettings.WSGUserID <= 0 Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Please sign in to WeSimGlide.org before installing the SSC-Tracker.", "WeSimGlide details missing", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show("Please sign in to WeSimGlide.org before installing the Tracker.", "WeSimGlide details missing", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Using
             Return
         End If
 
         If String.IsNullOrWhiteSpace(SessionSettings.WSGCompID) OrElse String.IsNullOrWhiteSpace(SessionSettings.WSGPilotName) Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("We need your competition ID and pilot name from WeSimGlide.org before installing the SSC-Tracker.", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show($"We need your competition ID and pilot name from WeSimGlide.org before installing the Tracker.{Environment.NewLine}{Environment.NewLine}Please set the information on WeSimGlide then try again (you may need to restart the app).", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Using
             Return
         End If
 
         Using New Centered_MessageBox(Me)
-            If MessageBox.Show(Me, "Download and configure the SSC-Tracker?", "Install SSC-Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If MessageBox.Show("Download and configure the Tracker app?", "Install Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Return
             End If
         End Using
@@ -1101,10 +1103,12 @@ Public Class Settings
             End Using
 
             SessionSettings.TrackerEXEFolder = trackerFolder
+            SessionSettings.TrackerStartAndFeed = True
             SessionSettings.Save()
 
             btnTrackerEXEFolder.Text = trackerFolder
             ToolTip1.SetToolTip(btnTrackerEXEFolder, trackerFolder)
+            chkEnableTrackerStartAndFeed.Checked = True
 
             UpdateToolButtonStates()
 
@@ -1135,7 +1139,7 @@ Public Class Settings
                 Else
                     Dim directory As String = Path.GetDirectoryName(fullPath)
                     If Not String.IsNullOrEmpty(directory) Then
-                        Directory.CreateDirectory(directory)
+                        IO.Directory.CreateDirectory(directory)
                     End If
                     entry.ExtractToFile(fullPath, True)
                 End If
