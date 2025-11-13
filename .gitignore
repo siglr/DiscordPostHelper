@@ -31,6 +31,7 @@ bld/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
+!Log/NB21_B_Record_Format.txt
 [Ll]ogs/
 
 # Visual Studio 2015/2017 cache/options directory

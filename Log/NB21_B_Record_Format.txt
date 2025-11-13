@@ -1,0 +1,26 @@
+NB21 Logger B Record Format
+===========================
+
+The NB21 logger writes IGC "B" (fix) records using the layout advertised in the `I` header record (`I073638FXA3943AGL4447TAS4851NET5254ENL5555FLP5658WSP5961WDI6262GND6363GEA`). Each row below lists the 1-indexed character range, the field mnemonic, and the NB21 data source.
+
+| Columns | Field | Source in `createBRecord` | Notes |
+| ------- | ----- | ------------------------- | ----- |
+| 1 | `B` | Literal | Record type identifier. |
+| 2–7 | `HHMMSS` | `realtime_s` → `s_to_hhmmss` | UTC fix timestamp. |
+| 8–15 | Latitude | `lat_deg` → `ConvertDecimalToDMS(..., true)` | Degrees and thousandths of minutes plus hemisphere. |
+| 16–24 | Longitude | `lon_deg` → `ConvertDecimalToDMS(..., false)` | Degrees and thousandths of minutes plus hemisphere. |
+| 25 | `A` | Literal | Fix validity flag (always `A`). |
+| 26–30 | Pressure alt | `alt_m` | Rounded simulator altitude (m) reused for both pressure and GNSS altitude. |
+| 31–35 | GNSS alt | `alt_m` | See above. |
+| 36–38 | `FXA` | Literal `"007"` | Fix accuracy extension (metres). |
+| 39–43 | `AGL` | `alt_agl_m` | Height above ground (m). |
+| 44–47 | `TAS` | `tas_kph` | True airspeed (km/h). |
+| 48–51 | `NET` | `wind_y_ms` | Netto vertical air-mass term scaled to centimetres per second (values clamped to ±9.99 m/s). |
+| 52–54 | `ENL` | `engine` | `999` while engine/thrust is on, otherwise `000`. |
+| 55 | `FLP` | `flap_pos` | One-digit flap index (1-based). |
+| 56–58 | `WSP` | `wind_kph` | Wind speed (km/h). |
+| 59–61 | `WDI` | `wind_deg` | Wind direction (degrees). |
+| 62 | `GND` | `on_ground` | `1` when the aircraft is on the ground. |
+| 63 | `GEA` | `gear_down` | `1` when landing gear is down. |
+
+All numeric values are zero-padded to the width shown in the column range. The netto, wind, and flag conversions, together with the constant strings, are implemented in `IGCFileWriter.createBRecord`.
