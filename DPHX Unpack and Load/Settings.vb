@@ -1,6 +1,12 @@
-﻿Imports System.IO
+Imports System.Diagnostics
+Imports System.IO
+Imports System.IO.Compression
+Imports System.Linq
+Imports System.Net
 Imports System.Text
+Imports System.Threading
 Imports System.Windows.Forms
+Imports System.Xml.Linq
 Imports Microsoft.Win32
 Imports Newtonsoft.Json.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -120,9 +126,7 @@ Public Class Settings
         chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
         chkWSGListenerAutoStart.Checked = SessionSettings.WSGListenerAutoStart
 
-        'TODO: If the NB21 Logger EXE is set to a valid path and the executable exists, the btnNB21Install text should be changed to "Launch", otherwise it should be "Install"
-
-        'TODO: If the Tracker EXE is set to a valid path and the executable exists, the btnTrackerInstall text should be changed to "Launch", otherwise it should be "Install"
+        UpdateToolButtonStates()
 
     End Sub
 
@@ -447,6 +451,7 @@ Public Class Settings
             ' User selected a folder and clicked OK
             btnNB21EXEFolder.Text = FolderBrowserDialog1.SelectedPath
             ToolTip1.SetToolTip(btnNB21EXEFolder, FolderBrowserDialog1.SelectedPath)
+            UpdateNB21ButtonState()
         End If
 
     End Sub
@@ -464,6 +469,7 @@ Public Class Settings
             ' User selected a folder and clicked OK
             btnTrackerEXEFolder.Text = FolderBrowserDialog1.SelectedPath
             ToolTip1.SetToolTip(btnTrackerEXEFolder, FolderBrowserDialog1.SelectedPath)
+            UpdateTrackerButtonState()
         End If
 
     End Sub
@@ -643,6 +649,7 @@ Public Class Settings
             ' folderPath is a valid folder
             btnNB21EXEFolder.Text = folderPath
             ToolTip1.SetToolTip(btnNB21EXEFolder, folderPath)
+            UpdateNB21ButtonState()
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
@@ -658,6 +665,7 @@ Public Class Settings
             ' folderPath is a valid folder
             btnTrackerEXEFolder.Text = folderPath
             ToolTip1.SetToolTip(btnTrackerEXEFolder, folderPath)
+            UpdateTrackerButtonState()
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
@@ -700,6 +708,8 @@ Public Class Settings
     Private Sub btnNB21EXEFolderClear_Click(sender As Object, e As EventArgs) Handles btnNB21EXEFolderClear.Click
         Settings.SessionSettings.ClearNB21EXEFolder()
         btnNB21EXEFolder.Text = "Select the folder containing the logger's EXE file (optional)"
+        ToolTip1.SetToolTip(btnNB21EXEFolder, btnNB21EXEFolder.Text)
+        UpdateNB21ButtonState()
     End Sub
 
     Private Sub btnNB21ResetPort_Click(sender As Object, e As EventArgs) Handles btnNB21ResetPort.Click
@@ -709,6 +719,8 @@ Public Class Settings
     Private Sub btnTrackerEXEFolderClear_Click(sender As Object, e As EventArgs) Handles btnTrackerEXEFolderClear.Click
         Settings.SessionSettings.ClearTrackerEXEFolder()
         btnTrackerEXEFolder.Text = "Select the folder containing the Tracker's EXE file (optional)"
+        ToolTip1.SetToolTip(btnTrackerEXEFolder, btnTrackerEXEFolder.Text)
+        UpdateTrackerButtonState()
     End Sub
 
     Private Sub btnTrackerResetPort_Click(sender As Object, e As EventArgs) Handles btnTrackerResetPort.Click
@@ -894,54 +906,128 @@ Public Class Settings
             Case "Install"
                 InstallNB21Logger()
             Case "Launch"
-                'TODO: Launch the NB21 Logger
+                LaunchNB21Logger()
         End Select
 
     End Sub
 
     Private Sub InstallNB21Logger()
 
-        'TODO: Check if we've received the user details from WeSimGlide (Settings.SessionSettings.WSGUserID)
-        'TODO: We require the WSGCompID and WSGPilotName to be set before installing tools
+        If SessionSettings.WSGUserID <= 0 Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Please sign in to WeSimGlide.org before installing the NB21 Logger.", "WeSimGlide details missing", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return
+        End If
 
-        'TODO: Ask user to confirm installation of NB21 Logger
+        If String.IsNullOrWhiteSpace(SessionSettings.WSGCompID) OrElse String.IsNullOrWhiteSpace(SessionSettings.WSGPilotName) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"We need your competition ID and pilot name from WeSimGlide.org before installing the NB21 Logger.{Environment.NewLine}{Environment.NewLine}Please set the information on WeSimGlide then try again (you may need to restart the app).", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return
+        End If
+
+        Using New Centered_MessageBox(Me)
+            If MessageBox.Show("Download and configure the NB21 Logger?", "Install NB21 Logger", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                Return
+            End If
+        End Using
 
         Dim downloadPath As String = Path.Combine(SupportingFeatures.SIGLRDiscordPostHelperFolder, "ToolSetupFiles/NB21_logger.zip")
 
-        ' For NB21 Logger, the zip file already contains a subfolder - so we download directly in the apps folder and unzip there
-        'TODO: Download the zip file under the current application folder
-        'TODO: Unzip the file in the current application folder
-        'TODO: Delete the zip file after extraction
-        'TODO: Create the folder "Tracklogs" under the NB21_logger folder
-        'TODO: Run NB21_logger.exe (invisibly if possible) for a first time so it creates the settings file in %localappdata%\NB21_logger
-        'TODO: Force exit the logger process
-        'TODO: Under %localappdata%\NB21_logger, find the most current "NB21_logger.exe_xxxxxxx" subfolder (xxxxx is a hash of some sort)
-        'TODO: Under that folder, find the most recent folder
-        'TODO: Under that folder, you will find the user.config file we need to modify (settings PilotName, IGCPath, PilotId only - either add or modify)
-        '<?xml version="1.0" encoding="utf-8"?>
-        '<configuration>
-        '    <userSettings>
-        '        <NB21_logger.Properties.Settings>
-        '            <setting name = "PilotName" serializeAs="String">
-        '                <value>WSGPilotName</value>
-        '            </setting>
-        '            <setting name = "IGCPath" serializeAs="String">
-        '                <value>DPHX APPLICATION PATH\NB21_logger\Tracklogs</value>
-        '            </setting>
-        '            <setting name = "PilotId" serializeAs="String">
-        '                <value>WSGCompID</value>
-        '            </setting>
-        '            <setting name = "SettingsUpgradeRequired" serializeAs="String">
-        '                <value>False</value>
-        '            </setting>
-        '            <setting name = "WindowsStart" serializeAs="String">
-        '                <value>False</value>
-        '            </setting>
-        '        </NB21_logger.Properties.Settings>
-        '    </userSettings>
-        '</configuration>
+        Dim localZip As String = Path.Combine(Application.StartupPath, "NB21_logger.zip")
+        Dim nb21Folder As String = Path.Combine(Application.StartupPath, "NB21_logger")
+        Dim tracklogsFolder As String = Path.Combine(nb21Folder, "Tracklogs")
 
-        'TODO: We are done - Launch NB21 Logger again for the user to see
+        Cursor.Current = Cursors.WaitCursor
+
+        Try
+            If File.Exists(localZip) Then
+                File.Delete(localZip)
+            End If
+
+            Using client As New WebClient()
+                client.DownloadFile(downloadPath, localZip)
+            End Using
+
+            ExtractZipWithOverwrite(localZip, Application.StartupPath)
+            File.Delete(localZip)
+
+            Directory.CreateDirectory(tracklogsFolder)
+
+            Dim exePath As String = Path.Combine(nb21Folder, "NB21_logger.exe")
+            If Not File.Exists(exePath) Then
+                Throw New FileNotFoundException("NB21_logger.exe was not found after extraction.", exePath)
+            End If
+
+            Dim startInfo As New ProcessStartInfo(exePath) With {
+                .WorkingDirectory = nb21Folder,
+                .UseShellExecute = False,
+                .CreateNoWindow = True,
+                .WindowStyle = ProcessWindowStyle.Hidden
+            }
+
+            Dim launchedProcess As Process = Process.Start(startInfo)
+
+            Dim configPath As String = Nothing
+            Dim timeout As Date = Date.UtcNow.AddSeconds(30)
+
+            Do
+                configPath = GetLatestNB21UserConfigPath()
+                If Not String.IsNullOrEmpty(configPath) Then
+                    Exit Do
+                End If
+                If launchedProcess IsNot Nothing AndAlso launchedProcess.HasExited Then
+                    Exit Do
+                End If
+                Thread.Sleep(500)
+            Loop While Date.UtcNow < timeout
+
+            If launchedProcess IsNot Nothing Then
+                Try
+                    If Not launchedProcess.HasExited Then
+                        launchedProcess.Kill()
+                    End If
+                Catch
+                Finally
+                    launchedProcess.Dispose()
+                End Try
+            End If
+
+            If String.IsNullOrEmpty(configPath) Then
+                Throw New InvalidOperationException("The NB21 Logger configuration file could not be located after the initial run.")
+            End If
+
+            UpdateNB21UserConfig(configPath, SessionSettings.WSGPilotName, SessionSettings.WSGCompID, tracklogsFolder)
+
+            SessionSettings.NB21EXEFolder = nb21Folder
+            SessionSettings.NB21IGCFolder = tracklogsFolder
+            SessionSettings.NB21StartAndFeed = True
+            SessionSettings.Save()
+
+            btnNB21EXEFolder.Text = nb21Folder
+            ToolTip1.SetToolTip(btnNB21EXEFolder, nb21Folder)
+            btnNB21IGCFolder.Text = tracklogsFolder
+            ToolTip1.SetToolTip(btnNB21IGCFolder, tracklogsFolder)
+            chkEnableNB21StartAndFeed.Checked = True
+
+            UpdateToolButtonStates()
+
+            LaunchNB21Logger()
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"NB21 Logger installation failed:{Environment.NewLine}{ex.Message}", "Install NB21 Logger", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        Finally
+            Cursor.Current = Cursors.Default
+            If File.Exists(localZip) Then
+                Try
+                    File.Delete(localZip)
+                Catch
+                End Try
+            End If
+        End Try
 
     End Sub
     Private Sub btnTrackerInstall_Click(sender As Object, e As EventArgs) Handles btnTrackerInstall.Click
@@ -950,33 +1036,293 @@ Public Class Settings
             Case "Install"
                 InstallTracker()
             Case "Launch"
-                'TODO: Launch the Tracker
+                LaunchTracker()
         End Select
 
     End Sub
 
     Private Sub InstallTracker()
 
-        'TODO: Check if we've received the user details from WeSimGlide (Settings.SessionSettings.WSGUserID)
-        'TODO: We require the WSGCompID and WSGPilotName to be set before installing tools
+        If SessionSettings.WSGUserID <= 0 Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Please sign in to WeSimGlide.org before installing the Tracker.", "WeSimGlide details missing", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return
+        End If
 
-        'TODO: Ask user to confirm installation of SSC-Tracker
+        If String.IsNullOrWhiteSpace(SessionSettings.WSGCompID) OrElse String.IsNullOrWhiteSpace(SessionSettings.WSGPilotName) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"We need your competition ID and pilot name from WeSimGlide.org before installing the Tracker.{Environment.NewLine}{Environment.NewLine}Please set the information on WeSimGlide then try again (you may need to restart the app).", "Missing pilot information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return
+        End If
+
+        Using New Centered_MessageBox(Me)
+            If MessageBox.Show("Download and configure the Tracker app?", "Install Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                Return
+            End If
+        End Using
 
         Dim downloadPath As String = "https://www.ssc-tracker.org/updates/SSC-Tracker.zip"
 
-        ' For the SSC-Tracker, the zip file does not contain a subfolder - so we need to create it first and unzip there
-        'TODO: Create the folder "Tracker" under the current application folder
-        'TODO: Download the zip file in the "Tracker" folder
-        'TODO: Unzip the file in the "Tracker" folder
-        'TODO: Delete the zip file after extraction
-        'TODO: Create the folder "TaskFolder" under the "Tracker" folder
-        'TODO: We need to create a few registry entries under "Computer\HKEY_CURRENT_USER\Software\SSC" (the SSC key must be created first if it doesn't exist)
-        'TODO: The string value "PilotID" must be created with the value WSGCompID
-        'TODO: The string value "PilotName" must be created with the value WSGPilotName
-        'TODO: The string value "TaskFolder" must be created with the value of the current application path plus "\Tracker\TaskFolder"
+        Dim trackerFolder As String = Path.Combine(Application.StartupPath, "Tracker")
+        Dim trackerZip As String = Path.Combine(trackerFolder, "SSC-Tracker.zip")
+        Dim taskFolder As String = Path.Combine(trackerFolder, "TaskFolder")
 
-        'TODO: We are done - Launch the tracker for the user to see and complete anything
+        Cursor.Current = Cursors.WaitCursor
+
+        Try
+            Directory.CreateDirectory(trackerFolder)
+
+            If File.Exists(trackerZip) Then
+                File.Delete(trackerZip)
+            End If
+
+            Using client As New WebClient()
+                client.DownloadFile(downloadPath, trackerZip)
+            End Using
+
+            ExtractZipWithOverwrite(trackerZip, trackerFolder)
+            File.Delete(trackerZip)
+
+            Directory.CreateDirectory(taskFolder)
+
+            Dim exePath As String = Path.Combine(trackerFolder, "SSC-Tracker.exe")
+            If Not File.Exists(exePath) Then
+                Throw New FileNotFoundException("SSC-Tracker.exe was not found after extraction.", exePath)
+            End If
+
+            Using sscKey As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\SSC", True)
+                If sscKey Is Nothing Then
+                    Throw New InvalidOperationException("Unable to create the registry key HKCU\\Software\\SSC.")
+                End If
+
+                sscKey.SetValue("PilotID", SessionSettings.WSGCompID, RegistryValueKind.String)
+                sscKey.SetValue("PilotName", SessionSettings.WSGPilotName, RegistryValueKind.String)
+                sscKey.SetValue("TaskFolder", taskFolder, RegistryValueKind.String)
+            End Using
+
+            SessionSettings.TrackerEXEFolder = trackerFolder
+            SessionSettings.TrackerStartAndFeed = True
+            SessionSettings.Save()
+
+            btnTrackerEXEFolder.Text = trackerFolder
+            ToolTip1.SetToolTip(btnTrackerEXEFolder, trackerFolder)
+            chkEnableTrackerStartAndFeed.Checked = True
+
+            UpdateToolButtonStates()
+
+            LaunchTracker()
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"SSC-Tracker installation failed:{Environment.NewLine}{ex.Message}", "Install SSC-Tracker", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+        Finally
+            Cursor.Current = Cursors.Default
+            If File.Exists(trackerZip) Then
+                Try
+                    File.Delete(trackerZip)
+                Catch
+                End Try
+            End If
+        End Try
 
     End Sub
+
+    Private Sub ExtractZipWithOverwrite(zipPath As String, destination As String)
+        Dim destinationRoot As String = Path.GetFullPath(destination)
+        Dim destinationRootWithSeparator As String = destinationRoot
+        If Not destinationRootWithSeparator.EndsWith(Path.DirectorySeparatorChar) Then
+            destinationRootWithSeparator &= Path.DirectorySeparatorChar
+        End If
+        Directory.CreateDirectory(destinationRoot)
+
+        Using archive As ZipArchive = ZipFile.OpenRead(zipPath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                Dim normalizedEntryName As String = entry.FullName.Replace("/"c, Path.DirectorySeparatorChar)
+                If String.IsNullOrWhiteSpace(normalizedEntryName) Then
+                    Continue For
+                End If
+                Dim targetPath As String = Path.Combine(destinationRootWithSeparator, normalizedEntryName)
+                targetPath = Path.GetFullPath(targetPath)
+
+                If Not targetPath.StartsWith(destinationRootWithSeparator, StringComparison.OrdinalIgnoreCase) AndAlso Not targetPath.Equals(destinationRoot, StringComparison.OrdinalIgnoreCase) Then
+                    Throw New InvalidDataException($"Zip entry '{entry.FullName}' is outside of the destination directory and cannot be extracted.")
+                End If
+
+                If String.IsNullOrEmpty(entry.Name) Then
+                    Directory.CreateDirectory(targetPath)
+                Else
+                    Dim directory As String = Path.GetDirectoryName(targetPath)
+                    If Not String.IsNullOrEmpty(directory) Then
+                        IO.Directory.CreateDirectory(directory)
+                    End If
+                    entry.ExtractToFile(targetPath, True)
+                End If
+            Next
+        End Using
+    End Sub
+
+    Private Sub UpdateToolButtonStates()
+        UpdateNB21ButtonState()
+        UpdateTrackerButtonState()
+    End Sub
+
+    Private Sub UpdateNB21ButtonState()
+        If File.Exists(GetNB21ExecutablePath()) Then
+            btnNB21Install.Text = "Launch"
+        Else
+            btnNB21Install.Text = "Install"
+        End If
+    End Sub
+
+    Private Sub UpdateTrackerButtonState()
+        If File.Exists(GetTrackerExecutablePath()) Then
+            btnTrackerInstall.Text = "Launch"
+        Else
+            btnTrackerInstall.Text = "Install"
+        End If
+    End Sub
+
+    Private Function GetNB21ExecutablePath() As String
+        Dim folder As String = btnNB21EXEFolder.Text
+        If String.IsNullOrWhiteSpace(folder) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(folder, "NB21_logger.exe")
+    End Function
+
+    Private Function GetTrackerExecutablePath() As String
+        Dim folder As String = btnTrackerEXEFolder.Text
+        If String.IsNullOrWhiteSpace(folder) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(folder, "SSC-Tracker.exe")
+    End Function
+
+    Private Function GetLatestNB21UserConfigPath() As String
+        Dim localAppData As String = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+        Dim nb21Root As String = Path.Combine(localAppData, "NB21_logger")
+
+        If Not Directory.Exists(nb21Root) Then
+            Return Nothing
+        End If
+
+        Dim exeFolders = Directory.GetDirectories(nb21Root, "NB21_logger.exe_*", SearchOption.TopDirectoryOnly)
+        If exeFolders.Length = 0 Then
+            Return Nothing
+        End If
+
+        Dim latestExeFolder As String = exeFolders.OrderByDescending(Function(path) Directory.GetLastWriteTimeUtc(path)).First()
+        Dim versionFolders = Directory.GetDirectories(latestExeFolder, "*", SearchOption.TopDirectoryOnly)
+        If versionFolders.Length = 0 Then
+            Return Nothing
+        End If
+
+        Dim latestVersionFolder As String = versionFolders.OrderByDescending(Function(path) Directory.GetLastWriteTimeUtc(path)).First()
+        Dim configPath As String = Path.Combine(latestVersionFolder, "user.config")
+
+        If File.Exists(configPath) Then
+            Return configPath
+        End If
+
+        Return Nothing
+    End Function
+
+    Private Sub UpdateNB21UserConfig(configPath As String, pilotName As String, pilotId As String, igcPath As String)
+        Dim doc As XDocument = XDocument.Load(configPath)
+
+        UpdateNB21Setting(doc, "PilotName", pilotName)
+        UpdateNB21Setting(doc, "PilotId", pilotId)
+        UpdateNB21Setting(doc, "IGCPath", igcPath)
+        UpdateNB21Setting(doc, "SettingsUpgradeRequired", "False")
+        UpdateNB21Setting(doc, "WindowsStart", "False")
+
+        doc.Save(configPath)
+    End Sub
+
+    Private Sub UpdateNB21Setting(doc As XDocument, settingName As String, value As String)
+        Dim settingElement As XElement = doc.Descendants().FirstOrDefault(Function(el) el.Name.LocalName = "setting" AndAlso String.Equals(CStr(el.Attribute("name")), settingName, StringComparison.Ordinal))
+
+        If settingElement Is Nothing Then
+            Dim parentElement As XElement = doc.Descendants().FirstOrDefault(Function(el) el.Name.LocalName = "NB21_logger.Properties.Settings")
+            If parentElement Is Nothing Then
+                Return
+            End If
+
+            Dim ns As XNamespace = parentElement.Name.Namespace
+            settingElement = New XElement(ns.GetName("setting"),
+                                          New XAttribute("name", settingName),
+                                          New XAttribute("serializeAs", "String"),
+                                          New XElement(ns.GetName("value"), value))
+            parentElement.Add(settingElement)
+        Else
+            Dim serializeAttr As XAttribute = settingElement.Attribute("serializeAs")
+            If serializeAttr Is Nothing Then
+                settingElement.SetAttributeValue("serializeAs", "String")
+            Else
+                serializeAttr.Value = "String"
+            End If
+
+            Dim valueElement As XElement = settingElement.Elements().FirstOrDefault(Function(el) el.Name.LocalName = "value")
+            If valueElement Is Nothing Then
+                Dim ns As XNamespace = settingElement.Name.Namespace
+                valueElement = New XElement(ns.GetName("value"))
+                settingElement.Add(valueElement)
+            End If
+            valueElement.Value = value
+        End If
+    End Sub
+
+    Private Function LaunchNB21Logger() As Boolean
+        Dim exePath As String = GetNB21ExecutablePath()
+        If Not File.Exists(exePath) Then
+            UpdateToolButtonStates()
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("The NB21 Logger executable could not be found. Please install it first.", "NB21 Logger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return False
+        End If
+
+        Try
+            Dim startInfo As New ProcessStartInfo(exePath) With {
+                .WorkingDirectory = Path.GetDirectoryName(exePath)
+            }
+            Process.Start(startInfo)
+            Return True
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Failed to launch the NB21 Logger:{Environment.NewLine}{ex.Message}", "NB21 Logger", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
+
+    Private Function LaunchTracker() As Boolean
+        Dim exePath As String = GetTrackerExecutablePath()
+        If Not File.Exists(exePath) Then
+            UpdateToolButtonStates()
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("The SSC-Tracker executable could not be found. Please install it first.", "SSC-Tracker", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Using
+            Return False
+        End If
+
+        Try
+            Dim startInfo As New ProcessStartInfo(exePath) With {
+                .WorkingDirectory = Path.GetDirectoryName(exePath)
+            }
+            Process.Start(startInfo)
+            Return True
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Failed to launch the SSC-Tracker:{Environment.NewLine}{ex.Message}", "SSC-Tracker", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return False
+        End Try
+    End Function
 
 End Class
