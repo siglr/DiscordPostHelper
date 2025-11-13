@@ -425,7 +425,7 @@ Public Class Logger
 
     Public ReadOnly Property IsReady As Boolean
         Get
-            'TODO: Define how to determine readiness
+            'Define how to determine readiness
             Return True
         End Get
     End Property

@@ -85,6 +85,8 @@ Partial Class Settings
         Me.chkWSGExceptOpeningDPHX = New System.Windows.Forms.CheckBox()
         Me.chkWSGListenerAutoStart = New System.Windows.Forms.CheckBox()
         Me.chkEnableEFBFlightPlanCreation = New System.Windows.Forms.CheckBox()
+        Me.btnNB21Install = New System.Windows.Forms.Button()
+        Me.btnTrackerInstall = New System.Windows.Forms.Button()
         Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
@@ -459,7 +461,7 @@ Partial Class Settings
         Me.btnNB21IGCFolderPaste.Location = New System.Drawing.Point(691, 66)
         Me.btnNB21IGCFolderPaste.Name = "btnNB21IGCFolderPaste"
         Me.btnNB21IGCFolderPaste.Size = New System.Drawing.Size(75, 33)
-        Me.btnNB21IGCFolderPaste.TabIndex = 12
+        Me.btnNB21IGCFolderPaste.TabIndex = 14
         Me.btnNB21IGCFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnNB21IGCFolderPaste.UseVisualStyleBackColor = True
@@ -473,7 +475,7 @@ Partial Class Settings
         Me.btnNB21IGCFolder.Location = New System.Drawing.Point(194, 66)
         Me.btnNB21IGCFolder.Name = "btnNB21IGCFolder"
         Me.btnNB21IGCFolder.Size = New System.Drawing.Size(447, 32)
-        Me.btnNB21IGCFolder.TabIndex = 10
+        Me.btnNB21IGCFolder.TabIndex = 12
         Me.btnNB21IGCFolder.Text = "Select the folder containing the logger flights IGC files (optional)"
         Me.btnNB21IGCFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolder, "Select the folder containing the logger flights IGC files")
@@ -509,7 +511,7 @@ Partial Class Settings
         Me.btnNB21IGCFolderClear.Location = New System.Drawing.Point(647, 66)
         Me.btnNB21IGCFolderClear.Name = "btnNB21IGCFolderClear"
         Me.btnNB21IGCFolderClear.Size = New System.Drawing.Size(38, 33)
-        Me.btnNB21IGCFolderClear.TabIndex = 11
+        Me.btnNB21IGCFolderClear.TabIndex = 13
         Me.btnNB21IGCFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnNB21IGCFolderClear, "Click this button to delete the optional NB21 Log Flights folder")
         Me.btnNB21IGCFolderClear.UseVisualStyleBackColor = True
@@ -673,10 +675,10 @@ Partial Class Settings
         'btnNB21EXEFolderClear
         '
         Me.btnNB21EXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21EXEFolderClear.Location = New System.Drawing.Point(647, 33)
+        Me.btnNB21EXEFolderClear.Location = New System.Drawing.Point(647, 34)
         Me.btnNB21EXEFolderClear.Name = "btnNB21EXEFolderClear"
         Me.btnNB21EXEFolderClear.Size = New System.Drawing.Size(38, 33)
-        Me.btnNB21EXEFolderClear.TabIndex = 7
+        Me.btnNB21EXEFolderClear.TabIndex = 9
         Me.btnNB21EXEFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderClear, "Click this button to delete the optional NB21 EXE folder")
         Me.btnNB21EXEFolderClear.UseVisualStyleBackColor = True
@@ -684,10 +686,10 @@ Partial Class Settings
         'btnNB21EXEFolderPaste
         '
         Me.btnNB21EXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNB21EXEFolderPaste.Location = New System.Drawing.Point(691, 33)
+        Me.btnNB21EXEFolderPaste.Location = New System.Drawing.Point(691, 34)
         Me.btnNB21EXEFolderPaste.Name = "btnNB21EXEFolderPaste"
         Me.btnNB21EXEFolderPaste.Size = New System.Drawing.Size(75, 33)
-        Me.btnNB21EXEFolderPaste.TabIndex = 8
+        Me.btnNB21EXEFolderPaste.TabIndex = 10
         Me.btnNB21EXEFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnNB21EXEFolderPaste.UseVisualStyleBackColor = True
@@ -698,10 +700,10 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNB21EXEFolder.AutoEllipsis = True
         Me.btnNB21EXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnNB21EXEFolder.Location = New System.Drawing.Point(194, 33)
+        Me.btnNB21EXEFolder.Location = New System.Drawing.Point(194, 34)
         Me.btnNB21EXEFolder.Name = "btnNB21EXEFolder"
         Me.btnNB21EXEFolder.Size = New System.Drawing.Size(447, 32)
-        Me.btnNB21EXEFolder.TabIndex = 6
+        Me.btnNB21EXEFolder.TabIndex = 8
         Me.btnNB21EXEFolder.Text = "Select the folder containing the logger's EXE file (optional)"
         Me.btnNB21EXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnNB21EXEFolder, "Select the folder containing the logger's EXE file")
@@ -799,10 +801,10 @@ Partial Class Settings
         'btnTrackerEXEFolderClear
         '
         Me.btnTrackerEXEFolderClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTrackerEXEFolderClear.Location = New System.Drawing.Point(647, 33)
+        Me.btnTrackerEXEFolderClear.Location = New System.Drawing.Point(647, 34)
         Me.btnTrackerEXEFolderClear.Name = "btnTrackerEXEFolderClear"
         Me.btnTrackerEXEFolderClear.Size = New System.Drawing.Size(38, 33)
-        Me.btnTrackerEXEFolderClear.TabIndex = 7
+        Me.btnTrackerEXEFolderClear.TabIndex = 9
         Me.btnTrackerEXEFolderClear.Text = "🗑️"
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderClear, "Click this button to delete the optional Tracker EXE folder")
         Me.btnTrackerEXEFolderClear.UseVisualStyleBackColor = True
@@ -810,10 +812,10 @@ Partial Class Settings
         'btnTrackerEXEFolderPaste
         '
         Me.btnTrackerEXEFolderPaste.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTrackerEXEFolderPaste.Location = New System.Drawing.Point(691, 33)
+        Me.btnTrackerEXEFolderPaste.Location = New System.Drawing.Point(691, 34)
         Me.btnTrackerEXEFolderPaste.Name = "btnTrackerEXEFolderPaste"
         Me.btnTrackerEXEFolderPaste.Size = New System.Drawing.Size(75, 33)
-        Me.btnTrackerEXEFolderPaste.TabIndex = 8
+        Me.btnTrackerEXEFolderPaste.TabIndex = 10
         Me.btnTrackerEXEFolderPaste.Text = "Paste"
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolderPaste, "Click this button to paste a folder from your clipboard")
         Me.btnTrackerEXEFolderPaste.UseVisualStyleBackColor = True
@@ -824,10 +826,10 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTrackerEXEFolder.AutoEllipsis = True
         Me.btnTrackerEXEFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnTrackerEXEFolder.Location = New System.Drawing.Point(194, 33)
+        Me.btnTrackerEXEFolder.Location = New System.Drawing.Point(194, 34)
         Me.btnTrackerEXEFolder.Name = "btnTrackerEXEFolder"
         Me.btnTrackerEXEFolder.Size = New System.Drawing.Size(447, 32)
-        Me.btnTrackerEXEFolder.TabIndex = 6
+        Me.btnTrackerEXEFolder.TabIndex = 8
         Me.btnTrackerEXEFolder.Text = "Select the folder containing the tracker's EXE file (optional)"
         Me.btnTrackerEXEFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.btnTrackerEXEFolder, "Select the folder containing the tracker's EXE file")
@@ -907,6 +909,28 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.chkEnableEFBFlightPlanCreation, "When enabled (checked), an EFB compatible PLN file will be created alongside the " &
         "original.")
         Me.chkEnableEFBFlightPlanCreation.UseVisualStyleBackColor = True
+        '
+        'btnNB21Install
+        '
+        Me.btnNB21Install.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNB21Install.Location = New System.Drawing.Point(691, 2)
+        Me.btnNB21Install.Name = "btnNB21Install"
+        Me.btnNB21Install.Size = New System.Drawing.Size(75, 33)
+        Me.btnNB21Install.TabIndex = 5
+        Me.btnNB21Install.Text = "Install"
+        Me.ToolTip1.SetToolTip(Me.btnNB21Install, "Click this button to install NB21 Logger")
+        Me.btnNB21Install.UseVisualStyleBackColor = True
+        '
+        'btnTrackerInstall
+        '
+        Me.btnTrackerInstall.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTrackerInstall.Location = New System.Drawing.Point(691, 2)
+        Me.btnTrackerInstall.Name = "btnTrackerInstall"
+        Me.btnTrackerInstall.Size = New System.Drawing.Size(75, 33)
+        Me.btnTrackerInstall.TabIndex = 5
+        Me.btnTrackerInstall.Text = "Install"
+        Me.ToolTip1.SetToolTip(Me.btnTrackerInstall, "Click this button to install SSC-Tracker")
+        Me.btnTrackerInstall.UseVisualStyleBackColor = True
         '
         'pnlMSFS2020WeatherPresetsFolder
         '
@@ -1020,7 +1044,7 @@ Partial Class Settings
         Me.Label10.Location = New System.Drawing.Point(5, 72)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(165, 20)
-        Me.Label10.TabIndex = 9
+        Me.Label10.TabIndex = 11
         Me.Label10.Text = "NB21 Log Flights Folder:"
         '
         'pnlAutoUnpack
@@ -1218,6 +1242,7 @@ Partial Class Settings
         '
         'pnlNB21LoggerExe
         '
+        Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21Install)
         Me.pnlNB21LoggerExe.Controls.Add(Me.separator5)
         Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21ResetPort)
         Me.pnlNB21LoggerExe.Controls.Add(Me.btnNB21IGCFolderClear)
@@ -1268,10 +1293,10 @@ Partial Class Settings
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(5, 39)
+        Me.Label14.Location = New System.Drawing.Point(5, 40)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(146, 20)
-        Me.Label14.TabIndex = 5
+        Me.Label14.TabIndex = 6
         Me.Label14.Text = "NB21 Log EXE Folder:"
         '
         'pnlLocalWSPort
@@ -1298,6 +1323,7 @@ Partial Class Settings
         '
         'pnlTrackerExe
         '
+        Me.pnlTrackerExe.Controls.Add(Me.btnTrackerInstall)
         Me.pnlTrackerExe.Controls.Add(Me.separator6)
         Me.pnlTrackerExe.Controls.Add(Me.btnTrackerResetPort)
         Me.pnlTrackerExe.Controls.Add(Me.Label18)
@@ -1344,10 +1370,10 @@ Partial Class Settings
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(5, 39)
+        Me.Label20.Location = New System.Drawing.Point(5, 40)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(131, 20)
-        Me.Label20.TabIndex = 5
+        Me.Label20.TabIndex = 6
         Me.Label20.Text = "Tracker EXE Folder:"
         '
         'Label4
@@ -1613,4 +1639,6 @@ Partial Class Settings
     Friend WithEvents chkWSGExceptOpeningDPHX As CheckBox
     Friend WithEvents chkWSGListenerAutoStart As CheckBox
     Friend WithEvents chkEnableEFBFlightPlanCreation As CheckBox
+    Friend WithEvents btnNB21Install As Button
+    Friend WithEvents btnTrackerInstall As Button
 End Class

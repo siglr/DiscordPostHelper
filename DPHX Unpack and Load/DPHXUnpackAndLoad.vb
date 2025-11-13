@@ -118,7 +118,7 @@ Public Class DPHXUnpackAndLoad
         If firstRun Then
 
             Do While True
-                Select Case OpenSettingsWindow()
+                Select Case OpenSettingsWindow(True)
                     Case DialogResult.Abort
                         _abortingFirstRun = True
                         Exit Do
@@ -741,8 +741,9 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Function OpenSettingsWindow() As DialogResult
+    Private Function OpenSettingsWindow(Optional firstRun As Boolean = False) As DialogResult
         Dim formSettings As New Settings
+        formSettings.IsFirstRun = firstRun
 
         Dim result As DialogResult = formSettings.ShowDialog(Me)
 

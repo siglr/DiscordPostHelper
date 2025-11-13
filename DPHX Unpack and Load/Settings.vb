@@ -8,6 +8,7 @@ Imports SIGLR.SoaringTools.CommonLibrary
 Public Class Settings
 
     Public Shared SessionSettings As New AllSettings
+    Public Property IsFirstRun As Boolean = False
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -15,6 +16,14 @@ Public Class Settings
         SupportingFeatures.CenterFormOnOwner(Owner, Me)
 
         okCancelPanel.Top = Me.Height - 103
+
+        If IsFirstRun Then
+            pnlNB21LoggerExe.Enabled = False
+            pnlTrackerExe.Enabled = False
+        Else
+            pnlNB21LoggerExe.Enabled = True
+            pnlTrackerExe.Enabled = True
+        End If
 
         If SessionSettings.MSFS2020Microsoft OrElse SessionSettings.MSFS2020Steam Then
             chkMSFS2020.Checked = True
@@ -110,6 +119,10 @@ Public Class Settings
         cboWSGIntegration.SelectedIndex = SessionSettings.WSGIntegration
         chkWSGExceptOpeningDPHX.Checked = SessionSettings.WSGIgnoreWhenOpeningDPHX
         chkWSGListenerAutoStart.Checked = SessionSettings.WSGListenerAutoStart
+
+        'TODO: If the NB21 Logger EXE is set to a valid path and the executable exists, the btnNB21Install text should be changed to "Launch", otherwise it should be "Install"
+
+        'TODO: If the Tracker EXE is set to a valid path and the executable exists, the btnTrackerInstall text should be changed to "Launch", otherwise it should be "Install"
 
     End Sub
 
@@ -873,6 +886,97 @@ Public Class Settings
                 runKey.DeleteValue("WSGListener", throwOnMissingValue:=False)
             End If
         End Using
+    End Sub
+
+    Private Sub btnNB21Install_Click(sender As Object, e As EventArgs) Handles btnNB21Install.Click
+
+        Select Case btnNB21Install.Text
+            Case "Install"
+                InstallNB21Logger()
+            Case "Launch"
+                'TODO: Launch the NB21 Logger
+        End Select
+
+    End Sub
+
+    Private Sub InstallNB21Logger()
+
+        'TODO: Check if we've received the user details from WeSimGlide (Settings.SessionSettings.WSGUserID)
+        'TODO: We require the WSGCompID and WSGPilotName to be set before installing tools
+
+        'TODO: Ask user to confirm installation of NB21 Logger
+
+        Dim downloadPath As String = Path.Combine(SupportingFeatures.SIGLRDiscordPostHelperFolder, "ToolSetupFiles/NB21_logger.zip")
+
+        ' For NB21 Logger, the zip file already contains a subfolder - so we download directly in the apps folder and unzip there
+        'TODO: Download the zip file under the current application folder
+        'TODO: Unzip the file in the current application folder
+        'TODO: Delete the zip file after extraction
+        'TODO: Create the folder "Tracklogs" under the NB21_logger folder
+        'TODO: Run NB21_logger.exe (invisibly if possible) for a first time so it creates the settings file in %localappdata%\NB21_logger
+        'TODO: Force exit the logger process
+        'TODO: Under %localappdata%\NB21_logger, find the most current "NB21_logger.exe_xxxxxxx" subfolder (xxxxx is a hash of some sort)
+        'TODO: Under that folder, find the most recent folder
+        'TODO: Under that folder, you will find the user.config file we need to modify (settings PilotName, IGCPath, PilotId only - either add or modify)
+        '<?xml version="1.0" encoding="utf-8"?>
+        '<configuration>
+        '    <userSettings>
+        '        <NB21_logger.Properties.Settings>
+        '            <setting name = "PilotName" serializeAs="String">
+        '                <value>WSGPilotName</value>
+        '            </setting>
+        '            <setting name = "IGCPath" serializeAs="String">
+        '                <value>DPHX APPLICATION PATH\NB21_logger\Tracklogs</value>
+        '            </setting>
+        '            <setting name = "PilotId" serializeAs="String">
+        '                <value>WSGCompID</value>
+        '            </setting>
+        '            <setting name = "SettingsUpgradeRequired" serializeAs="String">
+        '                <value>False</value>
+        '            </setting>
+        '            <setting name = "WindowsStart" serializeAs="String">
+        '                <value>False</value>
+        '            </setting>
+        '        </NB21_logger.Properties.Settings>
+        '    </userSettings>
+        '</configuration>
+
+        'TODO: We are done - Launch NB21 Logger again for the user to see
+
+    End Sub
+    Private Sub btnTrackerInstall_Click(sender As Object, e As EventArgs) Handles btnTrackerInstall.Click
+
+        Select Case btnTrackerInstall.Text
+            Case "Install"
+                InstallTracker()
+            Case "Launch"
+                'TODO: Launch the Tracker
+        End Select
+
+    End Sub
+
+    Private Sub InstallTracker()
+
+        'TODO: Check if we've received the user details from WeSimGlide (Settings.SessionSettings.WSGUserID)
+        'TODO: We require the WSGCompID and WSGPilotName to be set before installing tools
+
+        'TODO: Ask user to confirm installation of SSC-Tracker
+
+        Dim downloadPath As String = "https://www.ssc-tracker.org/updates/SSC-Tracker.zip"
+
+        ' For the SSC-Tracker, the zip file does not contain a subfolder - so we need to create it first and unzip there
+        'TODO: Create the folder "Tracker" under the current application folder
+        'TODO: Download the zip file in the "Tracker" folder
+        'TODO: Unzip the file in the "Tracker" folder
+        'TODO: Delete the zip file after extraction
+        'TODO: Create the folder "TaskFolder" under the "Tracker" folder
+        'TODO: We need to create a few registry entries under "Computer\HKEY_CURRENT_USER\Software\SSC" (the SSC key must be created first if it doesn't exist)
+        'TODO: The string value "PilotID" must be created with the value WSGCompID
+        'TODO: The string value "PilotName" must be created with the value WSGPilotName
+        'TODO: The string value "TaskFolder" must be created with the value of the current application path plus "\Tracker\TaskFolder"
+
+        'TODO: We are done - Launch the tracker for the user to see and complete anything
+
     End Sub
 
 End Class
