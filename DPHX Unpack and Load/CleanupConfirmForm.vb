@@ -1,16 +1,25 @@
-﻿Imports SIGLR.SoaringTools.CommonLibrary
+﻿Imports System
+Imports System.Collections.Generic
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class CleanupConfirmForm
     Private ReadOnly _candidates As List(Of CleanupCandidate)
     Private ReadOnly _deleteFunc As Func(Of String, String, String, Boolean, String)
+    Private ReadOnly _additionalActions As List(Of Func(Of String))
     Private _ran As Boolean = False
 
     ' New ctor: pass candidates and your DeleteFile delegate
     Public Sub New(candidates As List(Of CleanupCandidate),
-                   deleteFunc As Func(Of String, String, String, Boolean, String))
+                   deleteFunc As Func(Of String, String, String, Boolean, String),
+                   Optional additionalActions As IEnumerable(Of Func(Of String)) = Nothing)
         InitializeComponent()
         _candidates = candidates
         _deleteFunc = deleteFunc
+        If additionalActions IsNot Nothing Then
+            _additionalActions = New List(Of Func(Of String))(additionalActions)
+        Else
+            _additionalActions = New List(Of Func(Of String))()
+        End If
 
         clbFiles.CheckOnClick = True
         clbFiles.Items.Clear()
@@ -45,6 +54,26 @@ Public Class CleanupConfirmForm
                     Else
                         sb.AppendLine($"{c.Label} ""{c.FileName}"" skipped by user")
                     End If
+                    sb.AppendLine()
+                Next
+            End If
+
+            If _additionalActions.Count > 0 Then
+                If sb.Length > 0 Then sb.AppendLine()
+
+                For Each action In _additionalActions
+                    Dim line As String
+                    Try
+                        line = action()
+                    Catch ex As Exception
+                        line = $"Additional cleanup step failed: {ex.Message}"
+                    End Try
+
+                    If String.IsNullOrWhiteSpace(line) Then
+                        line = "Additional cleanup step completed."
+                    End If
+
+                    sb.AppendLine(line)
                     sb.AppendLine()
                 Next
             End If

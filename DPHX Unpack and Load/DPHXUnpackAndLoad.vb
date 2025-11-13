@@ -13,6 +13,7 @@ Imports System.Xml.Serialization
 Imports CefSharp.DevTools.Page
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
+Imports Microsoft.Win32
 Imports SIGLR.SoaringTools.CommonLibrary
 Imports SIGLR.SoaringTools.ImageViewer
 
@@ -1638,6 +1639,12 @@ Public Class DPHXUnpackAndLoad
     Private Sub CleanupFiles()
         ' 1) Build a list of candidates that *would* be deleted
         Dim candidates As New List(Of CleanupCandidate)
+        Dim additionalCleanupSteps As List(Of System.Func(Of String)) = Nothing
+        If Settings.SessionSettings.TrackerStartAndFeed Then
+            additionalCleanupSteps = New List(Of System.Func(Of String)) From {
+                New System.Func(Of String)(AddressOf ExecuteTrackerTaskFolderCleanup)
+            }
+        End If
 
         ' Helper: add a candidate only if it truly exists and is not excluded
         Dim addCand = Sub(fileName As String, folder As String, label As String, shortLabel As String, excluded As Boolean)
@@ -1751,11 +1758,76 @@ Public Class DPHXUnpackAndLoad
         End If
 
         ' 2) One dialog to confirm AND show results (it calls DeleteFile internally)
-        Using dlg As New CleanupConfirmForm(candidates, AddressOf DeleteFile)
+        Using dlg As New CleanupConfirmForm(candidates, AddressOf DeleteFile, additionalCleanupSteps)
             dlg.ShowDialog(Me)
         End Using
 
         EnableUnpackButton()
+    End Sub
+
+    Private Function ExecuteTrackerTaskFolderCleanup() As String
+        Try
+            Dim taskFolder As String = Nothing
+            Using key = Registry.CurrentUser.OpenSubKey("Software\\SSC")
+                If key IsNot Nothing Then
+                    taskFolder = TryCast(key.GetValue("TaskFolder"), String)
+                End If
+            End Using
+
+            If String.IsNullOrWhiteSpace(taskFolder) Then
+                Return "Tracker temporary task folder cleanup skipped (registry value not found)."
+            End If
+
+            taskFolder = taskFolder.Trim()
+            If taskFolder.Length = 0 Then
+                Return "Tracker temporary task folder cleanup skipped (registry value not found)."
+            End If
+
+            If Not Directory.Exists(taskFolder) Then
+                Return $"Tracker temporary task folder cleanup skipped (\"{taskFolder}\" not found)."
+            End If
+
+            Dim trackerFolder As New DirectoryInfo(taskFolder)
+            Dim errors As New List(Of String)()
+
+            For Each fileInfo In trackerFolder.GetFiles()
+                Try
+                    fileInfo.Attributes = FileAttributes.Normal
+                    fileInfo.Delete()
+                Catch ex As Exception
+                    errors.Add($"File '{fileInfo.Name}': {ex.Message}")
+                End Try
+            Next
+
+            For Each dirInfo In trackerFolder.GetDirectories()
+                Try
+                    ResetDirectoryAttributes(dirInfo)
+                    dirInfo.Delete(True)
+                Catch ex As Exception
+                    errors.Add($"Folder '{dirInfo.Name}': {ex.Message}")
+                End Try
+            Next
+
+            If errors.Count > 0 Then
+                Return $"Tracker temporary task folder cleanup failed: {String.Join("; ", errors)}"
+            End If
+
+            Return "Cleaned up the Tracker's temporary tasks folder."
+        Catch ex As Exception
+            Return $"Tracker temporary task folder cleanup failed: {ex.Message}"
+        End Try
+    End Function
+
+    Private Sub ResetDirectoryAttributes(directory As DirectoryInfo)
+        For Each subDirectory In directory.GetDirectories()
+            ResetDirectoryAttributes(subDirectory)
+        Next
+
+        For Each fileInfo In directory.GetFiles()
+            fileInfo.Attributes = FileAttributes.Normal
+        Next
+
+        directory.Attributes = FileAttributes.Normal
     End Sub
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
