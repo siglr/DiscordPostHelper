@@ -1172,16 +1172,20 @@ Public Class Settings
     Private Sub UpdateNB21ButtonState()
         If File.Exists(GetNB21ExecutablePath()) Then
             btnNB21Install.Text = "Launch"
+            ToolTip1.SetToolTip(btnNB21Install, "Click this button to test-launch NB21 Logger")
         Else
             btnNB21Install.Text = "Install"
+            ToolTip1.SetToolTip(btnNB21Install, "Click this button to install NB21 Logger")
         End If
     End Sub
 
     Private Sub UpdateTrackerButtonState()
         If File.Exists(GetTrackerExecutablePath()) Then
             btnTrackerInstall.Text = "Launch"
+            ToolTip1.SetToolTip(btnTrackerInstall, "Click this button to test-launch the Tracker")
         Else
             btnTrackerInstall.Text = "Install"
+            ToolTip1.SetToolTip(btnTrackerInstall, "Click this button to install the Tracker")
         End If
     End Sub
 
