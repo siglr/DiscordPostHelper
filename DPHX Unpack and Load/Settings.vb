@@ -1131,17 +1131,34 @@ Public Class Settings
     End Sub
 
     Private Sub ExtractZipWithOverwrite(zipPath As String, destination As String)
+        Dim destinationRoot As String = Path.GetFullPath(destination)
+        Dim destinationRootWithSeparator As String = destinationRoot
+        If Not destinationRootWithSeparator.EndsWith(Path.DirectorySeparatorChar) Then
+            destinationRootWithSeparator &= Path.DirectorySeparatorChar
+        End If
+        Directory.CreateDirectory(destinationRoot)
+
         Using archive As ZipArchive = ZipFile.OpenRead(zipPath)
             For Each entry As ZipArchiveEntry In archive.Entries
-                Dim fullPath As String = Path.Combine(destination, entry.FullName)
+                Dim normalizedEntryName As String = entry.FullName.Replace("/"c, Path.DirectorySeparatorChar)
+                If String.IsNullOrWhiteSpace(normalizedEntryName) Then
+                    Continue For
+                End If
+                Dim targetPath As String = Path.Combine(destinationRootWithSeparator, normalizedEntryName)
+                targetPath = Path.GetFullPath(targetPath)
+
+                If Not targetPath.StartsWith(destinationRootWithSeparator, StringComparison.OrdinalIgnoreCase) AndAlso Not targetPath.Equals(destinationRoot, StringComparison.OrdinalIgnoreCase) Then
+                    Throw New InvalidDataException($"Zip entry '{entry.FullName}' is outside of the destination directory and cannot be extracted.")
+                End If
+
                 If String.IsNullOrEmpty(entry.Name) Then
-                    Directory.CreateDirectory(fullPath)
+                    Directory.CreateDirectory(targetPath)
                 Else
-                    Dim directory As String = Path.GetDirectoryName(fullPath)
+                    Dim directory As String = Path.GetDirectoryName(targetPath)
                     If Not String.IsNullOrEmpty(directory) Then
                         IO.Directory.CreateDirectory(directory)
                     End If
-                    entry.ExtractToFile(fullPath, True)
+                    entry.ExtractToFile(targetPath, True)
                 End If
             Next
         End Using
