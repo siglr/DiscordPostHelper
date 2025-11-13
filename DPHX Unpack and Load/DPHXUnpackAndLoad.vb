@@ -588,27 +588,27 @@ Public Class DPHXUnpackAndLoad
             End If
 
             Me.BeginInvoke(Sub()
-                                If _isClosing OrElse Me.IsDisposed Then
-                                    CompleteUpcomingEventDecision(False)
-                                    Return
-                                End If
+                               If _isClosing OrElse Me.IsDisposed Then
+                                   CompleteUpcomingEventDecision(False)
+                                   Return
+                               End If
 
-                                If ShouldSuppressUpcomingEventPrompt() Then
-                                    CompleteUpcomingEventDecision(False)
-                                    Return
-                                End If
+                               If ShouldSuppressUpcomingEventPrompt() Then
+                                   CompleteUpcomingEventDecision(False)
+                                   Return
+                               End If
 
-                                Dim joined = False
+                               Dim joined = False
 
-                                Using prompt As New UpcomingEventPrompt(upcoming)
-                                    If prompt.ShowDialog(Me) = DialogResult.OK Then
-                                        joined = True
-                                        JoinUpcomingEvent(upcoming)
-                                    End If
-                                End Using
+                               Using prompt As New UpcomingEventPrompt(upcoming)
+                                   If prompt.ShowDialog(Me) = DialogResult.OK Then
+                                       joined = True
+                                       JoinUpcomingEvent(upcoming)
+                                   End If
+                               End Using
 
-                                CompleteUpcomingEventDecision(joined)
-                            End Sub)
+                               CompleteUpcomingEventDecision(joined)
+                           End Sub)
         Catch
             CompleteUpcomingEventDecision(False)
         End Try
@@ -1784,7 +1784,7 @@ Public Class DPHXUnpackAndLoad
             End If
 
             If Not Directory.Exists(taskFolder) Then
-                Return $"Tracker temporary task folder cleanup skipped (\"{taskFolder}\" not found)."
+                Return $"Tracker temporary task folder cleanup skipped (""{taskFolder}"" not found)."
             End If
 
             Dim trackerFolder As New DirectoryInfo(taskFolder)
