@@ -26,9 +26,21 @@ Public Class Settings
         If IsFirstRun Then
             pnlNB21LoggerExe.Enabled = False
             pnlTrackerExe.Enabled = False
+            pnlAutoOverwrite.Enabled = False
+            pnlAutoUnpack.Enabled = False
+            pnlWSGAutoLaunch.Enabled = False
+            pnlLocalWSPort.Enabled = False
+            pnlXCSoarTasksFolder.Enabled = False
+            pnlXCSoarMapsFolder.Enabled = False
         Else
             pnlNB21LoggerExe.Enabled = True
             pnlTrackerExe.Enabled = True
+            pnlAutoOverwrite.Enabled = True
+            pnlAutoUnpack.Enabled = True
+            pnlWSGAutoLaunch.Enabled = True
+            pnlLocalWSPort.Enabled = True
+            pnlXCSoarTasksFolder.Enabled = True
+            pnlXCSoarMapsFolder.Enabled = True
         End If
 
         If SessionSettings.MSFS2020Microsoft OrElse SessionSettings.MSFS2020Steam Then
