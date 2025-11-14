@@ -403,18 +403,6 @@ Public Class AllSettings
             End If
 
         Else
-            ' No settings file - create default folders
-            Dim dphxPackagesFolder As String = $"{Application.StartupPath}\DPHX-Packages"
-            If Not Directory.Exists(dphxPackagesFolder) Then
-                Directory.CreateDirectory(dphxPackagesFolder)
-                _PackagesFolder = dphxPackagesFolder
-            End If
-            Dim tempUnpackFolder As String = $"{Application.StartupPath}\Unpack"
-            If Not Directory.Exists(tempUnpackFolder) Then
-                Directory.CreateDirectory(tempUnpackFolder)
-                _UnpackingFolder = tempUnpackFolder
-            End If
-
             settingsFound = False
         End If
 

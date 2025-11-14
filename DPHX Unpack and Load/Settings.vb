@@ -61,8 +61,24 @@ Public Class Settings
         If Directory.Exists(SessionSettings.UnpackingFolder) Then
             btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
             ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
+        Else
+            Dim tempUnpackFolder As String = $"{Application.StartupPath}\Unpack"
+            If Not Directory.Exists(tempUnpackFolder) Then
+                Directory.CreateDirectory(tempUnpackFolder)
+                SessionSettings.UnpackingFolder = tempUnpackFolder
+            End If
+            btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
+            ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
         End If
         If Directory.Exists(SessionSettings.PackagesFolder) Then
+            btnPackagesFolder.Text = SessionSettings.PackagesFolder
+            ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
+        Else
+            Dim dphxPackagesFolder As String = $"{Application.StartupPath}\DPHX-Packages"
+            If Not Directory.Exists(dphxPackagesFolder) Then
+                Directory.CreateDirectory(dphxPackagesFolder)
+                SessionSettings.PackagesFolder = dphxPackagesFolder
+            End If
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If

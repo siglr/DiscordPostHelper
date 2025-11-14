@@ -214,6 +214,8 @@ Partial Class Settings
         '
         'separator1
         '
+        Me.separator1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator1.Location = New System.Drawing.Point(0, 0)
         Me.separator1.Name = "separator1"
@@ -618,7 +620,6 @@ Partial Class Settings
         '
         'btnDetectMSFSFolders
         '
-        Me.btnDetectMSFSFolders.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDetectMSFSFolders.Enabled = False
         Me.btnDetectMSFSFolders.Location = New System.Drawing.Point(616, 4)
         Me.btnDetectMSFSFolders.Name = "btnDetectMSFSFolders"
@@ -972,6 +973,8 @@ Partial Class Settings
         '
         'separator3
         '
+        Me.separator3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator3.Location = New System.Drawing.Point(0, 0)
         Me.separator3.Name = "separator3"
@@ -1002,6 +1005,8 @@ Partial Class Settings
         '
         'separator4
         '
+        Me.separator4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator4.Location = New System.Drawing.Point(0, 0)
         Me.separator4.Name = "separator4"
@@ -1104,6 +1109,8 @@ Partial Class Settings
         '
         'separator9
         '
+        Me.separator9.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator9.Location = New System.Drawing.Point(0, 0)
         Me.separator9.Name = "separator9"
@@ -1163,6 +1170,8 @@ Partial Class Settings
         '
         'separator2
         '
+        Me.separator2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator2.Location = New System.Drawing.Point(0, 0)
         Me.separator2.Name = "separator2"
@@ -1266,6 +1275,8 @@ Partial Class Settings
         '
         'separator5
         '
+        Me.separator5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator5.Location = New System.Drawing.Point(0, 0)
         Me.separator5.Name = "separator5"
@@ -1343,6 +1354,8 @@ Partial Class Settings
         '
         'separator6
         '
+        Me.separator6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator6.Location = New System.Drawing.Point(0, 0)
         Me.separator6.Name = "separator6"
@@ -1387,6 +1400,8 @@ Partial Class Settings
         '
         'separator7
         '
+        Me.separator7.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.separator7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.separator7.Controls.Add(Me.Panel3)
         Me.separator7.Location = New System.Drawing.Point(0, 0)
