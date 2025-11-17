@@ -310,11 +310,11 @@ Partial Public Class ManualFallbackMode
 
         Try
             If Directory.Exists(folder) Then
-                For Each file In Directory.GetFiles(folder)
-                    File.Delete(file)
+                For Each theFile As String In Directory.GetFiles(folder)
+                    File.Delete(theFile)
                 Next
-                For Each dir In Directory.GetDirectories(folder)
-                    Directory.Delete(dir, True)
+                For Each subfolder As String In Directory.GetDirectories(folder)
+                    Directory.Delete(subfolder, True)
                 Next
             Else
                 Directory.CreateDirectory(folder)
