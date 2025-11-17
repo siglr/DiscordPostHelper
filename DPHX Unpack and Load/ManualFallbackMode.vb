@@ -426,4 +426,9 @@ Partial Public Class ManualFallbackMode
             End Get
         End Property
     End Class
+
+    Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Reset()
+    End Sub
+
 End Class
