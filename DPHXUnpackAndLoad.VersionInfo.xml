@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.16.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.16.1</ReleaseVersion>
+      <ReleaseTitle>Install all tools from DPHX Settings</ReleaseTitle>
+      <ReleaseNotes>
+        Automated the download and installation of the logger and tracker
+        At startup, now retrieving the upcoming events and asking to join
+        Delayed WSG opening (if enabled) when asking to join upcoming event or already executing download from WSG
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.10.1</ReleaseVersion>
       <ReleaseTitle>Easier first-time setup</ReleaseTitle>
