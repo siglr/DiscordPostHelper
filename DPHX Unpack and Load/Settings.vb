@@ -1128,6 +1128,7 @@ Public Class Settings
                 sscKey.SetValue("PilotID", SessionSettings.WSGCompID, RegistryValueKind.String)
                 sscKey.SetValue("PilotName", SessionSettings.WSGPilotName, RegistryValueKind.String)
                 sscKey.SetValue("TaskFolder", taskFolder, RegistryValueKind.String)
+                sscKey.SetValue("CopyTaskFilesToSim", 0, RegistryValueKind.DWord)
             End Using
 
             SessionSettings.TrackerEXEFolder = trackerFolder
@@ -1334,6 +1335,14 @@ Public Class Settings
     End Function
 
     Private Function LaunchTracker() As Boolean
+
+        Using sscKey As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\SSC", True)
+            If sscKey Is Nothing Then
+                Throw New InvalidOperationException("Unable to create the registry key HKCU\\Software\\SSC.")
+            End If
+            sscKey.SetValue("CopyTaskFilesToSim", 0, RegistryValueKind.DWord)
+        End Using
+
         Dim exePath As String = GetTrackerExecutablePath()
         If Not File.Exists(exePath) Then
             UpdateToolButtonStates()

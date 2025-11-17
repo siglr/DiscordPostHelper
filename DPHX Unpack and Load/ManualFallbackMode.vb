@@ -70,8 +70,8 @@ Partial Public Class ManualFallbackMode
 
     Private Sub btnCopyGoFly_Click(sender As Object, e As EventArgs) Handles btnCopyGoFly.Click
 
-        If _selectedPln Is Nothing AndAlso _selectedWpr Is Nothing Then
-            ShowCenteredMessage("Please select at least a flight plan or a weather preset before continuing.", "No files selected")
+        If _selectedPln Is Nothing Then
+            ShowCenteredMessage("Please select at least a flight plan before continuing.", "No files selected")
             Return
         End If
 

@@ -1,6 +1,7 @@
 Imports System.Diagnostics
 Imports System.IO
 Imports System.Net.Http
+Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading
 Imports System.Windows.Forms
@@ -381,6 +382,15 @@ Friend Module TaskFileHelper
     End Function
 
     Friend Function EnsureTrackerRunning(status As frmStatus) As Boolean
+
+        'Make sure SSC is set to not copy task files to the simulator folder
+        Using sscKey As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\SSC", True)
+            If sscKey Is Nothing Then
+                Throw New InvalidOperationException("Unable to create the registry key HKCU\\Software\\SSC.")
+            End If
+            sscKey.SetValue("CopyTaskFilesToSim", 0, RegistryValueKind.DWord)
+        End Using
+
         Return EnsureExternalCompanion(
             processName:="SSC-Tracker",
             exeFolder:=Settings.SessionSettings.TrackerEXEFolder,
