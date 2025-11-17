@@ -303,7 +303,7 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles toolStripOpen.Click
+    Private Sub LoadDPHX_Click(sender As Object, e As EventArgs) Handles DPHXPackageToolStripMenuItem.Click
 
         lbl2020AllFilesStatus.Text = String.Empty
 
@@ -330,6 +330,12 @@ Public Class DPHXUnpackAndLoad
                 UnpackFiles()
             End If
         End If
+
+    End Sub
+
+    Private Sub ManualModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ManualModeToolStripMenuItem.Click
+
+        ManualFallbackMode.ShowDialog(Me)
 
     End Sub
 
@@ -2061,6 +2067,7 @@ Public Class DPHXUnpackAndLoad
 
         Return String.Empty
     End Function
+
 
 #End Region
 
