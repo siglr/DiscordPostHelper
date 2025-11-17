@@ -44,6 +44,11 @@ Partial Public Class ManualFallbackMode
         _selectedWpr = Nothing
         _copiedFiles.Clear()
 
+        Dim unpackForm = GetUnpackAndLoadForm()
+        If unpackForm IsNot Nothing Then
+            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
+        End If
+
     End Sub
 
     Private Sub cboWhitelistPresets_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cboWhitelistPresets.SelectionChangeCommitted
@@ -88,9 +93,14 @@ Partial Public Class ManualFallbackMode
         status.Start(Me)
         status.AppendStatusLine("Manual copy results:", True)
 
+        Dim unpackForm = GetUnpackAndLoadForm()
         Dim msfsRunning As Boolean = IsMsfsRunning()
         Dim stagedPln As String = StageSelectedFile(_selectedPln, workingFolder, status, "flight plan")
         Dim stagedWpr As String = StageSelectedFile(_selectedWpr, workingFolder, status, "weather preset")
+
+        If unpackForm IsNot Nothing Then
+            unpackForm.UpdateManualFallbackFlightPlanPath(stagedPln)
+        End If
 
         If Not String.IsNullOrEmpty(stagedWpr) Then
             Try
@@ -101,10 +111,6 @@ Partial Public Class ManualFallbackMode
         End If
 
         Dim internalLoggerInUse As Boolean = False
-        Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
-        If unpackForm Is Nothing Then
-            unpackForm = Application.OpenForms.OfType(Of DPHXUnpackAndLoad)().FirstOrDefault()
-        End If
 
         If unpackForm IsNot Nothing Then
             internalLoggerInUse = unpackForm.EnsureInternalLoggerInUse(status)
@@ -196,6 +202,11 @@ Partial Public Class ManualFallbackMode
         status.Done()
 
         _copiedFiles.Clear()
+
+        Dim unpackForm = GetUnpackAndLoadForm()
+        If unpackForm IsNot Nothing Then
+            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
+        End If
 
     End Sub
 
@@ -374,6 +385,15 @@ Partial Public Class ManualFallbackMode
 
     Private Function IsMsfsRunning() As Boolean
         Return Process.GetProcessesByName("FlightSimulator").Any() OrElse Process.GetProcessesByName("FlightSimulator2024").Any()
+    End Function
+
+    Private Function GetUnpackAndLoadForm() As DPHXUnpackAndLoad
+        Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
+        If unpackForm Is Nothing Then
+            unpackForm = Application.OpenForms.OfType(Of DPHXUnpackAndLoad)().FirstOrDefault()
+        End If
+
+        Return unpackForm
     End Function
     Private Class ManualFileSelection
         Public Property FullPath As String
