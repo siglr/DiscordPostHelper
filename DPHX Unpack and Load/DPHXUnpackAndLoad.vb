@@ -1628,11 +1628,12 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Function GetCurrentFlightPlanPath() As String
+        Dim manualPath = GetManualFallbackFlightPlanPath()
+        If Not String.IsNullOrEmpty(manualPath) Then
+            Return manualPath
+        End If
+
         If _allDPHData Is Nothing Then
-            Dim manualPath = GetManualFallbackFlightPlanPath()
-            If Not String.IsNullOrEmpty(manualPath) Then
-                Return manualPath
-            End If
             Return String.Empty
         End If
 
