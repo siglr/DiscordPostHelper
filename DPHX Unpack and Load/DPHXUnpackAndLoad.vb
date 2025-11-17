@@ -1154,90 +1154,15 @@ Public Class DPHXUnpackAndLoad
 
         ' NB21 auto-start and PLN feeding
         If Settings.SessionSettings.NB21StartAndFeed AndAlso (Not internalLoggerInUse) Then
-            Dim NB21LoggerRunning As Boolean
-            Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
-
-            NB21LoggerRunning = processList.Length > 0
-
-            If Not NB21LoggerRunning Then
-                ' NB21 logger not already running - attempt to start it
-                Dim loggerExePath As String = Path.Combine(Settings.SessionSettings.NB21EXEFolder, "NB21_logger.exe")
-                If File.Exists(loggerExePath) Then
-                    Try
-                        Dim loggerProcess As Process = Process.Start(loggerExePath)
-
-                        ' Wait for the process to be ready
-                        If loggerProcess.WaitForInputIdle(5000) Then
-                            ' Optionally check for network readiness (if applicable)
-                            For i As Integer = 1 To 10
-                                If IsPortOpen("localhost", Settings.SessionSettings.NB21LocalWSPort, 500) Then
-                                    NB21LoggerRunning = True
-                                    _status.AppendStatusLine("External NB21 Logger successfully started.", False)
-                                    Exit For
-                                End If
-                                Thread.Sleep(500) ' Check every 500ms
-                            Next
-                        End If
-
-                        If Not NB21LoggerRunning Then
-                            _status.AppendStatusLine("NB21 Logger did not become ready within the timeout period.", True)
-                        End If
-                    Catch ex As Exception
-                        _status.AppendStatusLine($"An error occurred trying to launch NB21 Logger: {ex.Message}", True)
-                    End Try
-                Else
-                    _status.AppendStatusLine($"The NB21 Logger's executable file was not found in {Settings.SessionSettings.NB21EXEFolder}", True)
-                End If
-            Else
-                _status.AppendStatusLine("External NB21 Logger is already running.", False)
-            End If
-
+            Dim NB21LoggerRunning As Boolean = TaskFileHelper.EnsureNb21Running(_status)
             If NB21LoggerRunning AndAlso Not String.IsNullOrWhiteSpace(loggerFlightPlanPath) Then
-                'Feed the PLN file to the logger
-                SendPLNFileToNB21Logger(loggerFlightPlanPath)
+                TaskFileHelper.SendPlnFileToNB21Logger(loggerFlightPlanPath, _status)
             End If
         End If
 
         ' Tracker auto-start and data feeding
         If Settings.SessionSettings.TrackerStartAndFeed Then
-            Dim TrackerRunning As Boolean
-            Dim processList As Process() = Process.GetProcessesByName("SSC-Tracker")
-
-            TrackerRunning = processList.Length > 0
-
-            If Not TrackerRunning Then
-                ' Tracker not already running - attempt to start it
-                Dim trackerExePath As String = Path.Combine(Settings.SessionSettings.TrackerEXEFolder, "SSC-Tracker.exe")
-                If File.Exists(trackerExePath) Then
-                    Try
-                        Dim trackerProcess As Process = Process.Start(trackerExePath)
-
-                        ' Wait for the process to be ready
-                        If trackerProcess.WaitForInputIdle(5000) Then
-                            ' Optionally check for network readiness (if applicable)
-                            For i As Integer = 1 To 10
-                                If IsPortOpen("localhost", Settings.SessionSettings.TrackerLocalWSPort, 500) Then
-                                    TrackerRunning = True
-                                    _status.AppendStatusLine("Tracker successfully started.", False)
-                                    Exit For
-                                End If
-                                Thread.Sleep(500) ' Check every 500ms
-                            Next
-                        End If
-
-                        If Not TrackerRunning Then
-                            _status.AppendStatusLine("Tracker did not become ready within the timeout period.", True)
-                        End If
-
-                    Catch ex As Exception
-                        _status.AppendStatusLine($"An error occurred trying to launch the Tracker: {ex.Message}", True)
-                    End Try
-                Else
-                    _status.AppendStatusLine($"The Tracker's executable file was not found in {Settings.SessionSettings.TrackerEXEFolder}", True)
-                End If
-            Else
-                _status.AppendStatusLine("Tracker is already running.", False)
-            End If
+            Dim TrackerRunning As Boolean = TaskFileHelper.EnsureTrackerRunning(_status)
 
             If TrackerRunning Then
                 'Feed the data to the tracker
@@ -1245,10 +1170,11 @@ Public Class DPHXUnpackAndLoad
                 If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
                     groupToUse = _allDPHData.TrackerGroup
                 End If
-                SendDataToTracker(groupToUse,
+                TaskFileHelper.SendDataToTracker(groupToUse,
                                   Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
                                   Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
-                                  _allDPHData.URLGroupEventPost
+                                  _allDPHData.URLGroupEventPost,
+                                  _status
                                  )
             End If
         End If
@@ -1315,331 +1241,23 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Function IsPortOpen(host As String, port As Integer, timeout As Integer) As Boolean
-        Try
-            Using client As New Net.Sockets.TcpClient()
-                Dim result = client.BeginConnect(host, port, Nothing, Nothing)
-                Dim success = result.AsyncWaitHandle.WaitOne(timeout)
-                If success Then
-                    client.EndConnect(result)
-                    Return True
-                End If
-            End Using
-        Catch ex As Exception
-            ' Ignore exceptions (e.g., port not open)
-        End Try
-        Return False
-    End Function
-
     Private ReadOnly Property IsUnpackRed As Boolean
         Get
             Return toolStripUnpack.ForeColor = Color.Red
         End Get
     End Property
 
-    Private Sub SendPLNFileToNB21Logger(plnfilePath As String)
-
-        ' Define the API endpoint and the path to the PLN file
-        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.NB21LocalWSPort}/pln_set"
-
-        Try
-            ' Read the contents of the PLN file
-            Dim plnContent As String = File.ReadAllText(plnfilePath)
-
-            ' Use HttpClient to send the POST request
-            Using client As New HttpClient()
-                Dim content As New StringContent(plnContent, Encoding.UTF8, "application/xml")
-                Dim response As HttpResponseMessage = client.PostAsync(apiUrl, content).Result
-
-                If response.IsSuccessStatusCode Then
-                    _status.AppendStatusLine("PLN file successfully sent to external NB21 Logger.", True)
-                Else
-                    _status.AppendStatusLine($"Failed to send PLN file to external NB21 Logger. HTTP Status: {response.StatusCode}", True)
-                End If
-            End Using
-        Catch ex As Exception
-            _status.AppendStatusLine($"An error occurred while sending the PLN file: {ex.Message}", True)
-        End Try
-
-    End Sub
-
-    ' Function to send a POST request
-    Private Function SendPostRequest(apiUrl As String, jsonPayload As String) As HttpResponseMessage
-        Using client As New HttpClient()
-            Dim content As New StringContent(jsonPayload, Encoding.UTF8, "application/json")
-            Return client.PostAsync(apiUrl, content).Result
-        End Using
-    End Function
-
-    Private Sub SendDataToTracker(trackerGroup As String, plnfilePath As String, wprfilePath As String, infoURL As String)
-        ' Define the API endpoint
-        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
-
-        Try
-            ' Read the contents of the PLN and WPR files
-            Dim plnContent As String = If(File.Exists(plnfilePath), File.ReadAllText(plnfilePath), "")
-            Dim wprContent As String = If(File.Exists(wprfilePath), File.ReadAllText(wprfilePath), "")
-
-            ' Extract filenames without extensions
-            Dim extractFilename As Func(Of String, String) =
-            Function(filePath)
-                If String.IsNullOrEmpty(filePath) Then Return ""
-                Dim fullFilename = Path.GetFileName(filePath) ' Get the filename with extension
-                Return Path.GetFileNameWithoutExtension(fullFilename) ' Remove the extension
-            End Function
-
-            Dim plnFilename As String = extractFilename(plnfilePath)
-            Dim wprFilename As String = extractFilename(wprfilePath)
-
-            ' Build the payload as JSON
-            Dim payload As New With {
-            .CMD = "SET",
-            .GN = trackerGroup,
-            .TASK = plnFilename,
-            .TASKDATA = plnContent,
-            .WEATHER = wprFilename,
-            .WEATHERDATA = wprContent,
-            .TASKINFO = infoURL
-            }
-
-            ' Convert payload to JSON
-            Dim jsonPayload As String = JsonConvert.SerializeObject(payload)
-
-            Dim response = SendPostRequest(apiUrl, jsonPayload)
-
-            ' Perform the call to tracker
-            response = SendPostRequest(apiUrl, jsonPayload)
-
-            If response.IsSuccessStatusCode Then
-                _status.AppendStatusLine($"Call to SSC Tracker successful.", True)
-            Else
-                _status.AppendStatusLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}", True)
-            End If
-
-        Catch ex As Exception
-            _status.AppendStatusLine($"An error occurred while communicating with Tracker: {ex.Message}", True)
-        End Try
-    End Sub
-
     Private Function CreatePLNForEFB(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
-
-        Try
-            Dim fullSourceFilename = Path.Combine(sourcePath, filename)
-            If Not File.Exists(fullSourceFilename) Then
-                Return $"❌ Source file not found: {fullSourceFilename}"
-            End If
-
-            ' Read the original PLN file as XML (preserve whitespace to avoid reformat surprises)
-            Dim xdoc = XDocument.Load(fullSourceFilename, LoadOptions.PreserveWhitespace)
-
-            ' Parse all waypoints and remove the extra information from each ATCWaypoint id
-            Dim changed As Integer = 0
-            For Each wp In xdoc.Descendants("ATCWaypoint")
-                Dim idAttr = wp.Attribute("id")
-                If idAttr Is Nothing Then Continue For
-                Dim original = idAttr.Value
-                Dim cleaned = CleanWaypointId(original)
-                If cleaned <> original Then
-                    idAttr.Value = cleaned
-                    changed += 1
-                End If
-            Next
-
-            ' Write the new PLN file with _EFB suffix in the same folder
-            Dim efbName = Path.GetFileNameWithoutExtension(fullSourceFilename) & "_EFB" & Path.GetExtension(fullSourceFilename)
-            Dim efbPath = Path.Combine(sourcePath, efbName)
-
-            Dim settings As New Xml.XmlWriterSettings With {
-            .Indent = True,
-            .Encoding = New UTF8Encoding(False) ' UTF-8, no BOM
-        }
-            Using w = Xml.XmlWriter.Create(efbPath, settings)
-                xdoc.Save(w)
-            End Using
-
-            ' Copy the file to the destination folder (uses your existing CopyFile)
-            If Not String.IsNullOrWhiteSpace(destPath) Then
-                Return CopyFile(efbName, sourcePath, destPath, msgToAsk)
-            End If
-
-            Return "No destination folder set for EFB version of task!"
-
-        Catch ex As Exception
-            Return $"❌ CreatePLNForEFB failed: {ex.Message}"
-        End Try
+        Return TaskFileHelper.CreatePlnForEfb(filename, sourcePath, destPath, msgToAsk, Me, warningMSFSRunningToolStrip.Visible)
     End Function
 
-    Private Function CleanWaypointId(value As String) As String
-        If String.IsNullOrEmpty(value) Then Return value
-        Dim s = value.Trim()
-
-        ' Remove leading asterisks (e.g., *Start, *Finish)
-        s = s.TrimStart("*"c)
-
-        ' Remove everything from the first '+' onward (e.g., +6378|7200x500, +7497x2000, etc.)
-        Dim plusIdx = s.IndexOf("+"c)
-        If plusIdx >= 0 Then s = s.Substring(0, plusIdx)
-
-        Return s.Trim()
-    End Function
-
-    Private Sub AppendMsfsRunningNoteForWpr(ByRef msg As String, fileName As String, isDelete As Boolean)
-        If Not warningMSFSRunningToolStrip.Visible Then Exit Sub
-        If Not fileName.EndsWith(".wpr", StringComparison.OrdinalIgnoreCase) Then Exit Sub
-
-        If isDelete Then
-            msg &= $"{Environment.NewLine}⚠️MSFS is running: the preset may remain visible/usable until MSFS is restarted."
-        Else
-            msg &= $"{Environment.NewLine}⚠️MSFS is running: the new/updated preset will not appear until MSFS is restarted."
-        End If
-    End Sub
 
     Private Function CopyFile(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
-        Dim fullSourceFilename As String
-        Dim fullDestFilename As String
-        Dim proceed As Boolean = False
-        Dim messageToReturn As String = String.Empty
-
-        If Not Directory.Exists(destPath) Then
-            Return $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
-        End If
-
-        fullSourceFilename = Path.Combine(sourcePath, filename)
-        fullDestFilename = Path.Combine(destPath, filename)
-
-        ' We'll copy from this path; default to the incoming package file
-        Dim sourceToCopy As String = fullSourceFilename
-
-        ' --- WHITELIST ENFORCEMENT ---
-        Dim whitelistDir = Path.Combine(Application.StartupPath, "Whitelist")
-        Dim whitelistFile = Path.Combine(whitelistDir, filename)
-        If File.Exists(whitelistFile) Then
-            ' If dest exists and already matches Whitelist -> skip
-            If File.Exists(fullDestFilename) AndAlso SupportingFeatures.FilesAreEquivalent(whitelistFile, fullDestFilename) Then
-                Return $"{msgToAsk} ""{filename}"" skipped (protected by Whitelist)"
-            End If
-
-            ' Otherwise, enforce Whitelist content (overwrite or create) regardless of policy
-            sourceToCopy = whitelistFile
-            proceed = True
-            If File.Exists(fullDestFilename) Then
-                messageToReturn = $"{msgToAsk} ""{filename}"" replaced with Whitelist copy"
-            Else
-                messageToReturn = $"{msgToAsk} ""{filename}"" copied (from Whitelist)"
-            End If
-        Else
-            ' --- normal logic (identical => skip; different => apply policy) ---
-            If File.Exists(fullDestFilename) Then
-                Dim srcInfo = New FileInfo(fullSourceFilename)
-                Dim dstInfo = New FileInfo(fullDestFilename)
-
-                Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
-                                   AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
-
-                If identical Then
-                    proceed = False
-                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
-                Else
-                    Select Case Settings.SessionSettings.AutoOverwriteFiles
-                        Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                            proceed = True
-                            messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
-                        Case AllSettings.AutoOverwriteOptions.AlwaysSkip
-                            proceed = False
-                            messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
-                        Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                            Using New Centered_MessageBox(Me)
-                                If MessageBox.Show(
-                                $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
-                                "File already exists",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question
-                            ) = DialogResult.Yes Then
-                                    proceed = True
-                                    messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
-                                Else
-                                    proceed = False
-                                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
-                                End If
-                            End Using
-                    End Select
-                End If
-            Else
-                proceed = True
-                messageToReturn = $"{msgToAsk} ""{filename}"" copied"
-            End If
-        End If
-
-        If proceed Then
-            Dim destWasReadOnly As Boolean = False
-            Dim originalAttrs As FileAttributes = CType(0, FileAttributes)
-
-            Try
-                ' If destination exists and is ReadOnly, clear that flag temporarily
-                If File.Exists(fullDestFilename) Then
-                    originalAttrs = File.GetAttributes(fullDestFilename)
-                    If (originalAttrs And FileAttributes.ReadOnly) <> 0 Then
-                        destWasReadOnly = True
-                        File.SetAttributes(fullDestFilename, originalAttrs And Not FileAttributes.ReadOnly)
-                    End If
-                End If
-
-                ' Copy from the selected source (Whitelist or package)
-                File.Copy(sourceToCopy, fullDestFilename, True)
-
-                ' Optional: restore ReadOnly if it was set before
-                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
-                    Dim newAttrs = File.GetAttributes(fullDestFilename)
-                    File.SetAttributes(fullDestFilename, newAttrs Or FileAttributes.ReadOnly)
-                End If
-
-                AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=False)
-
-            Catch ex As UnauthorizedAccessException
-                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy (access denied): {ex.Message}"
-                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
-                    Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
-                End If
-
-            Catch ex As Exception
-                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy: {ex.Message}"
-                If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
-                    Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
-                End If
-            End Try
-        End If
-
-        Return messageToReturn
+        Return TaskFileHelper.CopyTaskFile(filename, sourcePath, destPath, msgToAsk, Me, warningMSFSRunningToolStrip.Visible)
     End Function
 
     Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String, excludeFromCleanup As Boolean) As String
-        Dim fullSourceFilename As String
-        Dim messageToReturn As String = String.Empty
-
-        If Directory.Exists(sourcePath) Then
-            fullSourceFilename = Path.Combine(sourcePath, filename)
-            If File.Exists(fullSourceFilename) Then
-                Try
-                    If Not excludeFromCleanup Then
-                        File.Delete(fullSourceFilename)
-                        messageToReturn = $"{msgToAsk} ""{filename}"" deleted"
-                        AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=True)
-                    Else
-                        messageToReturn = $"{msgToAsk} ""{filename}"" excluded from cleanup"
-                    End If
-                Catch ex As Exception
-                    messageToReturn = $"{msgToAsk} ""{filename}"" found but error trying to delete it:{Environment.NewLine}{ex.Message}"
-                End Try
-            Else
-                messageToReturn = $"{msgToAsk} ""{filename}"" not found"
-            End If
-        Else
-            messageToReturn = $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
-        End If
-
-
-        Return messageToReturn
-
+        Return TaskFileHelper.DeleteTaskFile(filename, sourcePath, msgToAsk, excludeFromCleanup, warningMSFSRunningToolStrip.Visible)
     End Function
 
     Private Sub CleanupFiles()
@@ -1648,7 +1266,7 @@ Public Class DPHXUnpackAndLoad
         Dim additionalCleanupSteps As List(Of System.Func(Of String)) = Nothing
         If Settings.SessionSettings.TrackerStartAndFeed Then
             additionalCleanupSteps = New List(Of System.Func(Of String)) From {
-                New System.Func(Of String)(AddressOf ExecuteTrackerTaskFolderCleanup)
+                New System.Func(Of String)(AddressOf TaskFileHelper.ExecuteTrackerTaskFolderCleanup)
             }
         End If
 
@@ -1769,71 +1387,6 @@ Public Class DPHXUnpackAndLoad
         End Using
 
         EnableUnpackButton()
-    End Sub
-
-    Private Function ExecuteTrackerTaskFolderCleanup() As String
-        Try
-            Dim taskFolder As String = Nothing
-            Using key = Registry.CurrentUser.OpenSubKey("Software\\SSC")
-                If key IsNot Nothing Then
-                    taskFolder = TryCast(key.GetValue("TaskFolder"), String)
-                End If
-            End Using
-
-            If String.IsNullOrWhiteSpace(taskFolder) Then
-                Return "Tracker temporary task folder cleanup skipped (registry value not found)."
-            End If
-
-            taskFolder = taskFolder.Trim()
-            If taskFolder.Length = 0 Then
-                Return "Tracker temporary task folder cleanup skipped (registry value not found)."
-            End If
-
-            If Not Directory.Exists(taskFolder) Then
-                Return $"Tracker temporary task folder cleanup skipped (""{taskFolder}"" not found)."
-            End If
-
-            Dim trackerFolder As New DirectoryInfo(taskFolder)
-            Dim errors As New List(Of String)()
-
-            For Each fileInfo In trackerFolder.GetFiles()
-                Try
-                    fileInfo.Attributes = FileAttributes.Normal
-                    fileInfo.Delete()
-                Catch ex As Exception
-                    errors.Add($"File '{fileInfo.Name}': {ex.Message}")
-                End Try
-            Next
-
-            For Each dirInfo In trackerFolder.GetDirectories()
-                Try
-                    ResetDirectoryAttributes(dirInfo)
-                    dirInfo.Delete(True)
-                Catch ex As Exception
-                    errors.Add($"Folder '{dirInfo.Name}': {ex.Message}")
-                End Try
-            Next
-
-            If errors.Count > 0 Then
-                Return $"Tracker temporary task folder cleanup failed: {String.Join("; ", errors)}"
-            End If
-
-            Return "Cleaned up the Tracker's temporary tasks folder."
-        Catch ex As Exception
-            Return $"Tracker temporary task folder cleanup failed: {ex.Message}"
-        End Try
-    End Function
-
-    Private Sub ResetDirectoryAttributes(directory As DirectoryInfo)
-        For Each subDirectory In directory.GetDirectories()
-            ResetDirectoryAttributes(subDirectory)
-        Next
-
-        For Each fileInfo In directory.GetFiles()
-            fileInfo.Attributes = FileAttributes.Normal
-        Next
-
-        directory.Attributes = FileAttributes.Normal
     End Sub
 
     Private Sub toolStripWSGMap_Click(sender As Object, e As EventArgs) Handles toolStripWSGMap.Click
