@@ -1133,24 +1133,7 @@ Public Class DPHXUnpackAndLoad
 
         Dim loggerFlightPlanPath As String = GetCurrentFlightPlanPath()
 
-        Dim internalLoggerInUse As Boolean = False
-        If File.Exists($"{Application.StartupPath}\GiveMeTheLogger.Please") Then
-            Dim NB21LoggerRunning As Boolean
-            Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
-            NB21LoggerRunning = processList.Length > 0
-            If NB21LoggerRunning Then
-                _status.AppendStatusLine("Internal NB21 Logger requested but external already running.", False)
-            Else
-                OpenLoggerForm()
-                If _loggerForm IsNot Nothing AndAlso _loggerForm.IsReady Then
-                    'Logger started successfully
-                    _status.AppendStatusLine("Internal NB21 Logger successfully started and setup.", True)
-                    internalLoggerInUse = True
-                Else
-                    _status.AppendStatusLine("Internal NB21 Logger is not ready, possibly reverting to external.", True)
-                End If
-            End If
-        End If
+        Dim internalLoggerInUse As Boolean = EnsureInternalLoggerInUse(_status)
 
         ' NB21 auto-start and PLN feeding
         If Settings.SessionSettings.NB21StartAndFeed AndAlso (Not internalLoggerInUse) Then
@@ -1562,6 +1545,39 @@ Public Class DPHXUnpackAndLoad
     Private Sub ReloadSettings()
         Settings.SessionSettings.Load()
     End Sub
+
+    Friend Function EnsureInternalLoggerInUse(status As frmStatus) As Boolean
+        Dim internalLoggerInUse As Boolean = False
+
+        Dim requestFile As String = Path.Combine(Application.StartupPath, "GiveMeTheLogger.Please")
+        If Not File.Exists(requestFile) Then
+            Return False
+        End If
+
+        Dim processList As Process() = Process.GetProcessesByName("NB21_logger")
+        Dim NB21LoggerRunning As Boolean = processList.Length > 0
+        If NB21LoggerRunning Then
+            If status IsNot Nothing Then
+                status.AppendStatusLine("Internal NB21 Logger requested but external already running.", False)
+            End If
+            Return False
+        End If
+
+        OpenLoggerForm()
+
+        If _loggerForm IsNot Nothing AndAlso _loggerForm.IsReady Then
+            If status IsNot Nothing Then
+                status.AppendStatusLine("Internal NB21 Logger successfully started and setup.", True)
+            End If
+            internalLoggerInUse = True
+        Else
+            If status IsNot Nothing Then
+                status.AppendStatusLine("Internal NB21 Logger is not ready, possibly reverting to external.", True)
+            End If
+        End If
+
+        Return internalLoggerInUse
+    End Function
 
     Private Sub OpenLoggerForm()
 
