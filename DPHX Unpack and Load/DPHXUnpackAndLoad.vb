@@ -42,6 +42,7 @@ Public Class DPHXUnpackAndLoad
     Private _readySignalForListener As EventWaitHandle
     Private _isClosing As Boolean = False
     Private _loggerForm As Logger
+    Private _manualFallbackFlightPlanPath As String = String.Empty
     Private _upcomingEventCheckAttempted As Boolean = False
     Private _launchedWithDPHXArgument As Boolean = False
     Private _taskFetchRequestedByListener As Boolean = False
@@ -1579,6 +1580,14 @@ Public Class DPHXUnpackAndLoad
         Return internalLoggerInUse
     End Function
 
+    Friend Sub UpdateManualFallbackFlightPlanPath(flightPlanPath As String)
+        If String.IsNullOrWhiteSpace(flightPlanPath) Then
+            _manualFallbackFlightPlanPath = String.Empty
+        Else
+            _manualFallbackFlightPlanPath = flightPlanPath
+        End If
+    End Sub
+
     Private Sub OpenLoggerForm()
 
         ' Check that we have the user info on WSG - if not, can't use the logger
@@ -1619,7 +1628,15 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Function GetCurrentFlightPlanPath() As String
-        If _allDPHData Is Nothing OrElse String.IsNullOrWhiteSpace(_allDPHData.FlightPlanFilename) Then
+        If _allDPHData Is Nothing Then
+            Dim manualPath = GetManualFallbackFlightPlanPath()
+            If Not String.IsNullOrEmpty(manualPath) Then
+                Return manualPath
+            End If
+            Return String.Empty
+        End If
+
+        If String.IsNullOrWhiteSpace(_allDPHData.FlightPlanFilename) Then
             Return String.Empty
         End If
 
@@ -1634,6 +1651,19 @@ Public Class DPHXUnpackAndLoad
             Return _allDPHData.FlightPlanFilename
         End If
 
+        Return String.Empty
+    End Function
+
+    Private Function GetManualFallbackFlightPlanPath() As String
+        If String.IsNullOrWhiteSpace(_manualFallbackFlightPlanPath) Then
+            Return String.Empty
+        End If
+
+        If File.Exists(_manualFallbackFlightPlanPath) Then
+            Return _manualFallbackFlightPlanPath
+        End If
+
+        _manualFallbackFlightPlanPath = String.Empty
         Return String.Empty
     End Function
 
