@@ -18,19 +18,19 @@ Partial Class ManualFallbackMode
         Me.components = New System.ComponentModel.Container()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnSelectPLN = New System.Windows.Forms.Button()
-        Me.lblPLNFile = New System.Windows.Forms.Label()
-        Me.lblPLNTitle = New System.Windows.Forms.Label()
-        Me.grpPLN = New System.Windows.Forms.GroupBox()
-        Me.grpWeather = New System.Windows.Forms.GroupBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.lblWPRName = New System.Windows.Forms.Label()
-        Me.lblWPRFile = New System.Windows.Forms.Label()
+        Me.btnSelectWPR = New System.Windows.Forms.Button()
         Me.cboWhitelistPresets = New System.Windows.Forms.ComboBox()
         Me.btnCopyGoFly = New System.Windows.Forms.Button()
         Me.btnClearFiles = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
-        Me.grpTracker = New System.Windows.Forms.GroupBox()
         Me.txtTrackerGroupName = New System.Windows.Forms.TextBox()
+        Me.lblPLNFile = New System.Windows.Forms.Label()
+        Me.lblPLNTitle = New System.Windows.Forms.Label()
+        Me.grpPLN = New System.Windows.Forms.GroupBox()
+        Me.grpWeather = New System.Windows.Forms.GroupBox()
+        Me.lblWPRName = New System.Windows.Forms.Label()
+        Me.lblWPRFile = New System.Windows.Forms.Label()
+        Me.grpTracker = New System.Windows.Forms.GroupBox()
         Me.grpPLN.SuspendLayout()
         Me.grpWeather.SuspendLayout()
         Me.grpTracker.SuspendLayout()
@@ -48,86 +48,17 @@ Partial Class ManualFallbackMode
         Me.ToolTip1.SetToolTip(Me.btnSelectPLN, "Click to select the flight plan (PLN) file from your computer")
         Me.btnSelectPLN.UseVisualStyleBackColor = True
         '
-        'lblPLNFile
+        'btnSelectWPR
         '
-        Me.lblPLNFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblPLNFile.Location = New System.Drawing.Point(94, 36)
-        Me.lblPLNFile.Name = "lblPLNFile"
-        Me.lblPLNFile.Size = New System.Drawing.Size(358, 25)
-        Me.lblPLNFile.TabIndex = 1
-        Me.lblPLNFile.Text = "Flight plan file"
-        '
-        'lblPLNTitle
-        '
-        Me.lblPLNTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblPLNTitle.Location = New System.Drawing.Point(94, 61)
-        Me.lblPLNTitle.Name = "lblPLNTitle"
-        Me.lblPLNTitle.Size = New System.Drawing.Size(358, 25)
-        Me.lblPLNTitle.TabIndex = 2
-        Me.lblPLNTitle.Text = "Flight plan title"
-        '
-        'grpPLN
-        '
-        Me.grpPLN.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpPLN.Controls.Add(Me.btnSelectPLN)
-        Me.grpPLN.Controls.Add(Me.lblPLNTitle)
-        Me.grpPLN.Controls.Add(Me.lblPLNFile)
-        Me.grpPLN.Location = New System.Drawing.Point(12, 12)
-        Me.grpPLN.Name = "grpPLN"
-        Me.grpPLN.Size = New System.Drawing.Size(458, 100)
-        Me.grpPLN.TabIndex = 0
-        Me.grpPLN.TabStop = False
-        Me.grpPLN.Text = "Flight Plan"
-        '
-        'grpWeather
-        '
-        Me.grpWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpWeather.Controls.Add(Me.cboWhitelistPresets)
-        Me.grpWeather.Controls.Add(Me.Button1)
-        Me.grpWeather.Controls.Add(Me.lblWPRName)
-        Me.grpWeather.Controls.Add(Me.lblWPRFile)
-        Me.grpWeather.Location = New System.Drawing.Point(12, 118)
-        Me.grpWeather.Name = "grpWeather"
-        Me.grpWeather.Size = New System.Drawing.Size(458, 119)
-        Me.grpWeather.TabIndex = 1
-        Me.grpWeather.TabStop = False
-        Me.grpWeather.Text = "Weather Preset"
-        '
-        'Button1
-        '
-        Me.Button1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btnSelectWPR.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(6, 26)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(82, 87)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Select File"
-        Me.ToolTip1.SetToolTip(Me.Button1, "Click to select the weather (WPR) file from your computer")
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'lblWPRName
-        '
-        Me.lblWPRName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWPRName.Location = New System.Drawing.Point(94, 88)
-        Me.lblWPRName.Name = "lblWPRName"
-        Me.lblWPRName.Size = New System.Drawing.Size(358, 25)
-        Me.lblWPRName.TabIndex = 3
-        Me.lblWPRName.Text = "Weather preset name"
-        '
-        'lblWPRFile
-        '
-        Me.lblWPRFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWPRFile.Location = New System.Drawing.Point(94, 63)
-        Me.lblWPRFile.Name = "lblWPRFile"
-        Me.lblWPRFile.Size = New System.Drawing.Size(358, 25)
-        Me.lblWPRFile.TabIndex = 2
-        Me.lblWPRFile.Text = "Weather preset file"
+        Me.btnSelectWPR.Location = New System.Drawing.Point(6, 26)
+        Me.btnSelectWPR.Name = "btnSelectWPR"
+        Me.btnSelectWPR.Size = New System.Drawing.Size(82, 87)
+        Me.btnSelectWPR.TabIndex = 0
+        Me.btnSelectWPR.Text = "Select File"
+        Me.ToolTip1.SetToolTip(Me.btnSelectWPR, "Click to select the weather (WPR) file from your computer")
+        Me.btnSelectWPR.UseVisualStyleBackColor = True
         '
         'cboWhitelistPresets
         '
@@ -177,16 +108,6 @@ Partial Class ManualFallbackMode
         Me.ToolTip1.SetToolTip(Me.btnClose, "Click to close this window and go back to regular DPHX operations")
         Me.btnClose.UseVisualStyleBackColor = True
         '
-        'grpTracker
-        '
-        Me.grpTracker.Controls.Add(Me.txtTrackerGroupName)
-        Me.grpTracker.Location = New System.Drawing.Point(12, 243)
-        Me.grpTracker.Name = "grpTracker"
-        Me.grpTracker.Size = New System.Drawing.Size(458, 64)
-        Me.grpTracker.TabIndex = 2
-        Me.grpTracker.TabStop = False
-        Me.grpTracker.Text = "Tracker Group"
-        '
         'txtTrackerGroupName
         '
         Me.txtTrackerGroupName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -196,6 +117,85 @@ Partial Class ManualFallbackMode
         Me.txtTrackerGroupName.Size = New System.Drawing.Size(446, 27)
         Me.txtTrackerGroupName.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtTrackerGroupName, "Enter the SSC Tracker group name (if any)")
+        '
+        'lblPLNFile
+        '
+        Me.lblPLNFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblPLNFile.Location = New System.Drawing.Point(94, 36)
+        Me.lblPLNFile.Name = "lblPLNFile"
+        Me.lblPLNFile.Size = New System.Drawing.Size(358, 25)
+        Me.lblPLNFile.TabIndex = 1
+        Me.lblPLNFile.Text = "Flight plan file"
+        '
+        'lblPLNTitle
+        '
+        Me.lblPLNTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblPLNTitle.Location = New System.Drawing.Point(94, 61)
+        Me.lblPLNTitle.Name = "lblPLNTitle"
+        Me.lblPLNTitle.Size = New System.Drawing.Size(358, 25)
+        Me.lblPLNTitle.TabIndex = 2
+        Me.lblPLNTitle.Text = "Flight plan title"
+        '
+        'grpPLN
+        '
+        Me.grpPLN.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpPLN.Controls.Add(Me.btnSelectPLN)
+        Me.grpPLN.Controls.Add(Me.lblPLNTitle)
+        Me.grpPLN.Controls.Add(Me.lblPLNFile)
+        Me.grpPLN.Location = New System.Drawing.Point(12, 12)
+        Me.grpPLN.Name = "grpPLN"
+        Me.grpPLN.Size = New System.Drawing.Size(458, 100)
+        Me.grpPLN.TabIndex = 0
+        Me.grpPLN.TabStop = False
+        Me.grpPLN.Text = "Flight Plan"
+        '
+        'grpWeather
+        '
+        Me.grpWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpWeather.Controls.Add(Me.cboWhitelistPresets)
+        Me.grpWeather.Controls.Add(Me.btnSelectWPR)
+        Me.grpWeather.Controls.Add(Me.lblWPRName)
+        Me.grpWeather.Controls.Add(Me.lblWPRFile)
+        Me.grpWeather.Location = New System.Drawing.Point(12, 118)
+        Me.grpWeather.Name = "grpWeather"
+        Me.grpWeather.Size = New System.Drawing.Size(458, 119)
+        Me.grpWeather.TabIndex = 1
+        Me.grpWeather.TabStop = False
+        Me.grpWeather.Text = "Weather Preset"
+        '
+        'lblWPRName
+        '
+        Me.lblWPRName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblWPRName.Location = New System.Drawing.Point(94, 88)
+        Me.lblWPRName.Name = "lblWPRName"
+        Me.lblWPRName.Size = New System.Drawing.Size(358, 25)
+        Me.lblWPRName.TabIndex = 3
+        Me.lblWPRName.Text = "Weather preset name"
+        '
+        'lblWPRFile
+        '
+        Me.lblWPRFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblWPRFile.Location = New System.Drawing.Point(94, 63)
+        Me.lblWPRFile.Name = "lblWPRFile"
+        Me.lblWPRFile.Size = New System.Drawing.Size(358, 25)
+        Me.lblWPRFile.TabIndex = 2
+        Me.lblWPRFile.Text = "Weather preset file"
+        '
+        'grpTracker
+        '
+        Me.grpTracker.Controls.Add(Me.txtTrackerGroupName)
+        Me.grpTracker.Location = New System.Drawing.Point(12, 243)
+        Me.grpTracker.Name = "grpTracker"
+        Me.grpTracker.Size = New System.Drawing.Size(458, 64)
+        Me.grpTracker.TabIndex = 2
+        Me.grpTracker.TabStop = False
+        Me.grpTracker.Text = "Tracker Group"
         '
         'ManualFallbackMode
         '
@@ -231,7 +231,7 @@ Partial Class ManualFallbackMode
     Friend WithEvents lblPLNTitle As Label
     Friend WithEvents grpPLN As GroupBox
     Friend WithEvents grpWeather As GroupBox
-    Friend WithEvents Button1 As Button
+    Friend WithEvents btnSelectWPR As Button
     Friend WithEvents lblWPRName As Label
     Friend WithEvents lblWPRFile As Label
     Friend WithEvents cboWhitelistPresets As ComboBox

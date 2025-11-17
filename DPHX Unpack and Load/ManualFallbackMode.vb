@@ -218,7 +218,7 @@ Partial Public Class ManualFallbackMode
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub btnSelectWPR_Click(sender As Object, e As EventArgs) Handles btnSelectWPR.Click
 
         Using ofd As New OpenFileDialog()
             ofd.Filter = "Weather preset (*.wpr)|*.wpr"
