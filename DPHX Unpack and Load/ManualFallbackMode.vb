@@ -100,8 +100,20 @@ Partial Public Class ManualFallbackMode
             End Try
         End If
 
+        Dim internalLoggerInUse As Boolean = False
+        Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
+        If unpackForm Is Nothing Then
+            unpackForm = Application.OpenForms.OfType(Of DPHXUnpackAndLoad)().FirstOrDefault()
+        End If
+
+        If unpackForm IsNot Nothing Then
+            internalLoggerInUse = unpackForm.EnsureInternalLoggerInUse(status)
+        ElseIf File.Exists(Path.Combine(Application.StartupPath, "GiveMeTheLogger.Please")) Then
+            status.AppendStatusLine("Internal NB21 Logger requested but the main window is unavailable.", True)
+        End If
+
         Try
-            If Settings.SessionSettings.NB21StartAndFeed AndAlso Not String.IsNullOrWhiteSpace(stagedPln) Then
+            If Settings.SessionSettings.NB21StartAndFeed AndAlso Not internalLoggerInUse AndAlso Not String.IsNullOrWhiteSpace(stagedPln) Then
                 Dim nb21Running = TaskFileHelper.EnsureNb21Running(status)
                 If nb21Running Then
                     TaskFileHelper.SendPlnFileToNB21Logger(stagedPln, status)
