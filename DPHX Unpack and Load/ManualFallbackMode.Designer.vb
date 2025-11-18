@@ -16,6 +16,7 @@ Partial Class ManualFallbackMode
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ManualFallbackMode))
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnSelectPLN = New System.Windows.Forms.Button()
         Me.btnSelectWPR = New System.Windows.Forms.Button()
@@ -211,6 +212,7 @@ Partial Class ManualFallbackMode
         Me.Controls.Add(Me.grpWeather)
         Me.Controls.Add(Me.grpPLN)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.MaximumSize = New System.Drawing.Size(5000, 481)
