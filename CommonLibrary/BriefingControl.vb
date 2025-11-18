@@ -1388,15 +1388,3 @@ Public NotInheritable Class ValidFilesDragActiveChangedEventArgs
     Public ReadOnly Property Files As IReadOnlyList(Of String)
 End Class
 
-Public NotInheritable Class FilesDroppedEventArgs
-    Inherits EventArgs
-
-    Public Sub New(files As IReadOnlyList(Of String))
-        If files Is Nothing Then
-            Throw New ArgumentNullException(NameOf(files))
-        End If
-        Me.Files = files
-    End Sub
-
-    Public ReadOnly Property Files As IReadOnlyList(Of String)
-End Class
