@@ -140,6 +140,7 @@ Partial Class ManualFallbackMode
         '
         'grpPLN
         '
+        Me.grpPLN.AllowDrop = True
         Me.grpPLN.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpPLN.Controls.Add(Me.btnSelectPLN)
@@ -154,6 +155,7 @@ Partial Class ManualFallbackMode
         '
         'grpWeather
         '
+        Me.grpWeather.AllowDrop = True
         Me.grpWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpWeather.Controls.Add(Me.cboWhitelistPresets)
