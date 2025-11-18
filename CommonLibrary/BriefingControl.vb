@@ -5,6 +5,7 @@ Imports System.Runtime.Serialization
 Imports System.Text
 Imports System.Windows.Forms
 Imports System.Xml
+Imports System.Collections.Generic
 Imports SIGLR.SoaringTools.CommonLibrary.PreferredUnits
 
 Public Class BriefingControl
@@ -22,9 +23,174 @@ Public Class BriefingControl
     Private _onUnitsTab As Boolean = False
     Private _loaded As Boolean = False
     Private _discordPostID As String = String.Empty
+    Private _dragDropHandlersInitialized As Boolean
+    Private _validDragActive As Boolean
+    Private ReadOnly _controlsWithDragHandlers As New HashSet(Of Control)()
 
     Public Property EventIsEnabled As Boolean
     Private ReadOnly Property PrefUnits As New PreferredUnits
+
+    Public Event ValidFilesDragActiveChanged As EventHandler(Of ValidFilesDragActiveChangedEventArgs)
+    Public Event FilesDropped As EventHandler(Of FilesDroppedEventArgs)
+
+#End Region
+
+#Region "Drag and drop support"
+
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        InitializeDragDropSupport()
+    End Sub
+
+    Private Sub InitializeDragDropSupport()
+        If _dragDropHandlersInitialized Then
+            Return
+        End If
+
+        _dragDropHandlersInitialized = True
+        AttachDragDropHandlersRecursive(Me)
+    End Sub
+
+    Private Sub AttachDragDropHandlersRecursive(target As Control)
+        If target Is Nothing Then
+            Return
+        End If
+
+        If _controlsWithDragHandlers.Contains(target) Then
+            Return
+        End If
+        _controlsWithDragHandlers.Add(target)
+
+        Try
+            target.AllowDrop = True
+        Catch ex As NotSupportedException
+            ' Some controls might not support AllowDrop (e.g., WebBrowser). Ignore and continue.
+        End Try
+
+        AddHandler target.DragEnter, AddressOf OnControlDragEnter
+        AddHandler target.DragOver, AddressOf OnControlDragOver
+        AddHandler target.DragLeave, AddressOf OnControlDragLeave
+        AddHandler target.DragDrop, AddressOf OnControlDragDrop
+        AddHandler target.ControlAdded, AddressOf OnChildControlAdded
+
+        For Each child As Control In target.Controls
+            AttachDragDropHandlersRecursive(child)
+        Next
+    End Sub
+
+    Private Sub OnChildControlAdded(sender As Object, e As ControlEventArgs)
+        If Not _dragDropHandlersInitialized OrElse e Is Nothing OrElse e.Control Is Nothing Then
+            Return
+        End If
+
+        AttachDragDropHandlersRecursive(e.Control)
+    End Sub
+
+    Private Sub OnControlDragEnter(sender As Object, e As DragEventArgs)
+        ProcessDragData(e)
+    End Sub
+
+    Private Sub OnControlDragOver(sender As Object, e As DragEventArgs)
+        ProcessDragData(e)
+    End Sub
+
+    Private Sub OnControlDragLeave(sender As Object, e As EventArgs)
+        Dim mousePosition = Me.PointToClient(Control.MousePosition)
+        If Me.ClientRectangle.Contains(mousePosition) Then
+            Return
+        End If
+
+        UpdateValidDragState(False, Nothing)
+    End Sub
+
+    Private Sub OnControlDragDrop(sender As Object, e As DragEventArgs)
+        Dim files = GetValidFilesFromData(e.Data)
+        If files IsNot Nothing Then
+            RaiseEvent FilesDropped(Me, New FilesDroppedEventArgs(files))
+        End If
+
+        UpdateValidDragState(False, Nothing)
+    End Sub
+
+    Private Sub ProcessDragData(e As DragEventArgs)
+        Dim files = GetValidFilesFromData(e.Data)
+        If files IsNot Nothing Then
+            e.Effect = DragDropEffects.Copy
+            UpdateValidDragState(True, files, True)
+        Else
+            e.Effect = DragDropEffects.None
+            UpdateValidDragState(False, Nothing)
+        End If
+    End Sub
+
+    Private Function GetValidFilesFromData(data As IDataObject) As IReadOnlyList(Of String)
+        If data Is Nothing OrElse Not data.GetDataPresent(DataFormats.FileDrop) Then
+            Return Nothing
+        End If
+
+        Dim droppedFiles = TryCast(data.GetData(DataFormats.FileDrop), String())
+        If droppedFiles Is Nothing OrElse droppedFiles.Length = 0 Then
+            Return Nothing
+        End If
+
+        Dim cleanedFiles As New List(Of String)
+        For Each filePath As String In droppedFiles
+            If Not String.IsNullOrWhiteSpace(filePath) Then
+                cleanedFiles.Add(filePath)
+            End If
+        Next
+
+        Dim fileArray = cleanedFiles.ToArray()
+
+        If fileArray.Length = 1 Then
+            Dim extension = Path.GetExtension(fileArray(0))
+            If IsSingleFileExtensionValid(extension) Then
+                Return Array.AsReadOnly(fileArray)
+            End If
+        ElseIf fileArray.Length = 2 Then
+            Dim firstExtension = Path.GetExtension(fileArray(0))
+            Dim secondExtension = Path.GetExtension(fileArray(1))
+            If (HasExtension(firstExtension, ".pln") AndAlso HasExtension(secondExtension, ".wpr")) OrElse
+               (HasExtension(firstExtension, ".wpr") AndAlso HasExtension(secondExtension, ".pln")) Then
+                Return Array.AsReadOnly(fileArray)
+            End If
+        End If
+
+        Return Nothing
+    End Function
+
+    Private Shared Function IsSingleFileExtensionValid(extension As String) As Boolean
+        Return HasExtension(extension, ".dphx") OrElse HasExtension(extension, ".zip") OrElse HasExtension(extension, ".pln")
+    End Function
+
+    Private Shared Function HasExtension(extension As String, expectedExtension As String) As Boolean
+        If String.IsNullOrEmpty(extension) Then
+            Return False
+        End If
+
+        Return String.Equals(extension, expectedExtension, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    Private Sub UpdateValidDragState(isActive As Boolean, files As IReadOnlyList(Of String), Optional forceRaise As Boolean = False)
+        Dim shouldRaise As Boolean = False
+
+        If isActive Then
+            If Not _validDragActive OrElse forceRaise Then
+                shouldRaise = True
+            End If
+            _validDragActive = True
+        Else
+            If _validDragActive Then
+                shouldRaise = True
+            End If
+            _validDragActive = False
+        End If
+
+        If shouldRaise Then
+            Dim eventFiles As IReadOnlyList(Of String) = If(isActive, files, Nothing)
+            RaiseEvent ValidFilesDragActiveChanged(Me, New ValidFilesDragActiveChangedEventArgs(isActive, eventFiles))
+        End If
+    End Sub
 
 #End Region
 
@@ -1207,4 +1373,30 @@ Public Class BriefingControl
 
 #End Region
 
+End Class
+
+Public NotInheritable Class ValidFilesDragActiveChangedEventArgs
+    Inherits EventArgs
+
+    Public Sub New(isActive As Boolean, files As IReadOnlyList(Of String))
+        Me.IsActive = isActive
+        Me.Files = files
+    End Sub
+
+    Public ReadOnly Property IsActive As Boolean
+
+    Public ReadOnly Property Files As IReadOnlyList(Of String)
+End Class
+
+Public NotInheritable Class FilesDroppedEventArgs
+    Inherits EventArgs
+
+    Public Sub New(files As IReadOnlyList(Of String))
+        If files Is Nothing Then
+            Throw New ArgumentNullException(NameOf(files))
+        End If
+        Me.Files = files
+    End Sub
+
+    Public ReadOnly Property Files As IReadOnlyList(Of String)
 End Class

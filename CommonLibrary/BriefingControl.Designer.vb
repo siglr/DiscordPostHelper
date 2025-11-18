@@ -1689,6 +1689,7 @@ Partial Class BriefingControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AllowDrop = True
         Me.Controls.Add(Me.pnlTaskBriefing)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
