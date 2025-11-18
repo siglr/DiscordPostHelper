@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿Imports System.Collections.Generic
+Imports System.Drawing
 Imports System.Windows.Forms
 
 Public Class FileDropZone
@@ -128,9 +129,32 @@ End Class
 Public Class FilesDroppedEventArgs
     Inherits EventArgs
 
-    Public Property DroppedFiles As String()
+    Private ReadOnly _files As String()
 
-    Public Sub New(files As String())
-        DroppedFiles = files
+    Public Sub New(files As IEnumerable(Of String))
+        If files Is Nothing Then
+            Throw New ArgumentNullException(NameOf(files))
+        End If
+
+        Dim cleanedFiles As New List(Of String)
+        For Each filePath As String In files
+            If Not String.IsNullOrWhiteSpace(filePath) Then
+                cleanedFiles.Add(filePath)
+            End If
+        Next
+
+        _files = cleanedFiles.ToArray()
     End Sub
+
+    Public ReadOnly Property Files As IReadOnlyList(Of String)
+        Get
+            Return _files
+        End Get
+    End Property
+
+    Public ReadOnly Property DroppedFiles As String()
+        Get
+            Return _files
+        End Get
+    End Property
 End Class
