@@ -15,6 +15,9 @@ Partial Public Class ManualFallbackMode
     Private _selectedWpr As ManualFileSelection
     Private ReadOnly _copiedFiles As New List(Of CopiedFileRecord)
     Private _whitelistPresets As New List(Of WeatherPresetOption)
+    Private _plnGroupDefaultColor As Color
+    Private _weatherGroupDefaultColor As Color
+    Private ReadOnly _dragHighlightColor As Color = ControlPaint.LightLight(SystemColors.Control)
 
     Public Sub New()
         InitializeComponent()
@@ -23,6 +26,8 @@ Partial Public Class ManualFallbackMode
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
         Rescale()
+        _plnGroupDefaultColor = grpPLN.BackColor
+        _weatherGroupDefaultColor = grpWeather.BackColor
     End Sub
 
     Private Sub ManualFallbackMode_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -241,6 +246,34 @@ Partial Public Class ManualFallbackMode
 
     End Sub
 
+    Private Sub grpPLN_DragEnter(sender As Object, e As DragEventArgs) Handles grpPLN.DragEnter
+        HandleGroupDragEnter(e, ".pln", grpPLN)
+    End Sub
+
+    Private Sub grpPLN_DragOver(sender As Object, e As DragEventArgs) Handles grpPLN.DragOver
+        HandleGroupDragOver(e, ".pln", grpPLN)
+    End Sub
+
+    Private Sub grpPLN_DragLeave(sender As Object, e As EventArgs) Handles grpPLN.DragLeave
+        SetGroupHighlight(grpPLN, False)
+    End Sub
+
+    Private Sub grpPLN_DragDrop(sender As Object, e As DragEventArgs) Handles grpPLN.DragDrop
+        Dim filePath = TryGetDraggedFile(e, ".pln")
+        SetGroupHighlight(grpPLN, False)
+
+        If String.IsNullOrEmpty(filePath) Then
+            Return
+        End If
+
+        Dim selection = LoadPlnSelection(filePath)
+        If selection IsNot Nothing Then
+            _selectedPln = selection
+            lblPLNFile.Text = selection.FileName
+            lblPLNTitle.Text = selection.DisplayName
+        End If
+    End Sub
+
     Private Sub btnSelectWPR_Click(sender As Object, e As EventArgs) Handles btnSelectWPR.Click
 
         Using ofd As New OpenFileDialog()
@@ -259,6 +292,35 @@ Partial Public Class ManualFallbackMode
             End If
         End Using
 
+    End Sub
+
+    Private Sub grpWeather_DragEnter(sender As Object, e As DragEventArgs) Handles grpWeather.DragEnter
+        HandleGroupDragEnter(e, ".wpr", grpWeather)
+    End Sub
+
+    Private Sub grpWeather_DragOver(sender As Object, e As DragEventArgs) Handles grpWeather.DragOver
+        HandleGroupDragOver(e, ".wpr", grpWeather)
+    End Sub
+
+    Private Sub grpWeather_DragLeave(sender As Object, e As EventArgs) Handles grpWeather.DragLeave
+        SetGroupHighlight(grpWeather, False)
+    End Sub
+
+    Private Sub grpWeather_DragDrop(sender As Object, e As DragEventArgs) Handles grpWeather.DragDrop
+        Dim filePath = TryGetDraggedFile(e, ".wpr")
+        SetGroupHighlight(grpWeather, False)
+
+        If String.IsNullOrEmpty(filePath) Then
+            Return
+        End If
+
+        Dim selection = LoadWprSelection(filePath, True)
+        If selection IsNot Nothing Then
+            _selectedWpr = selection
+            lblWPRFile.Text = selection.FileName
+            lblWPRName.Text = selection.DisplayName
+            cboWhitelistPresets.SelectedIndex = -1
+        End If
     End Sub
 
     Private Sub LoadWhitelistPresets()
@@ -430,5 +492,72 @@ Partial Public Class ManualFallbackMode
     Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Reset()
     End Sub
+
+    Private Sub HandleGroupDragEnter(e As DragEventArgs, requiredExtension As String, targetGroup As GroupBox)
+        If CanAcceptFileDrop(e, requiredExtension) Then
+            e.Effect = DragDropEffects.Copy
+            SetGroupHighlight(targetGroup, True)
+        Else
+            e.Effect = DragDropEffects.None
+            SetGroupHighlight(targetGroup, False)
+        End If
+    End Sub
+
+    Private Sub HandleGroupDragOver(e As DragEventArgs, requiredExtension As String, targetGroup As GroupBox)
+        If CanAcceptFileDrop(e, requiredExtension) Then
+            e.Effect = DragDropEffects.Copy
+            SetGroupHighlight(targetGroup, True)
+        Else
+            e.Effect = DragDropEffects.None
+            SetGroupHighlight(targetGroup, False)
+        End If
+    End Sub
+
+    Private Function CanAcceptFileDrop(e As DragEventArgs, requiredExtension As String) As Boolean
+        Return Not String.IsNullOrEmpty(TryGetDraggedFile(e, requiredExtension))
+    End Function
+
+    Private Function TryGetDraggedFile(e As DragEventArgs, requiredExtension As String) As String
+        If e Is Nothing OrElse e.Data Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Return String.Empty
+        End If
+
+        Dim files = TryCast(e.Data.GetData(DataFormats.FileDrop), String())
+        If files Is Nothing OrElse files.Length = 0 Then
+            Return String.Empty
+        End If
+
+        Dim filePath = files(0)
+        If String.IsNullOrWhiteSpace(filePath) Then
+            Return String.Empty
+        End If
+
+        Dim extension = Path.GetExtension(filePath)
+        If Not String.IsNullOrEmpty(extension) AndAlso extension.Equals(requiredExtension, StringComparison.OrdinalIgnoreCase) Then
+            Return filePath
+        End If
+
+        Return String.Empty
+    End Function
+
+    Private Sub SetGroupHighlight(targetGroup As GroupBox, highlighted As Boolean)
+        If targetGroup Is Nothing Then
+            Return
+        End If
+
+        If highlighted Then
+            targetGroup.BackColor = _dragHighlightColor
+        Else
+            targetGroup.BackColor = GetGroupDefaultColor(targetGroup)
+        End If
+    End Sub
+
+    Private Function GetGroupDefaultColor(targetGroup As GroupBox) As Color
+        If targetGroup Is grpWeather Then
+            Return _weatherGroupDefaultColor
+        End If
+
+        Return _plnGroupDefaultColor
+    End Function
 
 End Class
