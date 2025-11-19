@@ -65,6 +65,7 @@ Partial Class DPHXUnpackAndLoad
         Me.lbl2020AllFilesStatus = New System.Windows.Forms.ToolStripTextBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.warningMSFSRunningToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.dragNdropToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.packageNameToolStrip = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ChkMSFS = New System.Windows.Forms.Timer(Me.components)
         Me.ctrlBriefing = New SIGLR.SoaringTools.CommonLibrary.BriefingControl()
@@ -115,14 +116,14 @@ Partial Class DPHXUnpackAndLoad
         '
         Me.DPHXPackageToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.DPHXPackageToolStripMenuItem.Name = "DPHXPackageToolStripMenuItem"
-        Me.DPHXPackageToolStripMenuItem.Size = New System.Drawing.Size(206, 26)
+        Me.DPHXPackageToolStripMenuItem.Size = New System.Drawing.Size(188, 26)
         Me.DPHXPackageToolStripMenuItem.Text = "DPHX Package"
         '
         'ManualModeToolStripMenuItem
         '
         Me.ManualModeToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.ManualModeToolStripMenuItem.Name = "ManualModeToolStripMenuItem"
-        Me.ManualModeToolStripMenuItem.Size = New System.Drawing.Size(206, 26)
+        Me.ManualModeToolStripMenuItem.Size = New System.Drawing.Size(188, 26)
         Me.ManualModeToolStripMenuItem.Text = "Manual Mode"
         '
         'toolStripUnpack
@@ -131,7 +132,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripUnpack.Image = CType(resources.GetObject("toolStripUnpack.Image"), System.Drawing.Image)
         Me.toolStripUnpack.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripUnpack.Name = "toolStripUnpack"
-        Me.toolStripUnpack.Size = New System.Drawing.Size(89, 26)
+        Me.toolStripUnpack.Size = New System.Drawing.Size(89, 25)
         Me.toolStripUnpack.Text = "&Unpack!"
         Me.toolStripUnpack.ToolTipText = "Click to unpack the files to their proper locations"
         '
@@ -141,35 +142,35 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripCleanup.Image = CType(resources.GetObject("toolStripCleanup.Image"), System.Drawing.Image)
         Me.toolStripCleanup.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripCleanup.Name = "toolStripCleanup"
-        Me.toolStripCleanup.Size = New System.Drawing.Size(89, 26)
+        Me.toolStripCleanup.Size = New System.Drawing.Size(89, 25)
         Me.toolStripCleanup.Text = "&Cleanup"
         Me.toolStripCleanup.ToolTipText = "Click to reset ALL of the fiels and start from scratch."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripFileBrowser
         '
         Me.toolStripFileBrowser.Image = CType(resources.GetObject("toolStripFileBrowser.Image"), System.Drawing.Image)
         Me.toolStripFileBrowser.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripFileBrowser.Name = "toolStripFileBrowser"
-        Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 26)
+        Me.toolStripFileBrowser.Size = New System.Drawing.Size(117, 25)
         Me.toolStripFileBrowser.Text = "File Browser"
         Me.toolStripFileBrowser.ToolTipText = "Click to open the File Browser"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripWSGHome
         '
         Me.toolStripWSGHome.Image = CType(resources.GetObject("toolStripWSGHome.Image"), System.Drawing.Image)
         Me.toolStripWSGHome.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGHome.Name = "toolStripWSGHome"
-        Me.toolStripWSGHome.Size = New System.Drawing.Size(74, 26)
+        Me.toolStripWSGHome.Size = New System.Drawing.Size(74, 25)
         Me.toolStripWSGHome.Text = "Home"
         Me.toolStripWSGHome.ToolTipText = "Click to open WeSimGlide's Home Page"
         '
@@ -178,7 +179,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripWSGMap.Image = CType(resources.GetObject("toolStripWSGMap.Image"), System.Drawing.Image)
         Me.toolStripWSGMap.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGMap.Name = "toolStripWSGMap"
-        Me.toolStripWSGMap.Size = New System.Drawing.Size(63, 26)
+        Me.toolStripWSGMap.Size = New System.Drawing.Size(63, 25)
         Me.toolStripWSGMap.Text = "Map"
         Me.toolStripWSGMap.ToolTipText = "Click to open WeSimGlide Map"
         '
@@ -187,28 +188,28 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripWSGUploadIGC.Image = CType(resources.GetObject("toolStripWSGUploadIGC.Image"), System.Drawing.Image)
         Me.toolStripWSGUploadIGC.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripWSGUploadIGC.Name = "toolStripWSGUploadIGC"
-        Me.toolStripWSGUploadIGC.Size = New System.Drawing.Size(57, 26)
+        Me.toolStripWSGUploadIGC.Size = New System.Drawing.Size(57, 25)
         Me.toolStripWSGUploadIGC.Text = "IGC"
         Me.toolStripWSGUploadIGC.ToolTipText = "Click to upload an IGC file to WeSimGlide"
         '
         'ToolStripSeparator5
         '
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 28)
         '
         'toolStripB21Planner
         '
         Me.toolStripB21Planner.Image = CType(resources.GetObject("toolStripB21Planner.Image"), System.Drawing.Image)
         Me.toolStripB21Planner.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripB21Planner.Name = "toolStripB21Planner"
-        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 26)
+        Me.toolStripB21Planner.Size = New System.Drawing.Size(116, 25)
         Me.toolStripB21Planner.Text = "&B21 Planner"
         Me.toolStripB21Planner.ToolTipText = "Click to open the B21 Planner in your browser."
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 29)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 28)
         '
         'ToolStripDropDownButton1
         '
@@ -217,7 +218,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 26)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(147, 25)
         Me.ToolStripDropDownButton1.Text = "&I need support!"
         Me.ToolStripDropDownButton1.ToolTipText = "Click here to view all support options"
         '
@@ -244,7 +245,7 @@ Partial Class DPHXUnpackAndLoad
         Me.toolStripSettings.Image = CType(resources.GetObject("toolStripSettings.Image"), System.Drawing.Image)
         Me.toolStripSettings.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripSettings.Name = "toolStripSettings"
-        Me.toolStripSettings.Size = New System.Drawing.Size(88, 26)
+        Me.toolStripSettings.Size = New System.Drawing.Size(88, 25)
         Me.toolStripSettings.Text = "&Settings"
         Me.toolStripSettings.ToolTipText = "Click to open the Settings windows"
         '
@@ -414,7 +415,7 @@ Partial Class DPHXUnpackAndLoad
         'StatusStrip1
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(18, 18)
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.warningMSFSRunningToolStrip, Me.packageNameToolStrip})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.warningMSFSRunningToolStrip, Me.dragNdropToolStrip, Me.packageNameToolStrip})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 700)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -431,6 +432,14 @@ Partial Class DPHXUnpackAndLoad
         Me.warningMSFSRunningToolStrip.ToolTipText = "MSFS needs to be restarted to see new weather presets after unpacking."
         Me.warningMSFSRunningToolStrip.Visible = False
         '
+        'dragNdropToolStrip
+        '
+        Me.dragNdropToolStrip.Font = New System.Drawing.Font("Segoe UI", 9.163636!, System.Drawing.FontStyle.Bold)
+        Me.dragNdropToolStrip.Name = "dragNdropToolStrip"
+        Me.dragNdropToolStrip.Size = New System.Drawing.Size(160, 19)
+        Me.dragNdropToolStrip.Text = "Drag && Drop Detected"
+        Me.dragNdropToolStrip.Visible = False
+        '
         'packageNameToolStrip
         '
         Me.packageNameToolStrip.Name = "packageNameToolStrip"
@@ -444,6 +453,7 @@ Partial Class DPHXUnpackAndLoad
         '
         'ctrlBriefing
         '
+        Me.ctrlBriefing.AllowDrop = True
         Me.ctrlBriefing.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -532,4 +542,5 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents toolStripOpen As ToolStripDropDownButton
     Friend WithEvents DPHXPackageToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManualModeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents dragNdropToolStrip As ToolStripStatusLabel
 End Class
