@@ -18,6 +18,17 @@ Partial Public Class ManualFallbackMode
     Private _plnGroupDefaultColor As Color
     Private _weatherGroupDefaultColor As Color
     Private ReadOnly _dragHighlightColor As Color = ControlPaint.LightLight(SystemColors.Control)
+    Private _selectionResult As ManualSelectionResult
+
+    Public Property InitialPlnPath As String
+    Public Property InitialWprPath As String
+    Public Property InitialTrackerGroup As String
+
+    Public ReadOnly Property SelectionResult As ManualSelectionResult
+        Get
+            Return _selectionResult
+        End Get
+    End Property
 
     Public Sub New()
         InitializeComponent()
@@ -34,6 +45,7 @@ Partial Public Class ManualFallbackMode
 
         LoadWhitelistPresets()
         Reset()
+        ApplyInitialSelection()
 
     End Sub
 
@@ -48,12 +60,37 @@ Partial Public Class ManualFallbackMode
         _selectedPln = Nothing
         _selectedWpr = Nothing
         _copiedFiles.Clear()
+        _selectionResult = Nothing
 
         Dim unpackForm = GetUnpackAndLoadForm()
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
+            unpackForm.UpdateManualFallbackPaths(String.Empty, String.Empty)
         End If
 
+    End Sub
+
+    Private Sub ApplyInitialSelection()
+        If Not String.IsNullOrWhiteSpace(InitialPlnPath) AndAlso File.Exists(InitialPlnPath) Then
+            Dim selection = LoadPlnSelection(InitialPlnPath)
+            If selection IsNot Nothing Then
+                _selectedPln = selection
+                lblPLNFile.Text = selection.FileName
+                lblPLNTitle.Text = selection.DisplayName
+            End If
+        End If
+
+        If Not String.IsNullOrWhiteSpace(InitialWprPath) AndAlso File.Exists(InitialWprPath) Then
+            Dim selection = LoadWprSelection(InitialWprPath, False)
+            If selection IsNot Nothing Then
+                _selectedWpr = selection
+                lblWPRFile.Text = selection.FileName
+                lblWPRName.Text = selection.DisplayName
+            End If
+        End If
+
+        If Not String.IsNullOrWhiteSpace(InitialTrackerGroup) Then
+            txtTrackerGroupName.Text = InitialTrackerGroup
+        End If
     End Sub
 
     Private Sub cboWhitelistPresets_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cboWhitelistPresets.SelectionChangeCommitted
@@ -85,98 +122,24 @@ Partial Public Class ManualFallbackMode
             Return
         End If
 
-        Dim workingFolder As String
-        Try
-            workingFolder = PrepareManualWorkingFolder()
-        Catch ex As Exception
-            ShowCenteredMessage(ex.Message, "Manual fallback mode")
+        If _selectedWpr Is Nothing Then
+            ShowCenteredMessage("A weather preset is required before continuing.", "Weather preset missing")
             Return
-        End Try
+        End If
 
-        Dim status As New frmStatus()
-        status.StartPosition = FormStartPosition.CenterParent
-        status.Start(Me)
-        status.AppendStatusLine("Manual copy results:", True)
+        _selectionResult = New ManualSelectionResult With {
+            .FlightPlanPath = _selectedPln.FullPath,
+            .WeatherPath = _selectedWpr.FullPath,
+            .TrackerGroupName = txtTrackerGroupName.Text.Trim()
+        }
 
         Dim unpackForm = GetUnpackAndLoadForm()
-        Dim msfsRunning As Boolean = IsMsfsRunning()
-        Dim stagedPln As String = StageSelectedFile(_selectedPln, workingFolder, status, "flight plan")
-        Dim stagedWpr As String = StageSelectedFile(_selectedWpr, workingFolder, status, "weather preset")
-
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(stagedPln)
+            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, _selectedWpr.FullPath)
         End If
 
-        If Not String.IsNullOrEmpty(stagedWpr) Then
-            Try
-                _sf.FixWPRFormat(stagedWpr, False)
-            Catch ex As Exception
-                status.AppendStatusLine($"⚠️ Unable to verify the WPR file for compatibility: {ex.Message}", True)
-            End Try
-        End If
-
-        Dim internalLoggerInUse As Boolean = False
-
-        If unpackForm IsNot Nothing Then
-            internalLoggerInUse = unpackForm.EnsureInternalLoggerInUse(status)
-        ElseIf File.Exists(Path.Combine(Application.StartupPath, "GiveMeTheLogger.Please")) Then
-            status.AppendStatusLine("Internal NB21 Logger requested but the main window is unavailable.", True)
-        End If
-
-        Try
-            If Settings.SessionSettings.NB21StartAndFeed AndAlso Not internalLoggerInUse AndAlso Not String.IsNullOrWhiteSpace(stagedPln) Then
-                Dim nb21Running = TaskFileHelper.EnsureNb21Running(status)
-                If nb21Running Then
-                    TaskFileHelper.SendPlnFileToNB21Logger(stagedPln, status)
-                End If
-            End If
-
-            If Settings.SessionSettings.TrackerStartAndFeed Then
-                Dim trackerRunning = TaskFileHelper.EnsureTrackerRunning(status)
-                If trackerRunning Then
-                    Dim trackerGroup = txtTrackerGroupName.Text.Trim()
-                    TaskFileHelper.SendDataToTracker(trackerGroup, stagedPln, stagedWpr, String.Empty, status)
-                End If
-            End If
-
-            If Settings.SessionSettings.Is2020Installed Then
-                If Not String.IsNullOrEmpty(stagedPln) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2020FlightPlansFolder, "Flight Plan for MSFS 2020", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedPln), Settings.SessionSettings.MSFS2020FlightPlansFolder, "Flight Plan for MSFS 2020")
-                End If
-
-                If Not String.IsNullOrEmpty(stagedWpr) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedWpr), workingFolder, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Weather Preset for MSFS 2020", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedWpr), Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Weather Preset for MSFS 2020")
-                End If
-            End If
-
-            If Settings.SessionSettings.Is2024Installed Then
-                If Not String.IsNullOrEmpty(stagedPln) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2024FlightPlansFolder, "Flight Plan for MSFS 2024", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedPln), Settings.SessionSettings.MSFS2024FlightPlansFolder, "Flight Plan for MSFS 2024")
-
-                    If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
-                        Dim efbResult = TaskFileHelper.CreatePlnForEfb(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2024FlightPlansFolder, "EFB Flight Plan for MSFS 2024", Me, msfsRunning)
-                        status.AppendStatusLine(efbResult, True)
-                        TrackCopyResult(efbResult, $"{Path.GetFileNameWithoutExtension(stagedPln)}_EFB{Path.GetExtension(stagedPln)}", Settings.SessionSettings.MSFS2024FlightPlansFolder, "EFB Flight Plan for MSFS 2024")
-                    End If
-                End If
-
-                If Not String.IsNullOrEmpty(stagedWpr) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedWpr), workingFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Weather Preset for MSFS 2024", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedWpr), Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Weather Preset for MSFS 2024")
-                End If
-            End If
-
-            status.AppendStatusLine("Manual fallback copy completed. Close this window or clean up when done.", False)
-        Finally
-            status.Done()
-        End Try
+        Me.DialogResult = DialogResult.OK
+        Me.Close()
 
     End Sub
 
@@ -210,7 +173,7 @@ Partial Public Class ManualFallbackMode
 
         Dim unpackForm = GetUnpackAndLoadForm()
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
+            unpackForm.UpdateManualFallbackPaths(String.Empty, String.Empty)
         End If
 
     End Sub
@@ -432,6 +395,12 @@ Partial Public Class ManualFallbackMode
 
         Return unpackForm
     End Function
+    Public Class ManualSelectionResult
+        Public Property FlightPlanPath As String
+        Public Property WeatherPath As String
+        Public Property TrackerGroupName As String
+    End Class
+
     Private Class ManualFileSelection
         Public Property FullPath As String
         Public Property DisplayName As String
@@ -482,7 +451,9 @@ Partial Public Class ManualFallbackMode
     End Class
 
     Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Reset()
+        If Me.DialogResult <> DialogResult.OK Then
+            Reset()
+        End If
     End Sub
 
     Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox)

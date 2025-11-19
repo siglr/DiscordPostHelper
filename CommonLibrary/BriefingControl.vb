@@ -2,6 +2,7 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.Serialization
+Imports System.Linq
 Imports System.Text
 Imports System.Windows.Forms
 Imports System.Xml
@@ -147,11 +148,14 @@ Public Class BriefingControl
             If IsSingleFileExtensionValid(extension) Then
                 Return Array.AsReadOnly(fileArray)
             End If
-        ElseIf fileArray.Length = 2 Then
-            Dim firstExtension = Path.GetExtension(fileArray(0))
-            Dim secondExtension = Path.GetExtension(fileArray(1))
-            If (HasExtension(firstExtension, ".pln") AndAlso HasExtension(secondExtension, ".wpr")) OrElse
-               (HasExtension(firstExtension, ".wpr") AndAlso HasExtension(secondExtension, ".pln")) Then
+        ElseIf fileArray.Length <= 3 Then
+            Dim extensions = fileArray.Select(Function(f) Path.GetExtension(f)).ToList()
+
+            Dim hasPln = extensions.Any(Function(ext) HasExtension(ext, ".pln"))
+            Dim hasWpr = extensions.Any(Function(ext) HasExtension(ext, ".wpr"))
+            Dim hasOnlySupported = extensions.All(Function(ext) HasExtension(ext, ".pln") OrElse HasExtension(ext, ".wpr") OrElse HasExtension(ext, ".dph"))
+
+            If hasOnlySupported AndAlso hasPln AndAlso (fileArray.Length <= 2 OrElse hasWpr) Then
                 Return Array.AsReadOnly(fileArray)
             End If
         End If
@@ -160,7 +164,7 @@ Public Class BriefingControl
     End Function
 
     Private Shared Function IsSingleFileExtensionValid(extension As String) As Boolean
-        Return HasExtension(extension, ".dphx") OrElse HasExtension(extension, ".zip") OrElse HasExtension(extension, ".pln")
+        Return HasExtension(extension, ".dphx") OrElse HasExtension(extension, ".zip") OrElse HasExtension(extension, ".pln") OrElse HasExtension(extension, ".dph")
     End Function
 
     Private Shared Function HasExtension(extension As String, expectedExtension As String) As Boolean
