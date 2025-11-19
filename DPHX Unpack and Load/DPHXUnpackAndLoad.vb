@@ -1870,7 +1870,7 @@ Public Class DPHXUnpackAndLoad
 
         Try
             ctrlBriefing.FullReset()
-            Dim stagedFiles = StageManualFiles(flightPlanPath, weatherPath)
+            Dim stagedFiles As Tuple(Of String, String) = StageManualFiles(flightPlanPath, weatherPath)
 
             Dim stagedFlightPlan As String = stagedFiles.Item1
             Dim stagedWeather As String = stagedFiles.Item2
