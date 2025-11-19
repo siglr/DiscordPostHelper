@@ -1833,7 +1833,7 @@ Public Class DPHXUnpackAndLoad
         Return If(value, String.Empty)
     End Function
 
-    Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As (String FlightPlan, String Weather)
+    Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As Tuple(Of String, String)
         SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
 
         If Not Directory.Exists(TempDPHXUnpackFolder) Then
@@ -1846,7 +1846,8 @@ Public Class DPHXUnpackAndLoad
         File.Copy(flightPlanPath, stagedPln, True)
         File.Copy(weatherPath, stagedWpr, True)
 
-        Return (stagedPln, stagedWpr)
+        Return New Tuple(Of String, String)(stagedPln, stagedWpr)
+
     End Function
 
     Private Sub LoadManualSelection(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
@@ -1871,14 +1872,16 @@ Public Class DPHXUnpackAndLoad
             ctrlBriefing.FullReset()
             Dim stagedFiles = StageManualFiles(flightPlanPath, weatherPath)
 
-            Dim sessionData = BuildSessionDataFromManualSources(stagedFiles.FlightPlan, stagedFiles.Weather, trackerGroup, taskData)
+            Dim stagedFlightPlan As String = stagedFiles.Item1
+            Dim stagedWeather As String = stagedFiles.Item2
+            Dim sessionData = BuildSessionDataFromManualSources(stagedFlightPlan, stagedWeather, trackerGroup, taskData)
 
             _allDPHData = sessionData
             _taskDiscordPostID = NullToEmpty(sessionData.DiscordTaskID)
 
-            If Not String.IsNullOrWhiteSpace(stagedFiles.Weather) Then
+            If Not String.IsNullOrWhiteSpace(stagedWeather) Then
                 Try
-                    _SF.FixWPRFormat(stagedFiles.Weather, False)
+                    _SF.FixWPRFormat(stagedWeather, False)
                 Catch ex As Exception
                     Using New Centered_MessageBox(Me)
                         MessageBox.Show(Me, $"Unable to normalize the weather preset: {ex.Message}", "Weather preset", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -1890,15 +1893,15 @@ Public Class DPHXUnpackAndLoad
 
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
-                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFiles.FlightPlan)),
-                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFiles.Weather)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFlightPlan)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedWeather)),
                                           _taskDiscordPostID,
                                           TempDPHXUnpackFolder)
 
             _currentFile = sourceLabel
             txtPackageName.Text = sourceLabel
             _lastLoadSuccess = True
-            UpdateManualFallbackPaths(stagedFiles.FlightPlan, stagedFiles.Weather)
+            UpdateManualFallbackPaths(stagedFlightPlan, stagedWeather)
 
             EnableUnpackButton()
             SetFormCaption(_currentFile)
