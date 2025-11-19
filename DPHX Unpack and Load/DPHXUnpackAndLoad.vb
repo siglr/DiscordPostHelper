@@ -1678,13 +1678,18 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub ctrlBriefing_FilesDropped(sender As Object, e As FilesDroppedEventArgs) Handles ctrlBriefing.FilesDropped
 
-        'TODO: Process dropped files
+        'TODO: Process dropped files:
         'TODO: Can be DPHX - open using normal existing method
         'TODO: Can be ZIP - check if ZIP contains at least PLN. DPH and/or WPR is only extra. If no PLN, reject with message. Otherwise, unzip and continue process as below
         'TODO: Can be PLN only - process as flight plan only
         'TODO: Can be PLN and DPH - process as flight plan and use DPH for task extra info (no weather, PLN must match the DPH info for PLN)
         'TODO: Can be PLN and WPR - process as flight plan and weather (no task extra info)
         'TODO: Can be PLN, DPH and WPR - process like a normal DPHX that has been unpacked (but may still miss some files, PLN and WPR must match the DPH info for PLN and WPR)
+
+        'TODO: When the WPR file is not present, we need to find a way to ask the user if he wants to select one from file system or from the weather presets in the Whitelist folder.
+
+        'TODO: The app (including BriefingControl) must now be able to handle the different scenarios above, yet still presenting the available information in the briefing control.
+        'TODO: You can simulate a "fake" DPHX context but only with the available information provided.
 
     End Sub
 
