@@ -81,8 +81,8 @@ Partial Class ManualFallbackMode
         Me.btnCopyGoFly.Name = "btnCopyGoFly"
         Me.btnCopyGoFly.Size = New System.Drawing.Size(458, 33)
         Me.btnCopyGoFly.TabIndex = 3
-        Me.btnCopyGoFly.Text = "Copy / Send and Go Fly !"
-        Me.ToolTip1.SetToolTip(Me.btnCopyGoFly, "Click to copy the selected files to the proper folders and tools")
+        Me.btnCopyGoFly.Text = "Confirm"
+        Me.ToolTip1.SetToolTip(Me.btnCopyGoFly, "Confirm the selected flight plan and weather preset")
         Me.btnCopyGoFly.UseVisualStyleBackColor = True
         '
         'btnClearFiles
@@ -93,8 +93,8 @@ Partial Class ManualFallbackMode
         Me.btnClearFiles.Name = "btnClearFiles"
         Me.btnClearFiles.Size = New System.Drawing.Size(458, 33)
         Me.btnClearFiles.TabIndex = 4
-        Me.btnClearFiles.Text = "Cleanup from folders"
-        Me.ToolTip1.SetToolTip(Me.btnClearFiles, "Click to cleanup copied files")
+        Me.btnClearFiles.Text = "Cancel"
+        Me.ToolTip1.SetToolTip(Me.btnClearFiles, "Cancel and return to the main window")
         Me.btnClearFiles.UseVisualStyleBackColor = True
         '
         'btnClose
@@ -106,7 +106,7 @@ Partial Class ManualFallbackMode
         Me.btnClose.Size = New System.Drawing.Size(458, 33)
         Me.btnClose.TabIndex = 5
         Me.btnClose.Text = "Close"
-        Me.ToolTip1.SetToolTip(Me.btnClose, "Click to close this window and go back to regular DPHX operations")
+        Me.ToolTip1.SetToolTip(Me.btnClose, "Close this window")
         Me.btnClose.UseVisualStyleBackColor = True
         '
         'txtTrackerGroupName

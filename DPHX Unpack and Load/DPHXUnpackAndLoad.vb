@@ -2,6 +2,8 @@
 Imports System.Diagnostics.Eventing.Reader
 Imports System.Globalization
 Imports System.IO
+Imports System.IO.Compression
+Imports System.Linq
 Imports System.Net
 Imports System.Net.Http
 Imports System.Reflection
@@ -9,6 +11,7 @@ Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports System.Xml.Linq
 Imports System.Xml.Serialization
 Imports CefSharp.DevTools.Page
 Imports Newtonsoft.Json
@@ -43,6 +46,7 @@ Public Class DPHXUnpackAndLoad
     Private _isClosing As Boolean = False
     Private _loggerForm As Logger
     Private _manualFallbackFlightPlanPath As String = String.Empty
+    Private _manualFallbackWeatherPath As String = String.Empty
     Private _upcomingEventCheckAttempted As Boolean = False
     Private _launchedWithDPHXArgument As Boolean = False
     Private _taskFetchRequestedByListener As Boolean = False
@@ -336,7 +340,15 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub ManualModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ManualModeToolStripMenuItem.Click
 
-        ManualFallbackMode.ShowDialog(Me)
+        Dim manualResult = PromptForManualSelection(String.Empty, String.Empty, String.Empty)
+
+        If manualResult IsNot Nothing Then
+            LoadManualSelection(manualResult.FlightPlanPath,
+                                manualResult.WeatherPath,
+                                manualResult.TrackerGroupName,
+                                Nothing,
+                                "Manual selection")
+        End If
 
     End Sub
 
@@ -826,7 +838,9 @@ Public Class DPHXUnpackAndLoad
             End If
 
             'We need to retrieve the DiscordPostID from the task online server
-            GetTaskDetails(_allDPHData.TaskID, _allDPHData.EntrySeqID)
+            If Not String.IsNullOrWhiteSpace(_allDPHData.TaskID) OrElse _allDPHData.EntrySeqID > 0 Then
+                GetTaskDetails(_allDPHData.TaskID, _allDPHData.EntrySeqID)
+            End If
 
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
@@ -1580,12 +1594,13 @@ Public Class DPHXUnpackAndLoad
         Return internalLoggerInUse
     End Function
 
+    Friend Sub UpdateManualFallbackPaths(flightPlanPath As String, weatherPath As String)
+        _manualFallbackFlightPlanPath = If(String.IsNullOrWhiteSpace(flightPlanPath), String.Empty, flightPlanPath)
+        _manualFallbackWeatherPath = If(String.IsNullOrWhiteSpace(weatherPath), String.Empty, weatherPath)
+    End Sub
+
     Friend Sub UpdateManualFallbackFlightPlanPath(flightPlanPath As String)
-        If String.IsNullOrWhiteSpace(flightPlanPath) Then
-            _manualFallbackFlightPlanPath = String.Empty
-        Else
-            _manualFallbackFlightPlanPath = flightPlanPath
-        End If
+        UpdateManualFallbackPaths(flightPlanPath, _manualFallbackWeatherPath)
     End Sub
 
     Private Sub OpenLoggerForm()
@@ -1668,6 +1683,391 @@ Public Class DPHXUnpackAndLoad
         Return String.Empty
     End Function
 
+    Private Function LoadAllDataFromFile(dataFile As String) As AllData
+        Try
+            If String.IsNullOrWhiteSpace(dataFile) OrElse Not File.Exists(dataFile) Then
+                Return Nothing
+            End If
+
+            Dim serializer As New XmlSerializer(GetType(AllData))
+            Using stream As New FileStream(dataFile, FileMode.Open, FileAccess.Read)
+                Return CType(serializer.Deserialize(stream), AllData)
+            End Using
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me,
+                                $"Unable to read the task data file ({Path.GetFileName(dataFile)}): {ex.Message}",
+                                "Task data",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
+            End Using
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function ExtractFlightPlanMetadata(flightPlanPath As String) As FlightPlanMetadata
+        Dim metadata As New FlightPlanMetadata With {
+            .Title = Path.GetFileNameWithoutExtension(flightPlanPath)
+        }
+
+        Try
+            Dim doc = XDocument.Load(flightPlanPath)
+            Dim titleElement = doc.Descendants("Title").FirstOrDefault()
+            If titleElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(titleElement.Value) Then
+                metadata.Title = titleElement.Value.Trim()
+            End If
+
+            Dim departureId = doc.Descendants("DepartureID").FirstOrDefault()
+            If departureId IsNot Nothing Then
+                metadata.DepartureId = departureId.Value.Trim()
+            End If
+
+            Dim departureName = doc.Descendants("DepartureName").FirstOrDefault()
+            If departureName IsNot Nothing Then
+                metadata.DepartureName = departureName.Value.Trim()
+            End If
+
+            Dim arrivalId = doc.Descendants("DestinationID").FirstOrDefault()
+            If arrivalId IsNot Nothing Then
+                metadata.ArrivalId = arrivalId.Value.Trim()
+            End If
+
+            Dim arrivalName = doc.Descendants("DestinationName").FirstOrDefault()
+            If arrivalName IsNot Nothing Then
+                metadata.ArrivalName = arrivalName.Value.Trim()
+            End If
+
+        Catch
+            'Non-fatal: fall back to defaults
+        End Try
+
+        Return metadata
+    End Function
+
+    Private Function BuildSessionDataFromManualSources(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData) As AllData
+        Dim session = If(taskData IsNot Nothing, taskData, New AllData())
+
+        EnsureSessionDataDefaults(session)
+
+        Dim metadata = ExtractFlightPlanMetadata(flightPlanPath)
+
+        session.FlightPlanFilename = flightPlanPath
+        session.WeatherFilename = weatherPath
+
+        If String.IsNullOrWhiteSpace(session.Title) Then
+            session.Title = metadata.Title
+        End If
+
+        If String.IsNullOrWhiteSpace(session.DepartureICAO) Then
+            session.DepartureICAO = metadata.DepartureId
+        End If
+
+        If String.IsNullOrWhiteSpace(session.DepartureName) Then
+            session.DepartureName = metadata.DepartureName
+        End If
+
+        If String.IsNullOrWhiteSpace(session.ArrivalICAO) Then
+            session.ArrivalICAO = metadata.ArrivalId
+        End If
+
+        If String.IsNullOrWhiteSpace(session.ArrivalName) Then
+            session.ArrivalName = metadata.ArrivalName
+        End If
+
+        If session.SimDate = Date.MinValue Then
+            session.SimDate = Date.Today
+        End If
+
+        If session.SimTime = Date.MinValue Then
+            session.SimTime = Date.Now
+        End If
+
+        If Not String.IsNullOrWhiteSpace(trackerGroup) Then
+            session.TrackerGroup = trackerGroup
+        End If
+
+        session.ExtraFiles = session.ExtraFiles.Where(Function(f) Not String.IsNullOrWhiteSpace(f) AndAlso File.Exists(f)).ToList()
+
+        Return session
+    End Function
+
+    Private Sub EnsureSessionDataDefaults(session As AllData)
+        If session Is Nothing Then
+            Return
+        End If
+
+        session.ExtraFiles = If(session.ExtraFiles, New List(Of String)())
+        session.Countries = If(session.Countries, New List(Of String)())
+        session.RecommendedAddOns = If(session.RecommendedAddOns, New List(Of RecommendedAddOn)())
+
+        session.TaskID = NullToEmpty(session.TaskID)
+        session.DiscordTaskID = NullToEmpty(session.DiscordTaskID)
+        session.DiscordTaskThreadURL = NullToEmpty(session.DiscordTaskThreadURL)
+        session.Title = NullToEmpty(session.Title)
+        session.SimDateTimeExtraInfo = NullToEmpty(session.SimDateTimeExtraInfo)
+        session.DepartureICAO = NullToEmpty(session.DepartureICAO)
+        session.DepartureName = NullToEmpty(session.DepartureName)
+        session.DepartureExtra = NullToEmpty(session.DepartureExtra)
+        session.ArrivalICAO = NullToEmpty(session.ArrivalICAO)
+        session.ArrivalName = NullToEmpty(session.ArrivalName)
+        session.ArrivalExtra = NullToEmpty(session.ArrivalExtra)
+        session.MainAreaPOI = NullToEmpty(session.MainAreaPOI)
+        session.ShortDescription = NullToEmpty(session.ShortDescription)
+        session.SoaringExtraInfo = NullToEmpty(session.SoaringExtraInfo)
+        session.RecommendedGliders = NullToEmpty(session.RecommendedGliders)
+        session.DifficultyRating = NullToEmpty(session.DifficultyRating)
+        session.DifficultyExtraInfo = NullToEmpty(session.DifficultyExtraInfo)
+        session.WeatherSummary = NullToEmpty(session.WeatherSummary)
+        session.BaroPressureExtraInfo = NullToEmpty(session.BaroPressureExtraInfo)
+        session.Credits = NullToEmpty(session.Credits)
+        session.LongDescription = NullToEmpty(session.LongDescription)
+        session.TrackerGroup = NullToEmpty(session.TrackerGroup)
+        session.GroupClubName = NullToEmpty(session.GroupClubName)
+        session.GroupEmoji = NullToEmpty(session.GroupEmoji)
+        session.EventTopic = NullToEmpty(session.EventTopic)
+        session.URLGroupEventPost = NullToEmpty(session.URLGroupEventPost)
+    End Sub
+
+    Private Function NullToEmpty(value As String) As String
+        Return If(value, String.Empty)
+    End Function
+
+    Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As (String FlightPlan, String Weather)
+        SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+
+        If Not Directory.Exists(TempDPHXUnpackFolder) Then
+            Directory.CreateDirectory(TempDPHXUnpackFolder)
+        End If
+
+        Dim stagedPln = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(flightPlanPath))
+        Dim stagedWpr = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(weatherPath))
+
+        File.Copy(flightPlanPath, stagedPln, True)
+        File.Copy(weatherPath, stagedWpr, True)
+
+        Return (stagedPln, stagedWpr)
+    End Function
+
+    Private Sub LoadManualSelection(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
+
+        _lastLoadSuccess = False
+
+        If Not File.Exists(flightPlanPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The selected flight plan could not be found.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
+        If Not File.Exists(weatherPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The selected weather preset could not be found.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
+        Try
+            ctrlBriefing.FullReset()
+            Dim stagedFiles = StageManualFiles(flightPlanPath, weatherPath)
+
+            Dim sessionData = BuildSessionDataFromManualSources(stagedFiles.FlightPlan, stagedFiles.Weather, trackerGroup, taskData)
+
+            _allDPHData = sessionData
+            _taskDiscordPostID = NullToEmpty(sessionData.DiscordTaskID)
+
+            If Not String.IsNullOrWhiteSpace(stagedFiles.Weather) Then
+                Try
+                    _SF.FixWPRFormat(stagedFiles.Weather, False)
+                Catch ex As Exception
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, $"Unable to normalize the weather preset: {ex.Message}", "Weather preset", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End Using
+                End Try
+            End If
+
+            If Not String.IsNullOrWhiteSpace(_allDPHData.TaskID) OrElse _allDPHData.EntrySeqID > 0 Then
+                GetTaskDetails(_allDPHData.TaskID, _allDPHData.EntrySeqID)
+            End If
+
+            ctrlBriefing.GenerateBriefing(_SF,
+                                          _allDPHData,
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFiles.FlightPlan)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFiles.Weather)),
+                                          _taskDiscordPostID,
+                                          TempDPHXUnpackFolder)
+
+            _currentFile = sourceLabel
+            txtPackageName.Text = sourceLabel
+            _lastLoadSuccess = True
+            UpdateManualFallbackPaths(stagedFiles.FlightPlan, stagedFiles.Weather)
+
+            EnableUnpackButton()
+            SetFormCaption(_currentFile)
+            packageNameToolStrip.Text = _currentFile
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me,
+                                $"Unable to load the selected files: {ex.Message}",
+                                "Manual selection",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+            End Using
+        End Try
+
+    End Sub
+
+    Private Function PromptForManualSelection(initialPln As String, initialWpr As String, trackerGroup As String) As ManualFallbackMode.ManualSelectionResult
+        Using dialog As New ManualFallbackMode()
+            dialog.InitialPlnPath = initialPln
+            dialog.InitialWprPath = initialWpr
+            dialog.InitialTrackerGroup = trackerGroup
+
+            If dialog.ShowDialog(Me) = DialogResult.OK Then
+                Return dialog.SelectionResult
+            End If
+        End Using
+
+        Return Nothing
+    End Function
+
+    Private Sub HandleManualFileCombination(files As IEnumerable(Of String))
+        Dim plnPath As String = files.FirstOrDefault(Function(f) HasExtension(f, ".pln"))
+        Dim wprPath As String = files.FirstOrDefault(Function(f) HasExtension(f, ".wpr"))
+        Dim dphPath As String = files.FirstOrDefault(Function(f) HasExtension(f, ".dph"))
+
+        If String.IsNullOrWhiteSpace(plnPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "A flight plan (.pln) is required to continue.", "Missing flight plan", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+            Return
+        End If
+
+        Dim taskData As AllData = Nothing
+        If Not String.IsNullOrWhiteSpace(dphPath) Then
+            taskData = LoadAllDataFromFile(dphPath)
+        End If
+
+        Dim trackerGroup As String = If(taskData IsNot Nothing, NullToEmpty(taskData.TrackerGroup), String.Empty)
+
+        If String.IsNullOrWhiteSpace(wprPath) Then
+            BeginInvoke(New Action(Sub()
+                                       Dim manualResult = PromptForManualSelection(plnPath, String.Empty, trackerGroup)
+                                       If manualResult Is Nothing Then
+                                           Return
+                                       End If
+
+                                       CompleteManualSelection(manualResult.FlightPlanPath, manualResult.WeatherPath, manualResult.TrackerGroupName, taskData, Path.GetFileName(manualResult.FlightPlanPath))
+                                   End Sub))
+            Return
+        End If
+
+        CompleteManualSelection(plnPath, wprPath, trackerGroup, taskData, Path.GetFileName(plnPath))
+    End Sub
+
+    Private Sub CompleteManualSelection(plnPath As String, wprPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
+        If String.IsNullOrWhiteSpace(plnPath) OrElse String.IsNullOrWhiteSpace(wprPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "A flight plan and weather preset are required to continue.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+            Return
+        End If
+
+        LoadManualSelection(plnPath, wprPath, trackerGroup, taskData, sourceLabel)
+    End Sub
+
+    Private Sub HandleZipDrop(zipPath As String)
+        Dim extractionFolder = Path.Combine(Settings.SessionSettings.UnpackingFolder, "DroppedZip")
+
+        If Directory.Exists(extractionFolder) Then
+            Directory.Delete(extractionFolder, True)
+        End If
+
+        Directory.CreateDirectory(extractionFolder)
+
+        Using archive As ZipArchive = ZipFile.OpenRead(zipPath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                If String.IsNullOrEmpty(entry.Name) Then
+                    Continue For
+                End If
+
+                Dim extension = Path.GetExtension(entry.Name)
+                If HasExtension(extension, ".pln") OrElse HasExtension(extension, ".wpr") OrElse HasExtension(extension, ".dph") OrElse HasExtension(extension, ".dphx") Then
+                    Dim destination = Path.Combine(extractionFolder, Path.GetFileName(entry.Name))
+                    entry.ExtractToFile(destination, True)
+                End If
+            Next
+        End Using
+
+        Dim extractedFiles = Directory.GetFiles(extractionFolder, "*", SearchOption.AllDirectories)
+
+        Dim dphxFile = extractedFiles.FirstOrDefault(Function(f) HasExtension(f, ".dphx"))
+        If Not String.IsNullOrWhiteSpace(dphxFile) Then
+            LoadDPHXPackage(dphxFile)
+            If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
+                UnpackFiles()
+            End If
+            Try
+                Directory.Delete(extractionFolder, True)
+            Catch
+            End Try
+            Return
+        End If
+
+        HandleManualFileCombination(extractedFiles)
+
+        Try
+            Directory.Delete(extractionFolder, True)
+        Catch
+        End Try
+    End Sub
+
+    Private Sub ProcessDroppedFiles(files As IReadOnlyList(Of String))
+        If files Is Nothing OrElse files.Count = 0 Then
+            Return
+        End If
+
+        If files.Count = 1 Then
+            Dim singleFile = files(0)
+            If HasExtension(singleFile, ".dphx") Then
+                LoadDPHXPackage(singleFile)
+                If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
+                    UnpackFiles()
+                End If
+                Return
+            End If
+
+            If HasExtension(singleFile, ".zip") Then
+                HandleZipDrop(singleFile)
+                Return
+            End If
+        End If
+
+        HandleManualFileCombination(files)
+    End Sub
+
+    Private Shared Function HasExtension(filePath As String, extension As String) As Boolean
+        If String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(extension) Then
+            Return False
+        End If
+
+        Dim extToCheck As String = filePath
+        If Not filePath.StartsWith(".") OrElse filePath.Contains(Path.DirectorySeparatorChar) OrElse filePath.Contains(Path.AltDirectorySeparatorChar) Then
+            extToCheck = Path.GetExtension(filePath)
+        End If
+
+        Return extToCheck.Equals(extension, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    Private Class FlightPlanMetadata
+        Public Property Title As String
+        Public Property DepartureId As String
+        Public Property DepartureName As String
+        Public Property ArrivalId As String
+        Public Property ArrivalName As String
+    End Class
+
     Private Sub ctrlBriefing_ValidFilesDragActiveChanged(sender As Object, e As ValidFilesDragActiveChangedEventArgs) Handles ctrlBriefing.ValidFilesDragActiveChanged
         If e.IsActive Then
             Me.dragNdropToolStrip.Visible = True
@@ -1677,19 +2077,17 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub ctrlBriefing_FilesDropped(sender As Object, e As FilesDroppedEventArgs) Handles ctrlBriefing.FilesDropped
-
-        'TODO: Process dropped files:
-        'TODO: Can be DPHX - open using normal existing method
-        'TODO: Can be ZIP - check if ZIP contains at least PLN. DPH and/or WPR is only extra. If no PLN, reject with message. Otherwise, unzip and continue process as below
-        'TODO: Can be PLN only - process as flight plan only
-        'TODO: Can be PLN and DPH - process as flight plan and use DPH for task extra info (no weather, PLN must match the DPH info for PLN)
-        'TODO: Can be PLN and WPR - process as flight plan and weather (no task extra info)
-        'TODO: Can be PLN, DPH and WPR - process like a normal DPHX that has been unpacked (but may still miss some files, PLN and WPR must match the DPH info for PLN and WPR)
-
-        'TODO: When the WPR file is not present, we need to find a way to ask the user if he wants to select one from file system or from the weather presets in the Whitelist folder.
-
-        'TODO: The app (including BriefingControl) must now be able to handle the different scenarios above, yet still presenting the available information in the briefing control.
-        'TODO: You can simulate a "fake" DPHX context but only with the available information provided.
+        Try
+            ProcessDroppedFiles(e.Files)
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me,
+                                $"Unable to process the dropped files: {ex.Message}",
+                                "Drag and drop",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+            End Using
+        End Try
 
     End Sub
 
