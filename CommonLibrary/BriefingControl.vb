@@ -125,31 +125,42 @@ Public Class BriefingControl
     End Sub
 
     Private Function GetValidFilesFromData(data As IDataObject) As IReadOnlyList(Of String)
-        If data Is Nothing OrElse Not data.GetDataPresent(DataFormats.FileDrop) Then
+        If data Is Nothing Then
             Return Nothing
         End If
 
-        Dim droppedFiles = TryCast(data.GetData(DataFormats.FileDrop), String())
-        If droppedFiles Is Nothing OrElse droppedFiles.Length = 0 Then
-            Return Nothing
-        End If
+        Dim entries As New List(Of String)
 
-        Dim cleanedFiles As New List(Of String)
-        For Each filePath As String In droppedFiles
-            If Not String.IsNullOrWhiteSpace(filePath) Then
-                cleanedFiles.Add(filePath)
+        If data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim droppedFiles = TryCast(data.GetData(DataFormats.FileDrop), String())
+            If droppedFiles IsNot Nothing AndAlso droppedFiles.Length > 0 Then
+                entries.AddRange(droppedFiles.Where(Function(f) Not String.IsNullOrWhiteSpace(f)))
             End If
-        Next
+        ElseIf data.GetDataPresent(DataFormats.UnicodeText) OrElse data.GetDataPresent(DataFormats.Text) Then
+            Dim textValue As String = Nothing
+            If data.GetDataPresent(DataFormats.UnicodeText) Then
+                textValue = TryCast(data.GetData(DataFormats.UnicodeText), String)
+            Else
+                textValue = TryCast(data.GetData(DataFormats.Text), String)
+            End If
 
-        Dim fileArray = cleanedFiles.ToArray()
+            If Not String.IsNullOrWhiteSpace(textValue) Then
+                entries.AddRange(textValue.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).Select(Function(t) t.Trim()).Where(Function(t) Not String.IsNullOrWhiteSpace(t)))
+            End If
+        End If
+
+        Dim fileArray = entries.ToArray()
+        If fileArray.Length = 0 Then
+            Return Nothing
+        End If
 
         If fileArray.Length = 1 Then
-            Dim extension = Path.GetExtension(fileArray(0))
+            Dim extension = GetEntryExtension(fileArray(0))
             If IsSingleFileExtensionValid(extension) Then
                 Return Array.AsReadOnly(fileArray)
             End If
         ElseIf fileArray.Length <= 3 Then
-            Dim extensions = fileArray.Select(Function(f) Path.GetExtension(f)).ToList()
+            Dim extensions = fileArray.Select(Function(f) GetEntryExtension(f)).ToList()
 
             Dim hasPln = extensions.Any(Function(ext) HasExtension(ext, ".pln"))
             Dim hasWpr = extensions.Any(Function(ext) HasExtension(ext, ".wpr"))
@@ -161,6 +172,19 @@ Public Class BriefingControl
         End If
 
         Return Nothing
+    End Function
+
+    Private Function GetEntryExtension(entry As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return Path.GetExtension(uri.AbsolutePath)
+        End If
+
+        Return Path.GetExtension(entry)
     End Function
 
     Private Shared Function IsSingleFileExtensionValid(extension As String) As Boolean

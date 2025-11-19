@@ -1853,7 +1853,12 @@ Public Class DPHXUnpackAndLoad
     End Function
 
     Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As Tuple(Of String, String)
-        SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+        Dim planInsideTemp = IsPathInsideFolder(flightPlanPath, TempDPHXUnpackFolder)
+        Dim weatherInsideTemp = IsPathInsideFolder(weatherPath, TempDPHXUnpackFolder)
+
+        If Not planInsideTemp AndAlso Not weatherInsideTemp Then
+            SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+        End If
 
         If Not Directory.Exists(TempDPHXUnpackFolder) Then
             Directory.CreateDirectory(TempDPHXUnpackFolder)
@@ -1862,10 +1867,38 @@ Public Class DPHXUnpackAndLoad
         Dim stagedPln = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(flightPlanPath))
         Dim stagedWpr = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(weatherPath))
 
-        File.Copy(flightPlanPath, stagedPln, True)
-        File.Copy(weatherPath, stagedWpr, True)
+        If Not String.Equals(flightPlanPath, stagedPln, StringComparison.OrdinalIgnoreCase) Then
+            File.Copy(flightPlanPath, stagedPln, True)
+        Else
+            If Not File.Exists(stagedPln) Then
+                Throw New FileNotFoundException("Flight plan not found", stagedPln)
+            End If
+        End If
+
+        If Not String.Equals(weatherPath, stagedWpr, StringComparison.OrdinalIgnoreCase) Then
+            File.Copy(weatherPath, stagedWpr, True)
+        Else
+            If Not File.Exists(stagedWpr) Then
+                Throw New FileNotFoundException("Weather preset not found", stagedWpr)
+            End If
+        End If
 
         Return Tuple.Create(stagedPln, stagedWpr)
+    End Function
+
+    Private Function IsPathInsideFolder(path As String, folder As String) As Boolean
+        If String.IsNullOrWhiteSpace(path) OrElse String.IsNullOrWhiteSpace(folder) Then
+            Return False
+        End If
+
+        Try
+            Dim fullPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            Dim fullFolder = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+
+            Return fullPath.StartsWith(fullFolder, StringComparison.OrdinalIgnoreCase)
+        Catch
+            Return False
+        End Try
     End Function
 
     Private Sub LoadManualSelection(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
