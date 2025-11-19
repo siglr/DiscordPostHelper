@@ -47,6 +47,7 @@ Public Class DPHXUnpackAndLoad
     Private _loggerForm As Logger
     Private _manualFallbackFlightPlanPath As String = String.Empty
     Private _manualFallbackWeatherPath As String = String.Empty
+    Private _manualFallbackTrackerGroup As String = String.Empty
     Private _upcomingEventCheckAttempted As Boolean = False
     Private _launchedWithDPHXArgument As Boolean = False
     Private _taskFetchRequestedByListener As Boolean = False
@@ -340,7 +341,7 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub ManualModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ManualModeToolStripMenuItem.Click
 
-        Dim manualResult = PromptForManualSelection(String.Empty, String.Empty, String.Empty)
+        Dim manualResult = PromptForManualSelection(_manualFallbackFlightPlanPath, _manualFallbackWeatherPath, _manualFallbackTrackerGroup)
 
         If manualResult IsNot Nothing Then
             LoadManualSelection(manualResult.FlightPlanPath,
@@ -1594,9 +1595,13 @@ Public Class DPHXUnpackAndLoad
         Return internalLoggerInUse
     End Function
 
-    Friend Sub UpdateManualFallbackPaths(flightPlanPath As String, weatherPath As String)
+    Friend Sub UpdateManualFallbackPaths(flightPlanPath As String, weatherPath As String, Optional trackerGroup As String = Nothing)
         _manualFallbackFlightPlanPath = If(String.IsNullOrWhiteSpace(flightPlanPath), String.Empty, flightPlanPath)
         _manualFallbackWeatherPath = If(String.IsNullOrWhiteSpace(weatherPath), String.Empty, weatherPath)
+
+        If trackerGroup IsNot Nothing Then
+            _manualFallbackTrackerGroup = trackerGroup
+        End If
     End Sub
 
     Friend Sub UpdateManualFallbackFlightPlanPath(flightPlanPath As String)
@@ -1775,12 +1780,14 @@ Public Class DPHXUnpackAndLoad
             session.ArrivalName = metadata.ArrivalName
         End If
 
-        If session.SimDate = Date.MinValue Then
-            session.SimDate = Date.Today
-        End If
+        If taskData IsNot Nothing Then
+            If session.SimDate = Date.MinValue Then
+                session.SimDate = Date.Today
+            End If
 
-        If session.SimTime = Date.MinValue Then
-            session.SimTime = Date.Now
+            If session.SimTime = Date.MinValue Then
+                session.SimTime = Date.Now
+            End If
         End If
 
         If Not String.IsNullOrWhiteSpace(trackerGroup) Then
@@ -1788,6 +1795,18 @@ Public Class DPHXUnpackAndLoad
         End If
 
         session.ExtraFiles = session.ExtraFiles.Where(Function(f) Not String.IsNullOrWhiteSpace(f) AndAlso File.Exists(f)).ToList()
+
+        If Not String.IsNullOrWhiteSpace(session.MapImageSelected) AndAlso Not File.Exists(session.MapImageSelected) Then
+            session.MapImageSelected = String.Empty
+        End If
+
+        If Not String.IsNullOrWhiteSpace(session.GroupEventTeaserAreaMapImage) AndAlso Not File.Exists(session.GroupEventTeaserAreaMapImage) Then
+            session.GroupEventTeaserAreaMapImage = String.Empty
+        End If
+
+        If Not String.IsNullOrWhiteSpace(session.TrackerGroup) Then
+            _manualFallbackTrackerGroup = session.TrackerGroup
+        End If
 
         Return session
     End Function
@@ -1902,7 +1921,7 @@ Public Class DPHXUnpackAndLoad
             _currentFile = sourceLabel
             txtPackageName.Text = sourceLabel
             _lastLoadSuccess = True
-            UpdateManualFallbackPaths(stagedFlightPlan, stagedWeather)
+            UpdateManualFallbackPaths(stagedFlightPlan, stagedWeather, trackerGroup)
 
             EnableUnpackButton()
             SetFormCaption(_currentFile)
@@ -1951,7 +1970,8 @@ Public Class DPHXUnpackAndLoad
             taskData = LoadAllDataFromFile(dphPath)
         End If
 
-        Dim trackerGroup As String = If(taskData IsNot Nothing, NullToEmpty(taskData.TrackerGroup), String.Empty)
+        Dim trackerGroupFromTask As String = If(taskData IsNot Nothing, NullToEmpty(taskData.TrackerGroup), String.Empty)
+        Dim trackerGroup As String = If(Not String.IsNullOrWhiteSpace(_manualFallbackTrackerGroup), _manualFallbackTrackerGroup, trackerGroupFromTask)
 
         If String.IsNullOrWhiteSpace(wprPath) Then
             BeginInvoke(New Action(Sub()
@@ -2030,8 +2050,13 @@ Public Class DPHXUnpackAndLoad
             Return
         End If
 
-        If files.Count = 1 Then
-            Dim singleFile = files(0)
+        Dim normalizedFiles = NormalizeDroppedFiles(files)
+        If normalizedFiles.Count = 0 Then
+            Return
+        End If
+
+        If normalizedFiles.Count = 1 Then
+            Dim singleFile = normalizedFiles(0)
             If HasExtension(singleFile, ".dphx") Then
                 LoadDPHXPackage(singleFile)
                 If Settings.SessionSettings.AutoUnpack AndAlso _lastLoadSuccess Then
@@ -2046,7 +2071,7 @@ Public Class DPHXUnpackAndLoad
             End If
         End If
 
-        HandleManualFileCombination(files)
+        HandleManualFileCombination(normalizedFiles)
     End Sub
 
     Private Shared Function HasExtension(filePath As String, extension As String) As Boolean
@@ -2060,6 +2085,90 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Return extToCheck.Equals(extension, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    Private Function NormalizeDroppedFiles(files As IEnumerable(Of String)) As List(Of String)
+        Dim normalized As New List(Of String)()
+
+        For Each entry In files
+            If String.IsNullOrWhiteSpace(entry) Then
+                Continue For
+            End If
+
+            Dim resolved = entry
+            If ShouldDownloadFromUrl(entry) Then
+                Try
+                    resolved = DownloadDroppedFile(entry)
+                Catch ex As Exception
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me,
+                                        $"Unable to download the dropped link: {ex.Message}",
+                                        "Drag and drop",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Warning)
+                    End Using
+                    Continue For
+                End Try
+            Else
+                If Not File.Exists(resolved) Then
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me,
+                                        $"The dropped file could not be found: {resolved}",
+                                        "Drag and drop",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Warning)
+                    End Using
+                    Continue For
+                End If
+            End If
+
+            normalized.Add(resolved)
+        Next
+
+        Return normalized
+    End Function
+
+    Private Function ShouldDownloadFromUrl(entry As String) As Boolean
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return False
+        End If
+
+        Dim uri As Uri = Nothing
+        If Not Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) Then
+            Return False
+        End If
+
+        If Not (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return False
+        End If
+
+        Dim ext = Path.GetExtension(uri.AbsolutePath)
+        Return HasExtension(ext, ".pln") OrElse HasExtension(ext, ".wpr")
+    End Function
+
+    Private Function DownloadDroppedFile(entry As String) As String
+        Dim uri As New Uri(entry.Trim())
+        Dim downloadFolder = Path.Combine(Path.GetTempPath(), "DPHXDropped")
+        If Not Directory.Exists(downloadFolder) Then
+            Directory.CreateDirectory(downloadFolder)
+        End If
+
+        Dim fileName = Path.GetFileName(uri.AbsolutePath)
+        If String.IsNullOrWhiteSpace(fileName) Then
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.AbsolutePath)}"
+        End If
+
+        Dim targetPath = Path.Combine(downloadFolder, fileName)
+        If File.Exists(targetPath) Then
+            Dim uniqueName = $"{Path.GetFileNameWithoutExtension(fileName)}_{Guid.NewGuid():N}{Path.GetExtension(fileName)}"
+            targetPath = Path.Combine(downloadFolder, uniqueName)
+        End If
+
+        Using client As New WebClient()
+            client.DownloadFile(uri, targetPath)
+        End Using
+
+        Return targetPath
     End Function
 
     Private Class FlightPlanMetadata

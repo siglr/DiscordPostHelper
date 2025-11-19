@@ -523,9 +523,14 @@ Public Class BriefingControl
         lblTaskTitle.Text = $"{_sessionData.Title} (#{_sessionData.EntrySeqID})"
         lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
         lblTaskName.Text = $"{Path.GetFileNameWithoutExtension(_sessionData.FlightPlanFilename)}"
-        lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"
+        Dim hasSimLocalInfo = _sessionData.SimDate <> Date.MinValue AndAlso _sessionData.SimTime <> Date.MinValue
+        If hasSimLocalInfo Then
+            lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"
+        Else
+            lblSimLocalDateTime.Text = "Not provided"
+        End If
         lblWeatherProfile.Text = _WeatherDetails.PresetName
-        lblRecGliders.Text = _sessionData.RecommendedGliders
+        lblRecGliders.Text = If(String.IsNullOrWhiteSpace(_sessionData.RecommendedGliders), "Not provided", _sessionData.RecommendedGliders)
 
         'Unstandard Barometric pressure
         If Not _WeatherDetails.IsStandardMSLPressure Then

@@ -2,6 +2,7 @@ Imports System
 Imports System.Drawing
 Imports System.IO
 Imports System.Linq
+Imports System.Net
 Imports System.Windows.Forms
 Imports System.Xml.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -63,11 +64,6 @@ Partial Public Class ManualFallbackMode
         _selectedPln = Nothing
         _selectedWpr = Nothing
         _selectionResult = Nothing
-
-        Dim unpackForm = GetUnpackAndLoadForm()
-        If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackPaths(String.Empty, String.Empty)
-        End If
 
     End Sub
 
@@ -137,7 +133,7 @@ Partial Public Class ManualFallbackMode
 
         Dim unpackForm = GetUnpackAndLoadForm()
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, _selectedWpr.FullPath)
+            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, _selectedWpr.FullPath, _selectionResult.TrackerGroupName)
         End If
 
         Me.DialogResult = DialogResult.OK
@@ -369,7 +365,7 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -380,7 +376,7 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragOver(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -391,7 +387,7 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragDrop(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, True)
         ClearAllGroupHighlights()
 
         If Not ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -434,32 +430,28 @@ Partial Public Class ManualFallbackMode
         Return False
     End Function
 
-    Private Function GetDraggedFilesInfo(e As DragEventArgs) As DraggedFilesInfo
+    Private Function GetDraggedFilesInfo(e As DragEventArgs, resolveDownloads As Boolean) As DraggedFilesInfo
         Dim info As New DraggedFilesInfo()
 
-        If e Is Nothing OrElse e.Data Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then
+        If e Is Nothing OrElse e.Data Is Nothing Then
             Return info
         End If
 
-        Dim files = TryCast(e.Data.GetData(DataFormats.FileDrop), String())
-        If files Is Nothing OrElse files.Length = 0 Then
+        Dim entries = ExtractDragEntries(e.Data)
+        If entries.Count = 0 Then
             Return info
         End If
 
-        For Each filePath In files
-            If String.IsNullOrWhiteSpace(filePath) Then
-                Continue For
-            End If
-
-            Dim extension = Path.GetExtension(filePath)
+        For Each entry In entries
+            Dim extension = GetEntryExtension(entry)
             If String.IsNullOrEmpty(extension) Then
                 Continue For
             End If
 
             If extension.Equals(".pln", StringComparison.OrdinalIgnoreCase) AndAlso String.IsNullOrEmpty(info.PlnPath) Then
-                info.PlnPath = filePath
+                info.PlnPath = If(resolveDownloads, ResolveDroppedEntry(entry, ".pln"), entry)
             ElseIf extension.Equals(".wpr", StringComparison.OrdinalIgnoreCase) AndAlso String.IsNullOrEmpty(info.WprPath) Then
-                info.WprPath = filePath
+                info.WprPath = If(resolveDownloads, ResolveDroppedEntry(entry, ".wpr"), entry)
             End If
 
             If info.HasPln AndAlso info.HasWpr Then
@@ -468,6 +460,97 @@ Partial Public Class ManualFallbackMode
         Next
 
         Return info
+    End Function
+
+    Private Function ExtractDragEntries(data As IDataObject) As List(Of String)
+        Dim entries As New List(Of String)()
+
+        If data Is Nothing Then
+            Return entries
+        End If
+
+        If data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim files = TryCast(data.GetData(DataFormats.FileDrop), String())
+            If files IsNot Nothing Then
+                entries.AddRange(files.Where(Function(f) Not String.IsNullOrWhiteSpace(f)))
+            End If
+        ElseIf data.GetDataPresent(DataFormats.UnicodeText) OrElse data.GetDataPresent(DataFormats.Text) Then
+            Dim textValue As String = Nothing
+            If data.GetDataPresent(DataFormats.UnicodeText) Then
+                textValue = TryCast(data.GetData(DataFormats.UnicodeText), String)
+            Else
+                textValue = TryCast(data.GetData(DataFormats.Text), String)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(textValue) Then
+                entries.AddRange(textValue.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).Select(Function(t) t.Trim()).Where(Function(t) Not String.IsNullOrWhiteSpace(t)))
+            End If
+        End If
+
+        Return entries
+    End Function
+
+    Private Function GetEntryExtension(entry As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return Path.GetExtension(uri.AbsolutePath)
+        End If
+
+        Return Path.GetExtension(entry)
+    End Function
+
+    Private Function ResolveDroppedEntry(entry As String, expectedExtension As String) As String
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            If Not Path.GetExtension(uri.AbsolutePath).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+                Return String.Empty
+            End If
+
+            Try
+                Return DownloadDroppedFile(uri)
+            Catch ex As Exception
+                ShowCenteredMessage($"Unable to download the dropped file: {ex.Message}", "Download error")
+                Return String.Empty
+            End Try
+        End If
+
+        If Not Path.GetExtension(entry).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+            Return String.Empty
+        End If
+
+        If File.Exists(entry) Then
+            Return entry
+        End If
+
+        ShowCenteredMessage($"The dropped file could not be found: {entry}", "File missing")
+        Return String.Empty
+    End Function
+
+    Private Function DownloadDroppedFile(uri As Uri) As String
+        Dim downloadFolder = Path.Combine(Path.GetTempPath(), "DPHXDropped")
+        If Not Directory.Exists(downloadFolder) Then
+            Directory.CreateDirectory(downloadFolder)
+        End If
+
+        Dim fileName = Path.GetFileName(uri.AbsolutePath)
+        If String.IsNullOrWhiteSpace(fileName) Then
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.AbsolutePath)}"
+        End If
+
+        Dim targetPath = Path.Combine(downloadFolder, fileName)
+        If File.Exists(targetPath) Then
+            targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}_{Guid.NewGuid():N}{Path.GetExtension(fileName)}")
+        End If
+
+        Using client As New WebClient()
+            client.DownloadFile(uri, targetPath)
+        End Using
+
+        Return targetPath
     End Function
 
     Private Sub UpdateGroupHighlights(draggedFiles As DraggedFilesInfo)
