@@ -1886,14 +1886,14 @@ Public Class DPHXUnpackAndLoad
         Return Tuple.Create(stagedPln, stagedWpr)
     End Function
 
-    Private Function IsPathInsideFolder(path As String, folder As String) As Boolean
-        If String.IsNullOrWhiteSpace(path) OrElse String.IsNullOrWhiteSpace(folder) Then
+    Private Function IsPathInsideFolder(targetPath As String, folderPath As String) As Boolean
+        If String.IsNullOrWhiteSpace(targetPath) OrElse String.IsNullOrWhiteSpace(folderPath) Then
             Return False
         End If
 
         Try
-            Dim fullPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-            Dim fullFolder = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            Dim fullPath = System.IO.Path.GetFullPath(targetPath).TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar)
+            Dim fullFolder = System.IO.Path.GetFullPath(folderPath).TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar)
 
             Return fullPath.StartsWith(fullFolder, StringComparison.OrdinalIgnoreCase)
         Catch
@@ -2186,9 +2186,9 @@ Public Class DPHXUnpackAndLoad
             Directory.CreateDirectory(downloadFolder)
         End If
 
-        Dim fileName = Path.GetFileName(uri.AbsolutePath)
+        Dim fileName = Path.GetFileName(uri.LocalPath)
         If String.IsNullOrWhiteSpace(fileName) Then
-            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.AbsolutePath)}"
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.LocalPath)}"
         End If
 
         Dim targetPath = Path.Combine(downloadFolder, fileName)

@@ -536,9 +536,9 @@ Partial Public Class ManualFallbackMode
             Directory.CreateDirectory(downloadFolder)
         End If
 
-        Dim fileName = Path.GetFileName(uri.AbsolutePath)
+        Dim fileName = Path.GetFileName(uri.LocalPath)
         If String.IsNullOrWhiteSpace(fileName) Then
-            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.AbsolutePath)}"
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.LocalPath)}"
         End If
 
         Dim targetPath = Path.Combine(downloadFolder, fileName)
