@@ -154,6 +154,10 @@ Public Class BriefingControl
             Return Nothing
         End If
 
+        If ContainsWeSimGlideLink(fileArray) Then
+            Return Array.AsReadOnly(fileArray)
+        End If
+
         If fileArray.Length = 1 Then
             Dim extension = GetEntryExtension(fileArray(0))
             If IsSingleFileExtensionValid(extension) Then
@@ -197,6 +201,14 @@ Public Class BriefingControl
         End If
 
         Return String.Equals(extension, expectedExtension, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    Private Shared Function ContainsWeSimGlideLink(entries As IEnumerable(Of String)) As Boolean
+        If entries Is Nothing Then
+            Return False
+        End If
+
+        Return entries.Any(Function(entry) Not String.IsNullOrWhiteSpace(entry) AndAlso entry.IndexOf("wesimglide.org", StringComparison.OrdinalIgnoreCase) >= 0)
     End Function
 
     Private Sub UpdateValidDragState(isActive As Boolean, files As IReadOnlyList(Of String), Optional forceRaise As Boolean = False)
