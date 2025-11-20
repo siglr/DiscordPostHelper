@@ -161,7 +161,7 @@ Public Class DPHXUnpackAndLoad
             lbl2020AllFilesStatus.Text = String.Empty
             lbl2024AllFilesStatus.Text = String.Empty
 
-            SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+            SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder, True)
 
             Dim doUnpack As Boolean = False
             Dim ignoreWSGIntegration As Boolean = False
@@ -243,7 +243,7 @@ Public Class DPHXUnpackAndLoad
 
             ' best-effort temp cleanup
             Dim tries As Integer = 0
-            Do While tries < 10 AndAlso Not SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
+            Do While tries < 10 AndAlso Not SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder, True)
                 tries += 1
                 Me.Refresh()
                 Application.DoEvents()
