@@ -386,7 +386,15 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragDrop(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e, True)
+        Dim entries = ExtractDragEntries(e.Data)
+
+        If ContainsWeSimGlideLink(entries) Then
+            ClearAllGroupHighlights()
+            ShowCenteredMessage("When using the DPHX Unpack & Load, simply click on the DPHX link instead of trying to drag and drop links to WeSimGlide.org", "Drag and drop")
+            Return
+        End If
+
+        Dim draggedFiles = GetDraggedFilesInfo(entries, True)
         ClearAllGroupHighlights()
 
         If Not ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -430,14 +438,14 @@ Partial Public Class ManualFallbackMode
     End Function
 
     Private Function GetDraggedFilesInfo(e As DragEventArgs, resolveDownloads As Boolean) As DraggedFilesInfo
+        Dim data = If(e Is Nothing, Nothing, e.Data)
+        Return GetDraggedFilesInfo(ExtractDragEntries(data), resolveDownloads)
+    End Function
+
+    Private Function GetDraggedFilesInfo(entries As List(Of String), resolveDownloads As Boolean) As DraggedFilesInfo
         Dim info As New DraggedFilesInfo()
 
-        If e Is Nothing OrElse e.Data Is Nothing Then
-            Return info
-        End If
-
-        Dim entries = ExtractDragEntries(e.Data)
-        If entries.Count = 0 Then
+        If entries Is Nothing OrElse entries.Count = 0 Then
             Return info
         End If
 
@@ -487,6 +495,14 @@ Partial Public Class ManualFallbackMode
         End If
 
         Return entries
+    End Function
+
+    Private Shared Function ContainsWeSimGlideLink(entries As IEnumerable(Of String)) As Boolean
+        If entries Is Nothing Then
+            Return False
+        End If
+
+        Return entries.Any(Function(entry) Not String.IsNullOrWhiteSpace(entry) AndAlso entry.IndexOf("wesimglide.org", StringComparison.OrdinalIgnoreCase) >= 0)
     End Function
 
     Private Function GetEntryExtension(entry As String) As String

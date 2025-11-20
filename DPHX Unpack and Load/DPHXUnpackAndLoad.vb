@@ -2094,6 +2094,17 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub ProcessDroppedFiles(files As IReadOnlyList(Of String))
+        If ContainsWeSimGlideLink(files) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me,
+                                "When using the DPHX Unpack & Load, simply click on the DPHX link instead of trying to drag and drop links to WeSimGlide.org",
+                                "Drag and drop",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information)
+            End Using
+            Return
+        End If
+
         If files Is Nothing OrElse files.Count = 0 Then
             Return
         End If
@@ -2121,6 +2132,14 @@ Public Class DPHXUnpackAndLoad
 
         HandleManualFileCombination(normalizedFiles)
     End Sub
+
+    Private Shared Function ContainsWeSimGlideLink(entries As IEnumerable(Of String)) As Boolean
+        If entries Is Nothing Then
+            Return False
+        End If
+
+        Return entries.Any(Function(entry) Not String.IsNullOrWhiteSpace(entry) AndAlso entry.IndexOf("wesimglide.org", StringComparison.OrdinalIgnoreCase) >= 0)
+    End Function
 
     Private Shared Function HasExtension(filePath As String, extension As String) As Boolean
         If String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(extension) Then
