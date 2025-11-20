@@ -2209,10 +2209,6 @@ Public Class DPHXUnpackAndLoad
 
                 Dim fileName = ResolveDroppedFileName(uri, client.ResponseHeaders)
                 Dim targetPath = Path.Combine(downloadFolder, fileName)
-                If File.Exists(targetPath) Then
-                    Dim uniqueName = $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}"
-                    targetPath = Path.Combine(downloadFolder, uniqueName)
-                End If
 
                 Using output As New FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None)
                     stream.CopyTo(output)
@@ -2229,15 +2225,9 @@ Public Class DPHXUnpackAndLoad
             contentDisposition = headers("Content-Disposition")
         End If
 
-        If Not String.IsNullOrWhiteSpace(contentDisposition) Then
-            Try
-                Dim disposition As New ContentDisposition(contentDisposition)
-                If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
-                    Return disposition.FileName
-                End If
-            Catch ex As FormatException
-                ' Ignore malformed Content-Disposition headers and fall back to the URL path.
-            End Try
+        Dim fileNameFromHeader = TryResolveContentDispositionFileName(contentDisposition)
+        If Not String.IsNullOrWhiteSpace(fileNameFromHeader) Then
+            Return fileNameFromHeader
         End If
 
         Dim fileName = Path.GetFileName(uri.LocalPath)
@@ -2246,6 +2236,42 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Return fileName
+    End Function
+
+    Private Function TryResolveContentDispositionFileName(contentDisposition As String) As String
+        If String.IsNullOrWhiteSpace(contentDisposition) Then
+            Return Nothing
+        End If
+
+        Try
+            Dim disposition As New ContentDisposition(contentDisposition)
+            If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
+                Return disposition.FileName
+            End If
+        Catch ex As FormatException
+            ' Fall back to manual parsing below.
+        End Try
+
+        Dim parts = contentDisposition.Split({";"c}, StringSplitOptions.RemoveEmptyEntries)
+        For Each part In parts
+            Dim trimmed = part.Trim()
+            If trimmed.StartsWith("filename*=", StringComparison.OrdinalIgnoreCase) Then
+                Dim value = trimmed.Substring("filename*=".Length)
+                Dim encodingSeparator = value.IndexOf("''")
+                If encodingSeparator >= 0 AndAlso encodingSeparator + 2 < value.Length Then
+                    value = value.Substring(encodingSeparator + 2)
+                End If
+
+                Return Uri.UnescapeDataString(value.Trim("\""c))
+            End If
+
+            If trimmed.StartsWith("filename=", StringComparison.OrdinalIgnoreCase) Then
+                Dim value = trimmed.Substring("filename=".Length).Trim()
+                Return value.Trim("\""c)
+            End If
+        Next
+
+        Return Nothing
     End Function
 
     Private Class FlightPlanMetadata
