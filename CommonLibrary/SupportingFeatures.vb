@@ -3346,12 +3346,10 @@ Public Class SupportingFeatures
         For Each part In parts
             Dim trimmed = part.Trim()
 
-            ' filename*=
             If trimmed.StartsWith("filename*=", StringComparison.OrdinalIgnoreCase) Then
                 Dim value = trimmed.Substring("filename*=".Length)
-
-                ' value is like: utf-8''SSC%20GR%20Ioannina%20175.pln
                 Dim encodingSeparator = value.IndexOf("''", StringComparison.Ordinal)
+
                 If encodingSeparator >= 0 AndAlso encodingSeparator + 2 <= value.Length Then
                     Dim encoded = value.Substring(encodingSeparator + 2)
                     rfc5987FileName = Uri.UnescapeDataString(encoded.Trim(""""c))
@@ -3359,34 +3357,56 @@ Public Class SupportingFeatures
                     rfc5987FileName = Uri.UnescapeDataString(value.Trim(""""c))
                 End If
 
-                ' filename=
             ElseIf trimmed.StartsWith("filename=", StringComparison.OrdinalIgnoreCase) Then
                 Dim value = trimmed.Substring("filename=".Length).Trim()
                 asciiFileName = value.Trim(""""c)
             End If
         Next
 
+        Dim candidate As String = Nothing
+
         ' Prefer RFC5987 filename*=
         If Not String.IsNullOrWhiteSpace(rfc5987FileName) Then
-            Return rfc5987FileName
+            candidate = rfc5987FileName
+
+            ' Fallback to plain filename=
+        ElseIf Not String.IsNullOrWhiteSpace(asciiFileName) Then
+            candidate = asciiFileName
+
+        Else
+            ' Last resort: built-in parser
+            Try
+                Dim disposition As New System.Net.Mime.ContentDisposition(contentDisposition)
+                If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
+                    candidate = disposition.FileName
+                End If
+            Catch ex As FormatException
+                ' ignore
+            End Try
         End If
 
-        ' Fallback to plain filename=
-        If Not String.IsNullOrWhiteSpace(asciiFileName) Then
-            Return asciiFileName
+        Return SanitizeContentDispositionFileName(candidate)
+    End Function
+
+    Private Shared Function SanitizeContentDispositionFileName(raw As String) As String
+        If String.IsNullOrWhiteSpace(raw) Then
+            Return Nothing
         End If
 
-        ' Last resort: built-in parser for odd cases we didn't handle
-        Try
-            Dim disposition As New System.Net.Mime.ContentDisposition(contentDisposition)
-            If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
-                Return disposition.FileName
-            End If
-        Catch ex As FormatException
-            ' ignore
-        End Try
+        ' Strip any directory / drive info
+        Dim name = System.IO.Path.GetFileName(raw)
 
-        Return Nothing
+        ' Reject "." or ".." etc.
+        If String.IsNullOrWhiteSpace(name) OrElse name = "." OrElse name = ".." Then
+            Return Nothing
+        End If
+
+        ' Replace any invalid filename chars with "_"
+        For Each ch In System.IO.Path.GetInvalidFileNameChars()
+            name = name.Replace(ch, "_"c)
+        Next
+
+        Return name
     End Function
 
 End Class
