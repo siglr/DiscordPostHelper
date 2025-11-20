@@ -48,6 +48,7 @@ Public Class DPHXUnpackAndLoad
     Private _manualFallbackFlightPlanPath As String = String.Empty
     Private _manualFallbackWeatherPath As String = String.Empty
     Private _manualFallbackTrackerGroup As String = String.Empty
+    Private _isManualMode As Boolean = False
     Private _upcomingEventCheckAttempted As Boolean = False
     Private _launchedWithDPHXArgument As Boolean = False
     Private _taskFetchRequestedByListener As Boolean = False
@@ -801,6 +802,7 @@ Public Class DPHXUnpackAndLoad
 
         Dim newDPHFile As String
         _lastLoadSuccess = False
+        _isManualMode = False
 
         ctrlBriefing.FullReset()
         Me.Refresh()
@@ -1171,10 +1173,14 @@ Public Class DPHXUnpackAndLoad
                 If TrackerRunning Then
                     'Feed the data to the tracker
                     Dim groupToUse As String = String.Empty
-                    If Not String.IsNullOrWhiteSpace(_allDPHData.TrackerGroup) Then
-                        groupToUse = _allDPHData.TrackerGroup
-                    ElseIf _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
-                        groupToUse = _allDPHData.TrackerGroup
+                    Dim trackerGroupValue As String = NullToEmpty(_allDPHData.TrackerGroup)
+
+                    If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
+                        groupToUse = trackerGroupValue
+                    ElseIf _isManualMode Then
+                        If Not String.IsNullOrWhiteSpace(trackerGroupValue) Then
+                            groupToUse = trackerGroupValue
+                        End If
                     End If
                     TaskFileHelper.SendDataToTracker(groupToUse,
                                       Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
@@ -1911,6 +1917,7 @@ Public Class DPHXUnpackAndLoad
     Private Sub LoadManualSelection(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
 
         _lastLoadSuccess = False
+        _isManualMode = True
 
         If Not File.Exists(flightPlanPath) Then
             Using New Centered_MessageBox(Me)
