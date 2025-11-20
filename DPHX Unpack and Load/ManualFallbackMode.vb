@@ -1,8 +1,8 @@
 Imports System
-Imports System.Diagnostics
 Imports System.Drawing
 Imports System.IO
 Imports System.Linq
+Imports System.Net
 Imports System.Windows.Forms
 Imports System.Xml.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -13,11 +13,21 @@ Partial Public Class ManualFallbackMode
     Private ReadOnly _sf As New SupportingFeatures(SupportingFeatures.ClientApp.DPHXUnpackAndLoad)
     Private _selectedPln As ManualFileSelection
     Private _selectedWpr As ManualFileSelection
-    Private ReadOnly _copiedFiles As New List(Of CopiedFileRecord)
     Private _whitelistPresets As New List(Of WeatherPresetOption)
     Private _plnGroupDefaultColor As Color
     Private _weatherGroupDefaultColor As Color
     Private ReadOnly _dragHighlightColor As Color = ControlPaint.LightLight(SystemColors.Control)
+    Private _selectionResult As ManualSelectionResult
+
+    Public Property InitialPlnPath As String
+    Public Property InitialWprPath As String
+    Public Property InitialTrackerGroup As String
+
+    Public ReadOnly Property SelectionResult As ManualSelectionResult
+        Get
+            Return _selectionResult
+        End Get
+    End Property
 
     Public Sub New()
         InitializeComponent()
@@ -34,6 +44,12 @@ Partial Public Class ManualFallbackMode
 
         LoadWhitelistPresets()
         Reset()
+        ApplyInitialSelection()
+
+        Me.AcceptButton = btnCopyGoFly
+        Me.CancelButton = btnClearFiles
+        btnClose.Visible = False
+        btnClose.Enabled = False
 
     End Sub
 
@@ -47,13 +63,32 @@ Partial Public Class ManualFallbackMode
         txtTrackerGroupName.Text = String.Empty
         _selectedPln = Nothing
         _selectedWpr = Nothing
-        _copiedFiles.Clear()
+        _selectionResult = Nothing
 
-        Dim unpackForm = GetUnpackAndLoadForm()
-        If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
+    End Sub
+
+    Private Sub ApplyInitialSelection()
+        If Not String.IsNullOrWhiteSpace(InitialPlnPath) AndAlso File.Exists(InitialPlnPath) Then
+            Dim selection = LoadPlnSelection(InitialPlnPath)
+            If selection IsNot Nothing Then
+                _selectedPln = selection
+                lblPLNFile.Text = selection.FileName
+                lblPLNTitle.Text = selection.DisplayName
+            End If
         End If
 
+        If Not String.IsNullOrWhiteSpace(InitialWprPath) AndAlso File.Exists(InitialWprPath) Then
+            Dim selection = LoadWprSelection(InitialWprPath, False)
+            If selection IsNot Nothing Then
+                _selectedWpr = selection
+                lblWPRFile.Text = selection.FileName
+                lblWPRName.Text = selection.DisplayName
+            End If
+        End If
+
+        If Not String.IsNullOrWhiteSpace(InitialTrackerGroup) Then
+            txtTrackerGroupName.Text = InitialTrackerGroup
+        End If
     End Sub
 
     Private Sub cboWhitelistPresets_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cboWhitelistPresets.SelectionChangeCommitted
@@ -85,138 +120,39 @@ Partial Public Class ManualFallbackMode
             Return
         End If
 
-        Dim workingFolder As String
-        Try
-            workingFolder = PrepareManualWorkingFolder()
-        Catch ex As Exception
-            ShowCenteredMessage(ex.Message, "Manual fallback mode")
+        If _selectedWpr Is Nothing Then
+            ShowCenteredMessage("A weather preset is required before continuing.", "Weather preset missing")
             Return
-        End Try
+        End If
 
-        Dim status As New frmStatus()
-        status.StartPosition = FormStartPosition.CenterParent
-        status.Start(Me)
-        status.AppendStatusLine("Manual copy results:", True)
+        _selectionResult = New ManualSelectionResult With {
+            .FlightPlanPath = _selectedPln.FullPath,
+            .WeatherPath = _selectedWpr.FullPath,
+            .TrackerGroupName = txtTrackerGroupName.Text.Trim()
+        }
 
         Dim unpackForm = GetUnpackAndLoadForm()
-        Dim msfsRunning As Boolean = IsMsfsRunning()
-        Dim stagedPln As String = StageSelectedFile(_selectedPln, workingFolder, status, "flight plan")
-        Dim stagedWpr As String = StageSelectedFile(_selectedWpr, workingFolder, status, "weather preset")
-
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(stagedPln)
+            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, _selectedWpr.FullPath, _selectionResult.TrackerGroupName)
         End If
 
-        If Not String.IsNullOrEmpty(stagedWpr) Then
-            Try
-                _sf.FixWPRFormat(stagedWpr, False)
-            Catch ex As Exception
-                status.AppendStatusLine($"⚠️ Unable to verify the WPR file for compatibility: {ex.Message}", True)
-            End Try
-        End If
-
-        Dim internalLoggerInUse As Boolean = False
-
-        If unpackForm IsNot Nothing Then
-            internalLoggerInUse = unpackForm.EnsureInternalLoggerInUse(status)
-        ElseIf File.Exists(Path.Combine(Application.StartupPath, "GiveMeTheLogger.Please")) Then
-            status.AppendStatusLine("Internal NB21 Logger requested but the main window is unavailable.", True)
-        End If
-
-        Try
-            If Settings.SessionSettings.NB21StartAndFeed AndAlso Not internalLoggerInUse AndAlso Not String.IsNullOrWhiteSpace(stagedPln) Then
-                Dim nb21Running = TaskFileHelper.EnsureNb21Running(status)
-                If nb21Running Then
-                    TaskFileHelper.SendPlnFileToNB21Logger(stagedPln, status)
-                End If
-            End If
-
-            If Settings.SessionSettings.TrackerStartAndFeed Then
-                Dim trackerRunning = TaskFileHelper.EnsureTrackerRunning(status)
-                If trackerRunning Then
-                    Dim trackerGroup = txtTrackerGroupName.Text.Trim()
-                    TaskFileHelper.SendDataToTracker(trackerGroup, stagedPln, stagedWpr, String.Empty, status)
-                End If
-            End If
-
-            If Settings.SessionSettings.Is2020Installed Then
-                If Not String.IsNullOrEmpty(stagedPln) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2020FlightPlansFolder, "Flight Plan for MSFS 2020", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedPln), Settings.SessionSettings.MSFS2020FlightPlansFolder, "Flight Plan for MSFS 2020")
-                End If
-
-                If Not String.IsNullOrEmpty(stagedWpr) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedWpr), workingFolder, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Weather Preset for MSFS 2020", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedWpr), Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Weather Preset for MSFS 2020")
-                End If
-            End If
-
-            If Settings.SessionSettings.Is2024Installed Then
-                If Not String.IsNullOrEmpty(stagedPln) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2024FlightPlansFolder, "Flight Plan for MSFS 2024", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedPln), Settings.SessionSettings.MSFS2024FlightPlansFolder, "Flight Plan for MSFS 2024")
-
-                    If Settings.SessionSettings.EnableEFBFlightPlanCreation Then
-                        Dim efbResult = TaskFileHelper.CreatePlnForEfb(Path.GetFileName(stagedPln), workingFolder, Settings.SessionSettings.MSFS2024FlightPlansFolder, "EFB Flight Plan for MSFS 2024", Me, msfsRunning)
-                        status.AppendStatusLine(efbResult, True)
-                        TrackCopyResult(efbResult, $"{Path.GetFileNameWithoutExtension(stagedPln)}_EFB{Path.GetExtension(stagedPln)}", Settings.SessionSettings.MSFS2024FlightPlansFolder, "EFB Flight Plan for MSFS 2024")
-                    End If
-                End If
-
-                If Not String.IsNullOrEmpty(stagedWpr) Then
-                    Dim result = TaskFileHelper.CopyTaskFile(Path.GetFileName(stagedWpr), workingFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Weather Preset for MSFS 2024", Me, msfsRunning)
-                    status.AppendStatusLine(result, True)
-                    TrackCopyResult(result, Path.GetFileName(stagedWpr), Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Weather Preset for MSFS 2024")
-                End If
-            End If
-
-            status.AppendStatusLine("Manual fallback copy completed. Close this window or clean up when done.", False)
-        Finally
-            status.Done()
-        End Try
+        Me.DialogResult = DialogResult.OK
+        Me.Close()
 
     End Sub
 
     Private Sub btnClearFiles_Click(sender As Object, e As EventArgs) Handles btnClearFiles.Click
 
-        If _copiedFiles.Count = 0 Then
-            ShowCenteredMessage("No files copied during this manual session. There is nothing to clean up.", "Cleanup")
-            Return
-        End If
-
-        Dim status As New frmStatus()
-        status.StartPosition = FormStartPosition.CenterParent
-        status.Start(Me)
-        status.AppendStatusLine("Manual cleanup results:", True)
-
-        Dim msfsRunning = IsMsfsRunning()
-
-        For Each record In _copiedFiles
-            Dim result = TaskFileHelper.DeleteTaskFile(record.FileName, record.DestinationFolder, record.Label, False, msfsRunning)
-            status.AppendStatusLine(result, True)
-        Next
-
-        If Settings.SessionSettings.TrackerStartAndFeed Then
-            status.AppendStatusLine(TaskFileHelper.ExecuteTrackerTaskFolderCleanup(), True)
-        End If
-
-        status.AppendStatusLine("Cleanup completed.", False)
-        status.Done()
-
-        _copiedFiles.Clear()
-
-        Dim unpackForm = GetUnpackAndLoadForm()
-        If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackFlightPlanPath(String.Empty)
-        End If
+        _selectionResult = Nothing
+        Me.DialogResult = DialogResult.Cancel
+        Me.Close()
 
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 
+        _selectionResult = Nothing
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
 
     End Sub
@@ -365,65 +301,6 @@ Partial Public Class ManualFallbackMode
         End Using
     End Sub
 
-    Private Function PrepareManualWorkingFolder() As String
-        Dim folder = Path.Combine(Settings.SessionSettings.UnpackingFolder, "ManualFallback")
-
-        Try
-            If Directory.Exists(folder) Then
-                For Each theFile As String In Directory.GetFiles(folder)
-                    File.Delete(theFile)
-                Next
-                For Each subfolder As String In Directory.GetDirectories(folder)
-                    Directory.Delete(subfolder, True)
-                Next
-            Else
-                Directory.CreateDirectory(folder)
-            End If
-        Catch ex As Exception
-            Throw New InvalidOperationException($"Unable to prepare the manual working folder (""{folder}"")): {ex.Message}", ex)
-        End Try
-
-        Return folder
-    End Function
-
-    Private Function StageSelectedFile(selection As ManualFileSelection, workingFolder As String, status As frmStatus, label As String) As String
-        If selection Is Nothing OrElse String.IsNullOrWhiteSpace(selection.FullPath) Then
-            Return String.Empty
-        End If
-
-        Try
-            Dim destination = Path.Combine(workingFolder, Path.GetFileName(selection.FullPath))
-            File.Copy(selection.FullPath, destination, True)
-            Return destination
-        Catch ex As Exception
-            status.AppendStatusLine($"❌ Unable to stage the {label}: {ex.Message}", True)
-            Return String.Empty
-        End Try
-    End Function
-
-    Private Sub TrackCopyResult(message As String, fileName As String, destinationFolder As String, label As String)
-        If String.IsNullOrWhiteSpace(message) OrElse String.IsNullOrWhiteSpace(fileName) OrElse String.IsNullOrWhiteSpace(destinationFolder) Then
-            Return
-        End If
-
-        Dim normalized = message.ToLowerInvariant()
-        If normalized.Contains("copied") OrElse normalized.Contains("replaced") Then
-            Dim alreadyTracked = _copiedFiles.Any(Function(c) c.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) _
-                                                    AndAlso c.DestinationFolder.Equals(destinationFolder, StringComparison.OrdinalIgnoreCase))
-            If Not alreadyTracked Then
-                _copiedFiles.Add(New CopiedFileRecord With {
-                    .FileName = fileName,
-                    .DestinationFolder = destinationFolder,
-                    .Label = label
-                })
-            End If
-        End If
-    End Sub
-
-    Private Function IsMsfsRunning() As Boolean
-        Return Process.GetProcessesByName("FlightSimulator").Any() OrElse Process.GetProcessesByName("FlightSimulator2024").Any()
-    End Function
-
     Private Function GetUnpackAndLoadForm() As DPHXUnpackAndLoad
         Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
         If unpackForm Is Nothing Then
@@ -432,6 +309,12 @@ Partial Public Class ManualFallbackMode
 
         Return unpackForm
     End Function
+    Public Class ManualSelectionResult
+        Public Property FlightPlanPath As String
+        Public Property WeatherPath As String
+        Public Property TrackerGroupName As String
+    End Class
+
     Private Class ManualFileSelection
         Public Property FullPath As String
         Public Property DisplayName As String
@@ -441,12 +324,6 @@ Partial Public Class ManualFallbackMode
                 Return If(String.IsNullOrEmpty(FullPath), String.Empty, Path.GetFileName(FullPath))
             End Get
         End Property
-    End Class
-
-    Private Class CopiedFileRecord
-        Public Property FileName As String
-        Public Property DestinationFolder As String
-        Public Property Label As String
     End Class
 
     Private Class WeatherPresetOption
@@ -482,11 +359,13 @@ Partial Public Class ManualFallbackMode
     End Class
 
     Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Reset()
+        If Me.DialogResult <> DialogResult.OK Then
+            Reset()
+        End If
     End Sub
 
     Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -497,7 +376,7 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragOver(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -508,7 +387,7 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragDrop(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e)
+        Dim draggedFiles = GetDraggedFilesInfo(e, True)
         ClearAllGroupHighlights()
 
         If Not ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -551,32 +430,28 @@ Partial Public Class ManualFallbackMode
         Return False
     End Function
 
-    Private Function GetDraggedFilesInfo(e As DragEventArgs) As DraggedFilesInfo
+    Private Function GetDraggedFilesInfo(e As DragEventArgs, resolveDownloads As Boolean) As DraggedFilesInfo
         Dim info As New DraggedFilesInfo()
 
-        If e Is Nothing OrElse e.Data Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then
+        If e Is Nothing OrElse e.Data Is Nothing Then
             Return info
         End If
 
-        Dim files = TryCast(e.Data.GetData(DataFormats.FileDrop), String())
-        If files Is Nothing OrElse files.Length = 0 Then
+        Dim entries = ExtractDragEntries(e.Data)
+        If entries.Count = 0 Then
             Return info
         End If
 
-        For Each filePath In files
-            If String.IsNullOrWhiteSpace(filePath) Then
-                Continue For
-            End If
-
-            Dim extension = Path.GetExtension(filePath)
+        For Each entry In entries
+            Dim extension = GetEntryExtension(entry)
             If String.IsNullOrEmpty(extension) Then
                 Continue For
             End If
 
             If extension.Equals(".pln", StringComparison.OrdinalIgnoreCase) AndAlso String.IsNullOrEmpty(info.PlnPath) Then
-                info.PlnPath = filePath
+                info.PlnPath = If(resolveDownloads, ResolveDroppedEntry(entry, ".pln"), entry)
             ElseIf extension.Equals(".wpr", StringComparison.OrdinalIgnoreCase) AndAlso String.IsNullOrEmpty(info.WprPath) Then
-                info.WprPath = filePath
+                info.WprPath = If(resolveDownloads, ResolveDroppedEntry(entry, ".wpr"), entry)
             End If
 
             If info.HasPln AndAlso info.HasWpr Then
@@ -585,6 +460,97 @@ Partial Public Class ManualFallbackMode
         Next
 
         Return info
+    End Function
+
+    Private Function ExtractDragEntries(data As IDataObject) As List(Of String)
+        Dim entries As New List(Of String)()
+
+        If data Is Nothing Then
+            Return entries
+        End If
+
+        If data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim files = TryCast(data.GetData(DataFormats.FileDrop), String())
+            If files IsNot Nothing Then
+                entries.AddRange(files.Where(Function(f) Not String.IsNullOrWhiteSpace(f)))
+            End If
+        ElseIf data.GetDataPresent(DataFormats.UnicodeText) OrElse data.GetDataPresent(DataFormats.Text) Then
+            Dim textValue As String = Nothing
+            If data.GetDataPresent(DataFormats.UnicodeText) Then
+                textValue = TryCast(data.GetData(DataFormats.UnicodeText), String)
+            Else
+                textValue = TryCast(data.GetData(DataFormats.Text), String)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(textValue) Then
+                entries.AddRange(textValue.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).Select(Function(t) t.Trim()).Where(Function(t) Not String.IsNullOrWhiteSpace(t)))
+            End If
+        End If
+
+        Return entries
+    End Function
+
+    Private Function GetEntryExtension(entry As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return Path.GetExtension(uri.AbsolutePath)
+        End If
+
+        Return Path.GetExtension(entry)
+    End Function
+
+    Private Function ResolveDroppedEntry(entry As String, expectedExtension As String) As String
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            If Not Path.GetExtension(uri.AbsolutePath).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+                Return String.Empty
+            End If
+
+            Try
+                Return DownloadDroppedFile(uri)
+            Catch ex As Exception
+                ShowCenteredMessage($"Unable to download the dropped file: {ex.Message}", "Download error")
+                Return String.Empty
+            End Try
+        End If
+
+        If Not Path.GetExtension(entry).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+            Return String.Empty
+        End If
+
+        If File.Exists(entry) Then
+            Return entry
+        End If
+
+        ShowCenteredMessage($"The dropped file could not be found: {entry}", "File missing")
+        Return String.Empty
+    End Function
+
+    Private Function DownloadDroppedFile(uri As Uri) As String
+        Dim downloadFolder = Path.Combine(Path.GetTempPath(), "DPHXDropped")
+        If Not Directory.Exists(downloadFolder) Then
+            Directory.CreateDirectory(downloadFolder)
+        End If
+
+        Dim fileName = Path.GetFileName(uri.LocalPath)
+        If String.IsNullOrWhiteSpace(fileName) Then
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.LocalPath)}"
+        End If
+
+        Dim targetPath = Path.Combine(downloadFolder, fileName)
+        If File.Exists(targetPath) Then
+            targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}_{Guid.NewGuid():N}{Path.GetExtension(fileName)}")
+        End If
+
+        Using client As New WebClient()
+            client.DownloadFile(uri, targetPath)
+        End Using
+
+        Return targetPath
     End Function
 
     Private Sub UpdateGroupHighlights(draggedFiles As DraggedFilesInfo)

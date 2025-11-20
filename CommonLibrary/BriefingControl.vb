@@ -2,6 +2,7 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.Serialization
+Imports System.Linq
 Imports System.Text
 Imports System.Windows.Forms
 Imports System.Xml
@@ -124,34 +125,48 @@ Public Class BriefingControl
     End Sub
 
     Private Function GetValidFilesFromData(data As IDataObject) As IReadOnlyList(Of String)
-        If data Is Nothing OrElse Not data.GetDataPresent(DataFormats.FileDrop) Then
+        If data Is Nothing Then
             Return Nothing
         End If
 
-        Dim droppedFiles = TryCast(data.GetData(DataFormats.FileDrop), String())
-        If droppedFiles Is Nothing OrElse droppedFiles.Length = 0 Then
-            Return Nothing
-        End If
+        Dim entries As New List(Of String)
 
-        Dim cleanedFiles As New List(Of String)
-        For Each filePath As String In droppedFiles
-            If Not String.IsNullOrWhiteSpace(filePath) Then
-                cleanedFiles.Add(filePath)
+        If data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim droppedFiles = TryCast(data.GetData(DataFormats.FileDrop), String())
+            If droppedFiles IsNot Nothing AndAlso droppedFiles.Length > 0 Then
+                entries.AddRange(droppedFiles.Where(Function(f) Not String.IsNullOrWhiteSpace(f)))
             End If
-        Next
+        ElseIf data.GetDataPresent(DataFormats.UnicodeText) OrElse data.GetDataPresent(DataFormats.Text) Then
+            Dim textValue As String = Nothing
+            If data.GetDataPresent(DataFormats.UnicodeText) Then
+                textValue = TryCast(data.GetData(DataFormats.UnicodeText), String)
+            Else
+                textValue = TryCast(data.GetData(DataFormats.Text), String)
+            End If
 
-        Dim fileArray = cleanedFiles.ToArray()
+            If Not String.IsNullOrWhiteSpace(textValue) Then
+                entries.AddRange(textValue.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).Select(Function(t) t.Trim()).Where(Function(t) Not String.IsNullOrWhiteSpace(t)))
+            End If
+        End If
+
+        Dim fileArray = entries.ToArray()
+        If fileArray.Length = 0 Then
+            Return Nothing
+        End If
 
         If fileArray.Length = 1 Then
-            Dim extension = Path.GetExtension(fileArray(0))
+            Dim extension = GetEntryExtension(fileArray(0))
             If IsSingleFileExtensionValid(extension) Then
                 Return Array.AsReadOnly(fileArray)
             End If
-        ElseIf fileArray.Length = 2 Then
-            Dim firstExtension = Path.GetExtension(fileArray(0))
-            Dim secondExtension = Path.GetExtension(fileArray(1))
-            If (HasExtension(firstExtension, ".pln") AndAlso HasExtension(secondExtension, ".wpr")) OrElse
-               (HasExtension(firstExtension, ".wpr") AndAlso HasExtension(secondExtension, ".pln")) Then
+        ElseIf fileArray.Length <= 3 Then
+            Dim extensions = fileArray.Select(Function(f) GetEntryExtension(f)).ToList()
+
+            Dim hasPln = extensions.Any(Function(ext) HasExtension(ext, ".pln"))
+            Dim hasWpr = extensions.Any(Function(ext) HasExtension(ext, ".wpr"))
+            Dim hasOnlySupported = extensions.All(Function(ext) HasExtension(ext, ".pln") OrElse HasExtension(ext, ".wpr") OrElse HasExtension(ext, ".dph"))
+
+            If hasOnlySupported AndAlso hasPln AndAlso (fileArray.Length <= 2 OrElse hasWpr) Then
                 Return Array.AsReadOnly(fileArray)
             End If
         End If
@@ -159,8 +174,21 @@ Public Class BriefingControl
         Return Nothing
     End Function
 
+    Private Function GetEntryExtension(entry As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return Path.GetExtension(uri.AbsolutePath)
+        End If
+
+        Return Path.GetExtension(entry)
+    End Function
+
     Private Shared Function IsSingleFileExtensionValid(extension As String) As Boolean
-        Return HasExtension(extension, ".dphx") OrElse HasExtension(extension, ".zip") OrElse HasExtension(extension, ".pln")
+        Return HasExtension(extension, ".dphx") OrElse HasExtension(extension, ".zip") OrElse HasExtension(extension, ".pln") OrElse HasExtension(extension, ".dph")
     End Function
 
     Private Shared Function HasExtension(extension As String, expectedExtension As String) As Boolean
@@ -519,9 +547,14 @@ Public Class BriefingControl
         lblTaskTitle.Text = $"{_sessionData.Title} (#{_sessionData.EntrySeqID})"
         lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
         lblTaskName.Text = $"{Path.GetFileNameWithoutExtension(_sessionData.FlightPlanFilename)}"
-        lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"
+        Dim hasSimLocalInfo = _sessionData.SimDate <> Date.MinValue AndAlso _sessionData.SimTime <> Date.MinValue
+        If hasSimLocalInfo Then
+            lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"
+        Else
+            lblSimLocalDateTime.Text = "Not provided"
+        End If
         lblWeatherProfile.Text = _WeatherDetails.PresetName
-        lblRecGliders.Text = _sessionData.RecommendedGliders
+        lblRecGliders.Text = If(String.IsNullOrWhiteSpace(_sessionData.RecommendedGliders), "Not provided", _sessionData.RecommendedGliders)
 
         'Unstandard Barometric pressure
         If Not _WeatherDetails.IsStandardMSLPressure Then
