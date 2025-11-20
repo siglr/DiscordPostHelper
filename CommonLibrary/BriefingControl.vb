@@ -544,6 +544,8 @@ Public Class BriefingControl
             dateFormat = "MMMM dd"
         End If
 
+        Dim showTrackerGroup As Boolean = Not String.IsNullOrWhiteSpace(_sessionData.TrackerGroup)
+
         lblTaskTitle.Text = $"{_sessionData.Title} (#{_sessionData.EntrySeqID})"
         lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
         lblTaskName.Text = $"{Path.GetFileNameWithoutExtension(_sessionData.FlightPlanFilename)}"
@@ -578,7 +580,12 @@ Public Class BriefingControl
         Else
             pnlSetupEventTitle.Visible = False
             pnlSetupServer.Visible = False
-            pnlSetupTrackerGroup.Visible = False
+            If Not _sessionData.EventEnabled AndAlso showTrackerGroup Then
+                pnlSetupTrackerGroup.Visible = True
+                lblEventTrackerGroup.Text = _sessionData.TrackerGroup
+            Else
+                pnlSetupTrackerGroup.Visible = False
+            End If
         End If
 
     End Sub
@@ -736,8 +743,13 @@ Public Class BriefingControl
 
         'Credits
 
-        'Local MSFS date and time 
-        sb.Append($"MSFS Local date & time is **{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}**($*$)")
+        'Local MSFS date and time
+        Dim hasSimLocalInfo = _sessionData.SimDate <> Date.MinValue AndAlso _sessionData.SimTime <> Date.MinValue
+        If hasSimLocalInfo Then
+            sb.Append($"MSFS Local date & time is **{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}**($*$)")
+        Else
+            sb.Append("MSFS Local date & time is **Not specified**($*$)")
+        End If
 
         'Flight plan
         sb.Append($"The flight plan to load is **{Path.GetFileName(_sessionData.FlightPlanFilename)}**($*$)")
