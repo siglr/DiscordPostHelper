@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.20.1</ReleaseVersion>
+      <ReleaseTitle>Very small update</ReleaseTitle>
+      <ReleaseNotes>
+        Moved "Discard" button on the toolbar to be closer to "Save" when visible
+        "This is a refly" only considered when "Delayed Availability" is checked
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.10.1</ReleaseVersion>
       <ReleaseTitle>Small but significant new stuff</ReleaseTitle>

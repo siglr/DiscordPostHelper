@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.16.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.20.1</ReleaseVersion>
+      <ReleaseTitle>Full Drag and Drop and Manual Loading Mode</ReleaseTitle>
+      <ReleaseNotes>
+        Individual and manual file loading fall back mode
+        Support dragging files directly on the main form
+        Support dragging PLN and WPR links from Discord
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.16.1</ReleaseVersion>
       <ReleaseTitle>Install all tools from DPHX Settings</ReleaseTitle>
