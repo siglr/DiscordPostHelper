@@ -580,12 +580,12 @@ Public Class BriefingControl
         Else
             pnlSetupEventTitle.Visible = False
             pnlSetupServer.Visible = False
-            pnlSetupTrackerGroup.Visible = False
-        End If
-
-        If Not SupportingFeatures.IsEventActive(_sessionData) AndAlso showTrackerGroup Then
-            pnlSetupTrackerGroup.Visible = True
-            lblEventTrackerGroup.Text = _sessionData.TrackerGroup
+            If Not _sessionData.EventEnabled AndAlso showTrackerGroup Then
+                pnlSetupTrackerGroup.Visible = True
+                lblEventTrackerGroup.Text = _sessionData.TrackerGroup
+            Else
+                pnlSetupTrackerGroup.Visible = False
+            End If
         End If
 
     End Sub
