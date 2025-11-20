@@ -344,11 +344,16 @@ Public Class DPHXUnpackAndLoad
         Dim manualResult = PromptForManualSelection(_manualFallbackFlightPlanPath, _manualFallbackWeatherPath, _manualFallbackTrackerGroup)
 
         If manualResult IsNot Nothing Then
+            Dim sourceLabel = Path.GetFileName(manualResult.FlightPlanPath)
+            If String.IsNullOrWhiteSpace(sourceLabel) Then
+                sourceLabel = "Manual selection"
+            End If
+
             LoadManualSelection(manualResult.FlightPlanPath,
                                 manualResult.WeatherPath,
                                 manualResult.TrackerGroupName,
                                 Nothing,
-                                "Manual selection")
+                                sourceLabel)
         End If
 
     End Sub
@@ -1161,17 +1166,19 @@ Public Class DPHXUnpackAndLoad
 
         ' Tracker auto-start and data feeding
         If Settings.SessionSettings.TrackerStartAndFeed Then
-            Dim TrackerRunning As Boolean = TaskFileHelper.EnsureTrackerRunning(_status)
+                Dim TrackerRunning As Boolean = TaskFileHelper.EnsureTrackerRunning(_status)
 
-            If TrackerRunning Then
-                'Feed the data to the tracker
-                Dim groupToUse As String = String.Empty
-                If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
-                    groupToUse = _allDPHData.TrackerGroup
-                End If
-                TaskFileHelper.SendDataToTracker(groupToUse,
-                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
-                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                If TrackerRunning Then
+                    'Feed the data to the tracker
+                    Dim groupToUse As String = String.Empty
+                    If Not String.IsNullOrWhiteSpace(_allDPHData.TrackerGroup) Then
+                        groupToUse = _allDPHData.TrackerGroup
+                    ElseIf _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
+                        groupToUse = _allDPHData.TrackerGroup
+                    End If
+                    TaskFileHelper.SendDataToTracker(groupToUse,
+                                      Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
+                                      Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
                                   _allDPHData.URLGroupEventPost,
                                   _status
                                  )
