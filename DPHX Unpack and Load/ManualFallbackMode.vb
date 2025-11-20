@@ -559,7 +559,7 @@ Partial Public Class ManualFallbackMode
             contentDisposition = headers("Content-Disposition")
         End If
 
-        Dim fileNameFromHeader = TryResolveContentDispositionFileName(contentDisposition)
+        Dim fileNameFromHeader = SupportingFeatures.TryResolveContentDispositionFileName(contentDisposition)
         If Not String.IsNullOrWhiteSpace(fileNameFromHeader) Then
             Return fileNameFromHeader
         End If
@@ -570,42 +570,6 @@ Partial Public Class ManualFallbackMode
         End If
 
         Return fileName
-    End Function
-
-    Private Function TryResolveContentDispositionFileName(contentDisposition As String) As String
-        If String.IsNullOrWhiteSpace(contentDisposition) Then
-            Return Nothing
-        End If
-
-        Try
-            Dim disposition As New ContentDisposition(contentDisposition)
-            If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
-                Return disposition.FileName
-            End If
-        Catch ex As FormatException
-            ' Fall back to manual parsing below.
-        End Try
-
-        Dim parts = contentDisposition.Split({";"c}, StringSplitOptions.RemoveEmptyEntries)
-        For Each part In parts
-            Dim trimmed = part.Trim()
-            If trimmed.StartsWith("filename*=", StringComparison.OrdinalIgnoreCase) Then
-                Dim value = trimmed.Substring("filename*=".Length)
-                Dim encodingSeparator = value.IndexOf("''")
-                If encodingSeparator >= 0 AndAlso encodingSeparator + 2 < value.Length Then
-                    value = value.Substring(encodingSeparator + 2)
-                End If
-
-                Return Uri.UnescapeDataString(value.Trim("\""c))
-            End If
-
-            If trimmed.StartsWith("filename=", StringComparison.OrdinalIgnoreCase) Then
-                Dim value = trimmed.Substring("filename=".Length).Trim()
-                Return value.Trim("\""c)
-            End If
-        Next
-
-        Return Nothing
     End Function
 
     Private Sub UpdateGroupHighlights(draggedFiles As DraggedFilesInfo)

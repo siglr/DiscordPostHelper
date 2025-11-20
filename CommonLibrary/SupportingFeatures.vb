@@ -3319,6 +3319,62 @@ Public Class SupportingFeatures
         Return s.Replace("\", "\\").Replace(")", "\)")
     End Function
 
+    Public Shared Function TryResolveContentDispositionFileName(contentDisposition As String) As String
+        If String.IsNullOrWhiteSpace(contentDisposition) Then
+            Return Nothing
+        End If
+
+        Dim parts = contentDisposition.Split({";"c}, StringSplitOptions.RemoveEmptyEntries)
+
+        Dim asciiFileName As String = Nothing
+        Dim rfc5987FileName As String = Nothing
+
+        For Each part In parts
+            Dim trimmed = part.Trim()
+
+            ' filename*=
+            If trimmed.StartsWith("filename*=", StringComparison.OrdinalIgnoreCase) Then
+                Dim value = trimmed.Substring("filename*=".Length)
+
+                ' value is like: utf-8''SSC%20GR%20Ioannina%20175.pln
+                Dim encodingSeparator = value.IndexOf("''", StringComparison.Ordinal)
+                If encodingSeparator >= 0 AndAlso encodingSeparator + 2 <= value.Length Then
+                    Dim encoded = value.Substring(encodingSeparator + 2)
+                    rfc5987FileName = Uri.UnescapeDataString(encoded.Trim(""""c))
+                Else
+                    rfc5987FileName = Uri.UnescapeDataString(value.Trim(""""c))
+                End If
+
+                ' filename=
+            ElseIf trimmed.StartsWith("filename=", StringComparison.OrdinalIgnoreCase) Then
+                Dim value = trimmed.Substring("filename=".Length).Trim()
+                asciiFileName = value.Trim(""""c)
+            End If
+        Next
+
+        ' Prefer RFC5987 filename*=
+        If Not String.IsNullOrWhiteSpace(rfc5987FileName) Then
+            Return rfc5987FileName
+        End If
+
+        ' Fallback to plain filename=
+        If Not String.IsNullOrWhiteSpace(asciiFileName) Then
+            Return asciiFileName
+        End If
+
+        ' Last resort: built-in parser for odd cases we didn't handle
+        Try
+            Dim disposition As New System.Net.Mime.ContentDisposition(contentDisposition)
+            If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
+                Return disposition.FileName
+            End If
+        Catch ex As FormatException
+            ' ignore
+        End Try
+
+        Return Nothing
+    End Function
+
 End Class
 
 
