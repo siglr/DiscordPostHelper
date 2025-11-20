@@ -2123,7 +2123,7 @@ Public Class Main
         sb.AppendLine($"## {WSGEmoji}WeSimGlide.org")
         sb.AppendLine(localizer.Format("group.thread.task_link", _TaskEntrySeqID, $"{SupportingFeatures.WeSimGlide}index.html?task={_TaskEntrySeqID}"))
         If fromGroup Then
-            If Not _taskDiscordPostID = String.Empty AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked) Then
+            If Not _taskDiscordPostID = String.Empty AndAlso Not (IsDelayedAvailabilityEnabledAndChecked() AndAlso chkAvailabilityRefly.Checked) Then
                 sb.AppendLine(localizer.Format("group.thread.discord_header"))
                 sb.AppendLine(localizer.Format("group.thread.discord_link", txtEventTitle.Text.Trim, $"{SupportingFeatures.TaskLibraryDiscordURL(_useTestMode)}/{_taskDiscordPostID}"))
             End If
@@ -2205,6 +2205,12 @@ Public Class Main
     Private ReadOnly Property IsDelayedAvailability() As Boolean
         Get
             Return AvailabilityDateTimeToUse > Now()
+        End Get
+    End Property
+
+    Private ReadOnly Property IsDelayedAvailabilityEnabledAndChecked() As Boolean
+        Get
+            Return chkDelayedAvailability.Enabled AndAlso chkDelayedAvailability.Checked
         End Get
     End Property
 
@@ -3115,7 +3121,7 @@ Public Class Main
         Dim localizedMainContent As String = Nothing
         Dim localizedFullDescription As String = Nothing
 
-        Dim needLocalizedResults As Boolean = ((chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked AndAlso Not (chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked)) OrElse
+        Dim needLocalizedResults As Boolean = ((chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked AndAlso Not (IsDelayedAvailabilityEnabledAndChecked() AndAlso chkAvailabilityRefly.Checked)) OrElse
                                               (chkDGPOFullDescription.Enabled AndAlso chkDGPOFullDescription.Checked AndAlso (Not IsDelayedAvailability)))
 
         If needLocalizedResults Then
@@ -3154,7 +3160,7 @@ Public Class Main
 
         'Main post
         If chkDGPOMainPost.Enabled AndAlso chkDGPOMainPost.Checked Then
-            If chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked Then
+            If IsDelayedAvailabilityEnabledAndChecked() AndAlso chkAvailabilityRefly.Checked Then
                 msg = $"{msg}{localizer.Format("group.event.no_task_details")}"
             Else
                 Dim mainContentToAppend As String = localizedMainContent
@@ -4262,7 +4268,12 @@ Public Class Main
 
     Private Function GetGroupEventLanguage() As SupportedLanguage
         'Get the language from the club preset
-        Return _ClubPreset.Language
+        If _ClubPreset IsNot Nothing Then
+            Return _ClubPreset.Language
+        Else
+            Return SupportedLanguage.English
+        End If
+
     End Function
 
     Private Function FormatSimDateTime(language As SupportedLanguage, includeLocalLabel As Boolean) As String
@@ -7458,7 +7469,7 @@ Public Class Main
 
             Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
 
-            Dim refly As Integer = If(chkAvailabilityRefly.Enabled AndAlso chkAvailabilityRefly.Checked, 1, 0)
+            Dim refly As Integer = If(IsDelayedAvailabilityEnabledAndChecked() AndAlso chkAvailabilityRefly.Checked, 1, 0)
 
             Dim result As Boolean = PublishEventNews(key,
                                                     txtClubFullName.Text.Trim,
@@ -7567,9 +7578,9 @@ Public Class Main
             Exit Sub
         End If
 
-        grbDelayedPosting.Enabled = chkDelayedAvailability.Checked
+        grbDelayedPosting.Enabled = IsDelayedAvailabilityEnabledAndChecked()
 
-        If chkDelayedAvailability.Checked Then
+        If IsDelayedAvailabilityEnabledAndChecked() Then
             chkDelayBasedOnEvent.Enabled = chkActivateEvent.Checked
             CalculateTaskAvailability()
         End If
@@ -7708,7 +7719,7 @@ Public Class Main
     Private ReadOnly Property AvailabilityDateTimeToUse As DateTime
         Get
             Dim availabilityDateTimeLocal As DateTime = _SF.GetFullEventDateTimeInLocal(dtAvailabilityDate, dtAvailabilityTime, False)
-            If Not (chkDelayedAvailability.Enabled AndAlso chkDelayedAvailability.Checked AndAlso availabilityDateTimeLocal > Now()) Then
+            If Not (IsDelayedAvailabilityEnabledAndChecked() AndAlso availabilityDateTimeLocal > Now()) Then
                 availabilityDateTimeLocal = Now()
             End If
             Return availabilityDateTimeLocal
