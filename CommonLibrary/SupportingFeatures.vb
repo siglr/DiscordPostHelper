@@ -937,13 +937,27 @@ Public Class SupportingFeatures
         End Try
     End Function
 
-    Public Shared Function CleanupDPHXTempFolder(ByVal unpackFolder As String) As Boolean
+    Public Shared Function CleanupDPHXTempFolder(ByVal unpackFolder As String, Optional includeDroppedFolder As Boolean = False) As Boolean
 
         Dim success As Boolean = True
 
-        If Directory.Exists(unpackFolder) Then
-            'Folder exists - delete files
-            Dim files As String() = Directory.GetFiles(unpackFolder)
+        success = CleanupFolderFiles(unpackFolder, success)
+
+        If includeDroppedFolder Then
+            Dim droppedFolder = Path.Combine(Path.GetTempPath(), "DPHXDropped")
+            success = CleanupFolderFiles(droppedFolder, success)
+        End If
+
+        Return success
+
+    End Function
+
+    Private Shared Function CleanupFolderFiles(folder As String, currentSuccess As Boolean) As Boolean
+
+        Dim success = currentSuccess
+
+        If Directory.Exists(folder) Then
+            Dim files As String() = Directory.GetFiles(folder)
             For Each file As String In files
                 Try
                     IO.File.Delete(file)
