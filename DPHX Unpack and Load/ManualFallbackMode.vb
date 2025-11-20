@@ -364,7 +364,14 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e, False)
+        Dim entries = ExtractDragEntries(e.Data)
+        If ContainsWeSimGlideLink(entries) Then
+            ClearAllGroupHighlights()
+            e.Effect = DragDropEffects.Copy
+            Return
+        End If
+
+        Dim draggedFiles = GetDraggedFilesInfo(entries, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
@@ -375,7 +382,14 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub HandleGroupDragOver(e As DragEventArgs, targetGroup As GroupBox)
-        Dim draggedFiles = GetDraggedFilesInfo(e, False)
+        Dim entries = ExtractDragEntries(e.Data)
+        If ContainsWeSimGlideLink(entries) Then
+            ClearAllGroupHighlights()
+            e.Effect = DragDropEffects.Copy
+            Return
+        End If
+
+        Dim draggedFiles = GetDraggedFilesInfo(entries, False)
         UpdateGroupHighlights(draggedFiles)
 
         If ShouldAcceptDrop(targetGroup, draggedFiles) Then
