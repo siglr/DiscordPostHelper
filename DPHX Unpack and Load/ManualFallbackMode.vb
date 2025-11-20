@@ -543,7 +543,7 @@ Partial Public Class ManualFallbackMode
 
         Dim targetPath = Path.Combine(downloadFolder, fileName)
         If File.Exists(targetPath) Then
-            targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}_{Guid.NewGuid():N}{Path.GetExtension(fileName)}")
+            targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}")
         End If
 
         Using client As New WebClient()

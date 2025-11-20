@@ -2193,7 +2193,7 @@ Public Class DPHXUnpackAndLoad
 
         Dim targetPath = Path.Combine(downloadFolder, fileName)
         If File.Exists(targetPath) Then
-            Dim uniqueName = $"{Path.GetFileNameWithoutExtension(fileName)}_{Guid.NewGuid():N}{Path.GetExtension(fileName)}"
+            Dim uniqueName = $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}"
             targetPath = Path.Combine(downloadFolder, uniqueName)
         End If
 
