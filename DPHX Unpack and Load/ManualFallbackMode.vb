@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.IO
 Imports System.Linq
 Imports System.Net
+Imports System.Net.Mime
 Imports System.Windows.Forms
 Imports System.Xml.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -534,21 +535,50 @@ Partial Public Class ManualFallbackMode
             Directory.CreateDirectory(downloadFolder)
         End If
 
+        Using client As New WebClient()
+            Using stream = client.OpenRead(uri)
+                If stream Is Nothing Then
+                    Throw New InvalidOperationException("Unable to download the dropped file.")
+                End If
+
+                Dim fileName = ResolveDroppedFileName(uri, client.ResponseHeaders)
+                Dim targetPath = Path.Combine(downloadFolder, fileName)
+                If File.Exists(targetPath) Then
+                    targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}")
+                End If
+
+                Using output As New FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None)
+                    stream.CopyTo(output)
+                End Using
+
+                Return targetPath
+            End Using
+        End Using
+    End Function
+
+    Private Function ResolveDroppedFileName(uri As Uri, headers As WebHeaderCollection) As String
+        Dim contentDisposition As String = Nothing
+        If headers IsNot Nothing Then
+            contentDisposition = headers("Content-Disposition")
+        End If
+
+        If Not String.IsNullOrWhiteSpace(contentDisposition) Then
+            Try
+                Dim disposition As New ContentDisposition(contentDisposition)
+                If Not String.IsNullOrWhiteSpace(disposition.FileName) Then
+                    Return disposition.FileName
+                End If
+            Catch ex As FormatException
+                ' Ignore malformed Content-Disposition headers and fall back to the URL path.
+            End Try
+        End If
+
         Dim fileName = Path.GetFileName(uri.LocalPath)
         If String.IsNullOrWhiteSpace(fileName) Then
             fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.LocalPath)}"
         End If
 
-        Dim targetPath = Path.Combine(downloadFolder, fileName)
-        If File.Exists(targetPath) Then
-            targetPath = Path.Combine(downloadFolder, $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}")
-        End If
-
-        Using client As New WebClient()
-            client.DownloadFile(uri, targetPath)
-        End Using
-
-        Return targetPath
+        Return fileName
     End Function
 
     Private Sub UpdateGroupHighlights(draggedFiles As DraggedFilesInfo)
