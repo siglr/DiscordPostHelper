@@ -48,8 +48,6 @@ Partial Public Class ManualFallbackMode
 
         Me.AcceptButton = btnCopyGoFly
         Me.CancelButton = btnClearFiles
-        btnClose.Visible = False
-        btnClose.Enabled = False
 
     End Sub
 
@@ -149,7 +147,7 @@ Partial Public Class ManualFallbackMode
 
     End Sub
 
-    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub btnClose_Click(sender As Object, e As EventArgs)
 
         _selectionResult = Nothing
         Me.DialogResult = DialogResult.Cancel

@@ -23,7 +23,6 @@ Partial Class ManualFallbackMode
         Me.cboWhitelistPresets = New System.Windows.Forms.ComboBox()
         Me.btnCopyGoFly = New System.Windows.Forms.Button()
         Me.btnClearFiles = New System.Windows.Forms.Button()
-        Me.btnClose = New System.Windows.Forms.Button()
         Me.txtTrackerGroupName = New System.Windows.Forms.TextBox()
         Me.lblPLNFile = New System.Windows.Forms.Label()
         Me.lblPLNTitle = New System.Windows.Forms.Label()
@@ -96,18 +95,6 @@ Partial Class ManualFallbackMode
         Me.btnClearFiles.Text = "Cancel"
         Me.ToolTip1.SetToolTip(Me.btnClearFiles, "Cancel and return to the main window")
         Me.btnClearFiles.UseVisualStyleBackColor = True
-        '
-        'btnClose
-        '
-        Me.btnClose.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.Location = New System.Drawing.Point(12, 393)
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(458, 33)
-        Me.btnClose.TabIndex = 5
-        Me.btnClose.Text = "Close"
-        Me.ToolTip1.SetToolTip(Me.btnClose, "Close this window")
-        Me.btnClose.UseVisualStyleBackColor = True
         '
         'txtTrackerGroupName
         '
@@ -204,9 +191,8 @@ Partial Class ManualFallbackMode
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(482, 437)
+        Me.ClientSize = New System.Drawing.Size(482, 406)
         Me.Controls.Add(Me.grpTracker)
-        Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnClearFiles)
         Me.Controls.Add(Me.btnCopyGoFly)
         Me.Controls.Add(Me.grpWeather)
@@ -215,9 +201,9 @@ Partial Class ManualFallbackMode
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(5000, 481)
+        Me.MaximumSize = New System.Drawing.Size(5000, 450)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(500, 481)
+        Me.MinimumSize = New System.Drawing.Size(500, 450)
         Me.Name = "ManualFallbackMode"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
@@ -241,7 +227,6 @@ Partial Class ManualFallbackMode
     Friend WithEvents cboWhitelistPresets As ComboBox
     Friend WithEvents btnCopyGoFly As Button
     Friend WithEvents btnClearFiles As Button
-    Friend WithEvents btnClose As Button
     Friend WithEvents grpTracker As GroupBox
     Friend WithEvents txtTrackerGroupName As TextBox
 End Class
