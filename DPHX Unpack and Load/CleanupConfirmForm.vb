@@ -59,8 +59,6 @@ Public Class CleanupConfirmForm
             End If
 
             If _additionalActions.Count > 0 Then
-                If sb.Length > 0 Then sb.AppendLine()
-
                 For Each action In _additionalActions
                     Dim line As String
                     Try
@@ -74,7 +72,6 @@ Public Class CleanupConfirmForm
                     End If
 
                     sb.AppendLine(line)
-                    sb.AppendLine()
                 Next
             End If
 
