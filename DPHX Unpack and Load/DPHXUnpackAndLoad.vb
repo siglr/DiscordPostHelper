@@ -1970,7 +1970,7 @@ Public Class DPHXUnpackAndLoad
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFlightPlan)),
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedWeather)),
                                           _taskDiscordPostID,
-                                          TempDPHXUnpackFolder)
+                                          TempDPHXUnpackFolder, _isManualMode)
 
             _currentFile = sourceLabel
             txtPackageName.Text = sourceLabel

@@ -27,6 +27,7 @@ Public Class BriefingControl
     Private _discordPostID As String = String.Empty
     Private _dragDropHandlersInitialized As Boolean
     Private _validDragActive As Boolean
+    Private _isManualMode As Boolean = False
     Private ReadOnly _controlsWithDragHandlers As New HashSet(Of Control)()
 
     Public Property EventIsEnabled As Boolean
@@ -497,10 +498,12 @@ Public Class BriefingControl
                                 flightplanfile As String,
                                 weatherfile As String,
                                 discordPostID As String,
-                                Optional unpackFolder As String = "NONE")
+                                Optional unpackFolder As String = "NONE",
+                                Optional isManualMode As Boolean = False)
 
         _SF = supportFeat
         SupportingFeatures.PrefUnits = PrefUnits
+        _isManualMode = isManualMode
 
         _sessionData = sessionData
         If unpackFolder = "NONE" Then
@@ -558,7 +561,10 @@ Public Class BriefingControl
             dateFormat = "MMMM dd"
         End If
 
-        Dim showTrackerGroup As Boolean = Not String.IsNullOrWhiteSpace(_sessionData.TrackerGroup)
+        Dim showTrackerGroup As Boolean = False
+        If _isManualMode Then
+            showTrackerGroup = Not String.IsNullOrWhiteSpace(_sessionData.TrackerGroup)
+        End If
 
         lblTaskTitle.Text = $"{_sessionData.Title} (#{_sessionData.EntrySeqID})"
         lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
