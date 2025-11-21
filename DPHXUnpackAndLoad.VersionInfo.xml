@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.20.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.21.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.21.2</ReleaseVersion>
+      <ReleaseTitle>Strengthened integration with Tracker</ReleaseTitle>
+      <ReleaseNotes>
+        Added a verification of what's been loaded on the Tracker and loop a few times if required
+        Fixed the tracker info showing when it should not on the briefing's Setup tab
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.20.1</ReleaseVersion>
       <ReleaseTitle>Full Drag and Drop and Manual Loading Mode</ReleaseTitle>

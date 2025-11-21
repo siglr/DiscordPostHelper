@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.20.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.21.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.21.2</ReleaseVersion>
+      <ReleaseTitle>Staying in sync with DPHX tool</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the tracker info showing when it should not on the briefing's Setup tab
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.20.1</ReleaseVersion>
       <ReleaseTitle>Very small update</ReleaseTitle>
