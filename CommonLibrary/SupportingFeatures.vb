@@ -3409,6 +3409,33 @@ Public Class SupportingFeatures
         Return name
     End Function
 
+    Public Shared Function GetFlightPlanTitleFromPln(plnFilePath As String) As String
+
+        If String.IsNullOrWhiteSpace(plnFilePath) OrElse Not File.Exists(plnFilePath) Then
+            Return String.Empty
+        End If
+
+        Try
+            Dim xdoc = XDocument.Load(plnFilePath, LoadOptions.PreserveWhitespace)
+
+            ' Prefer Title under <FlightPlan.FlightPlan>
+            Dim fp = xdoc.Descendants("FlightPlan.FlightPlan").FirstOrDefault()
+            If fp IsNot Nothing Then
+                Dim titleElem = fp.Element("Title")
+                If titleElem IsNot Nothing Then
+                    Dim title = titleElem.Value.Trim()
+                    If title.Length > 0 Then
+                        Return title
+                    End If
+                End If
+            End If
+            Return String.Empty
+
+        Catch ex As Exception
+            Return String.Empty
+        End Try
+    End Function
+
 End Class
 
 

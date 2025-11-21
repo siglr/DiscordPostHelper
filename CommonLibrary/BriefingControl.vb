@@ -13,6 +13,7 @@ Public Class BriefingControl
 
 #Region "Constants and global members"
 
+    Private _flightplanfile As String
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
     Private _WeatherDetails As WeatherDetails = Nothing
@@ -510,8 +511,9 @@ Public Class BriefingControl
         End If
 
         'Load flight plan
+        _flightplanfile = flightplanfile
         _XmlDocFlightPlan = New XmlDocument
-        _XmlDocFlightPlan.Load(flightplanfile)
+        _XmlDocFlightPlan.Load(_flightplanfile)
 
         'Load weather info
         _XmlDocWeatherPreset = New XmlDocument
@@ -561,6 +563,13 @@ Public Class BriefingControl
         lblTaskTitle.Text = $"{_sessionData.Title} (#{_sessionData.EntrySeqID})"
         lblDeparture.Text = $"{_sessionData.DepartureICAO}/{_sessionData.DepartureExtra}"
         lblTaskName.Text = $"{Path.GetFileNameWithoutExtension(_sessionData.FlightPlanFilename)}"
+        lblFlightPlanTitle.Text = SupportingFeatures.GetFlightPlanTitleFromPln(_flightplanfile)
+        If lblTaskName.Text.Trim() = lblFlightPlanTitle.Text.Trim() Then
+            pnlFlightPlanTitle.Visible = False
+        Else
+            pnlFlightPlanTitle.Visible = True
+        End If
+
         Dim hasSimLocalInfo = _sessionData.SimDate <> Date.MinValue AndAlso _sessionData.SimTime <> Date.MinValue
         If hasSimLocalInfo Then
             lblSimLocalDateTime.Text = $"{_sessionData.SimLocalDateTime.ToString(dateFormat, _EnglishCulture)}, {_sessionData.SimLocalDateTime.ToString(dateTimeFormat.ShortTimePattern, CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo.Trim, True, True)}"

@@ -12,6 +12,9 @@ Imports SIGLR.SoaringTools.CommonLibrary
 
 Friend Module TaskFileHelper
 
+    ' Reusable HttpClient for Tracker JSON polling
+    Private ReadOnly TrackerHttpClient As New HttpClient()
+
     Friend Function CopyTaskFile(filename As String,
                                  sourcePath As String,
                                  destPath As String,
@@ -251,12 +254,20 @@ Friend Module TaskFileHelper
         End Try
     End Sub
 
+    ' =========================
+    '  SSC-Tracker integration
+    ' =========================
+
     Friend Sub SendDataToTracker(trackerGroup As String,
                                  plnfilePath As String,
                                  wprfilePath As String,
                                  infoURL As String,
+                                 expectedPlnTitle As String,
                                  status As frmStatus)
-        Dim apiUrl As String = $"http://localhost:{Settings.SessionSettings.TrackerLocalWSPort}/settask"
+
+        Dim port = Settings.SessionSettings.TrackerLocalWSPort
+        Dim setTaskUrl As String = $"http://localhost:{port}/settask"
+        Dim jsonUrl As String = $"http://localhost:{port}/json"
 
         Try
             Dim plnContent As String = If(File.Exists(plnfilePath), File.ReadAllText(plnfilePath), "")
@@ -272,7 +283,7 @@ Friend Module TaskFileHelper
             Dim payload As New With {
                 .CMD = "SET",
                 .GN = trackerGroup,
-                .TASK = extractFilename(plnfilePath),
+                .TASK = extractFilename(plnfilePath),  ' keep existing behavior
                 .TASKDATA = plnContent,
                 .WEATHER = extractFilename(wprfilePath),
                 .WEATHERDATA = wprContent,
@@ -281,14 +292,37 @@ Friend Module TaskFileHelper
 
             Dim jsonPayload As String = JsonConvert.SerializeObject(payload)
 
-            Dim response = SendPostRequest(apiUrl, jsonPayload)
-            response = SendPostRequest(apiUrl, jsonPayload)
+            Const maxAttempts As Integer = 3
+            Const delayMs As Integer = 3000
 
-            If response.IsSuccessStatusCode Then
-                status?.AppendStatusLine($"Call to SSC Tracker successful.", True)
-            Else
-                status?.AppendStatusLine($"Failed to communicate with Tracker on the second call. HTTP Status: {response.StatusCode}", True)
-            End If
+            For attempt As Integer = 1 To maxAttempts
+                status?.AppendStatusLine($"Sending task to Tracker (attempt {attempt}/{maxAttempts})...", True)
+
+                Dim response = SendPostRequest(setTaskUrl, jsonPayload)
+
+                If Not response.IsSuccessStatusCode Then
+                    status?.AppendStatusLine(
+                        $"Tracker Set Task failed. HTTP {(CInt(response.StatusCode))} – {response.ReasonPhrase}", True)
+                    ' Still continue to retry – tracker might be starting up
+                Else
+                    ' Give SSC-Tracker time to apply the new task
+                    Thread.Sleep(delayMs)
+
+                    Dim trackerState = GetTrackerState(jsonUrl, status)
+
+                    If trackerState IsNot Nothing AndAlso
+                       TrackerStateLooksOk(trackerState, expectedPlnTitle, status) Then
+
+                        status?.AppendStatusLine("Tracker confirmed updated task successfully.", True)
+                        Exit Sub
+                    Else
+                        status?.AppendStatusLine("Tracker state does not match expected flight plan yet – retrying.", True)
+                    End If
+                End If
+            Next
+
+            status?.AppendStatusLine(
+                "Failed to reliably apply task to Tracker after several attempts.", True)
 
         Catch ex As Exception
             status?.AppendStatusLine($"An error occurred while communicating with Tracker: {ex.Message}", True)
@@ -300,6 +334,45 @@ Friend Module TaskFileHelper
             Dim content As New StringContent(jsonPayload, Encoding.UTF8, "application/json")
             Return client.PostAsync(apiUrl, content).Result
         End Using
+    End Function
+
+    Private Function GetTrackerState(jsonUrl As String, status As frmStatus) As TrackerItems
+        Try
+            Dim response = TrackerHttpClient.GetAsync(jsonUrl).Result
+            If Not response.IsSuccessStatusCode Then
+                status?.AppendStatusLine(
+                    $"Unable to get Tracker state. HTTP {(CInt(response.StatusCode))}.",
+                    True)
+                Return Nothing
+            End If
+
+            Dim json = response.Content.ReadAsStringAsync().Result
+            Dim state = JsonConvert.DeserializeObject(Of TrackerItems)(json)
+            Return state
+
+        Catch ex As Exception
+            status?.AppendStatusLine($"Error while querying Tracker /json: {ex.Message}", True)
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function TrackerStateLooksOk(state As TrackerItems,
+                                         expectedPlnTitle As String,
+                                         status As frmStatus) As Boolean
+        Dim trackerTaskTitle As String = If(state?.TASK, String.Empty)
+
+        status?.AppendStatusLine(
+            $"Tracker state → TASK='{trackerTaskTitle}'",
+            True)
+
+        If String.IsNullOrWhiteSpace(expectedPlnTitle) Then
+            ' If for some reason we don't have a title, don't block on this check
+            Return True
+        End If
+
+        Return String.Equals(trackerTaskTitle?.Trim(),
+                             expectedPlnTitle.Trim(),
+                             StringComparison.OrdinalIgnoreCase)
     End Function
 
     Friend Function ExecuteTrackerTaskFolderCleanup() As String
@@ -475,3 +548,17 @@ Friend Module TaskFileHelper
     End Function
 
 End Module
+
+' Classes for SSC-Tracker /json response
+Friend Class TrackerItems
+    Public Property GN As String = ""
+    Public Property TASK As String = ""
+    Public Property WEATHER As String = ""
+    Public Property ID As String = ""
+    Public Property CONFIG As Integer = 0
+    Public Property ITEMS As List(Of TrackerItem) = New List(Of TrackerItem)()
+End Class
+
+Friend Class TrackerItem
+    ' Details not needed for this check yet
+End Class

@@ -15,9 +15,10 @@ Imports System.Threading.Tasks
 Imports System.Xml.Linq
 Imports System.Xml.Serialization
 Imports CefSharp.DevTools.Page
+Imports Microsoft.Win32
+Imports NB21_logger
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
-Imports Microsoft.Win32
 Imports SIGLR.SoaringTools.CommonLibrary
 Imports SIGLR.SoaringTools.ImageViewer
 
@@ -1169,26 +1170,31 @@ Public Class DPHXUnpackAndLoad
 
         ' Tracker auto-start and data feeding
         If Settings.SessionSettings.TrackerStartAndFeed Then
-                Dim TrackerRunning As Boolean = TaskFileHelper.EnsureTrackerRunning(_status)
+            Dim TrackerRunning As Boolean = TaskFileHelper.EnsureTrackerRunning(_status)
 
-                If TrackerRunning Then
-                    'Feed the data to the tracker
-                    Dim groupToUse As String = String.Empty
-                    Dim trackerGroupValue As String = NullToEmpty(_allDPHData.TrackerGroup)
+            If TrackerRunning Then
+                'Feed the data to the tracker
+                Dim groupToUse As String = ""
+                Dim trackerGroupValue As String = NullToEmpty(_allDPHData.TrackerGroup)
 
-                    If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
+                If _allDPHData.IsFutureOrActiveEvent OrElse fromEvent Then
+                    groupToUse = trackerGroupValue
+                ElseIf _isManualMode Then
+                    If Not String.IsNullOrWhiteSpace(trackerGroupValue) Then
                         groupToUse = trackerGroupValue
-                    ElseIf _isManualMode Then
-                        If Not String.IsNullOrWhiteSpace(trackerGroupValue) Then
-                            groupToUse = trackerGroupValue
-                        End If
                     End If
-                    TaskFileHelper.SendDataToTracker(groupToUse,
-                                      Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
-                                      Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
-                                  _allDPHData.URLGroupEventPost,
-                                  _status
-                                 )
+                End If
+
+                Dim flightPlanFilePath As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
+                Dim flightPlanTitle As String = SupportingFeatures.GetFlightPlanTitleFromPln(flightPlanFilePath)
+
+                TaskFileHelper.SendDataToTracker(groupToUse,
+                                  flightPlanFilePath,
+                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                              _allDPHData.URLGroupEventPost,
+                              flightPlanTitle,
+                              _status
+                             )
             End If
         End If
 

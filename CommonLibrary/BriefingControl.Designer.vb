@@ -49,6 +49,7 @@ Partial Class BriefingControl
         Me.pnlSetupFlightplan = New System.Windows.Forms.Panel()
         Me.lblTaskName = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.pnlFlightPlanTitle = New System.Windows.Forms.Panel()
         Me.pnlSetupSeparator = New System.Windows.Forms.Panel()
         Me.pnlSetupEventTitle = New System.Windows.Forms.Panel()
         Me.lblGroupEventTitle = New System.Windows.Forms.Label()
@@ -148,6 +149,7 @@ Partial Class BriefingControl
         Me.radioBaroBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.lblFlightPlanTitle = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgSetup.SuspendLayout()
@@ -160,6 +162,7 @@ Partial Class BriefingControl
         Me.pnlSetupBaroWarning.SuspendLayout()
         Me.pnlSetupGliders.SuspendLayout()
         Me.pnlSetupFlightplan.SuspendLayout()
+        Me.pnlFlightPlanTitle.SuspendLayout()
         Me.pnlSetupEventTitle.SuspendLayout()
         Me.pnlSetupServer.SuspendLayout()
         Me.pnlSetupTrackerGroup.SuspendLayout()
@@ -301,6 +304,7 @@ Partial Class BriefingControl
         Me.flowSetup.Controls.Add(Me.pnlSetupBaroWarning)
         Me.flowSetup.Controls.Add(Me.pnlSetupGliders)
         Me.flowSetup.Controls.Add(Me.pnlSetupFlightplan)
+        Me.flowSetup.Controls.Add(Me.pnlFlightPlanTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupSeparator)
         Me.flowSetup.Controls.Add(Me.pnlSetupEventTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupServer)
@@ -525,11 +529,22 @@ Partial Class BriefingControl
         Me.Label12.TabIndex = 0
         Me.Label12.Text = "PLN"
         '
+        'pnlFlightPlanTitle
+        '
+        Me.pnlFlightPlanTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlFlightPlanTitle.Controls.Add(Me.lblFlightPlanTitle)
+        Me.pnlFlightPlanTitle.Location = New System.Drawing.Point(0, 287)
+        Me.pnlFlightPlanTitle.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlFlightPlanTitle.Name = "pnlFlightPlanTitle"
+        Me.pnlFlightPlanTitle.Size = New System.Drawing.Size(830, 41)
+        Me.pnlFlightPlanTitle.TabIndex = 7
+        '
         'pnlSetupSeparator
         '
         Me.pnlSetupSeparator.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 287)
+        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 328)
         Me.pnlSetupSeparator.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupSeparator.Name = "pnlSetupSeparator"
         Me.pnlSetupSeparator.Size = New System.Drawing.Size(830, 41)
@@ -540,7 +555,7 @@ Partial Class BriefingControl
         Me.pnlSetupEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupEventTitle.Controls.Add(Me.lblGroupEventTitle)
-        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 328)
+        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 369)
         Me.pnlSetupEventTitle.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupEventTitle.Name = "pnlSetupEventTitle"
         Me.pnlSetupEventTitle.Size = New System.Drawing.Size(830, 41)
@@ -563,7 +578,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupServer.Controls.Add(Me.lblEventMSFSServer)
         Me.pnlSetupServer.Controls.Add(Me.Label14)
-        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 369)
+        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 410)
         Me.pnlSetupServer.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupServer.Name = "pnlSetupServer"
         Me.pnlSetupServer.Size = New System.Drawing.Size(830, 41)
@@ -595,7 +610,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupTrackerGroup.Controls.Add(Me.lblEventTrackerGroup)
         Me.pnlSetupTrackerGroup.Controls.Add(Me.Label16)
-        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 410)
+        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 451)
         Me.pnlSetupTrackerGroup.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupTrackerGroup.Name = "pnlSetupTrackerGroup"
         Me.pnlSetupTrackerGroup.Size = New System.Drawing.Size(830, 41)
@@ -1685,11 +1700,22 @@ Partial Class BriefingControl
         '
         Me.Timer1.Interval = 1000
         '
+        'lblFlightPlanTitle
+        '
+        Me.lblFlightPlanTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblFlightPlanTitle.AutoEllipsis = True
+        Me.lblFlightPlanTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblFlightPlanTitle.Location = New System.Drawing.Point(175, 0)
+        Me.lblFlightPlanTitle.Name = "lblFlightPlanTitle"
+        Me.lblFlightPlanTitle.Size = New System.Drawing.Size(656, 41)
+        Me.lblFlightPlanTitle.TabIndex = 3
+        '
         'BriefingControl
         '
+        Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.AllowDrop = True
         Me.Controls.Add(Me.pnlTaskBriefing)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -1714,6 +1740,7 @@ Partial Class BriefingControl
         Me.pnlSetupGliders.PerformLayout()
         Me.pnlSetupFlightplan.ResumeLayout(False)
         Me.pnlSetupFlightplan.PerformLayout()
+        Me.pnlFlightPlanTitle.ResumeLayout(False)
         Me.pnlSetupEventTitle.ResumeLayout(False)
         Me.pnlSetupServer.ResumeLayout(False)
         Me.pnlSetupServer.PerformLayout()
@@ -1905,6 +1932,7 @@ Partial Class BriefingControl
     Friend WithEvents lblBaroNote As Windows.Forms.Label
     Friend WithEvents Label13 As Windows.Forms.Label
     Friend WithEvents pnlSetupSeparator As Windows.Forms.Panel
+    Friend WithEvents pnlFlightPlanTitle As Windows.Forms.Panel
     Friend WithEvents pnlSetupEventTitle As Windows.Forms.Panel
     Friend WithEvents lblGroupEventTitle As Windows.Forms.Label
     Friend WithEvents pnlSetupServer As Windows.Forms.Panel
@@ -1914,4 +1942,5 @@ Partial Class BriefingControl
     Friend WithEvents lblEventTrackerGroup As Windows.Forms.Label
     Friend WithEvents Label16 As Windows.Forms.Label
     Friend WithEvents Label8 As Windows.Forms.Label
+    Friend WithEvents lblFlightPlanTitle As Windows.Forms.Label
 End Class
