@@ -95,6 +95,7 @@ Partial Class IGCFileUpload
         Me.grpIGCUserComment = New System.Windows.Forms.GroupBox()
         Me.txtUserIGCComment = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnConvertToGSX = New System.Windows.Forms.Button()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -134,6 +135,7 @@ Partial Class IGCFileUpload
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnConvertToGSX)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnCopyToClipboard)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtIGCEntrySeqID)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label8)
@@ -168,9 +170,9 @@ Partial Class IGCFileUpload
         '
         Me.btnCopyToClipboard.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnCopyToClipboard.Location = New System.Drawing.Point(4, 139)
+        Me.btnCopyToClipboard.Location = New System.Drawing.Point(4, 109)
         Me.btnCopyToClipboard.Name = "btnCopyToClipboard"
-        Me.btnCopyToClipboard.Size = New System.Drawing.Size(239, 32)
+        Me.btnCopyToClipboard.Size = New System.Drawing.Size(239, 30)
         Me.btnCopyToClipboard.TabIndex = 1
         Me.btnCopyToClipboard.Text = "Copy to Clipboard"
         Me.ToolTip1.SetToolTip(Me.btnCopyToClipboard, "Click to copy the selected IGC file to your clipboard for easy pasting elsewhere." &
@@ -578,7 +580,7 @@ Partial Class IGCFileUpload
         Me.lstbxIGCFiles.Location = New System.Drawing.Point(4, 5)
         Me.lstbxIGCFiles.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.lstbxIGCFiles.Name = "lstbxIGCFiles"
-        Me.lstbxIGCFiles.Size = New System.Drawing.Size(239, 131)
+        Me.lstbxIGCFiles.Size = New System.Drawing.Size(239, 103)
         Me.lstbxIGCFiles.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.lstbxIGCFiles, "Select an IGC file from the list.")
         '
@@ -592,7 +594,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(720, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(719, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -603,7 +605,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(712, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(711, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -642,7 +644,7 @@ Partial Class IGCFileUpload
         Me.tabpgRatings.Location = New System.Drawing.Point(4, 22)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(712, 669)
+        Me.tabpgRatings.Size = New System.Drawing.Size(711, 669)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
@@ -951,6 +953,18 @@ Partial Class IGCFileUpload
         Me.txtUserIGCComment.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtUserIGCComment, "Provide comments for this specific IGC flight")
         '
+        'btnConvertToGSX
+        '
+        Me.btnConvertToGSX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConvertToGSX.Location = New System.Drawing.Point(4, 139)
+        Me.btnConvertToGSX.Name = "btnConvertToGSX"
+        Me.btnConvertToGSX.Size = New System.Drawing.Size(239, 30)
+        Me.btnConvertToGSX.TabIndex = 19
+        Me.btnConvertToGSX.Text = "Convert to GSX"
+        Me.ToolTip1.SetToolTip(Me.btnConvertToGSX, "Click to convert the selected IGC file to a GSX file format.")
+        Me.btnConvertToGSX.UseVisualStyleBackColor = True
+        '
         'IGCFileUpload
         '
         Me.AcceptButton = Me.btnClose
@@ -1058,4 +1072,5 @@ Partial Class IGCFileUpload
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
     Friend WithEvents btnCopyToClipboard As Button
+    Friend WithEvents btnConvertToGSX As Button
 End Class

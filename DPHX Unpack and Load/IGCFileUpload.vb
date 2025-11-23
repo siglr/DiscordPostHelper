@@ -1228,4 +1228,73 @@ End Function
         End Try
     End Sub
 
+    Private Sub btnConvertToGSX_Click(sender As Object, e As EventArgs) Handles btnConvertToGSX.Click
+
+        ' Convert the selected IGC file into a GPX file format
+        If lstbxIGCFiles.SelectedIndex < 0 Then Return
+
+        Dim sourcePath As String = igcDetails.IGCLocalFilePath
+        If String.IsNullOrWhiteSpace(sourcePath) OrElse Not File.Exists(sourcePath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show("Selected IGC file not found on disk.", "Convert IGC to GPX file",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
+        ' Ask the user where to save the GPX file
+        Dim gpxFileDestination As String = String.Empty
+
+        Using sfd As New SaveFileDialog()
+            sfd.Title = "Save GPX file"
+            sfd.Filter = "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*"
+            sfd.DefaultExt = "gpx"
+            sfd.AddExtension = True
+
+            ' Default to same folder and same base name as the IGC
+            Try
+                Dim defaultFolder As String = Path.GetDirectoryName(sourcePath)
+                Dim defaultName As String = Path.GetFileNameWithoutExtension(sourcePath) & ".gpx"
+
+                If Not String.IsNullOrWhiteSpace(defaultFolder) AndAlso Directory.Exists(defaultFolder) Then
+                    sfd.InitialDirectory = defaultFolder
+                End If
+
+                sfd.FileName = defaultName
+            Catch
+                ' If anything goes wrong with paths, just let dialog use its own defaults
+            End Try
+
+            If sfd.ShowDialog(Me) <> DialogResult.OK Then
+                ' User cancelled
+                Return
+            End If
+
+            gpxFileDestination = sfd.FileName
+        End Using
+
+        If String.IsNullOrWhiteSpace(gpxFileDestination) Then
+            ' Just in case, but normally we already returned on cancel
+            Return
+        End If
+
+        Try
+            IgcToGpxConverter.Convert(sourcePath, gpxFileDestination)
+
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"GPX file created successfully at:{Environment.NewLine}{gpxFileDestination}",
+                            "Convert IGC to GPX file",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"An error occurred converting the file:{Environment.NewLine}{ex.Message}",
+                            "Convert IGC to GPX file",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+        End Try
+
+    End Sub
+
 End Class
