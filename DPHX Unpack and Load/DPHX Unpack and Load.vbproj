@@ -179,6 +179,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IGCResults.vb" />
+    <Compile Include="IgcToKmlConverter.vb" />
     <Compile Include="IgcToGpxConverter.vb" />
     <Compile Include="Logger.Designer.vb">
       <DependentUpon>Logger.vb</DependentUpon>
