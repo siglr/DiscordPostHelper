@@ -7,7 +7,7 @@ Imports System.Xml
 
 ''' <summary>
 ''' Converts an IGC flight log file into a KML file with:
-''' - A LineString Placemark for the recorded track
+''' - A gx:Track Placemark for the recorded track (time-aware, animatable)
 ''' - A LineString Placemark for the task route (from C-records)
 ''' - A Point Placemark for each task waypoint
 ''' </summary>
@@ -263,6 +263,7 @@ Public Class IgcToKmlConverter
     ''' </summary>
     Private Sub WriteKmlDocument(xw As XmlWriter, fixLines As List(Of String), defaultName As String)
         Dim ns As String = "http://www.opengis.net/kml/2.2"
+        Dim gxNs As String = "http://www.google.com/kml/ext/2.2"
 
         Dim trackName As String = defaultName
         If Not String.IsNullOrWhiteSpace(_routeTitle) Then
@@ -274,6 +275,9 @@ Public Class IgcToKmlConverter
 
         xw.WriteStartDocument()
         xw.WriteStartElement("kml", ns)
+        ' declare gx namespace
+        xw.WriteAttributeString("xmlns", "gx", Nothing, gxNs)
+
         xw.WriteStartElement("Document", ns)
 
         xw.WriteElementString("name", ns, trackName)
@@ -295,8 +299,10 @@ Public Class IgcToKmlConverter
             xw.WriteElementString("description", ns, descBuilder.ToString())
         End If
 
-        WriteTrackPlacemark(xw, fixLines, trackName, ns)
+        ' Track Placemark (gx:Track)
+        WriteTrackPlacemark(xw, fixLines, trackName, ns, gxNs)
 
+        ' Route + waypoints
         If _routeWaypoints.Count > 0 Then
             WriteRoutePlacemark(xw, trackName, ns)
             WriteWaypointFolder(xw, ns)
@@ -308,24 +314,48 @@ Public Class IgcToKmlConverter
     End Sub
 
     ''' <summary>
-    ''' Writes a LineString Placemark for the recorded flight track.
+    ''' Writes a gx:Track Placemark for the recorded flight track.
+    ''' Includes <when> + <gx:coord> pairs for time-aware animation.
     ''' </summary>
-    Private Sub WriteTrackPlacemark(xw As XmlWriter, fixLines As List(Of String), trackName As String, ns As String)
+    Private Sub WriteTrackPlacemark(xw As XmlWriter,
+                                    fixLines As List(Of String),
+                                    trackName As String,
+                                    ns As String,
+                                    gxNs As String)
+
         xw.WriteStartElement("Placemark", ns)
         xw.WriteElementString("name", ns, trackName & " Track")
-        xw.WriteStartElement("LineString", ns)
-        xw.WriteElementString("tessellate", ns, "1")
 
-        xw.WriteStartElement("coordinates", ns)
+        ' Optional simple style (red line)
+        xw.WriteStartElement("Style", ns)
+        xw.WriteStartElement("LineStyle", ns)
+        xw.WriteElementString("color", ns, "ff0000ff") ' aabbggrr (opaque red)
+        xw.WriteElementString("width", ns, "2")
+        xw.WriteEndElement() ' </LineStyle>
+        xw.WriteEndElement() ' </Style>
+
+        ' gx:Track geometry
+        xw.WriteStartElement("gx", "Track", gxNs)
+
         For Each line In fixLines
-            Dim coord As String = ConvertBRecordToCoordinate(line)
-            If coord IsNot Nothing Then
-                xw.WriteString(coord)
+            Dim lat As Double
+            Dim lon As Double
+            Dim alt As Integer
+            Dim timeUtc As DateTime?
+
+            If TryParseBRecord(line, lat, lon, alt, timeUtc) Then
+                If timeUtc.HasValue Then
+                    xw.WriteElementString("when", Nothing, timeUtc.Value.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture))
+                End If
+
+                xw.WriteStartElement("gx", "coord", gxNs)
+                ' gx:coord uses "lon lat alt" separated by spaces
+                xw.WriteString(String.Format(CultureInfo.InvariantCulture, "{0:0.000000} {1:0.000000} {2}", lon, lat, alt))
+                xw.WriteEndElement() ' </gx:coord>
             End If
         Next
-        xw.WriteEndElement() ' </coordinates>
 
-        xw.WriteEndElement() ' </LineString>
+        xw.WriteEndElement() ' </gx:Track>
         xw.WriteEndElement() ' </Placemark>
     End Sub
 
@@ -335,12 +365,16 @@ Public Class IgcToKmlConverter
     Private Sub WriteRoutePlacemark(xw As XmlWriter, trackName As String, ns As String)
         xw.WriteStartElement("Placemark", ns)
         xw.WriteElementString("name", ns, If(String.IsNullOrWhiteSpace(_routeTitle), trackName & " Route", _routeTitle))
+
         xw.WriteStartElement("LineString", ns)
         xw.WriteElementString("tessellate", ns, "1")
 
         xw.WriteStartElement("coordinates", ns)
         For Each wp In _routeWaypoints
-            xw.WriteString(String.Format(CultureInfo.InvariantCulture, "{0:0.000000},{1:0.000000},0 ", wp.Longitude, wp.Latitude))
+            ' lon,lat,alt
+            xw.WriteString(String.Format(CultureInfo.InvariantCulture,
+                                         "{0:0.000000},{1:0.000000},0 ",
+                                         wp.Longitude, wp.Latitude))
         Next
         xw.WriteEndElement() ' </coordinates>
 
@@ -359,7 +393,10 @@ Public Class IgcToKmlConverter
             xw.WriteStartElement("Placemark", ns)
             xw.WriteElementString("name", ns, wp.Name)
             xw.WriteStartElement("Point", ns)
-            xw.WriteElementString("coordinates", ns, String.Format(CultureInfo.InvariantCulture, "{0:0.000000},{1:0.000000},0", wp.Longitude, wp.Latitude))
+            xw.WriteElementString("coordinates", ns,
+                                  String.Format(CultureInfo.InvariantCulture,
+                                                "{0:0.000000},{1:0.000000},0",
+                                                wp.Longitude, wp.Latitude))
             xw.WriteEndElement() ' </Point>
             xw.WriteEndElement() ' </Placemark>
         Next
@@ -367,13 +404,25 @@ Public Class IgcToKmlConverter
         xw.WriteEndElement() ' </Folder>
     End Sub
 
+    ' ---------------- B RECORD PARSING FOR TRACK ----------------
+
     ''' <summary>
-    ''' Converts a B-record to a KML coordinate string (lon,lat,altitude) with trailing space.
-    ''' Returns Nothing if the record is invalid.
+    ''' Parses a B-record into lat/lon/alt and UTC time (if date is known).
+    ''' Returns False if invalid/void.
     ''' </summary>
-    Private Function ConvertBRecordToCoordinate(line As String) As String
-        If line.Length < 35 OrElse line(0) <> "B"c Then
-            Return Nothing
+    Private Function TryParseBRecord(line As String,
+                                     ByRef lat As Double,
+                                     ByRef lon As Double,
+                                     ByRef alt As Integer,
+                                     ByRef timeUtc As DateTime?) As Boolean
+
+        lat = 0
+        lon = 0
+        alt = 0
+        timeUtc = Nothing
+
+        If String.IsNullOrEmpty(line) OrElse line.Length < 35 OrElse line(0) <> "B"c Then
+            Return False
         End If
 
         Dim timeStr As String = line.Substring(1, 6)
@@ -383,20 +432,18 @@ Public Class IgcToKmlConverter
         Dim gpsAltStr As String = line.Substring(30, 5)
 
         If validity = "V"c Then
-            Return Nothing
+            Return False
         End If
 
-        Dim lat As Double
-        Dim lon As Double
-        If Not TryParseIgcLatitude(latStr, lat) Then Return Nothing
-        If Not TryParseIgcLongitude(lonStr, lon) Then Return Nothing
+        If Not TryParseIgcLatitude(latStr, lat) Then Return False
+        If Not TryParseIgcLongitude(lonStr, lon) Then Return False
 
         Dim gpsAlt As Integer
         If Not Integer.TryParse(gpsAltStr, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, gpsAlt) Then
             gpsAlt = 0
         End If
+        alt = gpsAlt
 
-        Dim timestamp As String = Nothing
         If _flightDateUtc.HasValue Then
             Dim hh As Integer
             Dim mm As Integer
@@ -410,17 +457,12 @@ Public Class IgcToKmlConverter
                     .AddHours(hh) _
                     .AddMinutes(mm) _
                     .AddSeconds(ss)
-                timestamp = dt.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)
+
+                timeUtc = dt
             End If
         End If
 
-        Dim coord As New StringBuilder()
-        coord.AppendFormat(CultureInfo.InvariantCulture, "{0:0.000000},{1:0.000000},{2} ", lon, lat, gpsAlt)
-        If timestamp IsNot Nothing Then
-            coord.Append("<!-- ").Append(timestamp).Append(" -->")
-        End If
-
-        Return coord.ToString()
+        Return True
     End Function
 
     ' ---------------- IGC COORD PARSING ----------------
