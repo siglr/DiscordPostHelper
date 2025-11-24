@@ -694,6 +694,10 @@ Public Class IgcToFltRec
     Private Shared Sub WriteFltRec(data As FltRecData, outPath As String)
         Dim jsonBytes As Byte() = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))
 
+        If File.Exists(outPath) Then
+            File.Delete(outPath)
+        End If
+
         Using archive As ZipArchive = ZipFile.Open(outPath, ZipArchiveMode.Create)
             Dim entry As ZipArchiveEntry = archive.CreateEntry("data.json")
             Using entryStream As Stream = entry.Open()
