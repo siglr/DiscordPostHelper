@@ -1265,6 +1265,12 @@ End Function
 
     End Sub
 
+    Private Sub convertToFltRecMenuItem_Click(sender As Object, e As EventArgs) Handles convertToFltRecMenuItem.Click
+
+        ConvertSelectedIgcToFltRec()
+
+    End Sub
+
     Private Function GetSelectedIgcSourcePath(actionTitle As String) As String
 
         If lstbxIGCFiles.SelectedIndex < 0 Then Return String.Empty
@@ -1362,6 +1368,33 @@ End Function
                 MessageBox.Show($"An error occurred converting the file:{Environment.NewLine}{ex.Message}",
                             "Convert IGC to KML file",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+        End Try
+
+    End Sub
+
+    Private Sub ConvertSelectedIgcToFltRec()
+
+        Dim sourcePath As String = GetSelectedIgcSourcePath("Convert IGC to FltRec file")
+        If String.IsNullOrWhiteSpace(sourcePath) Then Return
+
+        Dim fltRecDestination As String = PromptForDestinationFile(sourcePath, "fltRec", "MSFS Flight Recorder files (*.fltRec)|*.fltRec|All files (*.*)|*.*", "Save FltRec file")
+        If String.IsNullOrWhiteSpace(fltRecDestination) Then Return
+
+        Try
+            IgcToFltRec.Convert(sourcePath, fltRecDestination)
+
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"FltRec file created successfully at:{Environment.NewLine}{fltRecDestination}",
+                                "Convert IGC to FltRec file",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"An error occurred converting the file:{Environment.NewLine}{ex.Message}",
+                                "Convert IGC to FltRec file",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Using
         End Try
 

@@ -99,6 +99,7 @@ Partial Class IGCFileUpload
         Me.convertToFormatMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.convertToGpxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.convertToKmlMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.convertToFltRecMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -973,10 +974,10 @@ Partial Class IGCFileUpload
         '
         Me.convertToFormatMenu.AutoSize = False
         Me.convertToFormatMenu.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.convertToFormatMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.convertToGpxMenuItem, Me.convertToKmlMenuItem})
+        Me.convertToFormatMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.convertToGpxMenuItem, Me.convertToKmlMenuItem, Me.convertToFltRecMenuItem})
         Me.convertToFormatMenu.Name = "convertToFormatMenu"
         Me.convertToFormatMenu.ShowImageMargin = False
-        Me.convertToFormatMenu.Size = New System.Drawing.Size(241, 52)
+        Me.convertToFormatMenu.Size = New System.Drawing.Size(241, 76)
         '
         'convertToGpxMenuItem
         '
@@ -991,6 +992,13 @@ Partial Class IGCFileUpload
         Me.convertToKmlMenuItem.Name = "convertToKmlMenuItem"
         Me.convertToKmlMenuItem.Size = New System.Drawing.Size(240, 24)
         Me.convertToKmlMenuItem.Text = "KML file"
+        '
+        'convertToFltRecMenuItem
+        '
+        Me.convertToFltRecMenuItem.AutoSize = False
+        Me.convertToFltRecMenuItem.Name = "convertToFltRecMenuItem"
+        Me.convertToFltRecMenuItem.Size = New System.Drawing.Size(240, 24)
+        Me.convertToFltRecMenuItem.Text = "FltRec file"
         '
         'IGCFileUpload
         '
@@ -1104,4 +1112,5 @@ Partial Class IGCFileUpload
     Friend WithEvents convertToFormatMenu As ContextMenuStrip
     Friend WithEvents convertToGpxMenuItem As ToolStripMenuItem
     Friend WithEvents convertToKmlMenuItem As ToolStripMenuItem
+    Friend WithEvents convertToFltRecMenuItem As ToolStripMenuItem
 End Class
