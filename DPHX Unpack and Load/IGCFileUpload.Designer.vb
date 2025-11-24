@@ -95,7 +95,10 @@ Partial Class IGCFileUpload
         Me.grpIGCUserComment = New System.Windows.Forms.GroupBox()
         Me.txtUserIGCComment = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnConvertToGSX = New System.Windows.Forms.Button()
+        Me.btnConvertToOtherFormat = New System.Windows.Forms.Button()
+        Me.convertToFormatMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.convertToGpxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.convertToKmlMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -108,6 +111,7 @@ Partial Class IGCFileUpload
         CType(Me.imgAvatar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpTaskUserData.SuspendLayout()
         Me.grpIGCUserComment.SuspendLayout()
+        Me.convertToFormatMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'browser
@@ -135,7 +139,7 @@ Partial Class IGCFileUpload
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.btnConvertToGSX)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnConvertToOtherFormat)
         Me.SplitContainer1.Panel1.Controls.Add(Me.btnCopyToClipboard)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtIGCEntrySeqID)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label8)
@@ -953,17 +957,40 @@ Partial Class IGCFileUpload
         Me.txtUserIGCComment.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtUserIGCComment, "Provide comments for this specific IGC flight")
         '
-        'btnConvertToGSX
+        'btnConvertToOtherFormat
         '
-        Me.btnConvertToGSX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.btnConvertToOtherFormat.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConvertToGSX.Location = New System.Drawing.Point(4, 139)
-        Me.btnConvertToGSX.Name = "btnConvertToGSX"
-        Me.btnConvertToGSX.Size = New System.Drawing.Size(239, 30)
-        Me.btnConvertToGSX.TabIndex = 19
-        Me.btnConvertToGSX.Text = "Convert to GSX"
-        Me.ToolTip1.SetToolTip(Me.btnConvertToGSX, "Click to convert the selected IGC file to a GSX file format.")
-        Me.btnConvertToGSX.UseVisualStyleBackColor = True
+        Me.btnConvertToOtherFormat.Location = New System.Drawing.Point(4, 139)
+        Me.btnConvertToOtherFormat.Name = "btnConvertToOtherFormat"
+        Me.btnConvertToOtherFormat.Size = New System.Drawing.Size(239, 30)
+        Me.btnConvertToOtherFormat.TabIndex = 19
+        Me.btnConvertToOtherFormat.Text = "Convert to ..."
+        Me.ToolTip1.SetToolTip(Me.btnConvertToOtherFormat, "Click to convert the selected IGC file to another format.")
+        Me.btnConvertToOtherFormat.UseVisualStyleBackColor = True
+        '
+        'convertToFormatMenu
+        '
+        Me.convertToFormatMenu.AutoSize = False
+        Me.convertToFormatMenu.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.convertToFormatMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.convertToGpxMenuItem, Me.convertToKmlMenuItem})
+        Me.convertToFormatMenu.Name = "convertToFormatMenu"
+        Me.convertToFormatMenu.ShowImageMargin = False
+        Me.convertToFormatMenu.Size = New System.Drawing.Size(241, 52)
+        '
+        'convertToGpxMenuItem
+        '
+        Me.convertToGpxMenuItem.AutoSize = False
+        Me.convertToGpxMenuItem.Name = "convertToGpxMenuItem"
+        Me.convertToGpxMenuItem.Size = New System.Drawing.Size(240, 24)
+        Me.convertToGpxMenuItem.Text = "GPX file"
+        '
+        'convertToKmlMenuItem
+        '
+        Me.convertToKmlMenuItem.AutoSize = False
+        Me.convertToKmlMenuItem.Name = "convertToKmlMenuItem"
+        Me.convertToKmlMenuItem.Size = New System.Drawing.Size(240, 24)
+        Me.convertToKmlMenuItem.Text = "KML file"
         '
         'IGCFileUpload
         '
@@ -997,6 +1024,7 @@ Partial Class IGCFileUpload
         Me.grpTaskUserData.PerformLayout()
         Me.grpIGCUserComment.ResumeLayout(False)
         Me.grpIGCUserComment.PerformLayout()
+        Me.convertToFormatMenu.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1072,5 +1100,8 @@ Partial Class IGCFileUpload
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
     Friend WithEvents btnCopyToClipboard As Button
-    Friend WithEvents btnConvertToGSX As Button
+    Friend WithEvents btnConvertToOtherFormat As Button
+    Friend WithEvents convertToFormatMenu As ContextMenuStrip
+    Friend WithEvents convertToGpxMenuItem As ToolStripMenuItem
+    Friend WithEvents convertToKmlMenuItem As ToolStripMenuItem
 End Class

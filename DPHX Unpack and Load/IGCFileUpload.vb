@@ -1,4 +1,5 @@
-﻿Imports System.Drawing.Drawing2D
+﻿Imports System.Drawing
+Imports System.Drawing.Drawing2D
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
@@ -1228,33 +1229,70 @@ End Function
         End Try
     End Sub
 
-    Private Sub btnConvertToGSX_Click(sender As Object, e As EventArgs) Handles btnConvertToGSX.Click
+    Private Sub btnConvertToOtherFormat_Click(sender As Object, e As EventArgs) Handles btnConvertToOtherFormat.Click
 
-        ' Convert the selected IGC file into a GPX file format
-        If lstbxIGCFiles.SelectedIndex < 0 Then Return
+        ShowConvertToFormatMenu()
+
+    End Sub
+
+    Private Sub ShowConvertToFormatMenu()
+
+        If convertToFormatMenu Is Nothing Then Return
+
+        convertToFormatMenu.AutoSize = False
+        convertToFormatMenu.MinimumSize = New Size(btnConvertToOtherFormat.Width, 0)
+        convertToFormatMenu.Width = btnConvertToOtherFormat.Width
+
+        For Each item As ToolStripItem In convertToFormatMenu.Items
+            item.AutoSize = False
+            item.Width = btnConvertToOtherFormat.Width
+        Next
+
+        Dim showPoint As New Point(0, btnConvertToOtherFormat.Height)
+        convertToFormatMenu.Show(btnConvertToOtherFormat, showPoint)
+
+    End Sub
+
+    Private Sub convertToGpxMenuItem_Click(sender As Object, e As EventArgs) Handles convertToGpxMenuItem.Click
+
+        ConvertSelectedIgcToGpx()
+
+    End Sub
+
+    Private Sub convertToKmlMenuItem_Click(sender As Object, e As EventArgs) Handles convertToKmlMenuItem.Click
+
+        ConvertSelectedIgcToKml()
+
+    End Sub
+
+    Private Function GetSelectedIgcSourcePath(actionTitle As String) As String
+
+        If lstbxIGCFiles.SelectedIndex < 0 Then Return String.Empty
 
         Dim sourcePath As String = igcDetails.IGCLocalFilePath
         If String.IsNullOrWhiteSpace(sourcePath) OrElse Not File.Exists(sourcePath) Then
             Using New Centered_MessageBox(Me)
-                MessageBox.Show("Selected IGC file not found on disk.", "Convert IGC to GPX file",
+                MessageBox.Show("Selected IGC file not found on disk.", actionTitle,
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Using
-            Return
+            Return String.Empty
         End If
 
-        ' Ask the user where to save the GPX file
-        Dim gpxFileDestination As String = String.Empty
+        Return sourcePath
+
+    End Function
+
+    Private Function PromptForDestinationFile(sourcePath As String, defaultExtension As String, filter As String, title As String) As String
 
         Using sfd As New SaveFileDialog()
-            sfd.Title = "Save GPX file"
-            sfd.Filter = "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*"
-            sfd.DefaultExt = "gpx"
+            sfd.Title = title
+            sfd.Filter = filter
+            sfd.DefaultExt = defaultExtension
             sfd.AddExtension = True
 
-            ' Default to same folder and same base name as the IGC
             Try
                 Dim defaultFolder As String = Path.GetDirectoryName(sourcePath)
-                Dim defaultName As String = Path.GetFileNameWithoutExtension(sourcePath) & ".gpx"
+                Dim defaultName As String = Path.GetFileNameWithoutExtension(sourcePath) & $".{defaultExtension}"
 
                 If Not String.IsNullOrWhiteSpace(defaultFolder) AndAlso Directory.Exists(defaultFolder) Then
                     sfd.InitialDirectory = defaultFolder
@@ -1266,17 +1304,22 @@ End Function
             End Try
 
             If sfd.ShowDialog(Me) <> DialogResult.OK Then
-                ' User cancelled
-                Return
+                Return String.Empty
             End If
 
-            gpxFileDestination = sfd.FileName
+            Return sfd.FileName
+
         End Using
 
-        If String.IsNullOrWhiteSpace(gpxFileDestination) Then
-            ' Just in case, but normally we already returned on cancel
-            Return
-        End If
+    End Function
+
+    Private Sub ConvertSelectedIgcToGpx()
+
+        Dim sourcePath As String = GetSelectedIgcSourcePath("Convert IGC to GPX file")
+        If String.IsNullOrWhiteSpace(sourcePath) Then Return
+
+        Dim gpxFileDestination As String = PromptForDestinationFile(sourcePath, "gpx", "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*", "Save GPX file")
+        If String.IsNullOrWhiteSpace(gpxFileDestination) Then Return
 
         Try
             IgcToGpxConverter.Convert(sourcePath, gpxFileDestination)
@@ -1291,6 +1334,33 @@ End Function
             Using New Centered_MessageBox(Me)
                 MessageBox.Show($"An error occurred converting the file:{Environment.NewLine}{ex.Message}",
                             "Convert IGC to GPX file",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+        End Try
+
+    End Sub
+
+    Private Sub ConvertSelectedIgcToKml()
+
+        Dim sourcePath As String = GetSelectedIgcSourcePath("Convert IGC to KML file")
+        If String.IsNullOrWhiteSpace(sourcePath) Then Return
+
+        Dim kmlFileDestination As String = PromptForDestinationFile(sourcePath, "kml", "KML files (*.kml)|*.kml|All files (*.*)|*.*", "Save KML file")
+        If String.IsNullOrWhiteSpace(kmlFileDestination) Then Return
+
+        Try
+            IgcToKmlConverter.Convert(sourcePath, kmlFileDestination)
+
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"KML file created successfully at:{Environment.NewLine}{kmlFileDestination}",
+                            "Convert IGC to KML file",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
+
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"An error occurred converting the file:{Environment.NewLine}{ex.Message}",
+                            "Convert IGC to KML file",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Using
         End Try
