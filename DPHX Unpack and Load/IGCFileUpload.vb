@@ -1378,21 +1378,11 @@ End Function
         Dim sourcePath As String = GetSelectedIgcSourcePath("Convert IGC to FltRec file")
         If String.IsNullOrWhiteSpace(sourcePath) Then Return
 
-        Dim aircraftTitle As String = Microsoft.VisualBasic.Interaction.InputBox("Enter aircraft title (MSFS):", "Convert IGC to FltRec file", "AS 33 Me (18m)")
-        If String.IsNullOrWhiteSpace(aircraftTitle) Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show("Conversion cancelled: aircraft title is required.",
-                                "Convert IGC to FltRec file",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End Using
-            Return
-        End If
-
         Dim fltRecDestination As String = PromptForDestinationFile(sourcePath, "fltRec", "MSFS Flight Recorder files (*.fltRec)|*.fltRec|All files (*.*)|*.*", "Save FltRec file")
         If String.IsNullOrWhiteSpace(fltRecDestination) Then Return
 
         Try
-            IgcToFltRec.Convert(sourcePath, fltRecDestination, aircraftTitle)
+            IgcToFltRec.Convert(sourcePath, fltRecDestination)
 
             Using New Centered_MessageBox(Me)
                 MessageBox.Show($"FltRec file created successfully at:{Environment.NewLine}{fltRecDestination}",

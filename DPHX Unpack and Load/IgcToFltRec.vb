@@ -92,32 +92,42 @@ Public Class IgcToFltRec
     ''' </summary>
     ''' <param name="igcPath">Path to the source IGC file.</param>
     ''' <param name="fltRecPath">Destination .fltRec path.</param>
-    ''' <param name="aircraftTitle">Aircraft title to embed in StartState.</param>
-    Public Shared Sub Convert(igcPath As String, fltRecPath As String, aircraftTitle As String)
+    Public Shared Sub Convert(igcPath As String, fltRecPath As String)
         If igcPath Is Nothing Then Throw New ArgumentNullException(NameOf(igcPath))
         If fltRecPath Is Nothing Then Throw New ArgumentNullException(NameOf(fltRecPath))
-        If aircraftTitle Is Nothing Then Throw New ArgumentNullException(NameOf(aircraftTitle))
 
         If Not File.Exists(igcPath) Then
             Throw New FileNotFoundException("IGC file not found.", igcPath)
         End If
 
-        Dim igcRecords As List(Of IgcRecord) = ParseIgc(igcPath)
-        Dim data As FltRecData = BuildFltRecData(igcRecords, aircraftTitle)
+        Dim igcData As IgcParseResult = ParseIgc(igcPath)
+        Dim aircraftTitle As String = If(String.IsNullOrWhiteSpace(igcData.SuggestedAircraftTitle), "AS 33 Me (18m)", igcData.SuggestedAircraftTitle)
+
+        Dim data As FltRecData = BuildFltRecData(igcData.Records, aircraftTitle)
         WriteFltRec(data, fltRecPath)
     End Sub
+
+    Private Class IgcParseResult
+        Public Property Records As List(Of IgcRecord)
+        Public Property SuggestedAircraftTitle As String
+    End Class
 
     Private Shared Function Clamp(x As Double, lo As Double, hi As Double) As Double
         Return Math.Max(lo, Math.Min(hi, x))
     End Function
 
-    Private Shared Function ParseIgc(path As String) As List(Of IgcRecord)
+    Private Shared Function ParseIgc(path As String) As IgcParseResult
         Dim records As New List(Of IgcRecord)()
         Dim extMap As New Dictionary(Of String, Tuple(Of Integer, Integer))()
+        Dim suggestedAircraftTitle As String = String.Empty
 
         For Each rawLine As String In File.ReadLines(path)
             Dim line As String = rawLine.Trim()
             If String.IsNullOrWhiteSpace(line) Then Continue For
+
+            If String.IsNullOrWhiteSpace(suggestedAircraftTitle) Then
+                suggestedAircraftTitle = ExtractTitleFromHeader(line)
+            End If
 
             If line.StartsWith("I"c) AndAlso line.Length >= 7 Then
                 Dim i As Integer = 3
@@ -266,7 +276,16 @@ Public Class IgcToFltRec
             Throw New InvalidOperationException("No valid B-records found in IGC file.")
         End If
 
-        Return records
+        Return New IgcParseResult With {.Records = records, .SuggestedAircraftTitle = suggestedAircraftTitle}
+    End Function
+
+    Private Shared Function ExtractTitleFromHeader(line As String) As String
+        Dim idx As Integer = line.IndexOf("TITL", StringComparison.OrdinalIgnoreCase)
+        If idx < 0 Then Return String.Empty
+
+        Dim titleValue As String = line.Substring(idx + 4)
+        titleValue = titleValue.TrimStart(" "c, vbTab, ":"c, "="c)
+        Return titleValue.Trim()
     End Function
 
     Private Shared Function TryDecodeCoordinate(value As String, isLat As Boolean, ByRef result As Double) As Boolean
