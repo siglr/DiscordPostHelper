@@ -481,9 +481,9 @@ Public Class IgcToFltRec
                 idx1 = Math.Min(n - 1, i + 1)
             End If
 
-            Dim t0 As Integer = igcRecords(idx0).TimeSec
-            Dim t1 As Integer = igcRecords(idx1).TimeSec
-            Dim dt As Double = Math.Max(0.001, t1 - t0)
+            Dim segmentStart As Integer = igcRecords(idx0).TimeSec
+            Dim segmentEnd As Integer = igcRecords(idx1).TimeSec
+            Dim dt As Double = Math.Max(0.001, segmentEnd - segmentStart)
             Dim h0 As Double = derived(idx0).Item3
             Dim h1 As Double = derived(idx1).Item3
             Dim dpsi As Double = DegreesToRadians(((h1 - h0 + 540.0) Mod 360.0) - 180.0)
