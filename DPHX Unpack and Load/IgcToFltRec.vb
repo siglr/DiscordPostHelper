@@ -349,6 +349,35 @@ Public Class IgcToFltRec
         Return value * 180.0 / Math.PI
     End Function
 
+    Private Shared Function Lerp(a As Double, b As Double, t As Double) As Double
+        Return a + (b - a) * t
+    End Function
+
+    Private Shared Function LerpNullableInt(a As Integer?, b As Integer?, t As Double) As Integer?
+        If a.HasValue AndAlso b.HasValue Then
+            Return CInt(Math.Round(Lerp(a.Value, b.Value, t)))
+        End If
+
+        If a.HasValue Then Return a
+        If b.HasValue Then Return b
+        Return Nothing
+    End Function
+
+    Private Shared Function LerpNullableDouble(a As Double?, b As Double?, t As Double) As Double?
+        If a.HasValue AndAlso b.HasValue Then
+            Return Lerp(a.Value, b.Value, t)
+        End If
+
+        If a.HasValue Then Return a
+        If b.HasValue Then Return b
+        Return Nothing
+    End Function
+
+    Private Shared Function InterpolateHeading(h0 As Double, h1 As Double, t As Double) As Double
+        Dim delta As Double = ((h1 - h0 + 540.0) Mod 360.0) - 180.0
+        Return (h0 + delta * t + 360.0) Mod 360.0
+    End Function
+
     Private Shared Function MovingAverage(series As List(Of Double), window As Integer) As List(Of Double)
         Dim half As Integer = window \ 2
         Dim n As Integer = series.Count
@@ -593,23 +622,33 @@ Public Class IgcToFltRec
         Dim records As New List(Of FltRecRecord)()
         Dim t0 As Integer = igcRecords(0).TimeSec
 
-        For i As Integer = 0 To igcRecords.Count - 1
-            Dim rec As IgcRecord = igcRecords(i)
-            Dim kin As Tuple(Of Double, Double, Double, Double) = derived(i)
-            Dim bankDeg As Double = finalBank(i)
-            Dim pitchDeg As Double = finalPitch(i)
+        Dim createFrame As Func(Of Integer, Double, FltRecRecord) = Function(idx As Integer, frac As Double) As FltRecRecord
+            Dim nextIdx As Integer = Math.Min(idx + 1, igcRecords.Count - 1)
+            Dim tInterp As Double = Clamp(frac, 0.0, 1.0)
 
-            Dim t As Integer = rec.TimeSec
-            Dim lat As Double = rec.Lat
-            Dim lon As Double = rec.Lon
-            Dim altM As Integer = rec.AltM
-            Dim altAglM As Integer? = rec.AltAglM
-            Dim vGround As Double = kin.Item1
-            Dim vAir As Double = kin.Item2
-            Dim head As Double = kin.Item3
-            Dim climb As Double = kin.Item4
+            Dim recA As IgcRecord = igcRecords(idx)
+            Dim recB As IgcRecord = igcRecords(nextIdx)
+            Dim kinA As Tuple(Of Double, Double, Double, Double) = derived(idx)
+            Dim kinB As Tuple(Of Double, Double, Double, Double) = derived(nextIdx)
 
-            Dim timeMs As Integer = CInt((t - t0) * 1000)
+            Dim bankA As Double = finalBank(idx)
+            Dim bankB As Double = finalBank(nextIdx)
+            Dim pitchA As Double = finalPitch(idx)
+            Dim pitchB As Double = finalPitch(nextIdx)
+
+            Dim t As Double = If(nextIdx = idx, recA.TimeSec, Lerp(recA.TimeSec, recB.TimeSec, tInterp))
+            Dim lat As Double = If(nextIdx = idx, recA.Lat, Lerp(recA.Lat, recB.Lat, tInterp))
+            Dim lon As Double = If(nextIdx = idx, recA.Lon, Lerp(recA.Lon, recB.Lon, tInterp))
+            Dim altM As Double = If(nextIdx = idx, recA.AltM, Lerp(recA.AltM, recB.AltM, tInterp))
+            Dim altAglM As Double? = LerpNullableDouble(If(recA.AltAglM.HasValue, CDbl(recA.AltAglM.Value), Nothing),
+                                                       If(recB.AltAglM.HasValue, CDbl(recB.AltAglM.Value), Nothing),
+                                                       tInterp)
+
+            Dim vGround As Double = If(nextIdx = idx, kinA.Item1, Lerp(kinA.Item1, kinB.Item1, tInterp))
+            Dim vAir As Double = If(nextIdx = idx, kinA.Item2, Lerp(kinA.Item2, kinB.Item2, tInterp))
+            Dim head As Double = If(nextIdx = idx, kinA.Item3, InterpolateHeading(kinA.Item3, kinB.Item3, tInterp))
+
+            Dim timeMs As Integer = CInt(Math.Round((t - t0) * 1000))
             Dim tasMs As Double = vAir
             Dim tasKts As Double = tasMs / KT_TO_MS
 
@@ -617,10 +656,14 @@ Public Class IgcToFltRec
             pos.Milliseconds = 0
             pos.Latitude = lat
             pos.Longitude = lon
-            pos.Altitude = CDbl(altM) * M_TO_FT
+            pos.Altitude = altM * M_TO_FT
             pos.AltitudeAboveGround = If(altAglM.HasValue,
-                             CDbl(altAglM.Value) * M_TO_FT,
+                             altAglM.Value * M_TO_FT,
                              0.0)
+
+            Dim bankDeg As Double = If(nextIdx = idx, bankA, Lerp(bankA, bankB, tInterp))
+            Dim pitchDeg As Double = If(nextIdx = idx, pitchA, Lerp(pitchA, pitchB, tInterp))
+
             pos.Pitch = pitchDeg
             pos.Bank = bankDeg
             pos.TrueHeading = head
@@ -635,7 +678,7 @@ Public Class IgcToFltRec
             pos.AIPitch = pitchDeg
             pos.AIBank = bankDeg
 
-            Dim onGroundFlag As Integer? = rec.OnGroundFlag
+            Dim onGroundFlag As Integer? = LerpNullableInt(recA.OnGroundFlag, recB.OnGroundFlag, tInterp)
             If Not onGroundFlag.HasValue Then
                 If altAglM.HasValue AndAlso altAglM.Value < 2.0 AndAlso pos.GroundSpeed < 10.0 Then
                     onGroundFlag = 1
@@ -645,29 +688,34 @@ Public Class IgcToFltRec
             End If
             pos.IsOnGround = onGroundFlag.Value
 
-            ' Map IGC FLP
-            Dim flapIndex As Integer
-            If rec.FlapIndex.HasValue Then
-                flapIndex = rec.FlapIndex.Value - 1   ' shift down by 1
-            Else
-                flapIndex = 0
-            End If
-            ' Clamp to sensible range
+            Dim flapIndexRaw As Integer? = LerpNullableInt(recA.FlapIndex, recB.FlapIndex, tInterp)
+            Dim flapIndex As Integer = If(flapIndexRaw.HasValue, flapIndexRaw.Value - 1, 0)
             If flapIndex < 0 Then flapIndex = 0
-
             pos.FlapsHandleIndex = flapIndex
 
-            Dim gearFlag As Integer = If(rec.GearFlag.HasValue, rec.GearFlag.Value, If(pos.IsOnGround = 1, 1, 0))
+            Dim gearRaw As Integer? = LerpNullableInt(recA.GearFlag, recB.GearFlag, tInterp)
+            Dim gearFlag As Integer = If(gearRaw.HasValue, gearRaw.Value, If(pos.IsOnGround = 1, 1, 0))
             pos.GearHandlePosition = gearFlag
 
-            pos.WindVelocity = If(rec.WindSpeedMs.HasValue, rec.WindSpeedMs.Value, 0.0)
-            pos.WindDirection = If(rec.WindDirDeg.HasValue, rec.WindDirDeg.Value, 0.0)
+            Dim windSpeedVal As Double? = LerpNullableDouble(recA.WindSpeedMs, recB.WindSpeedMs, tInterp)
+            pos.WindVelocity = If(windSpeedVal.HasValue, windSpeedVal.Value, 0.0)
 
-            Dim thr As Double
-            If rec.EnlRaw.HasValue Then
-                thr = Clamp(rec.EnlRaw.Value / 900.0, 0.0, 1.0)
-            Else
-                thr = 0.0
+            Dim windDir As Double? = Nothing
+            If recA.WindDirDeg.HasValue AndAlso recB.WindDirDeg.HasValue Then
+                windDir = InterpolateHeading(recA.WindDirDeg.Value, recB.WindDirDeg.Value, tInterp)
+            ElseIf recA.WindDirDeg.HasValue Then
+                windDir = recA.WindDirDeg.Value
+            ElseIf recB.WindDirDeg.HasValue Then
+                windDir = recB.WindDirDeg.Value
+            End If
+            pos.WindDirection = If(windDir.HasValue, windDir.Value, 0.0)
+
+            Dim thr As Double = 0.0
+            Dim enlValue As Double? = LerpNullableDouble(If(recA.EnlRaw.HasValue, CDbl(recA.EnlRaw.Value), Nothing),
+                                                         If(recB.EnlRaw.HasValue, CDbl(recB.EnlRaw.Value), Nothing),
+                                                         tInterp)
+            If enlValue.HasValue Then
+                thr = Clamp(enlValue.Value / 900.0, 0.0, 1.0)
             End If
             pos.ThrottleLeverPosition1 = thr
 
@@ -682,7 +730,14 @@ Public Class IgcToFltRec
             Dim frame As New FltRecRecord()
             frame.Time = timeMs
             frame.Position = pos
-            records.Add(frame)
+            Return frame
+        End Function
+
+        For i As Integer = 0 To igcRecords.Count - 1
+            records.Add(createFrame(i, 0.0))
+            If i < igcRecords.Count - 1 Then
+                records.Add(createFrame(i, 0.5))
+            End If
         Next
 
         Dim heads As New List(Of Double)()
