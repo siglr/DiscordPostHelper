@@ -15,6 +15,15 @@ Public Class IgcToFltRec
     Private Const KPH_TO_KT As Double = 1.0 / 1.852
     Private Const CLIENT_VERSION As String = "0.26.0.0"
 
+    Private Class RunSegmentInfo
+        Public Property StartTime As Integer
+        Public Property EndTime As Integer
+        Public Property StartLat As Double
+        Public Property StartLon As Double
+        Public Property EndLat As Double
+        Public Property EndLon As Double
+    End Class
+
     Private Class IgcRecord
         Public Property TimeSec As Integer
         Public Property Lat As Double
@@ -114,6 +123,15 @@ Public Class IgcToFltRec
 
     Private Shared Function Clamp(x As Double, lo As Double, hi As Double) As Double
         Return Math.Max(lo, Math.Min(hi, x))
+    End Function
+
+    Private Shared Function Lerp(a As Double, b As Double, t As Double) As Double
+        Return (1.0 - t) * a + (t * b)
+    End Function
+
+    Private Shared Function NormalizeAngle(angle As Double) As Double
+        Dim a As Double = (angle + 540.0) Mod 360.0 - 180.0
+        Return a
     End Function
 
     Private Shared Function ParseIgc(path As String) As IgcParseResult
@@ -433,10 +451,56 @@ Public Class IgcToFltRec
         Return baseFlare * factor
     End Function
 
+    Private Shared Function DetectTakeoffRun(igcRecords As List(Of IgcRecord), vGround As List(Of Double)) As RunSegmentInfo
+        If igcRecords Is Nothing OrElse vGround Is Nothing OrElse igcRecords.Count <> vGround.Count Then
+            Return Nothing
+        End If
+
+        Dim startIdx As Integer = -1
+        Dim endIdx As Integer = -1
+        Dim minRollSpeed As Double = 4.0
+
+        For i As Integer = 0 To igcRecords.Count - 1
+            Dim rec As IgcRecord = igcRecords(i)
+
+            Dim isOnGround As Boolean = False
+            If rec.OnGroundFlag.HasValue Then
+                isOnGround = (rec.OnGroundFlag.Value <> 0)
+            ElseIf rec.AltAglM.HasValue AndAlso rec.AltAglM.Value <= 1 Then
+                isOnGround = True
+            End If
+
+            Dim speedG As Double = vGround(i)
+
+            If isOnGround AndAlso speedG >= minRollSpeed Then
+                If startIdx = -1 Then
+                    startIdx = i
+                End If
+                endIdx = i
+            ElseIf endIdx <> -1 Then
+                Exit For
+            End If
+        Next
+
+        If startIdx >= 0 AndAlso endIdx > startIdx Then
+            Return New RunSegmentInfo With {
+                .StartTime = igcRecords(startIdx).TimeSec,
+                .EndTime = igcRecords(endIdx).TimeSec,
+                .StartLat = igcRecords(startIdx).Lat,
+                .StartLon = igcRecords(startIdx).Lon,
+                .EndLat = igcRecords(endIdx).Lat,
+                .EndLon = igcRecords(endIdx).Lon
+            }
+        End If
+
+        Return Nothing
+    End Function
+
     Private Shared Function BuildFltRecData(igcRecords As List(Of IgcRecord), aircraftTitle As String) As FltRecData
         Dim n As Integer = igcRecords.Count
         If n < 2 Then Throw New InvalidOperationException("Not enough IGC records.")
 
+        Dim vGroundList As New List(Of Double)()
         Dim derived As New List(Of Tuple(Of Double, Double, Double, Double))()
         For i As Integer = 0 To n - 1
             Dim rec As IgcRecord = igcRecords(i)
@@ -474,8 +538,11 @@ Public Class IgcToFltRec
                 vAir = Math.Max(5.0, vGround)
             End If
 
+            vGroundList.Add(vGround)
             derived.Add(Tuple.Create(vGround, vAir, head, climb))
         Next
+
+        Dim takeoffRun As RunSegmentInfo = DetectTakeoffRun(igcRecords, vGroundList)
 
         Dim g As Double = 9.81
         Dim rawBank As New List(Of Double)()
@@ -590,6 +657,35 @@ Public Class IgcToFltRec
             finalPitch.Add(-clamped)
         Next
 
+        ' === Detect landing roll on IGC samples (takeoff uses takeoffRun) ======
+        Dim landingStartIdx As Integer = -1
+        Dim landingEndIdx As Integer = -1
+        Dim minRollSpeed As Double = 4.0 ' m/s ~ 8 kt
+
+        ' Find last contiguous fast-on-ground block (landing roll)
+        For i As Integer = n - 1 To 0 Step -1
+            Dim rec As IgcRecord = igcRecords(i)
+
+            Dim isOnGround As Boolean = False
+            If rec.OnGroundFlag.HasValue Then
+                isOnGround = (rec.OnGroundFlag.Value <> 0)
+            ElseIf rec.AltAglM.HasValue AndAlso rec.AltAglM.Value <= 1 Then
+                isOnGround = True
+            End If
+
+            Dim speedG As Double = vGroundList(i)
+
+            If isOnGround AndAlso speedG >= minRollSpeed Then
+                If landingEndIdx = -1 Then
+                    landingEndIdx = i
+                End If
+                landingStartIdx = i
+            ElseIf landingEndIdx <> -1 Then
+                Exit For
+            End If
+        Next
+
+        ' === Phase 5: build frames (mostly unchanged) =========================
         Dim records As New List(Of FltRecRecord)()
         Dim t0 As Integer = igcRecords(0).TimeSec
 
@@ -608,6 +704,25 @@ Public Class IgcToFltRec
             Dim vAir As Double = kin.Item2
             Dim head As Double = kin.Item3
             Dim climb As Double = kin.Item4
+
+            ' --- Straighten the takeoff roll: force a straight line between
+            '     the first rolling point and the liftoff point.
+            If takeoffRun IsNot Nothing Then
+                Dim takeoffT0 As Double = takeoffRun.StartTime
+                Dim takeoffT1 As Double = takeoffRun.EndTime
+
+                If t >= takeoffT0 AndAlso t <= takeoffT1 Then
+                    Dim denom As Double = takeoffT1 - takeoffT0
+                    Dim fracRun As Double = 0.0
+
+                    If denom > 0.1 Then
+                        fracRun = Clamp((t - takeoffT0) / denom, 0.0, 1.0)
+                    End If
+
+                    lat = Lerp(takeoffRun.StartLat, takeoffRun.EndLat, fracRun)
+                    lon = Lerp(takeoffRun.StartLon, takeoffRun.EndLon, fracRun)
+                End If
+            End If
 
             Dim timeMs As Integer = CInt((t - t0) * 1000)
             Dim tasMs As Double = vAir
@@ -706,9 +821,86 @@ Public Class IgcToFltRec
             smoothHeads.Add(h Mod 360.0)
         Next
 
+        ' --- Takeoff window and heading: use the SAME run that we used to
+        '     straighten lat/lon (takeoffRun).
+        Dim takeoffHeading As Double = Double.NaN
+        Dim takeoffStartMs As Integer = Integer.MinValue
+        Dim takeoffEndMs As Integer = Integer.MinValue
+        If takeoffRun IsNot Nothing Then
+            takeoffHeading = Bearing(
+                takeoffRun.StartLat, takeoffRun.StartLon,
+                takeoffRun.EndLat, takeoffRun.EndLon
+            )
+            takeoffStartMs = CInt(Math.Round((takeoffRun.StartTime - t0) * 1000.0))
+            takeoffEndMs = CInt(Math.Round((takeoffRun.EndTime - t0) * 1000.0))
+        End If
+
+        ' --- Landing window and heading, from the landing indices we detected ---
+        Dim landingHeading As Double = Double.NaN
+        Dim landingStartMs As Integer = Integer.MinValue
+        Dim landingEndMs As Integer = Integer.MinValue
+        If landingStartIdx >= 0 AndAlso landingEndIdx > landingStartIdx Then
+            landingHeading = Bearing(
+                igcRecords(landingStartIdx).Lat,
+                igcRecords(landingStartIdx).Lon,
+                igcRecords(landingEndIdx).Lat,
+                igcRecords(landingEndIdx).Lon
+            )
+            landingStartMs = CInt(Math.Round((igcRecords(landingStartIdx).TimeSec - t0) * 1000.0))
+            landingEndMs = CInt(Math.Round((igcRecords(landingEndIdx).TimeSec - t0) * 1000.0))
+        End If
+
         For i As Integer = 0 To records.Count - 1
-            Dim h As Double = smoothHeads(i)
-            Dim pos As FltRecPosition = records(i).Position
+            Dim frame As FltRecRecord = records(i)
+            Dim pos As FltRecPosition = frame.Position
+            Dim h As Double
+
+            Dim inTakeoffRun As Boolean = (Not Double.IsNaN(takeoffHeading) AndAlso
+                                           frame.Time >= takeoffStartMs AndAlso
+                                           frame.Time <= takeoffEndMs AndAlso
+                                           pos.IsOnGround = 1)
+
+            Dim inLandingRun As Boolean = (Not Double.IsNaN(landingHeading) AndAlso
+                                           frame.Time >= landingStartMs AndAlso
+                                           frame.Time <= landingEndMs AndAlso
+                                           pos.IsOnGround = 1)
+
+            If inTakeoffRun Then
+                ' Takeoff roll: constant heading from runway track
+                h = takeoffHeading
+                pos.Bank = 0.0
+                pos.AIBank = 0.0
+            ElseIf inLandingRun Then
+                ' Landing roll: constant heading from final roll track
+                h = landingHeading
+                pos.Bank = 0.0
+                pos.AIBank = 0.0
+            ElseIf pos.IsOnGround = 1 Then
+                ' Other ground frames (e.g. taxi): follow local track
+                Dim hasPrev As Boolean = (i > 0 AndAlso records(i - 1).Position.IsOnGround = 1)
+                Dim hasNext As Boolean = (i < records.Count - 1 AndAlso records(i + 1).Position.IsOnGround = 1)
+                Dim trackHeading As Double
+
+                If hasPrev Then
+                    Dim prevPos As FltRecPosition = records(i - 1).Position
+                    trackHeading = Bearing(prevPos.Latitude, prevPos.Longitude,
+                                           pos.Latitude, pos.Longitude)
+                ElseIf hasNext Then
+                    Dim nextPos As FltRecPosition = records(i + 1).Position
+                    trackHeading = Bearing(pos.Latitude, pos.Longitude,
+                                           nextPos.Latitude, nextPos.Longitude)
+                Else
+                    trackHeading = smoothHeads(i)
+                End If
+
+                h = trackHeading
+                pos.Bank = 0.0
+                pos.AIBank = 0.0
+            Else
+                ' In the air: keep the smoothed heading
+                h = smoothHeads(i)
+            End If
+
             pos.TrueHeading = h
             pos.MagneticHeading = h
             pos.GyroHeading = h
@@ -732,8 +924,39 @@ Public Class IgcToFltRec
         data.StartState = startState
         data.Records = records
 
+        DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
+
         Return data
     End Function
+
+    Private Shared Sub DebugDumpTakeoffRun(takeoffRun As RunSegmentInfo,
+                                           records As List(Of FltRecRecord),
+                                           takeoffStartMs As Integer,
+                                           takeoffEndMs As Integer)
+        If takeoffRun Is Nothing Then Return
+
+        Dim expectedHeading As Double = Bearing(takeoffRun.StartLat, takeoffRun.StartLon,
+                                                takeoffRun.EndLat, takeoffRun.EndLon)
+
+        Console.WriteLine("TimeMs, Lat, Lon, TrueHeading, ExpHeading, HeadingErrDeg, TrackErrDeg")
+
+        For Each frame As FltRecRecord In records
+            If frame.Time < takeoffStartMs OrElse frame.Time > takeoffEndMs Then Continue For
+            If frame.Position Is Nothing OrElse frame.Position.IsOnGround <> 1 Then Continue For
+
+            Dim pos As FltRecPosition = frame.Position
+            Dim bearingFromStart As Double = Bearing(takeoffRun.StartLat, takeoffRun.StartLon,
+                                                     pos.Latitude, pos.Longitude)
+            Dim headingError As Double = NormalizeAngle(pos.TrueHeading - expectedHeading)
+            Dim trackError As Double = NormalizeAngle(bearingFromStart - expectedHeading)
+
+            Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                             "{0},{1:F7},{2:F7},{3:F3},{4:F3},{5:F4},{6:F4}",
+                                             frame.Time, pos.Latitude, pos.Longitude,
+                                             pos.TrueHeading, expectedHeading,
+                                             headingError, trackError))
+        Next
+    End Sub
 
     Private Shared Sub WriteFltRec(data As FltRecData, outPath As String)
         Dim jsonBytes As Byte() = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))
