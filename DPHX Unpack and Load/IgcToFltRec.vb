@@ -489,6 +489,33 @@ Public Class IgcToFltRec
             Dim head As Double = k.Item3
             Dim climb As Double = k.Item4
 
+            ' --- Compute heading with wind correction (Va = Vg - Vw) ---
+            Dim correctedHeading As Double = head
+
+            If rec.WindSpeedMs.HasValue AndAlso rec.WindSpeedMs.Value > 0.1 AndAlso rec.WindDirDeg.HasValue AndAlso vGround > 0.5 Then
+
+                ' Ground vector Vg
+                Dim trackRad As Double = DegreesToRadians(head)
+                Dim vgNorth As Double = vGround * Math.Cos(trackRad)
+                Dim vgEast As Double = vGround * Math.Sin(trackRad)
+
+                ' Convert wind FROM → TO
+                Dim windToDeg As Double = (rec.WindDirDeg.Value + 180.0) Mod 360.0
+                Dim windToRad As Double = DegreesToRadians(windToDeg)
+                Dim vwNorth As Double = rec.WindSpeedMs.Value * Math.Cos(windToRad)
+                Dim vwEast As Double = rec.WindSpeedMs.Value * Math.Sin(windToRad)
+
+                ' Air vector Va = Vg - Vw
+                Dim vaNorth As Double = vgNorth - vwNorth
+                Dim vaEast As Double = vgEast - vwEast
+                Dim vaMag As Double = Math.Sqrt(vaNorth * vaNorth + vaEast * vaEast)
+
+                If vaMag > 0.5 Then
+                    correctedHeading = (RadiansToDegrees(Math.Atan2(vaEast, vaNorth)) + 360.0) Mod 360.0
+                End If
+            End If
+            ' --- End of heading correction block ---
+
             Dim idx0 As Integer
             Dim idx1 As Integer
             If i = 0 Then
@@ -536,6 +563,9 @@ Public Class IgcToFltRec
             Dim pitchDeg As Double = basePitch + flare
 
             rawPitch.Add(pitchDeg)
+
+            ' Replace original heading value
+            derived(i) = Tuple.Create(vGround, vAir, correctedHeading, climb)
         Next
 
         Dim bankLong As List(Of Double) = MovingAverage(rawBank, 15)
@@ -615,7 +645,16 @@ Public Class IgcToFltRec
             End If
             pos.IsOnGround = onGroundFlag.Value
 
-            Dim flapIndex As Integer = If(rec.FlapIndex.HasValue, rec.FlapIndex.Value, 0)
+            ' Map IGC FLP
+            Dim flapIndex As Integer
+            If rec.FlapIndex.HasValue Then
+                flapIndex = rec.FlapIndex.Value - 1   ' shift down by 1
+            Else
+                flapIndex = 0
+            End If
+            ' Clamp to sensible range
+            If flapIndex < 0 Then flapIndex = 0
+
             pos.FlapsHandleIndex = flapIndex
 
             Dim gearFlag As Integer = If(rec.GearFlag.HasValue, rec.GearFlag.Value, If(pos.IsOnGround = 1, 1, 0))
