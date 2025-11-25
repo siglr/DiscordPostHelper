@@ -587,8 +587,10 @@ Public Class IgcToFltRec
             pos.Milliseconds = 0
             pos.Latitude = lat
             pos.Longitude = lon
-            pos.Altitude = CDbl(altM)
-            pos.AltitudeAboveGround = If(altAglM.HasValue, CDbl(altAglM.Value), 0.0)
+            pos.Altitude = CDbl(altM) * M_TO_FT
+            pos.AltitudeAboveGround = If(altAglM.HasValue,
+                             CDbl(altAglM.Value) * M_TO_FT,
+                             0.0)
             pos.Pitch = pitchDeg
             pos.Bank = bankDeg
             pos.TrueHeading = head
