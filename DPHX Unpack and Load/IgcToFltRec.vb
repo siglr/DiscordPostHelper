@@ -366,6 +366,26 @@ Public Class IgcToFltRec
         Return (brng + 360.0) Mod 360.0
     End Function
 
+    Private Shared Sub ProjectFrom(latDeg As Double, lonDeg As Double,
+                                   headingDeg As Double,
+                                   distanceM As Double,
+                                   ByRef outLat As Double,
+                                   ByRef outLon As Double)
+        Const R As Double = 6371000.0
+        Dim brngRad As Double = DegreesToRadians(headingDeg)
+        Dim lat1 As Double = DegreesToRadians(latDeg)
+        Dim lon1 As Double = DegreesToRadians(lonDeg)
+        Dim dDivR As Double = distanceM / R
+
+        Dim lat2 As Double = Math.Asin(Math.Sin(lat1) * Math.Cos(dDivR) +
+                                       Math.Cos(lat1) * Math.Sin(dDivR) * Math.Cos(brngRad))
+        Dim lon2 As Double = lon1 + Math.Atan2(Math.Sin(brngRad) * Math.Sin(dDivR) * Math.Cos(lat1),
+                                               Math.Cos(dDivR) - Math.Sin(lat1) * Math.Sin(lat2))
+
+        outLat = RadiansToDegrees(lat2)
+        outLon = RadiansToDegrees(lon2)
+    End Sub
+
     Private Shared Function DegreesToRadians(value As Double) As Double
         Return value * Math.PI / 180.0
     End Function
@@ -947,21 +967,70 @@ Public Class IgcToFltRec
     Private Shared Function InterpolateRecords(records As List(Of FltRecRecord)) As List(Of FltRecRecord)
         If records Is Nothing OrElse records.Count = 0 Then Return records
 
+        Const TARGET_DT As Double = 0.2 ' seconds (~5 Hz)
+
         Dim output As New List(Of FltRecRecord)()
 
-        For i As Integer = 0 To records.Count - 1
-            Dim current As FltRecRecord = records(i)
-            output.Add(current)
+        For i As Integer = 0 To records.Count - 2
+            Dim a As FltRecRecord = records(i)
+            Dim b As FltRecRecord = records(i + 1)
 
-            If i = records.Count - 1 Then Exit For
+            output.Add(a)
 
-            Dim nextRecord As FltRecRecord = records(i + 1)
-            Dim interp As New FltRecRecord()
-            interp.Time = CInt(Math.Round(current.Time + ((nextRecord.Time - current.Time) * 0.5)))
-            interp.Position = InterpolatePosition(current.Position, nextRecord.Position, 0.5)
+            Dim tA As Double = a.Time / 1000.0
+            Dim tB As Double = b.Time / 1000.0
+            Dim dt As Double = tB - tA
 
-            output.Add(interp)
+            If dt <= TARGET_DT * 1.1 Then Continue For
+            If dt <= 0 Then Continue For
+
+            Dim dist As Double = Haversine(a.Position.Latitude, a.Position.Longitude, b.Position.Latitude, b.Position.Longitude)
+            If dist < 1.0 Then Continue For
+
+            Dim nSteps As Integer = CInt(Math.Floor(dt / TARGET_DT))
+            If nSteps <= 1 Then Continue For
+
+            Dim stepDt As Double = dt / nSteps
+            Dim hA As Double = a.Position.TrueHeading
+            Dim hB As Double = b.Position.TrueHeading
+            Dim deltaH As Double = NormalizeAngle(hB - hA)
+            Dim hBunwrap As Double = hA + deltaH
+            Dim turnRateDegPerSec As Double = If(dt > 0.001, (hBunwrap - hA) / dt, 0.0)
+            Dim speedMps As Double = If(dt > 0.001, dist / dt, 0.0)
+
+            For k As Integer = 1 To nSteps - 1
+                Dim t As Double = tA + (stepDt * k)
+                Dim u As Double = (t - tA) / dt
+                Dim tau As Double = t - tA
+
+                Dim headingUnwrapped As Double = hA + (turnRateDegPerSec * tau)
+                Dim headingDeg As Double = (headingUnwrapped Mod 360.0 + 360.0) Mod 360.0
+
+                Dim lat As Double
+                Dim lon As Double
+
+                If speedMps < 0.01 Then
+                    lat = Lerp(a.Position.Latitude, b.Position.Latitude, u)
+                    lon = Lerp(a.Position.Longitude, b.Position.Longitude, u)
+                Else
+                    Dim distanceTravelled As Double = dist * u
+                    ProjectFrom(a.Position.Latitude, a.Position.Longitude, headingDeg, distanceTravelled, lat, lon)
+                End If
+
+                Dim interpPos As FltRecPosition = InterpolatePosition(a.Position, b.Position, u)
+                interpPos.Latitude = lat
+                interpPos.Longitude = lon
+                interpPos.TrueHeading = headingDeg
+
+                Dim interpRecord As New FltRecRecord()
+                interpRecord.Time = CInt(Math.Round(t * 1000.0))
+                interpRecord.Position = interpPos
+
+                output.Add(interpRecord)
+            Next
         Next
+
+        output.Add(records(records.Count - 1))
 
         Return output
     End Function
