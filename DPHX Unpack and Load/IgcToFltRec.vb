@@ -928,7 +928,7 @@ Public Class IgcToFltRec
                 pos.AIBank = 0.0
             End If
 
-            Dim magHeading As Double = (h + magVarDeg) Mod 360.0
+            Dim magHeading As Double = (h - magVarDeg) Mod 360.0
             If magHeading < 0 Then magHeading += 360.0
 
             pos.TrueHeading = h
