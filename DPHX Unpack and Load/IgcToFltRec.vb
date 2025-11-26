@@ -507,8 +507,10 @@ Public Class IgcToFltRec
         Dim n As Integer = igcRecords.Count
         If n < 2 Then Throw New InvalidOperationException("Not enough IGC records.")
 
+        Const ENABLE_DEBUG_OUTPUT As Boolean = False
+
         Dim vGroundList As New List(Of Double)()
-        Dim derived As New List(Of Tuple(Of Double, Double, Double, Double))()
+        Dim derived As New List(Of Tuple(Of Double, Double, Double))()
         Dim trackHeading As New List(Of Double)()
         Dim noseHeading As New List(Of Double)()
         Dim sumLat As Double = 0.0
@@ -580,7 +582,7 @@ Public Class IgcToFltRec
             trackHeading.Add(head)
             noseHeading.Add(correctedHeading)
             vGroundList.Add(vGround)
-            derived.Add(Tuple.Create(vGround, vAir, head, climb))
+            derived.Add(Tuple.Create(vGround, vAir, climb))
         Next
 
         Dim continuousTrack As New List(Of Double)()
@@ -623,10 +625,10 @@ Public Class IgcToFltRec
 
         For i As Integer = 0 To n - 1
             Dim rec As IgcRecord = igcRecords(i)
-            Dim k As Tuple(Of Double, Double, Double, Double) = derived(i)
+            Dim k As Tuple(Of Double, Double, Double) = derived(i)
             Dim vGround As Double = k.Item1
             Dim vAir As Double = k.Item2
-            Dim climb As Double = k.Item4
+            Dim climb As Double = k.Item3
 
             Dim idx0 As Integer
             Dim idx1 As Integer
@@ -676,8 +678,8 @@ Public Class IgcToFltRec
 
             rawPitch.Add(pitchDeg)
 
-            ' Replace original heading value with the already-smoothed nose heading for consistency
-            derived(i) = Tuple.Create(vGround, vAir, smoothNoseHeading(i), climb)
+            ' Refresh derived kinematic values with the latest smoothing output
+            derived(i) = Tuple.Create(vGround, vAir, climb)
         Next
 
         Dim bankLong As List(Of Double) = MovingAverage(rawBank, 15)
@@ -712,7 +714,7 @@ Public Class IgcToFltRec
 
         For i As Integer = 0 To igcRecords.Count - 1
             Dim rec As IgcRecord = igcRecords(i)
-            Dim kin As Tuple(Of Double, Double, Double, Double) = derived(i)
+            Dim kin As Tuple(Of Double, Double, Double) = derived(i)
             Dim bankDeg As Double = finalBank(i)
             Dim pitchDeg As Double = finalPitch(i)
 
@@ -724,7 +726,7 @@ Public Class IgcToFltRec
             Dim vGround As Double = kin.Item1
             Dim vAir As Double = kin.Item2
             Dim head As Double = smoothNoseHeading(i)
-            Dim climb As Double = kin.Item4
+            Dim climb As Double = kin.Item3
 
             ' --- Straighten the takeoff roll: force a straight line between
             '     the first rolling point and the liftoff point.
@@ -878,11 +880,6 @@ Public Class IgcToFltRec
                 h = trueNoseHeading
             End If
 
-            If pos.IsOnGround = 1 Then
-                pos.Bank = 0.0
-                pos.AIBank = 0.0
-            End If
-
             Dim magHeading As Double = (h - magVarDeg) Mod 360.0
             If magHeading < 0 Then magHeading += 360.0
 
@@ -894,31 +891,33 @@ Public Class IgcToFltRec
 
         records = InterpolateRecords(records)
 
-        Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
-        Dim airbornePrinted As Integer = 0
-        For i As Integer = 0 To Math.Min(49, records.Count - 1)
-            Dim pos As FltRecPosition = records(i).Position
-            Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                                             "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
-                                             records(i).Time, pos.TrueHeading,
-                                             pos.MagneticHeading, pos.IsOnGround,
-                                             pos.Latitude, pos.Longitude))
-        Next
-
-        Console.WriteLine("Airborne samples (first 20): TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
-        For i As Integer = 0 To records.Count - 1
-            Dim pos As FltRecPosition = records(i).Position
-            If pos Is Nothing Then Continue For
-            If pos.IsOnGround = 0 Then
+        If ENABLE_DEBUG_OUTPUT Then
+            Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+            Dim airbornePrinted As Integer = 0
+            For i As Integer = 0 To Math.Min(49, records.Count - 1)
+                Dim pos As FltRecPosition = records(i).Position
                 Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
                                                  "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
                                                  records(i).Time, pos.TrueHeading,
                                                  pos.MagneticHeading, pos.IsOnGround,
                                                  pos.Latitude, pos.Longitude))
-                airbornePrinted += 1
-                If airbornePrinted >= 20 Then Exit For
-            End If
-        Next
+            Next
+
+            Console.WriteLine("Airborne samples (first 20): TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+            For i As Integer = 0 To records.Count - 1
+                Dim pos As FltRecPosition = records(i).Position
+                If pos Is Nothing Then Continue For
+                If pos.IsOnGround = 0 Then
+                    Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                                     "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
+                                                     records(i).Time, pos.TrueHeading,
+                                                     pos.MagneticHeading, pos.IsOnGround,
+                                                     pos.Latitude, pos.Longitude))
+                    airbornePrinted += 1
+                    If airbornePrinted >= 20 Then Exit For
+                End If
+            Next
+        End If
 
         Dim startState As New StartState()
         startState.PlaneInParkingState = 0
@@ -937,7 +936,9 @@ Public Class IgcToFltRec
         data.StartState = startState
         data.Records = records
 
-        DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
+        If ENABLE_DEBUG_OUTPUT Then
+            DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
+        End If
 
         Return data
     End Function
