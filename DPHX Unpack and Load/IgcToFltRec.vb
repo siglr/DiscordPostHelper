@@ -60,7 +60,6 @@ Public Class IgcToFltRec
         Public Property GroundSpeed As Double
         Public Property MachAirspeed As Double
         Public Property AbsoluteTime As Double
-        Public Property SimulationRate As Double
         Public Property VelocityBodyX As Double
         Public Property VelocityBodyY As Double
         Public Property VelocityBodyZ As Double
@@ -914,7 +913,6 @@ Public Class IgcToFltRec
             pos.MachAirspeed = tasMs / 340.0
             Dim speedFtPerSec As Double = tasKts * KT_TO_MS * M_TO_FT
             pos.AbsoluteTime = absoluteTimeBase + (timeMs / 1000.0R)
-            pos.SimulationRate = 1.0
             pos.VelocityBodyX = 0.0R
             pos.VelocityBodyY = 0.0R
             pos.VelocityBodyZ = speedFtPerSec
@@ -1152,7 +1150,6 @@ Public Class IgcToFltRec
         pos.GroundSpeed = pos.GpsGroundSpeed
         pos.MachAirspeed = Lerp(a.MachAirspeed, b.MachAirspeed, t)
         pos.AbsoluteTime = Lerp(a.AbsoluteTime, b.AbsoluteTime, t)
-        pos.SimulationRate = Lerp(a.SimulationRate, b.SimulationRate, t)
         pos.VelocityBodyX = Lerp(a.VelocityBodyX, b.VelocityBodyX, t)
         pos.VelocityBodyY = Lerp(a.VelocityBodyY, b.VelocityBodyY, t)
         pos.VelocityBodyZ = Lerp(a.VelocityBodyZ, b.VelocityBodyZ, t)
