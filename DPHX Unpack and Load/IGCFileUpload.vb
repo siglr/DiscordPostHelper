@@ -1054,12 +1054,16 @@ End Function
             lblUserID.Text = Settings.SessionSettings.WSGUserID
             Dim url As String = Settings.SessionSettings.WSGAvatar
             If Not String.IsNullOrWhiteSpace(url) Then
-                Using wc As New WebClient()
-                    Using ms As New MemoryStream(wc.DownloadData(url))
-                        imgAvatar.Image = Image.FromStream(ms)
-                        MakeAvatarCircular(imgAvatar)
+                Try
+                    Using wc As New WebClient()
+                        Using ms As New MemoryStream(wc.DownloadData(url))
+                            imgAvatar.Image = Image.FromStream(ms)
+                            MakeAvatarCircular(imgAvatar)
+                        End Using
                     End Using
-                End Using
+                Catch ex As Exception
+                    imgAvatar.Image = Nothing
+                End Try
             Else
                 imgAvatar.Image = Nothing
             End If
