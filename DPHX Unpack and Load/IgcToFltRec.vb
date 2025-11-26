@@ -366,6 +366,25 @@ Public Class IgcToFltRec
         Return (brng + 360.0) Mod 360.0
     End Function
 
+    Private Shared Function ProjectFrom(lat As Double, lon As Double, bearingDeg As Double, distanceMeters As Double) As Tuple(Of Double, Double)
+        Const R As Double = 6371000.0
+        Dim angularDistance As Double = distanceMeters / R
+        Dim bearingRad As Double = DegreesToRadians(bearingDeg)
+
+        Dim latRad As Double = DegreesToRadians(lat)
+        Dim lonRad As Double = DegreesToRadians(lon)
+
+        Dim destLatRad As Double = Math.Asin(Math.Sin(latRad) * Math.Cos(angularDistance) +
+                                             Math.Cos(latRad) * Math.Sin(angularDistance) * Math.Cos(bearingRad))
+        Dim destLonRad As Double = lonRad + Math.Atan2(Math.Sin(bearingRad) * Math.Sin(angularDistance) * Math.Cos(latRad),
+                                                       Math.Cos(angularDistance) - Math.Sin(latRad) * Math.Sin(destLatRad))
+
+        Dim destLat As Double = RadiansToDegrees(destLatRad)
+        Dim destLon As Double = (RadiansToDegrees(destLonRad) + 540.0) Mod 360.0 - 180.0
+
+        Return Tuple.Create(destLat, destLon)
+    End Function
+
     Private Shared Function DegreesToRadians(value As Double) As Double
         Return value * Math.PI / 180.0
     End Function
@@ -692,7 +711,17 @@ Public Class IgcToFltRec
             Dim mag As Double = Math.Abs(raw)
             Dim wgt As Double = Math.Min(1.0, mag / 30.0)
             Dim b As Double = (1 - wgt) * bLong + wgt * bShort
-            If Math.Abs(b) < 0.5 Then b = 0.0
+            If Math.Abs(b) < 0.2 Then b = 0.0
+
+            ' Give small heading changes a little more roll so gentle turns
+            ' do not stay nearly level while retaining the same response for
+            ' larger bank angles.
+            Dim shallowMag As Double = Math.Abs(b)
+            If shallowMag > 0 AndAlso shallowMag < 12.0 Then
+                Dim boost As Double = 1.0 + ((12.0 - shallowMag) * 0.02)
+                b *= boost
+            End If
+
             b = Clamp(b, -80.0, 80.0)
             finalBank.Add(-b)
         Next
@@ -947,20 +976,39 @@ Public Class IgcToFltRec
     Private Shared Function InterpolateRecords(records As List(Of FltRecRecord)) As List(Of FltRecRecord)
         If records Is Nothing OrElse records.Count = 0 Then Return records
 
+        Const TARGET_DT As Double = 0.25
         Dim output As New List(Of FltRecRecord)()
 
         For i As Integer = 0 To records.Count - 1
-            Dim current As FltRecRecord = records(i)
-            output.Add(current)
+            Dim a As FltRecRecord = records(i)
+            output.Add(a)
 
             If i = records.Count - 1 Then Exit For
 
-            Dim nextRecord As FltRecRecord = records(i + 1)
-            Dim interp As New FltRecRecord()
-            interp.Time = CInt(Math.Round(current.Time + ((nextRecord.Time - current.Time) * 0.5)))
-            interp.Position = InterpolatePosition(current.Position, nextRecord.Position, 0.5)
+            Dim b As FltRecRecord = records(i + 1)
+            Dim dtSeconds As Double = (b.Time - a.Time) / 1000.0
+            If dtSeconds < 0.01 Then Continue For
 
-            output.Add(interp)
+            Dim dist As Double = Haversine(a.Position.Latitude, a.Position.Longitude, b.Position.Latitude, b.Position.Longitude)
+            If dist < 0.01 Then Continue For
+
+            Dim nSteps As Integer = CInt(Math.Floor(dtSeconds / TARGET_DT))
+            If nSteps < 1 Then nSteps = 1
+
+            Dim trackBearing As Double = Bearing(a.Position.Latitude, a.Position.Longitude, b.Position.Latitude, b.Position.Longitude)
+            For k As Integer = 1 To nSteps
+                Dim u As Double = k / (nSteps + 1)
+                Dim interp As New FltRecRecord()
+                interp.Time = CInt(Math.Round(a.Time + (u * (b.Time - a.Time))))
+
+                Dim interpPos As FltRecPosition = InterpolatePosition(a.Position, b.Position, u)
+                Dim projected As Tuple(Of Double, Double) = ProjectFrom(a.Position.Latitude, a.Position.Longitude, trackBearing, dist * u)
+                interpPos.Latitude = projected.Item1
+                interpPos.Longitude = projected.Item2
+
+                interp.Position = interpPos
+                output.Add(interp)
+            Next
         Next
 
         Return output
