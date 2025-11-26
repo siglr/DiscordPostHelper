@@ -290,6 +290,22 @@ Public Class IgcToFltRec
             records.Add(rec)
         Next
 
+        Dim continuousNose As New List(Of Double)()
+        Dim prevNose As Double = noseHeading(0)
+        continuousNose.Add(prevNose)
+        For i As Integer = 1 To noseHeading.Count - 1
+            Dim delta As Double = (noseHeading(i) - prevNose + 540.0) Mod 360.0 - 180.0
+            prevNose += delta
+            continuousNose.Add(prevNose)
+        Next
+
+        Dim smoothNoseUnwrapped As List(Of Double) = MovingAverage(continuousNose, 9)
+        Dim smoothNoseHeading As New List(Of Double)()
+        For Each h As Double In smoothNoseUnwrapped
+            Dim wrapped As Double = (h Mod 360.0 + 360.0) Mod 360.0
+            smoothNoseHeading.Add(wrapped)
+        Next
+
         If records.Count = 0 Then
             Throw New InvalidOperationException("No valid B-records found in IGC file.")
         End If
@@ -502,12 +518,19 @@ Public Class IgcToFltRec
 
         Dim vGroundList As New List(Of Double)()
         Dim derived As New List(Of Tuple(Of Double, Double, Double, Double))()
+        Dim trackHeading As New List(Of Double)()
+        Dim noseHeading As New List(Of Double)()
+        Dim sumLat As Double = 0.0
+        Dim sumLon As Double = 0.0
         For i As Integer = 0 To n - 1
             Dim rec As IgcRecord = igcRecords(i)
             Dim t As Integer = rec.TimeSec
             Dim lat As Double = rec.Lat
             Dim lon As Double = rec.Lon
             Dim alt As Integer = rec.AltM
+
+            sumLat += lat
+            sumLon += lon
 
             Dim vGround As Double
             Dim head As Double
@@ -538,8 +561,25 @@ Public Class IgcToFltRec
                 vAir = Math.Max(5.0, vGround)
             End If
 
+            trackHeading.Add(head)
             vGroundList.Add(vGround)
             derived.Add(Tuple.Create(vGround, vAir, head, climb))
+        Next
+
+        Dim continuousTrack As New List(Of Double)()
+        Dim prevTrack As Double = trackHeading(0)
+        continuousTrack.Add(prevTrack)
+        For i As Integer = 1 To trackHeading.Count - 1
+            Dim delta As Double = (trackHeading(i) - prevTrack + 540.0) Mod 360.0 - 180.0
+            prevTrack += delta
+            continuousTrack.Add(prevTrack)
+        Next
+
+        Dim smoothTrackUnwrapped As List(Of Double) = MovingAverage(continuousTrack, 9)
+        Dim smoothTrackHeading As New List(Of Double)()
+        For Each h As Double In smoothTrackUnwrapped
+            Dim wrapped As Double = (h Mod 360.0 + 360.0) Mod 360.0
+            smoothTrackHeading.Add(wrapped)
         Next
 
         Dim takeoffRun As RunSegmentInfo = DetectTakeoffRun(igcRecords, vGroundList)
@@ -583,6 +623,8 @@ Public Class IgcToFltRec
             End If
             ' --- End of heading correction block ---
 
+            noseHeading.Add(correctedHeading)
+
             Dim idx0 As Integer
             Dim idx1 As Integer
             If i = 0 Then
@@ -600,9 +642,9 @@ Public Class IgcToFltRec
             Dim segmentEnd As Integer = igcRecords(idx1).TimeSec
             Dim rawDelta As Integer = segmentEnd - segmentStart
             Dim dt As Double = If(rawDelta = 0, 1.0, Math.Max(0.001, rawDelta))
-            Dim h0 As Double = derived(idx0).Item3
-            Dim h1 As Double = derived(idx1).Item3
-            Dim dpsi As Double = DegreesToRadians(((h1 - h0 + 540.0) Mod 360.0) - 180.0)
+            Dim psi0 As Double = DegreesToRadians(smoothTrackUnwrapped(idx0))
+            Dim psi1 As Double = DegreesToRadians(smoothTrackUnwrapped(idx1))
+            Dim dpsi As Double = psi1 - psi0
             Dim w As Double = dpsi / dt
 
             Dim V As Double = Math.Max(15.0, vAir)
@@ -685,6 +727,10 @@ Public Class IgcToFltRec
             End If
         Next
 
+        Dim avgLat As Double = If(n > 0, sumLat / n, 0.0)
+        Dim avgLon As Double = If(n > 0, sumLon / n, 0.0)
+        Dim magVarDeg As Double = GetMagneticVariationDegrees(avgLat, avgLon)
+
         ' === Phase 5: build frames (mostly unchanged) =========================
         Dim records As New List(Of FltRecRecord)()
         Dim t0 As Integer = igcRecords(0).TimeSec
@@ -702,7 +748,7 @@ Public Class IgcToFltRec
             Dim altAglM As Integer? = rec.AltAglM
             Dim vGround As Double = kin.Item1
             Dim vAir As Double = kin.Item2
-            Dim head As Double = kin.Item3
+            Dim head As Double = smoothNoseHeading(i)
             Dim climb As Double = kin.Item4
 
             ' --- Straighten the takeoff roll: force a straight line between
@@ -800,26 +846,7 @@ Public Class IgcToFltRec
             records.Add(frame)
         Next
 
-        Dim heads As New List(Of Double)()
-        For Each r As FltRecRecord In records
-            heads.Add(r.Position.TrueHeading)
-        Next
-
-        Dim unwrapped As New List(Of Double)()
-        Dim prev As Double = heads(0)
-        unwrapped.Add(prev)
-        For i As Integer = 1 To heads.Count - 1
-            Dim h As Double = heads(i)
-            Dim delta As Double = (h - prev + 540.0) Mod 360.0 - 180.0
-            prev = prev + delta
-            unwrapped.Add(prev)
-        Next
-
-        Dim smoothUnwrapped As List(Of Double) = MovingAverage(unwrapped, 9)
-        Dim smoothHeads As New List(Of Double)()
-        For Each h As Double In smoothUnwrapped
-            smoothHeads.Add(h Mod 360.0)
-        Next
+        Dim smoothHeads As List(Of Double) = smoothNoseHeading
 
         ' --- Takeoff window and heading: use the SAME run that we used to
         '     straighten lat/lon (takeoffRun).
@@ -901,13 +928,11 @@ Public Class IgcToFltRec
                 h = smoothHeads(i)
             End If
 
-            ' --- HARD-CODED MAGVAR TEST (Pico de Fogo) ---
-            ' The original .fltRec exhibits MagneticHeading = TrueHeading + 9.05°
-            ' We'll apply that offset here to verify the MSFS behavior.
-            Dim magVarTest As Double = 9.05
+            Dim magHeading As Double = (h + magVarDeg) Mod 360.0
+            If magHeading < 0 Then magHeading += 360.0
 
             pos.TrueHeading = h
-            pos.MagneticHeading = (h + magVarTest) Mod 360.0
+            pos.MagneticHeading = magHeading
             pos.GyroHeading = pos.MagneticHeading
             pos.HeadingIndicator = pos.MagneticHeading
         Next
@@ -933,6 +958,102 @@ Public Class IgcToFltRec
 
         Return data
     End Function
+
+
+    Private Shared Function GetMagneticVariationDegrees(lat As Double, lon As Double) As Double
+        Return MagVarGrid.GetDeclination(lat, lon)
+    End Function
+
+    Private Class MagVarGridFile
+        Public Property minLat As Double
+        Public Property maxLat As Double
+        Public Property minLon As Double
+        Public Property maxLon As Double
+        Public Property stepLat As Double
+        Public Property stepLon As Double
+        Public Property referenceYear As Double
+        Public Property grid As Double()()
+    End Class
+
+    Private NotInheritable Class MagVarGrid
+        Private Shared ReadOnly MinLat As Double
+        Private Shared ReadOnly MaxLat As Double
+        Private Shared ReadOnly MinLon As Double
+        Private Shared ReadOnly MaxLon As Double
+        Private Shared ReadOnly StepLat As Double
+        Private Shared ReadOnly StepLon As Double
+        Private Shared ReadOnly ReferenceYear As Double
+        Private Shared ReadOnly DeclGrid As Double()()
+        Private Shared ReadOnly RowCount As Integer
+        Private Shared ReadOnly ColCount As Integer
+
+        Shared Sub New()
+            Dim basePath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MagneticDeclinationGrid.json")
+            Dim gridPath As String = If(File.Exists(basePath), basePath,
+                                        Path.Combine(Directory.GetCurrentDirectory(), "MagneticDeclinationGrid.json"))
+
+            If Not File.Exists(gridPath) Then
+                Throw New FileNotFoundException("Magnetic declination grid file not found.", gridPath)
+            End If
+
+            Dim json As String = File.ReadAllText(gridPath)
+            Dim gridData As MagVarGridFile = JsonConvert.DeserializeObject(Of MagVarGridFile)(json)
+
+            If gridData Is Nothing OrElse gridData.grid Is Nothing OrElse gridData.grid.Length = 0 Then
+                Throw New InvalidDataException("Magnetic declination grid data is missing or invalid.")
+            End If
+
+            MinLat = gridData.minLat
+            MaxLat = gridData.maxLat
+            MinLon = gridData.minLon
+            MaxLon = gridData.maxLon
+            StepLat = gridData.stepLat
+            StepLon = gridData.stepLon
+            ReferenceYear = gridData.referenceYear
+            DeclGrid = gridData.grid
+            RowCount = DeclGrid.Length
+
+            If DeclGrid(0) Is Nothing OrElse DeclGrid(0).Length = 0 Then
+                Throw New InvalidDataException("Magnetic declination grid rows must not be empty.")
+            End If
+
+            ColCount = DeclGrid(0).Length
+
+            If StepLat <= 0 OrElse StepLon <= 0 Then
+                Throw New InvalidDataException("Magnetic declination grid step sizes must be positive.")
+            End If
+        End Sub
+
+        Public Shared Function GetDeclination(lat As Double, lon As Double) As Double
+            Dim clampedLat As Double = Math.Max(MinLat, Math.Min(MaxLat, lat))
+            Dim lonSpan As Double = MaxLon - MinLon
+            Dim wrappedLon As Double = ((lon - MinLon) Mod lonSpan)
+            If wrappedLon < 0 Then wrappedLon += lonSpan
+            Dim adjustedLon As Double = MinLon + wrappedLon
+
+            Dim latIndex As Double = (clampedLat - MinLat) / StepLat
+            Dim lonIndex As Double = (adjustedLon - MinLon) / StepLon
+
+            Dim i0 As Integer = CInt(Math.Floor(latIndex))
+            Dim j0 As Integer = CInt(Math.Floor(lonIndex))
+            Dim i1 As Integer = Math.Min(i0 + 1, RowCount - 1)
+            Dim j1 As Integer = (j0 + 1) Mod ColCount
+
+            Dim tLat As Double = latIndex - i0
+            Dim tLon As Double = lonIndex - j0
+
+            Dim q11 As Double = DeclGrid(i0)(j0)
+            Dim q21 As Double = DeclGrid(i1)(j0)
+            Dim q12 As Double = DeclGrid(i0)(j1)
+            Dim q22 As Double = DeclGrid(i1)(j1)
+
+            Dim qLat0 As Double = q11 * (1 - tLat) + q21 * tLat
+            Dim qLat1 As Double = q12 * (1 - tLat) + q22 * tLat
+            Dim q As Double = qLat0 * (1 - tLon) + qLat1 * tLon
+
+            Return q
+        End Function
+    End Class
 
     Private Shared Sub DebugDumpTakeoffRun(takeoffRun As RunSegmentInfo,
                                            records As List(Of FltRecRecord),

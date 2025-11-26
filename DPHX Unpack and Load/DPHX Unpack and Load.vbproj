@@ -332,6 +332,9 @@
     <Content Include="Refresh.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="MagneticDeclinationGrid.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="_FilesToRemove.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
