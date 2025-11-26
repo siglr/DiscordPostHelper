@@ -129,6 +129,13 @@ Public Class IgcToFltRec
         Return (1.0 - t) * a + (t * b)
     End Function
 
+    Private Shared Function LerpAngleDegrees(a As Double, b As Double, t As Double) As Double
+        Dim delta As Double = NormalizeAngle(b - a)
+        Dim value As Double = a + (delta * t)
+        value = (value Mod 360.0 + 360.0) Mod 360.0
+        Return value
+    End Function
+
     Private Shared Function NormalizeAngle(angle As Double) As Double
         Dim a As Double = (angle + 540.0) Mod 360.0 - 180.0
         Return a
@@ -500,8 +507,10 @@ Public Class IgcToFltRec
         Dim n As Integer = igcRecords.Count
         If n < 2 Then Throw New InvalidOperationException("Not enough IGC records.")
 
+        Const ENABLE_DEBUG_OUTPUT As Boolean = False
+
         Dim vGroundList As New List(Of Double)()
-        Dim derived As New List(Of Tuple(Of Double, Double, Double, Double))()
+        Dim derived As New List(Of Tuple(Of Double, Double, Double))()
         Dim trackHeading As New List(Of Double)()
         Dim noseHeading As New List(Of Double)()
         Dim sumLat As Double = 0.0
@@ -573,7 +582,7 @@ Public Class IgcToFltRec
             trackHeading.Add(head)
             noseHeading.Add(correctedHeading)
             vGroundList.Add(vGround)
-            derived.Add(Tuple.Create(vGround, vAir, head, climb))
+            derived.Add(Tuple.Create(vGround, vAir, climb))
         Next
 
         Dim continuousTrack As New List(Of Double)()
@@ -616,10 +625,10 @@ Public Class IgcToFltRec
 
         For i As Integer = 0 To n - 1
             Dim rec As IgcRecord = igcRecords(i)
-            Dim k As Tuple(Of Double, Double, Double, Double) = derived(i)
+            Dim k As Tuple(Of Double, Double, Double) = derived(i)
             Dim vGround As Double = k.Item1
             Dim vAir As Double = k.Item2
-            Dim climb As Double = k.Item4
+            Dim climb As Double = k.Item3
 
             Dim idx0 As Integer
             Dim idx1 As Integer
@@ -646,7 +655,7 @@ Public Class IgcToFltRec
             Dim V As Double = Math.Max(15.0, vAir)
             Dim latAcc As Double = V * w
             Dim bankDeg As Double
-            If Math.Abs(latAcc) < 0.05 Then
+            If Math.Abs(latAcc) < 0.01 Then
                 bankDeg = 0.0
             Else
                 Dim bank As Double = Math.Atan(latAcc / g)
@@ -669,8 +678,8 @@ Public Class IgcToFltRec
 
             rawPitch.Add(pitchDeg)
 
-            ' Replace original heading value with the already-smoothed nose heading for consistency
-            derived(i) = Tuple.Create(vGround, vAir, smoothNoseHeading(i), climb)
+            ' Refresh derived kinematic values with the latest smoothing output
+            derived(i) = Tuple.Create(vGround, vAir, climb)
         Next
 
         Dim bankLong As List(Of Double) = MovingAverage(rawBank, 15)
@@ -683,8 +692,8 @@ Public Class IgcToFltRec
             Dim mag As Double = Math.Abs(raw)
             Dim wgt As Double = Math.Min(1.0, mag / 30.0)
             Dim b As Double = (1 - wgt) * bLong + wgt * bShort
-            If Math.Abs(b) < 2.0 Then b = 0.0
-            b = Clamp(b, -45.0, 45.0)
+            If Math.Abs(b) < 0.5 Then b = 0.0
+            b = Clamp(b, -80.0, 80.0)
             finalBank.Add(-b)
         Next
 
@@ -693,34 +702,6 @@ Public Class IgcToFltRec
         For Each p As Double In pitchSmooth
             Dim clamped As Double = Clamp(p, -10.0, 20.0)
             finalPitch.Add(-clamped)
-        Next
-
-        ' === Detect landing roll on IGC samples (takeoff uses takeoffRun) ======
-        Dim landingStartIdx As Integer = -1
-        Dim landingEndIdx As Integer = -1
-        Dim minRollSpeed As Double = 4.0 ' m/s ~ 8 kt
-
-        ' Find last contiguous fast-on-ground block (landing roll)
-        For i As Integer = n - 1 To 0 Step -1
-            Dim rec As IgcRecord = igcRecords(i)
-
-            Dim isOnGround As Boolean = False
-            If rec.OnGroundFlag.HasValue Then
-                isOnGround = (rec.OnGroundFlag.Value <> 0)
-            ElseIf rec.AltAglM.HasValue AndAlso rec.AltAglM.Value <= 1 Then
-                isOnGround = True
-            End If
-
-            Dim speedG As Double = vGroundList(i)
-
-            If isOnGround AndAlso speedG >= minRollSpeed Then
-                If landingEndIdx = -1 Then
-                    landingEndIdx = i
-                End If
-                landingStartIdx = i
-            ElseIf landingEndIdx <> -1 Then
-                Exit For
-            End If
         Next
 
         Dim avgLat As Double = If(n > 0, sumLat / n, 0.0)
@@ -733,7 +714,7 @@ Public Class IgcToFltRec
 
         For i As Integer = 0 To igcRecords.Count - 1
             Dim rec As IgcRecord = igcRecords(i)
-            Dim kin As Tuple(Of Double, Double, Double, Double) = derived(i)
+            Dim kin As Tuple(Of Double, Double, Double) = derived(i)
             Dim bankDeg As Double = finalBank(i)
             Dim pitchDeg As Double = finalPitch(i)
 
@@ -745,7 +726,7 @@ Public Class IgcToFltRec
             Dim vGround As Double = kin.Item1
             Dim vAir As Double = kin.Item2
             Dim head As Double = smoothNoseHeading(i)
-            Dim climb As Double = kin.Item4
+            Dim climb As Double = kin.Item3
 
             ' --- Straighten the takeoff roll: force a straight line between
             '     the first rolling point and the liftoff point.
@@ -856,21 +837,7 @@ Public Class IgcToFltRec
             takeoffEndMs = CInt(Math.Round((takeoffRun.EndTime - t0) * 1000.0))
         End If
 
-        ' --- Landing window and heading, from the landing indices we detected ---
-        Dim landingHeading As Double = Double.NaN
-        Dim landingStartMs As Integer = Integer.MinValue
-        Dim landingEndMs As Integer = Integer.MinValue
-        If landingStartIdx >= 0 AndAlso landingEndIdx > landingStartIdx Then
-            landingHeading = Bearing(
-                igcRecords(landingStartIdx).Lat,
-                igcRecords(landingStartIdx).Lon,
-                igcRecords(landingEndIdx).Lat,
-                igcRecords(landingEndIdx).Lon
-            )
-            landingStartMs = CInt(Math.Round((igcRecords(landingStartIdx).TimeSec - t0) * 1000.0))
-            landingEndMs = CInt(Math.Round((igcRecords(landingEndIdx).TimeSec - t0) * 1000.0))
-        End If
-
+        ' --- Final heading assignments (takeoff roll handled above) ---
         For i As Integer = 0 To records.Count - 1
             Dim frame As FltRecRecord = records(i)
             Dim pos As FltRecPosition = frame.Position
@@ -882,19 +849,9 @@ Public Class IgcToFltRec
                                            frame.Time <= takeoffEndMs AndAlso
                                            pos.IsOnGround = 1)
 
-            Dim inLandingRun As Boolean = (Not Double.IsNaN(landingHeading) AndAlso
-                                           frame.Time >= landingStartMs AndAlso
-                                           frame.Time <= landingEndMs AndAlso
-                                           pos.IsOnGround = 1)
-
             If inTakeoffRun Then
                 ' Takeoff roll: constant heading from runway track
                 h = takeoffHeading
-                pos.Bank = 0.0
-                pos.AIBank = 0.0
-            ElseIf inLandingRun Then
-                ' Landing roll: constant heading from final roll track
-                h = landingHeading
                 pos.Bank = 0.0
                 pos.AIBank = 0.0
             ElseIf pos.IsOnGround = 1 Then
@@ -923,11 +880,6 @@ Public Class IgcToFltRec
                 h = trueNoseHeading
             End If
 
-            If pos.IsOnGround = 1 Then
-                pos.Bank = 0.0
-                pos.AIBank = 0.0
-            End If
-
             Dim magHeading As Double = (h - magVarDeg) Mod 360.0
             If magHeading < 0 Then magHeading += 360.0
 
@@ -937,31 +889,35 @@ Public Class IgcToFltRec
             pos.HeadingIndicator = pos.MagneticHeading
         Next
 
-        Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
-        Dim airbornePrinted As Integer = 0
-        For i As Integer = 0 To Math.Min(49, records.Count - 1)
-            Dim pos As FltRecPosition = records(i).Position
-            Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                                             "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
-                                             records(i).Time, pos.TrueHeading,
-                                             pos.MagneticHeading, pos.IsOnGround,
-                                             pos.Latitude, pos.Longitude))
-        Next
+        records = InterpolateRecords(records)
 
-        Console.WriteLine("Airborne samples (first 20): TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
-        For i As Integer = 0 To records.Count - 1
-            Dim pos As FltRecPosition = records(i).Position
-            If pos Is Nothing Then Continue For
-            If pos.IsOnGround = 0 Then
+        If ENABLE_DEBUG_OUTPUT Then
+            Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+            Dim airbornePrinted As Integer = 0
+            For i As Integer = 0 To Math.Min(49, records.Count - 1)
+                Dim pos As FltRecPosition = records(i).Position
                 Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
                                                  "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
                                                  records(i).Time, pos.TrueHeading,
                                                  pos.MagneticHeading, pos.IsOnGround,
                                                  pos.Latitude, pos.Longitude))
-                airbornePrinted += 1
-                If airbornePrinted >= 20 Then Exit For
-            End If
-        Next
+            Next
+
+            Console.WriteLine("Airborne samples (first 20): TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+            For i As Integer = 0 To records.Count - 1
+                Dim pos As FltRecPosition = records(i).Position
+                If pos Is Nothing Then Continue For
+                If pos.IsOnGround = 0 Then
+                    Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                                     "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
+                                                     records(i).Time, pos.TrueHeading,
+                                                     pos.MagneticHeading, pos.IsOnGround,
+                                                     pos.Latitude, pos.Longitude))
+                    airbornePrinted += 1
+                    If airbornePrinted >= 20 Then Exit For
+                End If
+            Next
+        End If
 
         Dim startState As New StartState()
         startState.PlaneInParkingState = 0
@@ -980,9 +936,68 @@ Public Class IgcToFltRec
         data.StartState = startState
         data.Records = records
 
-        DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
+        If ENABLE_DEBUG_OUTPUT Then
+            DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
+        End If
 
         Return data
+    End Function
+
+
+    Private Shared Function InterpolateRecords(records As List(Of FltRecRecord)) As List(Of FltRecRecord)
+        If records Is Nothing OrElse records.Count = 0 Then Return records
+
+        Dim output As New List(Of FltRecRecord)()
+
+        For i As Integer = 0 To records.Count - 1
+            Dim current As FltRecRecord = records(i)
+            output.Add(current)
+
+            If i = records.Count - 1 Then Exit For
+
+            Dim nextRecord As FltRecRecord = records(i + 1)
+            Dim interp As New FltRecRecord()
+            interp.Time = CInt(Math.Round(current.Time + ((nextRecord.Time - current.Time) * 0.5)))
+            interp.Position = InterpolatePosition(current.Position, nextRecord.Position, 0.5)
+
+            output.Add(interp)
+        Next
+
+        Return output
+    End Function
+
+    Private Shared Function InterpolatePosition(a As FltRecPosition, b As FltRecPosition, t As Double) As FltRecPosition
+        Dim pos As New FltRecPosition()
+        pos.Milliseconds = 0
+        pos.Latitude = Lerp(a.Latitude, b.Latitude, t)
+        pos.Longitude = Lerp(a.Longitude, b.Longitude, t)
+        pos.Altitude = Lerp(a.Altitude, b.Altitude, t)
+        pos.AltitudeAboveGround = Lerp(a.AltitudeAboveGround, b.AltitudeAboveGround, t)
+        pos.Pitch = Lerp(a.Pitch, b.Pitch, t)
+        pos.Bank = Lerp(a.Bank, b.Bank, t)
+        pos.TrueHeading = LerpAngleDegrees(a.TrueHeading, b.TrueHeading, t)
+        pos.MagneticHeading = LerpAngleDegrees(a.MagneticHeading, b.MagneticHeading, t)
+        pos.GyroHeading = pos.MagneticHeading
+        pos.TrueAirspeed = Lerp(a.TrueAirspeed, b.TrueAirspeed, t)
+        pos.IndicatedAirspeed = Lerp(a.IndicatedAirspeed, b.IndicatedAirspeed, t)
+        pos.GpsGroundSpeed = Lerp(a.GpsGroundSpeed, b.GpsGroundSpeed, t)
+        pos.GroundSpeed = pos.GpsGroundSpeed
+        pos.MachAirspeed = Lerp(a.MachAirspeed, b.MachAirspeed, t)
+        pos.HeadingIndicator = LerpAngleDegrees(a.HeadingIndicator, b.HeadingIndicator, t)
+        pos.AIPitch = Lerp(a.AIPitch, b.AIPitch, t)
+        pos.AIBank = Lerp(a.AIBank, b.AIBank, t)
+        pos.IsOnGround = CInt(Math.Round(Lerp(a.IsOnGround, b.IsOnGround, t)))
+        pos.FlapsHandleIndex = CInt(Math.Round(Lerp(a.FlapsHandleIndex, b.FlapsHandleIndex, t)))
+        pos.GearHandlePosition = CInt(Math.Round(Lerp(a.GearHandlePosition, b.GearHandlePosition, t)))
+        pos.WindVelocity = Lerp(a.WindVelocity, b.WindVelocity, t)
+        pos.WindDirection = LerpAngleDegrees(a.WindDirection, b.WindDirection, t)
+        pos.ThrottleLeverPosition1 = Lerp(a.ThrottleLeverPosition1, b.ThrottleLeverPosition1, t)
+        pos.WingFlexPercent1 = Lerp(a.WingFlexPercent1, b.WingFlexPercent1, t)
+        pos.WingFlexPercent2 = Lerp(a.WingFlexPercent2, b.WingFlexPercent2, t)
+        pos.WingFlexPercent3 = Lerp(a.WingFlexPercent3, b.WingFlexPercent3, t)
+        pos.WingFlexPercent4 = Lerp(a.WingFlexPercent4, b.WingFlexPercent4, t)
+
+        Return pos
     End Function
 
 
