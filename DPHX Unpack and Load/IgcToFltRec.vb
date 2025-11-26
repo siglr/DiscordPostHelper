@@ -655,7 +655,7 @@ Public Class IgcToFltRec
             Dim V As Double = Math.Max(15.0, vAir)
             Dim latAcc As Double = V * w
             Dim bankDeg As Double
-            If Math.Abs(latAcc) < 0.05 Then
+            If Math.Abs(latAcc) < 0.01 Then
                 bankDeg = 0.0
             Else
                 Dim bank As Double = Math.Atan(latAcc / g)
@@ -692,8 +692,8 @@ Public Class IgcToFltRec
             Dim mag As Double = Math.Abs(raw)
             Dim wgt As Double = Math.Min(1.0, mag / 30.0)
             Dim b As Double = (1 - wgt) * bLong + wgt * bShort
-            If Math.Abs(b) < 2.0 Then b = 0.0
-            b = Clamp(b, -45.0, 45.0)
+            If Math.Abs(b) < 0.5 Then b = 0.0
+            b = Clamp(b, -80.0, 80.0)
             finalBank.Add(-b)
         Next
 
