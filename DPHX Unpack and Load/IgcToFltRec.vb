@@ -901,10 +901,15 @@ Public Class IgcToFltRec
                 h = smoothHeads(i)
             End If
 
+            ' --- HARD-CODED MAGVAR TEST (Pico de Fogo) ---
+            ' The original .fltRec exhibits MagneticHeading = TrueHeading + 9.05°
+            ' We'll apply that offset here to verify the MSFS behavior.
+            Dim magVarTest As Double = 9.05
+
             pos.TrueHeading = h
-            pos.MagneticHeading = h
-            pos.GyroHeading = h
-            pos.HeadingIndicator = h
+            pos.MagneticHeading = (h + magVarTest) Mod 360.0
+            pos.GyroHeading = pos.MagneticHeading
+            pos.HeadingIndicator = pos.MagneticHeading
         Next
 
         Dim startState As New StartState()
