@@ -290,22 +290,6 @@ Public Class IgcToFltRec
             records.Add(rec)
         Next
 
-        Dim continuousNose As New List(Of Double)()
-        Dim prevNose As Double = noseHeading(0)
-        continuousNose.Add(prevNose)
-        For i As Integer = 1 To noseHeading.Count - 1
-            Dim delta As Double = (noseHeading(i) - prevNose + 540.0) Mod 360.0 - 180.0
-            prevNose += delta
-            continuousNose.Add(prevNose)
-        Next
-
-        Dim smoothNoseUnwrapped As List(Of Double) = MovingAverage(continuousNose, 9)
-        Dim smoothNoseHeading As New List(Of Double)()
-        For Each h As Double In smoothNoseUnwrapped
-            Dim wrapped As Double = (h Mod 360.0 + 360.0) Mod 360.0
-            smoothNoseHeading.Add(wrapped)
-        Next
-
         If records.Count = 0 Then
             Throw New InvalidOperationException("No valid B-records found in IGC file.")
         End If
@@ -580,6 +564,22 @@ Public Class IgcToFltRec
         For Each h As Double In smoothTrackUnwrapped
             Dim wrapped As Double = (h Mod 360.0 + 360.0) Mod 360.0
             smoothTrackHeading.Add(wrapped)
+        Next
+
+        Dim continuousNose As New List(Of Double)()
+        Dim prevNose As Double = noseHeading(0)
+        continuousNose.Add(prevNose)
+        For i As Integer = 1 To noseHeading.Count - 1
+            Dim delta As Double = (noseHeading(i) - prevNose + 540.0) Mod 360.0 - 180.0
+            prevNose += delta
+            continuousNose.Add(prevNose)
+        Next
+
+        Dim smoothNoseUnwrapped As List(Of Double) = MovingAverage(continuousNose, 9)
+        Dim smoothNoseHeading As New List(Of Double)()
+        For Each h As Double In smoothNoseUnwrapped
+            Dim wrapped As Double = (h Mod 360.0 + 360.0) Mod 360.0
+            smoothNoseHeading.Add(wrapped)
         Next
 
         Dim takeoffRun As RunSegmentInfo = DetectTakeoffRun(igcRecords, vGroundList)
@@ -906,21 +906,21 @@ Public Class IgcToFltRec
                 ' Other ground frames (e.g. taxi): follow local track
                 Dim hasPrev As Boolean = (i > 0 AndAlso records(i - 1).Position.IsOnGround = 1)
                 Dim hasNext As Boolean = (i < records.Count - 1 AndAlso records(i + 1).Position.IsOnGround = 1)
-                Dim trackHeading As Double
+                Dim groundTrackHeading As Double
 
                 If hasPrev Then
                     Dim prevPos As FltRecPosition = records(i - 1).Position
-                    trackHeading = Bearing(prevPos.Latitude, prevPos.Longitude,
-                                           pos.Latitude, pos.Longitude)
+                    groundTrackHeading = Bearing(prevPos.Latitude, prevPos.Longitude,
+                                                 pos.Latitude, pos.Longitude)
                 ElseIf hasNext Then
                     Dim nextPos As FltRecPosition = records(i + 1).Position
-                    trackHeading = Bearing(pos.Latitude, pos.Longitude,
-                                           nextPos.Latitude, nextPos.Longitude)
+                    groundTrackHeading = Bearing(pos.Latitude, pos.Longitude,
+                                                 nextPos.Latitude, nextPos.Longitude)
                 Else
-                    trackHeading = smoothHeads(i)
+                    groundTrackHeading = smoothHeads(i)
                 End If
 
-                h = trackHeading
+                h = groundTrackHeading
                 pos.Bank = 0.0
                 pos.AIBank = 0.0
             Else
