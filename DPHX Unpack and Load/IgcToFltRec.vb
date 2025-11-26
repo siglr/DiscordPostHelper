@@ -992,15 +992,6 @@ Public Class IgcToFltRec
             Dim tMid As Double = (tA + tB) / 2.0
             Dim u As Double = (tMid - tA) / dt
 
-            Dim hA As Double = a.Position.TrueHeading
-            Dim hB As Double = b.Position.TrueHeading
-            Dim deltaH As Double = NormalizeAngle(hB - hA)
-            Dim hBunwrap As Double = hA + deltaH
-            Dim turnRateDegPerSec As Double = If(dt > 0.001, (hBunwrap - hA) / dt, 0.0)
-            Dim tau As Double = tMid - tA
-            Dim headingUnwrapped As Double = hA + (turnRateDegPerSec * tau)
-            Dim headingMid As Double = (headingUnwrapped Mod 360.0 + 360.0) Mod 360.0
-
             Dim latMid As Double
             Dim lonMid As Double
 
@@ -1008,14 +999,14 @@ Public Class IgcToFltRec
                 latMid = Lerp(latA, latB, u)
                 lonMid = Lerp(lonA, lonB, u)
             Else
+                Dim trackBearing As Double = Bearing(latA, lonA, latB, lonB)
                 Dim distanceMid As Double = dist * u
-                ProjectFrom(latA, lonA, headingMid, distanceMid, latMid, lonMid)
+                ProjectFrom(latA, lonA, trackBearing, distanceMid, latMid, lonMid)
             End If
 
             Dim interpPos As FltRecPosition = InterpolatePosition(a.Position, b.Position, u)
             interpPos.Latitude = latMid
             interpPos.Longitude = lonMid
-            interpPos.TrueHeading = headingMid
 
             Dim interpRecord As New FltRecRecord()
             interpRecord.Time = CInt(Math.Round(tMid * 1000.0))
