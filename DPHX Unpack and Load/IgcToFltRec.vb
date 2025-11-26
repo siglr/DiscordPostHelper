@@ -1,7 +1,9 @@
 Imports System
 Imports System.Collections.Generic
+Imports System.Globalization
 Imports System.IO
 Imports System.IO.Compression
+Imports System.Linq
 Imports Newtonsoft.Json
 
 ''' <summary>
@@ -57,6 +59,11 @@ Public Class IgcToFltRec
         Public Property GpsGroundSpeed As Double
         Public Property GroundSpeed As Double
         Public Property MachAirspeed As Double
+        Public Property AbsoluteTime As Double
+        Public Property SimulationRate As Double
+        Public Property VelocityBodyX As Double
+        Public Property VelocityBodyY As Double
+        Public Property VelocityBodyZ As Double
         Public Property HeadingIndicator As Double
         Public Property AIPitch As Double
         Public Property AIBank As Double
@@ -109,10 +116,15 @@ Public Class IgcToFltRec
             Throw New FileNotFoundException("IGC file not found.", igcPath)
         End If
 
+        Dim allLines As String() = File.ReadAllLines(igcPath)
         Dim igcData As IgcParseResult = ParseIgc(igcPath)
+        Dim nb21Start As DateTime? = TryGetNb21DateTimeFromLRecords(allLines)
+        Dim flightStartUtc As DateTime = If(nb21Start.HasValue, nb21Start.Value, GetIgcStartDateTimeUtc(allLines, igcData.Records))
+        Dim absoluteTimeBase As Double = flightStartUtc.Ticks / 10000000.0R
+
         Dim aircraftTitle As String = If(String.IsNullOrWhiteSpace(igcData.SuggestedAircraftTitle), "AS 33 Me (18m)", igcData.SuggestedAircraftTitle)
 
-        Dim data As FltRecData = BuildFltRecData(igcData.Records, aircraftTitle)
+        Dim data As FltRecData = BuildFltRecData(igcData.Records, aircraftTitle, absoluteTimeBase)
         WriteFltRec(data, fltRecPath)
     End Sub
 
@@ -302,6 +314,108 @@ Public Class IgcToFltRec
         End If
 
         Return New IgcParseResult With {.Records = records, .SuggestedAircraftTitle = suggestedAircraftTitle}
+    End Function
+
+    Private Shared Function TryGetNb21DateTimeFromLRecords(allLines As IEnumerable(Of String)) As DateTime?
+        Dim lastLdat As String = Nothing
+        Dim lastLtim As String = Nothing
+
+        For Each rawLine As String In allLines
+            If String.IsNullOrWhiteSpace(rawLine) Then Continue For
+            Dim line As String = rawLine.Trim()
+            If Not line.StartsWith("L", StringComparison.OrdinalIgnoreCase) Then Continue For
+
+            If line.IndexOf("LDAT", StringComparison.OrdinalIgnoreCase) >= 0 Then
+                lastLdat = line
+            End If
+
+            If line.IndexOf("LTIM", StringComparison.OrdinalIgnoreCase) >= 0 Then
+                lastLtim = line
+            End If
+        Next
+
+        If String.IsNullOrWhiteSpace(lastLdat) OrElse String.IsNullOrWhiteSpace(lastLtim) Then
+            Return Nothing
+        End If
+
+        Dim ldatTokens As String() = lastLdat.Split(New Char() {" "c, vbTab}, StringSplitOptions.RemoveEmptyEntries)
+        If ldatTokens.Length = 0 Then Return Nothing
+        Dim dateToken As String = ldatTokens(ldatTokens.Length - 1)
+
+        Dim ltimTokens As String() = lastLtim.Split(New Char() {" "c, vbTab}, StringSplitOptions.RemoveEmptyEntries)
+        Dim ltimIndex As Integer = Array.FindIndex(ltimTokens, Function(t) t.Equals("LTIM", StringComparison.OrdinalIgnoreCase))
+        If ltimIndex < 0 OrElse ltimIndex + 2 >= ltimTokens.Length Then
+            Return Nothing
+        End If
+        Dim timeToken As String = ltimTokens(ltimIndex + 2)
+
+        Try
+            If dateToken.Length <> 8 OrElse timeToken.Length <> 6 Then
+                Return Nothing
+            End If
+
+            Dim year As Integer = Integer.Parse(dateToken.Substring(0, 4), CultureInfo.InvariantCulture)
+            Dim month As Integer = Integer.Parse(dateToken.Substring(4, 2), CultureInfo.InvariantCulture)
+            Dim day As Integer = Integer.Parse(dateToken.Substring(6, 2), CultureInfo.InvariantCulture)
+
+            Dim hour As Integer = Integer.Parse(timeToken.Substring(0, 2), CultureInfo.InvariantCulture)
+            Dim minute As Integer = Integer.Parse(timeToken.Substring(2, 2), CultureInfo.InvariantCulture)
+            Dim second As Integer = Integer.Parse(timeToken.Substring(4, 2), CultureInfo.InvariantCulture)
+
+            Dim dt As New DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc)
+            Return dt
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Shared Function GetIgcStartDateTimeUtc(allLines As IEnumerable(Of String), igcRecords As List(Of IgcRecord)) As DateTime
+        Dim flightDate As DateTime = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)
+
+        For Each rawLine As String In allLines
+            Dim line As String = rawLine.Trim()
+            If line.StartsWith("HFDTE", StringComparison.OrdinalIgnoreCase) AndAlso line.Length >= 11 Then
+                Dim datePart As String = New String(line.Substring(5).TakeWhile(AddressOf Char.IsDigit).ToArray())
+                If datePart.Length >= 6 Then
+                    Try
+                        Dim day As Integer = Integer.Parse(datePart.Substring(0, 2), CultureInfo.InvariantCulture)
+                        Dim month As Integer = Integer.Parse(datePart.Substring(2, 2), CultureInfo.InvariantCulture)
+                        Dim yearShort As Integer = Integer.Parse(datePart.Substring(4, 2), CultureInfo.InvariantCulture)
+                        Dim year As Integer = If(yearShort >= 90, 1900 + yearShort, 2000 + yearShort)
+                        flightDate = New DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc)
+                    Catch
+                        ' Ignore and keep default date
+                    End Try
+                End If
+
+                Exit For
+            End If
+        Next
+
+        Dim timeSeconds As Integer = 0
+        If igcRecords IsNot Nothing AndAlso igcRecords.Count > 0 Then
+            timeSeconds = igcRecords(0).TimeSec
+        Else
+            For Each rawLine As String In allLines
+                Dim line As String = rawLine.Trim()
+                If line.StartsWith("B"c) AndAlso line.Length >= 7 Then
+                    Dim hhStr As String = line.Substring(1, 2)
+                    Dim mmStr As String = line.Substring(3, 2)
+                    Dim ssStr As String = line.Substring(5, 2)
+                    Dim hh As Integer
+                    Dim mm As Integer
+                    Dim ss As Integer
+                    If Integer.TryParse(hhStr, NumberStyles.Integer, CultureInfo.InvariantCulture, hh) AndAlso
+                       Integer.TryParse(mmStr, NumberStyles.Integer, CultureInfo.InvariantCulture, mm) AndAlso
+                       Integer.TryParse(ssStr, NumberStyles.Integer, CultureInfo.InvariantCulture, ss) Then
+                        timeSeconds = hh * 3600 + mm * 60 + ss
+                        Exit For
+                    End If
+                End If
+            Next
+        End If
+
+        Return flightDate.AddSeconds(timeSeconds)
     End Function
 
     Private Shared Function ExtractTitleFromHeader(line As String) As String
@@ -522,7 +636,7 @@ Public Class IgcToFltRec
         Return Nothing
     End Function
 
-    Private Shared Function BuildFltRecData(igcRecords As List(Of IgcRecord), aircraftTitle As String) As FltRecData
+    Private Shared Function BuildFltRecData(igcRecords As List(Of IgcRecord), aircraftTitle As String, absoluteTimeBase As Double) As FltRecData
         Dim n As Integer = igcRecords.Count
         If n < 2 Then Throw New InvalidOperationException("Not enough IGC records.")
 
@@ -798,6 +912,12 @@ Public Class IgcToFltRec
             pos.GpsGroundSpeed = vGround / KT_TO_MS
             pos.GroundSpeed = pos.GpsGroundSpeed
             pos.MachAirspeed = tasMs / 340.0
+            Dim speedFtPerSec As Double = tasKts * KT_TO_MS * M_TO_FT
+            pos.AbsoluteTime = absoluteTimeBase + (timeMs / 1000.0R)
+            pos.SimulationRate = 1.0
+            pos.VelocityBodyX = 0.0R
+            pos.VelocityBodyY = 0.0R
+            pos.VelocityBodyZ = speedFtPerSec
             pos.HeadingIndicator = head
             pos.AIPitch = pitchDeg
             pos.AIBank = bankDeg
@@ -1031,6 +1151,11 @@ Public Class IgcToFltRec
         pos.GpsGroundSpeed = Lerp(a.GpsGroundSpeed, b.GpsGroundSpeed, t)
         pos.GroundSpeed = pos.GpsGroundSpeed
         pos.MachAirspeed = Lerp(a.MachAirspeed, b.MachAirspeed, t)
+        pos.AbsoluteTime = Lerp(a.AbsoluteTime, b.AbsoluteTime, t)
+        pos.SimulationRate = Lerp(a.SimulationRate, b.SimulationRate, t)
+        pos.VelocityBodyX = Lerp(a.VelocityBodyX, b.VelocityBodyX, t)
+        pos.VelocityBodyY = Lerp(a.VelocityBodyY, b.VelocityBodyY, t)
+        pos.VelocityBodyZ = Lerp(a.VelocityBodyZ, b.VelocityBodyZ, t)
         pos.HeadingIndicator = LerpAngleDegrees(a.HeadingIndicator, b.HeadingIndicator, t)
         pos.AIPitch = Lerp(a.AIPitch, b.AIPitch, t)
         pos.AIBank = Lerp(a.AIBank, b.AIBank, t)
