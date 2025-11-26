@@ -545,7 +545,33 @@ Public Class IgcToFltRec
                 vAir = Math.Max(5.0, vGround)
             End If
 
+            Dim correctedHeading As Double = head
+
+            If rec.WindSpeedMs.HasValue AndAlso rec.WindSpeedMs.Value > 0.1 AndAlso rec.WindDirDeg.HasValue AndAlso vGround > 0.5 Then
+
+                ' Ground vector Vg
+                Dim trackRad As Double = DegreesToRadians(head)
+                Dim vgNorth As Double = vGround * Math.Cos(trackRad)
+                Dim vgEast As Double = vGround * Math.Sin(trackRad)
+
+                ' Convert wind FROM → TO
+                Dim windToDeg As Double = (rec.WindDirDeg.Value + 180.0) Mod 360.0
+                Dim windToRad As Double = DegreesToRadians(windToDeg)
+                Dim vwNorth As Double = rec.WindSpeedMs.Value * Math.Cos(windToRad)
+                Dim vwEast As Double = rec.WindSpeedMs.Value * Math.Sin(windToRad)
+
+                ' Air vector Va = Vg - Vw
+                Dim vaNorth As Double = vgNorth - vwNorth
+                Dim vaEast As Double = vgEast - vwEast
+                Dim vaMag As Double = Math.Sqrt(vaNorth * vaNorth + vaEast * vaEast)
+
+                If vaMag > 0.5 Then
+                    correctedHeading = (RadiansToDegrees(Math.Atan2(vaEast, vaNorth)) + 360.0) Mod 360.0
+                End If
+            End If
+
             trackHeading.Add(head)
+            noseHeading.Add(correctedHeading)
             vGroundList.Add(vGround)
             derived.Add(Tuple.Create(vGround, vAir, head, climb))
         Next
@@ -593,37 +619,7 @@ Public Class IgcToFltRec
             Dim k As Tuple(Of Double, Double, Double, Double) = derived(i)
             Dim vGround As Double = k.Item1
             Dim vAir As Double = k.Item2
-            Dim head As Double = k.Item3
             Dim climb As Double = k.Item4
-
-            ' --- Compute heading with wind correction (Va = Vg - Vw) ---
-            Dim correctedHeading As Double = head
-
-            If rec.WindSpeedMs.HasValue AndAlso rec.WindSpeedMs.Value > 0.1 AndAlso rec.WindDirDeg.HasValue AndAlso vGround > 0.5 Then
-
-                ' Ground vector Vg
-                Dim trackRad As Double = DegreesToRadians(head)
-                Dim vgNorth As Double = vGround * Math.Cos(trackRad)
-                Dim vgEast As Double = vGround * Math.Sin(trackRad)
-
-                ' Convert wind FROM → TO
-                Dim windToDeg As Double = (rec.WindDirDeg.Value + 180.0) Mod 360.0
-                Dim windToRad As Double = DegreesToRadians(windToDeg)
-                Dim vwNorth As Double = rec.WindSpeedMs.Value * Math.Cos(windToRad)
-                Dim vwEast As Double = rec.WindSpeedMs.Value * Math.Sin(windToRad)
-
-                ' Air vector Va = Vg - Vw
-                Dim vaNorth As Double = vgNorth - vwNorth
-                Dim vaEast As Double = vgEast - vwEast
-                Dim vaMag As Double = Math.Sqrt(vaNorth * vaNorth + vaEast * vaEast)
-
-                If vaMag > 0.5 Then
-                    correctedHeading = (RadiansToDegrees(Math.Atan2(vaEast, vaNorth)) + 360.0) Mod 360.0
-                End If
-            End If
-            ' --- End of heading correction block ---
-
-            noseHeading.Add(correctedHeading)
 
             Dim idx0 As Integer
             Dim idx1 As Integer
@@ -673,8 +669,8 @@ Public Class IgcToFltRec
 
             rawPitch.Add(pitchDeg)
 
-            ' Replace original heading value
-            derived(i) = Tuple.Create(vGround, vAir, correctedHeading, climb)
+            ' Replace original heading value with the already-smoothed nose heading for consistency
+            derived(i) = Tuple.Create(vGround, vAir, smoothNoseHeading(i), climb)
         Next
 
         Dim bankLong As List(Of Double) = MovingAverage(rawBank, 15)
