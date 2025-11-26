@@ -965,9 +965,7 @@ Public Class IgcToFltRec
 
 
     Private Shared Function InterpolateRecords(records As List(Of FltRecRecord)) As List(Of FltRecRecord)
-        If records Is Nothing OrElse records.Count = 0 Then Return records
-
-        Const TARGET_DT As Double = 0.2 ' seconds (~5 Hz)
+        If records Is Nothing OrElse records.Count < 2 Then Return records
 
         Dim output As New List(Of FltRecRecord)()
 
@@ -981,53 +979,49 @@ Public Class IgcToFltRec
             Dim tB As Double = b.Time / 1000.0
             Dim dt As Double = tB - tA
 
-            If dt <= TARGET_DT * 1.1 Then Continue For
-            If dt <= 0 Then Continue For
+            If dt <= 0.01 Then Continue For
 
-            Dim dist As Double = Haversine(a.Position.Latitude, a.Position.Longitude, b.Position.Latitude, b.Position.Longitude)
-            If dist < 1.0 Then Continue For
+            Dim latA As Double = a.Position.Latitude
+            Dim lonA As Double = a.Position.Longitude
+            Dim latB As Double = b.Position.Latitude
+            Dim lonB As Double = b.Position.Longitude
 
-            Dim nSteps As Integer = CInt(Math.Floor(dt / TARGET_DT))
-            If nSteps <= 1 Then Continue For
+            Dim dist As Double = Haversine(latA, lonA, latB, lonB)
+            Dim speedMps As Double = If(dt > 0.001, dist / dt, 0.0)
 
-            Dim stepDt As Double = dt / nSteps
+            Dim tMid As Double = (tA + tB) / 2.0
+            Dim u As Double = (tMid - tA) / dt
+
             Dim hA As Double = a.Position.TrueHeading
             Dim hB As Double = b.Position.TrueHeading
             Dim deltaH As Double = NormalizeAngle(hB - hA)
             Dim hBunwrap As Double = hA + deltaH
             Dim turnRateDegPerSec As Double = If(dt > 0.001, (hBunwrap - hA) / dt, 0.0)
-            Dim speedMps As Double = If(dt > 0.001, dist / dt, 0.0)
+            Dim tau As Double = tMid - tA
+            Dim headingUnwrapped As Double = hA + (turnRateDegPerSec * tau)
+            Dim headingMid As Double = (headingUnwrapped Mod 360.0 + 360.0) Mod 360.0
 
-            For k As Integer = 1 To nSteps - 1
-                Dim t As Double = tA + (stepDt * k)
-                Dim u As Double = (t - tA) / dt
-                Dim tau As Double = t - tA
+            Dim latMid As Double
+            Dim lonMid As Double
 
-                Dim headingUnwrapped As Double = hA + (turnRateDegPerSec * tau)
-                Dim headingDeg As Double = (headingUnwrapped Mod 360.0 + 360.0) Mod 360.0
+            If speedMps < 0.01 OrElse dist < 1.0 Then
+                latMid = Lerp(latA, latB, u)
+                lonMid = Lerp(lonA, lonB, u)
+            Else
+                Dim distanceMid As Double = dist * u
+                ProjectFrom(latA, lonA, headingMid, distanceMid, latMid, lonMid)
+            End If
 
-                Dim lat As Double
-                Dim lon As Double
+            Dim interpPos As FltRecPosition = InterpolatePosition(a.Position, b.Position, u)
+            interpPos.Latitude = latMid
+            interpPos.Longitude = lonMid
+            interpPos.TrueHeading = headingMid
 
-                If speedMps < 0.01 Then
-                    lat = Lerp(a.Position.Latitude, b.Position.Latitude, u)
-                    lon = Lerp(a.Position.Longitude, b.Position.Longitude, u)
-                Else
-                    Dim distanceTravelled As Double = dist * u
-                    ProjectFrom(a.Position.Latitude, a.Position.Longitude, headingDeg, distanceTravelled, lat, lon)
-                End If
+            Dim interpRecord As New FltRecRecord()
+            interpRecord.Time = CInt(Math.Round(tMid * 1000.0))
+            interpRecord.Position = interpPos
 
-                Dim interpPos As FltRecPosition = InterpolatePosition(a.Position, b.Position, u)
-                interpPos.Latitude = lat
-                interpPos.Longitude = lon
-                interpPos.TrueHeading = headingDeg
-
-                Dim interpRecord As New FltRecRecord()
-                interpRecord.Time = CInt(Math.Round(t * 1000.0))
-                interpRecord.Position = interpPos
-
-                output.Add(interpRecord)
-            Next
+            output.Add(interpRecord)
         Next
 
         output.Add(records(records.Count - 1))
