@@ -129,6 +129,13 @@ Public Class IgcToFltRec
         Return (1.0 - t) * a + (t * b)
     End Function
 
+    Private Shared Function LerpAngleDegrees(a As Double, b As Double, t As Double) As Double
+        Dim delta As Double = NormalizeAngle(b - a)
+        Dim value As Double = a + (delta * t)
+        value = (value Mod 360.0 + 360.0) Mod 360.0
+        Return value
+    End Function
+
     Private Shared Function NormalizeAngle(angle As Double) As Double
         Dim a As Double = (angle + 540.0) Mod 360.0 - 180.0
         Return a
@@ -695,34 +702,6 @@ Public Class IgcToFltRec
             finalPitch.Add(-clamped)
         Next
 
-        ' === Detect landing roll on IGC samples (takeoff uses takeoffRun) ======
-        Dim landingStartIdx As Integer = -1
-        Dim landingEndIdx As Integer = -1
-        Dim minRollSpeed As Double = 4.0 ' m/s ~ 8 kt
-
-        ' Find last contiguous fast-on-ground block (landing roll)
-        For i As Integer = n - 1 To 0 Step -1
-            Dim rec As IgcRecord = igcRecords(i)
-
-            Dim isOnGround As Boolean = False
-            If rec.OnGroundFlag.HasValue Then
-                isOnGround = (rec.OnGroundFlag.Value <> 0)
-            ElseIf rec.AltAglM.HasValue AndAlso rec.AltAglM.Value <= 1 Then
-                isOnGround = True
-            End If
-
-            Dim speedG As Double = vGroundList(i)
-
-            If isOnGround AndAlso speedG >= minRollSpeed Then
-                If landingEndIdx = -1 Then
-                    landingEndIdx = i
-                End If
-                landingStartIdx = i
-            ElseIf landingEndIdx <> -1 Then
-                Exit For
-            End If
-        Next
-
         Dim avgLat As Double = If(n > 0, sumLat / n, 0.0)
         Dim avgLon As Double = If(n > 0, sumLon / n, 0.0)
         Dim magVarDeg As Double = GetMagneticVariationDegrees(avgLat, avgLon)
@@ -856,21 +835,7 @@ Public Class IgcToFltRec
             takeoffEndMs = CInt(Math.Round((takeoffRun.EndTime - t0) * 1000.0))
         End If
 
-        ' --- Landing window and heading, from the landing indices we detected ---
-        Dim landingHeading As Double = Double.NaN
-        Dim landingStartMs As Integer = Integer.MinValue
-        Dim landingEndMs As Integer = Integer.MinValue
-        If landingStartIdx >= 0 AndAlso landingEndIdx > landingStartIdx Then
-            landingHeading = Bearing(
-                igcRecords(landingStartIdx).Lat,
-                igcRecords(landingStartIdx).Lon,
-                igcRecords(landingEndIdx).Lat,
-                igcRecords(landingEndIdx).Lon
-            )
-            landingStartMs = CInt(Math.Round((igcRecords(landingStartIdx).TimeSec - t0) * 1000.0))
-            landingEndMs = CInt(Math.Round((igcRecords(landingEndIdx).TimeSec - t0) * 1000.0))
-        End If
-
+        ' --- Final heading assignments (takeoff roll handled above) ---
         For i As Integer = 0 To records.Count - 1
             Dim frame As FltRecRecord = records(i)
             Dim pos As FltRecPosition = frame.Position
@@ -882,19 +847,9 @@ Public Class IgcToFltRec
                                            frame.Time <= takeoffEndMs AndAlso
                                            pos.IsOnGround = 1)
 
-            Dim inLandingRun As Boolean = (Not Double.IsNaN(landingHeading) AndAlso
-                                           frame.Time >= landingStartMs AndAlso
-                                           frame.Time <= landingEndMs AndAlso
-                                           pos.IsOnGround = 1)
-
             If inTakeoffRun Then
                 ' Takeoff roll: constant heading from runway track
                 h = takeoffHeading
-                pos.Bank = 0.0
-                pos.AIBank = 0.0
-            ElseIf inLandingRun Then
-                ' Landing roll: constant heading from final roll track
-                h = landingHeading
                 pos.Bank = 0.0
                 pos.AIBank = 0.0
             ElseIf pos.IsOnGround = 1 Then
@@ -936,6 +891,8 @@ Public Class IgcToFltRec
             pos.GyroHeading = pos.MagneticHeading
             pos.HeadingIndicator = pos.MagneticHeading
         Next
+
+        records = InterpolateRecords(records)
 
         Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
         Dim airbornePrinted As Integer = 0
@@ -983,6 +940,63 @@ Public Class IgcToFltRec
         DebugDumpTakeoffRun(takeoffRun, records, takeoffStartMs, takeoffEndMs)
 
         Return data
+    End Function
+
+
+    Private Shared Function InterpolateRecords(records As List(Of FltRecRecord)) As List(Of FltRecRecord)
+        If records Is Nothing OrElse records.Count = 0 Then Return records
+
+        Dim output As New List(Of FltRecRecord)()
+
+        For i As Integer = 0 To records.Count - 1
+            Dim current As FltRecRecord = records(i)
+            output.Add(current)
+
+            If i = records.Count - 1 Then Exit For
+
+            Dim nextRecord As FltRecRecord = records(i + 1)
+            Dim interp As New FltRecRecord()
+            interp.Time = CInt(Math.Round(current.Time + ((nextRecord.Time - current.Time) * 0.5)))
+            interp.Position = InterpolatePosition(current.Position, nextRecord.Position, 0.5)
+
+            output.Add(interp)
+        Next
+
+        Return output
+    End Function
+
+    Private Shared Function InterpolatePosition(a As FltRecPosition, b As FltRecPosition, t As Double) As FltRecPosition
+        Dim pos As New FltRecPosition()
+        pos.Milliseconds = 0
+        pos.Latitude = Lerp(a.Latitude, b.Latitude, t)
+        pos.Longitude = Lerp(a.Longitude, b.Longitude, t)
+        pos.Altitude = Lerp(a.Altitude, b.Altitude, t)
+        pos.AltitudeAboveGround = Lerp(a.AltitudeAboveGround, b.AltitudeAboveGround, t)
+        pos.Pitch = Lerp(a.Pitch, b.Pitch, t)
+        pos.Bank = Lerp(a.Bank, b.Bank, t)
+        pos.TrueHeading = LerpAngleDegrees(a.TrueHeading, b.TrueHeading, t)
+        pos.MagneticHeading = LerpAngleDegrees(a.MagneticHeading, b.MagneticHeading, t)
+        pos.GyroHeading = pos.MagneticHeading
+        pos.TrueAirspeed = Lerp(a.TrueAirspeed, b.TrueAirspeed, t)
+        pos.IndicatedAirspeed = Lerp(a.IndicatedAirspeed, b.IndicatedAirspeed, t)
+        pos.GpsGroundSpeed = Lerp(a.GpsGroundSpeed, b.GpsGroundSpeed, t)
+        pos.GroundSpeed = pos.GpsGroundSpeed
+        pos.MachAirspeed = Lerp(a.MachAirspeed, b.MachAirspeed, t)
+        pos.HeadingIndicator = LerpAngleDegrees(a.HeadingIndicator, b.HeadingIndicator, t)
+        pos.AIPitch = Lerp(a.AIPitch, b.AIPitch, t)
+        pos.AIBank = Lerp(a.AIBank, b.AIBank, t)
+        pos.IsOnGround = CInt(Math.Round(Lerp(a.IsOnGround, b.IsOnGround, t)))
+        pos.FlapsHandleIndex = CInt(Math.Round(Lerp(a.FlapsHandleIndex, b.FlapsHandleIndex, t)))
+        pos.GearHandlePosition = CInt(Math.Round(Lerp(a.GearHandlePosition, b.GearHandlePosition, t)))
+        pos.WindVelocity = Lerp(a.WindVelocity, b.WindVelocity, t)
+        pos.WindDirection = LerpAngleDegrees(a.WindDirection, b.WindDirection, t)
+        pos.ThrottleLeverPosition1 = Lerp(a.ThrottleLeverPosition1, b.ThrottleLeverPosition1, t)
+        pos.WingFlexPercent1 = Lerp(a.WingFlexPercent1, b.WingFlexPercent1, t)
+        pos.WingFlexPercent2 = Lerp(a.WingFlexPercent2, b.WingFlexPercent2, t)
+        pos.WingFlexPercent3 = Lerp(a.WingFlexPercent3, b.WingFlexPercent3, t)
+        pos.WingFlexPercent4 = Lerp(a.WingFlexPercent4, b.WingFlexPercent4, t)
+
+        Return pos
     End Function
 
 
