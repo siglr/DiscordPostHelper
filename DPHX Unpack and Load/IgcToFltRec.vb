@@ -842,8 +842,6 @@ Public Class IgcToFltRec
             records.Add(frame)
         Next
 
-        Dim smoothHeads As List(Of Double) = smoothNoseHeading
-
         ' --- Takeoff window and heading: use the SAME run that we used to
         '     straighten lat/lon (takeoffRun).
         Dim takeoffHeading As Double = Double.NaN
@@ -877,6 +875,7 @@ Public Class IgcToFltRec
             Dim frame As FltRecRecord = records(i)
             Dim pos As FltRecPosition = frame.Position
             Dim h As Double
+            Dim trueNoseHeading As Double = smoothNoseHeading(i)
 
             Dim inTakeoffRun As Boolean = (Not Double.IsNaN(takeoffHeading) AndAlso
                                            frame.Time >= takeoffStartMs AndAlso
@@ -913,7 +912,7 @@ Public Class IgcToFltRec
                     groundTrackHeading = Bearing(pos.Latitude, pos.Longitude,
                                                  nextPos.Latitude, nextPos.Longitude)
                 Else
-                    groundTrackHeading = smoothHeads(i)
+                    groundTrackHeading = smoothTrackHeading(i)
                 End If
 
                 h = groundTrackHeading
@@ -921,7 +920,12 @@ Public Class IgcToFltRec
                 pos.AIBank = 0.0
             Else
                 ' In the air: keep the smoothed heading
-                h = smoothHeads(i)
+                h = trueNoseHeading
+            End If
+
+            If pos.IsOnGround = 1 Then
+                pos.Bank = 0.0
+                pos.AIBank = 0.0
             End If
 
             Dim magHeading As Double = (h + magVarDeg) Mod 360.0
@@ -931,6 +935,32 @@ Public Class IgcToFltRec
             pos.MagneticHeading = magHeading
             pos.GyroHeading = pos.MagneticHeading
             pos.HeadingIndicator = pos.MagneticHeading
+        Next
+
+        Console.WriteLine("TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+        Dim airbornePrinted As Integer = 0
+        For i As Integer = 0 To Math.Min(49, records.Count - 1)
+            Dim pos As FltRecPosition = records(i).Position
+            Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                             "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
+                                             records(i).Time, pos.TrueHeading,
+                                             pos.MagneticHeading, pos.IsOnGround,
+                                             pos.Latitude, pos.Longitude))
+        Next
+
+        Console.WriteLine("Airborne samples (first 20): TimeMs, TrueHead, MagHead, IsOnGround, Lat, Lon")
+        For i As Integer = 0 To records.Count - 1
+            Dim pos As FltRecPosition = records(i).Position
+            If pos Is Nothing Then Continue For
+            If pos.IsOnGround = 0 Then
+                Console.WriteLine(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                                 "{0},{1:F3},{2:F3},{3},{4:F7},{5:F7}",
+                                                 records(i).Time, pos.TrueHeading,
+                                                 pos.MagneticHeading, pos.IsOnGround,
+                                                 pos.Latitude, pos.Longitude))
+                airbornePrinted += 1
+                If airbornePrinted >= 20 Then Exit For
+            End If
         Next
 
         Dim startState As New StartState()
