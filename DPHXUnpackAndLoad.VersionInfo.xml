@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.21.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.11.27.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.11.27.1</ReleaseVersion>
+      <ReleaseTitle>Export IGC to several formats</ReleaseTitle>
+      <ReleaseNotes>
+        Added IGC to GPX, KML and .fltRec file conversion
+        Prevented invalid avatar download resulting in error and crash in IGC upload
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.21.2</ReleaseVersion>
       <ReleaseTitle>Strengthened integration with Tracker</ReleaseTitle>
