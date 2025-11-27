@@ -16,6 +16,9 @@ Public Class IgcToFltRec
     Private Const KT_TO_MS As Double = 0.514444
     Private Const KPH_TO_KT As Double = 1.0 / 1.852
     Private Const CLIENT_VERSION As String = "0.26.0.0"
+    Private Const PITCH_SMOOTH_WINDOW As Integer = 5      ' was 9
+    Private Const PITCH_MAX_UP As Double = 70.0           ' was 20
+    Private Const PITCH_MAX_DOWN As Double = -40.0        ' was -10
 
     Private Class RunSegmentInfo
         Public Property StartTime As Integer
@@ -726,6 +729,9 @@ Public Class IgcToFltRec
             continuousTrack.Add(prevTrack)
         Next
 
+        ' Use a more responsive heading only for bank modelling
+        Dim bankTrackUnwrapped As List(Of Double) = MovingAverage(continuousTrack, 3)
+
         Dim smoothTrackUnwrapped As List(Of Double) = MovingAverage(continuousTrack, 9)
         Dim smoothTrackHeading As New List(Of Double)()
         For Each h As Double In smoothTrackUnwrapped
@@ -779,8 +785,8 @@ Public Class IgcToFltRec
             Dim segmentEnd As Integer = igcRecords(idx1).TimeSec
             Dim rawDelta As Integer = segmentEnd - segmentStart
             Dim dt As Double = If(rawDelta = 0, 1.0, Math.Max(0.001, rawDelta))
-            Dim psi0 As Double = DegreesToRadians(smoothTrackUnwrapped(idx0))
-            Dim psi1 As Double = DegreesToRadians(smoothTrackUnwrapped(idx1))
+            Dim psi0 As Double = DegreesToRadians(bankTrackUnwrapped(idx0))
+            Dim psi1 As Double = DegreesToRadians(bankTrackUnwrapped(idx1))
             Dim dpsi As Double = psi1 - psi0
             Dim w As Double = dpsi / dt
 
@@ -814,36 +820,42 @@ Public Class IgcToFltRec
             derived(i) = Tuple.Create(vGround, vAir, climb)
         Next
 
-        Dim bankLong As List(Of Double) = MovingAverage(rawBank, 15)
-        Dim bankShort As List(Of Double) = MovingAverage(rawBank, 5)
+        ' Slightly less aggressive smoothing, earlier switch to short window,
+        ' and allow full 90° bank.
+        Dim bankLong As List(Of Double) = MovingAverage(rawBank, 7)
+        Dim bankShort As List(Of Double) = MovingAverage(rawBank, 3)
+
         Dim finalBank As New List(Of Double)()
         For i As Integer = 0 To rawBank.Count - 1
             Dim raw As Double = rawBank(i)
             Dim bLong As Double = bankLong(i)
             Dim bShort As Double = bankShort(i)
             Dim mag As Double = Math.Abs(raw)
-            Dim wgt As Double = Math.Min(1.0, mag / 30.0)
+
+            ' Switch from long to short smoothing a bit earlier
+            Dim wgt As Double = Math.Min(1.0, mag / 20.0)
             Dim b As Double = (1 - wgt) * bLong + wgt * bShort
+
+            ' Optional: keep this deadband, or shrink it if you want more micro-movement
             If Math.Abs(b) < 0.2 Then b = 0.0
 
-            ' Give small heading changes a little more roll so gentle turns
-            ' do not stay nearly level while retaining the same response for
-            ' larger bank angles.
+            ' Shallow-turn boost: you can keep or slightly reduce the factor
             Dim shallowMag As Double = Math.Abs(b)
             If shallowMag > 0 AndAlso shallowMag < 12.0 Then
                 Dim boost As Double = 1.0 + ((12.0 - shallowMag) * 0.02)
                 b *= boost
             End If
 
-            b = Clamp(b, -80.0, 80.0)
+            ' Let it go to full knife-edge
+            b = Clamp(b, -90.0, 90.0)
             finalBank.Add(-b)
         Next
 
-        Dim pitchSmooth As List(Of Double) = MovingAverage(rawPitch, 9)
+        Dim pitchSmooth As List(Of Double) = MovingAverage(rawPitch, PITCH_SMOOTH_WINDOW)
         Dim finalPitch As New List(Of Double)()
         For Each p As Double In pitchSmooth
-            Dim clamped As Double = Clamp(p, -10.0, 20.0)
-            finalPitch.Add(-clamped)
+            Dim clamped As Double = Clamp(p, PITCH_MAX_DOWN, PITCH_MAX_UP)
+            finalPitch.Add(-clamped)  ' keep MSFS axis convention
         Next
 
         Dim avgLat As Double = If(n > 0, sumLat / n, 0.0)
