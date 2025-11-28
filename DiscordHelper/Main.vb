@@ -6357,7 +6357,8 @@ Public Class Main
         Dim currentTaskCandidate As New CandidateTask With {
             .Title = taskInfo.Title,
             .PLNXML = _XmlDocFlightPlan.InnerXml,
-            .WPRXML = _XmlDocWeatherPreset.InnerXml
+            .WPRXML = _XmlDocWeatherPreset.InnerXml,
+            .SimDateTime = SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)
             }
         currentTaskCandidate.CompleteTaskData()
 
@@ -6488,7 +6489,16 @@ Public Class Main
             res.Differences.Add("• Weather preset differs (WPR XML not identical).")
         End If
 
-        ' 3d) AAT Minimum Duration difference?
+        ' 3d) Simulator local date/time
+        If currentTask.SimDateTime.HasValue OrElse candidate.SimDateTime.HasValue Then
+            If Not currentTask.SimDateTime.HasValue OrElse Not candidate.SimDateTime.HasValue Then
+                res.Differences.Add("• Sim local date/time differs (missing in one task).")
+            ElseIf currentTask.SimDateTime.Value <> candidate.SimDateTime.Value Then
+                res.Differences.Add($"• Sim local date/time differs ({currentTask.SimDateTime.Value:yyyy-MM-dd HH:mm} vs {candidate.SimDateTime.Value:yyyy-MM-dd HH:mm}).")
+            End If
+        End If
+
+        ' 3e) AAT Minimum Duration difference?
         For i = 0 To currentTaskWayPoints.Count - 1
             If currentTaskWayPoints(i).AATMinDuration <> candidateWayPoints(i).AATMinDuration Then
                 res.Differences.Add($"• AAT Minimum Duration differs ({SupportingFeatures.FormatTimeSpanAsText(currentTaskWayPoints(i).AATMinDuration)} vs {SupportingFeatures.FormatTimeSpanAsText(candidateWayPoints(i).AATMinDuration)}).")
