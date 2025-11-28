@@ -46,7 +46,12 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     dbg('Database opened OK.');
 
+    $igcLocalDate = $data['LocalDate'] ?? '';
+    $igcLocalTime = $data['LocalTime'] ?? '';
+
     $foundTask = null;
+    $matchedCandidates = [];
+    $candidateMeta = [];
 
     // If EntrySeqID has been forced - retrieve the PLNXML and nothing else
     $entrySeqID = isset($data['entrySeqID']) ? (int)$data['entrySeqID'] : 0;
@@ -54,7 +59,7 @@ try {
     if ($entrySeqID > 0) {
         dbg("Forced lookup by EntrySeqID={$entrySeqID}");
         $stmt = $pdo->prepare("
-            SELECT EntrySeqID, Title, PLNXML, SimDateTime
+            SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime
               FROM Tasks
              WHERE EntrySeqID = :EntrySeqID
         ");
@@ -81,7 +86,7 @@ try {
         dbg("igcTitle='{$igcTitle}', waypointsCount=" . count((array)$igcWaypoints));
 
         $stmt = $pdo->prepare(
-            "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE PLNXML LIKE :titleClause"
+            "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE PLNXML LIKE :titleClause"
         );
         $titleClause = '%<Title>' . $igcTitle . '</Title>%';
         $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
@@ -91,16 +96,7 @@ try {
         dbg('Title search results count: ' . count($titleResults));
 
         if (!empty($titleResults)) {
-            foreach ($titleResults as $cand) {
-                dbg("Validating candidate by title: EntrySeqID={$cand['EntrySeqID']}");
-                if (validateCandidate($cand, $igcWaypoints)) {
-                    $foundTask = $cand;
-                    dbg("Candidate matched by title: EntrySeqID={$cand['EntrySeqID']}");
-                    break;
-                } else {
-                    dbg("Candidate failed by title: EntrySeqID={$cand['EntrySeqID']}");
-                }
-            }
+            [$matchedCandidates, $candidateMeta] = accumulateMatches($titleResults, $igcWaypoints, $matchedCandidates, $candidateMeta);
         }
     }
 
@@ -120,7 +116,7 @@ try {
             $params[]  = '%<ATCWaypoint id=" ' . $wpID . ' ">%';  // both sides
         }
         if (!empty($clauses)) {
-            $sql  = "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
             dbg('Waypoint SQL (ALL IDs): ' . $sql);
             dbg('Params: ' . implode(' | ', $params));
             $stmt = $pdo->prepare($sql);
@@ -128,16 +124,7 @@ try {
             $wpResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
             dbg('ALL-ID search results count: ' . count($wpResults));
 
-            foreach ($wpResults as $cand) {
-                dbg("Validating candidate by ALL IDs: EntrySeqID={$cand['EntrySeqID']}");
-                if (validateCandidate($cand, $igcWaypoints)) {
-                    $foundTask = $cand;
-                    dbg("Candidate matched by ALL IDs: EntrySeqID={$cand['EntrySeqID']}");
-                    break;
-                } else {
-                    dbg("Candidate failed by ALL IDs: EntrySeqID={$cand['EntrySeqID']}");
-                }
-            }
+            [$matchedCandidates, $candidateMeta] = accumulateMatches($wpResults, $igcWaypoints, $matchedCandidates, $candidateMeta);
         } else {
             dbg('No waypoint IDs available for ALL-ID search.');
         }
@@ -160,7 +147,7 @@ try {
                 $params[]  = '%<ATCWaypoint id="' . $wpID . ' ">%';   // trailing space
                 $params[]  = '%<ATCWaypoint id=" ' . $wpID . ' ">%';  // both sides
             }
-            $sql  = "SELECT EntrySeqID, Title, PLNXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
             dbg('Waypoint SQL (INTERIOR): ' . $sql);
             dbg('Params: ' . implode(' | ', $params));
             $stmt = $pdo->prepare($sql);
@@ -168,18 +155,29 @@ try {
             $cands = $stmt->fetchAll(PDO::FETCH_ASSOC);
             dbg('INTERIOR-ID search results count: ' . count($cands));
 
-            foreach ($cands as $cand) {
-                dbg("Validating candidate by INTERIOR IDs: EntrySeqID={$cand['EntrySeqID']}");
-                if (validateCandidate($cand, $igcWaypoints)) {
-                    $foundTask = $cand;
-                    dbg("Candidate matched by INTERIOR IDs: EntrySeqID={$cand['EntrySeqID']}");
-                    break;
-                } else {
-                    dbg("Candidate failed by INTERIOR IDs: EntrySeqID={$cand['EntrySeqID']}");
-                }
-            }
+            [$matchedCandidates, $candidateMeta] = accumulateMatches($cands, $igcWaypoints, $matchedCandidates, $candidateMeta);
         } else {
             dbg('Not enough waypoints to perform INTERIOR-ID search.');
+        }
+    }
+
+    // If any geometry match was found, proceed with variant-aware filtering
+    if (!$foundTask && !empty($matchedCandidates)) {
+        dbg('Geometry matches found, applying variant filters…');
+        $igcMeta = buildIgcWaypointMeta($igcWaypoints);
+
+        $filteredByConstraints = filterByConstraints($matchedCandidates, $candidateMeta, $igcMeta);
+        if (!empty($filteredByConstraints)) {
+            $matchedCandidates = $filteredByConstraints;
+        }
+
+        $filteredByLocalTime = filterByLocalDateTime($matchedCandidates, $igcLocalDate, $igcLocalTime);
+        if (!empty($filteredByLocalTime)) {
+            $matchedCandidates = $filteredByLocalTime;
+        }
+
+        if (count($matchedCandidates) === 1) {
+            $foundTask = array_values($matchedCandidates)[0];
         }
     }
 
@@ -191,7 +189,26 @@ try {
             'EntrySeqID' => $foundTask['EntrySeqID'],
             'Title' => $foundTask['Title'],
             'PLNXML' => $foundTask['PLNXML'],
-            'SimDateTime'  => $foundTask['SimDateTime']
+            'SimDateTime'  => $foundTask['SimDateTime'],
+            'WPRXML' => $foundTask['WPRXML'] ?? '',
+            'WeatherPresetName' => extractWeatherPresetName($foundTask['WPRXML'] ?? '')
+        ]);
+    } elseif (!empty($matchedCandidates)) {
+        dbg('MULTIPLE candidates remain, returning for user selection');
+        $candidateList = [];
+        foreach ($matchedCandidates as $cand) {
+            $candidateList[] = [
+                'EntrySeqID' => $cand['EntrySeqID'],
+                'Title' => $cand['Title'],
+                'PLNXML' => $cand['PLNXML'],
+                'SimDateTime' => $cand['SimDateTime'],
+                'WPRXML' => $cand['WPRXML'] ?? '',
+                'WeatherPresetName' => extractWeatherPresetName($cand['WPRXML'] ?? '')
+            ];
+        }
+        echo json_encode([
+            'status' => 'multiple',
+            'candidates' => $candidateList
         ]);
     } else {
         dbg('NOT FOUND — returning status=not_found');
@@ -209,6 +226,200 @@ catch (Exception $e) {
         'message' => $e->getMessage()
     ]);
     exit;
+}
+
+/**
+ * Parse altitude and AAT metadata from a waypoint identifier.
+ */
+function parseWaypointMeta(string $rawId): array {
+    $id = trim($rawId);
+    $meta = [
+        'minAlt' => null,
+        'maxAlt' => null,
+        'aatMinSeconds' => 0
+    ];
+
+    $parts = explode('+', $id);
+    $endpart = $parts[1] ?? '';
+
+    if ($endpart !== '') {
+        if (preg_match('/\|(\d+)/', $endpart, $m)) {
+            $meta['maxAlt'] = (int)$m[1];
+        }
+        if (preg_match('/\/(\d+)/', $endpart, $m)) {
+            $meta['minAlt'] = (int)$m[1];
+        }
+        if (preg_match('/AAT(\d{2}):(\d{2})/i', $endpart, $m)) {
+            $hours = (int)$m[1];
+            $minutes = (int)$m[2];
+            $meta['aatMinSeconds'] = ($hours * 3600) + ($minutes * 60);
+        }
+    }
+
+    return $meta;
+}
+
+/**
+ * Build normalized IGC waypoint metadata for variant comparisons.
+ */
+function buildIgcWaypointMeta(array $igcWaypoints): array {
+    $meta = [];
+    foreach ($igcWaypoints as $i => $wp) {
+        $meta[$i] = parseWaypointMeta((string)($wp['id'] ?? ''));
+    }
+    return $meta;
+}
+
+/**
+ * Compare waypoint-based constraints (altitude + AAT duration) when multiple candidates exist.
+ */
+function filterByConstraints(array $candidates, array $candidateMeta, array $igcMeta): array {
+    $filtered = [];
+    foreach ($candidates as $cand) {
+        $entrySeq = $cand['EntrySeqID'];
+        $plnMeta = $candidateMeta[$entrySeq] ?? null;
+        if (!$plnMeta || !isset($plnMeta['waypoints'])) {
+            $filtered[$entrySeq] = $cand; // nothing to compare
+            continue;
+        }
+
+        $plnWps = $plnMeta['waypoints'];
+        $matches = true;
+        foreach ($plnWps as $idx => $meta) {
+            $igcWp = $igcMeta[$idx] ?? null;
+            if (!$igcWp) { continue; }
+
+            if ($meta['minAlt'] !== null && $igcWp['minAlt'] !== null && $meta['minAlt'] !== $igcWp['minAlt']) {
+                $matches = false;
+                break;
+            }
+            if ($meta['maxAlt'] !== null && $igcWp['maxAlt'] !== null && $meta['maxAlt'] !== $igcWp['maxAlt']) {
+                $matches = false;
+                break;
+            }
+        }
+
+        $plnAat = 0;
+        foreach ($plnWps as $meta) {
+            if (!empty($meta['aatMinSeconds'])) {
+                $plnAat = $meta['aatMinSeconds'];
+                break;
+            }
+        }
+        $igcAat = 0;
+        foreach ($igcMeta as $meta) {
+            if (!empty($meta['aatMinSeconds'])) {
+                $igcAat = $meta['aatMinSeconds'];
+                break;
+            }
+        }
+        if ($plnAat > 0 && $igcAat > 0 && $plnAat !== $igcAat) {
+            $matches = false;
+        }
+
+        if ($matches) {
+            $filtered[$entrySeq] = $cand;
+        }
+    }
+    return $filtered;
+}
+
+/**
+ * Apply local date/time tolerance (±60 minutes, ignore year) when multiple matches exist.
+ */
+function filterByLocalDateTime(array $candidates, string $igcDate, string $igcTime): array {
+    if (empty($igcDate) || empty($igcTime)) { return []; }
+
+    $igcDt = buildComparableLocalDateTime($igcDate, $igcTime);
+    if (!$igcDt) { return []; }
+
+    $filtered = [];
+    foreach ($candidates as $cand) {
+        $sim = buildComparableLocalDateTimeFromSim($cand['SimDateTime'] ?? '');
+        if (!$sim) { continue; }
+
+        $deltaMinutes = min(
+            abs($igcDt->getTimestamp() - $sim->getTimestamp()) / 60,
+            abs($igcDt->getTimestamp() - $sim->modify('+1 day')->getTimestamp()) / 60,
+            abs($igcDt->getTimestamp() - $sim->modify('-1 day')->getTimestamp()) / 60
+        );
+
+        if ($deltaMinutes <= 60) {
+            $filtered[$cand['EntrySeqID']] = $cand;
+        }
+    }
+    return $filtered;
+}
+
+/**
+ * Normalize task datetime to a comparable value with a dummy year.
+ */
+function buildComparableLocalDateTimeFromSim(string $simDateTime): ?DateTimeImmutable {
+    if (empty($simDateTime)) { return null; }
+    try {
+        $sim = new DateTimeImmutable($simDateTime);
+        $baseYear = 2000;
+        return $sim->setDate($baseYear, (int)$sim->format('m'), (int)$sim->format('d'));
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
+/**
+ * Normalize IGC local date/time (yyyy-MM-dd + HHmmss) to a comparable value with a dummy year.
+ */
+function buildComparableLocalDateTime(string $datePart, string $timePart): ?DateTimeImmutable {
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $datePart, $m)) { return null; }
+    if (!preg_match('/^(\d{2})(\d{2})(\d{2})$/', $timePart, $t)) { return null; }
+    $month = (int)$m[2];
+    $day = (int)$m[3];
+    $hour = (int)$t[1];
+    $minute = (int)$t[2];
+    $second = (int)$t[3];
+    $baseYear = 2000;
+    try {
+        return new DateTimeImmutable(sprintf('%04d-%02d-%02d %02d:%02d:%02d', $baseYear, $month, $day, $hour, $minute, $second));
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
+/**
+ * Accumulate all matching candidates and preserve their parsed PLN metadata.
+ */
+function accumulateMatches(array $candidates, array $igcWaypoints, array $currentMatches, array $meta): array {
+    foreach ($candidates as $cand) {
+        $entrySeq = $cand['EntrySeqID'];
+        if (isset($currentMatches[$entrySeq])) { continue; }
+
+        dbg("Validating candidate EntrySeqID={$entrySeq}");
+        $plnMeta = null;
+        if (validateCandidate($cand, $igcWaypoints, $plnMeta)) {
+            $currentMatches[$entrySeq] = $cand;
+            if ($plnMeta !== null) {
+                $meta[$entrySeq] = $plnMeta;
+            }
+            dbg("Candidate matched: EntrySeqID={$entrySeq}");
+        } else {
+            dbg("Candidate failed validation: EntrySeqID={$entrySeq}");
+        }
+    }
+
+    return [$currentMatches, $meta];
+}
+
+/**
+ * Extract the weather preset name from WPR XML content.
+ */
+function extractWeatherPresetName(string $wprXml): string {
+    if (empty($wprXml)) { return ''; }
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string($wprXml);
+    if (!$xml) { return ''; }
+    $name = (string)($xml->{"WeatherPreset.Preset"}->Name ?? '');
+    if (!empty($name)) { return $name; }
+    $node = $xml->xpath('//Name');
+    return $node && isset($node[0]) ? (string)$node[0] : '';
 }
 
 function normId($s) {
@@ -284,7 +495,7 @@ function compareCoordinates($coord1, $coord2, $tolerance = 0.001) {
  * @param array $igcWaypoints Numeric array of ['id'=>'…','coord'=>'…']
  * @return bool               True if all waypoints pass tolerance check
  */
-function validateCandidate(array $candidate, array $igcWaypoints): bool {
+function validateCandidate(array $candidate, array $igcWaypoints, &$plnMeta = null): bool {
     $entrySeq = $candidate['EntrySeqID'] ?? 'unknown';
     // logMessage("validateCandidate: *** START validation for EntrySeqID: {$entrySeq} ***");
     dbg("validateCandidate: *** START validation for EntrySeqID: {$entrySeq} ***");
@@ -327,6 +538,7 @@ function validateCandidate(array $candidate, array $igcWaypoints): bool {
     // 2) $xmlMapById[name] = "lat,lon" for lookup by id (interior fixes)
     $orderedXmlPos = [];
     $xmlMapById    = [];
+    $plnMetaByIndex = [];
     $dump = [];
     foreach ($nodes as $i => $wp) {
         $nameAttrRaw = (string)$wp['id'];
@@ -339,6 +551,7 @@ function validateCandidate(array $candidate, array $igcWaypoints): bool {
 
         $orderedXmlPos[$i]   = $pos;
         $xmlMapById[$nameAttr] = $pos;
+        $plnMetaByIndex[$i] = parseWaypointMeta($nameAttrRaw);
         $dump[] = "{$i}:{$nameAttr}=>{$pos}";
     }
     // logMessage("validateCandidate: PLNXML waypoints by index|id: " . implode(' | ', $dump));
@@ -410,6 +623,9 @@ function validateCandidate(array $candidate, array $igcWaypoints): bool {
 
     // logMessage("validateCandidate: *** ALL WAYPOINTS MATCH for EntrySeqID {$entrySeq} ***");
     dbg("validateCandidate: *** ALL WAYPOINTS MATCH for EntrySeqID {$entrySeq} ***");
+    $plnMeta = [
+        'waypoints' => $plnMetaByIndex
+    ];
     return true;
 }
 ?>

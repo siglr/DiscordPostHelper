@@ -963,7 +963,9 @@ End Function
                                    igcDetails.IGCWaypoints.Select(
                                      Function(wp) New With {wp.Id, wp.Coord}
                                    ).ToList()
-                                 )}
+                                 )},
+              {"LocalDate", igcDetails.LocalDate},
+              {"LocalTime", igcDetails.LocalTime}
           }
             Using client As New HttpClient()
                 client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
@@ -973,11 +975,14 @@ End Function
                 If resp.IsSuccessStatusCode Then
                     Dim body = Await resp.Content.ReadAsStringAsync()
                     Dim j = JObject.Parse(body)
-                    If j("status")?.ToString() = "found" Then
+                    Dim status = j("status")?.ToString()
+                    If status = "found" Then
                         ' Found a match, extract the EntrySeqID and store it into a new IGCCacheTaskObject and then in the current igcDetails
                         Dim entrySeqID As Integer = 0
                         Dim plnXML As String = String.Empty
                         Dim simDateTime As DateTime = DateTime.MinValue
+                        Dim wprXml As String = j("WPRXML")?.ToString()
+                        Dim weatherPresetName As String = j("WeatherPresetName")?.ToString()
 
                         Integer.TryParse(j("EntrySeqID")?.ToString(), entrySeqID)
                         plnXML = j("PLNXML")?.ToString()
@@ -986,7 +991,36 @@ End Function
                         If Not String.IsNullOrEmpty(simDTstr) Then
                             DateTime.TryParseExact(simDTstr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
                         End If
-                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime, taskTitle)
+                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime, taskTitle, wprXml, weatherPresetName)
+                    ElseIf status = "multiple" Then
+                        Dim candidates As New List(Of IGCCacheTaskObject)()
+                        Dim arr = TryCast(j("candidates"), JArray)
+                        If arr IsNot Nothing Then
+                            For Each cand As JObject In arr
+                                Dim entrySeqID As Integer = 0
+                                Integer.TryParse(cand("EntrySeqID")?.ToString(), entrySeqID)
+                                Dim plnXml As String = cand("PLNXML")?.ToString()
+                                Dim simDateTime As DateTime = DateTime.MinValue
+                                Dim simDtStr As String = cand("SimDateTime")?.ToString()
+                                If Not String.IsNullOrEmpty(simDtStr) Then
+                                    DateTime.TryParseExact(simDtStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
+                                End If
+                                Dim title As String = cand("Title")?.ToString()
+                                Dim wprXml As String = cand("WPRXML")?.ToString()
+                                Dim weatherPreset As String = cand("WeatherPresetName")?.ToString()
+                                candidates.Add(New IGCCacheTaskObject(entrySeqID, plnXml, simDateTime, title, wprXml, weatherPreset))
+                            Next
+                        End If
+
+                        If candidates.Count > 0 Then
+                            Using selector As New TaskVersionSelector(candidates)
+                                If selector.ShowDialog(Me) = DialogResult.OK AndAlso selector.SelectedTask IsNot Nothing Then
+                                    igcDetails.MatchedTask = selector.SelectedTask
+                                Else
+                                    response = "Task selection cancelled."
+                                End If
+                            End Using
+                        End If
                     End If
                 End If
             End Using

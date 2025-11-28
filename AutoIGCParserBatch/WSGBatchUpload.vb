@@ -520,7 +520,9 @@ Public Class WSGBatchUpload
         Dim igcWaypointsJson As String = JsonConvert.SerializeObject(wpObjects)
         Dim form = New Dictionary(Of String, String) From {
                     {"igcTitle", taskTitle},
-                    {"igcWaypoints", igcWaypointsJson}
+                    {"igcWaypoints", igcWaypointsJson},
+                    {"LocalDate", igcDetails.LocalDate},
+                    {"LocalTime", igcDetails.LocalTime}
                 }
 
         Using client As New HttpClient()
@@ -535,13 +537,20 @@ Public Class WSGBatchUpload
             Dim jdoc As JToken = JToken.Parse(body)
             Dim status As String = jdoc.Value(Of String)("status")
 
-            If status <> "found" Then
+            If status = "found" Then
+                entrySeqID = jdoc.Value(Of Integer)("EntrySeqID")
+                txtLog.AppendText($"✔ Matched EntrySeqID {entrySeqID}" & vbCrLf)
+            ElseIf status = "multiple" Then
+                Dim first = jdoc("candidates")?.FirstOrDefault()
+                If first IsNot Nothing Then
+                    entrySeqID = first.Value(Of Integer)("EntrySeqID")
+                    txtLog.AppendText($"⚠️ Multiple matches, picked first EntrySeqID {entrySeqID}" & vbCrLf)
+                Else
+                    txtLog.AppendText($"❌ No match (status={status})" & vbCrLf)
+                End If
+            Else
                 txtLog.AppendText($"❌ No match (status={status})" & vbCrLf)
-                Return entrySeqID
             End If
-
-            entrySeqID = jdoc.Value(Of Integer)("EntrySeqID")
-            txtLog.AppendText($"✔ Matched EntrySeqID {entrySeqID}" & vbCrLf)
         End Using
 
         Return entrySeqID
