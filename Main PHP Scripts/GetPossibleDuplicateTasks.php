@@ -30,7 +30,7 @@ try {
     if ($haveBBox) {
         // SAME BOX within epsilon: each candidate edge must be within [value - eps, value + eps]
         $branches[] = "
-            SELECT EntrySeqID, TaskID, Title, PLNXML, WPRXML
+            SELECT EntrySeqID, TaskID, Title, PLNXML, WPRXML, SimDateTime
             FROM Tasks
             WHERE
                 LatMin  BETWEEN :latMin_lo  AND :latMin_hi  AND
@@ -50,7 +50,7 @@ try {
 
     if ($haveTitle) {
         $branches[] = "
-            SELECT EntrySeqID, TaskID, Title, PLNXML, WPRXML
+            SELECT EntrySeqID, TaskID, Title, PLNXML, WPRXML, SimDateTime
             FROM Tasks
             WHERE Title = :title COLLATE NOCASE
         ";
@@ -58,7 +58,7 @@ try {
     }
 
     $sql = "
-        SELECT DISTINCT EntrySeqID, TaskID, Title, PLNXML, WPRXML
+        SELECT DISTINCT EntrySeqID, TaskID, Title, PLNXML, WPRXML, SimDateTime
         FROM (
             " . implode("\nUNION ALL\n", $branches) . "
         ) AS candidates

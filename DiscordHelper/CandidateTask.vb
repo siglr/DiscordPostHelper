@@ -7,6 +7,7 @@ Public Class CandidateTask
     Public Property Title As String
     Public Property PLNXML As String
     Public Property WPRXML As String
+    Public Property SimDateTime As Date?
 
     Private _allWaypoints As List(Of ATCWaypoint)
     Public ReadOnly Property AllWaypoints As List(Of ATCWaypoint)
