@@ -59,7 +59,7 @@ try {
     if ($entrySeqID > 0) {
         dbg("Forced lookup by EntrySeqID={$entrySeqID}");
         $stmt = $pdo->prepare("
-            SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime
+            SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime, LastUpdate
               FROM Tasks
              WHERE EntrySeqID = :EntrySeqID
         ");
@@ -86,7 +86,7 @@ try {
         dbg("igcTitle='{$igcTitle}', waypointsCount=" . count((array)$igcWaypoints));
 
         $stmt = $pdo->prepare(
-            "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE PLNXML LIKE :titleClause"
+            "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime, LastUpdate FROM Tasks WHERE PLNXML LIKE :titleClause"
         );
         $titleClause = '%<Title>' . $igcTitle . '</Title>%';
         $stmt->bindParam(':titleClause', $titleClause, PDO::PARAM_STR);
@@ -116,7 +116,7 @@ try {
             $params[]  = '%<ATCWaypoint id=" ' . $wpID . ' ">%';  // both sides
         }
         if (!empty($clauses)) {
-            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime, LastUpdate FROM Tasks WHERE " . implode(' AND ', $clauses);
             dbg('Waypoint SQL (ALL IDs): ' . $sql);
             dbg('Params: ' . implode(' | ', $params));
             $stmt = $pdo->prepare($sql);
@@ -147,7 +147,7 @@ try {
                 $params[]  = '%<ATCWaypoint id="' . $wpID . ' ">%';   // trailing space
                 $params[]  = '%<ATCWaypoint id=" ' . $wpID . ' ">%';  // both sides
             }
-            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime FROM Tasks WHERE " . implode(' AND ', $clauses);
+            $sql  = "SELECT EntrySeqID, Title, PLNXML, WPRXML, SimDateTime, LastUpdate FROM Tasks WHERE " . implode(' AND ', $clauses);
             dbg('Waypoint SQL (INTERIOR): ' . $sql);
             dbg('Params: ' . implode(' | ', $params));
             $stmt = $pdo->prepare($sql);
@@ -190,6 +190,7 @@ try {
             'Title' => $foundTask['Title'],
             'PLNXML' => $foundTask['PLNXML'],
             'SimDateTime'  => $foundTask['SimDateTime'],
+            'LastUpdate' => $foundTask['LastUpdate'] ?? '',
             'WPRXML' => $foundTask['WPRXML'] ?? '',
             'WeatherPresetName' => extractWeatherPresetName($foundTask['WPRXML'] ?? '')
         ]);
@@ -202,6 +203,7 @@ try {
                 'Title' => $cand['Title'],
                 'PLNXML' => $cand['PLNXML'],
                 'SimDateTime' => $cand['SimDateTime'],
+                'LastUpdate' => $cand['LastUpdate'] ?? '',
                 'WPRXML' => $cand['WPRXML'] ?? '',
                 'WeatherPresetName' => extractWeatherPresetName($cand['WPRXML'] ?? '')
             ];
