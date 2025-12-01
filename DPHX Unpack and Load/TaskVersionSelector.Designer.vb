@@ -23,6 +23,10 @@ Partial Class TaskVersionSelector
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.dgvCandidates = New System.Windows.Forms.DataGridView()
+        Me.colEntrySeqId = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colSimTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colWeather = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -36,7 +40,8 @@ Partial Class TaskVersionSelector
         Me.dgvCandidates.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvCandidates.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvCandidates.AutoGenerateColumns = False
+        Me.dgvCandidates.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colEntrySeqId, Me.colTitle, Me.colSimTime, Me.colWeather})
         Me.dgvCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCandidates.Location = New System.Drawing.Point(13, 58)
         Me.dgvCandidates.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -82,6 +87,45 @@ Partial Class TaskVersionSelector
         Me.Label1.Text = "More than one task can be matched to your IGC tracklog." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Please select the correc" &
     "t one:"
         '
+        'colEntrySeqId
+        '
+        Me.colEntrySeqId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.colEntrySeqId.DataPropertyName = "EntrySeqID"
+        Me.colEntrySeqId.HeaderText = "Task #"
+        Me.colEntrySeqId.MinimumWidth = 6
+        Me.colEntrySeqId.Name = "colEntrySeqId"
+        Me.colEntrySeqId.ReadOnly = True
+        Me.colEntrySeqId.Width = 78
+        '
+        'colTitle
+        '
+        Me.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.colTitle.DataPropertyName = "Title"
+        Me.colTitle.HeaderText = "Title"
+        Me.colTitle.MinimumWidth = 6
+        Me.colTitle.Name = "colTitle"
+        Me.colTitle.ReadOnly = True
+        Me.colTitle.Width = 71
+        '
+        'colSimTime
+        '
+        Me.colSimTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.colSimTime.DataPropertyName = "SimTime"
+        Me.colSimTime.HeaderText = "Local date & time"
+        Me.colSimTime.MinimumWidth = 6
+        Me.colSimTime.Name = "colSimTime"
+        Me.colSimTime.ReadOnly = True
+        Me.colSimTime.Width = 168
+        '
+        'colWeather
+        '
+        Me.colWeather.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colWeather.DataPropertyName = "Weather"
+        Me.colWeather.HeaderText = "Weather preset"
+        Me.colWeather.MinimumWidth = 6
+        Me.colWeather.Name = "colWeather"
+        Me.colWeather.ReadOnly = True
+
         'TaskVersionSelector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
