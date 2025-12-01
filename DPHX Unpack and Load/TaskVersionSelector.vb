@@ -4,7 +4,7 @@ Imports System.Linq
 Imports System.Diagnostics
 Imports SIGLR.SoaringTools.CommonLibrary
 
-Public Partial Class TaskVersionSelector
+Partial Public Class TaskVersionSelector
     Inherits ZoomForm
 
     Private ReadOnly _candidates As List(Of IGCCacheTaskObject)
