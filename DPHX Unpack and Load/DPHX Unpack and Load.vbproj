@@ -278,6 +278,9 @@
     <EmbeddedResource Include="ManualFallbackMode.resx">
       <DependentUpon>ManualFallbackMode.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TaskVersionSelector.resx">
+      <DependentUpon>TaskVersionSelector.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UpcomingEventPrompt.resx">
       <DependentUpon>UpcomingEventPrompt.vb</DependentUpon>
     </EmbeddedResource>

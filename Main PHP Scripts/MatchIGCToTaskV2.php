@@ -328,26 +328,38 @@ function filterByConstraints(array $candidates, array $candidateMeta, array $igc
  * Apply local date/time tolerance (±60 minutes, ignore year) when multiple matches exist.
  */
 function filterByLocalDateTime(array $candidates, string $igcDate, string $igcTime): array {
-    if (empty($igcDate) || empty($igcTime)) { return []; }
+    if (empty($igcDate) || empty($igcTime)) { 
+        return []; 
+    }
 
     $igcDt = buildComparableLocalDateTime($igcDate, $igcTime);
-    if (!$igcDt) { return []; }
+    if (!$igcDt) { 
+        return []; 
+    }
 
     $filtered = [];
     foreach ($candidates as $cand) {
         $sim = buildComparableLocalDateTimeFromSim($cand['SimDateTime'] ?? '');
-        if (!$sim) { continue; }
+        if (!$sim) { 
+            continue; 
+        }
+
+        // Work with separate immutable instances for +/- 1 day
+        $sim0     = $sim;
+        $simPlus  = $sim->modify('+1 day');
+        $simMinus = $sim->modify('-1 day');
 
         $deltaMinutes = min(
-            abs($igcDt->getTimestamp() - $sim->getTimestamp()) / 60,
-            abs($igcDt->getTimestamp() - $sim->modify('+1 day')->getTimestamp()) / 60,
-            abs($igcDt->getTimestamp() - $sim->modify('-1 day')->getTimestamp()) / 60
+            abs($igcDt->getTimestamp() - $sim0->getTimestamp()) / 60,
+            abs($igcDt->getTimestamp() - $simPlus->getTimestamp()) / 60,
+            abs($igcDt->getTimestamp() - $simMinus->getTimestamp()) / 60
         );
 
         if ($deltaMinutes <= 60) {
             $filtered[$cand['EntrySeqID']] = $cand;
         }
     }
+
     return $filtered;
 }
 
