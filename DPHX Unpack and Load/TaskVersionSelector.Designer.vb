@@ -111,7 +111,7 @@ Partial Class TaskVersionSelector
         '
         Me.colSimTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
         Me.colSimTime.DataPropertyName = "SimTime"
-        Me.colSimTime.HeaderText = "Local date & time"
+        Me.colSimTime.HeaderText = "Local time"
         Me.colSimTime.MinimumWidth = 6
         Me.colSimTime.Name = "colSimTime"
         Me.colSimTime.ReadOnly = True
