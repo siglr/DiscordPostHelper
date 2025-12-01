@@ -951,6 +951,18 @@ End Function
         Return String.Join("|", slice)
     End Function
 
+    Private Function ParseLocalDateTime(value As String) As DateTime
+        If String.IsNullOrWhiteSpace(value) Then
+            Return DateTime.MinValue
+        End If
+
+        Try
+            Return DateTime.ParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal)
+        Catch ex As FormatException
+            Return DateTime.MinValue
+        End Try
+    End Function
+
     Private Async Function FetchEntrySeqIDFromServer() As Task(Of String)
 
         Dim response As String = String.Empty
@@ -983,6 +995,10 @@ End Function
                         Dim simDateTime As DateTime = DateTime.MinValue
                         Dim wprXml As String = j("WPRXML")?.ToString()
                         Dim weatherPresetName As String = j("WeatherPresetName")?.ToString()
+                        Dim lastUpdateStr As String = j("LastUpdate")?.ToString()
+                        If String.IsNullOrEmpty(lastUpdateStr) Then
+                            lastUpdateStr = j("LastUpdated")?.ToString()
+                        End If
 
                         Integer.TryParse(j("EntrySeqID")?.ToString(), entrySeqID)
                         plnXML = j("PLNXML")?.ToString()
@@ -991,7 +1007,7 @@ End Function
                         If Not String.IsNullOrEmpty(simDTstr) Then
                             DateTime.TryParseExact(simDTstr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
                         End If
-                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, wprXml, simDateTime, taskTitle, weatherPresetName)
+                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, wprXml, simDateTime, taskTitle, weatherPresetName, ParseLocalDateTime(lastUpdateStr))
                     ElseIf status = "multiple" Then
                         Dim candidates As New List(Of IGCCacheTaskObject)()
                         Dim arr = TryCast(j("candidates"), JArray)
@@ -1002,13 +1018,17 @@ End Function
                                 Dim plnXml As String = cand("PLNXML")?.ToString()
                                 Dim simDateTime As DateTime = DateTime.MinValue
                                 Dim simDtStr As String = cand("SimDateTime")?.ToString()
+                                Dim lastUpdateStr As String = cand("LastUpdate")?.ToString()
+                                If String.IsNullOrEmpty(lastUpdateStr) Then
+                                    lastUpdateStr = cand("LastUpdated")?.ToString()
+                                End If
                                 If Not String.IsNullOrEmpty(simDtStr) Then
                                     DateTime.TryParseExact(simDtStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
                                 End If
                                 Dim title As String = cand("Title")?.ToString()
                                 Dim wprXml As String = cand("WPRXML")?.ToString()
                                 Dim weatherPreset As String = cand("WeatherPresetName")?.ToString()
-                                candidates.Add(New IGCCacheTaskObject(entrySeqID, plnXml, wprXml, simDateTime, title, weatherPreset))
+                                candidates.Add(New IGCCacheTaskObject(entrySeqID, plnXml, wprXml, simDateTime, title, weatherPreset, ParseLocalDateTime(lastUpdateStr)))
                             Next
                         End If
 
