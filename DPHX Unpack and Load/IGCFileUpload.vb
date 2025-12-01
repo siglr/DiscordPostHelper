@@ -991,7 +991,7 @@ End Function
                         If Not String.IsNullOrEmpty(simDTstr) Then
                             DateTime.TryParseExact(simDTstr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, simDateTime)
                         End If
-                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, simDateTime, taskTitle, wprXml, weatherPresetName)
+                        igcDetails.MatchedTask = New IGCCacheTaskObject(entrySeqID, plnXML, wprXml, simDateTime, taskTitle, weatherPresetName)
                     ElseIf status = "multiple" Then
                         Dim candidates As New List(Of IGCCacheTaskObject)()
                         Dim arr = TryCast(j("candidates"), JArray)
@@ -1008,7 +1008,7 @@ End Function
                                 Dim title As String = cand("Title")?.ToString()
                                 Dim wprXml As String = cand("WPRXML")?.ToString()
                                 Dim weatherPreset As String = cand("WeatherPresetName")?.ToString()
-                                candidates.Add(New IGCCacheTaskObject(entrySeqID, plnXml, simDateTime, title, wprXml, weatherPreset))
+                                candidates.Add(New IGCCacheTaskObject(entrySeqID, plnXml, wprXml, simDateTime, title, weatherPreset))
                             Next
                         End If
 

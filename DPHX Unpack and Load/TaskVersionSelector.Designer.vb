@@ -25,6 +25,7 @@ Partial Class TaskVersionSelector
         Me.dgvCandidates = New System.Windows.Forms.DataGridView()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.dgvCandidates, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -35,9 +36,9 @@ Partial Class TaskVersionSelector
         Me.dgvCandidates.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvCandidates.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
+        Me.dgvCandidates.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvCandidates.Location = New System.Drawing.Point(13, 15)
+        Me.dgvCandidates.Location = New System.Drawing.Point(13, 58)
         Me.dgvCandidates.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.dgvCandidates.MultiSelect = False
         Me.dgvCandidates.Name = "dgvCandidates"
@@ -45,13 +46,13 @@ Partial Class TaskVersionSelector
         Me.dgvCandidates.RowHeadersVisible = False
         Me.dgvCandidates.RowHeadersWidth = 47
         Me.dgvCandidates.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvCandidates.Size = New System.Drawing.Size(796, 431)
+        Me.dgvCandidates.Size = New System.Drawing.Size(722, 315)
         Me.dgvCandidates.TabIndex = 0
         '
         'btnOk
         '
         Me.btnOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOk.Location = New System.Drawing.Point(582, 463)
+        Me.btnOk.Location = New System.Drawing.Point(508, 390)
         Me.btnOk.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(107, 46)
@@ -63,7 +64,7 @@ Partial Class TaskVersionSelector
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(702, 463)
+        Me.btnCancel.Location = New System.Drawing.Point(628, 390)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(107, 46)
@@ -71,12 +72,23 @@ Partial Class TaskVersionSelector
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(13, 13)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(387, 40)
+        Me.Label1.TabIndex = 3
+        Me.Label1.Text = "More than one task can be matched to your IGC tracklog." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Please select the correc" &
+    "t one:"
+        '
         'TaskVersionSelector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(822, 523)
+        Me.ClientSize = New System.Drawing.Size(748, 450)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOk)
         Me.Controls.Add(Me.dgvCandidates)
@@ -90,6 +102,7 @@ Partial Class TaskVersionSelector
         Me.Text = "Select Task Version"
         CType(Me.dgvCandidates, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -100,4 +113,5 @@ Partial Class TaskVersionSelector
     Friend WithEvents colTitle As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents colSimTime As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents colWeather As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label1 As Label
 End Class
