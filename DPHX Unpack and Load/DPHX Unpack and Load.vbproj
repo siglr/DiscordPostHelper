@@ -145,9 +145,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AutoIGCParserBatch\IGCCacheTaskObject.vb">
-      <Link>IGCCacheTaskObject.vb</Link>
-    </Compile>
+    <Compile Include="IGCCacheTaskObject.vb" />
     <Compile Include="..\AutoIGCParserBatch\IGCLookupDetails.vb">
       <Link>IGCLookupDetails.vb</Link>
     </Compile>
