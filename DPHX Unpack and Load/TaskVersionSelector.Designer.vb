@@ -42,6 +42,7 @@ Partial Class TaskVersionSelector
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvCandidates.AutoGenerateColumns = False
+        Me.dgvCandidates.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None
         Me.dgvCandidates.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colEntrySeqId, Me.colTitle, Me.colSimTime, Me.colWeather, Me.colLastUpdate})
         Me.dgvCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCandidates.Location = New System.Drawing.Point(13, 58)
@@ -51,6 +52,7 @@ Partial Class TaskVersionSelector
         Me.dgvCandidates.ReadOnly = True
         Me.dgvCandidates.RowHeadersVisible = False
         Me.dgvCandidates.RowHeadersWidth = 47
+        Me.dgvCandidates.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.dgvCandidates.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvCandidates.Size = New System.Drawing.Size(722, 315)
         Me.dgvCandidates.TabIndex = 0
@@ -103,13 +105,12 @@ Partial Class TaskVersionSelector
         '
         'colTitle
         '
-        Me.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.colTitle.DataPropertyName = "Title"
         Me.colTitle.HeaderText = "Title"
         Me.colTitle.MinimumWidth = 6
         Me.colTitle.Name = "colTitle"
         Me.colTitle.ReadOnly = True
-        Me.colTitle.Width = 71
         '
         'colSimTime
         '
@@ -123,7 +124,7 @@ Partial Class TaskVersionSelector
         '
         'colWeather
         '
-        Me.colWeather.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colWeather.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
         Me.colWeather.DataPropertyName = "Weather"
         Me.colWeather.HeaderText = "Weather preset"
         Me.colWeather.MinimumWidth = 6

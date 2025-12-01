@@ -42,8 +42,10 @@ Partial Public Class TaskVersionSelector
 
     Private Function FormatLastUpdate(dt As DateTime) As String
         If dt = DateTime.MinValue Then Return String.Empty
+        Dim utcDate = DateTime.SpecifyKind(dt, DateTimeKind.Utc)
+        Dim localDate = utcDate.ToLocalTime()
         Dim pattern = CultureInfo.CurrentCulture
-        Return dt.ToString("g", pattern)
+        Return localDate.ToString("g", pattern)
     End Function
 
     Private Sub DgvCandidates_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCandidates.CellContentClick
