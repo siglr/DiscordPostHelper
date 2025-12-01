@@ -969,7 +969,7 @@ End Function
           }
             Using client As New HttpClient()
                 client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
-                Dim resp = Await client.PostAsync("MatchIGCToTask.php",
+                Dim resp = Await client.PostAsync("MatchIGCToTaskV2.php",
                                                 New FormUrlEncodedContent(form))
 
                 If resp.IsSuccessStatusCode Then
