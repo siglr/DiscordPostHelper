@@ -1,6 +1,7 @@
 Imports System.Windows.Forms
 Imports System.Globalization
 Imports System.Linq
+Imports System.Diagnostics
 Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Partial Class TaskVersionSelector
@@ -26,7 +27,8 @@ Public Partial Class TaskVersionSelector
             .EntrySeqID = c.EntrySeqID,
             .Title = c.TaskTitle,
             .SimTime = FormatSimTime(c.MSFSLocalDateTime),
-            .Weather = If(String.IsNullOrWhiteSpace(c.WeatherPresetName), String.Empty, c.WeatherPresetName)
+            .Weather = If(String.IsNullOrWhiteSpace(c.WeatherPresetName), String.Empty, c.WeatherPresetName),
+            .LastUpdate = FormatLastUpdate(c.LastUpdate)
         }).ToList()
 
         dgvCandidates.DataSource = displayList
@@ -37,6 +39,30 @@ Public Partial Class TaskVersionSelector
         Dim pattern = CultureInfo.CurrentCulture.DateTimeFormat
         Return dt.ToString("MMM dd, HH:mm", pattern)
     End Function
+
+    Private Function FormatLastUpdate(dt As DateTime) As String
+        If dt = DateTime.MinValue Then Return String.Empty
+        Dim pattern = CultureInfo.CurrentCulture
+        Return dt.ToString("g", pattern)
+    End Function
+
+    Private Sub DgvCandidates_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCandidates.CellContentClick
+        If e.RowIndex < 0 OrElse e.ColumnIndex <> colEntrySeqId.Index Then
+            Return
+        End If
+
+        Dim entrySeqIdValue = dgvCandidates.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+        Dim entrySeqId As Integer
+        If entrySeqIdValue Is Nothing OrElse Not Integer.TryParse(entrySeqIdValue.ToString(), entrySeqId) Then
+            Return
+        End If
+
+        Try
+            Process.Start(New ProcessStartInfo(SupportingFeatures.GetWeSimGlideTaskURL(entrySeqId)) With {.UseShellExecute = True})
+        Catch ex As Exception
+            MessageBox.Show("Unable to open task on WeSimGlide.org.", "Open task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
+    End Sub
 
     Private Sub BtnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         If dgvCandidates.SelectedRows.Count = 0 Then

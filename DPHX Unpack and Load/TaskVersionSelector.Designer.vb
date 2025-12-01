@@ -23,10 +23,11 @@ Partial Class TaskVersionSelector
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.dgvCandidates = New System.Windows.Forms.DataGridView()
-        Me.colEntrySeqId = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colEntrySeqId = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.colTitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colSimTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colWeather = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colLastUpdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -41,7 +42,7 @@ Partial Class TaskVersionSelector
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvCandidates.AutoGenerateColumns = False
-        Me.dgvCandidates.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colEntrySeqId, Me.colTitle, Me.colSimTime, Me.colWeather})
+        Me.dgvCandidates.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colEntrySeqId, Me.colTitle, Me.colSimTime, Me.colWeather, Me.colLastUpdate})
         Me.dgvCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCandidates.Location = New System.Drawing.Point(13, 58)
         Me.dgvCandidates.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -89,13 +90,16 @@ Partial Class TaskVersionSelector
         '
         'colEntrySeqId
         '
+        Me.colEntrySeqId.ActiveLinkColor = System.Drawing.Color.RoyalBlue
         Me.colEntrySeqId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
         Me.colEntrySeqId.DataPropertyName = "EntrySeqID"
         Me.colEntrySeqId.HeaderText = "Task #"
+        Me.colEntrySeqId.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.colEntrySeqId.MinimumWidth = 6
         Me.colEntrySeqId.Name = "colEntrySeqId"
         Me.colEntrySeqId.ReadOnly = True
-        Me.colEntrySeqId.Width = 78
+        Me.colEntrySeqId.TrackVisitedState = False
+        Me.colEntrySeqId.VisitedLinkColor = System.Drawing.Color.RoyalBlue
         '
         'colTitle
         '
@@ -125,6 +129,15 @@ Partial Class TaskVersionSelector
         Me.colWeather.MinimumWidth = 6
         Me.colWeather.Name = "colWeather"
         Me.colWeather.ReadOnly = True
+        '
+        'colLastUpdate
+        '
+        Me.colLastUpdate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.colLastUpdate.DataPropertyName = "LastUpdate"
+        Me.colLastUpdate.HeaderText = "Last updated"
+        Me.colLastUpdate.MinimumWidth = 6
+        Me.colLastUpdate.Name = "colLastUpdate"
+        Me.colLastUpdate.ReadOnly = True
 
         'TaskVersionSelector
         '
@@ -153,9 +166,10 @@ Partial Class TaskVersionSelector
     Friend WithEvents dgvCandidates As System.Windows.Forms.DataGridView
     Friend WithEvents btnOk As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents colEntrySeqId As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents colEntrySeqId As System.Windows.Forms.DataGridViewLinkColumn
     Friend WithEvents colTitle As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents colSimTime As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents colWeather As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents colLastUpdate As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label1 As Label
 End Class
