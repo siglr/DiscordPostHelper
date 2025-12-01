@@ -506,7 +506,7 @@ Public Class WSGBatchUpload
     Private Async Function IGCFlightPlanMatchedTaskID() As Task(Of Integer)
         Dim entrySeqID As Integer = 0
 
-        ' 3) Call MatchIGCToTask.php to get EntrySeqID
+        ' 3) Call MatchIGCToTaskV2.php to get EntrySeqID
         Dim taskTitle = igcDetails.TaskTitle
 
         ' build the JSON array of { id, coord } from your IGCWaypoints
@@ -520,12 +520,14 @@ Public Class WSGBatchUpload
         Dim igcWaypointsJson As String = JsonConvert.SerializeObject(wpObjects)
         Dim form = New Dictionary(Of String, String) From {
                     {"igcTitle", taskTitle},
-                    {"igcWaypoints", igcWaypointsJson}
+                    {"igcWaypoints", igcWaypointsJson},
+                    {"LocalDate", igcDetails.LocalDate},
+                    {"LocalTime", igcDetails.LocalTime}
                 }
 
         Using client As New HttpClient()
             client.BaseAddress = New Uri("https://siglr.com/DiscordPostHelper/")
-            Dim resp = Await client.PostAsync("MatchIGCToTask.php", New FormUrlEncodedContent(form))
+            Dim resp = Await client.PostAsync("MatchIGCToTaskV2.php", New FormUrlEncodedContent(form))
             If Not resp.IsSuccessStatusCode Then
                 txtLog.AppendText($"❌ PHP error {(CInt(resp.StatusCode))} {resp.ReasonPhrase}" & vbCrLf)
                 Return entrySeqID
@@ -535,13 +537,20 @@ Public Class WSGBatchUpload
             Dim jdoc As JToken = JToken.Parse(body)
             Dim status As String = jdoc.Value(Of String)("status")
 
-            If status <> "found" Then
+            If status = "found" Then
+                entrySeqID = jdoc.Value(Of Integer)("EntrySeqID")
+                txtLog.AppendText($"✔ Matched EntrySeqID {entrySeqID}" & vbCrLf)
+            ElseIf status = "multiple" Then
+                Dim first = jdoc("candidates")?.FirstOrDefault()
+                If first IsNot Nothing Then
+                    entrySeqID = first.Value(Of Integer)("EntrySeqID")
+                    txtLog.AppendText($"⚠️ Multiple matches, picked first EntrySeqID {entrySeqID}" & vbCrLf)
+                Else
+                    txtLog.AppendText($"❌ No match (status={status})" & vbCrLf)
+                End If
+            Else
                 txtLog.AppendText($"❌ No match (status={status})" & vbCrLf)
-                Return entrySeqID
             End If
-
-            entrySeqID = jdoc.Value(Of Integer)("EntrySeqID")
-            txtLog.AppendText($"✔ Matched EntrySeqID {entrySeqID}" & vbCrLf)
         End Using
 
         Return entrySeqID
@@ -735,12 +744,12 @@ Public Class WSGBatchUpload
     End Function
 
     ''' <summary>
-    ''' Given an EntrySeqID, POSTs to your modified MatchIGCToTask.php
+    ''' Given an EntrySeqID, POSTs to MatchIGCToTaskV2.php
     ''' (which, when entrySeqID>0, returns { status:"found", EntrySeqID:…, PLNXML:… } )
     ''' and returns the PLNXML (or "" on error).
     ''' </summary>
     Private Function FetchPlnXml(entrySeqID As Integer) As String
-        Const url As String = "https://siglr.com/DiscordPostHelper/MatchIGCToTask.php"
+        Const url As String = "https://siglr.com/DiscordPostHelper/MatchIGCToTaskV2.php"
         Try
             Using client As New HttpClient()
                 ' build the form data

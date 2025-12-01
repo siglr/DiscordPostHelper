@@ -2914,28 +2914,12 @@ Public Class SupportingFeatures
             Return False
         End If
 
-        ' 1) Parse the task’s UTC datetime
-        '    → convert "YYYY-MM-DD HH:mm:ss" into an ISO + Z suffix
-        Dim simIso = simDateTime.Replace(" "c, "T"c) & "Z"
+        ' 1) Parse the task’s datetime (ignore year)
         Dim taskDT As DateTime
-        If Not DateTime.TryParseExact(
-                simIso,
-                "yyyy-MM-ddTHH:mm:ssZ",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
-                taskDT
-            ) Then
-            ' fallback to a permissive parse
-            If Not DateTime.TryParse(
-                    simIso,
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
-                    taskDT
-                ) Then
-                Return False
-            End If
+        If Not DateTime.TryParse(simDateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, taskDT) Then
+            Return False
         End If
-        Dim taskYear = taskDT.Year
+        Dim normalizedTask = New DateTime(2000, taskDT.Month, taskDT.Day, taskDT.Hour, taskDT.Minute, taskDT.Second, DateTimeKind.Unspecified)
 
         ' 2) Extract month & day from localDate
         Dim m = Regex.Match(localDate, "^(\d{4})-(\d{2})-(\d{2})$")
@@ -2949,12 +2933,18 @@ Public Class SupportingFeatures
         Dim mm = Integer.Parse(localTime.Substring(2, 2))
         Dim ss = Integer.Parse(localTime.Substring(4, 2))
 
-        ' 4) Build the IGC DateTime in UTC using the task’s year
-        Dim igcDT = New DateTime(taskYear, month, day, hh, mm, ss, DateTimeKind.Utc)
+        ' 4) Build the IGC DateTime using a dummy year
+        Dim igcDT = New DateTime(2000, month, day, hh, mm, ss, DateTimeKind.Unspecified)
 
-        ' 5) Compare absolute difference ≤ 30 minutes
-        Dim deltaMinutes = Math.Abs((taskDT - igcDT).TotalMinutes)
-        Return deltaMinutes <= 30
+        ' 5) Compare absolute difference ≤ 60 minutes (allowing ±1 day)
+        Dim deltas As Double() = {
+            Math.Abs((normalizedTask - igcDT).TotalMinutes),
+            Math.Abs((normalizedTask.AddDays(1) - igcDT).TotalMinutes),
+            Math.Abs((normalizedTask.AddDays(-1) - igcDT).TotalMinutes)
+        }
+
+        Dim smallestDelta = Math.Min(deltas(0), Math.Min(deltas(1), deltas(2)))
+        Return smallestDelta <= 60
     End Function
 
     ' --------- Public overload: takes datePart="yyyy-MM-dd" and timePart="HHmmss" ---------
