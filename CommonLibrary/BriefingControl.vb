@@ -944,7 +944,7 @@ Public Class BriefingControl
         waypointCoordinatesDataGrid.AllowUserToResizeColumns = True
         waypointCoordinatesDataGrid.Columns("MinAltFeet").Visible = False
         waypointCoordinatesDataGrid.Columns("MaxAltFeet").Visible = False
-        waypointCoordinatesDataGrid.Columns("DiameterMeter").Visible = False
+        waypointCoordinatesDataGrid.Columns("DiameterMeters").Visible = False
         waypointCoordinatesDataGrid.Columns("FullATCId").Visible = False
         waypointCoordinatesDataGrid.Columns("ContainsRestriction").Visible = False
         waypointCoordinatesDataGrid.Columns("PossibleElevationUpdateReq").Visible = False
@@ -1249,7 +1249,7 @@ Public Class BriefingControl
         Try
             waypointCoordinatesDataGrid.Columns("MinAltFeet").Visible = False
             waypointCoordinatesDataGrid.Columns("MaxAltFeet").Visible = False
-            waypointCoordinatesDataGrid.Columns("DiameterMeter").Visible = False
+            waypointCoordinatesDataGrid.Columns("DiameterMeters").Visible = False
             'Distance
             Select Case cboWayPointDistances.SelectedIndex
                 Case 0 'None
