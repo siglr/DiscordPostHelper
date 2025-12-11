@@ -2296,6 +2296,10 @@ Public Class Main
 
         filename = SupportingFeatures.SanitizeFilePath(filename)
 
+        If String.IsNullOrEmpty(filename) Then
+            Return
+        End If
+
         _PossibleElevationUpdateRequired = False
 
         'read file
@@ -2379,6 +2383,10 @@ Public Class Main
 
     Private Sub LoadWeatherfile(filename As String)
         filename = SupportingFeatures.SanitizeFilePath(filename)
+
+        If String.IsNullOrEmpty(filename) Then
+            Return
+        End If
         'read file
         txtWeatherFile.Text = filename
 
