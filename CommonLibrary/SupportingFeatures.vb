@@ -2534,6 +2534,60 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Function SanitizeFilePath(filePath As String) As String
+
+        If String.IsNullOrEmpty(filePath) Then
+            Return filePath
+        End If
+
+        Try
+            Dim directoryPath As String = Path.GetDirectoryName(filePath)
+            Dim fileNameWithoutExtension As String = Path.GetFileNameWithoutExtension(filePath)
+            Dim fileExtension As String = Path.GetExtension(filePath)
+
+            Dim cleanedFileName As String = If(fileNameWithoutExtension, String.Empty).Trim()
+            Dim cleanedExtension As String = If(fileExtension, String.Empty).Trim()
+
+            If String.IsNullOrWhiteSpace(cleanedFileName) Then
+                Using New Centered_MessageBox()
+                    MessageBox.Show("The application cannot accept the file as it is because the filename is empty after cleaning.", "Invalid file name", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            Dim recomposedFileName As String = $"{cleanedFileName}{cleanedExtension}"
+            Dim sanitizedPath As String = If(String.IsNullOrEmpty(directoryPath), recomposedFileName, Path.Combine(directoryPath, recomposedFileName))
+
+            If String.Equals(filePath, sanitizedPath, StringComparison.Ordinal) Then
+                Return sanitizedPath
+            End If
+
+            If Not File.Exists(filePath) Then
+                Using New Centered_MessageBox()
+                    MessageBox.Show($"The application cannot accept the file as it is because it cannot be found:{Environment.NewLine}{filePath}", "Invalid file name", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            If File.Exists(sanitizedPath) Then
+                Using New Centered_MessageBox()
+                    MessageBox.Show($"The application cannot accept the file as it is because a file with the sanitized name already exists:{Environment.NewLine}{sanitizedPath}", "Invalid file name", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            File.Move(filePath, sanitizedPath)
+
+            Return sanitizedPath
+        Catch ex As Exception
+            Using New Centered_MessageBox()
+                MessageBox.Show($"The application cannot accept the file as it is.{Environment.NewLine}{ex.Message}", "Invalid file name", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return String.Empty
+        End Try
+
+    End Function
+
     Public Shared Function ValidateFileName(filename As String) As String
 
         Dim reasons As New List(Of String)
