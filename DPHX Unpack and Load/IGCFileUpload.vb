@@ -396,14 +396,17 @@ Public Class IGCFileUpload
             Return "Could not load the IGC file!"
         End If
 
-        ' Now wait for at least one tracklogs entry
-        Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table tr.tracklogs_entry_current').length > 0", timeoutSeconds:=10)
+        ' === NEW STRUCTURE: div-based rows instead of <tr> ===
+        ' Wait for at least one tracklogs entry
+        Dim hasRows = Await WaitForConditionAsync(
+        "document.querySelectorAll('#tracklogs_table .tracklogs_entry_current').length > 0",
+        timeoutSeconds:=10)
         If Not hasRows Then
             Return "No tracklogs entries detected!"
         End If
 
         ' Click the first tracklog
-        Await ClickElementAsync("#tracklogs_table tr.tracklogs_entry_current")
+        Await ClickElementAsync("#tracklogs_table .tracklogs_entry_current")
 
         ' Click Load Task
         Await ClickElementAsync("#tracklog_info_load_task")
@@ -429,25 +432,36 @@ Public Class IGCFileUpload
         Dim doc As New HtmlDocument()
         doc.LoadHtml(tracklogsHtml)
 
+        ' === DIV-BASED ROWS INSTEAD OF <tr> ===
         'Find the “current” row (fallback to any row if needed)
-        Dim row As HtmlNode = doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry_current')]")
+        Dim row As HtmlNode = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'tracklogs_entry_current')]") ' CHANGED
         If row Is Nothing Then
-            row = doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry')]")
+            row = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'tracklogs_entry')]") ' CHANGED
         End If
         If row Is Nothing Then
             Return "No tracklogs row found in parsed HTML."
         End If
 
-        'Within that row, locate the info cell
-        Dim infoTd As HtmlNode = row.SelectSingleNode(".//td[contains(@class,'tracklogs_entry_info')]")
+        'Within that row, locate the info cell (now a div, not a td)
+        Dim infoTd As HtmlNode = row.SelectSingleNode(".//*[contains(@class,'tracklogs_entry_info')]") ' CHANGED
         If infoTd Is Nothing Then
             Return "Could not find info cell."
         End If
 
         'Pull out the name div for IGCValid & raw text
         Dim nameDiv As HtmlNode = infoTd.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_name')]")
-        Dim rawName As String = If(nameDiv?.InnerText.Trim(), "")
-        Dim igcValid As Boolean = rawName.StartsWith("🔒")
+
+        ' --- IGC lock flag comes from the right-hand info panel now ---
+        Dim igcValid As Boolean = False
+
+        ' Try to read the "igc" line, e.g. "✈️ 🔒 tracklog" or "✈️ ! tracklog"
+        Dim igcInfoRes As JavascriptResponse = Await browser.EvaluateScriptAsync("document.querySelector('#tracklog_info_details .igc')?.innerText")
+
+        If igcInfoRes.Success AndAlso igcInfoRes.Result IsNot Nothing Then
+            Dim igcInfoText As String = igcInfoRes.Result.ToString()
+            ' Locked if it contains the lock emoji
+            igcValid = igcInfoText.Contains("🔒")
+        End If
 
         'Pull out the result‐status div
         Dim resultDiv As HtmlNode = nameDiv.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_finished')]")

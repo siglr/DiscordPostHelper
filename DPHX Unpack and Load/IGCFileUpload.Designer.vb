@@ -26,6 +26,7 @@ Partial Class IGCFileUpload
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IGCFileUpload))
         Me.browser = New CefSharp.WinForms.ChromiumWebBrowser()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.btnConvertToOtherFormat = New System.Windows.Forms.Button()
         Me.btnCopyToClipboard = New System.Windows.Forms.Button()
         Me.txtIGCEntrySeqID = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -95,7 +96,6 @@ Partial Class IGCFileUpload
         Me.grpIGCUserComment = New System.Windows.Forms.GroupBox()
         Me.txtUserIGCComment = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnConvertToOtherFormat = New System.Windows.Forms.Button()
         Me.convertToFormatMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.convertToGpxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.convertToKmlMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -170,6 +170,18 @@ Partial Class IGCFileUpload
         Me.SplitContainer1.SplitterDistance = 250
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
+        '
+        'btnConvertToOtherFormat
+        '
+        Me.btnConvertToOtherFormat.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConvertToOtherFormat.Location = New System.Drawing.Point(4, 139)
+        Me.btnConvertToOtherFormat.Name = "btnConvertToOtherFormat"
+        Me.btnConvertToOtherFormat.Size = New System.Drawing.Size(239, 30)
+        Me.btnConvertToOtherFormat.TabIndex = 19
+        Me.btnConvertToOtherFormat.Text = "Convert to ..."
+        Me.ToolTip1.SetToolTip(Me.btnConvertToOtherFormat, "Click to convert the selected IGC file to another format.")
+        Me.btnConvertToOtherFormat.UseVisualStyleBackColor = True
         '
         'btnCopyToClipboard
         '
@@ -599,7 +611,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(719, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(717, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -610,7 +622,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(711, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(709, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -649,7 +661,7 @@ Partial Class IGCFileUpload
         Me.tabpgRatings.Location = New System.Drawing.Point(4, 22)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(711, 669)
+        Me.tabpgRatings.Size = New System.Drawing.Size(709, 669)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
@@ -957,18 +969,6 @@ Partial Class IGCFileUpload
         Me.txtUserIGCComment.Size = New System.Drawing.Size(692, 27)
         Me.txtUserIGCComment.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtUserIGCComment, "Provide comments for this specific IGC flight")
-        '
-        'btnConvertToOtherFormat
-        '
-        Me.btnConvertToOtherFormat.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConvertToOtherFormat.Location = New System.Drawing.Point(4, 139)
-        Me.btnConvertToOtherFormat.Name = "btnConvertToOtherFormat"
-        Me.btnConvertToOtherFormat.Size = New System.Drawing.Size(239, 30)
-        Me.btnConvertToOtherFormat.TabIndex = 19
-        Me.btnConvertToOtherFormat.Text = "Convert to ..."
-        Me.ToolTip1.SetToolTip(Me.btnConvertToOtherFormat, "Click to convert the selected IGC file to another format.")
-        Me.btnConvertToOtherFormat.UseVisualStyleBackColor = True
         '
         'convertToFormatMenu
         '
