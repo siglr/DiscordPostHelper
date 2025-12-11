@@ -142,21 +142,42 @@ Public Class WSGBatchUpload
             Return
         End If
 
+        If ForcedTaskId > 0 Then
+            Dim forcedPlnPath = Path.Combine(tempFolder, $"{ForcedTaskId}.pln")
+            If File.Exists(forcedPlnPath) Then
+                igcDetails.MatchedTask.PLNXML = File.ReadAllText(forcedPlnPath)
+            End If
+        End If
+
+        If String.IsNullOrWhiteSpace(igcDetails.MatchedTask.PLNXML) Then
+            igcDetails.MatchedTask.PLNXML = FetchPlnXml(igcDetails.MatchedTask.EntrySeqID)
+        End If
+
         txtLog.AppendText($"✔ Found EntrySeqID {igcDetails.MatchedTask.EntrySeqID} for this IGC." & vbCrLf)
 
         ' 4) Already uploaded?
         Dim alreadyUploaded As Boolean = Await ParseIGCFileAndCheckIfAlreadyUploaded()
         If Not alreadyUploaded Then
-            If ForcedTaskId > 0 Then
-                'Load the flight plan first
-                ' Tell our handler which file to feed in
-                uploadHandler.FileToUpload = $"{tempFolder}\{ForcedTaskId}.pln"
+            Dim tempPlnPath As String = Nothing
+            If Not String.IsNullOrWhiteSpace(igcDetails.MatchedTask.PLNXML) Then
+                Dim plnFileName = $"{igcDetails.MatchedTask.EntrySeqID}.pln"
+                tempPlnPath = Path.Combine(Path.GetTempPath(), plnFileName)
 
-                ' Fire the JS “Choose file(s)” click
+                If Not File.Exists(tempPlnPath) Then
+                    File.WriteAllText(tempPlnPath, igcDetails.MatchedTask.PLNXML, Encoding.UTF8)
+                End If
+
+                uploadHandler.FileToUpload = tempPlnPath
+
                 Await ClickElementByIdAsync("drop_zone_choose_button")
 
-                ' Wait for the file input to be populated
                 Dim gotPlnFile = Await WaitForConditionAsync("document.getElementById('drop_zone_choose_input').files.length > 0", timeoutSeconds:=5)
+                If File.Exists(tempPlnPath) Then
+                    Try
+                        File.Delete(tempPlnPath)
+                    Catch
+                    End Try
+                End If
                 If Not gotPlnFile Then
                     txtLog.AppendText("  ❌ PLN File never made it into the input!" & Environment.NewLine)
                     Return
@@ -176,14 +197,14 @@ Public Class WSGBatchUpload
             End If
 
             ' 4) Now wait for at least one tracklogs entry
-            Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table tr.tracklogs_entry_current').length > 0", timeoutSeconds:=10)
+            Dim hasRows = Await WaitForConditionAsync("document.querySelectorAll('#tracklogs_table .tracklogs_entry_current').length > 0", timeoutSeconds:=10)
             If Not hasRows Then
                 txtLog.AppendText("  ❌ No tracklogs entries detected!" & Environment.NewLine)
                 Return
             End If
 
             ' 5) Click the first tracklog
-            Await ClickElementAsync("#tracklogs_table tr.tracklogs_entry_current")
+            Await ClickElementAsync("#tracklogs_table .tracklogs_entry_current")
 
             ' 6) Click Load Task
             Await ClickElementAsync("#tracklog_info_load_task")
@@ -236,9 +257,9 @@ Public Class WSGBatchUpload
 
         ' 3) Find the “current” row (fallback to any row if needed)
         Dim row As HtmlNode =
-        doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry_current')]")
+        doc.DocumentNode.SelectSingleNode("//*[contains(@class,'tracklogs_entry_current')]")
         If row Is Nothing Then
-            row = doc.DocumentNode.SelectSingleNode("//tr[contains(@class,'tracklogs_entry')]")
+            row = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'tracklogs_entry')]")
         End If
         If row Is Nothing Then
             txtLog.AppendText("❌ No tracklogs row found in parsed HTML." & vbCrLf)
@@ -246,7 +267,7 @@ Public Class WSGBatchUpload
         End If
 
         ' 4) Within that row, locate the info cell
-        Dim infoTd = row.SelectSingleNode(".//td[contains(@class,'tracklogs_entry_info')]")
+        Dim infoTd = row.SelectSingleNode(".//*[contains(@class,'tracklogs_entry_info')]")
         If infoTd Is Nothing Then
             txtLog.AppendText("❌ Could not find info cell." & vbCrLf)
             Return False
@@ -254,8 +275,13 @@ Public Class WSGBatchUpload
 
         ' 5) Pull out the name div for IGCValid & raw text
         Dim nameDiv = infoTd.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_name')]")
-        Dim rawName = If(nameDiv?.InnerText.Trim(), "")
-        Dim igcValid = rawName.StartsWith("🔒")
+        Dim igcValid As Boolean = False
+
+        Dim igcInfoRes = Await browser.EvaluateScriptAsync("document.querySelector('#tracklog_info_details .igc')?.innerText")
+        If igcInfoRes.Success AndAlso igcInfoRes.Result IsNot Nothing Then
+            Dim igcInfoText As String = igcInfoRes.Result.ToString()
+            igcValid = igcInfoText.Contains("🔒")
+        End If
 
         ' 6) Pull out the result‐status div
         Dim resultDiv = nameDiv.SelectSingleNode(".//div[contains(@class,'tracklogs_entry_finished')]")
@@ -285,7 +311,7 @@ Public Class WSGBatchUpload
             End If
         Else
             ' incomplete: only distance is shown
-            Dim m = System.Text.RegularExpressions.Regex.Match(resultText, "([\d\.]+)km")
+            Dim m = System.Text.RegularExpressions.Regex.Match(resultText, "([\d\.]+)\s*km", RegexOptions.IgnoreCase)
             If m.Success Then distance = m.Groups(1).Value
         End If
 
