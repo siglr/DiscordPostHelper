@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.21.2</CurrentLatestVersion>
+  <CurrentLatestVersion>25.12.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.12.11.1</ReleaseVersion>
+      <ReleaseTitle>Better task duplicate detection and handling</ReleaseTitle>
+      <ReleaseNotes>
+        Added sim local date/time as possible change for new task version
+        Added trimming file names for blank spaces that were causing havoc
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.21.2</ReleaseVersion>
       <ReleaseTitle>Staying in sync with DPHX tool</ReleaseTitle>

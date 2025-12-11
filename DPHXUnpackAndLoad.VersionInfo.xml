@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.11.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.12.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.12.11.1</ReleaseVersion>
+      <ReleaseTitle>Better IGC to task matching</ReleaseTitle>
+      <ReleaseNotes>
+        Reinforced the IGC to task matching process to account for task versioning
+        Removed extra columns from the Waypoints tab
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.11.27.1</ReleaseVersion>
       <ReleaseTitle>Export IGC to several formats</ReleaseTitle>
