@@ -918,18 +918,24 @@ Public Class Main
 
         ' Iterate through the array of dropped file paths
         For Each filePath As String In e.DroppedFiles
+            Dim sanitizedPath As String = SupportingFeatures.SanitizeFilePath(filePath)
+
+            If String.IsNullOrEmpty(sanitizedPath) Then
+                Continue For
+            End If
+
             ' Process each file
-            Select Case Path.GetExtension(filePath).ToUpper
+            Select Case Path.GetExtension(sanitizedPath).ToUpper
                 Case ".PLN"
-                    droppedFlightPlan = filePath
+                    droppedFlightPlan = sanitizedPath
                 Case ".WPR"
-                    droppedWeather = filePath
+                    droppedWeather = sanitizedPath
                 Case ".DPH"
-                    droppedDPH = filePath
+                    droppedDPH = sanitizedPath
                 Case ".DPHX"
-                    droppedDPHX = filePath
+                    droppedDPHX = sanitizedPath
                 Case Else
-                    droppedOtherFiles.Add(filePath)
+                    droppedOtherFiles.Add(sanitizedPath)
             End Select
         Next
 
@@ -984,9 +990,15 @@ Public Class Main
     End Sub
 
     Private Sub AddExtraFile(otherFile As String)
-        If _SF.ExtraFileExtensionIsValid(otherFile) Then
-            If Not lstAllFiles.Items.Contains(otherFile) Then
-                lstAllFiles.Items.Add(otherFile)
+        Dim sanitizedExtraFile As String = SupportingFeatures.SanitizeFilePath(otherFile)
+
+        If String.IsNullOrEmpty(sanitizedExtraFile) Then
+            Return
+        End If
+
+        If _SF.ExtraFileExtensionIsValid(sanitizedExtraFile) Then
+            If Not lstAllFiles.Items.Contains(sanitizedExtraFile) Then
+                lstAllFiles.Items.Add(sanitizedExtraFile)
                 SessionModified(SourceOfChange.TaskTab)
             Else
                 Using New Centered_MessageBox(Me)
@@ -1318,8 +1330,11 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
-            If txtFlightPlanFile.Text.Trim.Length > 0 AndAlso OpenFileDialog1.FileName <> txtFlightPlanFile.Text Then
+            Dim selectedFlightPlan As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
+            Dim currentFlightPlan As String = SupportingFeatures.SanitizeFilePath(txtFlightPlanFile.Text)
+
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedFlightPlan)
+            If currentFlightPlan.Trim.Length > 0 AndAlso selectedFlightPlan <> currentFlightPlan Then
                 'User has selected a different flight plan than the current one - ask to reset first?
                 Using New Centered_MessageBox(Me)
                     If MessageBox.Show(Me, "You have selected a different flight plan file. Do you want to reset first ?", "Selecting a new flight plan file", vbYesNo, MessageBoxIcon.Question) = vbYes Then
@@ -1328,7 +1343,7 @@ Public Class Main
                     End If
                 End Using
             End If
-            LoadFlightPlan(OpenFileDialog1.FileName)
+            LoadFlightPlan(selectedFlightPlan)
         End If
 
     End Sub
@@ -1357,8 +1372,10 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
-            LoadWeatherfile(OpenFileDialog1.FileName)
+            Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
+
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
+            LoadWeatherfile(selectedWeatherFile)
         End If
 
     End Sub
@@ -1603,16 +1620,25 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
+            Dim currentFlightPlan As String = SupportingFeatures.SanitizeFilePath(txtFlightPlanFile.Text)
+            Dim currentWeatherFile As String = SupportingFeatures.SanitizeFilePath(txtWeatherFile.Text)
+
             For i As Integer = 0 To OpenFileDialog1.FileNames.Count - 1
+                Dim sanitizedExtraFile As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileNames(i))
+
+                If String.IsNullOrEmpty(sanitizedExtraFile) Then
+                    Continue For
+                End If
+
                 'Check if one of the files is selected flight plan or weather file to exclude them
-                If OpenFileDialog1.FileNames(i) <> txtFlightPlanFile.Text And OpenFileDialog1.FileNames(i) <> txtWeatherFile.Text Then
+                If sanitizedExtraFile <> currentFlightPlan And sanitizedExtraFile <> currentWeatherFile Then
                     If lstAllFiles.Items.Count = 7 Then
                         Using New Centered_MessageBox(Me)
                             MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End Using
                         Exit For
                     End If
-                    AddExtraFile(OpenFileDialog1.FileNames(i))
+                    AddExtraFile(sanitizedExtraFile)
                 End If
             Next
         End If
@@ -2269,6 +2295,13 @@ Public Class Main
     Private Sub LoadFlightPlan(filename As String)
 
         _PossibleElevationUpdateRequired = False
+        lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
+
+        filename = SupportingFeatures.SanitizeFilePath(filename)
+
+        If String.IsNullOrEmpty(filename) Then
+            Return
+        End If
 
         'read file
         txtFlightPlanFile.Text = filename
@@ -2350,6 +2383,11 @@ Public Class Main
     End Sub
 
     Private Sub LoadWeatherfile(filename As String)
+        filename = SupportingFeatures.SanitizeFilePath(filename)
+
+        If String.IsNullOrEmpty(filename) Then
+            Return
+        End If
         'read file
         txtWeatherFile.Text = filename
 
@@ -2880,8 +2918,10 @@ Public Class Main
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         If result = DialogResult.OK Then
-            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(OpenFileDialog1.FileName)
-            txtEventTeaserAreaMapImage.Text = OpenFileDialog1.FileName
+            Dim selectedImage As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
+
+            SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedImage)
+            txtEventTeaserAreaMapImage.Text = selectedImage
             chkDGPOTeaser.Checked = True
             SessionModified(SourceOfChange.EventTab)
         End If
