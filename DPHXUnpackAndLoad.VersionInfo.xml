@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.12.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>25.12.11.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>25.12.11.2</ReleaseVersion>
+      <ReleaseTitle>Fix IGC results extraction</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed results extraction following changes on the task planner side
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.12.11.1</ReleaseVersion>
       <ReleaseTitle>Better IGC to task matching</ReleaseTitle>
