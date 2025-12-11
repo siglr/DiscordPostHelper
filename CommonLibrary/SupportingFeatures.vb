@@ -2546,7 +2546,14 @@ Public Class SupportingFeatures
             Dim fileExtension As String = Path.GetExtension(filePath)
 
             Dim cleanedFileName As String = If(fileNameWithoutExtension, String.Empty).Trim()
-            Dim cleanedExtension As String = If(fileExtension, String.Empty).Trim()
+
+            Dim trimmedExtension As String = If(fileExtension, String.Empty).Trim()
+            Dim cleanedExtensionWithoutDot As String = If(trimmedExtension.StartsWith("."), trimmedExtension.Substring(1), trimme
+dExtension)
+            cleanedExtensionWithoutDot = cleanedExtensionWithoutDot.Trim()
+
+            Dim cleanedExtension As String = If(String.IsNullOrEmpty(cleanedExtensionWithoutDot), String.Empty, $".{cleanedExten
+sionWithoutDot}")
 
             If String.IsNullOrWhiteSpace(cleanedFileName) Then
                 Using New Centered_MessageBox()
