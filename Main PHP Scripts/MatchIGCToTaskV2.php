@@ -453,6 +453,8 @@ function coordinateToDecimal($coord) {
     $coord = preg_replace('/\s+/', ' ', $coord);
     // logMessage("coordinateToDecimal normalized: " . $coord);
     dbg("coordinateToDecimal normalized: " . $coord);
+    // Support locales where decimals use a comma (e.g. 53,94)
+    $coord = str_replace(',', '.', $coord);
     $result = sscanf($coord, "%c%d° %d' %f", $hem, $deg, $min, $sec);
     if ($result === 4) {
         $decimal = $deg + ($min / 60) + ($sec / 3600);
@@ -461,6 +463,45 @@ function coordinateToDecimal($coord) {
         }
         return $decimal;
     }
+    return null;
+}
+
+
+/**
+ * Split an IGC-style coordinate string into [lat, lon] while supporting
+ * both decimal dot and decimal comma for seconds.
+ *
+ * Examples:
+ *   "N45° 44' 53.94",E12° 3' 25.86""  -> [ "N45°44'53.94"", "E12°3'25.86"" ]
+ *   "N45° 44' 53,94",E12° 3' 25,86""  -> [ "N45°44'53,94"", "E12°3'25,86"" ]
+ *
+ * NOTE: We do NOT split on the first comma blindly, because a decimal comma can
+ * appear inside the seconds portion (e.g. 53,94).
+ *
+ * @param string $igcCoord
+ * @return array|null
+ */
+function splitIgcLatLon($igcCoord) {
+    $s = str_replace(' ', '', trim((string)$igcCoord));
+    if ($s === '') return null;
+
+    // Preferred split: comma that is immediately followed by E or W (start of lon).
+    if (preg_match('/^(.+?),(?=[EW])(.+)$/i', $s, $m)) {
+        return [ $m[1], $m[2] ];
+    }
+
+    // Fallback: sometimes lon could start with a sign or the delimiter could be missing spaces.
+    // Try to split at the boundary where lon hemisphere appears.
+    if (preg_match('/^(.+?)(?=,[EW])[,](.+)$/i', $s, $m)) {
+        return [ $m[1], $m[2] ];
+    }
+
+    // Last resort: classic split (works when decimals use dot).
+    $parts = explode(',', $s);
+    if (count($parts) >= 2) {
+        return [ trim($parts[0]), trim($parts[1]) ];
+    }
+
     return null;
 }
 
@@ -604,16 +645,14 @@ function validateCandidate(array $candidate, array $igcWaypoints, &$plnMeta = nu
             return false;
         }
         $xmlLat = trim($xmlLat);
-        $xmlLon = trim($xmlLon);
-
-        // Parse IGC coords (strip spaces)
-        $parts = explode(',', str_replace(' ', '', $igcCoord));
-        if (count($parts) < 2) {
+        $xmlLon = trim($xmlLon);        // Parse IGC coords (strip spaces) — supports decimal dot or comma
+        $igcParts = splitIgcLatLon($igcCoord);
+        if ($igcParts === null) {
             // logMessage("validateCandidate: Invalid IGC coord for '{$wpID}': {$igcCoord}");
             dbg("validateCandidate: Invalid IGC coord for '{$wpID}': {$igcCoord}");
             return false;
         }
-        [$igcLat, $igcLon] = array_map('trim', $parts);
+        [$igcLat, $igcLon] = array_map('trim', $igcParts);
 
         // Compare latitude
         // logMessage("validateCandidate: Comparing LAT '{$wpID}' — IGC={$igcLat} vs XML={$xmlLat}");
