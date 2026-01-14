@@ -184,50 +184,67 @@ Public Class IGCFileUpload
         tabIGCTabs.SelectedTab = tabpgResults
         grpIGCUserComment.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
         grpTaskUserData.Enabled = True AndAlso igcDetails.IsOwnedByCurrentUser
+
         Dim flagValid As String = "❗"
         Dim flagCompleted As String = "❌"
         Dim flagDateTime As String = "❌"
         Dim flagPenalties As String = "👮"
-        If igcDetails.Results.IGCValid Then
-            flagValid = "🔒"
-        End If
-        If igcDetails.Results.TaskCompleted Then
-            flagCompleted = "🏁"
-        End If
-        If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, igcDetails.MatchedTask.MSFSLocalDateTime) Then
-            flagDateTime = "⌚"
-        End If
-        If Not igcDetails.Results.Penalties Then
-            flagPenalties = "✅"
-        End If
+
+        If igcDetails.Results.IGCValid Then flagValid = "🔒"
+        If igcDetails.Results.TaskCompleted Then flagCompleted = "🏁"
+        If SupportingFeatures.LocalDateTimeMatch(igcDetails.LocalDate, igcDetails.LocalTime, igcDetails.MatchedTask.MSFSLocalDateTime) Then flagDateTime = "⌚"
+        If Not igcDetails.Results.Penalties Then flagPenalties = "✅"
+
         txtFlags.Text = $"{flagValid}{flagCompleted}{flagDateTime}{flagPenalties}"
         txtLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.LocalDate, igcDetails.LocalTime)
         txtTaskLocalDateTime.Text = SupportingFeatures.FormatDateWithoutYearSecondsAndWeekday(igcDetails.MatchedTask.MSFSLocalDateTime)
 
-        If igcDetails.Results.Speed Is Nothing Then
+        Dim uiCulture As CultureInfo = CultureInfo.CurrentCulture
+        Dim igcCulture As CultureInfo = CultureInfo.InvariantCulture
+        Dim parseStyle As NumberStyles = NumberStyles.Float Or NumberStyles.AllowThousands
+
+        ' -----------------------------
+        ' SPEED (source: IGC extraction, always '.' decimal)
+        ' -----------------------------
+        If String.IsNullOrWhiteSpace(igcDetails.Results.Speed) Then
             txtSpeed.Text = String.Empty
         Else
-            Select Case SupportingFeatures.PrefUnits.Speed
-                Case PreferredUnits.SpeedUnits.Imperial
-                    txtSpeed.Text = String.Format("{0:N1} mph", Conversions.KmhToMph(igcDetails.Results.Speed))
-                Case PreferredUnits.SpeedUnits.Knots
-                    txtSpeed.Text = String.Format("{0:N1} kts", Conversions.KmhToKnots(igcDetails.Results.Speed))
-                Case PreferredUnits.SpeedUnits.Metric
-                    txtSpeed.Text = $"{igcDetails.Results.Speed} km/h"
-            End Select
+            Dim kmh As Single
+            If Single.TryParse(igcDetails.Results.Speed.Trim(), parseStyle, igcCulture, kmh) Then
+                Select Case SupportingFeatures.PrefUnits.Speed
+                    Case PreferredUnits.SpeedUnits.Imperial
+                        txtSpeed.Text = String.Format(uiCulture, "{0:N1} mph", kmh * 0.6213712F)
+                    Case PreferredUnits.SpeedUnits.Knots
+                        txtSpeed.Text = String.Format(uiCulture, "{0:N1} kts", kmh / 1.852F)
+                    Case PreferredUnits.SpeedUnits.Metric
+                        txtSpeed.Text = String.Format(uiCulture, "{0:N1} km/h", kmh)
+                End Select
+            Else
+                txtSpeed.Text = String.Empty
+            End If
         End If
 
-        If igcDetails.Results.Distance Is Nothing Then
+        ' -----------------------------
+        ' DISTANCE (source: IGC extraction, always '.' decimal)
+        ' -----------------------------
+        If String.IsNullOrWhiteSpace(igcDetails.Results.Distance) Then
             txtDistance.Text = String.Empty
         Else
-            Select Case SupportingFeatures.PrefUnits.Distance
-                Case PreferredUnits.DistanceUnits.Metric
-                    txtDistance.Text = $"{igcDetails.Results.Distance} km"
-                Case PreferredUnits.DistanceUnits.Imperial
-                    txtDistance.Text = String.Format("{0:N1} mi", Conversions.KmToMiles(igcDetails.Results.Distance))
-                Case PreferredUnits.DistanceUnits.Both
-                    txtDistance.Text = String.Format($"{igcDetails.Results.Distance} km / {Conversions.KmToMiles(igcDetails.Results.Distance):N1} mi")
-            End Select
+            Dim km As Decimal
+            If Decimal.TryParse(igcDetails.Results.Distance.Trim(), parseStyle, igcCulture, km) Then
+                Dim miles As Decimal = Conversions.KmToMiles(km)
+
+                Select Case SupportingFeatures.PrefUnits.Distance
+                    Case PreferredUnits.DistanceUnits.Metric
+                        txtDistance.Text = String.Format(uiCulture, "{0:N2} km", km)
+                    Case PreferredUnits.DistanceUnits.Imperial
+                        txtDistance.Text = String.Format(uiCulture, "{0:N1} mi", miles)
+                    Case PreferredUnits.DistanceUnits.Both
+                        txtDistance.Text = String.Format(uiCulture, "{0:N2} km / {1:N1} mi", km, miles)
+                End Select
+            Else
+                txtDistance.Text = String.Empty
+            End If
         End If
 
         txtTime.Text = igcDetails.Results.Duration
