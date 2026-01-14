@@ -11,11 +11,32 @@ Public Class Conversions
     Private Const constKnotsToKmh As Single = 1.852
     Private Const constEarthRadius As Double = 6371 ' Earth's radius in kilometers
 
+    Private Shared Function TryParseDecimal(value As String, ByRef parsedValue As Decimal) As Boolean
+        If Decimal.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, parsedValue) Then
+            Return True
+        End If
+        Return Decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, parsedValue)
+    End Function
+
+    Private Shared Function TryParseSingle(value As String, ByRef parsedValue As Single) As Boolean
+        If Single.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, parsedValue) Then
+            Return True
+        End If
+        Return Single.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, parsedValue)
+    End Function
 
     Public Shared Function FeetToMeters(feet As Decimal) As Decimal
 
         Return feet / constMeterToFeet
 
+    End Function
+
+    Public Shared Function FeetToMeters(feet As String) As Decimal
+        Dim feetValue As Decimal
+        If Not TryParseDecimal(feet, feetValue) Then
+            Return 0
+        End If
+        Return FeetToMeters(feetValue)
     End Function
 
     Public Shared Function KmToMiles(km As Decimal) As Decimal
@@ -24,30 +45,86 @@ Public Class Conversions
 
     End Function
 
+    Public Shared Function KmToMiles(km As String) As Decimal
+        Dim kmValue As Decimal
+        If Not TryParseDecimal(km, kmValue) Then
+            Return 0
+        End If
+        Return KmToMiles(kmValue)
+    End Function
+
     Public Shared Function MilesToKm(miles As Decimal) As Decimal
 
         Return miles * constMilesToKm
 
     End Function
 
+    Public Shared Function MilesToKm(miles As String) As Decimal
+        Dim milesValue As Decimal
+        If Not TryParseDecimal(miles, milesValue) Then
+            Return 0
+        End If
+        Return MilesToKm(milesValue)
+    End Function
+
     Public Shared Function PaToInHg(pa As Single) As Decimal
         Return pa * constPaToInHg
+    End Function
+
+    Public Shared Function PaToInHg(pa As String) As Decimal
+        Dim paValue As Single
+        If Not TryParseSingle(pa, paValue) Then
+            Return 0
+        End If
+        Return PaToInHg(paValue)
     End Function
 
     Public Shared Function KelvinToCelsius(kelvin As Single) As Decimal
         Return kelvin - constKelvinTo
     End Function
 
+    Public Shared Function KelvinToCelsius(kelvin As String) As Decimal
+        Dim kelvinValue As Single
+        If Not TryParseSingle(kelvin, kelvinValue) Then
+            Return 0
+        End If
+        Return KelvinToCelsius(kelvinValue)
+    End Function
+
     Public Shared Function KelvinToFarenheit(kelvin As Single) As Decimal
         Return (kelvin - 273.15) * (9 / 5) + 32
+    End Function
+
+    Public Shared Function KelvinToFarenheit(kelvin As String) As Decimal
+        Dim kelvinValue As Single
+        If Not TryParseSingle(kelvin, kelvinValue) Then
+            Return 0
+        End If
+        Return KelvinToFarenheit(kelvinValue)
     End Function
 
     Public Shared Function MeterToInches(meters As Single) As Decimal
         Return meters * constMeterToInches
     End Function
 
+    Public Shared Function MeterToInches(meters As String) As Decimal
+        Dim meterValue As Single
+        If Not TryParseSingle(meters, meterValue) Then
+            Return 0
+        End If
+        Return MeterToInches(meterValue)
+    End Function
+
     Public Shared Function MeterToFeet(meters As Single) As Decimal
         Return meters * constMeterToFeet
+    End Function
+
+    Public Shared Function MeterToFeet(meters As String) As Decimal
+        Dim meterValue As Single
+        If Not TryParseSingle(meters, meterValue) Then
+            Return 0
+        End If
+        Return MeterToFeet(meterValue)
     End Function
 
     Public Shared Function GetDistanceInKm(latitude1 As Double, longitude1 As Double, latitude2 As Double, longitude2 As Double) As Double
