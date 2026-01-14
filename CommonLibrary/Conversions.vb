@@ -12,17 +12,19 @@ Public Class Conversions
     Private Const constEarthRadius As Double = 6371 ' Earth's radius in kilometers
 
     Private Shared Function TryParseDecimal(value As String, ByRef parsedValue As Decimal) As Boolean
-        If Decimal.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, parsedValue) Then
+        Dim style As NumberStyles = NumberStyles.Float Or NumberStyles.AllowThousands
+        If Decimal.TryParse(value, style, CultureInfo.CurrentCulture, parsedValue) Then
             Return True
         End If
-        Return Decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, parsedValue)
+        Return Decimal.TryParse(value, style, CultureInfo.InvariantCulture, parsedValue)
     End Function
 
     Private Shared Function TryParseSingle(value As String, ByRef parsedValue As Single) As Boolean
-        If Single.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, parsedValue) Then
+        Dim style As NumberStyles = NumberStyles.Float Or NumberStyles.AllowThousands
+        If Single.TryParse(value, style, CultureInfo.CurrentCulture, parsedValue) Then
             Return True
         End If
-        Return Single.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, parsedValue)
+        Return Single.TryParse(value, style, CultureInfo.InvariantCulture, parsedValue)
     End Function
 
     Public Shared Function FeetToMeters(feet As Decimal) As Decimal
