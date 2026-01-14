@@ -13,18 +13,53 @@ Public Class Conversions
 
     Private Shared Function TryParseDecimal(value As String, ByRef parsedValue As Decimal) As Boolean
         Dim style As NumberStyles = NumberStyles.Float Or NumberStyles.AllowThousands
-        If Decimal.TryParse(value, style, CultureInfo.CurrentCulture, parsedValue) Then
+        If String.IsNullOrWhiteSpace(value) Then
+            Return False
+        End If
+        Dim trimmedValue As String = value.Trim()
+        Dim currentCulture As CultureInfo = CultureInfo.CurrentCulture
+        If Decimal.TryParse(trimmedValue, style, currentCulture, parsedValue) Then
             Return True
         End If
-        Return Decimal.TryParse(value, style, CultureInfo.InvariantCulture, parsedValue)
+        Dim normalizedValue As String = NormalizeNumberString(trimmedValue, currentCulture.NumberFormat)
+        If Not String.Equals(trimmedValue, normalizedValue, StringComparison.Ordinal) AndAlso Decimal.TryParse(normalizedValue, style, currentCulture, parsedValue) Then
+            Return True
+        End If
+        Return Decimal.TryParse(trimmedValue, style, CultureInfo.InvariantCulture, parsedValue)
     End Function
 
     Private Shared Function TryParseSingle(value As String, ByRef parsedValue As Single) As Boolean
         Dim style As NumberStyles = NumberStyles.Float Or NumberStyles.AllowThousands
-        If Single.TryParse(value, style, CultureInfo.CurrentCulture, parsedValue) Then
+        If String.IsNullOrWhiteSpace(value) Then
+            Return False
+        End If
+        Dim trimmedValue As String = value.Trim()
+        Dim currentCulture As CultureInfo = CultureInfo.CurrentCulture
+        If Single.TryParse(trimmedValue, style, currentCulture, parsedValue) Then
             Return True
         End If
-        Return Single.TryParse(value, style, CultureInfo.InvariantCulture, parsedValue)
+        Dim normalizedValue As String = NormalizeNumberString(trimmedValue, currentCulture.NumberFormat)
+        If Not String.Equals(trimmedValue, normalizedValue, StringComparison.Ordinal) AndAlso Single.TryParse(normalizedValue, style, currentCulture, parsedValue) Then
+            Return True
+        End If
+        Return Single.TryParse(trimmedValue, style, CultureInfo.InvariantCulture, parsedValue)
+    End Function
+
+    Private Shared Function NormalizeNumberString(value As String, numberFormat As NumberFormatInfo) As String
+        Dim trimmedValue As String = value.Trim()
+        Dim lastDotIndex As Integer = trimmedValue.LastIndexOf("."c)
+        Dim lastCommaIndex As Integer = trimmedValue.LastIndexOf(","c)
+        If lastDotIndex = -1 AndAlso lastCommaIndex = -1 Then
+            Return trimmedValue
+        End If
+        Dim decimalSymbol As Char = If(lastDotIndex > lastCommaIndex, "."c, ","c)
+        Dim groupSymbol As Char = If(decimalSymbol = "."c, ","c, "."c)
+        Dim normalizedValue As String = trimmedValue.Replace(groupSymbol.ToString(), String.Empty)
+        Dim decimalSeparator As String = numberFormat.NumberDecimalSeparator
+        If decimalSeparator <> decimalSymbol.ToString() Then
+            normalizedValue = normalizedValue.Replace(decimalSymbol.ToString(), decimalSeparator)
+        End If
+        Return normalizedValue
     End Function
 
     Public Shared Function FeetToMeters(feet As Decimal) As Decimal
@@ -199,7 +234,7 @@ Public Class Conversions
     Public Shared Function KmhToMph(kmhString As String) As Single
         Dim kmh As Single
         ' TryParse will use the current culture’s decimal separator
-        If Single.TryParse(kmhString, kmh) Then
+        If TryParseSingle(kmhString, kmh) Then
             ' 1 km/h ≈ 0.621371192 mph
             Return kmh * 0.6213712F
         End If
@@ -212,7 +247,7 @@ Public Class Conversions
     ''' </summary>
     Public Shared Function KmhToKnots(kmhString As String) As Single
         Dim kmh As Single
-        If Single.TryParse(kmhString, kmh) Then
+        If TryParseSingle(kmhString, kmh) Then
             ' 1 knot = 1.852 km/h  ⇒  knots = km/h ÷ 1.852
             Return kmh / constKnotsToKmh
         End If
