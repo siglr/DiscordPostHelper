@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.12.11.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.14.1</ReleaseVersion>
+      <ReleaseTitle>Fix IGC conversion error (decimal symbol)</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the conversion error occuring on IGC upload for users with a decimal symbol different than dot.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.12.11.2</ReleaseVersion>
       <ReleaseTitle>Fix IGC results extraction</ReleaseTitle>
