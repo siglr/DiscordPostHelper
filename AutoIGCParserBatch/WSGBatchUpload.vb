@@ -21,7 +21,7 @@ Public Class WSGBatchUpload
 
     Public Property ForcedTaskId As Integer = 0
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         uploadHandler = New UploadFileDialogHandler()
         browser.DialogHandler = uploadHandler
@@ -56,30 +56,37 @@ Public Class WSGBatchUpload
 
         txtLog.AppendText($"Found {igcFiles.Count} files. Starting…{Environment.NewLine}")
         currentIdx = 0
-        ProcessNextFileAsync()
+        Await ProcessNextFileAsync()
 
     End Sub
 
-    Private Async Sub ProcessNextFileAsync()
+    Private Async Function ProcessNextFileAsync() As Task
 
-        lblProgress.Text = $"{currentIdx} / {igcFiles.Count}"
+        Try
+            lblProgress.Text = $"{currentIdx} / {igcFiles.Count}"
 
-        If currentIdx >= igcFiles.Count Then
-            txtLog.AppendText("✅ All done." & Environment.NewLine)
-            txtLog.AppendText("✅ Clearing folder!" & Environment.NewLine)
-            'Clear the folder
-            If Directory.Exists(tempFolder) Then
-                Directory.Delete(tempFolder, recursive:=True)
+            If currentIdx >= igcFiles.Count Then
+                txtLog.AppendText("✅ All done." & Environment.NewLine)
+                txtLog.AppendText("✅ Clearing folder!" & Environment.NewLine)
+                'Clear the folder
+                If Directory.Exists(tempFolder) Then
+                    Directory.Delete(tempFolder, recursive:=True)
+                End If
+                Directory.CreateDirectory(tempFolder)
+
+                'Call the PHP scripts
+                Await CallSetUnassignedIGCRecordUserAsync()
+                Await CallUpdateLatestIGCLeadersAsync()
+
+                Dim entrySeqId = 0
+                If igcDetails IsNot Nothing AndAlso igcDetails.MatchedTask IsNot Nothing Then
+                    entrySeqId = igcDetails.MatchedTask.EntrySeqID
+                End If
+
+                Dim url = $"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={entrySeqId}&only_unassigned=1"
+                SafeBrowserLoad(url, "final admin view load")
+                Return
             End If
-            Directory.CreateDirectory(tempFolder)
-
-            'Call the PHP scripts
-            Await CallSetUnassignedIGCRecordUserAsync()
-            Await CallUpdateLatestIGCLeadersAsync()
-
-            browser.Load($"https://siglr.com/DiscordPostHelper/adm_ViewIGCRecords.php?days=1&entryseqid={igcDetails.MatchedTask.EntrySeqID}&only_unassigned=1")
-            Return
-        End If
 
         igcDetails = New IGCLookupDetails With {
         .IGCLocalFilePath = igcFiles(currentIdx)
@@ -91,7 +98,7 @@ Public Class WSGBatchUpload
         If doc Is Nothing Then
             txtLog.AppendText("❌ Error parsing IGC file." & Environment.NewLine)
             currentIdx += 1
-            ProcessNextFileAsync()
+            Await ProcessNextFileAsync()
             Return
         End If
 
@@ -110,7 +117,7 @@ Public Class WSGBatchUpload
         If String.IsNullOrWhiteSpace(igcDetails.NB21Version) Then
             txtLog.AppendText("❌ IGC file not coming from NB21 Logger." & Environment.NewLine)
             currentIdx += 1
-            ProcessNextFileAsync()
+            Await ProcessNextFileAsync()
             Return
         End If
 
@@ -138,7 +145,7 @@ Public Class WSGBatchUpload
         If igcDetails.MatchedTask.EntrySeqID = 0 Then
             txtLog.AppendText($"❌ No matching task for IGC: {Path.GetFileName(igcDetails.IGCLocalFilePath)}. Skipping." & vbCrLf)
             currentIdx += 1
-            ProcessNextFileAsync()
+            Await ProcessNextFileAsync()
             Return
         End If
 
@@ -229,10 +236,59 @@ Public Class WSGBatchUpload
             Await browser.EvaluateScriptAsync("b21_task_planner.reset_all_button()")
         End If
 
-        ' 5) Move on to the next file
-        currentIdx += 1
-        ProcessNextFileAsync()
+            ' 5) Move on to the next file
+            currentIdx += 1
+            Await ProcessNextFileAsync()
+        Catch ex As Exception
+            LogException("ProcessNextFileAsync", ex)
+        End Try
 
+    End Function
+
+    Private Sub SafeBrowserLoad(url As String, context As String)
+        If browser Is Nothing Then
+            txtLog.AppendText($"⚠ Browser is not initialized; skipping load ({context})." & Environment.NewLine)
+            Return
+        End If
+
+        If browser.IsDisposed Then
+            txtLog.AppendText($"⚠ Browser is disposed; skipping load ({context})." & Environment.NewLine)
+            Return
+        End If
+
+        If Not browser.IsBrowserInitialized Then
+            txtLog.AppendText($"⚠ Browser not initialized yet; skipping load ({context})." & Environment.NewLine)
+            Return
+        End If
+
+        Try
+            If browser.InvokeRequired Then
+                browser.BeginInvoke(New Action(Sub()
+                                                   Try
+                                                       browser.Load(url)
+                                                   Catch ex As Exception
+                                                       LogException($"SafeBrowserLoad/{context}", ex)
+                                                   End Try
+                                               End Sub))
+            Else
+                browser.Load(url)
+            End If
+        Catch ex As Exception
+            LogException($"SafeBrowserLoad/{context}", ex)
+        End Try
+    End Sub
+
+    Private Sub LogException(context As String, ex As Exception)
+        Dim message = $"❌ Exception in {context}: {ex.Message}{Environment.NewLine}{ex}{Environment.NewLine}"
+        If txtLog Is Nothing Then
+            Return
+        End If
+
+        If txtLog.InvokeRequired Then
+            txtLog.BeginInvoke(New Action(Sub() txtLog.AppendText(message)))
+        Else
+            txtLog.AppendText(message)
+        End If
     End Sub
 #Region "Browser Related Stuff"
 
