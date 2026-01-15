@@ -90,6 +90,7 @@ Module Startup
         Implements ICompletionCallback
 
         Private ReadOnly _completionEvent As ManualResetEventSlim
+        Private _isDisposed As Boolean
 
         Public Sub New(completionEvent As ManualResetEventSlim)
             _completionEvent = completionEvent
@@ -99,7 +100,14 @@ Module Startup
             _completionEvent.Set()
         End Sub
 
+        Public ReadOnly Property IsDisposed As Boolean Implements ICompletionCallback.IsDisposed
+            Get
+                Return _isDisposed
+            End Get
+        End Property
+
         Public Sub Dispose() Implements IDisposable.Dispose
+            _isDisposed = True
         End Sub
     End Class
 
