@@ -1465,7 +1465,7 @@ Public Class Main
 
     Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
 
-        WeatherPresetsBrowser.ShowDialog(Me)
+        'TODO: REPLACE
 
     End Sub
 

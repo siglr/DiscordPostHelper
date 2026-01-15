@@ -145,15 +145,6 @@
     <Compile Include="WaitingForURLForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WeatherPreset.vb" />
-    <Compile Include="WeatherPresetBuiltInData.vb" />
-    <Compile Include="WeatherPresetsBrowser.Designer.vb">
-      <DependentUpon>WeatherPresetsBrowser.vb</DependentUpon>
-    </Compile>
-    <Compile Include="WeatherPresetsBrowser.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WeatherPresetUserData.vb" />
     <Compile Include="WizardNextChoice.Designer.vb">
       <DependentUpon>WizardNextChoice.vb</DependentUpon>
     </Compile>
@@ -193,9 +184,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WaitingForURLForm.resx">
       <DependentUpon>WaitingForURLForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WeatherPresetsBrowser.resx">
-      <DependentUpon>WeatherPresetsBrowser.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WizardNextChoice.resx">
       <DependentUpon>WizardNextChoice.vb</DependentUpon>
@@ -249,10 +237,6 @@
     <ProjectReference Include="..\Updater\Updater.vbproj">
       <Project>{ef1db017-460d-4cde-94f8-4f085b1912b0}</Project>
       <Name>Updater</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WindLayers3DDisplay\WindLayers3DDisplay.vbproj">
-      <Project>{2248b813-f058-4079-bd3e-f634b7d4e456}</Project>
-      <Name>WindLayers3DDisplay</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
