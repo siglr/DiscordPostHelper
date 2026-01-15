@@ -77,8 +77,10 @@ Module Startup
         Dim cookieManager = Cef.GetGlobalCookieManager()
         If cookieManager IsNot Nothing Then
             Using completionEvent As New ManualResetEventSlim(False)
-                cookieManager.FlushStore(New CefShutdownCompletionCallback(completionEvent))
-                completionEvent.Wait(TimeSpan.FromSeconds(5))
+                Using callback As New CefShutdownCompletionCallback(completionEvent)
+                    cookieManager.FlushStore(callback)
+                    completionEvent.Wait(TimeSpan.FromSeconds(5))
+                End Using
             End Using
         End If
 
