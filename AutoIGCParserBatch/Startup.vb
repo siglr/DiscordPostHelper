@@ -17,7 +17,8 @@ Module Startup
       .BrowserSubprocessPath = Path.Combine(
         AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
         "CefSharp.BrowserSubprocess.exe"
-      )
+      ),
+      .PersistSessionCookies = True
     }
         ' 3) MUST happen before any ChromiumWebBrowser is instantiated
         CefSharp.Cef.Initialize(settings, performDependencyCheck:=True, browserProcessHandler:=Nothing)
