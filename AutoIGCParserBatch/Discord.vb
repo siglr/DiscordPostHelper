@@ -10,6 +10,38 @@ Public Class frmDiscord
     Private listOfIGCUrls As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
     Private scrapingUp As Boolean = False
     Private forcedTaskConfirmed As Boolean = False
+    Private browserRequestContext As RequestContext
+
+    Public Sub New()
+        InitializeComponent()
+        InitializeBrowser()
+    End Sub
+
+    Private Sub InitializeBrowser()
+        Dim cachePath = Startup.CefCachePath
+        Dim requestContextSettings = New RequestContextSettings() With {
+            .CachePath = cachePath,
+            .PersistSessionCookies = True
+        }
+        browserRequestContext = New RequestContext(requestContextSettings)
+
+        Dim newBrowser = New ChromiumWebBrowser("https://discord.com/app", browserRequestContext) With {
+            .ActivateBrowserOnCreation = False,
+            .Anchor = browser.Anchor,
+            .Location = browser.Location,
+            .Name = "browser",
+            .Size = browser.Size,
+            .TabIndex = browser.TabIndex
+        }
+
+        Controls.Remove(browser)
+        browser.Dispose()
+        browser = newBrowser
+        Controls.Add(browser)
+
+        Startup.LogCefDiagnostic($"RequestContext CachePath = {cachePath}")
+        Startup.LogCefDiagnostic($"CookieDbExists = {File.Exists(Startup.CookieDbPath)}")
+    End Sub
 
     Private Async Sub btnGo_Click(sender As Object, e As EventArgs) Handles btnGo.Click
 
@@ -44,6 +76,18 @@ Public Class frmDiscord
 
     Private Sub frmDiscord_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         browser.Load("https://discord.com/channels/@me")
+    End Sub
+
+    Private Sub frmDiscord_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If browser IsNot Nothing Then
+            browser.Dispose()
+            browser = Nothing
+        End If
+
+        If browserRequestContext IsNot Nothing Then
+            browserRequestContext.Dispose()
+            browserRequestContext = Nothing
+        End If
     End Sub
 
     Private Async Function ScrapeIgcUrlsFromDiscordThreadAsync() As Task
