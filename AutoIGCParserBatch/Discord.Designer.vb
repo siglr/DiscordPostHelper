@@ -23,7 +23,7 @@ Partial Class frmDiscord
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         txtLog = New TextBox()
-        browser = New CefSharp.WinForms.ChromiumWebBrowser()
+        browser = New CefSharp.WinForms.ChromiumWebBrowser("https://discord.com/app")
         txtDiscordThreadURL = New TextBox()
         btnGo = New Button()
         btnStart = New Button()
