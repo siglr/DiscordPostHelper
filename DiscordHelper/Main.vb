@@ -21,6 +21,7 @@ Public Class Main
 #Region "Members, Constants and Enums"
 
     Public Shared SessionSettings As New AllSettings
+    Public CurrentSessionFile As String = String.Empty
 
     Private Enum SourceOfChange
         TaskTab
@@ -51,7 +52,6 @@ Public Class Main
     Private _GuideCurrentStep As Integer = 0
     Private _FlightTotalDistanceInKm As Double = 0
     Private _TaskTotalDistanceInKm As Double = 0
-    Private _CurrentSessionFile As String = String.Empty
     Private _loadingFile As Boolean = False
     Private _sessionModified As Boolean = False
     Private _taskModified As Boolean = False
@@ -176,27 +176,27 @@ Public Class Main
 
         If My.Application.CommandLineArgs.Count > 0 Then
             ' Open the file passed as an argument
-            _CurrentSessionFile = My.Application.CommandLineArgs(0)
+            CurrentSessionFile = My.Application.CommandLineArgs(0)
             'Check if the selected file is a dph or dphx files
-            If Path.GetExtension(_CurrentSessionFile) = ".dphx" Then
+            If Path.GetExtension(CurrentSessionFile) = ".dphx" Then
                 'Package - we need to unpack it first
-                OpenFileDialog1.FileName = _SF.UnpackDPHXFile(_CurrentSessionFile)
+                OpenFileDialog1.FileName = _SF.UnpackDPHXFile(CurrentSessionFile)
 
                 If OpenFileDialog1.FileName = String.Empty Then
-                    _CurrentSessionFile = String.Empty
+                    CurrentSessionFile = String.Empty
                 Else
-                    _CurrentSessionFile = OpenFileDialog1.FileName
+                    CurrentSessionFile = OpenFileDialog1.FileName
                 End If
             End If
         Else
             'Load previous session data
             If Not SessionSettings.LastFileLoaded = String.Empty Then
-                _CurrentSessionFile = SessionSettings.LastFileLoaded
+                CurrentSessionFile = SessionSettings.LastFileLoaded
             End If
         End If
         Me.Refresh()
         _loadingFile = True
-        LoadSessionData(_CurrentSessionFile)
+        LoadSessionData(CurrentSessionFile)
         _loadingFile = False
         CheckForNewVersion()
 
@@ -416,7 +416,7 @@ Public Class Main
     Private Sub ResetForm()
 
         _loadingFile = True
-        _CurrentSessionFile = String.Empty
+        CurrentSessionFile = String.Empty
 
         BriefingControl1.FullReset()
         lblCountriesTestModeMsg.Visible = _useTestMode
@@ -612,7 +612,7 @@ Public Class Main
             SessionSettings.MainFormSize = Me.Size.ToString()
             SessionSettings.MainFormLocation = Me.Location.ToString()
             SessionSettings.WaitSecondsForFiles = numWaitSecondsForFiles.Value
-            SessionSettings.LastFileLoaded = _CurrentSessionFile
+            SessionSettings.LastFileLoaded = CurrentSessionFile
             SessionSettings.FlightPlanTabSplitterLocation = FlightPlanTabSplitter.SplitPosition
             SessionSettings.Save()
             BriefingControl1.Closing()
@@ -712,7 +712,7 @@ Public Class Main
     Private Sub toolStripReload_Click(sender As Object, e As EventArgs) Handles toolStripReload.Click
 
         If CheckUnsavedAndConfirmAction("discard changes and reload current file") Then
-            Dim currentFile As String = _CurrentSessionFile
+            Dim currentFile As String = CurrentSessionFile
             ResetForm()
             LoadFile(currentFile)
             mainTabControl.SelectTab(0)
@@ -763,8 +763,8 @@ Public Class Main
         End If
 
         If saveWithoutAsking Then
-            DPHXFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHXFilename}.dphx"
-            DPHFilename = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{DPHFilename}.dph"
+            DPHXFilename = $"{Path.GetDirectoryName(CurrentSessionFile)}\{DPHXFilename}.dphx"
+            DPHFilename = $"{Path.GetDirectoryName(CurrentSessionFile)}\{DPHFilename}.dph"
         Else
             If txtFlightPlanFile.Text = String.Empty Then
                 SaveFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
@@ -786,7 +786,7 @@ Public Class Main
             txtDPHXPackageFilename.Text = DPHXFilename
 
             SaveSessionData(DPHFilename)
-            _CurrentSessionFile = DPHFilename
+            CurrentSessionFile = DPHFilename
 
             'Then save the DPHX as well
             'Check if file already exists and delete it
@@ -796,7 +796,7 @@ Public Class Main
 
             ' Zip the selected files using the ZipFiles method
             Dim filesToInclude As New List(Of String)()
-            filesToInclude.Add(_CurrentSessionFile)
+            filesToInclude.Add(CurrentSessionFile)
             If File.Exists(txtFlightPlanFile.Text) Then
                 filesToInclude.Add(txtFlightPlanFile.Text)
             End If
@@ -1462,6 +1462,13 @@ Public Class Main
     End Sub
 
     Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
+
+        If CurrentSessionFile = String.Empty Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You need to load or create a session file before accessing the weather preset browser.", "No session loaded", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
 
         Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
 
@@ -5468,11 +5475,11 @@ Public Class Main
 
         _loadingFile = False
         SaveSession()
-        Dim currentFile As String = _CurrentSessionFile
+        Dim currentFile As String = CurrentSessionFile
         ResetForm()
 
         _loadingFile = True
-        _CurrentSessionFile = currentFile
+        CurrentSessionFile = currentFile
         LoadSessionData(currentFile)
         SessionUntouched()
         _loadingFile = False
@@ -5481,8 +5488,8 @@ Public Class Main
 
     Private Sub btnCreateShareablePack_Click(sender As Object, e As EventArgs) Handles toolStripSharePackage.Click
 
-        If _CurrentSessionFile <> String.Empty Then
-            Dim DPHXFilename As String = $"{Path.GetDirectoryName(_CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(_CurrentSessionFile)}.dphx"
+        If CurrentSessionFile <> String.Empty Then
+            Dim DPHXFilename As String = $"{Path.GetDirectoryName(CurrentSessionFile)}\{Path.GetFileNameWithoutExtension(CurrentSessionFile)}.dphx"
             If File.Exists(DPHXFilename) Then
                 If CheckUnsavedAndConfirmAction("share DPHX package") Then
                     Dim allFiles As New Specialized.StringCollection
@@ -5549,7 +5556,7 @@ Public Class Main
         If validSessionFile Then
             ResetForm()
             _loadingFile = True
-            _CurrentSessionFile = selectedFilename
+            CurrentSessionFile = selectedFilename
             LoadSessionData(selectedFilename)
             GenerateBriefing()
             _loadingFile = False
@@ -5567,7 +5574,7 @@ Public Class Main
             serializer.Serialize(stream, allCurrentData)
         End Using
 
-        _CurrentSessionFile = filename
+        CurrentSessionFile = filename
         SetFormCaption(filename)
 
     End Sub
@@ -6445,7 +6452,7 @@ Public Class Main
         Dim taskData As New Dictionary(Of String, Object) From {
             {"TemporaryTaskID", taskInfo.TemporaryTaskID},
             {"Title", taskInfo.Title},
-            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"LastUpdate", GetFileUpdateUTCDateTime(CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
             {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
             {"SoaringRidge", If(taskInfo.SoaringRidge, 1, 0)},
@@ -6731,7 +6738,7 @@ Public Class Main
             {"RealTaskID", taskInfo.TaskID},
             {"EntrySeqID", taskInfo.EntrySeqID},
             {"Title", taskInfo.Title},
-            {"LastUpdate", GetFileUpdateUTCDateTime(_CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
+            {"LastUpdate", GetFileUpdateUTCDateTime(CurrentSessionFile).ToString("yyyy-MM-dd HH:mm:ss")},
             {"SimDateTime", SupportingFeatures.GetFullEventDateTimeInLocal(taskInfo.SimDate, taskInfo.SimTime, False)},
             {"IncludeYear", If(taskInfo.IncludeYear, 1, 0)},
             {"SimDateTimeExtraInfo", taskInfo.SimDateTimeExtraInfo},
@@ -7044,7 +7051,7 @@ Public Class Main
         If _TaskEntrySeqID > 0 Then
             'Verify if local DPH has been changed
             btnStartTaskPost.Text = "Start Task Update Workflow"
-            Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(_CurrentSessionFile, False)
+            Dim localDPHTime As DateTime = GetFileUpdateUTCDateTime(CurrentSessionFile, False)
             Dim statusMsg As String = String.Empty
             Select Case _TaskStatus
                 Case SupportingFeatures.WSGTaskStatus.Active

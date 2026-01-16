@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		config.php = config.php
 		Main PHP Scripts\CreateNewTaskFromDPH.php = Main PHP Scripts\CreateNewTaskFromDPH.php
 		Main PHP Scripts\DeleteTask.php = Main PHP Scripts\DeleteTask.php
+		Main PHP Scripts\DownloadSSCWeatherPresetZip.php = Main PHP Scripts\DownloadSSCWeatherPresetZip.php
 		Main PHP Scripts\DPHGetVersionInfo.php = Main PHP Scripts\DPHGetVersionInfo.php
 		Main PHP Scripts\EveryMinuteCronJob.php = Main PHP Scripts\EveryMinuteCronJob.php
 		Main PHP Scripts\FetchTaskEventsByEntrySeqID.php = Main PHP Scripts\FetchTaskEventsByEntrySeqID.php

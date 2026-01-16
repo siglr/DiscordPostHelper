@@ -2,6 +2,7 @@
 Imports System.Xml
 Imports Microsoft.Win32
 Imports SIGLR.SoaringTools.CommonLibrary
+Imports System.IO.Compression
 
 Public Class WeatherPresetBrowser
 
@@ -75,6 +76,18 @@ Public Class WeatherPresetBrowser
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
 
+        'If an SSC preset was previously selected and Custom was then selected, we need to restore it and redownload the files
+        If SSCPresetName <> String.Empty AndAlso optCustomPreset.Checked Then
+            Try
+                DownloadAndExtractZipPresets(SSCPresetName)
+
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show($"An error occurent while re-downloading the presets: {Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+            End Try
+        End If
+
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
 
@@ -82,28 +95,78 @@ Public Class WeatherPresetBrowser
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
-        If SSCPresetName <> String.Empty And SSCPresetName <> cboSSCPresetList.Text Then
-            'Previous selection was SSC preset and new selection is different - Cleanup previous ones
-            Dim sscPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
-            If File.Exists(sscPreset.PresetFile2024) Then
-                File.Delete(sscPreset.PresetFile2024)
-            End If
-            If File.Exists(sscPreset.PresetFile2020) Then
-                File.Delete(sscPreset.PresetFile2020)
-            End If
+        ' If SSC preset changed, delete previous extracted local files based on the OLD preset filenames
+        If SSCPresetName <> String.Empty AndAlso SSCPresetName <> cboSSCPresetList.Text Then
+
+            Dim oldPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
+
+            Dim oldLocal2024 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2024, _parent.CurrentSessionFile)
+            Dim oldLocal2020 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2020, _parent.CurrentSessionFile)
+
+            If File.Exists(oldLocal2024) Then File.Delete(oldLocal2024)
+            If File.Exists(oldLocal2020) Then File.Delete(oldLocal2020)
         End If
 
-        'TODO: If SSC preset, download both files from server and save in DPH folder (if not saved yet, we need to ask user)
+        'If SSC preset selected, download and extract the files
+        If optSSCPreset.Checked Then
+            Try
+                DownloadAndExtractZipPresets(cboSSCPresetList.Text)
 
-        'Save selections to return to parent form
-        SSCPresetName = cboSSCPresetList.Text
-        Filename2024 = lblWeatherPresetFilename2024.Tag
-        Filename2020 = lblWeatherPresetFilename2020.Tag
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show($"An error occurent while downloading the presets: {Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Me.DialogResult = DialogResult.Cancel
+                Me.Close()
+            End Try
+
+            ' Save selections to return to parent form
+            SSCPresetName = cboSSCPresetList.Text
+
+            ' IMPORTANT: store the *local* filenames (or full local paths) derived from the NEW preset
+            Dim newPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
+            Dim newLocal2024 As String = LocalPresetPathFromServerPath(newPreset.PresetFile2024, _parent.CurrentSessionFile)
+            Dim newLocal2020 As String = LocalPresetPathFromServerPath(newPreset.PresetFile2020, _parent.CurrentSessionFile)
+            Filename2024 = newLocal2024
+            Filename2020 = newLocal2020
+        Else
+            SSCPresetName = String.Empty
+            Filename2024 = lblWeatherPresetFilename2024.Tag.ToString()
+            Filename2020 = lblWeatherPresetFilename2020.Tag.ToString()
+        End If
+
 
         Me.DialogResult = DialogResult.OK
         Me.Close()
 
     End Sub
+
+    Private Sub DownloadAndExtractZipPresets(presetTitle As String)
+        ' Download ZIP into the session folder
+        Dim sessionFolder As String = Path.GetDirectoryName(_parent.CurrentSessionFile)
+        Dim zipPath As String = SSCWeatherPreset.DownloadSSCWeatherPresetZip(presetTitle, sessionFolder)
+
+        ' Extract ZIP to session folder (keep exact filenames from ZIP)
+        Using archive As ZipArchive = ZipFile.OpenRead(zipPath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                If String.IsNullOrWhiteSpace(entry.Name) Then Continue For
+                If Not entry.Name.EndsWith(".WPR", StringComparison.OrdinalIgnoreCase) Then Continue For
+
+                Dim outPath As String = Path.Combine(sessionFolder, entry.Name)
+                entry.ExtractToFile(outPath, True)
+            Next
+        End Using
+
+        ' Delete ZIP after successful extraction attempt
+        Try : File.Delete(zipPath) : Catch : End Try
+
+    End Sub
+
+    Private Shared Function LocalPresetPathFromServerPath(serverRelativePath As String, sessionFilePath As String) As String
+        Dim folder As String = Path.GetDirectoryName(sessionFilePath)
+        Dim fileName As String = Path.GetFileName(serverRelativePath) 'works even if server path uses /
+        Return Path.Combine(folder, fileName)
+    End Function
 
     Private Sub WeatherPresetBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -134,6 +197,15 @@ Public Class WeatherPresetBrowser
     Private Sub cboSSCPresetList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSSCPresetList.SelectedIndexChanged
 
         If cboSSCPresetList.SelectedIndex = -1 Then
+            If SSCPresetName <> String.Empty Then
+                Dim oldPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
+
+                Dim oldLocal2024 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2024, _parent.CurrentSessionFile)
+                Dim oldLocal2020 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2020, _parent.CurrentSessionFile)
+
+                If File.Exists(oldLocal2024) Then File.Delete(oldLocal2024)
+                If File.Exists(oldLocal2020) Then File.Delete(oldLocal2020)
+            End If
             ClearOutCustomPreset(True)
             ClearOutCustomPreset(False)
             Exit Sub
@@ -143,8 +215,8 @@ Public Class WeatherPresetBrowser
         Dim sscPreset As SSCWeatherPreset = _sscWeatherPresets(cboSSCPresetList.Items(cboSSCPresetList.SelectedIndex))
 
         If sscPreset IsNot Nothing Then
-            SetCustomPreset(True, sscPreset.PresetFile2024, sscPreset.PresetMSFSTitle)
-            SetCustomPreset(False, sscPreset.PresetFile2020, sscPreset.PresetMSFSTitle)
+            SetCustomPreset(True, sscPreset.PresetFile2024, sscPreset.PresetMSFSTitle2024)
+            SetCustomPreset(False, sscPreset.PresetFile2020, sscPreset.PresetMSFSTitle2020)
         End If
 
     End Sub

@@ -1,4 +1,5 @@
 <?php
+// RetrieveSSCWeatherPresets.php
 header('Content-Type: application/json');
 require __DIR__ . '/CommonFunctions.php';
 
@@ -7,45 +8,34 @@ try {
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Load single parameters row
-    $paramsStmt = $pdo->query("
-        SELECT Prefix2024, Prefix2020, Folder2020, Folder2024
-        FROM SSCWeatherPresetsParameters
-        LIMIT 1
-    ");
-    $params = $paramsStmt->fetch(PDO::FETCH_ASSOC);
-    if (!$params) {
-        throw new Exception("SSCWeatherPresetsParameters is empty.");
-    }
-
     // RootPath is hardcoded
     $rootPath = 'WeatherPresets';
 
-    // Load presets + compute paths
-    $stmt = $pdo->prepare("
+    // NEW schema: build paths using stored filenames (no parameters table)
+    $stmt = $pdo->query("
         SELECT
-            p.PresetID,
-            p.PresetDescriptiveName,
-            p.PresetMSFSTitle,
-            (? || '/' || ? || '/' || ? || ' ' || p.PresetMSFSTitle || '.WPR') AS PresetFile2020,
-            (? || '/' || ? || '/' || ? || ' ' || p.PresetMSFSTitle || '.WPR') AS PresetFile2024
-        FROM SSCWeatherPresets p
-        ORDER BY p.PresetID
+            PresetID,
+            PresetDescriptiveName,
+            FileName2020,
+            Title2020,
+            FileName2024,
+            Title2024
+        FROM SSCWeatherPresets
+        ORDER BY PresetID
     ");
-
-    $stmt->execute([
-        $rootPath, $params['Folder2020'], $params['Prefix2020'],
-        $rootPath, $params['Folder2024'], $params['Prefix2024'],
-    ]);
 
     $presets = [];
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
         $presets[] = [
             'PresetID'              => (int)$r['PresetID'],
             'PresetDescriptiveName' => (string)$r['PresetDescriptiveName'],
-            'PresetMSFSTitle'       => (string)$r['PresetMSFSTitle'],
-            'PresetFile2020'        => (string)$r['PresetFile2020'],
-            'PresetFile2024'        => (string)$r['PresetFile2024'],
+
+            'PresetMSFSTitle2020'   => (string)$r['Title2020'],
+            'PresetMSFSTitle2024'   => (string)$r['Title2024'],
+
+            // Paths are now deterministic:
+            'PresetFile2020'        => $rootPath . '/SSC2020/' . (string)$r['FileName2020'],
+            'PresetFile2024'        => $rootPath . '/SSC2024/' . (string)$r['FileName2024'],
         ];
     }
 
