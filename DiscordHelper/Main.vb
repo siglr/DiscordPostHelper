@@ -1,22 +1,13 @@
 ﻿Imports System.Collections.Specialized
-Imports System.Data.SqlTypes
-Imports System.Diagnostics.Eventing.Reader
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Reflection
-Imports System.Security.AccessControl
-Imports System.Security.Policy
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports System.Web
-Imports System.Web.UI.WebControls.WebParts
-Imports System.Windows.Forms
-Imports System.Windows.Input
-Imports System.Windows.Markup
 Imports System.Xml
 Imports System.Xml.Serialization
 Imports Newtonsoft.Json
@@ -52,6 +43,7 @@ Public Class Main
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
     Private _WeatherDetails As WeatherDetails = Nothing
+    Private _WeatherPresetBrowser As New WeatherPresetBrowser
     Private _sscPresetName As String = String.Empty
     Private _filename2024 As String = String.Empty
     Private _filename2020 As String = String.Empty
@@ -1471,13 +1463,12 @@ Public Class Main
 
     Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
 
-        Dim weatherPresetBrowser As New WeatherPresetBrowser
-        Dim result As DialogResult = weatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
+        Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
 
         If result = DialogResult.OK Then
-            _sscPresetName = weatherPresetBrowser.SSCPresetName
-            _filename2024 = weatherPresetBrowser.Filename2024
-            _filename2020 = weatherPresetBrowser.Filename2020
+            _sscPresetName = _WeatherPresetBrowser.SSCPresetName
+            _filename2024 = _WeatherPresetBrowser.Filename2024
+            _filename2020 = _WeatherPresetBrowser.Filename2020
         End If
 
     End Sub
