@@ -77,10 +77,10 @@ Partial Class WeatherPresetBrowser
         Me.optSSCPreset.AutoSize = True
         Me.optSSCPreset.Location = New System.Drawing.Point(12, 12)
         Me.optSSCPreset.Name = "optSSCPreset"
-        Me.optSSCPreset.Size = New System.Drawing.Size(161, 24)
+        Me.optSSCPreset.Size = New System.Drawing.Size(280, 24)
         Me.optSSCPreset.TabIndex = 0
         Me.optSSCPreset.TabStop = True
-        Me.optSSCPreset.Text = "SSC Standard Preset"
+        Me.optSSCPreset.Text = "SSC Standard Preset (2024 title shown)"
         Me.ToolTip1.SetToolTip(Me.optSSCPreset, "Click to use standard SSC weather presets")
         Me.optSSCPreset.UseVisualStyleBackColor = True
         '
@@ -107,7 +107,7 @@ Partial Class WeatherPresetBrowser
         Me.cboSSCPresetList.Size = New System.Drawing.Size(581, 28)
         Me.cboSSCPresetList.Sorted = True
         Me.cboSSCPresetList.TabIndex = 0
-        Me.ToolTip1.SetToolTip(Me.cboSSCPresetList, "Select the SSC weather preset from the list")
+        Me.ToolTip1.SetToolTip(Me.cboSSCPresetList, "Select the SSC weather preset from the list (2024 title shown)")
         '
         'btnPreset2024Browse
         '
