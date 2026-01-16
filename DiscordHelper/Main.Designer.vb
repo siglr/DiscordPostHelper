@@ -1263,7 +1263,7 @@ Partial Class Main
         Me.btnWeatherBrowser.Text = "Browser"
         Me.ToolTip1.SetToolTip(Me.btnWeatherBrowser, "Click this button to open the weather profile browser / manager.")
         Me.btnWeatherBrowser.UseVisualStyleBackColor = True
-        Me.btnWeatherBrowser.Visible = False
+        Me.btnWeatherBrowser.Visible = True
         '
         'chkSoaringTypeDynamic
         '

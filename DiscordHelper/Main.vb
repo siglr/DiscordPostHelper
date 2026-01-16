@@ -52,6 +52,9 @@ Public Class Main
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
     Private _WeatherDetails As WeatherDetails = Nothing
+    Private _sscPresetName As String = String.Empty
+    Private _filename2024 As String = String.Empty
+    Private _filename2020 As String = String.Empty
     Private _ClubPreset As PresetEvent = Nothing
     Private _GuideCurrentStep As Integer = 0
     Private _FlightTotalDistanceInKm As Double = 0
@@ -429,6 +432,9 @@ Public Class Main
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
         _WeatherDetails = Nothing
+        _sscPresetName = String.Empty
+        _filename2024 = String.Empty
+        _filename2020 = String.Empty
         _FlightTotalDistanceInKm = 0
         _TaskTotalDistanceInKm = 0
         _PossibleElevationUpdateRequired = False
@@ -1465,7 +1471,14 @@ Public Class Main
 
     Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
 
-        'TODO: REPLACE
+        Dim weatherPresetBrowser As New WeatherPresetBrowser
+        Dim result As DialogResult = weatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
+
+        If result = DialogResult.OK Then
+            _sscPresetName = weatherPresetBrowser.SSCPresetName
+            _filename2024 = weatherPresetBrowser.Filename2024
+            _filename2020 = weatherPresetBrowser.Filename2020
+        End If
 
     End Sub
 

@@ -139,6 +139,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SSCWeatherPreset.vb" />
+    <Compile Include="WeatherPresetBrowser.Designer.vb">
+      <DependentUpon>WeatherPresetBrowser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WeatherPresetBrowser.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WaitingForURLForm.Designer.vb">
       <DependentUpon>WaitingForURLForm.vb</DependentUpon>
     </Compile>
@@ -181,6 +188,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeatherPresetBrowser.resx">
+      <DependentUpon>WeatherPresetBrowser.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WaitingForURLForm.resx">
       <DependentUpon>WaitingForURLForm.vb</DependentUpon>
