@@ -116,7 +116,7 @@ Partial Class WeatherPresetBrowser
         Me.btnPreset2024Browse.Size = New System.Drawing.Size(75, 35)
         Me.btnPreset2024Browse.TabIndex = 2
         Me.btnPreset2024Browse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btnPreset2024Browse, "Click to browse and select the default weather preset file")
+        Me.ToolTip1.SetToolTip(Me.btnPreset2024Browse, "Click to browse and select the primary weather preset file")
         Me.btnPreset2024Browse.UseVisualStyleBackColor = True
         '
         'lblWeatherPresetTitle2024
@@ -129,7 +129,7 @@ Partial Class WeatherPresetBrowser
         Me.lblWeatherPresetTitle2024.TabIndex = 3
         Me.lblWeatherPresetTitle2024.Text = "- no preset selected -"
         Me.lblWeatherPresetTitle2024.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.lblWeatherPresetTitle2024, "This is the default weather preset title")
+        Me.ToolTip1.SetToolTip(Me.lblWeatherPresetTitle2024, "This is the primary weather preset title")
         '
         'lblWeatherPresetTitle2020
         '
@@ -231,9 +231,9 @@ Partial Class WeatherPresetBrowser
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(2, 27)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(126, 20)
+        Me.Label2.Size = New System.Drawing.Size(129, 20)
         Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Default (Required)"
+        Me.Label2.Text = "Primary (Required)"
         '
         'OpenFileDialog1
         '
