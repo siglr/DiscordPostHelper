@@ -1357,21 +1357,26 @@ Public Class Main
     End Sub
 
     Private Sub btnSelectWeatherFile_Click(sender As Object, e As EventArgs) Handles btnSelectWeatherFile.Click
-        If txtFlightPlanFile.Text = String.Empty Then
-            OpenFileDialog1.InitialDirectory = SessionSettings.LastUsedFileLocation
-        Else
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(txtFlightPlanFile.Text)
-        End If
-        OpenFileDialog1.FileName = ""
-        OpenFileDialog1.Title = "Select weather file"
-        OpenFileDialog1.Filter = "Weather preset file|*.wpr"
-        OpenFileDialog1.Multiselect = False
 
-        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+        If CurrentSessionFile = String.Empty Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You need to load or create a session file before accessing the weather preset browser.", "No session loaded", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
+
+        Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
 
         If result = DialogResult.OK Then
-            Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
+            _sscPresetName = _WeatherPresetBrowser.SSCPresetName
+            _filename2024 = _WeatherPresetBrowser.Filename2024
+            _filename2020 = _WeatherPresetBrowser.Filename2020
 
+            'If an SSC preset, Sync must not be available
+            btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
+
+            'Set the weather preset in the form and load it
+            Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(_filename2024)
             SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
             LoadWeatherfile(selectedWeatherFile)
         End If
@@ -1442,7 +1447,7 @@ Public Class Main
         If txtWeatherFile.Text = String.Empty Then
             btnSyncWeatherTitle.Enabled = False
         Else
-            btnSyncWeatherTitle.Enabled = True
+            btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
         End If
 
     End Sub
@@ -1458,25 +1463,6 @@ Public Class Main
         End If
 
         CheckAndSetEventAward()
-
-    End Sub
-
-    Private Sub btnWeatherBrowser_Click(sender As Object, e As EventArgs) Handles btnWeatherBrowser.Click
-
-        If CurrentSessionFile = String.Empty Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me, "You need to load or create a session file before accessing the weather preset browser.", "No session loaded", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Using
-            Exit Sub
-        End If
-
-        Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
-
-        If result = DialogResult.OK Then
-            _sscPresetName = _WeatherPresetBrowser.SSCPresetName
-            _filename2024 = _WeatherPresetBrowser.Filename2024
-            _filename2020 = _WeatherPresetBrowser.Filename2020
-        End If
 
     End Sub
 
@@ -4744,27 +4730,27 @@ Public Class Main
                 mainTabControl.SelectedTab = mainTabControl.TabPages("tabFlightPlan")
                 SetGuidePanelToLeft()
                 pnlGuide.Top = -3
-                lblGuideInstructions.Text = "Click the ""Flight Plan"" button And Select the flight plan To use With this task."
+                lblGuideInstructions.Text = "Click the ""Flight Plan"" button and Select the flight plan to use with this task."
                 SetFocusOnField(btnSelectFlightPlan, fromF1Key)
-            Case 2 'Select weather file
+            Case 2 'Title
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 54
-                lblGuideInstructions.Text = "Click the ""Weather file"" button And Select the weather file To use With this task."
-                SetFocusOnField(btnSelectWeatherFile, fromF1Key)
-            Case 3 'Title
+                lblGuideInstructions.Text = "This is the title that was read from the flight plan. Is it ok? If not, change it and use the checkbox to prevent it from being overwritten."
+                SetFocusOnField(txtTitle, fromF1Key)
+            Case 3 'Select weather file
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 95
-                lblGuideInstructions.Text = "This Is the title that was read from the flight plan. Is it ok? If Not, change it And use the checkbox To prevent it from being overwritten."
-                SetFocusOnField(txtTitle, fromF1Key)
+                lblGuideInstructions.Text = "Click the ""Weather Preset"" button and select the weather presets to use with this task."
+                SetFocusOnField(btnSelectWeatherFile, fromF1Key)
             Case 4 'Sim date & time
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 139
-                lblGuideInstructions.Text = "Specify the appropriate local Date And time To Set inside MSFS. You can also add extra information In the text box If you want."
+                lblGuideInstructions.Text = "Specify the appropriate local date and time to set inside MSFS. You can also add extra information in the text box if you want."
                 SetFocusOnField(dtSimDate, fromF1Key)
             Case 5 'Main area
                 SetGuidePanelToLeft()
                 pnlGuide.Top = 194
-                lblGuideInstructions.Text = "Do you want To specify the main area And/Or point Of interest For this task? It's only optionnal."
+                lblGuideInstructions.Text = "Do you want to specify the main area and/or point of interest for this task? It's only optionnal."
                 SetFocusOnField(txtMainArea, fromF1Key)
             Case 6 'Departure
                 SetGuidePanelToLeft()
