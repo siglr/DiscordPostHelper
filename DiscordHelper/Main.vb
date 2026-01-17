@@ -5572,6 +5572,8 @@ Public Class Main
         With allCurrentData
             .FlightPlanFilename = txtFlightPlanFile.Text
             .WeatherFilename = txtWeatherFile.Text
+            .WeatherFilenameSecondary = _filename2020
+            .SSCPresetName = _sscPresetName
             .LockTitle = chkTitleLock.Checked
             .Title = txtTitle.Text
             .SimDate = dtSimDate.Value
@@ -5703,14 +5705,29 @@ Public Class Main
                 Me.Update()
                 LoadFlightPlan(txtFlightPlanFile.Text)
 
-                If File.Exists(.WeatherFilename) Then
-                Else
+                Dim weatherPrimary As String = .WeatherFilename
+                Dim weatherSecondary As String = .WeatherFilenameSecondary
+
+                If Not String.IsNullOrEmpty(weatherPrimary) AndAlso Not File.Exists(weatherPrimary) Then
                     'Should expect the file to be in the same folder as the .dph file
-                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}") Then
-                        .WeatherFilename = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(.WeatherFilename)}"
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(weatherPrimary)}") Then
+                        weatherPrimary = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(weatherPrimary)}"
                     End If
                 End If
-                txtWeatherFile.Text = .WeatherFilename
+
+                If Not String.IsNullOrEmpty(weatherSecondary) AndAlso Not File.Exists(weatherSecondary) Then
+                    'Should expect the file to be in the same folder as the .dph file
+                    If File.Exists($"{Path.GetDirectoryName(filename)}\{Path.GetFileName(weatherSecondary)}") Then
+                        weatherSecondary = $"{Path.GetDirectoryName(filename)}\{Path.GetFileName(weatherSecondary)}"
+                    End If
+                End If
+
+                _sscPresetName = If(String.IsNullOrEmpty(.SSCPresetName), String.Empty, .SSCPresetName)
+                _filename2024 = weatherPrimary
+                _filename2020 = weatherSecondary
+
+                txtWeatherFile.Text = weatherPrimary
+                btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
                 Me.Update()
                 LoadWeatherfile(txtWeatherFile.Text)
 
@@ -7997,6 +8014,4 @@ Public Class Main
 #End Region
 
 End Class
-
-
 
