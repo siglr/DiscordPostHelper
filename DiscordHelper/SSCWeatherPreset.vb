@@ -6,11 +6,11 @@ Imports SIGLR.SoaringTools.CommonLibrary
 Public Class SSCWeatherPreset
 
     Public Property PresetDescriptiveName As String
-    Public Property PresetMSFSTitle2024 As String
-    Public Property PresetMSFSTitle2020 As String
+    Public Property PresetMSFSTitlePrimary As String
+    Public Property PresetMSFSTitleSecondary As String
     Public Property PresetID As String
-    Public Property PresetFile2020 As String
-    Public Property PresetFile2024 As String
+    Public Property PresetSecondaryWPRFilename As String
+    Public Property PresetPrimaryWPRFilename As String
 
     Public Shared Function LoadSSCWeatherPresets() As Dictionary(Of String, SSCWeatherPreset)
         Dim presets As New Dictionary(Of String, SSCWeatherPreset)(StringComparer.OrdinalIgnoreCase)
@@ -34,10 +34,10 @@ Public Class SSCWeatherPreset
                             Dim preset As New SSCWeatherPreset With {
                                 .PresetID = SafeToken(p, "PresetID"),
                                 .PresetDescriptiveName = SafeToken(p, "PresetDescriptiveName"),
-                                .PresetMSFSTitle2024 = SafeToken(p, "PresetMSFSTitle2024"),
-                                .PresetMSFSTitle2020 = SafeToken(p, "PresetMSFSTitle2020"),
-                                .PresetFile2024 = SafeToken(p, "PresetFile2024"),
-                                .PresetFile2020 = SafeToken(p, "PresetFile2020")
+                                .PresetMSFSTitlePrimary = SafeToken(p, "PresetMSFSTitlePrimary"),
+                                .PresetMSFSTitleSecondary = SafeToken(p, "PresetMSFSTitleSecondary"),
+                                .PresetPrimaryWPRFilename = SafeToken(p, "PresetPrimaryWPRFilename"),
+                                .PresetSecondaryWPRFilename = SafeToken(p, "PresetSecondaryWPRFilename")
                             }
 
                             ' Key = PresetDescriptiveName (primary = 2024)

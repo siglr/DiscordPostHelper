@@ -13,11 +13,11 @@ Public Class WeatherPresetBrowser
     Private _presetTypeTimer As Timer
 
     Public SSCPresetName As String = String.Empty
-    Public Filename2024 As String = String.Empty
-    Public Filename2020 As String = String.Empty
+    Public PrimaryWPRFilename As String = String.Empty
+    Public SecondaryWPRFilename As String = String.Empty
 
 
-    Public Function ShowForm(parent As Main, p_sscPresetName As String, p_filename2024 As String, p_filename2020 As String) As DialogResult
+    Public Function ShowForm(parent As Main, p_sscPresetName As String, p_primaryWPRFilename As String, p_secondaryWPRFilename As String) As DialogResult
 
         _parent = parent
 
@@ -26,8 +26,8 @@ Public Class WeatherPresetBrowser
         End If
 
         SSCPresetName = p_sscPresetName
-        Filename2024 = p_filename2024
-        Filename2020 = p_filename2020
+        PrimaryWPRFilename = p_primaryWPRFilename
+        SecondaryWPRFilename = p_secondaryWPRFilename
 
         'Populate SSC Presets dropdown list
         cboSSCPresetList.Items.Clear()
@@ -36,20 +36,20 @@ Public Class WeatherPresetBrowser
         Next
 
         Select Case True
-            Case SSCPresetName = String.Empty AndAlso Filename2024 = String.Empty AndAlso Filename2020 = String.Empty
+            Case SSCPresetName = String.Empty AndAlso PrimaryWPRFilename = String.Empty AndAlso SecondaryWPRFilename = String.Empty
                 'No preset selected
                 optSSCPreset.Checked = True
                 grpSSCPresets.Enabled = True
                 grpCustomPresets.Enabled = False
                 cboSSCPresetList.SelectedIndex = -1
-            Case SSCPresetName = String.Empty AndAlso (Filename2024 <> String.Empty OrElse Filename2020 <> String.Empty)
+            Case SSCPresetName = String.Empty AndAlso (PrimaryWPRFilename <> String.Empty OrElse SecondaryWPRFilename <> String.Empty)
                 'Custom preset selected
                 optCustomPreset.Checked = True
                 grpSSCPresets.Enabled = False
                 grpCustomPresets.Enabled = True
                 cboSSCPresetList.SelectedIndex = -1
-                SetCustomPreset(True, Filename2024)
-                SetCustomPreset(False, Filename2020)
+                SetCustomPreset(True, PrimaryWPRFilename)
+                SetCustomPreset(False, SecondaryWPRFilename)
             Case Else
                 'SSC preset selected
                 If Not _sscWeatherPresets.ContainsKey(SSCPresetName) Then
@@ -59,8 +59,8 @@ Public Class WeatherPresetBrowser
                     grpSSCPresets.Enabled = False
                     grpCustomPresets.Enabled = True
                     cboSSCPresetList.SelectedIndex = -1
-                    SetCustomPreset(True, Filename2024)
-                    SetCustomPreset(False, Filename2020)
+                    SetCustomPreset(True, PrimaryWPRFilename)
+                    SetCustomPreset(False, SecondaryWPRFilename)
                 End If
                 optSSCPreset.Checked = True
                 grpSSCPresets.Enabled = True
@@ -100,11 +100,11 @@ Public Class WeatherPresetBrowser
 
             Dim oldPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
 
-            Dim oldLocal2024 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2024, _parent.CurrentSessionFile)
-            Dim oldLocal2020 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2020, _parent.CurrentSessionFile)
+            Dim oldLocalPrimary As String = LocalPresetPathFromServerPath(oldPreset.PresetPrimaryWPRFilename, _parent.CurrentSessionFile)
+            Dim oldLocalSecondary As String = LocalPresetPathFromServerPath(oldPreset.PresetSecondaryWPRFilename, _parent.CurrentSessionFile)
 
-            If File.Exists(oldLocal2024) Then File.Delete(oldLocal2024)
-            If File.Exists(oldLocal2020) Then File.Delete(oldLocal2020)
+            If File.Exists(oldLocalPrimary) Then File.Delete(oldLocalPrimary)
+            If File.Exists(oldLocalSecondary) Then File.Delete(oldLocalSecondary)
         End If
 
         'If SSC preset selected, download and extract the files
@@ -125,14 +125,14 @@ Public Class WeatherPresetBrowser
 
             ' IMPORTANT: store the *local* filenames (or full local paths) derived from the NEW preset
             Dim newPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
-            Dim newLocal2024 As String = LocalPresetPathFromServerPath(newPreset.PresetFile2024, _parent.CurrentSessionFile)
-            Dim newLocal2020 As String = LocalPresetPathFromServerPath(newPreset.PresetFile2020, _parent.CurrentSessionFile)
-            Filename2024 = newLocal2024
-            Filename2020 = newLocal2020
+            Dim newLocalPrimary As String = LocalPresetPathFromServerPath(newPreset.PresetPrimaryWPRFilename, _parent.CurrentSessionFile)
+            Dim newLocalSecondary As String = LocalPresetPathFromServerPath(newPreset.PresetSecondaryWPRFilename, _parent.CurrentSessionFile)
+            PrimaryWPRFilename = newLocalPrimary
+            SecondaryWPRFilename = newLocalSecondary
         Else
             SSCPresetName = String.Empty
-            Filename2024 = lblWeatherPresetFilename2024.Tag.ToString()
-            Filename2020 = lblWeatherPresetFilename2020.Tag.ToString()
+            PrimaryWPRFilename = lblWeatherPresetPrimaryFilename.Tag.ToString()
+            SecondaryWPRFilename = lblWeatherPresetSecondaryFilename.Tag.ToString()
         End If
 
 
@@ -200,11 +200,11 @@ Public Class WeatherPresetBrowser
             If SSCPresetName <> String.Empty Then
                 Dim oldPreset As SSCWeatherPreset = _sscWeatherPresets(SSCPresetName)
 
-                Dim oldLocal2024 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2024, _parent.CurrentSessionFile)
-                Dim oldLocal2020 As String = LocalPresetPathFromServerPath(oldPreset.PresetFile2020, _parent.CurrentSessionFile)
+                Dim oldLocalPrimary As String = LocalPresetPathFromServerPath(oldPreset.PresetPrimaryWPRFilename, _parent.CurrentSessionFile)
+                Dim oldLocalSecondary As String = LocalPresetPathFromServerPath(oldPreset.PresetSecondaryWPRFilename, _parent.CurrentSessionFile)
 
-                If File.Exists(oldLocal2024) Then File.Delete(oldLocal2024)
-                If File.Exists(oldLocal2020) Then File.Delete(oldLocal2020)
+                If File.Exists(oldLocalPrimary) Then File.Delete(oldLocalPrimary)
+                If File.Exists(oldLocalSecondary) Then File.Delete(oldLocalSecondary)
             End If
             ClearOutCustomPreset(True)
             ClearOutCustomPreset(False)
@@ -215,22 +215,22 @@ Public Class WeatherPresetBrowser
         Dim sscPreset As SSCWeatherPreset = _sscWeatherPresets(cboSSCPresetList.Items(cboSSCPresetList.SelectedIndex))
 
         If sscPreset IsNot Nothing Then
-            SetCustomPreset(True, sscPreset.PresetFile2024, sscPreset.PresetMSFSTitle2024)
-            SetCustomPreset(False, sscPreset.PresetFile2020, sscPreset.PresetMSFSTitle2020)
+            SetCustomPreset(True, sscPreset.PresetPrimaryWPRFilename, sscPreset.PresetMSFSTitlePrimary)
+            SetCustomPreset(False, sscPreset.PresetSecondaryWPRFilename, sscPreset.PresetMSFSTitleSecondary)
         End If
 
     End Sub
 
-    Private Sub btnPreset2024Browse_Click(sender As Object, e As EventArgs) Handles btnPreset2024Browse.Click
+    Private Sub btnPresetPrimaryBrowse_Click(sender As Object, e As EventArgs) Handles btnPresetPrimaryBrowse.Click
 
-        'Browse for 2024 preset file
+        'Browse for primary preset file
         If _parent.txtFlightPlanFile.Text = String.Empty Then
             OpenFileDialog1.InitialDirectory = Main.SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(_parent.txtFlightPlanFile.Text)
         End If
         OpenFileDialog1.FileName = ""
-        OpenFileDialog1.Title = "Select weather file for MSFS 2024"
+        OpenFileDialog1.Title = "Select primary weather file"
         OpenFileDialog1.Filter = "Weather preset file|*.wpr"
         OpenFileDialog1.Multiselect = False
 
@@ -239,26 +239,26 @@ Public Class WeatherPresetBrowser
         If result = DialogResult.OK Then
             Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
             SetCustomPreset(True, selectedWeatherFile)
-            If selectedWeatherFile = lblWeatherPresetFilename2020.Tag Then
+            If selectedWeatherFile = lblWeatherPresetSecondaryFilename.Tag Then
                 ' Don't allow same file for both versions
-                lblWeatherPresetFilename2020.Text = String.Empty
-                lblWeatherPresetFilename2020.Tag = String.Empty
-                lblWeatherPresetTitle2020.Text = String.Empty
+                lblWeatherPresetSecondaryFilename.Text = String.Empty
+                lblWeatherPresetSecondaryFilename.Tag = String.Empty
+                lblWeatherPresetTitleSecondary.Text = String.Empty
             End If
         End If
 
     End Sub
 
-    Private Sub btnPreset2020Browse_Click(sender As Object, e As EventArgs) Handles btnPreset2020Browse.Click
+    Private Sub btnPresetSecondaryBrowse_Click(sender As Object, e As EventArgs) Handles btnPresetSecondaryBrowse.Click
 
-        'Browse for 2020 preset file
+        'Browse for secondary preset file
         If _parent.txtFlightPlanFile.Text = String.Empty Then
             OpenFileDialog1.InitialDirectory = Main.SessionSettings.LastUsedFileLocation
         Else
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(_parent.txtFlightPlanFile.Text)
         End If
         OpenFileDialog1.FileName = ""
-        OpenFileDialog1.Title = "Select weather file for MSFS 2024"
+        OpenFileDialog1.Title = "Select secondary weather file"
         OpenFileDialog1.Filter = "Weather preset file|*.wpr"
         OpenFileDialog1.Multiselect = False
 
@@ -266,7 +266,7 @@ Public Class WeatherPresetBrowser
 
         If result = DialogResult.OK Then
             Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(OpenFileDialog1.FileName)
-            If selectedWeatherFile = lblWeatherPresetFilename2024.Tag Then
+            If selectedWeatherFile = lblWeatherPresetPrimaryFilename.Tag Then
                 ' Don't allow same file for both versions
             Else
                 SetCustomPreset(False, selectedWeatherFile)
@@ -280,22 +280,22 @@ Public Class WeatherPresetBrowser
         Dim filenameOnly As String = Path.GetFileName(selectedWeatherFile)
 
         If defaultPreset Then
-            lblWeatherPresetFilename2024.Text = filenameOnly
-            lblWeatherPresetFilename2024.Tag = selectedWeatherFile
-            ToolTip1.SetToolTip(lblWeatherPresetFilename2024, selectedWeatherFile)
+            lblWeatherPresetPrimaryFilename.Text = filenameOnly
+            lblWeatherPresetPrimaryFilename.Tag = selectedWeatherFile
+            ToolTip1.SetToolTip(lblWeatherPresetPrimaryFilename, selectedWeatherFile)
             Main.SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
             If presetTitle = String.Empty Then
                 presetTitle = GetWeatherPresetTitleFromFile(selectedWeatherFile)
             End If
             lblWeatherPresetTitle2024.Text = presetTitle
         Else
-            lblWeatherPresetFilename2020.Text = filenameOnly
-            lblWeatherPresetFilename2020.Tag = selectedWeatherFile
-            ToolTip1.SetToolTip(lblWeatherPresetFilename2020, selectedWeatherFile)
+            lblWeatherPresetSecondaryFilename.Text = filenameOnly
+            lblWeatherPresetSecondaryFilename.Tag = selectedWeatherFile
+            ToolTip1.SetToolTip(lblWeatherPresetSecondaryFilename, selectedWeatherFile)
             If presetTitle = String.Empty Then
                 presetTitle = GetWeatherPresetTitleFromFile(selectedWeatherFile)
             End If
-            lblWeatherPresetTitle2020.Text = presetTitle
+            lblWeatherPresetTitleSecondary.Text = presetTitle
         End If
 
     End Sub
@@ -321,26 +321,26 @@ Public Class WeatherPresetBrowser
 
     Private Sub ClearOutCustomPreset(primary As Boolean)
         If primary Then
-            lblWeatherPresetFilename2024.Text = String.Empty
-            lblWeatherPresetFilename2024.Tag = String.Empty
-            ToolTip1.SetToolTip(lblWeatherPresetFilename2024, String.Empty)
+            lblWeatherPresetPrimaryFilename.Text = String.Empty
+            lblWeatherPresetPrimaryFilename.Tag = String.Empty
+            ToolTip1.SetToolTip(lblWeatherPresetPrimaryFilename, String.Empty)
             lblWeatherPresetTitle2024.Text = String.Empty
         Else
-            lblWeatherPresetFilename2020.Text = String.Empty
-            lblWeatherPresetFilename2020.Tag = String.Empty
-            ToolTip1.SetToolTip(lblWeatherPresetFilename2020, String.Empty)
-            lblWeatherPresetTitle2020.Text = String.Empty
+            lblWeatherPresetSecondaryFilename.Text = String.Empty
+            lblWeatherPresetSecondaryFilename.Tag = String.Empty
+            ToolTip1.SetToolTip(lblWeatherPresetSecondaryFilename, String.Empty)
+            lblWeatherPresetTitleSecondary.Text = String.Empty
         End If
     End Sub
-    Private Sub lblWeatherPresetFilename2024_TextChanged(sender As Object, e As EventArgs) Handles lblWeatherPresetFilename2024.TextChanged
+    Private Sub lblWeatherPresetFilename2024_TextChanged(sender As Object, e As EventArgs) Handles lblWeatherPresetPrimaryFilename.TextChanged
 
-        If lblWeatherPresetFilename2024.Text = String.Empty Then
-            btnPreset2020Browse.Enabled = False
-            lblWeatherPresetFilename2020.Text = String.Empty
-            lblWeatherPresetTitle2020.Text = String.Empty
+        If lblWeatherPresetPrimaryFilename.Text = String.Empty Then
+            btnPresetSecondaryBrowse.Enabled = False
+            lblWeatherPresetSecondaryFilename.Text = String.Empty
+            lblWeatherPresetTitleSecondary.Text = String.Empty
             btnSave.Enabled = False
         Else
-            btnPreset2020Browse.Enabled = True
+            btnPresetSecondaryBrowse.Enabled = True
             btnSave.Enabled = True
         End If
     End Sub

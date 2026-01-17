@@ -29,12 +29,12 @@ Partial Class WeatherPresetBrowser
         Me.optSSCPreset = New System.Windows.Forms.RadioButton()
         Me.optCustomPreset = New System.Windows.Forms.RadioButton()
         Me.cboSSCPresetList = New System.Windows.Forms.ComboBox()
-        Me.btnPreset2024Browse = New System.Windows.Forms.Button()
+        Me.btnPresetPrimaryBrowse = New System.Windows.Forms.Button()
         Me.lblWeatherPresetTitle2024 = New System.Windows.Forms.Label()
-        Me.lblWeatherPresetTitle2020 = New System.Windows.Forms.Label()
-        Me.btnPreset2020Browse = New System.Windows.Forms.Button()
-        Me.lblWeatherPresetFilename2024 = New System.Windows.Forms.Label()
-        Me.lblWeatherPresetFilename2020 = New System.Windows.Forms.Label()
+        Me.lblWeatherPresetTitleSecondary = New System.Windows.Forms.Label()
+        Me.btnPresetSecondaryBrowse = New System.Windows.Forms.Button()
+        Me.lblWeatherPresetPrimaryFilename = New System.Windows.Forms.Label()
+        Me.lblWeatherPresetSecondaryFilename = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.grpSSCPresets = New System.Windows.Forms.GroupBox()
         Me.grpCustomPresets = New System.Windows.Forms.GroupBox()
@@ -109,15 +109,15 @@ Partial Class WeatherPresetBrowser
         Me.cboSSCPresetList.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.cboSSCPresetList, "Select the SSC weather preset from the list (primary preset titles shown)")
         '
-        'btnPreset2024Browse
+        'btnPresetPrimaryBrowse
         '
-        Me.btnPreset2024Browse.Location = New System.Drawing.Point(512, 43)
-        Me.btnPreset2024Browse.Name = "btnPreset2024Browse"
-        Me.btnPreset2024Browse.Size = New System.Drawing.Size(75, 35)
-        Me.btnPreset2024Browse.TabIndex = 2
-        Me.btnPreset2024Browse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btnPreset2024Browse, "Click to browse and select the primary weather preset file")
-        Me.btnPreset2024Browse.UseVisualStyleBackColor = True
+        Me.btnPresetPrimaryBrowse.Location = New System.Drawing.Point(512, 43)
+        Me.btnPresetPrimaryBrowse.Name = "btnPresetPrimaryBrowse"
+        Me.btnPresetPrimaryBrowse.Size = New System.Drawing.Size(75, 35)
+        Me.btnPresetPrimaryBrowse.TabIndex = 2
+        Me.btnPresetPrimaryBrowse.Text = "Browse"
+        Me.ToolTip1.SetToolTip(Me.btnPresetPrimaryBrowse, "Click to browse and select the primary weather preset file")
+        Me.btnPresetPrimaryBrowse.UseVisualStyleBackColor = True
         '
         'lblWeatherPresetTitle2024
         '
@@ -131,50 +131,50 @@ Partial Class WeatherPresetBrowser
         Me.lblWeatherPresetTitle2024.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ToolTip1.SetToolTip(Me.lblWeatherPresetTitle2024, "This is the primary weather preset title")
         '
-        'lblWeatherPresetTitle2020
+        'lblWeatherPresetTitleSecondary
         '
-        Me.lblWeatherPresetTitle2020.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblWeatherPresetTitleSecondary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWeatherPresetTitle2020.Location = New System.Drawing.Point(6, 151)
-        Me.lblWeatherPresetTitle2020.Name = "lblWeatherPresetTitle2020"
-        Me.lblWeatherPresetTitle2020.Size = New System.Drawing.Size(500, 27)
-        Me.lblWeatherPresetTitle2020.TabIndex = 7
-        Me.lblWeatherPresetTitle2020.Text = "- no preset selected -"
-        Me.lblWeatherPresetTitle2020.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.lblWeatherPresetTitle2020, "This is the optional secondary weather preset title")
+        Me.lblWeatherPresetTitleSecondary.Location = New System.Drawing.Point(6, 151)
+        Me.lblWeatherPresetTitleSecondary.Name = "lblWeatherPresetTitleSecondary"
+        Me.lblWeatherPresetTitleSecondary.Size = New System.Drawing.Size(500, 27)
+        Me.lblWeatherPresetTitleSecondary.TabIndex = 7
+        Me.lblWeatherPresetTitleSecondary.Text = "- no preset selected -"
+        Me.lblWeatherPresetTitleSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.lblWeatherPresetTitleSecondary, "This is the optional secondary weather preset title")
         '
-        'btnPreset2020Browse
+        'btnPresetSecondaryBrowse
         '
-        Me.btnPreset2020Browse.Enabled = False
-        Me.btnPreset2020Browse.Location = New System.Drawing.Point(512, 120)
-        Me.btnPreset2020Browse.Name = "btnPreset2020Browse"
-        Me.btnPreset2020Browse.Size = New System.Drawing.Size(75, 35)
-        Me.btnPreset2020Browse.TabIndex = 6
-        Me.btnPreset2020Browse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btnPreset2020Browse, "Click to browse and select the optional secondary weather preset file")
-        Me.btnPreset2020Browse.UseVisualStyleBackColor = True
+        Me.btnPresetSecondaryBrowse.Enabled = False
+        Me.btnPresetSecondaryBrowse.Location = New System.Drawing.Point(512, 120)
+        Me.btnPresetSecondaryBrowse.Name = "btnPresetSecondaryBrowse"
+        Me.btnPresetSecondaryBrowse.Size = New System.Drawing.Size(75, 35)
+        Me.btnPresetSecondaryBrowse.TabIndex = 6
+        Me.btnPresetSecondaryBrowse.Text = "Browse"
+        Me.ToolTip1.SetToolTip(Me.btnPresetSecondaryBrowse, "Click to browse and select the optional secondary weather preset file")
+        Me.btnPresetSecondaryBrowse.UseVisualStyleBackColor = True
         '
-        'lblWeatherPresetFilename2024
+        'lblWeatherPresetPrimaryFilename
         '
-        Me.lblWeatherPresetFilename2024.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblWeatherPresetPrimaryFilename.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWeatherPresetFilename2024.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.lblWeatherPresetFilename2024.Location = New System.Drawing.Point(6, 47)
-        Me.lblWeatherPresetFilename2024.Name = "lblWeatherPresetFilename2024"
-        Me.lblWeatherPresetFilename2024.Size = New System.Drawing.Size(500, 27)
-        Me.lblWeatherPresetFilename2024.TabIndex = 1
-        Me.lblWeatherPresetFilename2024.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblWeatherPresetPrimaryFilename.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.lblWeatherPresetPrimaryFilename.Location = New System.Drawing.Point(6, 47)
+        Me.lblWeatherPresetPrimaryFilename.Name = "lblWeatherPresetPrimaryFilename"
+        Me.lblWeatherPresetPrimaryFilename.Size = New System.Drawing.Size(500, 27)
+        Me.lblWeatherPresetPrimaryFilename.TabIndex = 1
+        Me.lblWeatherPresetPrimaryFilename.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'lblWeatherPresetFilename2020
+        'lblWeatherPresetSecondaryFilename
         '
-        Me.lblWeatherPresetFilename2020.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblWeatherPresetSecondaryFilename.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWeatherPresetFilename2020.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.lblWeatherPresetFilename2020.Location = New System.Drawing.Point(6, 124)
-        Me.lblWeatherPresetFilename2020.Name = "lblWeatherPresetFilename2020"
-        Me.lblWeatherPresetFilename2020.Size = New System.Drawing.Size(500, 27)
-        Me.lblWeatherPresetFilename2020.TabIndex = 5
-        Me.lblWeatherPresetFilename2020.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblWeatherPresetSecondaryFilename.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.lblWeatherPresetSecondaryFilename.Location = New System.Drawing.Point(6, 124)
+        Me.lblWeatherPresetSecondaryFilename.Name = "lblWeatherPresetSecondaryFilename"
+        Me.lblWeatherPresetSecondaryFilename.Size = New System.Drawing.Size(500, 27)
+        Me.lblWeatherPresetSecondaryFilename.TabIndex = 5
+        Me.lblWeatherPresetSecondaryFilename.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'FlowLayoutPanel1
         '
@@ -203,14 +203,14 @@ Partial Class WeatherPresetBrowser
         Me.grpCustomPresets.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetTitle2020)
-        Me.grpCustomPresets.Controls.Add(Me.btnPreset2020Browse)
+        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetTitleSecondary)
+        Me.grpCustomPresets.Controls.Add(Me.btnPresetSecondaryBrowse)
         Me.grpCustomPresets.Controls.Add(Me.Label3)
-        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetFilename2020)
+        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetSecondaryFilename)
         Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetTitle2024)
-        Me.grpCustomPresets.Controls.Add(Me.btnPreset2024Browse)
+        Me.grpCustomPresets.Controls.Add(Me.btnPresetPrimaryBrowse)
         Me.grpCustomPresets.Controls.Add(Me.Label2)
-        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetFilename2024)
+        Me.grpCustomPresets.Controls.Add(Me.lblWeatherPresetPrimaryFilename)
         Me.grpCustomPresets.Location = New System.Drawing.Point(12, 99)
         Me.grpCustomPresets.Name = "grpCustomPresets"
         Me.grpCustomPresets.Size = New System.Drawing.Size(593, 191)
@@ -277,12 +277,12 @@ Partial Class WeatherPresetBrowser
     Friend WithEvents grpCustomPresets As GroupBox
     Friend WithEvents cboSSCPresetList As ComboBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents lblWeatherPresetFilename2024 As Label
-    Friend WithEvents btnPreset2024Browse As Button
-    Friend WithEvents lblWeatherPresetTitle2020 As Label
-    Friend WithEvents btnPreset2020Browse As Button
+    Friend WithEvents lblWeatherPresetPrimaryFilename As Label
+    Friend WithEvents btnPresetPrimaryBrowse As Button
+    Friend WithEvents lblWeatherPresetTitleSecondary As Label
+    Friend WithEvents btnPresetSecondaryBrowse As Button
     Friend WithEvents Label3 As Label
-    Friend WithEvents lblWeatherPresetFilename2020 As Label
+    Friend WithEvents lblWeatherPresetSecondaryFilename As Label
     Friend WithEvents lblWeatherPresetTitle2024 As Label
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
 End Class

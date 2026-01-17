@@ -46,8 +46,8 @@ Public Class Main
     Private _WeatherDetails As WeatherDetails = Nothing
     Private _WeatherPresetBrowser As New WeatherPresetBrowser
     Private _sscPresetName As String = String.Empty
-    Private _filename2024 As String = String.Empty
-    Private _filename2020 As String = String.Empty
+    Private _primaryWPRFilename As String = String.Empty
+    Private _secondaryWPRFilename As String = String.Empty
     Private _ClubPreset As PresetEvent = Nothing
     Private _GuideCurrentStep As Integer = 0
     Private _FlightTotalDistanceInKm As Double = 0
@@ -425,8 +425,8 @@ Public Class Main
         _XmlDocWeatherPreset = New XmlDocument
         _WeatherDetails = Nothing
         _sscPresetName = String.Empty
-        _filename2024 = String.Empty
-        _filename2020 = String.Empty
+        _primaryWPRFilename = String.Empty
+        _secondaryWPRFilename = String.Empty
         _FlightTotalDistanceInKm = 0
         _TaskTotalDistanceInKm = 0
         _PossibleElevationUpdateRequired = False
@@ -1365,25 +1365,25 @@ Public Class Main
             Exit Sub
         End If
 
-        Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _filename2024, _filename2020)
+        Dim result As DialogResult = _WeatherPresetBrowser.ShowForm(Me, _sscPresetName, _primaryWPRFilename, _secondaryWPRFilename)
 
         If result = DialogResult.OK Then
             _sscPresetName = _WeatherPresetBrowser.SSCPresetName
-            _filename2024 = _WeatherPresetBrowser.Filename2024
-            _filename2020 = _WeatherPresetBrowser.Filename2020
+            _primaryWPRFilename = _WeatherPresetBrowser.PrimaryWPRFilename
+            _secondaryWPRFilename = _WeatherPresetBrowser.SecondaryWPRFilename
 
             'If an SSC preset, Sync must not be available and check for weather summary
             btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
             If _sscPresetName <> String.Empty AndAlso txtWeatherSummary.Text.Trim = String.Empty Then
                 'Auto fill weather summary
-                txtWeatherSummary.Text = $"SSC {Path.GetFileNameWithoutExtension(_filename2024).Substring(6, 6)}"
+                txtWeatherSummary.Text = $"SSC {Path.GetFileNameWithoutExtension(_primaryWPRFilename).Substring(6, 6)}"
             ElseIf _sscPresetName = String.Empty AndAlso txtWeatherSummary.Text.Trim.StartsWith("SSC v") AndAlso txtWeatherSummary.Text.Trim.Length = 10 Then
                 'Most probably an old SSC preset was specified in the summary - Clear weather summary
                 txtWeatherSummary.Text = String.Empty
             End If
 
             'Set the weather preset in the form and load it
-            Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(_filename2024)
+            Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(_primaryWPRFilename)
             SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
             LoadWeatherfile(selectedWeatherFile)
         End If
@@ -5579,7 +5579,7 @@ Public Class Main
         With allCurrentData
             .FlightPlanFilename = txtFlightPlanFile.Text
             .WeatherFilename = txtWeatherFile.Text
-            .WeatherFilenameSecondary = _filename2020
+            .WeatherFilenameSecondary = _secondaryWPRFilename
             .SSCPresetName = _sscPresetName
             .LockTitle = chkTitleLock.Checked
             .Title = txtTitle.Text
@@ -5730,8 +5730,8 @@ Public Class Main
                 End If
 
                 _sscPresetName = If(String.IsNullOrEmpty(.SSCPresetName), String.Empty, .SSCPresetName)
-                _filename2024 = weatherPrimary
-                _filename2020 = weatherSecondary
+                _primaryWPRFilename = weatherPrimary
+                _secondaryWPRFilename = weatherSecondary
 
                 txtWeatherFile.Text = weatherPrimary
                 btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
