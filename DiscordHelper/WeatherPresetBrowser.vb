@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports System.Xml
 Imports Microsoft.Win32
 Imports SIGLR.SoaringTools.CommonLibrary
 Imports System.IO.Compression

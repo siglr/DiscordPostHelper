@@ -44,6 +44,7 @@ Public Class Main
     Private _XmlDocFlightPlan As XmlDocument
     Private _XmlDocWeatherPreset As XmlDocument
     Private _WeatherDetails As WeatherDetails = Nothing
+    Private _secondaryWeatherPresetName As String = String.Empty
     Private _WeatherPresetBrowser As New WeatherPresetBrowser
     Private _sscPresetName As String = String.Empty
     Private _primaryWPRFilename As String = String.Empty
@@ -424,6 +425,7 @@ Public Class Main
         _XmlDocFlightPlan = New XmlDocument
         _XmlDocWeatherPreset = New XmlDocument
         _WeatherDetails = Nothing
+        _secondaryWeatherPresetName = String.Empty
         _sscPresetName = String.Empty
         _primaryWPRFilename = String.Empty
         _secondaryWPRFilename = String.Empty
@@ -1389,6 +1391,7 @@ Public Class Main
             Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(_primaryWPRFilename)
             SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
             LoadWeatherfile(selectedWeatherFile)
+            UpdateSecondaryWeatherPresetName()
         End If
 
     End Sub
@@ -2181,11 +2184,24 @@ Public Class Main
         sb.AppendLine(localizer.Format("group.thread.file_zip", zipLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=zip&entrySeqID={_TaskEntrySeqID}"))
         sb.AppendLine(localizer.Format("group.thread.file_pln", plnLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=pln&entrySeqID={_TaskEntrySeqID}"))
         sb.AppendLine(localizer.Format("group.thread.file_wpr", wprLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
-        If _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim) Then
+        If Not String.IsNullOrWhiteSpace(_secondaryWPRFilename) Then
+            Dim wprSecondaryLabel As String = If(fullDetailsMode, Path.GetFileName(_secondaryWPRFilename), pendingText)
+            sb.AppendLine(localizer.Format("group.thread.file_wpr_secondary", wprSecondaryLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
+        End If
+        Dim primaryPresetMismatch As Boolean = _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim)
+        Dim secondaryPresetMismatch As Boolean = Not String.IsNullOrWhiteSpace(_secondaryWeatherPresetName) AndAlso Not String.IsNullOrWhiteSpace(_secondaryWPRFilename) AndAlso _secondaryWeatherPresetName.Trim <> Path.GetFileNameWithoutExtension(_secondaryWPRFilename.Trim)
+        If primaryPresetMismatch Then
             If fullDetailsMode Then
                 sb.AppendLine(localizer.Format("group.thread.weather_note_exact", _WeatherDetails.PresetName))
             Else
                 sb.AppendLine(localizer.Format("group.thread.weather_note_different"))
+            End If
+        End If
+        If secondaryPresetMismatch Then
+            If fullDetailsMode Then
+                sb.AppendLine(localizer.Format("group.thread.weather_note_secondary_exact", _secondaryWeatherPresetName))
+            Else
+                sb.AppendLine(localizer.Format("group.thread.weather_note_secondary_different"))
             End If
         End If
         sb.AppendLine()
@@ -2387,6 +2403,17 @@ Public Class Main
                 lblLabel.ForeColor = Color.Black
                 ToolTip1.SetToolTip(lblLabel, "Under Discord limit!")
         End Select
+    End Sub
+
+    Private Sub UpdateSecondaryWeatherPresetName()
+        _secondaryWeatherPresetName = String.Empty
+
+        If String.IsNullOrWhiteSpace(_secondaryWPRFilename) Then
+            Return
+        End If
+
+        Dim secondaryWeatherFile As String = SupportingFeatures.SanitizeFilePath(_secondaryWPRFilename)
+        _secondaryWeatherPresetName = SupportingFeatures.GetWeatherPresetTitleFromFile(secondaryWeatherFile)
     End Sub
 
     Private Sub LoadWeatherfile(filename As String)
@@ -5742,6 +5769,7 @@ Public Class Main
                 btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
                 Me.Update()
                 LoadWeatherfile(txtWeatherFile.Text)
+                UpdateSecondaryWeatherPresetName()
 
                 chkTitleLock.Checked = .LockTitle
                 txtTitle.Text = .Title
@@ -8026,4 +8054,3 @@ Public Class Main
 #End Region
 
 End Class
-

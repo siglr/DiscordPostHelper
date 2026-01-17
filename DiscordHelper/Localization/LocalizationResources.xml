@@ -168,6 +168,10 @@
     <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
     <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
   </entry>
+  <entry key="group.thread.file_wpr_secondary">
+    <english>**WPR (Secondary)** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
+    <french>**WPR (Secondaire)** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  </entry>
   <entry key="group.thread.file_zip">
     <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
     <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras, pour une utilisation manuelle.</french>
@@ -212,8 +216,16 @@
     <english> 👉 *Note: weather preset name in MSFS is different than filename*</english>
     <french> 👉 *Remarque : le nom de la configuration météo dans MSFS est différent du nom de fichier*</french>
   </entry>
+  <entry key="group.thread.weather_note_secondary_different">
+    <english> 👉 *Note: secondary weather preset name in MSFS is different than filename*</english>
+    <french> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est différent du nom de fichier*</french>
+  </entry>
   <entry key="group.thread.weather_note_exact">
     <english> 👉 *Note: weather preset name in MSFS is: "{0}"*</english>
     <french> 👉 *Remarque : le nom de la configuration météo dans MSFS est : "{0}"*</french>
+  </entry>
+  <entry key="group.thread.weather_note_secondary_exact">
+    <english> 👉 *Note: secondary weather preset name in MSFS is: "{0}"*</english>
+    <french> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est : "{0}"*</french>
   </entry>
 </localization>
