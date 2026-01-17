@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports System.Xml
 Imports Microsoft.Win32
 Imports SIGLR.SoaringTools.CommonLibrary
 Imports System.IO.Compression
@@ -285,7 +284,7 @@ Public Class WeatherPresetBrowser
             ToolTip1.SetToolTip(lblWeatherPresetPrimaryFilename, selectedWeatherFile)
             Main.SessionSettings.LastUsedFileLocation = Path.GetDirectoryName(selectedWeatherFile)
             If presetTitle = String.Empty Then
-                presetTitle = GetWeatherPresetTitleFromFile(selectedWeatherFile)
+                presetTitle = SupportingFeatures.GetWeatherPresetTitleFromFile(selectedWeatherFile)
             End If
             lblWeatherPresetTitle2024.Text = presetTitle
         Else
@@ -293,31 +292,12 @@ Public Class WeatherPresetBrowser
             lblWeatherPresetSecondaryFilename.Tag = selectedWeatherFile
             ToolTip1.SetToolTip(lblWeatherPresetSecondaryFilename, selectedWeatherFile)
             If presetTitle = String.Empty Then
-                presetTitle = GetWeatherPresetTitleFromFile(selectedWeatherFile)
+                presetTitle = SupportingFeatures.GetWeatherPresetTitleFromFile(selectedWeatherFile)
             End If
             lblWeatherPresetTitleSecondary.Text = presetTitle
         End If
 
     End Sub
-
-    Private Function GetWeatherPresetTitleFromFile(weatherFilePath As String) As String
-
-        If weatherFilePath = String.Empty OrElse Not File.Exists(weatherFilePath) Then
-            Return String.Empty
-        End If
-
-        Dim presetTitle As String = String.Empty
-        Dim xmlDocWeatherPreset As New XmlDocument()
-        xmlDocWeatherPreset.Load(weatherFilePath)
-        Dim weatherDetails As WeatherDetails = New WeatherDetails(xmlDocWeatherPreset)
-        presetTitle = weatherDetails.PresetName
-
-        weatherDetails = Nothing
-        xmlDocWeatherPreset = Nothing
-
-        Return presetTitle
-
-    End Function
 
     Private Sub ClearOutCustomPreset(primary As Boolean)
         If primary Then

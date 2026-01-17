@@ -95,6 +95,23 @@ Public Class SupportingFeatures
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
     End Function
 
+    Public Shared Function GetWeatherPresetTitleFromFile(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) OrElse Not File.Exists(weatherFilePath) Then
+            Return String.Empty
+        End If
+
+        Dim presetTitle As String = String.Empty
+        Dim xmlDocWeatherPreset As New XmlDocument()
+        xmlDocWeatherPreset.Load(weatherFilePath)
+        Dim weatherDetails As WeatherDetails = New WeatherDetails(xmlDocWeatherPreset)
+        presetTitle = weatherDetails.PresetName
+
+        weatherDetails = Nothing
+        xmlDocWeatherPreset = Nothing
+
+        Return presetTitle
+    End Function
+
     Public Shared Sub CenterFormOnOwner(ownerForm As Form, childForm As Form)
         'Center on parent form
         Dim ownerRect = If(ownerForm IsNot Nothing, ownerForm.Bounds, Screen.FromControl(childForm).WorkingArea)
@@ -3520,5 +3537,4 @@ Public Class NativeMethods
     End Function
 
 End Class
-
 
