@@ -5735,7 +5735,9 @@ Public Class Main
                 _sscPresetName = If(String.IsNullOrEmpty(.SSCPresetName), String.Empty, .SSCPresetName)
                 _primaryWPRFilename = weatherPrimary
                 _secondaryWPRFilename = weatherSecondary
-
+                If _secondaryWPRFilename Is Nothing Then
+                    _secondaryWPRFilename = String.Empty
+                End If
                 txtWeatherFile.Text = weatherPrimary
                 btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
                 Me.Update()
