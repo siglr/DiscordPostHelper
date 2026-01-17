@@ -1372,8 +1372,15 @@ Public Class Main
             _filename2024 = _WeatherPresetBrowser.Filename2024
             _filename2020 = _WeatherPresetBrowser.Filename2020
 
-            'If an SSC preset, Sync must not be available
+            'If an SSC preset, Sync must not be available and check for weather summary
             btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
+            If _sscPresetName <> String.Empty AndAlso txtWeatherSummary.Text.Trim = String.Empty Then
+                'Auto fill weather summary
+                txtWeatherSummary.Text = $"SSC {Path.GetFileNameWithoutExtension(_filename2024).Substring(6, 6)}"
+            ElseIf _sscPresetName = String.Empty AndAlso txtWeatherSummary.Text.Trim.StartsWith("SSC v") AndAlso txtWeatherSummary.Text.Trim.Length = 10 Then
+                'Most probably an old SSC preset was specified in the summary - Clear weather summary
+                txtWeatherSummary.Text = String.Empty
+            End If
 
             'Set the weather preset in the form and load it
             Dim selectedWeatherFile As String = SupportingFeatures.SanitizeFilePath(_filename2024)
