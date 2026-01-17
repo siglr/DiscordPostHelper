@@ -10,6 +10,12 @@ Public Class AllData
     <XmlElement("WeatherFilename")>
     Public Property WeatherFilename As String
 
+    <XmlElement("WeatherFilenameSecondary")>
+    Public Property WeatherFilenameSecondary As String
+
+    <XmlElement("SSCPresetName")>
+    Public Property SSCPresetName As String
+
     <XmlElement("LockTitle")>
     Public Property LockTitle As Boolean
 
