@@ -95,6 +95,23 @@ Public Class SupportingFeatures
         Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsEventsTestingID}"
     End Function
 
+    Public Shared Function GetWeatherPresetTitleFromFile(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) OrElse Not File.Exists(weatherFilePath) Then
+            Return String.Empty
+        End If
+
+        Dim presetTitle As String = String.Empty
+        Dim xmlDocWeatherPreset As New XmlDocument()
+        xmlDocWeatherPreset.Load(weatherFilePath)
+        Dim weatherDetails As WeatherDetails = New WeatherDetails(xmlDocWeatherPreset)
+        presetTitle = weatherDetails.PresetName
+
+        weatherDetails = Nothing
+        xmlDocWeatherPreset = Nothing
+
+        Return presetTitle
+    End Function
+
     Public Shared Sub CenterFormOnOwner(ownerForm As Form, childForm As Form)
         'Center on parent form
         Dim ownerRect = If(ownerForm IsNot Nothing, ownerForm.Bounds, Screen.FromControl(childForm).WorkingArea)
@@ -3485,59 +3502,37 @@ Public Class SupportingFeatures
         End Try
     End Function
 
-    Public Shared Function GetWeatherPresetTitleFromFile(weatherFilePath As String) As String
+    Public Class NativeMethods
+        <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+        Public Shared Function FindWindow(lpClassName As String, lpWindowName As String) As IntPtr
+        End Function
 
-        If weatherFilePath = String.Empty OrElse Not File.Exists(weatherFilePath) Then
-            Return String.Empty
-        End If
+        <DllImport("user32.dll")>
+        Public Shared Function SetForegroundWindow(hWnd As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
 
-        Dim presetTitle As String = String.Empty
-        Dim xmlDocWeatherPreset As New XmlDocument()
-        xmlDocWeatherPreset.Load(weatherFilePath)
-        Dim weatherDetails As WeatherDetails = New WeatherDetails(xmlDocWeatherPreset)
-        presetTitle = weatherDetails.PresetName
+        <DllImport("user32.dll")>
+        Public Shared Function IsIconic(hWnd As IntPtr) As Boolean
+        End Function
 
-        weatherDetails = Nothing
-        xmlDocWeatherPreset = Nothing
+        <DllImport("user32.dll")>
+        Public Shared Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
+        End Function
 
-        Return presetTitle
+        Public Delegate Function EnumWindowsProc(hWnd As IntPtr, lParam As Integer) As Boolean
 
-    End Function
+        <DllImport("user32.dll")>
+        Public Shared Function EnumWindows(lpEnumFunc As EnumWindowsProc, lParam As Integer) As Boolean
+        End Function
 
-End Class
+        <DllImport("user32.dll")>
+        Public Shared Function GetWindowText(hWnd As IntPtr, lpString As StringBuilder, nMaxCount As Integer) As Integer
+        End Function
 
+        <DllImport("user32.dll")>
+        Public Shared Function IsWindowVisible(hWnd As IntPtr) As Boolean
+        End Function
 
-Public Class NativeMethods
-    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
-    Public Shared Function FindWindow(lpClassName As String, lpWindowName As String) As IntPtr
-    End Function
-
-    <DllImport("user32.dll")>
-    Public Shared Function SetForegroundWindow(hWnd As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    End Function
-
-    <DllImport("user32.dll")>
-    Public Shared Function IsIconic(hWnd As IntPtr) As Boolean
-    End Function
-
-    <DllImport("user32.dll")>
-    Public Shared Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
-    End Function
-
-    Public Delegate Function EnumWindowsProc(hWnd As IntPtr, lParam As Integer) As Boolean
-
-    <DllImport("user32.dll")>
-    Public Shared Function EnumWindows(lpEnumFunc As EnumWindowsProc, lParam As Integer) As Boolean
-    End Function
-
-    <DllImport("user32.dll")>
-    Public Shared Function GetWindowText(hWnd As IntPtr, lpString As StringBuilder, nMaxCount As Integer) As Integer
-    End Function
-
-    <DllImport("user32.dll")>
-    Public Shared Function IsWindowVisible(hWnd As IntPtr) As Boolean
-    End Function
-
-End Class
+    End Class
 
 
