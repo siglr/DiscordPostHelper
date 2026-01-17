@@ -4302,44 +4302,6 @@ Public Class Main
 
     End Function
 
-    Private Function BuildLightTaskDetailsForEventPost(altRestrictionsMsg As Boolean, addOnsMsg As Boolean, allFilesDetailsPosted As Boolean, fltPlanPosted As Boolean) As String
-
-        Dim dateFormat As String
-        If chkIncludeYear.Checked Then
-            dateFormat = "MMMM dd, yyyy"
-        Else
-            dateFormat = "MMMM dd"
-        End If
-
-        Dim sb As New StringBuilder
-
-        If Not txtTaskID.Text = String.Empty Then
-            sb.AppendLine("## Relevant task details summary")
-            If altRestrictionsMsg AndAlso txtAltRestrictions.Text.Trim.Length > 33 Then
-                sb.AppendLine("⚠️ There are altitude restrictions on this task")
-            End If
-            If addOnsMsg AndAlso lstAllRecommendedAddOns.Items.Count > 0 Then
-                sb.AppendLine("📀 There are recommended add-ons with this task")
-            End If
-            sb.AppendLine($"🔗 [Click here for the official task details in the Task Library]({GetDiscordLinkToTaskThread()})")
-            sb.AppendLine("*If you did not join MSFS Soaring Task Tools already, you will need this [invite link](https://discord.gg/aW8YYe3HJF) first*")
-            sb.AppendLine()
-        End If
-
-        If (Not allFilesDetailsPosted) AndAlso (Not txtFlightPlanFile.Text = String.Empty) Then
-            sb.AppendLine($"📁 Flight plan file: **""{Path.GetFileName(txtFlightPlanFile.Text)}""**")
-        End If
-        If (Not allFilesDetailsPosted) AndAlso txtWeatherFile.Text <> String.Empty AndAlso (_WeatherDetails IsNot Nothing) Then
-            sb.AppendLine($"🌤 Weather file & profile name: **""{Path.GetFileName(txtWeatherFile.Text)}"" ({_WeatherDetails.PresetName})**")
-        End If
-        If (Not fltPlanPosted) AndAlso (Not chkDGPOEventLogistics.Checked) Then
-            sb.AppendLine($"📆 Sim date and time: **{dtSimDate.Value.ToString(dateFormat, _EnglishCulture)}, {dtSimLocalTime.Value.ToString("hh:mm tt", _EnglishCulture)} local** {SupportingFeatures.ValueToAppendIfNotEmpty(txtSimDateTimeExtraInfo.Text, True, True)}")
-        End If
-
-        Return sb.ToString.Trim
-
-    End Function
-
     Private Function GetGroupEventLanguage() As SupportedLanguage
         'Get the language from the club preset
         If _ClubPreset IsNot Nothing Then
