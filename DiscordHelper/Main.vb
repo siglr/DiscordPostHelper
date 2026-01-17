@@ -6733,6 +6733,9 @@ Public Class Main
 
         Dim availabilityToUse As String = AvailabilityDateTimeToUse.ToUniversalTime.ToString("yyyy-MM-dd HH:mm:ss")
 
+        Dim secondaryWeatherFilename As String = taskInfo.WeatherFilenameSecondary
+        Dim secondaryWeatherPresetName As String = _secondaryWeatherPresetName
+
         Dim modeRights As String = String.Empty
         If isUpdate Then
             modeRights = "UpdateTask"
@@ -6786,6 +6789,8 @@ Public Class Main
             {"PLNXML", _XmlDocFlightPlan.InnerXml},
             {"WPRFilename", taskInfo.WeatherFilename},
             {"WPRXML", _XmlDocWeatherPreset.InnerXml},
+            {"WPRSecondaryFilename", secondaryWeatherFilename},
+            {"WPRSecondaryName", secondaryWeatherPresetName},
             {"RepostText", repostText},
             {"SuppressBaroPressureWarningSymbol", If(taskInfo.SuppressBaroPressureWarningSymbol, 1, 0)},
             {"BaroPressureExtraInfo", taskInfo.BaroPressureExtraInfo.Trim},
