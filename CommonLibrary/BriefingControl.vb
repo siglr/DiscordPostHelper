@@ -514,15 +514,29 @@ Public Class BriefingControl
         End If
 
         'Load flight plan
-        _flightplanfile = flightplanfile
-        _XmlDocFlightPlan = New XmlDocument
-        _XmlDocFlightPlan.Load(_flightplanfile)
+        If File.Exists(flightplanfile) Then
+            _flightplanfile = flightplanfile
+            _XmlDocFlightPlan = New XmlDocument
+            _XmlDocFlightPlan.Load(_flightplanfile)
+        Else
+            Using New Centered_MessageBox()
+                MessageBox.Show($"Flight plan file not found!{Environment.NewLine}{flightplanfile}{Environment.NewLine}Cannot generate briefing.", "Flight plan file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
 
         'Load weather info
-        _XmlDocWeatherPreset = New XmlDocument
-        _XmlDocWeatherPreset.Load(weatherfile)
-        _WeatherDetails = Nothing
-        _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
+        If File.Exists(weatherfile) Then
+            _XmlDocWeatherPreset = New XmlDocument
+            _XmlDocWeatherPreset.Load(weatherfile)
+            _WeatherDetails = Nothing
+            _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
+        Else
+            Using New Centered_MessageBox()
+                MessageBox.Show($"Weather file not found!{Environment.NewLine}{weatherfile}{Environment.NewLine}Cannot generate briefing.", "Weather file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Exit Sub
+        End If
 
         _SF.DownloadCountryFlags(_sessionData.Countries)
         BuildTaskData()

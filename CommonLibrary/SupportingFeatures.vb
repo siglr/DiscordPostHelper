@@ -3501,8 +3501,9 @@ Public Class SupportingFeatures
             Return String.Empty
         End Try
     End Function
+End Class
 
-    Public Class NativeMethods
+Public Class NativeMethods
         <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
         Public Shared Function FindWindow(lpClassName As String, lpWindowName As String) As IntPtr
         End Function

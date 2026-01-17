@@ -169,8 +169,8 @@
     <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
   </entry>
   <entry key="group.thread.file_wpr_secondary">
-    <english>**WPR (Secondary)** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
-    <french>**WPR (Secondaire)** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+    <english>**Secondary WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
+    <french>**WPR Secondaire** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
   </entry>
   <entry key="group.thread.file_zip">
     <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
@@ -225,7 +225,7 @@
     <french> 👉 *Remarque : le nom de la configuration météo dans MSFS est : "{0}"*</french>
   </entry>
   <entry key="group.thread.weather_note_secondary_exact">
-    <english> 👉 *Note: secondary weather preset name in MSFS is: "{0}"*</english>
+    <english> 👉 *Note: Secondary weather preset name in MSFS is: "{0}"*</english>
     <french> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est : "{0}"*</french>
   </entry>
 </localization>
