@@ -803,6 +803,9 @@ Public Class Main
             If File.Exists(txtWeatherFile.Text) Then
                 filesToInclude.Add(txtWeatherFile.Text)
             End If
+            If _secondaryWPRFilename <> String.Empty AndAlso File.Exists(_secondaryWPRFilename) Then
+                filesToInclude.Add(_secondaryWPRFilename)
+            End If
             For i As Integer = 0 To lstAllFiles.Items.Count - 1
                 filesToInclude.Add(lstAllFiles.Items(i))
             Next
@@ -1374,7 +1377,7 @@ Public Class Main
 
             'If an SSC preset, Sync must not be available and check for weather summary
             btnSyncWeatherTitle.Enabled = (_sscPresetName = String.Empty)
-            If _sscPresetName <> String.Empty AndAlso txtWeatherSummary.Text.Trim = String.Empty Then
+            If _sscPresetName <> String.Empty AndAlso (txtWeatherSummary.Text.Trim = String.Empty OrElse (txtWeatherSummary.Text.Trim.StartsWith("SSC v") AndAlso txtWeatherSummary.Text.Trim.Length = 10)) Then
                 'Auto fill weather summary
                 txtWeatherSummary.Text = $"SSC {Path.GetFileNameWithoutExtension(_primaryWPRFilename).Substring(6, 6)}"
             ElseIf _sscPresetName = String.Empty AndAlso txtWeatherSummary.Text.Trim.StartsWith("SSC v") AndAlso txtWeatherSummary.Text.Trim.Length = 10 Then

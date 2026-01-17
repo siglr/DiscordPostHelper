@@ -302,7 +302,7 @@ Public Class WeatherPresetBrowser
 
     Private Function GetWeatherPresetTitleFromFile(weatherFilePath As String) As String
 
-        If weatherFilePath = String.Empty Then
+        If weatherFilePath = String.Empty OrElse Not File.Exists(weatherFilePath) Then
             Return String.Empty
         End If
 

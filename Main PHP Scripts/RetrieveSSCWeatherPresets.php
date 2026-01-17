@@ -30,12 +30,12 @@ try {
             'PresetID'              => (int)$r['PresetID'],
             'PresetDescriptiveName' => (string)$r['PresetDescriptiveName'],
 
-            'PresetMSFSTitle2020'   => (string)$r['Title2020'],
-            'PresetMSFSTitle2024'   => (string)$r['Title2024'],
+            'PresetMSFSTitleSecondary'   => (string)$r['Title2020'],
+            'PresetMSFSTitlePrimary'   => (string)$r['Title2024'],
 
             // Paths are now deterministic:
-            'PresetFile2020'        => $rootPath . '/SSC2020/' . (string)$r['FileName2020'],
-            'PresetFile2024'        => $rootPath . '/SSC2024/' . (string)$r['FileName2024'],
+            'PresetSecondaryWPRFilename'        => $rootPath . '/SSC2020/' . (string)$r['FileName2020'],
+            'PresetPrimaryWPRFilename'        => $rootPath . '/SSC2024/' . (string)$r['FileName2024'],
         ];
     }
 
