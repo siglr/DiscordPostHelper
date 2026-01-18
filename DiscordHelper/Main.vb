@@ -2188,7 +2188,7 @@ Public Class Main
         sb.AppendLine(localizer.Format("group.thread.file_wpr", wprLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
         If Not String.IsNullOrWhiteSpace(_secondaryWPRFilename) Then
             Dim wprSecondaryLabel As String = If(fullDetailsMode, Path.GetFileName(_secondaryWPRFilename), pendingText)
-            sb.AppendLine(localizer.Format("group.thread.file_wpr_secondary", wprSecondaryLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr&entrySeqID={_TaskEntrySeqID}"))
+            sb.AppendLine(localizer.Format("group.thread.file_wpr_secondary", wprSecondaryLabel, $"{SupportingFeatures.WeSimGlide}download.html?getFileFromDiscord=wpr2&entrySeqID={_TaskEntrySeqID}"))
         End If
         Dim primaryPresetMismatch As Boolean = _WeatherDetails IsNot Nothing AndAlso _WeatherDetails.PresetName.Trim <> Path.GetFileNameWithoutExtension(txtWeatherFile.Text.Trim)
         Dim secondaryPresetMismatch As Boolean = Not String.IsNullOrWhiteSpace(_secondaryWeatherPresetName) AndAlso Not String.IsNullOrWhiteSpace(_secondaryWPRFilename) AndAlso _secondaryWeatherPresetName.Trim <> Path.GetFileNameWithoutExtension(_secondaryWPRFilename.Trim)
