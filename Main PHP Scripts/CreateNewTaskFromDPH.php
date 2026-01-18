@@ -226,6 +226,10 @@ try {
         // Prepare SuppressBaroPressureWarningSymbol
         $suppressBaroPressureWarningSymbol = isset($taskData['SuppressBaroPressureWarningSymbol']) ? (int)$taskData['SuppressBaroPressureWarningSymbol'] : 0;
 
+        // Prepare WPR secondary fields (backward compatibility for older DPH app)
+        $wprSecondaryFilename = array_key_exists('WPRSecondaryFilename', $taskData) ? $taskData['WPRSecondaryFilename'] : null;
+        $wprSecondaryName = array_key_exists('WPRSecondaryName', $taskData) ? $taskData['WPRSecondaryName'] : null;
+
         // Update the database with full task details
         $stmt = $pdo->prepare("
             UPDATE Tasks SET
@@ -430,8 +434,8 @@ try {
             ':PLNXML' => $taskData['PLNXML'],
             ':WPRFilename' => $taskData['WPRFilename'],
             ':WPRXML' => $taskData['WPRXML'],
-            ':WPRSecondaryFilename' => $taskData['WPRSecondaryFilename'],
-            ':WPRSecondaryName' => $taskData['WPRSecondaryName'],
+            ':WPRSecondaryFilename' => $wprSecondaryFilename,
+            ':WPRSecondaryName' => $wprSecondaryName,
             ':LatMin' => $taskData['LatMin'],
             ':LatMax' => $taskData['LatMax'],
             ':LongMin' => $taskData['LongMin'],
