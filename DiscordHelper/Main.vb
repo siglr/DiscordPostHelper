@@ -199,6 +199,7 @@ Public Class Main
         _loadingFile = True
         LoadSessionData(CurrentSessionFile)
         _loadingFile = False
+        UpdateWeatherPresetButtonState()
         CheckForNewVersion()
 
         _isInitiatizing = False
@@ -418,6 +419,7 @@ Public Class Main
 
         _loadingFile = True
         CurrentSessionFile = String.Empty
+        UpdateWeatherPresetButtonState()
 
         BriefingControl1.FullReset()
         lblCountriesTestModeMsg.Visible = _useTestMode
@@ -5546,6 +5548,7 @@ Public Class Main
             GenerateBriefing()
             _loadingFile = False
             CheckWhichOptionsCanBeEnabled()
+            UpdateWeatherPresetButtonState()
         End If
 
     End Sub
@@ -5561,6 +5564,7 @@ Public Class Main
 
         CurrentSessionFile = filename
         SetFormCaption(filename)
+        UpdateWeatherPresetButtonState()
 
     End Sub
 
@@ -6019,6 +6023,10 @@ Public Class Main
             toolStripReload.Visible = False
         End If
 
+    End Sub
+
+    Private Sub UpdateWeatherPresetButtonState()
+        btnSelectWeatherFile.Enabled = (CurrentSessionFile <> String.Empty)
     End Sub
 
 #End Region
