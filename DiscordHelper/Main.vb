@@ -5468,6 +5468,7 @@ Public Class Main
         _loadingFile = True
         CurrentSessionFile = currentFile
         LoadSessionData(currentFile)
+        UpdateWeatherPresetButtonState()
         SessionUntouched()
         _loadingFile = False
 
