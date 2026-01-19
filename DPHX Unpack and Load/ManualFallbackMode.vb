@@ -242,7 +242,11 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub UpdateWeatherModeControls()
-        grpCustomPresets.Enabled = optCustomPreset.Checked
+        grpCustomPresets.Enabled = True
+        grpPrimaryWeather.Enabled = True
+        grpSecondaryWeather.Enabled = True
+        btnPrimaryBrowse.Enabled = optCustomPreset.Checked
+        btnSecondaryBrowse.Enabled = optCustomPreset.Checked
         cboSSCPresetList.Enabled = optSSCPreset.Checked AndAlso optSSCPreset.Enabled
         UpdateWeatherLayout()
 
