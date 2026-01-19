@@ -862,29 +862,39 @@ Public Class BriefingControl
         Return GetFriendlyPresetNameFromFilename(weatherFilePath)
     End Function
 
-    Private Sub AppendWeatherPresetLines(sb As StringBuilder, baseText As String, verb As String, Optional punctuation As String = "", Optional suffix As String = "")
-        Dim entries = GetWeatherPresetEntries()
+    Private Sub AppendTaskWeatherPresetLines(sb As StringBuilder)
+        Dim entries = GetWeatherPresetEntriesForText()
         If entries.Count = 0 Then
             Return
         End If
 
-        Dim useSimLabel As Boolean = entries.Count > 1
+        If entries.Count = 2 Then
+            For Each entry In entries
+                sb.Append($"For {entry.SimLabel}, the weather profile to load is **{entry.DisplayName}**($*$)")
+            Next
+            Return
+        End If
 
-        For Each entry In entries
-            Dim simSuffix As String = If(useSimLabel, $" ({entry.SimLabel})", String.Empty)
-            Dim line As String
-
-            If String.IsNullOrWhiteSpace(verb) Then
-                line = $"{baseText}{simSuffix}{punctuation} **{entry.DisplayName}**{suffix}"
-            Else
-                line = $"{baseText}{simSuffix} {verb} **{entry.DisplayName}**{suffix}"
-            End If
-
-            sb.Append($"{line}($*$)")
-        Next
+        sb.Append($"The weather profile to load is **{entries(0).DisplayName}**($*$)")
     End Sub
 
-    Private Function GetWeatherPresetEntries() As List(Of WeatherPresetEntry)
+    Private Sub AppendEventWeatherPresetLines(sb As StringBuilder)
+        Dim entries = GetWeatherPresetEntriesForText()
+        If entries.Count = 0 Then
+            Return
+        End If
+
+        If entries.Count = 2 Then
+            For Each entry In entries
+                sb.Append($"For {entry.SimLabel}, load weather preset **{entry.DisplayName}**($*$)")
+            Next
+            Return
+        End If
+
+        sb.Append($"Load weather preset: **{entries(0).DisplayName}**($*$)")
+    End Sub
+
+    Private Function GetWeatherPresetEntriesForText() As List(Of WeatherPresetEntry)
         Dim results As New List(Of WeatherPresetEntry)()
         Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
         Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
@@ -892,17 +902,17 @@ Public Class BriefingControl
         Dim weather2024Path = GetWeatherFilePath(_sessionData.WeatherFilename)
         Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
 
-        If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
-            Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
-            If Not String.IsNullOrWhiteSpace(displayName) Then
-                results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
-            End If
-        End If
-
         If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
             Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
             If Not String.IsNullOrWhiteSpace(displayName) Then
                 results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
+            End If
+        End If
+
+        If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
             End If
         End If
 
@@ -1056,9 +1066,7 @@ Public Class BriefingControl
 
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
-            AppendWeatherPresetLines(sb,
-                                     "The weather profile to load",
-                                     "is")
+            AppendTaskWeatherPresetLines(sb)
             If _sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}**($*$)")
             End If
@@ -1286,10 +1294,7 @@ Public Class BriefingControl
             End If
 
             'Weather ad flight plan
-            AppendWeatherPresetLines(sb,
-                                     "Load weather preset",
-                                     String.Empty,
-                                     ":", String.Empty)
+            AppendEventWeatherPresetLines(sb)
             sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
             sb.Append("($*$)")
 
