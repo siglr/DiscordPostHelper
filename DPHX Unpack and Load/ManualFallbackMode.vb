@@ -23,6 +23,8 @@ Partial Public Class ManualFallbackMode
     Private _msfs2020Enabled As Boolean
     Private _msfs2024Enabled As Boolean
     Private _layoutInitialized As Boolean
+    Private _presetTypeBuffer As String = ""
+    Private _presetTypeTimer As Timer
     Private _baseFormHeight As Integer
     Private _baseCustomGroupHeight As Integer
     Private _baseWeatherGroupHeight As Integer
@@ -60,6 +62,15 @@ Partial Public Class ManualFallbackMode
     Private Sub ManualFallbackMode_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _msfs2020Enabled = Settings.SessionSettings.Is2020Installed
         _msfs2024Enabled = Settings.SessionSettings.Is2024Installed
+
+        _presetTypeTimer = New Timer() With {.Interval = 900}
+        AddHandler _presetTypeTimer.Tick,
+        Sub()
+            _presetTypeTimer.Stop()
+            _presetTypeBuffer = ""
+        End Sub
+
+        AddHandler cboSSCPresetList.KeyPress, AddressOf cboSSCPresetList_KeyPress
 
         LoadSscPresets()
         Reset()
@@ -289,6 +300,59 @@ Partial Public Class ManualFallbackMode
         Dim selectedPreset = GetSelectedSscPreset()
         If selectedPreset IsNot Nothing Then
             DisplaySscPresetDetails(selectedPreset)
+        End If
+    End Sub
+
+    Private Sub cboSSCPresetList_KeyPress(sender As Object, e As KeyPressEventArgs)
+        If Char.IsDigit(e.KeyChar) Then
+            e.Handled = True
+
+            _presetTypeTimer.Stop()
+            _presetTypeTimer.Start()
+
+            _presetTypeBuffer &= e.KeyChar
+
+            If _presetTypeBuffer.Length > 3 Then
+                _presetTypeBuffer = _presetTypeBuffer.Substring(_presetTypeBuffer.Length - 3)
+            End If
+
+            JumpToPresetByPrefix(_presetTypeBuffer)
+            Return
+        End If
+
+        If e.KeyChar = ChrW(Keys.Back) Then
+            e.Handled = True
+            If _presetTypeBuffer.Length > 0 Then
+                _presetTypeBuffer = _presetTypeBuffer.Substring(0, _presetTypeBuffer.Length - 1)
+                JumpToPresetByPrefix(_presetTypeBuffer)
+            End If
+            Return
+        End If
+
+        e.Handled = True
+    End Sub
+
+    Private Sub JumpToPresetByPrefix(prefix As String)
+        If String.IsNullOrWhiteSpace(prefix) Then
+            Return
+        End If
+
+        Dim idx As Integer = -1
+
+        For i As Integer = 0 To cboSSCPresetList.Items.Count - 1
+            Dim s As String = Convert.ToString(cboSSCPresetList.Items(i))
+            If s IsNot Nothing AndAlso s.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) Then
+                idx = i
+                Exit For
+            End If
+        Next
+
+        If idx >= 0 Then
+            cboSSCPresetList.SelectedIndex = idx
+
+            If Not cboSSCPresetList.DroppedDown Then
+                cboSSCPresetList.DroppedDown = True
+            End If
         End If
     End Sub
 
