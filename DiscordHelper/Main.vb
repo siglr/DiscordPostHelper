@@ -35,6 +35,7 @@ Public Class Main
     Private Const DefaultMapImageHeight As Integer = 639
     Private Const WSGEmojiForBot As String = "<:wsg:1296813102893105203>"
     Private Const WSGEmojiForUser As String = ":wsg:"
+    Private Const MaxExtraFiles As Integer = 10
 
     Private ReadOnly _SF As New SupportingFeatures
     Private ReadOnly _CurrentDistanceUnit As Integer
@@ -981,9 +982,9 @@ Public Class Main
             LoadWeatherfile(droppedWeather)
         End If
         For Each otherFile As String In droppedOtherFiles
-            If lstAllFiles.Items.Count = 7 Then
+            If GetEffectiveExtraFileCountForLimit() >= MaxExtraFiles Then
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(Me, "Maximum 10 extra files (map/cover images not included).", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Using
                 Exit For
             End If
@@ -993,6 +994,24 @@ Public Class Main
         LoadPossibleImagesInCoverDropdown(cboCoverImage.SelectedItem)
 
     End Sub
+
+    Private Function GetEffectiveExtraFileCountForLimit() As Integer
+        Dim totalCount As Integer = lstAllFiles.Items.Count
+        Dim itemsToExclude As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+        Dim mapSelection As String = cboBriefingMap.Text.Trim
+
+        If Not String.IsNullOrEmpty(mapSelection) AndAlso lstAllFiles.Items.Contains(mapSelection) Then
+            itemsToExclude.Add(mapSelection)
+        End If
+
+        Dim coverSelection As String = cboCoverImage.Text.Trim
+
+        If Not String.IsNullOrEmpty(coverSelection) AndAlso lstAllFiles.Items.Contains(coverSelection) Then
+            itemsToExclude.Add(coverSelection)
+        End If
+
+        Return Math.Max(0, totalCount - itemsToExclude.Count)
+    End Function
 
     Private Sub AddExtraFile(otherFile As String)
         Dim sanitizedExtraFile As String = SupportingFeatures.SanitizeFilePath(otherFile)
@@ -1644,9 +1663,9 @@ Public Class Main
 
                 'Check if one of the files is selected flight plan or weather file to exclude them
                 If sanitizedExtraFile <> currentFlightPlan And sanitizedExtraFile <> currentWeatherFile Then
-                    If lstAllFiles.Items.Count = 7 Then
+                    If GetEffectiveExtraFileCountForLimit() >= MaxExtraFiles Then
                         Using New Centered_MessageBox(Me)
-                            MessageBox.Show(Me, "Discord does not allow more than 10 files!", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            MessageBox.Show(Me, "Maximum 10 extra files (map/cover images not included).", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End Using
                         Exit For
                     End If
