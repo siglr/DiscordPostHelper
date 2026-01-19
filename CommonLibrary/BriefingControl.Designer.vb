@@ -318,7 +318,7 @@ Partial Class BriefingControl
         Me.flowSetup.Location = New System.Drawing.Point(0, 0)
         Me.flowSetup.Margin = New System.Windows.Forms.Padding(0)
         Me.flowSetup.Name = "flowSetup"
-        Me.flowSetup.Size = New System.Drawing.Size(830, 496)
+        Me.flowSetup.Size = New System.Drawing.Size(830, 535)
         Me.flowSetup.TabIndex = 11
         Me.flowSetup.WrapContents = False
         '
@@ -360,9 +360,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblDeparture.AutoEllipsis = True
         Me.lblDeparture.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDeparture.Location = New System.Drawing.Point(175, 0)
+        Me.lblDeparture.Location = New System.Drawing.Point(211, 0)
         Me.lblDeparture.Name = "lblDeparture"
-        Me.lblDeparture.Size = New System.Drawing.Size(656, 41)
+        Me.lblDeparture.Size = New System.Drawing.Size(620, 41)
         Me.lblDeparture.TabIndex = 1
         '
         'Label7
@@ -392,9 +392,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSimLocalDateTime.AutoEllipsis = True
         Me.lblSimLocalDateTime.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSimLocalDateTime.Location = New System.Drawing.Point(175, 0)
+        Me.lblSimLocalDateTime.Location = New System.Drawing.Point(211, 0)
         Me.lblSimLocalDateTime.Name = "lblSimLocalDateTime"
-        Me.lblSimLocalDateTime.Size = New System.Drawing.Size(656, 41)
+        Me.lblSimLocalDateTime.Size = New System.Drawing.Size(620, 41)
         Me.lblSimLocalDateTime.TabIndex = 1
         '
         'Label11
@@ -424,9 +424,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblWeatherProfile2024.AutoEllipsis = True
         Me.lblWeatherProfile2024.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWeatherProfile2024.Location = New System.Drawing.Point(175, 0)
+        Me.lblWeatherProfile2024.Location = New System.Drawing.Point(211, 0)
         Me.lblWeatherProfile2024.Name = "lblWeatherProfile2024"
-        Me.lblWeatherProfile2024.Size = New System.Drawing.Size(656, 41)
+        Me.lblWeatherProfile2024.Size = New System.Drawing.Size(620, 41)
         Me.lblWeatherProfile2024.TabIndex = 1
         '
         'lblWeatherTitle2024
@@ -456,9 +456,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblWeatherProfile2020.AutoEllipsis = True
         Me.lblWeatherProfile2020.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWeatherProfile2020.Location = New System.Drawing.Point(175, 0)
+        Me.lblWeatherProfile2020.Location = New System.Drawing.Point(211, 0)
         Me.lblWeatherProfile2020.Name = "lblWeatherProfile2020"
-        Me.lblWeatherProfile2020.Size = New System.Drawing.Size(656, 41)
+        Me.lblWeatherProfile2020.Size = New System.Drawing.Size(620, 41)
         Me.lblWeatherProfile2020.TabIndex = 1
         '
         'lblWeatherTitle2020
@@ -488,9 +488,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblBaroNote.AutoEllipsis = True
         Me.lblBaroNote.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblBaroNote.Location = New System.Drawing.Point(175, 0)
+        Me.lblBaroNote.Location = New System.Drawing.Point(211, 0)
         Me.lblBaroNote.Name = "lblBaroNote"
-        Me.lblBaroNote.Size = New System.Drawing.Size(656, 41)
+        Me.lblBaroNote.Size = New System.Drawing.Size(620, 41)
         Me.lblBaroNote.TabIndex = 1
         '
         'Label13
@@ -520,9 +520,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblRecGliders.AutoEllipsis = True
         Me.lblRecGliders.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRecGliders.Location = New System.Drawing.Point(175, 0)
+        Me.lblRecGliders.Location = New System.Drawing.Point(211, 0)
         Me.lblRecGliders.Name = "lblRecGliders"
-        Me.lblRecGliders.Size = New System.Drawing.Size(656, 41)
+        Me.lblRecGliders.Size = New System.Drawing.Size(620, 41)
         Me.lblRecGliders.TabIndex = 1
         '
         'Label10
@@ -552,9 +552,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTaskName.AutoEllipsis = True
         Me.lblTaskName.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTaskName.Location = New System.Drawing.Point(175, 0)
+        Me.lblTaskName.Location = New System.Drawing.Point(211, 0)
         Me.lblTaskName.Name = "lblTaskName"
-        Me.lblTaskName.Size = New System.Drawing.Size(656, 41)
+        Me.lblTaskName.Size = New System.Drawing.Size(620, 41)
         Me.lblTaskName.TabIndex = 1
         '
         'Label12
@@ -571,7 +571,7 @@ Partial Class BriefingControl
         Me.pnlFlightPlanTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFlightPlanTitle.Controls.Add(Me.lblFlightPlanTitle)
-        Me.pnlFlightPlanTitle.Location = New System.Drawing.Point(0, 287)
+        Me.pnlFlightPlanTitle.Location = New System.Drawing.Point(0, 328)
         Me.pnlFlightPlanTitle.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlFlightPlanTitle.Name = "pnlFlightPlanTitle"
         Me.pnlFlightPlanTitle.Size = New System.Drawing.Size(830, 41)
@@ -583,9 +583,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblFlightPlanTitle.AutoEllipsis = True
         Me.lblFlightPlanTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblFlightPlanTitle.Location = New System.Drawing.Point(175, 0)
+        Me.lblFlightPlanTitle.Location = New System.Drawing.Point(211, 0)
         Me.lblFlightPlanTitle.Name = "lblFlightPlanTitle"
-        Me.lblFlightPlanTitle.Size = New System.Drawing.Size(656, 41)
+        Me.lblFlightPlanTitle.Size = New System.Drawing.Size(620, 41)
         Me.lblFlightPlanTitle.TabIndex = 3
         '
         'pnlSetupSeparator
@@ -638,9 +638,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEventMSFSServer.AutoEllipsis = True
         Me.lblEventMSFSServer.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventMSFSServer.Location = New System.Drawing.Point(175, 0)
+        Me.lblEventMSFSServer.Location = New System.Drawing.Point(211, 0)
         Me.lblEventMSFSServer.Name = "lblEventMSFSServer"
-        Me.lblEventMSFSServer.Size = New System.Drawing.Size(656, 41)
+        Me.lblEventMSFSServer.Size = New System.Drawing.Size(620, 41)
         Me.lblEventMSFSServer.TabIndex = 1
         '
         'Label14
@@ -670,9 +670,9 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEventTrackerGroup.AutoEllipsis = True
         Me.lblEventTrackerGroup.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblEventTrackerGroup.Location = New System.Drawing.Point(175, 0)
+        Me.lblEventTrackerGroup.Location = New System.Drawing.Point(211, 0)
         Me.lblEventTrackerGroup.Name = "lblEventTrackerGroup"
-        Me.lblEventTrackerGroup.Size = New System.Drawing.Size(656, 41)
+        Me.lblEventTrackerGroup.Size = New System.Drawing.Size(619, 41)
         Me.lblEventTrackerGroup.TabIndex = 1
         '
         'Label16

@@ -1178,13 +1178,13 @@ Public Class DPHXUnpackAndLoad
 
         _status.AppendStatusLine($"SSCPresetName: {If(String.IsNullOrWhiteSpace(_allDPHData.SSCPresetName), "(none)", _allDPHData.SSCPresetName)}", False)
         _status.AppendStatusLine($"Weather preset availability: {weatherPresence}", False)
-        If Settings.SessionSettings.Is2020Installed Then
-            Dim weather2020Selection = GetWeatherFilenameForSim(True)
-            _status.AppendStatusLine($"Weather file selected for MSFS 2020: {FormatWeatherFilenameForLog(weather2020Selection)}", False)
-        End If
         If Settings.SessionSettings.Is2024Installed Then
             Dim weather2024Selection = GetWeatherFilenameForSim(False)
             _status.AppendStatusLine($"Weather file selected for MSFS 2024: {FormatWeatherFilenameForLog(weather2024Selection)}", False)
+        End If
+        If Settings.SessionSettings.Is2020Installed Then
+            Dim weather2020Selection = GetWeatherFilenameForSim(True)
+            _status.AppendStatusLine($"Weather file selected for MSFS 2020: {FormatWeatherFilenameForLog(weather2020Selection)}", False)
         End If
 
         Dim internalLoggerInUse As Boolean = EnsureInternalLoggerInUse(_status)

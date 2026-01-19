@@ -955,17 +955,17 @@ Public Class BriefingControl
         Dim weather2024Path = GetWeatherFilePath(_sessionData.WeatherFilename)
         Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
 
-        If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
-            Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
-            If Not String.IsNullOrWhiteSpace(displayName) Then
-                results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
-            End If
-        End If
-
         If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
             Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
             If Not String.IsNullOrWhiteSpace(displayName) Then
                 results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
+            End If
+        End If
+
+        If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
             End If
         End If
 
