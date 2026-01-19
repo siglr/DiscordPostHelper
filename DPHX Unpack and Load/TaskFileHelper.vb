@@ -14,6 +14,7 @@ Friend Module TaskFileHelper
 
     ' Reusable HttpClient for Tracker JSON polling
     Private ReadOnly TrackerHttpClient As New HttpClient()
+    Private Const WeatherPresetPrefix As String = "0_"
 
     Friend Function CopyTaskFile(filename As String,
                                  sourcePath As String,
@@ -21,17 +22,60 @@ Friend Module TaskFileHelper
                                  msgToAsk As String,
                                  owner As IWin32Window,
                                  msfsWarningVisible As Boolean) As String
+        Return CopyTaskFileInternal(filename, sourcePath, destPath, msgToAsk, owner, msfsWarningVisible)
+    End Function
+
+    Friend Function CopyWeatherPresetToMsfs(filename As String,
+                                            sourcePath As String,
+                                            destPath As String,
+                                            msgToAsk As String,
+                                            owner As IWin32Window,
+                                            msfsWarningVisible As Boolean) As String
+        Dim sourceName = Path.GetFileName(filename)
+        Dim installedName = GetInstalledWeatherPresetFilename(sourceName)
+        Dim label = $"{msgToAsk} (source: {sourceName}, installed: {installedName})"
+        Dim copyMessage = CopyTaskFileInternal(sourceName, sourcePath, destPath, label, owner, msfsWarningVisible, installedName)
+        Dim xmlMessage = UpdateWeatherPresetDisplayName(Path.Combine(destPath, installedName))
+
+        If Not String.IsNullOrWhiteSpace(xmlMessage) Then
+            copyMessage &= $"{Environment.NewLine}{xmlMessage}"
+        End If
+
+        Return copyMessage
+    End Function
+
+    Friend Function GetInstalledWeatherPresetFilename(originalFilename As String) As String
+        If String.IsNullOrWhiteSpace(originalFilename) Then
+            Return originalFilename
+        End If
+
+        Dim nameOnly = Path.GetFileName(originalFilename)
+        If nameOnly.StartsWith(WeatherPresetPrefix, StringComparison.OrdinalIgnoreCase) Then
+            Return nameOnly
+        End If
+
+        Return WeatherPresetPrefix & nameOnly
+    End Function
+
+    Private Function CopyTaskFileInternal(filename As String,
+                                          sourcePath As String,
+                                          destPath As String,
+                                          msgToAsk As String,
+                                          owner As IWin32Window,
+                                          msfsWarningVisible As Boolean,
+                                          Optional destFilename As String = Nothing) As String
         Dim fullSourceFilename As String
         Dim fullDestFilename As String
         Dim proceed As Boolean = False
         Dim messageToReturn As String = String.Empty
+        Dim destName = If(String.IsNullOrWhiteSpace(destFilename), filename, destFilename)
 
         If Not Directory.Exists(destPath) Then
-            Return $"{msgToAsk} ""{filename}"" skipped - destination folder not set or invalid (check settings)"
+            Return $"{msgToAsk} ""{destName}"" skipped - destination folder not set or invalid (check settings)"
         End If
 
         fullSourceFilename = Path.Combine(sourcePath, filename)
-        fullDestFilename = Path.Combine(destPath, filename)
+        fullDestFilename = Path.Combine(destPath, destName)
 
         Dim sourceToCopy As String = fullSourceFilename
         If File.Exists(fullDestFilename) Then
@@ -43,35 +87,35 @@ Friend Module TaskFileHelper
 
             If identical Then
                 proceed = False
-                messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
+                messageToReturn = $"{msgToAsk} ""{destName}"" skipped (identical - up-to-date)"
             Else
                 Select Case Settings.SessionSettings.AutoOverwriteFiles
                     Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
                         proceed = True
-                        messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
+                        messageToReturn = $"{msgToAsk} ""{destName}"" copied over (different existing file, policy: Overwrite)"
                     Case AllSettings.AutoOverwriteOptions.AlwaysSkip
                         proceed = False
-                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
+                        messageToReturn = $"{msgToAsk} ""{destName}"" skipped (different file exists, policy: Skip)"
                     Case AllSettings.AutoOverwriteOptions.AlwaysAsk
                         Dim ownerWindow As IWin32Window = owner
                         Using New Centered_MessageBox(ownerWindow)
                             If MessageBox.Show(ownerWindow,
-                                               $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
+                                               $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{destName}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
                                                "File already exists",
                                                MessageBoxButtons.YesNo,
                                                MessageBoxIcon.Question) = DialogResult.Yes Then
                                 proceed = True
-                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
+                                messageToReturn = $"{msgToAsk} ""{destName}"" copied over (different existing file, policy: Ask)"
                             Else
                                 proceed = False
-                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
+                                messageToReturn = $"{msgToAsk} ""{destName}"" skipped by user (different file exists, policy: Ask)"
                             End If
                         End Using
                 End Select
             End If
         Else
             proceed = True
-            messageToReturn = $"{msgToAsk} ""{filename}"" copied"
+            messageToReturn = $"{msgToAsk} ""{destName}"" copied"
         End If
 
         If proceed Then
@@ -94,16 +138,16 @@ Friend Module TaskFileHelper
                     File.SetAttributes(fullDestFilename, newAttrs Or FileAttributes.ReadOnly)
                 End If
 
-                AppendMsfsRunningNoteForWpr(messageToReturn, filename, isDelete:=False, msfsWarningVisible:=msfsWarningVisible)
+                AppendMsfsRunningNoteForWpr(messageToReturn, destName, isDelete:=False, msfsWarningVisible:=msfsWarningVisible)
 
             Catch ex As UnauthorizedAccessException
-                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy (access denied): {ex.Message}"
+                messageToReturn = $"{msgToAsk} ""{destName}"" failed to copy (access denied): {ex.Message}"
                 If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
                     Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
                 End If
 
             Catch ex As Exception
-                messageToReturn = $"{msgToAsk} ""{filename}"" failed to copy: {ex.Message}"
+                messageToReturn = $"{msgToAsk} ""{destName}"" failed to copy: {ex.Message}"
                 If destWasReadOnly AndAlso File.Exists(fullDestFilename) Then
                     Try : File.SetAttributes(fullDestFilename, originalAttrs) : Catch : End Try
                 End If
@@ -111,6 +155,58 @@ Friend Module TaskFileHelper
         End If
 
         Return messageToReturn
+    End Function
+
+    Private Function UpdateWeatherPresetDisplayName(filePath As String) As String
+        If String.IsNullOrWhiteSpace(filePath) Then
+            Return "Preset name update skipped - installed file path missing."
+        End If
+
+        If Not File.Exists(filePath) Then
+            Return "Preset name update skipped - installed file not found."
+        End If
+
+        Try
+            Dim doc = XDocument.Load(filePath, LoadOptions.PreserveWhitespace)
+            Dim nameElement = doc.Descendants("Name").FirstOrDefault()
+            Dim currentName = If(nameElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(nameElement.Value),
+                                 nameElement.Value.Trim(),
+                                 Path.GetFileNameWithoutExtension(filePath))
+
+            If String.IsNullOrWhiteSpace(currentName) Then
+                Return "Preset name update skipped - preset name missing."
+            End If
+
+            Dim newName = currentName
+            Dim updated = False
+            If Not currentName.StartsWith(WeatherPresetPrefix, StringComparison.OrdinalIgnoreCase) Then
+                newName = WeatherPresetPrefix & currentName
+                updated = True
+                If nameElement Is Nothing Then
+                    If doc.Root IsNot Nothing Then
+                        doc.Root.AddFirst(New XElement("Name", newName))
+                    End If
+                Else
+                    nameElement.Value = newName
+                End If
+
+                Dim settings As New Xml.XmlWriterSettings With {
+                    .Indent = True,
+                    .Encoding = New UTF8Encoding(False)
+                }
+                Using writer = Xml.XmlWriter.Create(filePath, settings)
+                    doc.Save(writer)
+                End Using
+            End If
+
+            If updated Then
+                Return $"Preset name updated to ""{newName}""."
+            End If
+
+            Return $"Preset name already prefixed: ""{newName}""."
+        Catch ex As Exception
+            Return $"Preset name update failed: {ex.Message}"
+        End Try
     End Function
 
     Friend Function DeleteTaskFile(filename As String,
