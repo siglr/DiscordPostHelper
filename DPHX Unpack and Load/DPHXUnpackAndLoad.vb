@@ -945,12 +945,11 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2020 = GetWeatherFilenameForSim(True)
             If Not String.IsNullOrWhiteSpace(weather2020) Then
-                _filesToUnpack2020.Add("Weather File", Path.GetFileName(weather2020))
-                If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
-                                                    Path.GetFileName(weather2020)),
-                                                    Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                                                    Path.GetFileName(weather2020))) Then
-                    _filesCurrentlyUnpacked2020.Add("Weather File", Path.GetFileName(weather2020))
+                Dim sourceName = Path.GetFileName(weather2020)
+                Dim installedName = TaskFileHelper.GetInstalledWeatherPresetFilename(sourceName)
+                _filesToUnpack2020.Add("Weather File", installedName)
+                If File.Exists(Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder, installedName)) Then
+                    _filesCurrentlyUnpacked2020.Add("Weather File", installedName)
                 End If
             End If
         End If
@@ -967,12 +966,11 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2024 = GetWeatherFilenameForSim(False)
             If Not String.IsNullOrWhiteSpace(weather2024) Then
-                _filesToUnpack2024.Add("Weather File", Path.GetFileName(weather2024))
-                If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
-                                                    Path.GetFileName(weather2024)),
-                                                    Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                                                    Path.GetFileName(weather2024))) Then
-                    _filesCurrentlyUnpacked2024.Add("Weather File", Path.GetFileName(weather2024))
+                Dim sourceName = Path.GetFileName(weather2024)
+                Dim installedName = TaskFileHelper.GetInstalledWeatherPresetFilename(sourceName)
+                _filesToUnpack2024.Add("Weather File", installedName)
+                If File.Exists(Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder, installedName)) Then
+                    _filesCurrentlyUnpacked2024.Add("Weather File", installedName)
                 End If
             End If
         End If
@@ -1242,7 +1240,7 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2020 = GetWeatherFilenameForSim(True)
             If Not String.IsNullOrWhiteSpace(weather2020) Then
-                _status.AppendStatusLine(CopyFile(Path.GetFileName(weather2020),
+                _status.AppendStatusLine(CopyWeatherPresetFile(Path.GetFileName(weather2020),
                      TempDPHXUnpackFolder,
                      Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                      "Weather Preset for MSFS 2020"), True)
@@ -1269,7 +1267,7 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2024 = GetWeatherFilenameForSim(False)
             If Not String.IsNullOrWhiteSpace(weather2024) Then
-                _status.AppendStatusLine(CopyFile(Path.GetFileName(weather2024),
+                _status.AppendStatusLine(CopyWeatherPresetFile(Path.GetFileName(weather2024),
                      TempDPHXUnpackFolder,
                      Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
                      "Weather Preset for MSFS 2024"), True)
@@ -1319,6 +1317,10 @@ Public Class DPHXUnpackAndLoad
         Return TaskFileHelper.CopyTaskFile(filename, sourcePath, destPath, msgToAsk, Me, warningMSFSRunningToolStrip.Visible)
     End Function
 
+    Private Function CopyWeatherPresetFile(filename As String, sourcePath As String, destPath As String, msgToAsk As String) As String
+        Return TaskFileHelper.CopyWeatherPresetToMsfs(filename, sourcePath, destPath, msgToAsk, Me, warningMSFSRunningToolStrip.Visible)
+    End Function
+
     Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String, excludeFromCleanup As Boolean) As String
         Return TaskFileHelper.DeleteTaskFile(filename, sourcePath, msgToAsk, excludeFromCleanup, warningMSFSRunningToolStrip.Visible)
     End Function
@@ -1361,9 +1363,11 @@ Public Class DPHXUnpackAndLoad
                 Settings.SessionSettings.Exclude2020FlightPlanFromCleanup)
 
             Dim weather2020 = GetWeatherFilenameForSim(True)
-            addCand(Path.GetFileName(weather2020),
+            Dim weather2020Source = Path.GetFileName(weather2020)
+            Dim weather2020Installed = TaskFileHelper.GetInstalledWeatherPresetFilename(weather2020Source)
+            addCand(weather2020Installed,
                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                "Weather Preset for MSFS 2020",
+                $"Weather Preset for MSFS 2020 (source: {weather2020Source}, installed: {weather2020Installed})",
                 "WPR 2020",
                 Settings.SessionSettings.Exclude2020WeatherFileFromCleanup)
         End If
@@ -1391,9 +1395,11 @@ Public Class DPHXUnpackAndLoad
             End If
 
             Dim weather2024 = GetWeatherFilenameForSim(False)
-            addCand(Path.GetFileName(weather2024),
+            Dim weather2024Source = Path.GetFileName(weather2024)
+            Dim weather2024Installed = TaskFileHelper.GetInstalledWeatherPresetFilename(weather2024Source)
+            addCand(weather2024Installed,
                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                "Weather Preset for MSFS 2024",
+                $"Weather Preset for MSFS 2024 (source: {weather2024Source}, installed: {weather2024Installed})",
                 "WPR 2024",
                 Settings.SessionSettings.Exclude2024WeatherFileFromCleanup)
         End If
