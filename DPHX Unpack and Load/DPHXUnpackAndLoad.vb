@@ -831,21 +831,12 @@ Public Class DPHXUnpackAndLoad
                 _allDPHData = CType(serializer.Deserialize(stream), AllData)
             End Using
 
+            EnsureSessionDataDefaults(_allDPHData)
+            SyncWeatherFilenamesFromPackage(TempDPHXUnpackFolder)
+
             'Fix the weather file format to be compatible with both MSFS versions
-            If _allDPHData.WeatherFilename <> String.Empty Then
-                'Weather file present
-                Dim weatherFile As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename))
-                If File.Exists(weatherFile) Then
-                    If _SF.FixWPRFormat(weatherFile, False) Then
-                        'Success
-                    Else
-                        'Failure
-                        Using New Centered_MessageBox(Me)
-                            MessageBox.Show($"Unable to verify and fix the weather file for compatibility with both MSFS versions.", "Fixing WPR file", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        End Using
-                    End If
-                End If
-            End If
+            FixWeatherFileFormat(_allDPHData.WeatherFilename)
+            FixWeatherFileFormat(_allDPHData.WeatherFilenameSecondary)
 
             'We need to retrieve the DiscordPostID from the task online server
             If Not String.IsNullOrWhiteSpace(_allDPHData.TaskID) OrElse _allDPHData.EntrySeqID > 0 Then
@@ -855,7 +846,9 @@ Public Class DPHXUnpackAndLoad
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename)),
-                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(If(Not String.IsNullOrWhiteSpace(_allDPHData.WeatherFilename),
+                                                                                              _allDPHData.WeatherFilename,
+                                                                                              _allDPHData.WeatherFilenameSecondary))),
                                           _taskDiscordPostID,
                                           TempDPHXUnpackFolder)
 
@@ -951,12 +944,15 @@ Public Class DPHXUnpackAndLoad
             End If
 
             'Weather file
-            _filesToUnpack2020.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
-            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
-                                                Path.GetFileName(_allDPHData.WeatherFilename)),
-                                                Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                                                Path.GetFileName(_allDPHData.WeatherFilename))) Then
-                _filesCurrentlyUnpacked2020.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            Dim weather2020 = GetWeatherFilenameForSim(True)
+            If Not String.IsNullOrWhiteSpace(weather2020) Then
+                _filesToUnpack2020.Add("Weather File", Path.GetFileName(weather2020))
+                If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
+                                                    Path.GetFileName(weather2020)),
+                                                    Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                                                    Path.GetFileName(weather2020))) Then
+                    _filesCurrentlyUnpacked2020.Add("Weather File", Path.GetFileName(weather2020))
+                End If
             End If
         End If
         If Settings.SessionSettings.Is2024Installed Then
@@ -970,12 +966,15 @@ Public Class DPHXUnpackAndLoad
             End If
 
             'Weather file
-            _filesToUnpack2024.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
-            If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
-                                                Path.GetFileName(_allDPHData.WeatherFilename)),
-                                                Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                                                Path.GetFileName(_allDPHData.WeatherFilename))) Then
-                _filesCurrentlyUnpacked2024.Add("Weather File", Path.GetFileName(_allDPHData.WeatherFilename))
+            Dim weather2024 = GetWeatherFilenameForSim(False)
+            If Not String.IsNullOrWhiteSpace(weather2024) Then
+                _filesToUnpack2024.Add("Weather File", Path.GetFileName(weather2024))
+                If SupportingFeatures.FilesAreEquivalent(Path.Combine(TempDPHXUnpackFolder,
+                                                    Path.GetFileName(weather2024)),
+                                                    Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                                                    Path.GetFileName(weather2024))) Then
+                    _filesCurrentlyUnpacked2024.Add("Weather File", Path.GetFileName(weather2024))
+                End If
             End If
         End If
 
@@ -1157,6 +1156,29 @@ Public Class DPHXUnpackAndLoad
         _status.AppendStatusLine("Unpacking Results:", True)
 
         Dim loggerFlightPlanPath As String = GetCurrentFlightPlanPath()
+        Dim primaryWeather As String = NullToEmpty(_allDPHData.WeatherFilename)
+        Dim secondaryWeather As String = NullToEmpty(_allDPHData.WeatherFilenameSecondary)
+        Dim weatherPresence As String
+        If Not String.IsNullOrWhiteSpace(primaryWeather) AndAlso Not String.IsNullOrWhiteSpace(secondaryWeather) Then
+            weatherPresence = "Primary + Secondary"
+        ElseIf Not String.IsNullOrWhiteSpace(primaryWeather) Then
+            weatherPresence = "Primary only"
+        ElseIf Not String.IsNullOrWhiteSpace(secondaryWeather) Then
+            weatherPresence = "Secondary only"
+        Else
+            weatherPresence = "None"
+        End If
+
+        _status.AppendStatusLine($"SSCPresetName: {If(String.IsNullOrWhiteSpace(_allDPHData.SSCPresetName), "(none)", _allDPHData.SSCPresetName)}", False)
+        _status.AppendStatusLine($"Weather preset availability: {weatherPresence}", False)
+        If Settings.SessionSettings.Is2020Installed Then
+            Dim weather2020Selection = GetWeatherFilenameForSim(True)
+            _status.AppendStatusLine($"Weather file selected for MSFS 2020: {FormatWeatherFilenameForLog(weather2020Selection)}", False)
+        End If
+        If Settings.SessionSettings.Is2024Installed Then
+            Dim weather2024Selection = GetWeatherFilenameForSim(False)
+            _status.AppendStatusLine($"Weather file selected for MSFS 2024: {FormatWeatherFilenameForLog(weather2024Selection)}", False)
+        End If
 
         Dim internalLoggerInUse As Boolean = EnsureInternalLoggerInUse(_status)
 
@@ -1187,10 +1209,23 @@ Public Class DPHXUnpackAndLoad
 
                 Dim flightPlanFilePath As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.FlightPlanFilename))
                 Dim flightPlanTitle As String = SupportingFeatures.GetFlightPlanTitleFromPln(flightPlanFilePath)
+                Dim trackerWeatherFilename As String = String.Empty
+
+                If Settings.SessionSettings.Is2024Installed Then
+                    trackerWeatherFilename = GetWeatherFilenameForSim(False)
+                ElseIf Settings.SessionSettings.Is2020Installed Then
+                    trackerWeatherFilename = GetWeatherFilenameForSim(True)
+                Else
+                    trackerWeatherFilename = _allDPHData.WeatherFilename
+                End If
+                Dim trackerWeatherPath As String = String.Empty
+                If Not String.IsNullOrWhiteSpace(trackerWeatherFilename) Then
+                    trackerWeatherPath = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(trackerWeatherFilename))
+                End If
 
                 TaskFileHelper.SendDataToTracker(groupToUse,
                                   flightPlanFilePath,
-                                  Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(_allDPHData.WeatherFilename)),
+                                  trackerWeatherPath,
                               _allDPHData.URLGroupEventPost,
                               flightPlanTitle,
                               _status
@@ -1206,10 +1241,15 @@ Public Class DPHXUnpackAndLoad
                  "Flight Plan for MSFS 2020"), True)
 
             'Weather file
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2020"), True)
+            Dim weather2020 = GetWeatherFilenameForSim(True)
+            If Not String.IsNullOrWhiteSpace(weather2020) Then
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(weather2020),
+                     TempDPHXUnpackFolder,
+                     Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                     "Weather Preset for MSFS 2020"), True)
+            Else
+                _status.AppendStatusLine("Weather Preset for MSFS 2020 skipped - no weather preset specified.", True)
+            End If
 
         End If
         If Settings.SessionSettings.Is2024Installed Then
@@ -1228,10 +1268,15 @@ Public Class DPHXUnpackAndLoad
             End If
 
             'Weather file
-            _status.AppendStatusLine(CopyFile(Path.GetFileName(_allDPHData.WeatherFilename),
-                 TempDPHXUnpackFolder,
-                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                 "Weather Preset for MSFS 2024"), True)
+            Dim weather2024 = GetWeatherFilenameForSim(False)
+            If Not String.IsNullOrWhiteSpace(weather2024) Then
+                _status.AppendStatusLine(CopyFile(Path.GetFileName(weather2024),
+                     TempDPHXUnpackFolder,
+                     Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                     "Weather Preset for MSFS 2024"), True)
+            Else
+                _status.AppendStatusLine("Weather Preset for MSFS 2024 skipped - no weather preset specified.", True)
+            End If
 
         End If
 
@@ -1298,33 +1343,14 @@ Public Class DPHXUnpackAndLoad
                           Dim full As String = Path.Combine(folder, fileName)
                           If Not File.Exists(full) Then Exit Sub
 
-                          Dim whitelistDir As String = Path.Combine(Application.StartupPath, "Whitelist")
-
-                          ' ----- Whitelist match? -> start unchecked -----
-                          Dim defaultChecked As Boolean = True
-                          If Directory.Exists(whitelistDir) Then
-                              Dim wlPath As String = Path.Combine(whitelistDir, fileName)
-                              If File.Exists(wlPath) Then
-                                  ' Uses your XML-aware comparer for PLN/WPR
-                                  If SupportingFeatures.FilesAreEquivalent(full, wlPath) Then
-                                      defaultChecked = False
-                                  End If
-                              End If
-                          End If
-
                           Dim disp As String = $"{shortLabel} : {fileName}"
-                          Dim isWL As Boolean = Not defaultChecked
-                          If Not defaultChecked Then
-                              disp &= " (whitelist)"
-                          End If
 
                           candidates.Add(New CleanupCandidate With {
                           .Display = disp,
                           .FileName = fileName,
                           .SourcePath = folder,
                           .Label = label,
-                          .DefaultChecked = defaultChecked,
-                          .IsWhitelistProtected = isWL
+                          .DefaultChecked = True
                       })
                       End Sub
 
@@ -1335,7 +1361,8 @@ Public Class DPHXUnpackAndLoad
                 "PLN 2020",
                 Settings.SessionSettings.Exclude2020FlightPlanFromCleanup)
 
-            addCand(Path.GetFileName(_allDPHData.WeatherFilename),
+            Dim weather2020 = GetWeatherFilenameForSim(True)
+            addCand(Path.GetFileName(weather2020),
                 Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
                 "Weather Preset for MSFS 2020",
                 "WPR 2020",
@@ -1364,7 +1391,8 @@ Public Class DPHXUnpackAndLoad
                     Settings.SessionSettings.Exclude2024FlightPlanFromCleanup)
             End If
 
-            addCand(Path.GetFileName(_allDPHData.WeatherFilename),
+            Dim weather2024 = GetWeatherFilenameForSim(False)
+            addCand(Path.GetFileName(weather2024),
                 Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
                 "Weather Preset for MSFS 2024",
                 "WPR 2024",
@@ -1843,6 +1871,9 @@ Public Class DPHXUnpackAndLoad
         session.TaskID = NullToEmpty(session.TaskID)
         session.DiscordTaskID = NullToEmpty(session.DiscordTaskID)
         session.DiscordTaskThreadURL = NullToEmpty(session.DiscordTaskThreadURL)
+        session.WeatherFilename = NullToEmpty(session.WeatherFilename)
+        session.WeatherFilenameSecondary = NullToEmpty(session.WeatherFilenameSecondary)
+        session.SSCPresetName = NullToEmpty(session.SSCPresetName)
         session.Title = NullToEmpty(session.Title)
         session.SimDateTimeExtraInfo = NullToEmpty(session.SimDateTimeExtraInfo)
         session.DepartureICAO = NullToEmpty(session.DepartureICAO)
@@ -1871,6 +1902,74 @@ Public Class DPHXUnpackAndLoad
     Private Function NullToEmpty(value As String) As String
         Return If(value, String.Empty)
     End Function
+
+    Private Function GetWeatherFilenameForSim(isMsfs2020 As Boolean) As String
+        Dim primary As String = NullToEmpty(_allDPHData.WeatherFilename)
+        Dim secondary As String = NullToEmpty(_allDPHData.WeatherFilenameSecondary)
+        Dim hasPrimary As Boolean = Not String.IsNullOrWhiteSpace(primary)
+        Dim hasSecondary As Boolean = Not String.IsNullOrWhiteSpace(secondary)
+
+        If hasPrimary AndAlso hasSecondary Then
+            Return If(isMsfs2020, secondary, primary)
+        End If
+
+        If hasPrimary Then
+            Return primary
+        End If
+
+        Return secondary
+    End Function
+
+    Private Function FormatWeatherFilenameForLog(weatherFilename As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilename) Then
+            Return "(none)"
+        End If
+
+        Return Path.GetFileName(weatherFilename)
+    End Function
+
+    Private Sub SyncWeatherFilenamesFromPackage(packageFolder As String)
+        If String.IsNullOrWhiteSpace(packageFolder) OrElse Not Directory.Exists(packageFolder) Then
+            Return
+        End If
+
+        Dim wprFiles = Directory.GetFiles(packageFolder, "*.wpr")
+        If wprFiles Is Nothing OrElse wprFiles.Length = 0 Then
+            Return
+        End If
+
+        Dim primaryName = Path.GetFileName(NullToEmpty(_allDPHData.WeatherFilename))
+        Dim secondaryName = Path.GetFileName(NullToEmpty(_allDPHData.WeatherFilenameSecondary))
+
+        If String.IsNullOrWhiteSpace(primaryName) AndAlso wprFiles.Length = 1 Then
+            _allDPHData.WeatherFilename = Path.GetFileName(wprFiles(0))
+            primaryName = Path.GetFileName(_allDPHData.WeatherFilename)
+        End If
+
+        If String.IsNullOrWhiteSpace(secondaryName) AndAlso wprFiles.Length > 1 Then
+            Dim secondaryCandidate = wprFiles.Select(Function(path) Path.GetFileName(path)).FirstOrDefault(Function(name) Not name.Equals(primaryName, StringComparison.OrdinalIgnoreCase))
+            If Not String.IsNullOrWhiteSpace(secondaryCandidate) Then
+                _allDPHData.WeatherFilenameSecondary = secondaryCandidate
+            End If
+        End If
+    End Sub
+
+    Private Sub FixWeatherFileFormat(weatherFilename As String)
+        If String.IsNullOrWhiteSpace(weatherFilename) Then
+            Return
+        End If
+
+        Dim weatherFile As String = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(weatherFilename))
+        If File.Exists(weatherFile) Then
+            If _SF.FixWPRFormat(weatherFile, False) Then
+                Return
+            End If
+
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Unable to verify and fix the weather file for compatibility with both MSFS versions: {Path.GetFileName(weatherFilename)}", "Fixing WPR file", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+        End If
+    End Sub
 
     Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As Tuple(Of String, String)
         Dim planInsideTemp = IsPathInsideFolder(flightPlanPath, TempDPHXUnpackFolder)

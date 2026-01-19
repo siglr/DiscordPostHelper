@@ -1,6 +1,5 @@
 ﻿Imports System
 Imports System.Collections.Generic
-Imports SIGLR.SoaringTools.CommonLibrary
 
 Public Class CleanupConfirmForm
     Private ReadOnly _candidates As List(Of CleanupCandidate)
@@ -92,25 +91,6 @@ Public Class CleanupConfirmForm
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
-    End Sub
-
-    Private Sub clbFiles_ItemCheck(sender As Object, e As ItemCheckEventArgs) Handles clbFiles.ItemCheck
-        ' Fires BEFORE the check state changes; use e.NewValue to gate
-        If e.NewValue = CheckState.Checked Then
-            Dim cand As CleanupCandidate = _candidates(e.Index)
-            If cand IsNot Nothing AndAlso cand.IsWhitelistProtected Then
-                Using New Centered_MessageBox(Me)
-                    Dim res = MessageBox.Show(Me,
-                        $"{cand.FileName} matches a Whitelist-protected copy and was left unchecked by default.{Environment.NewLine}{Environment.NewLine}Delete it anyway?",
-                    "Whitelist protection",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning)
-                    If res = DialogResult.No Then
-                        e.NewValue = CheckState.Unchecked   ' cancel the check
-                    End If
-                End Using
-            End If
-        End If
     End Sub
 
 End Class

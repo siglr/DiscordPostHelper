@@ -383,20 +383,10 @@ Public Class CleaningTool
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
             lstWeather2020.Items.Clear()
 
-            Dim whitelistDir As String = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Whitelist")
-
             For Each filePath In wprFiles
                 Dim filename As String = System.IO.Path.GetFileName(filePath)
 
-                ' --- skip if identical to a Whitelist copy ---
-                If Directory.Exists(whitelistDir) Then
-                    Dim wlPath As String = System.IO.Path.Combine(whitelistDir, filename)
-                    If System.IO.File.Exists(wlPath) AndAlso SupportingFeatures.FilesAreEquivalent(filePath, wlPath) Then
-                        Continue For
-                    End If
-                End If
-
-                ' Load name only for items that pass the whitelist filter
+                ' Load the display name from the weather preset
                 Dim doc As XDocument = XDocument.Load(filePath)
                 Dim nameElem = doc.Descendants("Name").FirstOrDefault()
                 Dim name As String = If(nameElem IsNot Nothing, nameElem.Value, "")
@@ -421,18 +411,8 @@ Public Class CleaningTool
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
             lstWeather2024.Items.Clear()
 
-            Dim whitelistDir As String = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Whitelist")
-
             For Each filePath In wprFiles
                 Dim filename As String = System.IO.Path.GetFileName(filePath)
-
-                ' --- skip if identical to a Whitelist copy ---
-                If Directory.Exists(whitelistDir) Then
-                    Dim wlPath As String = System.IO.Path.Combine(whitelistDir, filename)
-                    If System.IO.File.Exists(wlPath) AndAlso SupportingFeatures.FilesAreEquivalent(filePath, wlPath) Then
-                        Continue For
-                    End If
-                End If
 
                 Dim doc As XDocument = XDocument.Load(filePath)
                 Dim nameElem = doc.Descendants("Name").FirstOrDefault()
