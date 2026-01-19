@@ -142,6 +142,7 @@ CommonLibrary
 [FUTURE_WORK]
 
 * Deprecate legacy visualization tools.
+* Document and expand the BriefingControl render context API (host mode, installed sims, preset name display) as new host integrations are added.
 
 ---
 

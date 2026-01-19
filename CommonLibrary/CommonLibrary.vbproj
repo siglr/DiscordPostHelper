@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="AllData.vb" />
     <Compile Include="ATCWaypointvb.vb" />
+    <Compile Include="BriefingRenderContext.vb" />
     <Compile Include="BriefingControl.Designer.vb">
       <DependentUpon>BriefingControl.vb</DependentUpon>
     </Compile>

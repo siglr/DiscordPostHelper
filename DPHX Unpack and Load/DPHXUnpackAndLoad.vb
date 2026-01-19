@@ -119,6 +119,12 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
+        Dim briefingContext As New BriefingRenderContext() With {
+            .HostMode = BriefingHostMode.EndUser,
+            .InstalledSims = GetInstalledSimFlags(),
+            .PresetNameDisplayMode = PresetNameDisplayMode.Exact
+        }
+        ctrlBriefing.RenderContext = briefingContext
         SetFormCaption(_currentFile)
 
         Rescale()
@@ -1938,6 +1944,20 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Return secondary
+    End Function
+
+    Private Function GetInstalledSimFlags() As InstalledSimFlags
+        Dim flags As InstalledSimFlags = InstalledSimFlags.None
+
+        If Settings.SessionSettings.Is2020Installed Then
+            flags = flags Or InstalledSimFlags.MSFS2020
+        End If
+
+        If Settings.SessionSettings.Is2024Installed Then
+            flags = flags Or InstalledSimFlags.MSFS2024
+        End If
+
+        Return flags
     End Function
 
     Private Function FormatWeatherFilenameForLog(weatherFilename As String) As String

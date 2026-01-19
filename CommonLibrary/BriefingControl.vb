@@ -25,13 +25,31 @@ Public Class BriefingControl
     Private _onUnitsTab As Boolean = False
     Private _loaded As Boolean = False
     Private _discordPostID As String = String.Empty
+    Private _weatherFile As String = String.Empty
     Private _dragDropHandlersInitialized As Boolean
     Private _validDragActive As Boolean
     Private _isManualMode As Boolean = False
     Private ReadOnly _controlsWithDragHandlers As New HashSet(Of Control)()
+    Private _renderContext As BriefingRenderContext = New BriefingRenderContext()
 
     Public Property EventIsEnabled As Boolean
     Private ReadOnly Property PrefUnits As New PreferredUnits
+
+    Public Property RenderContext As BriefingRenderContext
+        Get
+            If _renderContext Is Nothing Then
+                _renderContext = New BriefingRenderContext()
+            End If
+            Return _renderContext
+        End Get
+        Set(value As BriefingRenderContext)
+            If value Is Nothing Then
+                _renderContext = New BriefingRenderContext()
+            Else
+                _renderContext = value
+            End If
+        End Set
+    End Property
 
     Public Event ValidFilesDragActiveChanged As EventHandler(Of ValidFilesDragActiveChangedEventArgs)
     Public Event FilesDropped As EventHandler(Of FilesDroppedEventArgs)
@@ -480,6 +498,7 @@ Public Class BriefingControl
         windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
+        _weatherFile = String.Empty
 
         GC.Collect()
 
@@ -506,6 +525,7 @@ Public Class BriefingControl
         _isManualMode = isManualMode
 
         _sessionData = sessionData
+        _weatherFile = weatherfile
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
             lblPrefUnitsMessage.Text = $"Units selected here are only used for YOUR briefing tabs.{Environment.NewLine}They DO NOT change the content of generated Discord posts which always include all formats.{Environment.NewLine}Also, any data specified in description fields is excluded and will appear as is."
@@ -596,7 +616,8 @@ Public Class BriefingControl
         Else
             lblSimLocalDateTime.Text = "Not provided"
         End If
-        lblWeatherProfile.Text = _WeatherDetails.PresetName
+        Label9.Text = $"Weather ({GetInstalledSimLabel()})"
+        lblWeatherProfile.Text = GetWeatherPresetDisplayName()
         lblRecGliders.Text = If(String.IsNullOrWhiteSpace(_sessionData.RecommendedGliders), "Not provided", _sessionData.RecommendedGliders)
 
         'Unstandard Barometric pressure
@@ -726,6 +747,45 @@ Public Class BriefingControl
 
 #Region "Private"
 
+    Private Function GetInstalledSimLabel() As String
+        Dim sims = RenderContext.InstalledSims
+        Dim has2020 As Boolean = (sims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+        Dim has2024 As Boolean = (sims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+
+        If has2020 AndAlso has2024 Then
+            Return "MSFS 2020/2024"
+        End If
+
+        If has2024 Then
+            Return "MSFS 2024"
+        End If
+
+        If has2020 Then
+            Return "MSFS 2020"
+        End If
+
+        Return "MSFS"
+    End Function
+
+    Private Function GetWeatherPresetDisplayName() As String
+        If _WeatherDetails Is Nothing Then
+            Return String.Empty
+        End If
+
+        If RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
+            Dim exactName As String = String.Empty
+            If Not String.IsNullOrWhiteSpace(_weatherFile) Then
+                exactName = Path.GetFileNameWithoutExtension(_weatherFile)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(exactName) Then
+                Return exactName
+            End If
+        End If
+
+        Return _WeatherDetails.PresetName
+    End Function
+
     Private Sub CountDownReset()
         Timer1.Stop()
         countDownToMeet.ZoomFactor = 2
@@ -832,7 +892,7 @@ Public Class BriefingControl
 
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
-            sb.Append($"The weather profile to load is **{_WeatherDetails.PresetName}**($*$)")
+            sb.Append($"The weather profile to load ({GetInstalledSimLabel()}) is **{GetWeatherPresetDisplayName()}**($*$)")
             If _sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}**($*$)")
             End If
@@ -1060,7 +1120,7 @@ Public Class BriefingControl
             End If
 
             'Weather ad flight plan
-            sb.Append($"Load weather preset: **{_WeatherDetails.PresetName}**($*$)")
+            sb.Append($"Load weather preset ({GetInstalledSimLabel()}): **{GetWeatherPresetDisplayName()}**($*$)")
             sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
             sb.Append("($*$)")
 
@@ -1479,4 +1539,3 @@ Public NotInheritable Class ValidFilesDragActiveChangedEventArgs
 
     Public ReadOnly Property Files As IReadOnlyList(Of String)
 End Class
-
