@@ -22,22 +22,22 @@ Partial Class ManualFallbackMode
         Me.btnCopyGoFly = New System.Windows.Forms.Button()
         Me.btnClearFiles = New System.Windows.Forms.Button()
         Me.txtTrackerGroupName = New System.Windows.Forms.TextBox()
+        Me.btnSecondaryBrowse = New System.Windows.Forms.Button()
+        Me.btnPrimaryBrowse = New System.Windows.Forms.Button()
+        Me.cboSSCPresetList = New System.Windows.Forms.ComboBox()
         Me.lblPLNFile = New System.Windows.Forms.Label()
         Me.lblPLNTitle = New System.Windows.Forms.Label()
         Me.grpPLN = New System.Windows.Forms.GroupBox()
         Me.grpWeather = New System.Windows.Forms.GroupBox()
         Me.grpCustomPresets = New System.Windows.Forms.GroupBox()
         Me.grpSecondaryWeather = New System.Windows.Forms.GroupBox()
-        Me.btnSecondaryBrowse = New System.Windows.Forms.Button()
         Me.lblSecondaryName = New System.Windows.Forms.Label()
         Me.lblSecondaryFile = New System.Windows.Forms.Label()
         Me.grpPrimaryWeather = New System.Windows.Forms.GroupBox()
-        Me.btnPrimaryBrowse = New System.Windows.Forms.Button()
         Me.lblPrimaryName = New System.Windows.Forms.Label()
         Me.lblPrimaryFile = New System.Windows.Forms.Label()
         Me.optCustomPreset = New System.Windows.Forms.RadioButton()
         Me.optSSCPreset = New System.Windows.Forms.RadioButton()
-        Me.cboSSCPresetList = New System.Windows.Forms.ComboBox()
         Me.grpTracker = New System.Windows.Forms.GroupBox()
         Me.grpPLN.SuspendLayout()
         Me.grpWeather.SuspendLayout()
@@ -63,7 +63,7 @@ Partial Class ManualFallbackMode
         '
         Me.btnCopyGoFly.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnCopyGoFly.Location = New System.Drawing.Point(12, 541)
+        Me.btnCopyGoFly.Location = New System.Drawing.Point(12, 518)
         Me.btnCopyGoFly.Name = "btnCopyGoFly"
         Me.btnCopyGoFly.Size = New System.Drawing.Size(458, 33)
         Me.btnCopyGoFly.TabIndex = 3
@@ -75,7 +75,7 @@ Partial Class ManualFallbackMode
         '
         Me.btnClearFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClearFiles.Location = New System.Drawing.Point(12, 580)
+        Me.btnClearFiles.Location = New System.Drawing.Point(12, 557)
         Me.btnClearFiles.Name = "btnClearFiles"
         Me.btnClearFiles.Size = New System.Drawing.Size(458, 33)
         Me.btnClearFiles.TabIndex = 4
@@ -92,6 +92,42 @@ Partial Class ManualFallbackMode
         Me.txtTrackerGroupName.Size = New System.Drawing.Size(446, 27)
         Me.txtTrackerGroupName.TabIndex = 0
         Me.ToolTip1.SetToolTip(Me.txtTrackerGroupName, "Enter the SSC Tracker group name (if any)")
+        '
+        'btnSecondaryBrowse
+        '
+        Me.btnSecondaryBrowse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnSecondaryBrowse.Location = New System.Drawing.Point(6, 24)
+        Me.btnSecondaryBrowse.Name = "btnSecondaryBrowse"
+        Me.btnSecondaryBrowse.Size = New System.Drawing.Size(82, 55)
+        Me.btnSecondaryBrowse.TabIndex = 0
+        Me.btnSecondaryBrowse.Text = "Browse"
+        Me.ToolTip1.SetToolTip(Me.btnSecondaryBrowse, "Select a custom secondary (2020) weather preset (.wpr)")
+        Me.btnSecondaryBrowse.UseVisualStyleBackColor = True
+        '
+        'btnPrimaryBrowse
+        '
+        Me.btnPrimaryBrowse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnPrimaryBrowse.Location = New System.Drawing.Point(6, 24)
+        Me.btnPrimaryBrowse.Name = "btnPrimaryBrowse"
+        Me.btnPrimaryBrowse.Size = New System.Drawing.Size(82, 55)
+        Me.btnPrimaryBrowse.TabIndex = 0
+        Me.btnPrimaryBrowse.Text = "Browse"
+        Me.ToolTip1.SetToolTip(Me.btnPrimaryBrowse, "Select a custom primary (2024) weather preset (.wpr)")
+        Me.btnPrimaryBrowse.UseVisualStyleBackColor = True
+        '
+        'cboSSCPresetList
+        '
+        Me.cboSSCPresetList.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboSSCPresetList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboSSCPresetList.FormattingEnabled = True
+        Me.cboSSCPresetList.Location = New System.Drawing.Point(182, 27)
+        Me.cboSSCPresetList.Name = "cboSSCPresetList"
+        Me.cboSSCPresetList.Size = New System.Drawing.Size(270, 28)
+        Me.cboSSCPresetList.TabIndex = 1
+        Me.ToolTip1.SetToolTip(Me.cboSSCPresetList, "Select an SSC standard preset")
         '
         'lblPLNFile
         '
@@ -145,9 +181,9 @@ Partial Class ManualFallbackMode
         '
         'grpCustomPresets
         '
-        Me.grpCustomPresets.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right) _
-            Or System.Windows.Forms.AnchorStyles.Bottom), System.Windows.Forms.AnchorStyles)
+        Me.grpCustomPresets.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpCustomPresets.Controls.Add(Me.grpSecondaryWeather)
         Me.grpCustomPresets.Controls.Add(Me.grpPrimaryWeather)
         Me.grpCustomPresets.Location = New System.Drawing.Point(6, 88)
@@ -171,18 +207,6 @@ Partial Class ManualFallbackMode
         Me.grpSecondaryWeather.TabIndex = 1
         Me.grpSecondaryWeather.TabStop = False
         Me.grpSecondaryWeather.Text = "Secondary (MSFS 2020)"
-        '
-        'btnSecondaryBrowse
-        '
-        Me.btnSecondaryBrowse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnSecondaryBrowse.Location = New System.Drawing.Point(6, 24)
-        Me.btnSecondaryBrowse.Name = "btnSecondaryBrowse"
-        Me.btnSecondaryBrowse.Size = New System.Drawing.Size(82, 55)
-        Me.btnSecondaryBrowse.TabIndex = 0
-        Me.btnSecondaryBrowse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btnSecondaryBrowse, "Select a custom secondary (2020) weather preset (.wpr)")
-        Me.btnSecondaryBrowse.UseVisualStyleBackColor = True
         '
         'lblSecondaryName
         '
@@ -219,18 +243,6 @@ Partial Class ManualFallbackMode
         Me.grpPrimaryWeather.TabStop = False
         Me.grpPrimaryWeather.Text = "Primary (MSFS 2024)"
         '
-        'btnPrimaryBrowse
-        '
-        Me.btnPrimaryBrowse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnPrimaryBrowse.Location = New System.Drawing.Point(6, 24)
-        Me.btnPrimaryBrowse.Name = "btnPrimaryBrowse"
-        Me.btnPrimaryBrowse.Size = New System.Drawing.Size(82, 55)
-        Me.btnPrimaryBrowse.TabIndex = 0
-        Me.btnPrimaryBrowse.Text = "Browse"
-        Me.ToolTip1.SetToolTip(Me.btnPrimaryBrowse, "Select a custom primary (2024) weather preset (.wpr)")
-        Me.btnPrimaryBrowse.UseVisualStyleBackColor = True
-        '
         'lblPrimaryName
         '
         Me.lblPrimaryName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -256,7 +268,7 @@ Partial Class ManualFallbackMode
         Me.optCustomPreset.AutoSize = True
         Me.optCustomPreset.Location = New System.Drawing.Point(10, 58)
         Me.optCustomPreset.Name = "optCustomPreset"
-        Me.optCustomPreset.Size = New System.Drawing.Size(127, 24)
+        Me.optCustomPreset.Size = New System.Drawing.Size(125, 24)
         Me.optCustomPreset.TabIndex = 2
         Me.optCustomPreset.TabStop = True
         Me.optCustomPreset.Text = "Custom Preset"
@@ -267,23 +279,11 @@ Partial Class ManualFallbackMode
         Me.optSSCPreset.AutoSize = True
         Me.optSSCPreset.Location = New System.Drawing.Point(10, 28)
         Me.optSSCPreset.Name = "optSSCPreset"
-        Me.optSSCPreset.Size = New System.Drawing.Size(166, 24)
+        Me.optSSCPreset.Size = New System.Drawing.Size(161, 24)
         Me.optSSCPreset.TabIndex = 0
         Me.optSSCPreset.TabStop = True
         Me.optSSCPreset.Text = "SSC Standard Preset"
         Me.optSSCPreset.UseVisualStyleBackColor = True
-        '
-        'cboSSCPresetList
-        '
-        Me.cboSSCPresetList.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cboSSCPresetList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboSSCPresetList.FormattingEnabled = True
-        Me.cboSSCPresetList.Location = New System.Drawing.Point(182, 27)
-        Me.cboSSCPresetList.Name = "cboSSCPresetList"
-        Me.cboSSCPresetList.Size = New System.Drawing.Size(270, 28)
-        Me.cboSSCPresetList.TabIndex = 1
-        Me.ToolTip1.SetToolTip(Me.cboSSCPresetList, "Select an SSC standard preset")
         '
         'grpTracker
         '
@@ -301,7 +301,7 @@ Partial Class ManualFallbackMode
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(482, 650)
+        Me.ClientSize = New System.Drawing.Size(482, 606)
         Me.Controls.Add(Me.grpTracker)
         Me.Controls.Add(Me.btnClearFiles)
         Me.Controls.Add(Me.btnCopyGoFly)
