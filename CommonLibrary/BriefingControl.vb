@@ -526,6 +526,7 @@ Public Class BriefingControl
         _isManualMode = isManualMode
 
         _sessionData = sessionData
+        _weatherFile = weatherfile
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
             lblPrefUnitsMessage.Text = $"Units selected here are only used for YOUR briefing tabs.{Environment.NewLine}They DO NOT change the content of generated Discord posts which always include all formats.{Environment.NewLine}Also, any data specified in description fields is excluded and will appear as is."
