@@ -30,6 +30,7 @@ Partial Public Class ManualFallbackMode
     Private _baseConfirmTop As Integer
     Private _baseCancelTop As Integer
     Private _customGroupSpacing As Integer
+    Private _basePrimaryTop As Integer
 
     Public Property InitialPlnPath As String
     Public Property InitialPrimaryWprPath As String
@@ -193,6 +194,7 @@ Partial Public Class ManualFallbackMode
         _baseTrackerTop = grpTracker.Top
         _baseConfirmTop = btnCopyGoFly.Top
         _baseCancelTop = btnClearFiles.Top
+        _basePrimaryTop = grpPrimaryWeather.Top
 
         Dim primaryBottom = grpPrimaryWeather.Top + grpPrimaryWeather.Height
         _customGroupSpacing = Math.Max(0, grpSecondaryWeather.Top - primaryBottom)
@@ -214,6 +216,12 @@ Partial Public Class ManualFallbackMode
         Dim shrinkBy As Integer = 0
         If sectionsVisible <= 1 Then
             shrinkBy = grpSecondaryWeather.Height + _customGroupSpacing
+        End If
+
+        If showSecondary AndAlso Not showPrimary Then
+            grpSecondaryWeather.Top = _basePrimaryTop
+        Else
+            grpSecondaryWeather.Top = _basePrimaryTop + grpPrimaryWeather.Height + _customGroupSpacing
         End If
 
         grpCustomPresets.Height = _baseCustomGroupHeight - shrinkBy
