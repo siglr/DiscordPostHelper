@@ -22,6 +22,14 @@ Partial Public Class ManualFallbackMode
     Private _sscWeatherPresets As Dictionary(Of String, SSCWeatherPreset)
     Private _msfs2020Enabled As Boolean
     Private _msfs2024Enabled As Boolean
+    Private _layoutInitialized As Boolean
+    Private _baseFormHeight As Integer
+    Private _baseCustomGroupHeight As Integer
+    Private _baseWeatherGroupHeight As Integer
+    Private _baseTrackerTop As Integer
+    Private _baseConfirmTop As Integer
+    Private _baseCancelTop As Integer
+    Private _customGroupSpacing As Integer
 
     Public Property InitialPlnPath As String
     Public Property InitialPrimaryWprPath As String
@@ -45,6 +53,7 @@ Partial Public Class ManualFallbackMode
         _plnGroupDefaultColor = grpPLN.BackColor
         _primaryGroupDefaultColor = grpPrimaryWeather.BackColor
         _secondaryGroupDefaultColor = grpSecondaryWeather.BackColor
+        InitializeLayoutSizing()
     End Sub
 
     Private Sub ManualFallbackMode_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -169,6 +178,59 @@ Partial Public Class ManualFallbackMode
             grpPrimaryWeather.Text = "Primary (MSFS 2024)"
             grpSecondaryWeather.Text = "Secondary (MSFS 2020)"
         End If
+
+        AdjustLayoutForSimConfiguration()
+    End Sub
+
+    Private Sub InitializeLayoutSizing()
+        If _layoutInitialized Then
+            Return
+        End If
+
+        _baseFormHeight = 650
+        _baseCustomGroupHeight = grpCustomPresets.Height
+        _baseWeatherGroupHeight = grpWeather.Height
+        _baseTrackerTop = grpTracker.Top
+        _baseConfirmTop = btnCopyGoFly.Top
+        _baseCancelTop = btnClearFiles.Top
+
+        Dim primaryBottom = grpPrimaryWeather.Top + grpPrimaryWeather.Height
+        _customGroupSpacing = Math.Max(0, grpSecondaryWeather.Top - primaryBottom)
+
+        _layoutInitialized = True
+    End Sub
+
+    Private Sub AdjustLayoutForSimConfiguration()
+        If Not _layoutInitialized Then
+            InitializeLayoutSizing()
+        End If
+
+        Dim showPrimary = grpPrimaryWeather.Visible
+        Dim showSecondary = grpSecondaryWeather.Visible
+        Dim sectionsVisible = 0
+        If showPrimary Then sectionsVisible += 1
+        If showSecondary Then sectionsVisible += 1
+
+        Dim shrinkBy As Integer = 0
+        If sectionsVisible <= 1 Then
+            shrinkBy = grpSecondaryWeather.Height + _customGroupSpacing
+        End If
+
+        grpCustomPresets.Height = _baseCustomGroupHeight - shrinkBy
+        grpWeather.Height = _baseWeatherGroupHeight - shrinkBy
+
+        grpTracker.Top = _baseTrackerTop - shrinkBy
+        btnCopyGoFly.Top = _baseConfirmTop - shrinkBy
+        btnClearFiles.Top = _baseCancelTop - shrinkBy
+
+        Dim targetHeight = _baseFormHeight - shrinkBy
+        Dim newWidth = Me.Width
+        Dim minWidth = Me.MinimumSize.Width
+        Dim maxWidth = Me.MaximumSize.Width
+
+        Me.MinimumSize = New Size(minWidth, targetHeight)
+        Me.MaximumSize = New Size(maxWidth, targetHeight)
+        Me.Size = New Size(newWidth, targetHeight)
     End Sub
 
     Private Sub UpdateWeatherModeControls()
@@ -585,13 +647,47 @@ Partial Public Class ManualFallbackMode
             Dim selection = LoadWprSelection(draggedFiles.WprPath, True)
             If selection IsNot Nothing Then
                 optCustomPreset.Checked = True
-                If targetGroup Is grpPrimaryWeather Then
-                    _selectedPrimaryWpr = selection
-                ElseIf targetGroup Is grpSecondaryWeather Then
-                    _selectedSecondaryWpr = selection
-                End If
+                AssignDroppedWeather(selection, targetGroup)
                 SyncCustomSelectionToLabels()
             End If
+        End If
+    End Sub
+
+    Private Sub AssignDroppedWeather(selection As ManualFileSelection, targetGroup As GroupBox)
+        If selection Is Nothing Then
+            Return
+        End If
+
+        Dim showPrimary = grpPrimaryWeather.Visible
+        Dim showSecondary = grpSecondaryWeather.Visible
+
+        If optSSCPreset.Checked Then
+            If showPrimary AndAlso _selectedPrimaryWpr Is Nothing Then
+                _selectedPrimaryWpr = selection
+                Return
+            End If
+
+            If showSecondary AndAlso _selectedSecondaryWpr Is Nothing Then
+                _selectedSecondaryWpr = selection
+                Return
+            End If
+
+            If showPrimary Then
+                _selectedPrimaryWpr = selection
+            ElseIf showSecondary Then
+                _selectedSecondaryWpr = selection
+            End If
+            Return
+        End If
+
+        If targetGroup Is grpPrimaryWeather Then
+            _selectedPrimaryWpr = selection
+        ElseIf targetGroup Is grpSecondaryWeather Then
+            _selectedSecondaryWpr = selection
+        ElseIf showPrimary Then
+            _selectedPrimaryWpr = selection
+        ElseIf showSecondary Then
+            _selectedSecondaryWpr = selection
         End If
     End Sub
 
