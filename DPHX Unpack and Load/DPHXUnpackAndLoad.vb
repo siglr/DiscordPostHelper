@@ -832,7 +832,7 @@ Public Class DPHXUnpackAndLoad
             End Using
 
             EnsureSessionDataDefaults(_allDPHData)
-            SyncWeatherFilenamesFromPackage(TempDPHXUnpackFolder)
+            'SyncWeatherFilenamesFromPackage(TempDPHXUnpackFolder)
 
             'Fix the weather file format to be compatible with both MSFS versions
             FixWeatherFileFormat(_allDPHData.WeatherFilename)
@@ -1927,32 +1927,6 @@ Public Class DPHXUnpackAndLoad
 
         Return Path.GetFileName(weatherFilename)
     End Function
-
-    Private Sub SyncWeatherFilenamesFromPackage(packageFolder As String)
-        If String.IsNullOrWhiteSpace(packageFolder) OrElse Not Directory.Exists(packageFolder) Then
-            Return
-        End If
-
-        Dim wprFiles = Directory.GetFiles(packageFolder, "*.wpr")
-        If wprFiles Is Nothing OrElse wprFiles.Length = 0 Then
-            Return
-        End If
-
-        Dim primaryName = Path.GetFileName(NullToEmpty(_allDPHData.WeatherFilename))
-        Dim secondaryName = Path.GetFileName(NullToEmpty(_allDPHData.WeatherFilenameSecondary))
-
-        If String.IsNullOrWhiteSpace(primaryName) AndAlso wprFiles.Length = 1 Then
-            _allDPHData.WeatherFilename = Path.GetFileName(wprFiles(0))
-            primaryName = Path.GetFileName(_allDPHData.WeatherFilename)
-        End If
-
-        If String.IsNullOrWhiteSpace(secondaryName) AndAlso wprFiles.Length > 1 Then
-            Dim secondaryCandidate = wprFiles.Select(Function(path) Path.GetFileName(path)).FirstOrDefault(Function(name) Not name.Equals(primaryName, StringComparison.OrdinalIgnoreCase))
-            If Not String.IsNullOrWhiteSpace(secondaryCandidate) Then
-                _allDPHData.WeatherFilenameSecondary = secondaryCandidate
-            End If
-        End If
-    End Sub
 
     Private Sub FixWeatherFileFormat(weatherFilename As String)
         If String.IsNullOrWhiteSpace(weatherFilename) Then
