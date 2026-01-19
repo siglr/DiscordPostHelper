@@ -372,6 +372,7 @@ Public Class BriefingControl
     End Sub
 
     Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
+        UpdateWeatherGraphLabel()
         FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
 
         Select Case chkShowGraph.Checked
@@ -546,14 +547,16 @@ Public Class BriefingControl
         End If
 
         'Load weather info
-        If File.Exists(weatherfile) Then
+        Dim weatherFileToLoad = SelectWeatherFileForDisplay(weatherfile)
+        _weatherFile = weatherFileToLoad
+        If File.Exists(weatherFileToLoad) Then
             _XmlDocWeatherPreset = New XmlDocument
-            _XmlDocWeatherPreset.Load(weatherfile)
+            _XmlDocWeatherPreset.Load(weatherFileToLoad)
             _WeatherDetails = Nothing
             _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
         Else
             Using New Centered_MessageBox()
-                MessageBox.Show($"Weather file not found!{Environment.NewLine}{weatherfile}{Environment.NewLine}Cannot generate briefing.", "Weather file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show($"Weather file not found!{Environment.NewLine}{weatherFileToLoad}{Environment.NewLine}Cannot generate briefing.", "Weather file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Exit Sub
         End If
@@ -582,6 +585,7 @@ Public Class BriefingControl
 
         'Generate the Setup tab
         BuildSetupTab()
+        UpdateWeatherGraphLabel()
 
     End Sub
 
@@ -787,18 +791,18 @@ Public Class BriefingControl
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2024.Text = "Weather (2024)"
             lblWeatherTitle2020.Text = "Weather (2020)"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetName())
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, String.Empty)
+            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         ElseIf has2024 Then
             pnlSetupWeather2024.Visible = True
             pnlSetupWeather2020.Visible = False
             lblWeatherTitle2024.Text = "Weather"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetName())
+            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
         ElseIf has2020 Then
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2020.Text = "Weather"
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetName())
+            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         Else
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = False
@@ -806,7 +810,7 @@ Public Class BriefingControl
     End Sub
 
     Private Function GetPrimaryWeatherPresetDisplayName() As String
-        Return GetWeatherPresetDisplayName(_weatherFile, GetWeatherDetailsPresetName())
+        Return GetWeatherPresetDisplayName(_weatherFile, GetWeatherDetailsPresetNameForFile(_weatherFile))
     End Function
 
     Private Function GetWeatherDetailsPresetName() As String
@@ -815,6 +819,18 @@ Public Class BriefingControl
         End If
 
         Return _WeatherDetails.PresetName
+    End Function
+
+    Private Function GetWeatherDetailsPresetNameForFile(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) OrElse String.IsNullOrWhiteSpace(_weatherFile) Then
+            Return String.Empty
+        End If
+
+        If String.Equals(Path.GetFullPath(weatherFilePath), Path.GetFullPath(_weatherFile), StringComparison.OrdinalIgnoreCase) Then
+            Return GetWeatherDetailsPresetName()
+        End If
+
+        Return String.Empty
     End Function
 
     Private Function GetWeatherFilePath(weatherFilename As String) As String
@@ -828,6 +844,55 @@ Public Class BriefingControl
 
         Return weatherFilename
     End Function
+
+    Private Function SelectWeatherFileForDisplay(requestedWeatherFile As String) As String
+        Dim primaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim secondaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+
+        Dim hasPrimary As Boolean = Not String.IsNullOrWhiteSpace(primaryWeatherPath)
+        Dim hasSecondary As Boolean = Not String.IsNullOrWhiteSpace(secondaryWeatherPath)
+
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If allow2024 AndAlso allow2020 AndAlso hasPrimary AndAlso hasSecondary Then
+            Return primaryWeatherPath
+        End If
+
+        If allow2020 AndAlso Not allow2024 AndAlso hasSecondary Then
+            Return secondaryWeatherPath
+        End If
+
+        If allow2024 AndAlso Not allow2020 AndAlso hasPrimary Then
+            Return primaryWeatherPath
+        End If
+
+        If hasPrimary Then
+            Return primaryWeatherPath
+        End If
+
+        If hasSecondary Then
+            Return secondaryWeatherPath
+        End If
+
+        Return requestedWeatherFile
+    End Function
+
+    Private Sub UpdateWeatherGraphLabel()
+        Dim primaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim secondaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+        Dim hasPrimary As Boolean = Not String.IsNullOrWhiteSpace(primaryWeatherPath)
+        Dim hasSecondary As Boolean = Not String.IsNullOrWhiteSpace(secondaryWeatherPath)
+
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If allow2024 AndAlso allow2020 AndAlso hasPrimary AndAlso hasSecondary Then
+            chkShowGraph.Text = "Show graph instead of data table (showing MSFS 2024 preset)"
+        Else
+            chkShowGraph.Text = "Show graph instead of data table"
+        End If
+    End Sub
 
     Private Function GetWeatherPresetDisplayName(weatherFilePath As String, fallbackPresetName As String) As String
         If RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
@@ -849,6 +914,73 @@ Public Class BriefingControl
 
         Return GetFriendlyPresetNameFromFilename(weatherFilePath)
     End Function
+
+    Private Sub AppendTaskWeatherPresetLines(sb As StringBuilder)
+        Dim entries = GetWeatherPresetEntriesForText()
+        If entries.Count = 0 Then
+            Return
+        End If
+
+        If entries.Count = 2 Then
+            For Each entry In entries
+                sb.Append($"For {entry.SimLabel}, the weather profile to load is **{entry.DisplayName}**($*$)")
+            Next
+            Return
+        End If
+
+        sb.Append($"The weather profile to load is **{entries(0).DisplayName}**($*$)")
+    End Sub
+
+    Private Sub AppendEventWeatherPresetLines(sb As StringBuilder)
+        Dim entries = GetWeatherPresetEntriesForText()
+        If entries.Count = 0 Then
+            Return
+        End If
+
+        If entries.Count = 2 Then
+            For Each entry In entries
+                sb.Append($"For {entry.SimLabel}, load weather preset **{entry.DisplayName}**($*$)")
+            Next
+            Return
+        End If
+
+        sb.Append($"Load weather preset: **{entries(0).DisplayName}**($*$)")
+    End Sub
+
+    Private Function GetWeatherPresetEntriesForText() As List(Of WeatherPresetEntry)
+        Dim results As New List(Of WeatherPresetEntry)()
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        Dim weather2024Path = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+
+        If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
+            End If
+        End If
+
+        If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
+            End If
+        End If
+
+        Return results
+    End Function
+
+    Private NotInheritable Class WeatherPresetEntry
+        Public Sub New(simLabel As String, displayName As String)
+            Me.SimLabel = simLabel
+            Me.DisplayName = displayName
+        End Sub
+
+        Public ReadOnly Property SimLabel As String
+        Public ReadOnly Property DisplayName As String
+    End Class
 
     Private Function TryReadWeatherPresetName(weatherFilePath As String) As String
         If String.IsNullOrWhiteSpace(weatherFilePath) OrElse Not File.Exists(weatherFilePath) Then
@@ -987,7 +1119,7 @@ Public Class BriefingControl
 
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
-            sb.Append($"The weather profile to load ({GetInstalledSimLabel()}) is **{GetPrimaryWeatherPresetDisplayName()}**($*$)")
+            AppendTaskWeatherPresetLines(sb)
             If _sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}**($*$)")
             End If
@@ -1215,7 +1347,7 @@ Public Class BriefingControl
             End If
 
             'Weather ad flight plan
-            sb.Append($"Load weather preset ({GetInstalledSimLabel()}): **{GetPrimaryWeatherPresetDisplayName()}**($*$)")
+            AppendEventWeatherPresetLines(sb)
             sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
             sb.Append("($*$)")
 
