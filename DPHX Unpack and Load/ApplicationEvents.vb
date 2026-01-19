@@ -8,7 +8,7 @@ Namespace My
     Partial Friend Class MyApplication
 
         Private Sub PromptToRemoveDeprecatedWhitelistFolder()
-            Dim whitelistFolder As String = Path.Combine(Application.StartupPath, "Whitelist")
+            Dim whitelistFolder As String = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "Whitelist")
 
             If Not Directory.Exists(whitelistFolder) Then
                 Return
