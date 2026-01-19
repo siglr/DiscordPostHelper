@@ -50,6 +50,7 @@ Partial Class BriefingControl
         Me.lblTaskName = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.pnlFlightPlanTitle = New System.Windows.Forms.Panel()
+        Me.lblFlightPlanTitle = New System.Windows.Forms.Label()
         Me.pnlSetupSeparator = New System.Windows.Forms.Panel()
         Me.pnlSetupEventTitle = New System.Windows.Forms.Panel()
         Me.lblGroupEventTitle = New System.Windows.Forms.Label()
@@ -149,7 +150,6 @@ Partial Class BriefingControl
         Me.radioBaroBoth = New System.Windows.Forms.RadioButton()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.lblFlightPlanTitle = New System.Windows.Forms.Label()
         Me.pnlTaskBriefing.SuspendLayout()
         Me.tabsBriefing.SuspendLayout()
         Me.tbpgSetup.SuspendLayout()
@@ -539,6 +539,17 @@ Partial Class BriefingControl
         Me.pnlFlightPlanTitle.Name = "pnlFlightPlanTitle"
         Me.pnlFlightPlanTitle.Size = New System.Drawing.Size(830, 41)
         Me.pnlFlightPlanTitle.TabIndex = 7
+        '
+        'lblFlightPlanTitle
+        '
+        Me.lblFlightPlanTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblFlightPlanTitle.AutoEllipsis = True
+        Me.lblFlightPlanTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblFlightPlanTitle.Location = New System.Drawing.Point(175, 0)
+        Me.lblFlightPlanTitle.Name = "lblFlightPlanTitle"
+        Me.lblFlightPlanTitle.Size = New System.Drawing.Size(656, 41)
+        Me.lblFlightPlanTitle.TabIndex = 3
         '
         'pnlSetupSeparator
         '
@@ -971,7 +982,7 @@ Partial Class BriefingControl
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(181, 30)
         Me.Label3.TabIndex = 3
-        Me.Label3.Text = "Sync Fly in"
+        Me.Label3.Text = "Sync in"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'countDownToSyncFly
@@ -1699,17 +1710,6 @@ Partial Class BriefingControl
         'Timer1
         '
         Me.Timer1.Interval = 1000
-        '
-        'lblFlightPlanTitle
-        '
-        Me.lblFlightPlanTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblFlightPlanTitle.AutoEllipsis = True
-        Me.lblFlightPlanTitle.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblFlightPlanTitle.Location = New System.Drawing.Point(175, 0)
-        Me.lblFlightPlanTitle.Name = "lblFlightPlanTitle"
-        Me.lblFlightPlanTitle.Size = New System.Drawing.Size(656, 41)
-        Me.lblFlightPlanTitle.TabIndex = 3
         '
         'BriefingControl
         '
