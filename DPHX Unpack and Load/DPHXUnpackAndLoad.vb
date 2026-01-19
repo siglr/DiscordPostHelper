@@ -48,7 +48,9 @@ Public Class DPHXUnpackAndLoad
     Private _isClosing As Boolean = False
     Private _loggerForm As Logger
     Private _manualFallbackFlightPlanPath As String = String.Empty
-    Private _manualFallbackWeatherPath As String = String.Empty
+    Private _manualFallbackWeatherPrimaryPath As String = String.Empty
+    Private _manualFallbackWeatherSecondaryPath As String = String.Empty
+    Private _manualFallbackSSCPresetName As String = String.Empty
     Private _manualFallbackTrackerGroup As String = String.Empty
     Private _isManualMode As Boolean = False
     Private _upcomingEventCheckAttempted As Boolean = False
@@ -344,7 +346,11 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub ManualModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ManualModeToolStripMenuItem.Click
 
-        Dim manualResult = PromptForManualSelection(_manualFallbackFlightPlanPath, _manualFallbackWeatherPath, _manualFallbackTrackerGroup)
+        Dim manualResult = PromptForManualSelection(_manualFallbackFlightPlanPath,
+                                                    _manualFallbackWeatherPrimaryPath,
+                                                    _manualFallbackWeatherSecondaryPath,
+                                                    _manualFallbackSSCPresetName,
+                                                    _manualFallbackTrackerGroup)
 
         If manualResult IsNot Nothing Then
             Dim sourceLabel = Path.GetFileName(manualResult.FlightPlanPath)
@@ -353,8 +359,10 @@ Public Class DPHXUnpackAndLoad
             End If
 
             LoadManualSelection(manualResult.FlightPlanPath,
-                                manualResult.WeatherPath,
+                                manualResult.PrimaryWeatherLocalPath,
+                                manualResult.SecondaryWeatherLocalPath,
                                 manualResult.TrackerGroupName,
+                                manualResult.SSCPresetName,
                                 Nothing,
                                 sourceLabel)
         End If
@@ -1648,17 +1656,22 @@ Public Class DPHXUnpackAndLoad
         Return internalLoggerInUse
     End Function
 
-    Friend Sub UpdateManualFallbackPaths(flightPlanPath As String, weatherPath As String, Optional trackerGroup As String = Nothing)
+    Friend Sub UpdateManualFallbackPaths(flightPlanPath As String, primaryWeatherPath As String, secondaryWeatherPath As String, Optional trackerGroup As String = Nothing, Optional sscPresetName As String = Nothing)
         _manualFallbackFlightPlanPath = If(String.IsNullOrWhiteSpace(flightPlanPath), String.Empty, flightPlanPath)
-        _manualFallbackWeatherPath = If(String.IsNullOrWhiteSpace(weatherPath), String.Empty, weatherPath)
+        _manualFallbackWeatherPrimaryPath = If(String.IsNullOrWhiteSpace(primaryWeatherPath), String.Empty, primaryWeatherPath)
+        _manualFallbackWeatherSecondaryPath = If(String.IsNullOrWhiteSpace(secondaryWeatherPath), String.Empty, secondaryWeatherPath)
 
         If trackerGroup IsNot Nothing Then
             _manualFallbackTrackerGroup = trackerGroup
         End If
+
+        If sscPresetName IsNot Nothing Then
+            _manualFallbackSSCPresetName = sscPresetName
+        End If
     End Sub
 
     Friend Sub UpdateManualFallbackFlightPlanPath(flightPlanPath As String)
-        UpdateManualFallbackPaths(flightPlanPath, _manualFallbackWeatherPath)
+        UpdateManualFallbackPaths(flightPlanPath, _manualFallbackWeatherPrimaryPath, _manualFallbackWeatherSecondaryPath)
     End Sub
 
     Private Sub OpenLoggerForm()
@@ -1803,7 +1816,7 @@ Public Class DPHXUnpackAndLoad
         Return metadata
     End Function
 
-    Private Function BuildSessionDataFromManualSources(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData) As AllData
+    Private Function BuildSessionDataFromManualSources(flightPlanPath As String, primaryWeatherPath As String, secondaryWeatherPath As String, trackerGroup As String, sscPresetName As String, taskData As AllData) As AllData
         Dim session = If(taskData IsNot Nothing, taskData, New AllData())
 
         EnsureSessionDataDefaults(session)
@@ -1811,7 +1824,9 @@ Public Class DPHXUnpackAndLoad
         Dim metadata = ExtractFlightPlanMetadata(flightPlanPath)
 
         session.FlightPlanFilename = flightPlanPath
-        session.WeatherFilename = weatherPath
+        session.WeatherFilename = primaryWeatherPath
+        session.WeatherFilenameSecondary = secondaryWeatherPath
+        session.SSCPresetName = If(sscPresetName, String.Empty)
 
         If String.IsNullOrWhiteSpace(session.Title) Then
             session.Title = metadata.Title
@@ -1950,11 +1965,12 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Function StageManualFiles(flightPlanPath As String, weatherPath As String) As Tuple(Of String, String)
+    Private Function StageManualFiles(flightPlanPath As String, primaryWeatherPath As String, secondaryWeatherPath As String) As Tuple(Of String, String, String)
         Dim planInsideTemp = IsPathInsideFolder(flightPlanPath, TempDPHXUnpackFolder)
-        Dim weatherInsideTemp = IsPathInsideFolder(weatherPath, TempDPHXUnpackFolder)
+        Dim weatherPrimaryInsideTemp = IsPathInsideFolder(primaryWeatherPath, TempDPHXUnpackFolder)
+        Dim weatherSecondaryInsideTemp = IsPathInsideFolder(secondaryWeatherPath, TempDPHXUnpackFolder)
 
-        If Not planInsideTemp AndAlso Not weatherInsideTemp Then
+        If Not planInsideTemp AndAlso Not weatherPrimaryInsideTemp AndAlso Not weatherSecondaryInsideTemp Then
             SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder)
         End If
 
@@ -1963,7 +1979,8 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Dim stagedPln = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(flightPlanPath))
-        Dim stagedWpr = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(weatherPath))
+        Dim stagedPrimaryWpr As String = String.Empty
+        Dim stagedSecondaryWpr As String = String.Empty
 
         If Not String.Equals(flightPlanPath, stagedPln, StringComparison.OrdinalIgnoreCase) Then
             File.Copy(flightPlanPath, stagedPln, True)
@@ -1973,15 +1990,25 @@ Public Class DPHXUnpackAndLoad
             End If
         End If
 
-        If Not String.Equals(weatherPath, stagedWpr, StringComparison.OrdinalIgnoreCase) Then
-            File.Copy(weatherPath, stagedWpr, True)
-        Else
-            If Not File.Exists(stagedWpr) Then
-                Throw New FileNotFoundException("Weather preset not found", stagedWpr)
+        If Not String.IsNullOrWhiteSpace(primaryWeatherPath) Then
+            stagedPrimaryWpr = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(primaryWeatherPath))
+            If Not String.Equals(primaryWeatherPath, stagedPrimaryWpr, StringComparison.OrdinalIgnoreCase) Then
+                File.Copy(primaryWeatherPath, stagedPrimaryWpr, True)
+            ElseIf Not File.Exists(stagedPrimaryWpr) Then
+                Throw New FileNotFoundException("Primary weather preset not found", stagedPrimaryWpr)
             End If
         End If
 
-        Return Tuple.Create(stagedPln, stagedWpr)
+        If Not String.IsNullOrWhiteSpace(secondaryWeatherPath) Then
+            stagedSecondaryWpr = Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(secondaryWeatherPath))
+            If Not String.Equals(secondaryWeatherPath, stagedSecondaryWpr, StringComparison.OrdinalIgnoreCase) Then
+                File.Copy(secondaryWeatherPath, stagedSecondaryWpr, True)
+            ElseIf Not File.Exists(stagedSecondaryWpr) Then
+                Throw New FileNotFoundException("Secondary weather preset not found", stagedSecondaryWpr)
+            End If
+        End If
+
+        Return Tuple.Create(stagedPln, stagedPrimaryWpr, stagedSecondaryWpr)
     End Function
 
     Private Function IsPathInsideFolder(targetPath As String, folderPath As String) As Boolean
@@ -1999,7 +2026,7 @@ Public Class DPHXUnpackAndLoad
         End Try
     End Function
 
-    Private Sub LoadManualSelection(flightPlanPath As String, weatherPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
+    Private Sub LoadManualSelection(flightPlanPath As String, primaryWeatherPath As String, secondaryWeatherPath As String, trackerGroup As String, sscPresetName As String, taskData As AllData, sourceLabel As String)
 
         _lastLoadSuccess = False
         _isManualMode = True
@@ -2011,30 +2038,55 @@ Public Class DPHXUnpackAndLoad
             Return
         End If
 
-        If Not File.Exists(weatherPath) Then
+        If String.IsNullOrWhiteSpace(primaryWeatherPath) AndAlso String.IsNullOrWhiteSpace(secondaryWeatherPath) Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "The selected weather preset could not be found.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Using
             Return
         End If
 
+        If Not String.IsNullOrWhiteSpace(primaryWeatherPath) AndAlso Not File.Exists(primaryWeatherPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The selected primary weather preset could not be found.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
+        If Not String.IsNullOrWhiteSpace(secondaryWeatherPath) AndAlso Not File.Exists(secondaryWeatherPath) Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "The selected secondary weather preset could not be found.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Using
+            Return
+        End If
+
         Try
             ctrlBriefing.FullReset()
-            Dim stagedFiles = StageManualFiles(flightPlanPath, weatherPath)
+            Dim stagedFiles = StageManualFiles(flightPlanPath, primaryWeatherPath, secondaryWeatherPath)
             Dim stagedFlightPlan = stagedFiles.Item1
-            Dim stagedWeather = stagedFiles.Item2
+            Dim stagedPrimaryWeather = stagedFiles.Item2
+            Dim stagedSecondaryWeather = stagedFiles.Item3
 
-            Dim sessionData = BuildSessionDataFromManualSources(stagedFlightPlan, stagedWeather, trackerGroup, taskData)
+            Dim sessionData = BuildSessionDataFromManualSources(stagedFlightPlan, stagedPrimaryWeather, stagedSecondaryWeather, trackerGroup, sscPresetName, taskData)
 
             _allDPHData = sessionData
             _taskDiscordPostID = NullToEmpty(sessionData.DiscordTaskID)
 
-            If Not String.IsNullOrWhiteSpace(stagedWeather) Then
+            If Not String.IsNullOrWhiteSpace(stagedPrimaryWeather) Then
                 Try
-                    _SF.FixWPRFormat(stagedWeather, False)
+                    _SF.FixWPRFormat(stagedPrimaryWeather, False)
                 Catch ex As Exception
                     Using New Centered_MessageBox(Me)
                         MessageBox.Show(Me, $"Unable to normalize the weather preset: {ex.Message}", "Weather preset", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End Using
+                End Try
+            End If
+
+            If Not String.IsNullOrWhiteSpace(stagedSecondaryWeather) Then
+                Try
+                    _SF.FixWPRFormat(stagedSecondaryWeather, False)
+                Catch ex As Exception
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, $"Unable to normalize the secondary weather preset: {ex.Message}", "Weather preset", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     End Using
                 End Try
             End If
@@ -2046,14 +2098,16 @@ Public Class DPHXUnpackAndLoad
             ctrlBriefing.GenerateBriefing(_SF,
                                           _allDPHData,
                                           Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedFlightPlan)),
-                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(stagedWeather)),
+                                          Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(If(Not String.IsNullOrWhiteSpace(stagedPrimaryWeather),
+                                                                                              stagedPrimaryWeather,
+                                                                                              stagedSecondaryWeather))),
                                           _taskDiscordPostID,
                                           TempDPHXUnpackFolder, _isManualMode)
 
             _currentFile = sourceLabel
             txtPackageName.Text = sourceLabel
             _lastLoadSuccess = True
-            UpdateManualFallbackPaths(stagedFlightPlan, stagedWeather, trackerGroup)
+            UpdateManualFallbackPaths(stagedFlightPlan, stagedPrimaryWeather, stagedSecondaryWeather, trackerGroup, sscPresetName)
 
             EnableUnpackButton()
             SetFormCaption(_currentFile)
@@ -2071,10 +2125,12 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
-    Private Function PromptForManualSelection(initialPln As String, initialWpr As String, trackerGroup As String) As ManualFallbackMode.ManualSelectionResult
+    Private Function PromptForManualSelection(initialPln As String, initialPrimaryWpr As String, initialSecondaryWpr As String, initialSscPresetName As String, trackerGroup As String) As ManualFallbackMode.ManualSelectionResult
         Using dialog As New ManualFallbackMode()
             dialog.InitialPlnPath = initialPln
-            dialog.InitialWprPath = initialWpr
+            dialog.InitialPrimaryWprPath = initialPrimaryWpr
+            dialog.InitialSecondaryWprPath = initialSecondaryWpr
+            dialog.InitialSSCPresetName = initialSscPresetName
             dialog.InitialTrackerGroup = trackerGroup
 
             If dialog.ShowDialog(Me) = DialogResult.OK Then
@@ -2107,28 +2163,46 @@ Public Class DPHXUnpackAndLoad
 
         If String.IsNullOrWhiteSpace(wprPath) Then
             BeginInvoke(New Action(Sub()
-                                       Dim manualResult = PromptForManualSelection(plnPath, String.Empty, trackerGroup)
+                                       Dim manualResult = PromptForManualSelection(plnPath, String.Empty, String.Empty, String.Empty, trackerGroup)
                                        If manualResult Is Nothing Then
                                            Return
                                        End If
 
-                                       CompleteManualSelection(manualResult.FlightPlanPath, manualResult.WeatherPath, manualResult.TrackerGroupName, taskData, Path.GetFileName(manualResult.FlightPlanPath))
+                                       CompleteManualSelection(manualResult.FlightPlanPath,
+                                                               manualResult.PrimaryWeatherLocalPath,
+                                                               manualResult.SecondaryWeatherLocalPath,
+                                                               manualResult.TrackerGroupName,
+                                                               manualResult.SSCPresetName,
+                                                               taskData,
+                                                               Path.GetFileName(manualResult.FlightPlanPath))
                                    End Sub))
             Return
         End If
 
-        CompleteManualSelection(plnPath, wprPath, trackerGroup, taskData, Path.GetFileName(plnPath))
+        Dim primaryWeather As String = String.Empty
+        Dim secondaryWeather As String = String.Empty
+        If Settings.SessionSettings.Is2024Installed AndAlso Settings.SessionSettings.Is2020Installed Then
+            primaryWeather = wprPath
+        ElseIf Settings.SessionSettings.Is2024Installed Then
+            primaryWeather = wprPath
+        ElseIf Settings.SessionSettings.Is2020Installed Then
+            secondaryWeather = wprPath
+        Else
+            primaryWeather = wprPath
+        End If
+
+        CompleteManualSelection(plnPath, primaryWeather, secondaryWeather, trackerGroup, String.Empty, taskData, Path.GetFileName(plnPath))
     End Sub
 
-    Private Sub CompleteManualSelection(plnPath As String, wprPath As String, trackerGroup As String, taskData As AllData, sourceLabel As String)
-        If String.IsNullOrWhiteSpace(plnPath) OrElse String.IsNullOrWhiteSpace(wprPath) Then
+    Private Sub CompleteManualSelection(plnPath As String, primaryWprPath As String, secondaryWprPath As String, trackerGroup As String, sscPresetName As String, taskData As AllData, sourceLabel As String)
+        If String.IsNullOrWhiteSpace(plnPath) OrElse (String.IsNullOrWhiteSpace(primaryWprPath) AndAlso String.IsNullOrWhiteSpace(secondaryWprPath)) Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, "A flight plan and weather preset are required to continue.", "Manual selection", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
             Return
         End If
 
-        LoadManualSelection(plnPath, wprPath, trackerGroup, taskData, sourceLabel)
+        LoadManualSelection(plnPath, primaryWprPath, secondaryWprPath, trackerGroup, sscPresetName, taskData, sourceLabel)
     End Sub
 
     Private Sub HandleZipDrop(zipPath As String)
