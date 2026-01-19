@@ -119,6 +119,7 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
+        UpdateBriefingRenderContext()
         SetFormCaption(_currentFile)
 
         Rescale()
@@ -297,6 +298,7 @@ Public Class DPHXUnpackAndLoad
 
         OpenSettingsWindow()
 
+        UpdateBriefingRenderContext()
         msfs2020ToolStrip.Visible = Settings.SessionSettings.Is2020Installed
         msfs2024ToolStrip.Visible = Settings.SessionSettings.Is2024Installed
 
@@ -310,7 +312,7 @@ Public Class DPHXUnpackAndLoad
             'Port has changed, send the set-port command to the WSG Listener
             SendCommandToWSG("set-port", $"port={newPort}", oldPort)
         End If
-
+        RegenerateBriefingIfLoaded()
 
     End Sub
 
@@ -1621,6 +1623,8 @@ Public Class DPHXUnpackAndLoad
 
     Private Sub ReloadSettings()
         Settings.SessionSettings.Load()
+        UpdateBriefingRenderContext()
+        RegenerateBriefingIfLoaded()
     End Sub
 
     Friend Function EnsureInternalLoggerInUse(status As frmStatus) As Boolean
@@ -1938,6 +1942,72 @@ Public Class DPHXUnpackAndLoad
         End If
 
         Return secondary
+    End Function
+
+    Private Function GetInstalledSimFlags() As InstalledSimFlags
+        Dim flags As InstalledSimFlags = InstalledSimFlags.None
+
+        If Settings.SessionSettings.Is2020Installed Then
+            flags = flags Or InstalledSimFlags.MSFS2020
+        End If
+
+        If Settings.SessionSettings.Is2024Installed Then
+            flags = flags Or InstalledSimFlags.MSFS2024
+        End If
+
+        Return flags
+    End Function
+
+    Private Sub UpdateBriefingRenderContext()
+        Dim briefingContext As New BriefingRenderContext() With {
+            .HostMode = BriefingHostMode.EndUser,
+            .InstalledSims = GetInstalledSimFlags(),
+            .PresetNameDisplayMode = PresetNameDisplayMode.Exact
+        }
+        ctrlBriefing.RenderContext = briefingContext
+    End Sub
+
+    Private Sub RegenerateBriefingIfLoaded()
+        If _allDPHData Is Nothing OrElse Not _lastLoadSuccess Then
+            Return
+        End If
+
+        Dim flightPlanPath = GetBriefingFilePath(_allDPHData.FlightPlanFilename)
+        Dim weatherPath = GetBriefingWeatherFilePath(_allDPHData.WeatherFilename, _allDPHData.WeatherFilenameSecondary)
+
+        If String.IsNullOrWhiteSpace(flightPlanPath) OrElse String.IsNullOrWhiteSpace(weatherPath) Then
+            Return
+        End If
+
+        If Not File.Exists(flightPlanPath) OrElse Not File.Exists(weatherPath) Then
+            Return
+        End If
+
+        ctrlBriefing.GenerateBriefing(_SF,
+                                      _allDPHData,
+                                      flightPlanPath,
+                                      weatherPath,
+                                      _taskDiscordPostID,
+                                      TempDPHXUnpackFolder,
+                                      _isManualMode)
+    End Sub
+
+    Private Function GetBriefingFilePath(filename As String) As String
+        If String.IsNullOrWhiteSpace(filename) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(filename))
+    End Function
+
+    Private Function GetBriefingWeatherFilePath(primaryFilename As String, secondaryFilename As String) As String
+        Dim filename = If(Not String.IsNullOrWhiteSpace(primaryFilename), primaryFilename, secondaryFilename)
+
+        If String.IsNullOrWhiteSpace(filename) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(TempDPHXUnpackFolder, Path.GetFileName(filename))
     End Function
 
     Private Function FormatWeatherFilenameForLog(weatherFilename As String) As String

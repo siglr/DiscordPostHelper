@@ -136,6 +136,13 @@ Public Class Main
             Exit Sub
         End If
 
+        Dim briefingContext As New BriefingRenderContext() With {
+            .HostMode = BriefingHostMode.DesignerPreview,
+            .InstalledSims = InstalledSimFlags.MSFS2020 Or InstalledSimFlags.MSFS2024,
+            .PresetNameDisplayMode = PresetNameDisplayMode.Friendly
+        }
+        BriefingControl1.RenderContext = briefingContext
+
         _SF.FillCountryFlagList(cboCountryFlag.Items)
 
         'Get the permission ID

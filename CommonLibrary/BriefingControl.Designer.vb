@@ -37,9 +37,12 @@ Partial Class BriefingControl
         Me.pnlSetupLocalTime = New System.Windows.Forms.Panel()
         Me.lblSimLocalDateTime = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.pnlSetupWeather = New System.Windows.Forms.Panel()
-        Me.lblWeatherProfile = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
+        Me.pnlSetupWeather2024 = New System.Windows.Forms.Panel()
+        Me.lblWeatherProfile2024 = New System.Windows.Forms.Label()
+        Me.lblWeatherTitle2024 = New System.Windows.Forms.Label()
+        Me.pnlSetupWeather2020 = New System.Windows.Forms.Panel()
+        Me.lblWeatherProfile2020 = New System.Windows.Forms.Label()
+        Me.lblWeatherTitle2020 = New System.Windows.Forms.Label()
         Me.pnlSetupBaroWarning = New System.Windows.Forms.Panel()
         Me.lblBaroNote = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -158,7 +161,8 @@ Partial Class BriefingControl
         Me.pnlSetupTaskTitle.SuspendLayout()
         Me.pnlSetupDeparture.SuspendLayout()
         Me.pnlSetupLocalTime.SuspendLayout()
-        Me.pnlSetupWeather.SuspendLayout()
+        Me.pnlSetupWeather2024.SuspendLayout()
+        Me.pnlSetupWeather2020.SuspendLayout()
         Me.pnlSetupBaroWarning.SuspendLayout()
         Me.pnlSetupGliders.SuspendLayout()
         Me.pnlSetupFlightplan.SuspendLayout()
@@ -300,7 +304,8 @@ Partial Class BriefingControl
         Me.flowSetup.Controls.Add(Me.pnlSetupTaskTitle)
         Me.flowSetup.Controls.Add(Me.pnlSetupDeparture)
         Me.flowSetup.Controls.Add(Me.pnlSetupLocalTime)
-        Me.flowSetup.Controls.Add(Me.pnlSetupWeather)
+        Me.flowSetup.Controls.Add(Me.pnlSetupWeather2024)
+        Me.flowSetup.Controls.Add(Me.pnlSetupWeather2020)
         Me.flowSetup.Controls.Add(Me.pnlSetupBaroWarning)
         Me.flowSetup.Controls.Add(Me.pnlSetupGliders)
         Me.flowSetup.Controls.Add(Me.pnlSetupFlightplan)
@@ -401,37 +406,69 @@ Partial Class BriefingControl
         Me.Label11.TabIndex = 0
         Me.Label11.Text = "Local time"
         '
-        'pnlSetupWeather
+        'pnlSetupWeather2024
         '
-        Me.pnlSetupWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.pnlSetupWeather2024.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlSetupWeather.Controls.Add(Me.lblWeatherProfile)
-        Me.pnlSetupWeather.Controls.Add(Me.Label9)
-        Me.pnlSetupWeather.Location = New System.Drawing.Point(0, 123)
-        Me.pnlSetupWeather.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlSetupWeather.Name = "pnlSetupWeather"
-        Me.pnlSetupWeather.Size = New System.Drawing.Size(830, 41)
-        Me.pnlSetupWeather.TabIndex = 2
+        Me.pnlSetupWeather2024.Controls.Add(Me.lblWeatherProfile2024)
+        Me.pnlSetupWeather2024.Controls.Add(Me.lblWeatherTitle2024)
+        Me.pnlSetupWeather2024.Location = New System.Drawing.Point(0, 123)
+        Me.pnlSetupWeather2024.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupWeather2024.Name = "pnlSetupWeather2024"
+        Me.pnlSetupWeather2024.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupWeather2024.TabIndex = 2
         '
-        'lblWeatherProfile
+        'lblWeatherProfile2024
         '
-        Me.lblWeatherProfile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblWeatherProfile2024.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblWeatherProfile.AutoEllipsis = True
-        Me.lblWeatherProfile.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWeatherProfile.Location = New System.Drawing.Point(175, 0)
-        Me.lblWeatherProfile.Name = "lblWeatherProfile"
-        Me.lblWeatherProfile.Size = New System.Drawing.Size(656, 41)
-        Me.lblWeatherProfile.TabIndex = 1
+        Me.lblWeatherProfile2024.AutoEllipsis = True
+        Me.lblWeatherProfile2024.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWeatherProfile2024.Location = New System.Drawing.Point(175, 0)
+        Me.lblWeatherProfile2024.Name = "lblWeatherProfile2024"
+        Me.lblWeatherProfile2024.Size = New System.Drawing.Size(656, 41)
+        Me.lblWeatherProfile2024.TabIndex = 1
         '
-        'Label9
+        'lblWeatherTitle2024
         '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(0, 0)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(122, 37)
-        Me.Label9.TabIndex = 0
-        Me.Label9.Text = "Weather"
+        Me.lblWeatherTitle2024.AutoSize = True
+        Me.lblWeatherTitle2024.Location = New System.Drawing.Point(0, 0)
+        Me.lblWeatherTitle2024.Name = "lblWeatherTitle2024"
+        Me.lblWeatherTitle2024.Size = New System.Drawing.Size(122, 37)
+        Me.lblWeatherTitle2024.TabIndex = 0
+        Me.lblWeatherTitle2024.Text = "Weather"
+        '
+        'pnlSetupWeather2020
+        '
+        Me.pnlSetupWeather2020.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlSetupWeather2020.Controls.Add(Me.lblWeatherProfile2020)
+        Me.pnlSetupWeather2020.Controls.Add(Me.lblWeatherTitle2020)
+        Me.pnlSetupWeather2020.Location = New System.Drawing.Point(0, 164)
+        Me.pnlSetupWeather2020.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlSetupWeather2020.Name = "pnlSetupWeather2020"
+        Me.pnlSetupWeather2020.Size = New System.Drawing.Size(830, 41)
+        Me.pnlSetupWeather2020.TabIndex = 12
+        '
+        'lblWeatherProfile2020
+        '
+        Me.lblWeatherProfile2020.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblWeatherProfile2020.AutoEllipsis = True
+        Me.lblWeatherProfile2020.Font = New System.Drawing.Font("Segoe UI Variable Display", 18.32727!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWeatherProfile2020.Location = New System.Drawing.Point(175, 0)
+        Me.lblWeatherProfile2020.Name = "lblWeatherProfile2020"
+        Me.lblWeatherProfile2020.Size = New System.Drawing.Size(656, 41)
+        Me.lblWeatherProfile2020.TabIndex = 1
+        '
+        'lblWeatherTitle2020
+        '
+        Me.lblWeatherTitle2020.AutoSize = True
+        Me.lblWeatherTitle2020.Location = New System.Drawing.Point(0, 0)
+        Me.lblWeatherTitle2020.Name = "lblWeatherTitle2020"
+        Me.lblWeatherTitle2020.Size = New System.Drawing.Size(122, 37)
+        Me.lblWeatherTitle2020.TabIndex = 0
+        Me.lblWeatherTitle2020.Text = "Weather"
         '
         'pnlSetupBaroWarning
         '
@@ -439,7 +476,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupBaroWarning.Controls.Add(Me.lblBaroNote)
         Me.pnlSetupBaroWarning.Controls.Add(Me.Label13)
-        Me.pnlSetupBaroWarning.Location = New System.Drawing.Point(0, 164)
+        Me.pnlSetupBaroWarning.Location = New System.Drawing.Point(0, 205)
         Me.pnlSetupBaroWarning.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupBaroWarning.Name = "pnlSetupBaroWarning"
         Me.pnlSetupBaroWarning.Size = New System.Drawing.Size(830, 41)
@@ -471,7 +508,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupGliders.Controls.Add(Me.lblRecGliders)
         Me.pnlSetupGliders.Controls.Add(Me.Label10)
-        Me.pnlSetupGliders.Location = New System.Drawing.Point(0, 205)
+        Me.pnlSetupGliders.Location = New System.Drawing.Point(0, 246)
         Me.pnlSetupGliders.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupGliders.Name = "pnlSetupGliders"
         Me.pnlSetupGliders.Size = New System.Drawing.Size(830, 41)
@@ -503,7 +540,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupFlightplan.Controls.Add(Me.lblTaskName)
         Me.pnlSetupFlightplan.Controls.Add(Me.Label12)
-        Me.pnlSetupFlightplan.Location = New System.Drawing.Point(0, 246)
+        Me.pnlSetupFlightplan.Location = New System.Drawing.Point(0, 287)
         Me.pnlSetupFlightplan.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupFlightplan.Name = "pnlSetupFlightplan"
         Me.pnlSetupFlightplan.Size = New System.Drawing.Size(830, 41)
@@ -555,7 +592,7 @@ Partial Class BriefingControl
         '
         Me.pnlSetupSeparator.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 328)
+        Me.pnlSetupSeparator.Location = New System.Drawing.Point(0, 369)
         Me.pnlSetupSeparator.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupSeparator.Name = "pnlSetupSeparator"
         Me.pnlSetupSeparator.Size = New System.Drawing.Size(830, 41)
@@ -566,7 +603,7 @@ Partial Class BriefingControl
         Me.pnlSetupEventTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupEventTitle.Controls.Add(Me.lblGroupEventTitle)
-        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 369)
+        Me.pnlSetupEventTitle.Location = New System.Drawing.Point(0, 410)
         Me.pnlSetupEventTitle.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupEventTitle.Name = "pnlSetupEventTitle"
         Me.pnlSetupEventTitle.Size = New System.Drawing.Size(830, 41)
@@ -589,7 +626,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupServer.Controls.Add(Me.lblEventMSFSServer)
         Me.pnlSetupServer.Controls.Add(Me.Label14)
-        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 410)
+        Me.pnlSetupServer.Location = New System.Drawing.Point(0, 451)
         Me.pnlSetupServer.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupServer.Name = "pnlSetupServer"
         Me.pnlSetupServer.Size = New System.Drawing.Size(830, 41)
@@ -621,7 +658,7 @@ Partial Class BriefingControl
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSetupTrackerGroup.Controls.Add(Me.lblEventTrackerGroup)
         Me.pnlSetupTrackerGroup.Controls.Add(Me.Label16)
-        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 451)
+        Me.pnlSetupTrackerGroup.Location = New System.Drawing.Point(0, 492)
         Me.pnlSetupTrackerGroup.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlSetupTrackerGroup.Name = "pnlSetupTrackerGroup"
         Me.pnlSetupTrackerGroup.Size = New System.Drawing.Size(830, 41)
@@ -1732,8 +1769,10 @@ Partial Class BriefingControl
         Me.pnlSetupDeparture.PerformLayout()
         Me.pnlSetupLocalTime.ResumeLayout(False)
         Me.pnlSetupLocalTime.PerformLayout()
-        Me.pnlSetupWeather.ResumeLayout(False)
-        Me.pnlSetupWeather.PerformLayout()
+        Me.pnlSetupWeather2024.ResumeLayout(False)
+        Me.pnlSetupWeather2024.PerformLayout()
+        Me.pnlSetupWeather2020.ResumeLayout(False)
+        Me.pnlSetupWeather2020.PerformLayout()
         Me.pnlSetupBaroWarning.ResumeLayout(False)
         Me.pnlSetupBaroWarning.PerformLayout()
         Me.pnlSetupGliders.ResumeLayout(False)
@@ -1916,9 +1955,12 @@ Partial Class BriefingControl
     Friend WithEvents flowSetup As Windows.Forms.FlowLayoutPanel
     Friend WithEvents pnlSetupTaskTitle As Windows.Forms.Panel
     Friend WithEvents pnlSetupDeparture As Windows.Forms.Panel
-    Friend WithEvents pnlSetupWeather As Windows.Forms.Panel
-    Friend WithEvents lblWeatherProfile As Windows.Forms.Label
-    Friend WithEvents Label9 As Windows.Forms.Label
+    Friend WithEvents pnlSetupWeather2024 As Windows.Forms.Panel
+    Friend WithEvents lblWeatherProfile2024 As Windows.Forms.Label
+    Friend WithEvents lblWeatherTitle2024 As Windows.Forms.Label
+    Friend WithEvents pnlSetupWeather2020 As Windows.Forms.Panel
+    Friend WithEvents lblWeatherProfile2020 As Windows.Forms.Label
+    Friend WithEvents lblWeatherTitle2020 As Windows.Forms.Label
     Friend WithEvents pnlSetupGliders As Windows.Forms.Panel
     Friend WithEvents lblRecGliders As Windows.Forms.Label
     Friend WithEvents Label10 As Windows.Forms.Label

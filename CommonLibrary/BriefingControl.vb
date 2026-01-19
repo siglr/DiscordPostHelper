@@ -25,13 +25,31 @@ Public Class BriefingControl
     Private _onUnitsTab As Boolean = False
     Private _loaded As Boolean = False
     Private _discordPostID As String = String.Empty
+    Private _weatherFile As String = String.Empty
     Private _dragDropHandlersInitialized As Boolean
     Private _validDragActive As Boolean
     Private _isManualMode As Boolean = False
     Private ReadOnly _controlsWithDragHandlers As New HashSet(Of Control)()
+    Private _renderContext As BriefingRenderContext = New BriefingRenderContext()
 
     Public Property EventIsEnabled As Boolean
     Private ReadOnly Property PrefUnits As New PreferredUnits
+
+    Public Property RenderContext As BriefingRenderContext
+        Get
+            If _renderContext Is Nothing Then
+                _renderContext = New BriefingRenderContext()
+            End If
+            Return _renderContext
+        End Get
+        Set(value As BriefingRenderContext)
+            If value Is Nothing Then
+                _renderContext = New BriefingRenderContext()
+            Else
+                _renderContext = value
+            End If
+        End Set
+    End Property
 
     Public Event ValidFilesDragActiveChanged As EventHandler(Of ValidFilesDragActiveChangedEventArgs)
     Public Event FilesDropped As EventHandler(Of FilesDroppedEventArgs)
@@ -480,6 +498,7 @@ Public Class BriefingControl
         windLayersFlowLayoutPnl.Controls.Clear()
 
         CountDownReset()
+        _weatherFile = String.Empty
 
         GC.Collect()
 
@@ -506,6 +525,7 @@ Public Class BriefingControl
         _isManualMode = isManualMode
 
         _sessionData = sessionData
+        _weatherFile = weatherfile
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
             lblPrefUnitsMessage.Text = $"Units selected here are only used for YOUR briefing tabs.{Environment.NewLine}They DO NOT change the content of generated Discord posts which always include all formats.{Environment.NewLine}Also, any data specified in description fields is excluded and will appear as is."
@@ -596,7 +616,7 @@ Public Class BriefingControl
         Else
             lblSimLocalDateTime.Text = "Not provided"
         End If
-        lblWeatherProfile.Text = _WeatherDetails.PresetName
+        UpdateSetupWeatherPanels()
         lblRecGliders.Text = If(String.IsNullOrWhiteSpace(_sessionData.RecommendedGliders), "Not provided", _sessionData.RecommendedGliders)
 
         'Unstandard Barometric pressure
@@ -726,6 +746,210 @@ Public Class BriefingControl
 
 #Region "Private"
 
+    Private Function GetInstalledSimLabel() As String
+        Dim sims = RenderContext.InstalledSims
+        Dim has2020 As Boolean = (sims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+        Dim has2024 As Boolean = (sims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+
+        If has2020 AndAlso has2024 Then
+            Return "MSFS 2020/2024"
+        End If
+
+        If has2024 Then
+            Return "MSFS 2024"
+        End If
+
+        If has2020 Then
+            Return "MSFS 2020"
+        End If
+
+        Return "MSFS"
+    End Function
+
+    Private Sub UpdateSetupWeatherPanels()
+        Dim weather2024Path = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+        Dim has2024 As Boolean = Not String.IsNullOrWhiteSpace(weather2024Path)
+        Dim has2020 As Boolean = Not String.IsNullOrWhiteSpace(weather2020Path)
+
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If Not allow2024 Then
+            has2024 = False
+        End If
+        If Not allow2020 Then
+            has2020 = False
+        End If
+
+        If has2024 AndAlso has2020 Then
+            pnlSetupWeather2024.Visible = True
+            pnlSetupWeather2020.Visible = True
+            lblWeatherTitle2024.Text = "Weather (2024)"
+            lblWeatherTitle2020.Text = "Weather (2020)"
+            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+        ElseIf has2024 Then
+            pnlSetupWeather2024.Visible = True
+            pnlSetupWeather2020.Visible = False
+            lblWeatherTitle2024.Text = "Weather"
+            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+        ElseIf has2020 Then
+            pnlSetupWeather2024.Visible = False
+            pnlSetupWeather2020.Visible = True
+            lblWeatherTitle2020.Text = "Weather"
+            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+        Else
+            pnlSetupWeather2024.Visible = False
+            pnlSetupWeather2020.Visible = False
+        End If
+    End Sub
+
+    Private Function GetPrimaryWeatherPresetDisplayName() As String
+        Return GetWeatherPresetDisplayName(_weatherFile, GetWeatherDetailsPresetNameForFile(_weatherFile))
+    End Function
+
+    Private Function GetWeatherDetailsPresetName() As String
+        If _WeatherDetails Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return _WeatherDetails.PresetName
+    End Function
+
+    Private Function GetWeatherDetailsPresetNameForFile(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) OrElse String.IsNullOrWhiteSpace(_weatherFile) Then
+            Return String.Empty
+        End If
+
+        If String.Equals(Path.GetFullPath(weatherFilePath), Path.GetFullPath(_weatherFile), StringComparison.OrdinalIgnoreCase) Then
+            Return GetWeatherDetailsPresetName()
+        End If
+
+        Return String.Empty
+    End Function
+
+    Private Function GetWeatherFilePath(weatherFilename As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilename) Then
+            Return String.Empty
+        End If
+
+        If _unpackFolder <> String.Empty Then
+            Return Path.Combine(_unpackFolder, Path.GetFileName(weatherFilename))
+        End If
+
+        Return weatherFilename
+    End Function
+
+    Private Function GetWeatherPresetDisplayName(weatherFilePath As String, fallbackPresetName As String) As String
+        If RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
+            If Not String.IsNullOrWhiteSpace(weatherFilePath) Then
+                Return Path.GetFileNameWithoutExtension(weatherFilePath)
+            End If
+
+            Return fallbackPresetName
+        End If
+
+        If Not String.IsNullOrWhiteSpace(fallbackPresetName) Then
+            Return fallbackPresetName
+        End If
+
+        Dim presetName = TryReadWeatherPresetName(weatherFilePath)
+        If Not String.IsNullOrWhiteSpace(presetName) Then
+            Return presetName
+        End If
+
+        Return GetFriendlyPresetNameFromFilename(weatherFilePath)
+    End Function
+
+    Private Sub AppendWeatherPresetLines(sb As StringBuilder, baseText As String, verb As String, Optional punctuation As String = "", Optional suffix As String = "")
+        Dim entries = GetWeatherPresetEntries()
+        If entries.Count = 0 Then
+            Return
+        End If
+
+        Dim useSimLabel As Boolean = entries.Count > 1
+
+        For Each entry In entries
+            Dim simSuffix As String = If(useSimLabel, $" ({entry.SimLabel})", String.Empty)
+            Dim line As String
+
+            If String.IsNullOrWhiteSpace(verb) Then
+                line = $"{baseText}{simSuffix}{punctuation} **{entry.DisplayName}**{suffix}"
+            Else
+                line = $"{baseText}{simSuffix} {verb} **{entry.DisplayName}**{suffix}"
+            End If
+
+            sb.Append($"{line}($*$)")
+        Next
+    End Sub
+
+    Private Function GetWeatherPresetEntries() As List(Of WeatherPresetEntry)
+        Dim results As New List(Of WeatherPresetEntry)()
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        Dim weather2024Path = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+
+        If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
+            End If
+        End If
+
+        If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
+            Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            If Not String.IsNullOrWhiteSpace(displayName) Then
+                results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
+            End If
+        End If
+
+        Return results
+    End Function
+
+    Private NotInheritable Class WeatherPresetEntry
+        Public Sub New(simLabel As String, displayName As String)
+            Me.SimLabel = simLabel
+            Me.DisplayName = displayName
+        End Sub
+
+        Public ReadOnly Property SimLabel As String
+        Public ReadOnly Property DisplayName As String
+    End Class
+
+    Private Function TryReadWeatherPresetName(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) OrElse Not File.Exists(weatherFilePath) Then
+            Return String.Empty
+        End If
+
+        Try
+            Dim xmlWeather As New XmlDocument
+            xmlWeather.Load(weatherFilePath)
+            Dim nameNode = xmlWeather.DocumentElement.SelectNodes("WeatherPreset.Preset/Name").Item(0)
+            If nameNode IsNot Nothing AndAlso nameNode.FirstChild IsNot Nothing Then
+                Return nameNode.FirstChild.Value
+            End If
+        Catch ex As Exception
+        End Try
+
+        Return String.Empty
+    End Function
+
+    Private Function GetFriendlyPresetNameFromFilename(weatherFilePath As String) As String
+        If String.IsNullOrWhiteSpace(weatherFilePath) Then
+            Return String.Empty
+        End If
+
+        Dim nameOnly = Path.GetFileNameWithoutExtension(weatherFilePath)
+        If nameOnly.StartsWith("0_", StringComparison.OrdinalIgnoreCase) Then
+            nameOnly = nameOnly.Substring(2)
+        End If
+
+        Return nameOnly
+    End Function
+
     Private Sub CountDownReset()
         Timer1.Stop()
         countDownToMeet.ZoomFactor = 2
@@ -832,7 +1056,9 @@ Public Class BriefingControl
 
         If _WeatherDetails IsNot Nothing Then
             'Weather info (temperature, baro pressure, precipitations)
-            sb.Append($"The weather profile to load is **{_WeatherDetails.PresetName}**($*$)")
+            AppendWeatherPresetLines(sb,
+                                     "The weather profile to load",
+                                     "is")
             If _sessionData.WeatherSummary <> String.Empty Then
                 sb.Append($"Weather summary: **{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.WeatherSummary)}**($*$)")
             End If
@@ -1060,7 +1286,10 @@ Public Class BriefingControl
             End If
 
             'Weather ad flight plan
-            sb.Append($"Load weather preset: **{_WeatherDetails.PresetName}**($*$)")
+            AppendWeatherPresetLines(sb,
+                                     "Load weather preset",
+                                     String.Empty,
+                                     ":", String.Empty)
             sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
             sb.Append("($*$)")
 
@@ -1479,4 +1708,3 @@ Public NotInheritable Class ValidFilesDragActiveChangedEventArgs
 
     Public ReadOnly Property Files As IReadOnlyList(Of String)
 End Class
-
