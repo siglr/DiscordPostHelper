@@ -186,6 +186,7 @@
     <Compile Include="Logger.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SSCWeatherPreset.vb" />
     <Compile Include="PipeCommandServer.vb" />
     <Compile Include="Settings.designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>

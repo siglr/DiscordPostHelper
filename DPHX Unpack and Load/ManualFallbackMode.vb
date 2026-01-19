@@ -1,9 +1,9 @@
 Imports System
 Imports System.Drawing
 Imports System.IO
+Imports System.IO.Compression
 Imports System.Linq
 Imports System.Net
-Imports System.Net.Mime
 Imports System.Windows.Forms
 Imports System.Xml.Linq
 Imports SIGLR.SoaringTools.CommonLibrary
@@ -11,17 +11,22 @@ Imports SIGLR.SoaringTools.CommonLibrary
 Partial Public Class ManualFallbackMode
     Inherits ZoomForm
 
-    Private ReadOnly _sf As New SupportingFeatures(SupportingFeatures.ClientApp.DPHXUnpackAndLoad)
     Private _selectedPln As ManualFileSelection
-    Private _selectedWpr As ManualFileSelection
-    Private _whitelistPresets As New List(Of WeatherPresetOption)
+    Private _selectedPrimaryWpr As ManualFileSelection
+    Private _selectedSecondaryWpr As ManualFileSelection
     Private _plnGroupDefaultColor As Color
-    Private _weatherGroupDefaultColor As Color
+    Private _primaryGroupDefaultColor As Color
+    Private _secondaryGroupDefaultColor As Color
     Private ReadOnly _dragHighlightColor As Color = ControlPaint.LightLight(SystemColors.Control)
     Private _selectionResult As ManualSelectionResult
+    Private _sscWeatherPresets As Dictionary(Of String, SSCWeatherPreset)
+    Private _msfs2020Enabled As Boolean
+    Private _msfs2024Enabled As Boolean
 
     Public Property InitialPlnPath As String
-    Public Property InitialWprPath As String
+    Public Property InitialPrimaryWprPath As String
+    Public Property InitialSecondaryWprPath As String
+    Public Property InitialSSCPresetName As String
     Public Property InitialTrackerGroup As String
 
     Public ReadOnly Property SelectionResult As ManualSelectionResult
@@ -38,32 +43,44 @@ Partial Public Class ManualFallbackMode
         MyBase.OnLoad(e)
         Rescale()
         _plnGroupDefaultColor = grpPLN.BackColor
-        _weatherGroupDefaultColor = grpWeather.BackColor
+        _primaryGroupDefaultColor = grpPrimaryWeather.BackColor
+        _secondaryGroupDefaultColor = grpSecondaryWeather.BackColor
     End Sub
 
     Private Sub ManualFallbackMode_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _msfs2020Enabled = Settings.SessionSettings.Is2020Installed
+        _msfs2024Enabled = Settings.SessionSettings.Is2024Installed
 
-        LoadWhitelistPresets()
+        LoadSscPresets()
         Reset()
         ApplyInitialSelection()
+        UpdateWeatherLayout()
+        UpdateWeatherModeControls()
 
         Me.AcceptButton = btnCopyGoFly
         Me.CancelButton = btnClearFiles
-
     End Sub
 
     Private Sub Reset()
-
-        cboWhitelistPresets.SelectedIndex = -1
+        cboSSCPresetList.SelectedIndex = -1
         lblPLNFile.Text = String.Empty
         lblPLNTitle.Text = String.Empty
-        lblWPRFile.Text = String.Empty
-        lblWPRName.Text = String.Empty
-        txtTrackerGroupName.Text = String.Empty
+        lblPrimaryFile.Text = String.Empty
+        lblPrimaryName.Text = String.Empty
+        lblSecondaryFile.Text = String.Empty
+        lblSecondaryName.Text = String.Empty
+        ToolTip1.SetToolTip(lblPrimaryFile, String.Empty)
+        ToolTip1.SetToolTip(lblSecondaryFile, String.Empty)
         _selectedPln = Nothing
-        _selectedWpr = Nothing
+        _selectedPrimaryWpr = Nothing
+        _selectedSecondaryWpr = Nothing
         _selectionResult = Nothing
 
+        If optSSCPreset.Enabled Then
+            optSSCPreset.Checked = True
+        Else
+            optCustomPreset.Checked = True
+        End If
     End Sub
 
     Private Sub ApplyInitialSelection()
@@ -76,13 +93,28 @@ Partial Public Class ManualFallbackMode
             End If
         End If
 
-        If Not String.IsNullOrWhiteSpace(InitialWprPath) AndAlso File.Exists(InitialWprPath) Then
-            Dim selection = LoadWprSelection(InitialWprPath, False)
+        If Not String.IsNullOrWhiteSpace(InitialPrimaryWprPath) AndAlso File.Exists(InitialPrimaryWprPath) Then
+            Dim selection = LoadWprSelection(InitialPrimaryWprPath, False)
             If selection IsNot Nothing Then
-                _selectedWpr = selection
-                lblWPRFile.Text = selection.FileName
-                lblWPRName.Text = selection.DisplayName
+                _selectedPrimaryWpr = selection
             End If
+        End If
+
+        If Not String.IsNullOrWhiteSpace(InitialSecondaryWprPath) AndAlso File.Exists(InitialSecondaryWprPath) Then
+            Dim selection = LoadWprSelection(InitialSecondaryWprPath, False)
+            If selection IsNot Nothing Then
+                _selectedSecondaryWpr = selection
+            End If
+        End If
+
+        Dim hasCustomSelection = _selectedPrimaryWpr IsNot Nothing OrElse _selectedSecondaryWpr IsNot Nothing
+        If Not String.IsNullOrWhiteSpace(InitialSSCPresetName) AndAlso _sscWeatherPresets IsNot Nothing AndAlso _sscWeatherPresets.ContainsKey(InitialSSCPresetName) Then
+            optSSCPreset.Checked = True
+            cboSSCPresetList.Text = InitialSSCPresetName
+            DisplaySscPresetDetails(_sscWeatherPresets(InitialSSCPresetName))
+        ElseIf hasCustomSelection Then
+            optCustomPreset.Checked = True
+            SyncCustomSelectionToLabels()
         End If
 
         If Not String.IsNullOrWhiteSpace(InitialTrackerGroup) Then
@@ -90,80 +122,324 @@ Partial Public Class ManualFallbackMode
         End If
     End Sub
 
-    Private Sub cboWhitelistPresets_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cboWhitelistPresets.SelectionChangeCommitted
+    Private Sub LoadSscPresets()
+        cboSSCPresetList.Items.Clear()
+        _sscWeatherPresets = Nothing
 
-        Dim selectedOption = TryCast(cboWhitelistPresets.SelectedItem, WeatherPresetOption)
-        If selectedOption Is Nothing Then
+        Try
+            _sscWeatherPresets = SSCWeatherPreset.LoadSSCWeatherPresets()
+
+            If _sscWeatherPresets IsNot Nothing Then
+                For Each preset As KeyValuePair(Of String, SSCWeatherPreset) In _sscWeatherPresets
+                    cboSSCPresetList.Items.Add(preset.Key)
+                Next
+            End If
+        Catch ex As Exception
+            ShowCenteredMessage($"Unable to load SSC presets: {ex.Message}", "SSC presets")
+        End Try
+
+        Dim hasPresets As Boolean = _sscWeatherPresets IsNot Nothing AndAlso _sscWeatherPresets.Count > 0
+        optSSCPreset.Enabled = hasPresets
+        cboSSCPresetList.Enabled = hasPresets
+        If Not hasPresets Then
+            optCustomPreset.Checked = True
+        End If
+    End Sub
+
+    Private Sub UpdateWeatherLayout()
+        Dim has2020 = _msfs2020Enabled
+        Dim has2024 = _msfs2024Enabled
+
+        If has2020 AndAlso has2024 Then
+            grpPrimaryWeather.Visible = True
+            grpSecondaryWeather.Visible = True
+            grpPrimaryWeather.Text = "Primary (MSFS 2024) - Required"
+            grpSecondaryWeather.Text = If(optSSCPreset.Checked, "Secondary (MSFS 2020) - Required", "Secondary (MSFS 2020) - Optional")
+        ElseIf has2024 Then
+            grpPrimaryWeather.Visible = True
+            grpSecondaryWeather.Visible = False
+            grpPrimaryWeather.Text = "Primary (MSFS 2024) - Required"
+        ElseIf has2020 Then
+            grpPrimaryWeather.Visible = False
+            grpSecondaryWeather.Visible = True
+            grpSecondaryWeather.Text = "Weather Preset (MSFS 2020) - Required"
+        Else
+            grpPrimaryWeather.Visible = True
+            grpSecondaryWeather.Visible = True
+            grpPrimaryWeather.Text = "Primary (MSFS 2024)"
+            grpSecondaryWeather.Text = "Secondary (MSFS 2020)"
+        End If
+    End Sub
+
+    Private Sub UpdateWeatherModeControls()
+        grpCustomPresets.Enabled = optCustomPreset.Checked
+        cboSSCPresetList.Enabled = optSSCPreset.Checked AndAlso optSSCPreset.Enabled
+        UpdateWeatherLayout()
+
+        If optSSCPreset.Checked Then
+            Dim selectedPreset = GetSelectedSscPreset()
+            If selectedPreset IsNot Nothing Then
+                DisplaySscPresetDetails(selectedPreset)
+            End If
+        Else
+            SyncCustomSelectionToLabels()
+        End If
+    End Sub
+
+    Private Function GetSelectedSscPreset() As SSCWeatherPreset
+        If _sscWeatherPresets Is Nothing Then
+            Return Nothing
+        End If
+
+        Dim selectedName = cboSSCPresetList.Text
+        If String.IsNullOrWhiteSpace(selectedName) Then
+            Return Nothing
+        End If
+
+        If _sscWeatherPresets.ContainsKey(selectedName) Then
+            Return _sscWeatherPresets(selectedName)
+        End If
+
+        Return Nothing
+    End Function
+
+    Private Sub optPreset_CheckedChanged(sender As Object, e As EventArgs) Handles optCustomPreset.CheckedChanged, optSSCPreset.CheckedChanged
+        UpdateWeatherModeControls()
+    End Sub
+
+    Private Sub cboSSCPresetList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSSCPresetList.SelectedIndexChanged
+        If cboSSCPresetList.SelectedIndex = -1 Then
             Return
         End If
 
-        _selectedWpr = New ManualFileSelection With {
-            .FullPath = selectedOption.FilePath,
-            .DisplayName = selectedOption.PresetName
-        }
+        Dim selectedPreset = GetSelectedSscPreset()
+        If selectedPreset IsNot Nothing Then
+            DisplaySscPresetDetails(selectedPreset)
+        End If
+    End Sub
 
-        lblWPRFile.Text = Path.GetFileName(selectedOption.FilePath)
-        lblWPRName.Text = selectedOption.PresetName
-
-        'Clear any previously selected custom file
-        If _selectedWpr IsNot Nothing Then
-            'Nothing else to do, the whitelist file is authoritative
+    Private Sub DisplaySscPresetDetails(preset As SSCWeatherPreset)
+        If preset Is Nothing Then
+            Return
         End If
 
+        lblPrimaryFile.Text = Path.GetFileName(preset.PresetPrimaryWPRFilename)
+        lblPrimaryName.Text = preset.PresetMSFSTitlePrimary
+        lblSecondaryFile.Text = Path.GetFileName(preset.PresetSecondaryWPRFilename)
+        lblSecondaryName.Text = preset.PresetMSFSTitleSecondary
+        ToolTip1.SetToolTip(lblPrimaryFile, preset.PresetPrimaryWPRFilename)
+        ToolTip1.SetToolTip(lblSecondaryFile, preset.PresetSecondaryWPRFilename)
+    End Sub
+
+    Private Sub SyncCustomSelectionToLabels()
+        UpdateCustomPresetLabels(True, _selectedPrimaryWpr)
+        UpdateCustomPresetLabels(False, _selectedSecondaryWpr)
+    End Sub
+
+    Private Sub UpdateCustomPresetLabels(isPrimary As Boolean, selection As ManualFileSelection)
+        If isPrimary Then
+            If selection Is Nothing Then
+                lblPrimaryFile.Text = String.Empty
+                lblPrimaryName.Text = String.Empty
+                lblPrimaryFile.Tag = String.Empty
+                ToolTip1.SetToolTip(lblPrimaryFile, String.Empty)
+            Else
+                lblPrimaryFile.Text = selection.FileName
+                lblPrimaryName.Text = selection.DisplayName
+                lblPrimaryFile.Tag = selection.FullPath
+                ToolTip1.SetToolTip(lblPrimaryFile, selection.FullPath)
+            End If
+        Else
+            If selection Is Nothing Then
+                lblSecondaryFile.Text = String.Empty
+                lblSecondaryName.Text = String.Empty
+                lblSecondaryFile.Tag = String.Empty
+                ToolTip1.SetToolTip(lblSecondaryFile, String.Empty)
+            Else
+                lblSecondaryFile.Text = selection.FileName
+                lblSecondaryName.Text = selection.DisplayName
+                lblSecondaryFile.Tag = selection.FullPath
+                ToolTip1.SetToolTip(lblSecondaryFile, selection.FullPath)
+            End If
+        End If
     End Sub
 
     Private Sub btnCopyGoFly_Click(sender As Object, e As EventArgs) Handles btnCopyGoFly.Click
-
         If _selectedPln Is Nothing Then
             ShowCenteredMessage("Please select at least a flight plan before continuing.", "No files selected")
             Return
         End If
 
-        If _selectedWpr Is Nothing Then
-            ShowCenteredMessage("A weather preset is required before continuing.", "Weather preset missing")
+        Dim primaryPath As String = String.Empty
+        Dim secondaryPath As String = String.Empty
+        Dim primaryName As String = String.Empty
+        Dim secondaryName As String = String.Empty
+        Dim presetName As String = String.Empty
+        Dim mode As ManualWeatherSelectionMode
+
+        If optSSCPreset.Checked Then
+            Dim selectedPreset = GetSelectedSscPreset()
+            If selectedPreset Is Nothing Then
+                ShowCenteredMessage("Please select an SSC standard preset before continuing.", "SSC preset missing")
+                Return
+            End If
+
+            Try
+                Dim downloadResult = DownloadAndExtractSscPresets(selectedPreset)
+                primaryPath = downloadResult.Item1
+                secondaryPath = downloadResult.Item2
+                primaryName = selectedPreset.PresetMSFSTitlePrimary
+                secondaryName = selectedPreset.PresetMSFSTitleSecondary
+                presetName = selectedPreset.PresetDescriptiveName
+                mode = ManualWeatherSelectionMode.SSC_STANDARD
+            Catch ex As Exception
+                ShowCenteredMessage($"An error occurred while downloading the SSC preset: {ex.Message}", "SSC preset")
+                Return
+            End Try
+        Else
+            mode = ManualWeatherSelectionMode.CUSTOM
+            If _selectedPrimaryWpr IsNot Nothing Then
+                primaryPath = _selectedPrimaryWpr.FullPath
+                primaryName = _selectedPrimaryWpr.DisplayName
+            End If
+
+            If _selectedSecondaryWpr IsNot Nothing Then
+                secondaryPath = _selectedSecondaryWpr.FullPath
+                secondaryName = _selectedSecondaryWpr.DisplayName
+            End If
+        End If
+
+        If Not ValidateWeatherSelection(mode, primaryPath, secondaryPath) Then
             Return
         End If
 
         _selectionResult = New ManualSelectionResult With {
             .FlightPlanPath = _selectedPln.FullPath,
-            .WeatherPath = _selectedWpr.FullPath,
+            .PrimaryWeatherLocalPath = primaryPath,
+            .SecondaryWeatherLocalPath = secondaryPath,
+            .DisplayNamePrimary = primaryName,
+            .DisplayNameSecondary = secondaryName,
+            .SSCPresetName = presetName,
+            .WeatherMode = mode,
             .TrackerGroupName = txtTrackerGroupName.Text.Trim()
         }
 
         Dim unpackForm = GetUnpackAndLoadForm()
         If unpackForm IsNot Nothing Then
-            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, _selectedWpr.FullPath, _selectionResult.TrackerGroupName)
+            unpackForm.UpdateManualFallbackPaths(_selectedPln.FullPath, primaryPath, secondaryPath, _selectionResult.TrackerGroupName, presetName)
         End If
 
         Me.DialogResult = DialogResult.OK
         Me.Close()
-
     End Sub
+
+    Private Function ValidateWeatherSelection(mode As ManualWeatherSelectionMode, primaryPath As String, secondaryPath As String) As Boolean
+        If mode = ManualWeatherSelectionMode.SSC_STANDARD Then
+            If _msfs2024Enabled AndAlso (String.IsNullOrWhiteSpace(primaryPath) OrElse Not File.Exists(primaryPath)) Then
+                ShowCenteredMessage("A primary (MSFS 2024) weather preset is required.", "Weather preset missing")
+                Return False
+            End If
+            If _msfs2020Enabled AndAlso (String.IsNullOrWhiteSpace(secondaryPath) OrElse Not File.Exists(secondaryPath)) Then
+                ShowCenteredMessage("A secondary (MSFS 2020) weather preset is required.", "Weather preset missing")
+                Return False
+            End If
+            Return True
+        End If
+
+        If _msfs2024Enabled AndAlso _msfs2020Enabled Then
+            If String.IsNullOrWhiteSpace(primaryPath) Then
+                ShowCenteredMessage("A primary weather preset is required for MSFS 2024.", "Weather preset missing")
+                Return False
+            End If
+        ElseIf _msfs2024Enabled Then
+            If String.IsNullOrWhiteSpace(primaryPath) Then
+                ShowCenteredMessage("A primary weather preset is required for MSFS 2024.", "Weather preset missing")
+                Return False
+            End If
+        ElseIf _msfs2020Enabled Then
+            If String.IsNullOrWhiteSpace(secondaryPath) Then
+                ShowCenteredMessage("A weather preset is required for MSFS 2020.", "Weather preset missing")
+                Return False
+            End If
+        Else
+            If String.IsNullOrWhiteSpace(primaryPath) AndAlso String.IsNullOrWhiteSpace(secondaryPath) Then
+                ShowCenteredMessage("A weather preset is required before continuing.", "Weather preset missing")
+                Return False
+            End If
+        End If
+
+        If Not String.IsNullOrWhiteSpace(primaryPath) AndAlso Not File.Exists(primaryPath) Then
+            ShowCenteredMessage("The selected primary weather preset could not be found.", "Weather preset missing")
+            Return False
+        End If
+
+        If Not String.IsNullOrWhiteSpace(secondaryPath) AndAlso Not File.Exists(secondaryPath) Then
+            ShowCenteredMessage("The selected secondary weather preset could not be found.", "Weather preset missing")
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    Private Function DownloadAndExtractSscPresets(preset As SSCWeatherPreset) As Tuple(Of String, String)
+        Dim targetFolder = GetPresetDownloadFolder()
+        Dim zipPath = SSCWeatherPreset.DownloadSSCWeatherPresetZipByID(preset.PresetID, targetFolder)
+
+        Using archive As ZipArchive = ZipFile.OpenRead(zipPath)
+            For Each entry As ZipArchiveEntry In archive.Entries
+                If String.IsNullOrWhiteSpace(entry.Name) Then
+                    Continue For
+                End If
+                If Not entry.Name.EndsWith(".WPR", StringComparison.OrdinalIgnoreCase) Then
+                    Continue For
+                End If
+
+                Dim outPath As String = Path.Combine(targetFolder, entry.Name)
+                entry.ExtractToFile(outPath, True)
+            Next
+        End Using
+
+        Try
+            File.Delete(zipPath)
+        Catch
+        End Try
+
+        Dim localPrimary As String = LocalPresetPathFromServerPath(preset.PresetPrimaryWPRFilename, targetFolder)
+        Dim localSecondary As String = LocalPresetPathFromServerPath(preset.PresetSecondaryWPRFilename, targetFolder)
+
+        Return Tuple.Create(localPrimary, localSecondary)
+    End Function
+
+    Private Function GetPresetDownloadFolder() As String
+        Dim baseFolder As String = Settings.SessionSettings.UnpackingFolder
+        If String.IsNullOrWhiteSpace(baseFolder) OrElse Not Directory.Exists(baseFolder) Then
+            baseFolder = Path.GetTempPath()
+        End If
+
+        Dim folder As String = Path.Combine(baseFolder, "ManualFallbackPresets")
+        If Not Directory.Exists(folder) Then
+            Directory.CreateDirectory(folder)
+        End If
+
+        Return folder
+    End Function
+
+    Private Shared Function LocalPresetPathFromServerPath(serverRelativePath As String, targetFolder As String) As String
+        Dim fileName As String = Path.GetFileName(serverRelativePath)
+        Return Path.Combine(targetFolder, fileName)
+    End Function
 
     Private Sub btnClearFiles_Click(sender As Object, e As EventArgs) Handles btnClearFiles.Click
-
         _selectionResult = Nothing
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
-
-    End Sub
-
-    Private Sub btnClose_Click(sender As Object, e As EventArgs)
-
-        _selectionResult = Nothing
-        Me.DialogResult = DialogResult.Cancel
-        Me.Close()
-
     End Sub
 
     Private Sub txtTrackerGroupName_Leave(sender As Object, e As EventArgs) Handles txtTrackerGroupName.Leave
-
         txtTrackerGroupName.Text = txtTrackerGroupName.Text.Trim()
-
     End Sub
 
     Private Sub btnSelectPLN_Click(sender As Object, e As EventArgs) Handles btnSelectPLN.Click
-
         Using ofd As New OpenFileDialog()
             ofd.Filter = "Flight plan (*.pln)|*.pln"
             ofd.Title = "Select a Flight Plan"
@@ -178,15 +454,50 @@ Partial Public Class ManualFallbackMode
                 End If
             End If
         End Using
-
     End Sub
 
+    Private Sub btnPrimaryBrowse_Click(sender As Object, e As EventArgs) Handles btnPrimaryBrowse.Click
+        Dim selection = BrowseForWeatherPreset("Select primary weather file")
+        If selection IsNot Nothing Then
+            _selectedPrimaryWpr = selection
+            SyncCustomSelectionToLabels()
+            optCustomPreset.Checked = True
+        End If
+    End Sub
+
+    Private Sub btnSecondaryBrowse_Click(sender As Object, e As EventArgs) Handles btnSecondaryBrowse.Click
+        Dim selection = BrowseForWeatherPreset("Select secondary weather file")
+        If selection IsNot Nothing Then
+            If _selectedPrimaryWpr IsNot Nothing AndAlso String.Equals(selection.FullPath, _selectedPrimaryWpr.FullPath, StringComparison.OrdinalIgnoreCase) Then
+                Return
+            End If
+
+            _selectedSecondaryWpr = selection
+            SyncCustomSelectionToLabels()
+            optCustomPreset.Checked = True
+        End If
+    End Sub
+
+    Private Function BrowseForWeatherPreset(title As String) As ManualFileSelection
+        Using ofd As New OpenFileDialog()
+            ofd.Filter = "Weather preset (*.wpr)|*.wpr"
+            ofd.Title = title
+            ofd.Multiselect = False
+
+            If ofd.ShowDialog(Me) = DialogResult.OK Then
+                Return LoadWprSelection(ofd.FileName, True)
+            End If
+        End Using
+
+        Return Nothing
+    End Function
+
     Private Sub grpPLN_DragEnter(sender As Object, e As DragEventArgs) Handles grpPLN.DragEnter
-        HandleGroupDragEnter(e, grpPLN)
+        HandleGroupDragEnter(e, grpPLN, True, False)
     End Sub
 
     Private Sub grpPLN_DragOver(sender As Object, e As DragEventArgs) Handles grpPLN.DragOver
-        HandleGroupDragOver(e, grpPLN)
+        HandleGroupDragEnter(e, grpPLN, True, False)
     End Sub
 
     Private Sub grpPLN_DragLeave(sender As Object, e As EventArgs) Handles grpPLN.DragLeave
@@ -194,176 +505,42 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Sub grpPLN_DragDrop(sender As Object, e As DragEventArgs) Handles grpPLN.DragDrop
-        HandleGroupDragDrop(e, grpPLN)
+        HandleGroupDragDrop(e, grpPLN, True, False)
     End Sub
 
-    Private Sub btnSelectWPR_Click(sender As Object, e As EventArgs) Handles btnSelectWPR.Click
-
-        Using ofd As New OpenFileDialog()
-            ofd.Filter = "Weather preset (*.wpr)|*.wpr"
-            ofd.Title = "Select a Weather Preset"
-            ofd.Multiselect = False
-
-            If ofd.ShowDialog(Me) = DialogResult.OK Then
-                Dim selection = LoadWprSelection(ofd.FileName, True)
-                If selection IsNot Nothing Then
-                    _selectedWpr = selection
-                    lblWPRFile.Text = selection.FileName
-                    lblWPRName.Text = selection.DisplayName
-                    cboWhitelistPresets.SelectedIndex = -1
-                End If
-            End If
-        End Using
-
+    Private Sub grpPrimaryWeather_DragEnter(sender As Object, e As DragEventArgs) Handles grpPrimaryWeather.DragEnter
+        HandleGroupDragEnter(e, grpPrimaryWeather, False, True)
     End Sub
 
-    Private Sub grpWeather_DragEnter(sender As Object, e As DragEventArgs) Handles grpWeather.DragEnter
-        HandleGroupDragEnter(e, grpWeather)
+    Private Sub grpPrimaryWeather_DragOver(sender As Object, e As DragEventArgs) Handles grpPrimaryWeather.DragOver
+        HandleGroupDragEnter(e, grpPrimaryWeather, False, True)
     End Sub
 
-    Private Sub grpWeather_DragOver(sender As Object, e As DragEventArgs) Handles grpWeather.DragOver
-        HandleGroupDragOver(e, grpWeather)
-    End Sub
-
-    Private Sub grpWeather_DragLeave(sender As Object, e As EventArgs) Handles grpWeather.DragLeave
+    Private Sub grpPrimaryWeather_DragLeave(sender As Object, e As EventArgs) Handles grpPrimaryWeather.DragLeave
         ClearAllGroupHighlights()
     End Sub
 
-    Private Sub grpWeather_DragDrop(sender As Object, e As DragEventArgs) Handles grpWeather.DragDrop
-        HandleGroupDragDrop(e, grpWeather)
+    Private Sub grpPrimaryWeather_DragDrop(sender As Object, e As DragEventArgs) Handles grpPrimaryWeather.DragDrop
+        HandleGroupDragDrop(e, grpPrimaryWeather, False, True)
     End Sub
 
-    Private Sub LoadWhitelistPresets()
-        _whitelistPresets = New List(Of WeatherPresetOption)()
-        Dim whitelistFolder = Path.Combine(Application.StartupPath, "Whitelist")
-
-        If Directory.Exists(whitelistFolder) Then
-            For Each filePath In Directory.GetFiles(whitelistFolder, "*.wpr", SearchOption.TopDirectoryOnly)
-                Dim selection = LoadWprSelection(filePath, False)
-                If selection IsNot Nothing Then
-                    _whitelistPresets.Add(New WeatherPresetOption With {
-                        .FilePath = filePath,
-                        .PresetName = selection.DisplayName
-                    })
-                End If
-            Next
-        End If
-
-        cboWhitelistPresets.DataSource = Nothing
-        If _whitelistPresets.Count > 0 Then
-            cboWhitelistPresets.DataSource = _whitelistPresets
-            cboWhitelistPresets.DisplayMember = "DisplayText"
-            cboWhitelistPresets.ValueMember = "FilePath"
-            cboWhitelistPresets.Enabled = True
-        Else
-            cboWhitelistPresets.Enabled = False
-        End If
+    Private Sub grpSecondaryWeather_DragEnter(sender As Object, e As DragEventArgs) Handles grpSecondaryWeather.DragEnter
+        HandleGroupDragEnter(e, grpSecondaryWeather, False, True)
     End Sub
 
-    Private Function LoadPlnSelection(filePath As String) As ManualFileSelection
-        Try
-            Dim doc = XDocument.Load(filePath)
-            Dim titleElement = doc.Descendants("Title").FirstOrDefault()
-            Dim title = If(titleElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(titleElement.Value), titleElement.Value.Trim(), Path.GetFileNameWithoutExtension(filePath))
-
-            Return New ManualFileSelection With {
-                .FullPath = filePath,
-                .DisplayName = title
-            }
-        Catch ex As Exception
-            ShowCenteredMessage($"Unable to read the flight plan file: {ex.Message}", "Flight plan error")
-            Return Nothing
-        End Try
-    End Function
-
-    Private Function LoadWprSelection(filePath As String, showErrors As Boolean) As ManualFileSelection
-        Try
-            Dim doc = XDocument.Load(filePath)
-            Dim nameElement = doc.Descendants("Name").FirstOrDefault()
-            Dim presetName = If(nameElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(nameElement.Value), nameElement.Value.Trim(), Path.GetFileNameWithoutExtension(filePath))
-
-            Return New ManualFileSelection With {
-                .FullPath = filePath,
-                .DisplayName = presetName
-            }
-        Catch ex As Exception
-            If showErrors Then
-                ShowCenteredMessage($"Unable to read the weather preset file: {ex.Message}", "Weather preset error")
-            End If
-            Return Nothing
-        End Try
-    End Function
-
-    Private Sub ShowCenteredMessage(message As String, caption As String)
-        Using New Centered_MessageBox(Me)
-            MessageBox.Show(Me, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End Using
+    Private Sub grpSecondaryWeather_DragOver(sender As Object, e As DragEventArgs) Handles grpSecondaryWeather.DragOver
+        HandleGroupDragEnter(e, grpSecondaryWeather, False, True)
     End Sub
 
-    Private Function GetUnpackAndLoadForm() As DPHXUnpackAndLoad
-        Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
-        If unpackForm Is Nothing Then
-            unpackForm = Application.OpenForms.OfType(Of DPHXUnpackAndLoad)().FirstOrDefault()
-        End If
-
-        Return unpackForm
-    End Function
-    Public Class ManualSelectionResult
-        Public Property FlightPlanPath As String
-        Public Property WeatherPath As String
-        Public Property TrackerGroupName As String
-    End Class
-
-    Private Class ManualFileSelection
-        Public Property FullPath As String
-        Public Property DisplayName As String
-
-        Public ReadOnly Property FileName As String
-            Get
-                Return If(String.IsNullOrEmpty(FullPath), String.Empty, Path.GetFileName(FullPath))
-            End Get
-        End Property
-    End Class
-
-    Private Class WeatherPresetOption
-        Public Property FilePath As String
-        Public Property PresetName As String
-
-        Public ReadOnly Property DisplayText As String
-            Get
-                Dim fileName = Path.GetFileName(FilePath)
-                If String.IsNullOrWhiteSpace(PresetName) Then
-                    Return fileName
-                End If
-                Return $"{PresetName} — {fileName}"
-            End Get
-        End Property
-    End Class
-
-    Private Class DraggedFilesInfo
-        Public Property PlnPath As String
-        Public Property WprPath As String
-
-        Public ReadOnly Property HasPln As Boolean
-            Get
-                Return Not String.IsNullOrEmpty(PlnPath)
-            End Get
-        End Property
-
-        Public ReadOnly Property HasWpr As Boolean
-            Get
-                Return Not String.IsNullOrEmpty(WprPath)
-            End Get
-        End Property
-    End Class
-
-    Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If Me.DialogResult <> DialogResult.OK Then
-            Reset()
-        End If
+    Private Sub grpSecondaryWeather_DragLeave(sender As Object, e As EventArgs) Handles grpSecondaryWeather.DragLeave
+        ClearAllGroupHighlights()
     End Sub
 
-    Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox)
+    Private Sub grpSecondaryWeather_DragDrop(sender As Object, e As DragEventArgs) Handles grpSecondaryWeather.DragDrop
+        HandleGroupDragDrop(e, grpSecondaryWeather, False, True)
+    End Sub
+
+    Private Sub HandleGroupDragEnter(e As DragEventArgs, targetGroup As GroupBox, acceptPln As Boolean, acceptWpr As Boolean)
         Dim entries = ExtractDragEntries(e.Data)
         If ContainsWeSimGlideLink(entries) Then
             ClearAllGroupHighlights()
@@ -372,34 +549,18 @@ Partial Public Class ManualFallbackMode
         End If
 
         Dim draggedFiles = GetDraggedFilesInfo(entries, False)
-        UpdateGroupHighlights(draggedFiles)
+        ClearAllGroupHighlights()
 
-        If ShouldAcceptDrop(targetGroup, draggedFiles) Then
+        Dim canAccept = (acceptPln AndAlso draggedFiles.HasPln) OrElse (acceptWpr AndAlso draggedFiles.HasWpr)
+        If canAccept Then
+            SetGroupHighlight(targetGroup, True)
             e.Effect = DragDropEffects.Copy
         Else
             e.Effect = DragDropEffects.None
         End If
     End Sub
 
-    Private Sub HandleGroupDragOver(e As DragEventArgs, targetGroup As GroupBox)
-        Dim entries = ExtractDragEntries(e.Data)
-        If ContainsWeSimGlideLink(entries) Then
-            ClearAllGroupHighlights()
-            e.Effect = DragDropEffects.Copy
-            Return
-        End If
-
-        Dim draggedFiles = GetDraggedFilesInfo(entries, False)
-        UpdateGroupHighlights(draggedFiles)
-
-        If ShouldAcceptDrop(targetGroup, draggedFiles) Then
-            e.Effect = DragDropEffects.Copy
-        Else
-            e.Effect = DragDropEffects.None
-        End If
-    End Sub
-
-    Private Sub HandleGroupDragDrop(e As DragEventArgs, targetGroup As GroupBox)
+    Private Sub HandleGroupDragDrop(e As DragEventArgs, targetGroup As GroupBox, acceptPln As Boolean, acceptWpr As Boolean)
         Dim entries = ExtractDragEntries(e.Data)
 
         If ContainsWeSimGlideLink(entries) Then
@@ -411,11 +572,7 @@ Partial Public Class ManualFallbackMode
         Dim draggedFiles = GetDraggedFilesInfo(entries, True)
         ClearAllGroupHighlights()
 
-        If Not ShouldAcceptDrop(targetGroup, draggedFiles) Then
-            Return
-        End If
-
-        If draggedFiles.HasPln Then
+        If acceptPln AndAlso draggedFiles.HasPln Then
             Dim selection = LoadPlnSelection(draggedFiles.PlnPath)
             If selection IsNot Nothing Then
                 _selectedPln = selection
@@ -424,37 +581,19 @@ Partial Public Class ManualFallbackMode
             End If
         End If
 
-        If draggedFiles.HasWpr Then
+        If acceptWpr AndAlso draggedFiles.HasWpr Then
             Dim selection = LoadWprSelection(draggedFiles.WprPath, True)
             If selection IsNot Nothing Then
-                _selectedWpr = selection
-                lblWPRFile.Text = selection.FileName
-                lblWPRName.Text = selection.DisplayName
-                cboWhitelistPresets.SelectedIndex = -1
+                optCustomPreset.Checked = True
+                If targetGroup Is grpPrimaryWeather Then
+                    _selectedPrimaryWpr = selection
+                ElseIf targetGroup Is grpSecondaryWeather Then
+                    _selectedSecondaryWpr = selection
+                End If
+                SyncCustomSelectionToLabels()
             End If
         End If
     End Sub
-
-    Private Function ShouldAcceptDrop(targetGroup As GroupBox, draggedFiles As DraggedFilesInfo) As Boolean
-        If draggedFiles Is Nothing Then
-            Return False
-        End If
-
-        If targetGroup Is grpPLN Then
-            Return draggedFiles.HasPln
-        End If
-
-        If targetGroup Is grpWeather Then
-            Return draggedFiles.HasWpr
-        End If
-
-        Return False
-    End Function
-
-    Private Function GetDraggedFilesInfo(e As DragEventArgs, resolveDownloads As Boolean) As DraggedFilesInfo
-        Dim data = If(e Is Nothing, Nothing, e.Data)
-        Return GetDraggedFilesInfo(ExtractDragEntries(data), resolveDownloads)
-    End Function
 
     Private Function GetDraggedFilesInfo(entries As List(Of String), resolveDownloads As Boolean) As DraggedFilesInfo
         Dim info As New DraggedFilesInfo()
@@ -602,17 +741,10 @@ Partial Public Class ManualFallbackMode
         Return fileName
     End Function
 
-    Private Sub UpdateGroupHighlights(draggedFiles As DraggedFilesInfo)
-        Dim hasPln = draggedFiles IsNot Nothing AndAlso draggedFiles.HasPln
-        Dim hasWpr = draggedFiles IsNot Nothing AndAlso draggedFiles.HasWpr
-
-        SetGroupHighlight(grpPLN, hasPln)
-        SetGroupHighlight(grpWeather, hasWpr)
-    End Sub
-
     Private Sub ClearAllGroupHighlights()
         SetGroupHighlight(grpPLN, False)
-        SetGroupHighlight(grpWeather, False)
+        SetGroupHighlight(grpPrimaryWeather, False)
+        SetGroupHighlight(grpSecondaryWeather, False)
     End Sub
 
     Private Sub SetGroupHighlight(targetGroup As GroupBox, highlighted As Boolean)
@@ -628,11 +760,132 @@ Partial Public Class ManualFallbackMode
     End Sub
 
     Private Function GetGroupDefaultColor(targetGroup As GroupBox) As Color
-        If targetGroup Is grpWeather Then
-            Return _weatherGroupDefaultColor
+        If targetGroup Is grpPrimaryWeather Then
+            Return _primaryGroupDefaultColor
+        End If
+
+        If targetGroup Is grpSecondaryWeather Then
+            Return _secondaryGroupDefaultColor
         End If
 
         Return _plnGroupDefaultColor
     End Function
+
+    Private Function LoadPlnSelection(filePath As String) As ManualFileSelection
+        Try
+            Dim doc = XDocument.Load(filePath)
+            Dim titleElement = doc.Descendants("Title").FirstOrDefault()
+            Dim title = If(titleElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(titleElement.Value), titleElement.Value.Trim(), Path.GetFileNameWithoutExtension(filePath))
+
+            Return New ManualFileSelection With {
+                .FullPath = filePath,
+                .DisplayName = title
+            }
+        Catch ex As Exception
+            ShowCenteredMessage($"Unable to read the flight plan file: {ex.Message}", "Flight plan error")
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function LoadWprSelection(filePath As String, showErrors As Boolean) As ManualFileSelection
+        If String.IsNullOrWhiteSpace(filePath) Then
+            Return Nothing
+        End If
+
+        If Not File.Exists(filePath) Then
+            If showErrors Then
+                ShowCenteredMessage($"The selected weather preset could not be found: {filePath}", "Weather preset error")
+            End If
+            Return Nothing
+        End If
+
+        If Not Path.GetExtension(filePath).Equals(".wpr", StringComparison.OrdinalIgnoreCase) Then
+            If showErrors Then
+                ShowCenteredMessage("The selected file is not a valid .WPR weather preset.", "Weather preset error")
+            End If
+            Return Nothing
+        End If
+
+        Try
+            Dim doc = XDocument.Load(filePath)
+            Dim nameElement = doc.Descendants("Name").FirstOrDefault()
+            Dim presetName = If(nameElement IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(nameElement.Value), nameElement.Value.Trim(), Path.GetFileNameWithoutExtension(filePath))
+
+            Return New ManualFileSelection With {
+                .FullPath = filePath,
+                .DisplayName = presetName
+            }
+        Catch ex As Exception
+            If showErrors Then
+                ShowCenteredMessage($"Unable to read the weather preset file: {ex.Message}", "Weather preset error")
+            End If
+            Return Nothing
+        End Try
+    End Function
+
+    Private Sub ShowCenteredMessage(message As String, caption As String)
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(Me, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+    End Sub
+
+    Private Function GetUnpackAndLoadForm() As DPHXUnpackAndLoad
+        Dim unpackForm = TryCast(Me.Owner, DPHXUnpackAndLoad)
+        If unpackForm Is Nothing Then
+            unpackForm = Application.OpenForms.OfType(Of DPHXUnpackAndLoad)().FirstOrDefault()
+        End If
+
+        Return unpackForm
+    End Function
+
+    Public Class ManualSelectionResult
+        Public Property FlightPlanPath As String
+        Public Property PrimaryWeatherLocalPath As String
+        Public Property SecondaryWeatherLocalPath As String
+        Public Property DisplayNamePrimary As String
+        Public Property DisplayNameSecondary As String
+        Public Property SSCPresetName As String
+        Public Property WeatherMode As ManualWeatherSelectionMode
+        Public Property TrackerGroupName As String
+    End Class
+
+    Public Enum ManualWeatherSelectionMode
+        SSC_STANDARD
+        CUSTOM
+    End Enum
+
+    Private Class ManualFileSelection
+        Public Property FullPath As String
+        Public Property DisplayName As String
+
+        Public ReadOnly Property FileName As String
+            Get
+                Return If(String.IsNullOrEmpty(FullPath), String.Empty, Path.GetFileName(FullPath))
+            End Get
+        End Property
+    End Class
+
+    Private Class DraggedFilesInfo
+        Public Property PlnPath As String
+        Public Property WprPath As String
+
+        Public ReadOnly Property HasPln As Boolean
+            Get
+                Return Not String.IsNullOrEmpty(PlnPath)
+            End Get
+        End Property
+
+        Public ReadOnly Property HasWpr As Boolean
+            Get
+                Return Not String.IsNullOrEmpty(WprPath)
+            End Get
+        End Property
+    End Class
+
+    Private Sub ManualFallbackMode_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If Me.DialogResult <> DialogResult.OK Then
+            Reset()
+        End If
+    End Sub
 
 End Class
