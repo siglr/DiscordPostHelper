@@ -4977,10 +4977,10 @@ Public Class Main
                 lblEventGuideInstructions.Text = "Specify the meet date and time. This is the time when people will start gathering for the group flight and briefing."
                 SetFocusOnField(dtEventMeetDate, fromF1Key)
 
-            Case 67 'Sync Fly
+            Case 67 'Sync
                 SetEventGuidePanelToLeft()
                 pnlWizardEvent.Top = 323
-                lblEventGuideInstructions.Text = "Only if the flight's conditions require a synchronized click ""Fly"", then tick the ""Yes"" checkbox and specify when it will happen."
+                lblEventGuideInstructions.Text = "Only if the flight's conditions require some sort of sync, then tick the ""Yes"" checkbox and specify when it will happen."
                 SetFocusOnField(chkUseSyncFly, fromF1Key)
 
             Case 68 'Launch Time
