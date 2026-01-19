@@ -372,6 +372,7 @@ Public Class BriefingControl
     End Sub
 
     Private Sub chkShowGraph_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowGraph.CheckedChanged
+        UpdateWeatherGraphLabel()
         FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
 
         Select Case chkShowGraph.Checked
@@ -525,7 +526,6 @@ Public Class BriefingControl
         _isManualMode = isManualMode
 
         _sessionData = sessionData
-        _weatherFile = weatherfile
         If unpackFolder = "NONE" Then
             _unpackFolder = String.Empty
             lblPrefUnitsMessage.Text = $"Units selected here are only used for YOUR briefing tabs.{Environment.NewLine}They DO NOT change the content of generated Discord posts which always include all formats.{Environment.NewLine}Also, any data specified in description fields is excluded and will appear as is."
@@ -546,14 +546,16 @@ Public Class BriefingControl
         End If
 
         'Load weather info
-        If File.Exists(weatherfile) Then
+        Dim weatherFileToLoad = SelectWeatherFileForDisplay(weatherfile)
+        _weatherFile = weatherFileToLoad
+        If File.Exists(weatherFileToLoad) Then
             _XmlDocWeatherPreset = New XmlDocument
-            _XmlDocWeatherPreset.Load(weatherfile)
+            _XmlDocWeatherPreset.Load(weatherFileToLoad)
             _WeatherDetails = Nothing
             _WeatherDetails = New WeatherDetails(_XmlDocWeatherPreset)
         Else
             Using New Centered_MessageBox()
-                MessageBox.Show($"Weather file not found!{Environment.NewLine}{weatherfile}{Environment.NewLine}Cannot generate briefing.", "Weather file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show($"Weather file not found!{Environment.NewLine}{weatherFileToLoad}{Environment.NewLine}Cannot generate briefing.", "Weather file missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
             Exit Sub
         End If
@@ -582,6 +584,7 @@ Public Class BriefingControl
 
         'Generate the Setup tab
         BuildSetupTab()
+        UpdateWeatherGraphLabel()
 
     End Sub
 
@@ -840,6 +843,47 @@ Public Class BriefingControl
 
         Return weatherFilename
     End Function
+
+    Private Function SelectWeatherFileForDisplay(requestedWeatherFile As String) As String
+        Dim primaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim secondaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+
+        Dim hasPrimary As Boolean = Not String.IsNullOrWhiteSpace(primaryWeatherPath)
+        Dim hasSecondary As Boolean = Not String.IsNullOrWhiteSpace(secondaryWeatherPath)
+
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If allow2024 AndAlso allow2020 AndAlso hasPrimary AndAlso hasSecondary Then
+            Return primaryWeatherPath
+        End If
+
+        If hasPrimary Then
+            Return primaryWeatherPath
+        End If
+
+        If hasSecondary Then
+            Return secondaryWeatherPath
+        End If
+
+        Return requestedWeatherFile
+    End Function
+
+    Private Sub UpdateWeatherGraphLabel()
+        Dim primaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilename)
+        Dim secondaryWeatherPath = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
+        Dim hasPrimary As Boolean = Not String.IsNullOrWhiteSpace(primaryWeatherPath)
+        Dim hasSecondary As Boolean = Not String.IsNullOrWhiteSpace(secondaryWeatherPath)
+
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If allow2024 AndAlso allow2020 AndAlso hasPrimary AndAlso hasSecondary Then
+            chkShowGraph.Text = "Show graph instead of data table (showing MSFS 2024 preset)"
+        Else
+            chkShowGraph.Text = "Show graph instead of data table"
+        End If
+    End Sub
 
     Private Function GetWeatherPresetDisplayName(weatherFilePath As String, fallbackPresetName As String) As String
         If RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
