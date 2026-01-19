@@ -858,6 +858,14 @@ Public Class BriefingControl
             Return primaryWeatherPath
         End If
 
+        If allow2020 AndAlso Not allow2024 AndAlso hasSecondary Then
+            Return secondaryWeatherPath
+        End If
+
+        If allow2024 AndAlso Not allow2020 AndAlso hasPrimary Then
+            Return primaryWeatherPath
+        End If
+
         If hasPrimary Then
             Return primaryWeatherPath
         End If
