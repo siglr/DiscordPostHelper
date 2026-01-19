@@ -832,7 +832,6 @@ Public Class DPHXUnpackAndLoad
             End Using
 
             EnsureSessionDataDefaults(_allDPHData)
-            'SyncWeatherFilenamesFromPackage(TempDPHXUnpackFolder)
 
             'Fix the weather file format to be compatible with both MSFS versions
             FixWeatherFileFormat(_allDPHData.WeatherFilename)
