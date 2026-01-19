@@ -34,61 +34,44 @@ Friend Module TaskFileHelper
         fullDestFilename = Path.Combine(destPath, filename)
 
         Dim sourceToCopy As String = fullSourceFilename
+        If File.Exists(fullDestFilename) Then
+            Dim srcInfo = New FileInfo(fullSourceFilename)
+            Dim dstInfo = New FileInfo(fullDestFilename)
 
-        Dim whitelistDir = Path.Combine(Application.StartupPath, "Whitelist")
-        Dim whitelistFile = Path.Combine(whitelistDir, filename)
-        If File.Exists(whitelistFile) Then
-            If File.Exists(fullDestFilename) AndAlso SupportingFeatures.FilesAreEquivalent(whitelistFile, fullDestFilename) Then
-                Return $"{msgToAsk} ""{filename}"" skipped (protected by Whitelist)"
-            End If
+            Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
+                                   AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
 
-            sourceToCopy = whitelistFile
-            proceed = True
-            If File.Exists(fullDestFilename) Then
-                messageToReturn = $"{msgToAsk} ""{filename}"" replaced with Whitelist copy"
+            If identical Then
+                proceed = False
+                messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
             Else
-                messageToReturn = $"{msgToAsk} ""{filename}"" copied (from Whitelist)"
+                Select Case Settings.SessionSettings.AutoOverwriteFiles
+                    Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
+                        proceed = True
+                        messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
+                    Case AllSettings.AutoOverwriteOptions.AlwaysSkip
+                        proceed = False
+                        messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
+                    Case AllSettings.AutoOverwriteOptions.AlwaysAsk
+                        Dim ownerWindow As IWin32Window = owner
+                        Using New Centered_MessageBox(ownerWindow)
+                            If MessageBox.Show(ownerWindow,
+                                               $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
+                                               "File already exists",
+                                               MessageBoxButtons.YesNo,
+                                               MessageBoxIcon.Question) = DialogResult.Yes Then
+                                proceed = True
+                                messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
+                            Else
+                                proceed = False
+                                messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
+                            End If
+                        End Using
+                End Select
             End If
         Else
-            If File.Exists(fullDestFilename) Then
-                Dim srcInfo = New FileInfo(fullSourceFilename)
-                Dim dstInfo = New FileInfo(fullDestFilename)
-
-                Dim identical As Boolean = (srcInfo.Exists AndAlso dstInfo.Exists AndAlso srcInfo.Length = dstInfo.Length) _
-                                       AndAlso SupportingFeatures.FilesAreEquivalent(fullSourceFilename, fullDestFilename)
-
-                If identical Then
-                    proceed = False
-                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped (identical - up-to-date)"
-                Else
-                    Select Case Settings.SessionSettings.AutoOverwriteFiles
-                        Case AllSettings.AutoOverwriteOptions.AlwaysOverwrite
-                            proceed = True
-                            messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Overwrite)"
-                        Case AllSettings.AutoOverwriteOptions.AlwaysSkip
-                            proceed = False
-                            messageToReturn = $"{msgToAsk} ""{filename}"" skipped (different file exists, policy: Skip)"
-                        Case AllSettings.AutoOverwriteOptions.AlwaysAsk
-                            Dim ownerWindow As IWin32Window = owner
-                            Using New Centered_MessageBox(ownerWindow)
-                                If MessageBox.Show(ownerWindow,
-                                                   $"A different {msgToAsk} file already exists.{Environment.NewLine}{Environment.NewLine}{filename}{Environment.NewLine}{Environment.NewLine}Overwrite it?",
-                                                   "File already exists",
-                                                   MessageBoxButtons.YesNo,
-                                                   MessageBoxIcon.Question) = DialogResult.Yes Then
-                                    proceed = True
-                                    messageToReturn = $"{msgToAsk} ""{filename}"" copied over (different existing file, policy: Ask)"
-                                Else
-                                    proceed = False
-                                    messageToReturn = $"{msgToAsk} ""{filename}"" skipped by user (different file exists, policy: Ask)"
-                                End If
-                            End Using
-                    End Select
-                End If
-            Else
-                proceed = True
-                messageToReturn = $"{msgToAsk} ""{filename}"" copied"
-            End If
+            proceed = True
+            messageToReturn = $"{msgToAsk} ""{filename}"" copied"
         End If
 
         If proceed Then
