@@ -772,6 +772,16 @@ Public Class BriefingControl
         Dim has2024 As Boolean = Not String.IsNullOrWhiteSpace(weather2024Path)
         Dim has2020 As Boolean = Not String.IsNullOrWhiteSpace(weather2020Path)
 
+        Dim allow2024 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2024) = InstalledSimFlags.MSFS2024
+        Dim allow2020 As Boolean = (RenderContext.InstalledSims And InstalledSimFlags.MSFS2020) = InstalledSimFlags.MSFS2020
+
+        If Not allow2024 Then
+            has2024 = False
+        End If
+        If Not allow2020 Then
+            has2020 = False
+        End If
+
         If has2024 AndAlso has2020 Then
             pnlSetupWeather2024.Visible = True
             pnlSetupWeather2020.Visible = True
