@@ -179,6 +179,8 @@ Partial Class ManualFallbackMode
         '
         'grpTracker
         '
+        Me.grpTracker.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpTracker.Controls.Add(Me.txtTrackerGroupName)
         Me.grpTracker.Location = New System.Drawing.Point(12, 243)
         Me.grpTracker.Name = "grpTracker"
