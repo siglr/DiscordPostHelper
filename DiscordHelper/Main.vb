@@ -1035,6 +1035,7 @@ Public Class Main
             Dim resolvedWeather = ResolveDroppedEntry(droppedWeather, ".wpr", downloadFolder)
             If resolvedWeather <> String.Empty Then
                 ClearWeatherSelectionsForDrop()
+                _primaryWPRFilename = resolvedWeather
                 LoadWeatherfile(resolvedWeather)
                 UpdateSecondaryWeatherPresetName()
             End If
@@ -1324,7 +1325,6 @@ Public Class Main
         _sscPresetName = String.Empty
         _secondaryWPRFilename = String.Empty
         _secondaryWeatherPresetName = String.Empty
-        _primaryWPRFilename = String.Empty
         btnSyncWeatherTitle.Enabled = True
     End Sub
 
