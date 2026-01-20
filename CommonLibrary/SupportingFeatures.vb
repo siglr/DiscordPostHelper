@@ -1749,7 +1749,35 @@ Public Class SupportingFeatures
         Return localTimeZone.IsDaylightSavingTime(localDateTime)
     End Function
 
+    Public Shared Function FilterUnsupportedRichTextChars(input As String) As String
+        If String.IsNullOrEmpty(input) Then
+            Return input
+        End If
+
+        Dim filtered As New StringBuilder(input.Length)
+        For Each currentChar As Char In input
+            If Char.IsSurrogate(currentChar) Then
+                Continue For
+            End If
+
+            Dim codePoint As Integer = AscW(currentChar)
+            If codePoint >= &HFE00 AndAlso codePoint <= &HFE0F Then
+                Continue For
+            End If
+
+            Dim category As UnicodeCategory = CharUnicodeInfo.GetUnicodeCategory(currentChar)
+            If category = UnicodeCategory.OtherSymbol Then
+                Continue For
+            End If
+
+            filtered.Append(currentChar)
+        Next
+
+        Return filtered.ToString()
+    End Function
+
     Public Shared Function ConvertMarkdownToRTF(ByVal input As String) As String
+        input = FilterUnsupportedRichTextChars(input)
         ' Replace special characters
         input = ReplaceSpecialCharactersWithUnicodeEscapes(input)
 
