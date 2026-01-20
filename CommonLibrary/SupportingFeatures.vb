@@ -1760,6 +1760,11 @@ Public Class SupportingFeatures
                 Continue For
             End If
 
+            Dim codePoint As Integer = AscW(currentChar)
+            If codePoint >= &HFE00 AndAlso codePoint <= &HFE0F Then
+                Continue For
+            End If
+
             Dim category As UnicodeCategory = CharUnicodeInfo.GetUnicodeCategory(currentChar)
             If category = UnicodeCategory.OtherSymbol Then
                 Continue For
