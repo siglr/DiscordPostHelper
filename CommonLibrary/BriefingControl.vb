@@ -1338,6 +1338,7 @@ Public Class BriefingControl
             Dim meetMessage As String = If(String.IsNullOrWhiteSpace(meetMessageTemplate),
                                            "At this time we meet in the voice chat and get ready.",
                                            meetMessageTemplate)
+            meetMessage = meetMessage.Replace(Environment.NewLine, "($*$)")
             sb.Append($"**Meet/briefing time:** {fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}($*$)")
             sb.Append($"{meetMessage}($*$)")
             sb.Append("($*$)")
@@ -1378,9 +1379,10 @@ Public Class BriefingControl
             If _sessionData.UseEventSyncFly Then
                 Dim syncMessageTemplate As String = If(clubPreset IsNot Nothing, clubPreset.SyncMessage, String.Empty)
                 Dim syncMessage As String = If(String.IsNullOrWhiteSpace(syncMessageTemplate),
-                                               "At this time we simultaneously click the [FLY]/[Start] button to sync our weather." & Environment.NewLine &
+                                               "At this time we simultaneously click the [FLY]/[Start] button to sync our weather.($*$)" &
                                                "Remember to **🛑WAIT🛑** on the World Map for the signal!",
                                                syncMessageTemplate)
+                syncMessage = syncMessage.Replace(Environment.NewLine, "($*$)")
                 sb.Append($"**Synchronization:** {fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}($*$)")
                 sb.Append($"{syncMessage}($*$)")
                 sb.Append("($*$)")
@@ -1399,6 +1401,7 @@ Public Class BriefingControl
                 Dim noSyncMessage As String = If(String.IsNullOrWhiteSpace(noSyncMessageTemplate),
                                                  "This event DOES NOT require to synchronize weather. You can click Fly/Start at your convenience and wait at the airfield.",
                                                  noSyncMessageTemplate)
+                noSyncMessage = noSyncMessage.Replace(Environment.NewLine, "($*$)")
                 sb.Append("**Synchronization:** None($*$)")
                 sb.Append($"{noSyncMessage}($*$)")
                 sb.Append("($*$)")
@@ -1417,6 +1420,7 @@ Public Class BriefingControl
                 Dim launchMessage As String = If(String.IsNullOrWhiteSpace(launchMessageTemplate),
                                                  "At this time we can begin to launch from the airfield.",
                                                  launchMessageTemplate)
+                launchMessage = launchMessage.Replace(Environment.NewLine, "($*$)")
                 sb.Append($"**Launch:** {fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}($*$)")
                 sb.Append($"{launchMessage}($*$)")
                 sb.Append("($*$)")
@@ -1446,6 +1450,7 @@ Public Class BriefingControl
                 Dim startMessage As String = If(String.IsNullOrWhiteSpace(startMessageTemplate),
                                                 "At this time we cross the starting line and start the task.",
                                                 startMessageTemplate)
+                startMessage = startMessage.Replace(Environment.NewLine, "($*$)")
                 sb.Append($"**Task Start:** {fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}($*$)")
                 sb.Append($"{startMessage}($*$)")
                 sb.Append("($*$)")
