@@ -1116,7 +1116,7 @@ Public Class Main
 
         If extension.Equals(".png", StringComparison.OrdinalIgnoreCase) Then
             Using New Centered_MessageBox(Me)
-                If MessageBox.Show(Me, "This PNG image can be converted to JPG to save space. Convert it now?", "Convert PNG to JPG", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                If MessageBox.Show(Me, "This PNG image can be converted to JPG to save space. The original PNG will be deleted. Convert it now?", "Convert PNG to JPG", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                     Dim sessionFolder As String = Path.GetDirectoryName(CurrentSessionFile)
                     Dim targetPath As String = Path.Combine(sessionFolder, $"{Path.GetFileNameWithoutExtension(extraFilePath)}.jpg")
                     Try
