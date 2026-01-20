@@ -1347,15 +1347,8 @@ Public Class BriefingControl
                 sb.Append("($*$)")
             End If
 
-            'MSFS Server
-            If _sessionData.MSFSServer > 0 Then
-                sb.Append($"Set MSFS Server to: **{_SF.GetMSFSServers.ElementAt(_sessionData.MSFSServer)}**($*$)")
-                sb.Append("($*$)")
-            End If
-
-            'Weather ad flight plan
-            AppendEventWeatherPresetLines(sb)
-            sb.Append($"And flight plan: **""{Path.GetFileName(_sessionData.FlightPlanFilename)}""**($*$)")
+            'Look at SETUP tab for MSFS setup information
+            sb.Append($"Look in the **SETUP** tab for all information to setup MSFS for this event!($*$)")
             sb.Append("($*$)")
 
             Dim dateFormat As String
@@ -1364,16 +1357,6 @@ Public Class BriefingControl
             Else
                 dateFormat = "MMMM dd"
             End If
-
-            sb.Append($"The MSFS Local Date & Time should be: **{fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}**")
-            If _sessionData.UseEventSyncFly Then
-                sb.Append($"when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
-            ElseIf _sessionData.UseEventLaunch Then
-                sb.Append($"when it's the Launch time ({fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
-            Else
-                sb.Append($"when it's the Meet time ({fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
-            End If
-            sb.Append("($*$)")
 
             'Sync Start or not?
             If _sessionData.UseEventSyncFly Then
