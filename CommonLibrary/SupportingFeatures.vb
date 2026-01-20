@@ -148,7 +148,7 @@ Public Class SupportingFeatures
 
         _ClientRunning = RunningClientApp
 
-        If _ClientRunning = ClientApp.DiscordPostHelper Then
+        If _ClientRunning = ClientApp.DiscordPostHelper OrElse _ClientRunning = ClientApp.DPHXUnpackAndLoad Then
             LoadDefaultClubEvents()
         End If
 
