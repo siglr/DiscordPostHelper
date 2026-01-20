@@ -1296,11 +1296,17 @@ Public Class BriefingControl
             Dim fullStartTaskDateTimeLocal As DateTime = _sessionData.StartTaskLocalDateTime
             Dim fullMSFSLocalDateTime As DateTime = _sessionData.SimLocalDateTime
 
-            Dim meetMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventMeetMessage), "At this time we meet in the voice chat and get ready.", _sessionData.EventMeetMessage)
-            Dim noSyncMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventNoSyncMessage), "This event DOES NOT require to synchronize weather. You can click Fly/Start at your convenience and wait at the airfield.", _sessionData.EventNoSyncMessage)
-            Dim syncMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventSyncMessage), "At this time we simultaneously click the [FLY]/[Start] button to sync our weather. Remember to **🛑WAIT🛑** on the World Map for the signal!", _sessionData.EventSyncMessage)
-            Dim launchMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventLaunchMessage), "At this time we can begin to launch from the airfield.", _sessionData.EventLaunchMessage)
-            Dim startMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventStartMessage), "At this time we cross the starting line and start the task.", _sessionData.EventStartMessage)
+            _SF.EnsureDefaultClubEventsLoaded()
+            Dim clubPreset As PresetEvent = Nothing
+            If Not String.IsNullOrWhiteSpace(_sessionData.GroupClubId) AndAlso _SF.DefaultKnownClubEvents.ContainsKey(_sessionData.GroupClubId.ToUpperInvariant()) Then
+                clubPreset = _SF.DefaultKnownClubEvents(_sessionData.GroupClubId.ToUpperInvariant())
+            End If
+
+            Dim meetMessage As String = If(clubPreset IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(clubPreset.MeetMessage), clubPreset.MeetMessage, "At this time we meet in the voice chat and get ready.")
+            Dim noSyncMessage As String = If(clubPreset IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(clubPreset.NoSyncMessage), clubPreset.NoSyncMessage, "This event DOES NOT require to synchronize weather. You can click Fly/Start at your convenience and wait at the airfield.")
+            Dim syncMessage As String = If(clubPreset IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(clubPreset.SyncMessage), clubPreset.SyncMessage, "At this time we simultaneously click the [FLY]/[Start] button to sync our weather. Remember to **🛑WAIT🛑** on the World Map for the signal!")
+            Dim launchMessage As String = If(clubPreset IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(clubPreset.LaunchMessage), clubPreset.LaunchMessage, "At this time we can begin to launch from the airfield.")
+            Dim startMessage As String = If(clubPreset IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(clubPreset.StartMessage), clubPreset.StartMessage, "At this time we cross the starting line and start the task.")
 
             'Define audio cues
             Dim audioCueDictionary As New Dictionary(Of Integer, String)

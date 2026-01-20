@@ -262,6 +262,12 @@ Public Class SupportingFeatures
         End Try
     End Sub
 
+    Public Sub EnsureDefaultClubEventsLoaded()
+        If DefaultKnownClubEvents.Count = 0 Then
+            LoadDefaultClubEvents()
+        End If
+    End Sub
+
     Public Function ListOfAllTrackerGroups() As List(Of String)
 
         Dim theList As New List(Of String)
