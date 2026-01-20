@@ -101,8 +101,8 @@
     <french>📆 Date et heure MSFS : **{0}** {1}</french>
   </entry>
   <entry key="group.event.logistics_sync_warning">
-    <english>🛑 Stay on the world map to synchronize weather 🛑</english>
-    <french>🛑 Restez sur la carte du monde pour synchroniser la météo 🛑</french>
+    <english>🛑 This event requires a synchronization! 🛑</english>
+    <french>🛑 Cet événement requiert une synchronisation! 🛑</french>
   </entry>
   <entry key="group.event.logistics_voice">
     <english>🗣 Voice: **{0}**</english>
@@ -117,36 +117,36 @@
     <french>## 🗺️ Carte</french>
   </entry>
   <entry key="group.event.meet_briefing">
-    <english>💼 Meet/Briefing: **{0}**{1}At this time we meet in the voice chat and get ready.</english>
+    <english>💼 Meet/Briefing time: **{0}**{1}At this time we meet in the voice chat and get ready.</english>
     <french>💼 Rencontre/Briefing : **{0}**{1}C’est à ce moment que nous nous retrouvons en vocal pour nous préparer.</french>
   </entry>
   <entry key="group.event.meet_label">
-    <english>💼 Meet/Briefing: **{0}**</english>
+    <english>💼 Meet/Briefing time: **{0}**</english>
     <french>💼 Rencontre/Briefing : **{0}**</french>
   </entry>
   <entry key="group.event.no_sync">
-    <english>⏱️ Sync Fly: **{0}**{1}No sync fly is required for this event.</english>
-    <french>⏱️ Synchro Vol : **{0}**{1}Aucune synchro vol n’est requise pour cet événement.</french>
+    <english>⏱️ Synchronization: **{0}**{1}No synchronization is required for this event.</english>
+    <french>⏱️ Synchronisation : **{0}**{1}Aucune synchro n’est requise pour cet événement.</french>
   </entry>
   <entry key="group.event.no_sync_label">
-    <english>⏱️ Sync Fly: **{0}**</english>
-    <french>⏱️ Synchro Vol : **{0}**</french>
+    <english>⏱️ Synchronization: **{0}**</english>
+    <french>⏱️ Synchronisation : **{0}**</french>
   </entry>
   <entry key="group.event.no_task_details">
     <english>No task details yet!</english>
     <french>Aucun détail de tâche pour le moment!</french>
   </entry>
   <entry key="group.event.sync_fly">
-    <english>⏱️ Sync Fly: **{0}**{1}At this time we simultaneously click fly to sync our weather.</english>
-    <french>⏱️ Synchro Vol : **{0}**{1}À ce moment, nous cliquons simultanément sur Voler pour synchroniser la météo.</french>
+    <english>⏱️ Synchronization: **{0}**{1}At this time we all click fly to sync our weather.</english>
+    <french>⏱️ Synchronisation : **{0}**{1}À ce moment, nous cliquons simultanément sur Voler pour synchroniser la météo.</french>
   </entry>
   <entry key="group.event.sync_label">
-    <english>⏱️ Sync Fly: **{0}**</english>
-    <french>⏱️ Synchro Vol : **{0}**</french>
+    <english>⏱️ Synchronization: **{0}**</english>
+    <french>⏱️ Synchronisation : **{0}**</french>
   </entry>
   <entry key="group.event.sync_fly_launch">
-    <english>We can also start launching from the airfield.</english>
-    <french>Nous pouvons également commencer le lancement depuis l’aérodrome.</french>
+    <english>After sync, we can also start launching from the airfield.</english>
+    <french>Après la synchro, Nous pouvons également commencer le lancement depuis l’aérodrome.</french>
   </entry>
   <entry key="group.event.launch">
     <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>

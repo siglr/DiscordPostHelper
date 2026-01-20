@@ -4440,6 +4440,7 @@ Public Class Main
                 sb.AppendLine(syncMessageTemplate)
             End If
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
+                sb.AppendLine()
                 sb.AppendLine(localizer.Format("group.event.sync_fly_launch"))
             End If
             sb.AppendLine()
