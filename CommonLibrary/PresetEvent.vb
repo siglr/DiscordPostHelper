@@ -26,6 +26,11 @@
     Public ReadOnly Property AuthorizedPublishers As List(Of String)
     Public ReadOnly Property EmojiID As String
     Public ReadOnly Property Language As Integer
+    Public ReadOnly Property MeetMessage As String
+    Public ReadOnly Property NoSyncMessage As String
+    Public ReadOnly Property SyncMessage As String
+    Public ReadOnly Property LaunchMessage As String
+    Public ReadOnly Property StartMessage As String
 
     Private _emoji As String
     Public ReadOnly Property Emoji As String
@@ -59,6 +64,11 @@
                    pForceStartTask As Boolean,
                    pDiscordURL As String,
                    pLanguage As Integer,
+                   pMeetMessage As String,
+                   pNoSyncMessage As String,
+                   pSyncMessage As String,
+                   pLaunchMessage As String,
+                   pStartMessage As String,
                    pSharedPublishers As List(Of String),
                    pAuthorizedPublishers As List(Of String))
 
@@ -87,6 +97,11 @@
         ForceStartTask = pForceStartTask
         DiscordURL = $"https://discord.com/channels/{pDiscordURL}"
         Language = pLanguage
+        MeetMessage = pMeetMessage
+        NoSyncMessage = pNoSyncMessage
+        SyncMessage = pSyncMessage
+        LaunchMessage = pLaunchMessage
+        StartMessage = pStartMessage
         SharedPublishers = pSharedPublishers
         AuthorizedPublishers = pAuthorizedPublishers
 

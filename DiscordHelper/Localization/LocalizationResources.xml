@@ -120,6 +120,10 @@
     <english>💼 Meet/Briefing: **{0}**{1}At this time we meet in the voice chat and get ready.</english>
     <french>💼 Rencontre/Briefing : **{0}**{1}C’est à ce moment que nous nous retrouvons en vocal pour nous préparer.</french>
   </entry>
+  <entry key="group.event.no_sync">
+    <english>⏱️ Sync Fly: **{0}**{1}No sync fly is required for this event.</english>
+    <french>⏱️ Synchro Vol : **{0}**{1}Aucune synchro vol n’est requise pour cet événement.</french>
+  </entry>
   <entry key="group.event.no_task_details">
     <english>No task details yet!</english>
     <french>Aucun détail de tâche pour le moment!</french>

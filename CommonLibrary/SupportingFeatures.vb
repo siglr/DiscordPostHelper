@@ -217,6 +217,11 @@ Public Class SupportingFeatures
                                 Boolean.Parse(club("ForceStartTask").ToString()),
                                 club("DiscordURL").ToString(),
                                 Integer.Parse(club("Language").ToString()),
+                                club("MeetMessage").ToString(),
+                                club("NoSyncMessage").ToString(),
+                                club("SyncMessage").ToString(),
+                                club("LaunchMessage").ToString(),
+                                club("StartMessage").ToString(),
                                 sharedPublishers,
                                 authorizedPublishers
                                 )
@@ -3535,4 +3540,3 @@ Public Class NativeMethods
         End Function
 
     End Class
-
