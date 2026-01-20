@@ -4421,19 +4421,24 @@ Public Class Main
 
         Dim meetTimestamp As String = _SF.GetDiscordTimeStampForDate(fullMeetDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
         Dim meetMessageTemplate As String = If(_ClubPreset IsNot Nothing, _ClubPreset.MeetMessage, String.Empty)
-        Dim meetMessage As String = If(String.IsNullOrWhiteSpace(meetMessageTemplate),
-            localizer.Format("group.event.meet_briefing", meetTimestamp, Environment.NewLine),
-            String.Format(meetMessageTemplate, meetTimestamp, Environment.NewLine))
-        sb.AppendLine(meetMessage)
-        sb.AppendLine()
+        If String.IsNullOrWhiteSpace(meetMessageTemplate) Then
+            sb.AppendLine(localizer.Format("group.event.meet_briefing", meetTimestamp, Environment.NewLine))
+            sb.AppendLine()
+        Else
+            sb.AppendLine(localizer.Format("group.event.meet_label", meetTimestamp))
+            sb.AppendLine(meetMessageTemplate)
+            sb.AppendLine()
+        End If
 
         If chkUseSyncFly.Checked Then
             Dim syncTimestamp As String = _SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
             Dim syncMessageTemplate As String = If(_ClubPreset IsNot Nothing, _ClubPreset.SyncMessage, String.Empty)
-            Dim syncMessage As String = If(String.IsNullOrWhiteSpace(syncMessageTemplate),
-                localizer.Format("group.event.sync_fly", syncTimestamp, Environment.NewLine),
-                String.Format(syncMessageTemplate, syncTimestamp, Environment.NewLine))
-            sb.AppendLine(syncMessage)
+            If String.IsNullOrWhiteSpace(syncMessageTemplate) Then
+                sb.AppendLine(localizer.Format("group.event.sync_fly", syncTimestamp, Environment.NewLine))
+            Else
+                sb.AppendLine(localizer.Format("group.event.sync_label", syncTimestamp))
+                sb.AppendLine(syncMessageTemplate)
+            End If
             If chkUseLaunch.Checked AndAlso fullSyncFlyDateTimeLocal = fullLaunchDateTimeLocal Then
                 sb.AppendLine(localizer.Format("group.event.sync_fly_launch"))
             End If
@@ -4441,29 +4446,35 @@ Public Class Main
         Else
             Dim noSyncTimestamp As String = _SF.GetDiscordTimeStampForDate(fullSyncFlyDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
             Dim noSyncMessageTemplate As String = If(_ClubPreset IsNot Nothing, _ClubPreset.NoSyncMessage, String.Empty)
-            Dim noSyncMessage As String = If(String.IsNullOrWhiteSpace(noSyncMessageTemplate),
-                localizer.Format("group.event.no_sync", noSyncTimestamp, Environment.NewLine),
-                String.Format(noSyncMessageTemplate, noSyncTimestamp, Environment.NewLine))
-            sb.AppendLine(noSyncMessage)
+            If String.IsNullOrWhiteSpace(noSyncMessageTemplate) Then
+                sb.AppendLine(localizer.Format("group.event.no_sync", noSyncTimestamp, Environment.NewLine))
+            Else
+                sb.AppendLine(localizer.Format("group.event.no_sync_label", noSyncTimestamp))
+                sb.AppendLine(noSyncMessageTemplate)
+            End If
             sb.AppendLine()
         End If
         If chkUseLaunch.Checked AndAlso (fullSyncFlyDateTimeLocal <> fullLaunchDateTimeLocal OrElse Not chkUseSyncFly.Checked) Then
             Dim launchTimestamp As String = _SF.GetDiscordTimeStampForDate(fullLaunchDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
             Dim launchMessageTemplate As String = If(_ClubPreset IsNot Nothing, _ClubPreset.LaunchMessage, String.Empty)
-            Dim launchMessage As String = If(String.IsNullOrWhiteSpace(launchMessageTemplate),
-                localizer.Format("group.event.launch", launchTimestamp, Environment.NewLine),
-                String.Format(launchMessageTemplate, launchTimestamp, Environment.NewLine))
-            sb.AppendLine(launchMessage)
+            If String.IsNullOrWhiteSpace(launchMessageTemplate) Then
+                sb.AppendLine(localizer.Format("group.event.launch", launchTimestamp, Environment.NewLine))
+            Else
+                sb.AppendLine(localizer.Format("group.event.launch_label", launchTimestamp))
+                sb.AppendLine(launchMessageTemplate)
+            End If
             sb.AppendLine()
         End If
 
         If chkUseStart.Checked Then
             Dim startTimestamp As String = _SF.GetDiscordTimeStampForDate(fullStartTaskDateTimeLocal, SupportingFeatures.DiscordTimeStampFormat.TimeOnlyWithoutSeconds)
             Dim startMessageTemplate As String = If(_ClubPreset IsNot Nothing, _ClubPreset.StartMessage, String.Empty)
-            Dim startMessage As String = If(String.IsNullOrWhiteSpace(startMessageTemplate),
-                localizer.Format("group.event.task_start", startTimestamp, Environment.NewLine),
-                String.Format(startMessageTemplate, startTimestamp, Environment.NewLine))
-            sb.AppendLine(startMessage)
+            If String.IsNullOrWhiteSpace(startMessageTemplate) Then
+                sb.AppendLine(localizer.Format("group.event.task_start", startTimestamp, Environment.NewLine))
+            Else
+                sb.AppendLine(localizer.Format("group.event.task_start_label", startTimestamp))
+                sb.AppendLine(startMessageTemplate)
+            End If
             sb.AppendLine()
         End If
 

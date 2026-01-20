@@ -120,9 +120,17 @@
     <english>💼 Meet/Briefing: **{0}**{1}At this time we meet in the voice chat and get ready.</english>
     <french>💼 Rencontre/Briefing : **{0}**{1}C’est à ce moment que nous nous retrouvons en vocal pour nous préparer.</french>
   </entry>
+  <entry key="group.event.meet_label">
+    <english>💼 Meet/Briefing: **{0}**</english>
+    <french>💼 Rencontre/Briefing : **{0}**</french>
+  </entry>
   <entry key="group.event.no_sync">
     <english>⏱️ Sync Fly: **{0}**{1}No sync fly is required for this event.</english>
     <french>⏱️ Synchro Vol : **{0}**{1}Aucune synchro vol n’est requise pour cet événement.</french>
+  </entry>
+  <entry key="group.event.no_sync_label">
+    <english>⏱️ Sync Fly: **{0}**</english>
+    <french>⏱️ Synchro Vol : **{0}**</french>
   </entry>
   <entry key="group.event.no_task_details">
     <english>No task details yet!</english>
@@ -132,6 +140,10 @@
     <english>⏱️ Sync Fly: **{0}**{1}At this time we simultaneously click fly to sync our weather.</english>
     <french>⏱️ Synchro Vol : **{0}**{1}À ce moment, nous cliquons simultanément sur Voler pour synchroniser la météo.</french>
   </entry>
+  <entry key="group.event.sync_label">
+    <english>⏱️ Sync Fly: **{0}**</english>
+    <french>⏱️ Synchro Vol : **{0}**</french>
+  </entry>
   <entry key="group.event.sync_fly_launch">
     <english>We can also start launching from the airfield.</english>
     <french>Nous pouvons également commencer le lancement depuis l’aérodrome.</french>
@@ -140,9 +152,17 @@
     <english>🚀 Launch: **{0}**{1}At this time we can start launching from the airfield.</english>
     <french>🚀 Lancement : **{0}**{1}C’est le moment de commencer les lancements depuis l’aérodrome.</french>
   </entry>
+  <entry key="group.event.launch_label">
+    <english>🚀 Launch: **{0}**</english>
+    <french>🚀 Lancement : **{0}**</french>
+  </entry>
   <entry key="group.event.task_start">
     <english>🟢 Task Start: **{0}**{1}At this time we cross the starting line and start the task.</english>
     <french>🟢 Départ de la tâche : **{0}**{1}C’est à ce moment que nous franchissons la ligne de départ et débutons la tâche.</french>
+  </entry>
+  <entry key="group.event.task_start_label">
+    <english>🟢 Task Start: **{0}**</english>
+    <french>🟢 Départ de la tâche : **{0}**</french>
   </entry>
   <entry key="group.event.teaser_header">
     <english>## 🤐 Teaser</english>
