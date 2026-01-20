@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>25.12.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.20.1</ReleaseVersion>
+      <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for dual weather presets
+        Added support for SSC Weather Presets and auto download
+        Added support for custom event messages per club
+        Added support for drag and drop of Discord file links and images
+        Updated extra files limit to 10 excluding map and cover image
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>25.12.11.1</ReleaseVersion>
       <ReleaseTitle>Better task duplicate detection and handling</ReleaseTitle>

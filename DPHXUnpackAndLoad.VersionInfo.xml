@@ -1,6 +1,17 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.20.1</ReleaseVersion>
+      <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>
+      <ReleaseNotes>
+        Removed Whitelist folder feature in favor of SSC Presets selection and download
+        Added support for dual weather presets
+        Added support for SSC Weather Presets and auto download
+        Added renaming of weather presets so they are easily identifiable in MSFS
+        Changed the event timing messages to be aligned with WSG and Discord and customized per club
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.14.1</ReleaseVersion>
       <ReleaseTitle>Fix IGC conversion error (decimal symbol)</ReleaseTitle>
