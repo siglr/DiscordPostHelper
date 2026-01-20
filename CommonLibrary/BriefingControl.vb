@@ -1296,21 +1296,11 @@ Public Class BriefingControl
             Dim fullStartTaskDateTimeLocal As DateTime = _sessionData.StartTaskLocalDateTime
             Dim fullMSFSLocalDateTime As DateTime = _sessionData.SimLocalDateTime
 
-            Dim fullMeetDateTimeMSFS As DateTime
-            Dim fullSyncFlyDateTimeMSFS As DateTime
-            Dim fullLaunchDateTimeMSFS As DateTime
-            Dim fullStartTaskDateTimeMSFS As DateTime
-            _SF.ExpressEventTimesInMSFSTime(fullMeetDateTimeLocal,
-                                        fullSyncFlyDateTimeLocal,
-                                        fullLaunchDateTimeLocal,
-                                        fullStartTaskDateTimeLocal,
-                                        fullMSFSLocalDateTime,
-                                        _sessionData.UseEventSyncFly,
-                                        _sessionData.UseEventLaunch,
-                                        fullMeetDateTimeMSFS,
-                                        fullSyncFlyDateTimeMSFS,
-                                        fullLaunchDateTimeMSFS,
-                                        fullStartTaskDateTimeMSFS)
+            Dim meetMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventMeetMessage), "At this time we meet in the voice chat and get ready.", _sessionData.EventMeetMessage)
+            Dim noSyncMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventNoSyncMessage), "This event DOES NOT require to synchronize weather. You can click Fly/Start at your convenience and wait at the airfield.", _sessionData.EventNoSyncMessage)
+            Dim syncMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventSyncMessage), "At this time we simultaneously click the [FLY]/[Start] button to sync our weather. Remember to **🛑WAIT🛑** on the World Map for the signal!", _sessionData.EventSyncMessage)
+            Dim launchMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventLaunchMessage), "At this time we can begin to launch from the airfield.", _sessionData.EventLaunchMessage)
+            Dim startMessage As String = If(String.IsNullOrWhiteSpace(_sessionData.EventStartMessage), "At this time we cross the starting line and start the task.", _sessionData.EventStartMessage)
 
             'Define audio cues
             Dim audioCueDictionary As New Dictionary(Of Integer, String)
@@ -1326,7 +1316,7 @@ Public Class BriefingControl
 
             'Timezone
             Dim timezoneInfos As List(Of String) = SupportingFeatures.GetTimeZoneInformation
-            sb.Append($"The local times displayed here are for the timezone: **{timezoneInfos(0)} (UTC{timezoneInfos(1)})**($*$)")
+            sb.Append($"The local times displayed here are for the timezone: **{timezoneInfos(0)}**($*$)")
             sb.Append("($*$)")
 
             'Date
@@ -1335,8 +1325,14 @@ Public Class BriefingControl
 
             'Meeting Time and Discord Voice Channel
             If _sessionData.VoiceChannel <> String.Empty Then
-                sb.Append($"We meet at: **{fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time ({Conversions.ConvertLocalToUTC(fullMeetDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu) ")
-                sb.Append($"on voice channel: **{SupportingFeatures.GetTextPartFromURLMarkdown(_sessionData.VoiceChannel)}**($*$)")
+                sb.Append($"Meet/briefing time: **{fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time.($*$)")
+                sb.Append($"{meetMessage}($*$)")
+                sb.Append("($*$)")
+                sb.Append($"Voice channel: **{SupportingFeatures.GetTextPartFromURLMarkdown(_sessionData.VoiceChannel)}**($*$)")
+                sb.Append("($*$)")
+            Else
+                sb.Append($"Meet/briefing time: **{fullMeetDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time.($*$)")
+                sb.Append($"{meetMessage}($*$)")
                 sb.Append("($*$)")
             End If
 
@@ -1358,7 +1354,7 @@ Public Class BriefingControl
                 dateFormat = "MMMM dd"
             End If
 
-            sb.Append($"The MSFS Local Date & Time should be: **{fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}**")
+            sb.Append($"The MSFS Local Date & Time should be: **{fullMSFSLocalDateTime.ToString(dateFormat, CultureInfo.CurrentCulture)}, {fullMSFSLocalDateTime.ToString("t", CultureInfo.CurrentCulture)} {SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.SimDateTimeExtraInfo, True, True)}** ")
             If _sessionData.UseEventSyncFly Then
                 sb.Append($"when it's the Sync Fly time ({fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)} your local time) ($*$)")
             ElseIf _sessionData.UseEventLaunch Then
@@ -1370,8 +1366,8 @@ Public Class BriefingControl
 
             'Sync Start or not?
             If _sessionData.UseEventSyncFly Then
-                sb.Append($"This task requires a **SYNC FLY** so **WAIT** on the World Map for the signal. ($*$)")
-                sb.Append($"Sync Fly expected at **{fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time ({Conversions.ConvertLocalToUTC(fullSyncFlyDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullSyncFlyDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append($"Synchronization: **{fullSyncFlyDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time.($*$)")
+                sb.Append($"{syncMessage}($*$)")
                 sb.Append("($*$)")
 
                 ' Add cues with their associated embedded resource paths - for Sync Fly countdown
@@ -1384,7 +1380,8 @@ Public Class BriefingControl
 
                 countDownToSyncFly.SetTargetDateTime(fullSyncFlyDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"This task DOES NOT require a SYNC FLY so you can click Fly at your convenience and wait at the airfield. ($*$)")
+                sb.Append("Synchronization: **None**.($*$)")
+                sb.Append($"{noSyncMessage}($*$)")
                 sb.Append("($*$)")
                 countDownToSyncFly.ResetToZero(True)
             End If
@@ -1397,7 +1394,8 @@ Public Class BriefingControl
 
             'Launch
             If _sessionData.UseEventLaunch Then
-                sb.Append($"Launch/Winch/Tow signal expected at **{fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time ({Conversions.ConvertLocalToUTC(fullLaunchDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullLaunchDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append($"Launch: **{fullLaunchDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time.($*$)")
+                sb.Append($"{launchMessage}($*$)")
                 sb.Append("($*$)")
 
                 audioCueDictionary.Clear()
@@ -1416,14 +1414,13 @@ Public Class BriefingControl
 
                 countDownToLaunch.SetTargetDateTime(fullLaunchDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"Once at the airfield, launch at your convenience and wait for the task start signal. ($*$)")
-                sb.Append("($*$)")
                 countDownToLaunch.ResetToZero(True)
             End If
 
             'Start task
             If _sessionData.UseEventStartTask Then
-                sb.Append($"Task start/Start gate opening signal expected at **{fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time ({Conversions.ConvertLocalToUTC(fullStartTaskDateTimeLocal).ToString("t", CultureInfo.CurrentCulture)} Zulu / {fullStartTaskDateTimeMSFS.ToString("t", CultureInfo.CurrentCulture)} in MSFS) ($*$)")
+                sb.Append($"Task start: **{fullStartTaskDateTimeLocal.ToString("t", CultureInfo.CurrentCulture)}** your local time.($*$)")
+                sb.Append($"{startMessage}($*$)")
                 sb.Append("($*$)")
 
                 ' Add cues with their associated embedded resource paths - for task start
@@ -1436,8 +1433,6 @@ Public Class BriefingControl
 
                 countDownTaskStart.SetTargetDateTime(fullStartTaskDateTimeLocal, audioCueDictionary)
             Else
-                sb.Append($"There is no specific task start time, you can cross the start gate at your convenience. ($*$)")
-                sb.Append("($*$)")
                 countDownTaskStart.ResetToZero(True)
             End If
             sb.Append($"The expected duration should be **{SupportingFeatures.GetDuration(_sessionData.DurationMin, _sessionData.DurationMax)}{SupportingFeatures.ValueToAppendIfNotEmpty(_sessionData.DurationExtraInfo, True, True)}**($*$)")

@@ -191,6 +191,12 @@ Public Class SupportingFeatures
                                 Next
                             End If
 
+                            Dim meetMessage As String = If(club("MeetMessage") IsNot Nothing, club("MeetMessage").ToString(), String.Empty)
+                            Dim noSyncMessage As String = If(club("NoSyncMessage") IsNot Nothing, club("NoSyncMessage").ToString(), String.Empty)
+                            Dim syncMessage As String = If(club("SyncMessage") IsNot Nothing, club("SyncMessage").ToString(), String.Empty)
+                            Dim launchMessage As String = If(club("LaunchMessage") IsNot Nothing, club("LaunchMessage").ToString(), String.Empty)
+                            Dim startMessage As String = If(club("StartMessage") IsNot Nothing, club("StartMessage").ToString(), String.Empty)
+
                             Dim presetEvent As New PresetEvent(
                                 club("ClubId").ToString(),
                                 club("ClubName").ToString(),
@@ -217,6 +223,11 @@ Public Class SupportingFeatures
                                 Boolean.Parse(club("ForceStartTask").ToString()),
                                 club("DiscordURL").ToString(),
                                 Integer.Parse(club("Language").ToString()),
+                                meetMessage,
+                                noSyncMessage,
+                                syncMessage,
+                                launchMessage,
+                                startMessage,
                                 sharedPublishers,
                                 authorizedPublishers
                                 )
@@ -3535,4 +3546,3 @@ Public Class NativeMethods
         End Function
 
     End Class
-

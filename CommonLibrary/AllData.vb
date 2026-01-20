@@ -208,6 +208,21 @@ Public Class AllData
     <XmlElement("EventDescription")>
     Public Property EventDescription As String
 
+    <XmlElement("EventMeetMessage")>
+    Public Property EventMeetMessage As String
+
+    <XmlElement("EventNoSyncMessage")>
+    Public Property EventNoSyncMessage As String
+
+    <XmlElement("EventSyncMessage")>
+    Public Property EventSyncMessage As String
+
+    <XmlElement("EventLaunchMessage")>
+    Public Property EventLaunchMessage As String
+
+    <XmlElement("EventStartMessage")>
+    Public Property EventStartMessage As String
+
     <XmlElement("EligibleAward")>
     Public Property EligibleAward As Integer
 

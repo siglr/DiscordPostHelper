@@ -5679,6 +5679,11 @@ Public Class Main
             .EventStartTaskDate = dtEventStartTaskDate.Value
             .EventStartTaskTime = dtEventStartTaskTime.Value
             .EventDescription = txtEventDescription.Text.Replace(Environment.NewLine, "($*$)")
+            .EventMeetMessage = If(_ClubPreset IsNot Nothing, _ClubPreset.MeetMessage, String.Empty)
+            .EventNoSyncMessage = If(_ClubPreset IsNot Nothing, _ClubPreset.NoSyncMessage, String.Empty)
+            .EventSyncMessage = If(_ClubPreset IsNot Nothing, _ClubPreset.SyncMessage, String.Empty)
+            .EventLaunchMessage = If(_ClubPreset IsNot Nothing, _ClubPreset.LaunchMessage, String.Empty)
+            .EventStartMessage = If(_ClubPreset IsNot Nothing, _ClubPreset.StartMessage, String.Empty)
             .EligibleAward = cboEligibleAward.SelectedIndex
             .EnableRepostInfo = chkRepost.Checked
             .RepostOriginalDate = dtRepostOriginalDate.Value
