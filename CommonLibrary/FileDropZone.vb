@@ -42,8 +42,8 @@ Public Class FileDropZone
     End Sub
 
     Private Sub FileDropZone_DragEnter(sender As Object, e As DragEventArgs)
-        ' Check if files are being dragged into the control
-        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+        ' Check if files or text links are being dragged into the control
+        If e.Data.GetDataPresent(DataFormats.FileDrop) OrElse e.Data.GetDataPresent(DataFormats.UnicodeText) OrElse e.Data.GetDataPresent(DataFormats.Text) Then
             isDraggingOver = True
             originalBorderColor = borderPen.Color ' Store the original border color
             borderPen.Width = 5 ' Set a thicker border in dragging mode
@@ -64,9 +64,9 @@ Public Class FileDropZone
     End Sub
 
     Private Sub FileDropZone_DragDrop(sender As Object, e As DragEventArgs)
-        ' Handle the dropped files in the main form
-        Dim files() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
-        Me.OnFilesDropped(New FilesDroppedEventArgs(files))
+        ' Handle the dropped files or links in the main form
+        Dim entries As List(Of String) = ExtractDropEntries(e.Data)
+        Me.OnFilesDropped(New FilesDroppedEventArgs(entries))
 
         ' Reset the border style and color
         isDraggingOver = False
@@ -124,6 +124,35 @@ Public Class FileDropZone
     Private Sub RefreshBackground()
         Me.Invalidate()
     End Sub
+
+    Private Function ExtractDropEntries(data As IDataObject) As List(Of String)
+        Dim entries As New List(Of String)()
+
+        If data Is Nothing Then
+            Return entries
+        End If
+
+        If data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim files = TryCast(data.GetData(DataFormats.FileDrop), String())
+            If files IsNot Nothing Then
+                entries.AddRange(files.Where(Function(f) Not String.IsNullOrWhiteSpace(f)))
+            End If
+        ElseIf data.GetDataPresent(DataFormats.UnicodeText) OrElse data.GetDataPresent(DataFormats.Text) Then
+            Dim textValue As String = Nothing
+            If data.GetDataPresent(DataFormats.UnicodeText) Then
+                textValue = TryCast(data.GetData(DataFormats.UnicodeText), String)
+            Else
+                textValue = TryCast(data.GetData(DataFormats.Text), String)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(textValue) Then
+                Dim parts = textValue.Split({ControlChars.Cr, ControlChars.Lf}, StringSplitOptions.RemoveEmptyEntries)
+                entries.AddRange(parts.Select(Function(p) p.Trim()).Where(Function(p) Not String.IsNullOrWhiteSpace(p)))
+            End If
+        End If
+
+        Return entries
+    End Function
 End Class
 
 Public Class FilesDroppedEventArgs
@@ -153,6 +182,18 @@ Public Class FilesDroppedEventArgs
     End Property
 
     Public ReadOnly Property DroppedFiles As String()
+        Get
+            Return _files
+        End Get
+    End Property
+
+    Public ReadOnly Property Entries As IReadOnlyList(Of String)
+        Get
+            Return _files
+        End Get
+    End Property
+
+    Public ReadOnly Property DroppedEntries As String()
         Get
             Return _files
         End Get

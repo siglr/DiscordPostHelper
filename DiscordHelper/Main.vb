@@ -928,29 +928,58 @@ Public Class Main
         Dim droppedDPH As String = String.Empty
         Dim droppedDPHX As String = String.Empty
         Dim droppedOtherFiles As List(Of String) = New List(Of String)
+        Dim invalidLinkEntries As New List(Of String)
 
-        ' Iterate through the array of dropped file paths
-        For Each filePath As String In e.DroppedFiles
-            Dim sanitizedPath As String = SupportingFeatures.SanitizeFilePath(filePath)
-
-            If String.IsNullOrEmpty(sanitizedPath) Then
+        ' Iterate through the array of dropped file paths or links
+        For Each entry As String In e.DroppedEntries
+            If String.IsNullOrWhiteSpace(entry) Then
                 Continue For
             End If
 
-            ' Process each file
-            Select Case Path.GetExtension(sanitizedPath).ToUpper
+            Dim trimmedEntry As String = entry.Trim()
+            Dim extension As String = GetEntryExtension(trimmedEntry)
+
+            If String.IsNullOrWhiteSpace(extension) Then
+                If IsWebLink(trimmedEntry) Then
+                    invalidLinkEntries.Add(trimmedEntry)
+                End If
+                Continue For
+            End If
+
+            Select Case extension.ToUpperInvariant()
                 Case ".PLN"
-                    droppedFlightPlan = sanitizedPath
+                    droppedFlightPlan = trimmedEntry
                 Case ".WPR"
-                    droppedWeather = sanitizedPath
+                    droppedWeather = trimmedEntry
                 Case ".DPH"
-                    droppedDPH = sanitizedPath
+                    If IsWebLink(trimmedEntry) Then
+                        invalidLinkEntries.Add(trimmedEntry)
+                    Else
+                        droppedDPH = SupportingFeatures.SanitizeFilePath(trimmedEntry)
+                    End If
                 Case ".DPHX"
-                    droppedDPHX = sanitizedPath
+                    If IsWebLink(trimmedEntry) Then
+                        invalidLinkEntries.Add(trimmedEntry)
+                    Else
+                        droppedDPHX = SupportingFeatures.SanitizeFilePath(trimmedEntry)
+                    End If
+                Case ".JPG", ".PNG"
+                    droppedOtherFiles.Add(trimmedEntry)
                 Case Else
-                    droppedOtherFiles.Add(sanitizedPath)
+                    If IsWebLink(trimmedEntry) Then
+                        invalidLinkEntries.Add(trimmedEntry)
+                    Else
+                        droppedOtherFiles.Add(trimmedEntry)
+                    End If
             End Select
         Next
+
+        If invalidLinkEntries.Count > 0 Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "Only PLN, WPR, JPG and PNG direct links can be dropped here.", "Invalid link drop", vbOKOnly, MessageBoxIcon.Error)
+            End Using
+            Return
+        End If
 
         'Handle all invalid cases
         Dim invalidMessage As String = String.Empty
@@ -966,11 +995,25 @@ Public Class Main
         If Not grbTaskInfo.Enabled AndAlso droppedFlightPlan = String.Empty AndAlso (droppedWeather <> String.Empty OrElse droppedOtherFiles.Count > 0) Then
             invalidMessage = "There is no flight plan loaded or dropped to load, so no other files can be specified in an empty session."
         End If
+        If CurrentSessionFile = String.Empty AndAlso (IsWebLink(droppedWeather) OrElse droppedOtherFiles.Any(Function(fileEntry) IsWebLink(fileEntry))) Then
+            invalidMessage = "You need to save a session before dropping weather or image links."
+        End If
         If invalidMessage <> String.Empty Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show(Me, invalidMessage, "Invalid file drop", vbOKOnly, MessageBoxIcon.Error)
             End Using
             Return
+        End If
+
+        Dim downloadFolder As String = String.Empty
+        If CurrentSessionFile <> String.Empty Then
+            downloadFolder = Path.GetDirectoryName(CurrentSessionFile)
+        ElseIf IsWebLink(droppedFlightPlan) Then
+            downloadFolder = PromptForDownloadFolder()
+            If String.IsNullOrWhiteSpace(downloadFolder) Then
+                Return
+            End If
+            SessionSettings.LastUsedFileLocation = downloadFolder
         End If
 
         'Process files
@@ -983,10 +1026,19 @@ Public Class Main
             Return
         End If
         If droppedFlightPlan <> String.Empty Then
-            LoadFlightPlan(droppedFlightPlan)
+            Dim resolvedFlightPlan = ResolveDroppedEntry(droppedFlightPlan, ".pln", downloadFolder)
+            If resolvedFlightPlan <> String.Empty Then
+                LoadFlightPlan(resolvedFlightPlan)
+            End If
         End If
         If droppedWeather <> String.Empty Then
-            LoadWeatherfile(droppedWeather)
+            Dim resolvedWeather = ResolveDroppedEntry(droppedWeather, ".wpr", downloadFolder)
+            If resolvedWeather <> String.Empty Then
+                ClearWeatherSelectionsForDrop()
+                _primaryWPRFilename = resolvedWeather
+                LoadWeatherfile(resolvedWeather)
+                UpdateSecondaryWeatherPresetName()
+            End If
         End If
         For Each otherFile As String In droppedOtherFiles
             If GetEffectiveExtraFileCountForLimit() >= MaxExtraFiles Then
@@ -995,7 +1047,10 @@ Public Class Main
                 End Using
                 Exit For
             End If
-            AddExtraFile(otherFile)
+            Dim resolvedExtraFile As String = ResolveDroppedExtraEntry(otherFile, downloadFolder)
+            If resolvedExtraFile <> String.Empty Then
+                AddExtraFile(resolvedExtraFile)
+            End If
         Next
         LoadPossibleImagesInMapDropdown(cboBriefingMap.SelectedItem)
         LoadPossibleImagesInCoverDropdown(cboCoverImage.SelectedItem)
@@ -1028,6 +1083,11 @@ Public Class Main
         End If
 
         If _SF.ExtraFileExtensionIsValid(sanitizedExtraFile) Then
+            sanitizedExtraFile = EnsureExtraFilePathReady(sanitizedExtraFile)
+            If String.IsNullOrEmpty(sanitizedExtraFile) Then
+                Return
+            End If
+
             If Not lstAllFiles.Items.Contains(sanitizedExtraFile) Then
                 lstAllFiles.Items.Add(sanitizedExtraFile)
                 SessionModified(SourceOfChange.TaskTab)
@@ -1041,6 +1101,231 @@ Public Class Main
                 MessageBox.Show(Me, "File type cannot be added as it may be unsafe.", "Error adding extra file", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         End If
+    End Sub
+
+    Private Function EnsureExtraFilePathReady(extraFilePath As String) As String
+        Dim extension As String = Path.GetExtension(extraFilePath)
+        Dim isImage As Boolean = extension.Equals(".png", StringComparison.OrdinalIgnoreCase) OrElse extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+
+        If isImage AndAlso CurrentSessionFile = String.Empty Then
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show(Me, "You need to save a session file before adding image files.", "Session not saved", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return String.Empty
+        End If
+
+        If extension.Equals(".png", StringComparison.OrdinalIgnoreCase) Then
+            Using New Centered_MessageBox(Me)
+                If MessageBox.Show(Me, "This PNG image can be converted to JPG to save space. The original PNG will be deleted. Convert it now?", "Convert PNG to JPG", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    Dim sessionFolder As String = Path.GetDirectoryName(CurrentSessionFile)
+                    Dim targetPath As String = Path.Combine(sessionFolder, $"{Path.GetFileNameWithoutExtension(extraFilePath)}.jpg")
+                    Try
+                        If File.Exists(targetPath) Then
+                            File.Delete(targetPath)
+                        End If
+
+                        ConvertPngToJpgFile(extraFilePath, targetPath, 70)
+                        File.Delete(extraFilePath)
+
+                        If lstAllFiles.Items.Contains(extraFilePath) Then
+                            lstAllFiles.Items.Remove(extraFilePath)
+                        End If
+
+                        Return targetPath
+                    Catch ex As Exception
+                        MessageBox.Show(Me, $"Unable to convert the PNG file:{Environment.NewLine}{ex.Message}", "Error converting image", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Try
+                End If
+            End Using
+        End If
+
+        Return extraFilePath
+    End Function
+
+    Private Sub ConvertPngToJpgFile(sourcePath As String, targetPath As String, quality As Long)
+        Using image As Image = Image.FromFile(sourcePath)
+            Dim jpgEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
+            Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
+            Dim myEncoderParameters As New EncoderParameters(1)
+            Dim myEncoderParameter As New EncoderParameter(myEncoder, quality)
+            myEncoderParameters.Param(0) = myEncoderParameter
+
+            image.Save(targetPath, jpgEncoder, myEncoderParameters)
+        End Using
+    End Sub
+
+    Private Function IsWebLink(entry As String) As Boolean
+        Dim uri As Uri = Nothing
+        Return Uri.TryCreate(entry, UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps)
+    End Function
+
+    Private Function GetEntryExtension(entry As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Return Path.GetExtension(uri.AbsolutePath)
+        End If
+
+        Return Path.GetExtension(entry)
+    End Function
+
+    Private Function ResolveDroppedEntry(entry As String, expectedExtension As String, downloadFolder As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            If Not Path.GetExtension(uri.AbsolutePath).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+                Return String.Empty
+            End If
+
+            If String.IsNullOrWhiteSpace(downloadFolder) Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "A download folder is required before downloading this file.", "Missing download folder", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            Try
+                Return DownloadDroppedFile(uri, downloadFolder)
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to download the dropped file: {ex.Message}", "Download error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End Try
+        End If
+
+        Dim sanitizedPath As String = SupportingFeatures.SanitizeFilePath(entry)
+        If String.IsNullOrEmpty(sanitizedPath) Then
+            Return String.Empty
+        End If
+
+        If Not Path.GetExtension(sanitizedPath).Equals(expectedExtension, StringComparison.OrdinalIgnoreCase) Then
+            Return String.Empty
+        End If
+
+        If File.Exists(sanitizedPath) Then
+            Return sanitizedPath
+        End If
+
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(Me, $"The dropped file could not be found: {sanitizedPath}", "File missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Using
+        Return String.Empty
+    End Function
+
+    Private Function ResolveDroppedExtraEntry(entry As String, downloadFolder As String) As String
+        If String.IsNullOrWhiteSpace(entry) Then
+            Return String.Empty
+        End If
+
+        Dim uri As Uri = Nothing
+        If Uri.TryCreate(entry.Trim(), UriKind.Absolute, uri) AndAlso (uri.Scheme = Uri.UriSchemeHttp OrElse uri.Scheme = Uri.UriSchemeHttps) Then
+            Dim extension As String = Path.GetExtension(uri.AbsolutePath)
+            If Not extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) AndAlso Not extension.Equals(".png", StringComparison.OrdinalIgnoreCase) Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "Only JPG or PNG links can be used for extra images.", "Invalid link drop", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            If String.IsNullOrWhiteSpace(downloadFolder) Then
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, "You need to save a session before dropping image links.", "Session not saved", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End If
+
+            Try
+                Return DownloadDroppedFile(uri, downloadFolder)
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me, $"Unable to download the dropped file: {ex.Message}", "Download error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Return String.Empty
+            End Try
+        End If
+
+        Dim sanitizedPath As String = SupportingFeatures.SanitizeFilePath(entry)
+        If String.IsNullOrEmpty(sanitizedPath) Then
+            Return String.Empty
+        End If
+
+        If File.Exists(sanitizedPath) Then
+            Return sanitizedPath
+        End If
+
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(Me, $"The dropped file could not be found: {sanitizedPath}", "File missing", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Using
+        Return String.Empty
+    End Function
+
+    Private Function DownloadDroppedFile(uri As Uri, targetFolder As String) As String
+        If Not Directory.Exists(targetFolder) Then
+            Directory.CreateDirectory(targetFolder)
+        End If
+
+        Using client As New WebClient()
+            Using stream = client.OpenRead(uri)
+                If stream Is Nothing Then
+                    Throw New InvalidOperationException("Unable to download the dropped file.")
+                End If
+
+                Dim fileName = ResolveDroppedFileName(uri, client.ResponseHeaders)
+                Dim targetPath = Path.Combine(targetFolder, fileName)
+
+                Using output As New FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None)
+                    stream.CopyTo(output)
+                End Using
+
+                Return targetPath
+            End Using
+        End Using
+    End Function
+
+    Private Function ResolveDroppedFileName(uri As Uri, headers As WebHeaderCollection) As String
+        Dim contentDisposition As String = Nothing
+        If headers IsNot Nothing Then
+            contentDisposition = headers("Content-Disposition")
+        End If
+
+        Dim fileNameFromHeader = SupportingFeatures.TryResolveContentDispositionFileName(contentDisposition)
+        If Not String.IsNullOrWhiteSpace(fileNameFromHeader) Then
+            Return fileNameFromHeader
+        End If
+
+        Dim fileName = Path.GetFileName(uri.LocalPath)
+        If String.IsNullOrWhiteSpace(fileName) Then
+            fileName = $"dropped_{Guid.NewGuid():N}{Path.GetExtension(uri.LocalPath)}"
+        End If
+
+        Return fileName
+    End Function
+
+    Private Function PromptForDownloadFolder() As String
+        Using dialog As New FolderBrowserDialog()
+            dialog.Description = "Select a folder to store the downloaded PLN file."
+            dialog.ShowNewFolderButton = True
+
+            If dialog.ShowDialog(Me) = DialogResult.OK Then
+                Return dialog.SelectedPath
+            End If
+        End Using
+
+        Return String.Empty
+    End Function
+
+    Private Sub ClearWeatherSelectionsForDrop()
+        _sscPresetName = String.Empty
+        _secondaryWPRFilename = String.Empty
+        _secondaryWeatherPresetName = String.Empty
+        btnSyncWeatherTitle.Enabled = True
     End Sub
 
     Private Sub btnLoadEventDescriptionTemplate_Click(sender As Object, e As EventArgs) Handles btnLoadEventDescriptionTemplate.Click
