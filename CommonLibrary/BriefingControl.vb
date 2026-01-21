@@ -791,18 +791,18 @@ Public Class BriefingControl
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2024.Text = "Weather (2024)"
             lblWeatherTitle2020.Text = "Weather (2020)"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            lblWeatherProfile2024.Text = GetSetupWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2020.Text = GetSetupWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         ElseIf has2024 Then
             pnlSetupWeather2024.Visible = True
             pnlSetupWeather2020.Visible = False
             lblWeatherTitle2024.Text = "Weather"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2024.Text = GetSetupWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
         ElseIf has2020 Then
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2020.Text = "Weather"
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            lblWeatherProfile2020.Text = GetSetupWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         Else
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = False
@@ -913,6 +913,21 @@ Public Class BriefingControl
         End If
 
         Return GetFriendlyPresetNameFromFilename(weatherFilePath)
+    End Function
+
+    Private Function GetSetupWeatherPresetDisplayName(weatherFilePath As String, fallbackPresetName As String) As String
+        Dim displayName = GetWeatherPresetDisplayName(weatherFilePath, fallbackPresetName)
+        If String.IsNullOrWhiteSpace(displayName) Then
+            Return displayName
+        End If
+
+        If RenderContext.HostMode = BriefingHostMode.EndUser AndAlso RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
+            If Not displayName.StartsWith("0_", StringComparison.OrdinalIgnoreCase) Then
+                displayName = "0_" & displayName
+            End If
+        End If
+
+        Return displayName
     End Function
 
     Private Sub AppendTaskWeatherPresetLines(sb As StringBuilder)
