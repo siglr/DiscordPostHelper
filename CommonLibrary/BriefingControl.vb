@@ -791,18 +791,18 @@ Public Class BriefingControl
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2024.Text = "Weather (2024)"
             lblWeatherTitle2020.Text = "Weather (2020)"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            lblWeatherProfile2024.Text = GetSetupWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2020.Text = GetSetupWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         ElseIf has2024 Then
             pnlSetupWeather2024.Visible = True
             pnlSetupWeather2020.Visible = False
             lblWeatherTitle2024.Text = "Weather"
-            lblWeatherProfile2024.Text = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            lblWeatherProfile2024.Text = GetSetupWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
         ElseIf has2020 Then
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = True
             lblWeatherTitle2020.Text = "Weather"
-            lblWeatherProfile2020.Text = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            lblWeatherProfile2020.Text = GetSetupWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
         Else
             pnlSetupWeather2024.Visible = False
             pnlSetupWeather2020.Visible = False
@@ -915,6 +915,21 @@ Public Class BriefingControl
         Return GetFriendlyPresetNameFromFilename(weatherFilePath)
     End Function
 
+    Private Function GetSetupWeatherPresetDisplayName(weatherFilePath As String, fallbackPresetName As String) As String
+        Dim displayName = GetWeatherPresetDisplayName(weatherFilePath, fallbackPresetName)
+        If String.IsNullOrWhiteSpace(displayName) Then
+            Return displayName
+        End If
+
+        If RenderContext.HostMode = BriefingHostMode.EndUser AndAlso RenderContext.PresetNameDisplayMode = PresetNameDisplayMode.Exact Then
+            If Not displayName.StartsWith("0_", StringComparison.OrdinalIgnoreCase) Then
+                displayName = "0_" & displayName
+            End If
+        End If
+
+        Return displayName
+    End Function
+
     Private Sub AppendTaskWeatherPresetLines(sb As StringBuilder)
         Dim entries = GetWeatherPresetEntriesForText()
         If entries.Count = 0 Then
@@ -956,14 +971,14 @@ Public Class BriefingControl
         Dim weather2020Path = GetWeatherFilePath(_sessionData.WeatherFilenameSecondary)
 
         If allow2024 AndAlso Not String.IsNullOrWhiteSpace(weather2024Path) Then
-            Dim displayName = GetWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
+            Dim displayName = GetSetupWeatherPresetDisplayName(weather2024Path, GetWeatherDetailsPresetNameForFile(weather2024Path))
             If Not String.IsNullOrWhiteSpace(displayName) Then
                 results.Add(New WeatherPresetEntry("MSFS 2024", displayName))
             End If
         End If
 
         If allow2020 AndAlso Not String.IsNullOrWhiteSpace(weather2020Path) Then
-            Dim displayName = GetWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
+            Dim displayName = GetSetupWeatherPresetDisplayName(weather2020Path, GetWeatherDetailsPresetNameForFile(weather2020Path))
             If Not String.IsNullOrWhiteSpace(displayName) Then
                 results.Add(New WeatherPresetEntry("MSFS 2020", displayName))
             End If
