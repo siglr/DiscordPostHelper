@@ -78,8 +78,8 @@ Public Class Settings
             Dim tempUnpackFolder As String = $"{Application.StartupPath}\Unpack"
             If Not Directory.Exists(tempUnpackFolder) Then
                 Directory.CreateDirectory(tempUnpackFolder)
-                SessionSettings.UnpackingFolder = tempUnpackFolder
             End If
+            SessionSettings.UnpackingFolder = tempUnpackFolder
             btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
             ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
         End If
@@ -90,8 +90,8 @@ Public Class Settings
             Dim dphxPackagesFolder As String = $"{Application.StartupPath}\DPHX-Packages"
             If Not Directory.Exists(dphxPackagesFolder) Then
                 Directory.CreateDirectory(dphxPackagesFolder)
-                SessionSettings.PackagesFolder = dphxPackagesFolder
             End If
+            SessionSettings.PackagesFolder = dphxPackagesFolder
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If
