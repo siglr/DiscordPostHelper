@@ -148,6 +148,12 @@ Public Class DPHXUnpackAndLoad
         End If
 
         If Not _abortingFirstRun Then
+            If Not EnsureWeatherCommunityPackagesOnStartup() Then
+                _abortingFirstRun = True
+                Application.Exit()
+                Exit Sub
+            End If
+
             Dim createdNew As Boolean
             _readySignalForListener = New EventWaitHandle(False, EventResetMode.ManualReset, READY_EVENT_NAME, createdNew)
             ' Ensure not-ready on startup even if a prior run left it signaled
@@ -780,9 +786,11 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Function OpenSettingsWindow(Optional firstRun As Boolean = False) As DialogResult
+    Private Function OpenSettingsWindow(Optional firstRun As Boolean = False,
+                                        Optional skipCommunityPackagePrompt As Boolean = False) As DialogResult
         Dim formSettings As New Settings
         formSettings.IsFirstRun = firstRun
+        formSettings.SkipCommunityPackagePrompt = skipCommunityPackagePrompt
 
         Dim result As DialogResult = formSettings.ShowDialog(Me)
 
@@ -804,6 +812,42 @@ Public Class DPHXUnpackAndLoad
 
         Return result
 
+    End Function
+
+    Private Function EnsureWeatherCommunityPackagesOnStartup() As Boolean
+        Do
+            Dim ensureResult = EnsureWeatherCommunityPackages()
+
+            Select Case ensureResult
+                Case WeatherCommunityPackageHelper.PackageEnsureResult.Ready
+                    Return True
+                Case WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled
+                    Return False
+                Case Else
+                    Dim settingsResult = OpenSettingsWindow(skipCommunityPackagePrompt:=ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.NeedsFolderChange)
+                    If settingsResult = DialogResult.Abort OrElse settingsResult = DialogResult.Cancel Then
+                        Return False
+                    End If
+            End Select
+        Loop
+    End Function
+
+    Private Function EnsureWeatherCommunityPackages() As WeatherCommunityPackageHelper.PackageEnsureResult
+        Dim result As WeatherCommunityPackageHelper.PackageEnsureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready
+
+        If Settings.SessionSettings.Is2024Installed Then
+            result = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024",
+                                                                               Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                                                                               Me)
+        End If
+
+        If result = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso Settings.SessionSettings.Is2020Installed Then
+            result = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020",
+                                                                               Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                                                                               Me)
+        End If
+
+        Return result
     End Function
 
     Private Function TempDPHXUnpackFolder() As String

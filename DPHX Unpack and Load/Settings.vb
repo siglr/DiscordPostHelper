@@ -15,6 +15,7 @@ Public Class Settings
 
     Public Shared SessionSettings As New AllSettings
     Public Property IsFirstRun As Boolean = False
+    Public Property SkipCommunityPackagePrompt As Boolean = False
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -77,8 +78,8 @@ Public Class Settings
             Dim tempUnpackFolder As String = $"{Application.StartupPath}\Unpack"
             If Not Directory.Exists(tempUnpackFolder) Then
                 Directory.CreateDirectory(tempUnpackFolder)
-                SessionSettings.UnpackingFolder = tempUnpackFolder
             End If
+            SessionSettings.UnpackingFolder = tempUnpackFolder
             btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
             ToolTip1.SetToolTip(btnUnpackingFolder, SessionSettings.UnpackingFolder)
         End If
@@ -89,8 +90,8 @@ Public Class Settings
             Dim dphxPackagesFolder As String = $"{Application.StartupPath}\DPHX-Packages"
             If Not Directory.Exists(dphxPackagesFolder) Then
                 Directory.CreateDirectory(dphxPackagesFolder)
-                SessionSettings.PackagesFolder = dphxPackagesFolder
             End If
+            SessionSettings.PackagesFolder = dphxPackagesFolder
             btnPackagesFolder.Text = SessionSettings.PackagesFolder
             ToolTip1.SetToolTip(btnPackagesFolder, SessionSettings.PackagesFolder)
         End If
@@ -188,9 +189,12 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2020 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
+            If String.IsNullOrWhiteSpace(btnMSFS2020CommunityFolder.Text) Then
                 validSettings = False
-                sbMsg.AppendLine("Invalid folder path for 2020 Weather Presets")
+                sbMsg.AppendLine("Missing folder path for 2020 Community Folder")
+            ElseIf Not Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for 2020 Community Folder")
             End If
         End If
 
@@ -199,9 +203,12 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2024 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
+            If String.IsNullOrWhiteSpace(btnMSFS2024CommunityFolder.Text) Then
                 validSettings = False
-                sbMsg.AppendLine("Invalid folder path for 2024 Weather Presets")
+                sbMsg.AppendLine("Missing folder path for 2024 Community Folder")
+            ElseIf Not Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for 2024 Community Folder")
             End If
         End If
 
@@ -268,6 +275,42 @@ Public Class Settings
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         Else
+            If chkMSFS2024.Checked Then
+                If Not WeatherCommunityPackageHelper.ConfirmCommunityFolderSelection("MSFS 2024", btnMSFS2024CommunityFolder.Text, Me) Then
+                    Return
+                End If
+            End If
+
+            If chkMSFS2020.Checked Then
+                If Not WeatherCommunityPackageHelper.ConfirmCommunityFolderSelection("MSFS 2020", btnMSFS2020CommunityFolder.Text, Me) Then
+                    Return
+                End If
+            End If
+
+            Dim ensureResult As WeatherCommunityPackageHelper.PackageEnsureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready
+
+            If chkMSFS2024.Checked Then
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024",
+                                                                                         btnMSFS2024CommunityFolder.Text,
+                                                                                         Me,
+                                                                                         SkipCommunityPackagePrompt)
+            End If
+
+            If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso chkMSFS2020.Checked Then
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020",
+                                                                                         btnMSFS2020CommunityFolder.Text,
+                                                                                         Me,
+                                                                                         SkipCommunityPackagePrompt)
+            End If
+
+            If ensureResult <> WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
+                If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled AndAlso IsFirstRun Then
+                    Me.DialogResult = DialogResult.Abort
+                    Me.Close()
+                End If
+                Return
+            End If
+
             'Save settings
             SessionSettings.MSFS2020Microsoft = opt2020Microsoft.Checked
             SessionSettings.MSFS2020Steam = opt2020Steam.Checked
@@ -382,7 +425,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnMSFS2020CommunityFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2020CommunityFolder.Click
-        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2020 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select the MSFS 2020 Community Folder"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2020CommunityFolder.Text
@@ -399,7 +442,7 @@ Public Class Settings
     End Sub
 
     Private Sub btn2024WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024CommunityFolder.Click
-        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2024 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select the MSFS 2024 Community Folder"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2024CommunityFolder.Text
@@ -815,6 +858,7 @@ Public Class Settings
         Dim folderPathToCheck As String
         Dim basePath As String
         Dim errorMessages As String = String.Empty
+        Dim communityFolder As String = String.Empty
 
         If opt2020Microsoft.Checked Then
             'Base path
@@ -827,13 +871,13 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                                                            "Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2020CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
         End If
         If opt2020Steam.Checked Then
@@ -847,13 +891,12 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2020CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) Community folder.{Environment.NewLine}"
             End If
         End If
 
@@ -868,13 +911,13 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                                                            "Packages\Microsoft.Limitless_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2024CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
         End If
         If opt2024Steam.Checked Then
@@ -888,13 +931,12 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2024CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) Community folder.{Environment.NewLine}"
             End If
         End If
 
@@ -905,6 +947,37 @@ Public Class Settings
         End If
 
     End Sub
+
+    Private Function ResolveCommunityFolderFromUserCfg(userCfgPath As String) As String
+        If String.IsNullOrWhiteSpace(userCfgPath) OrElse Not File.Exists(userCfgPath) Then
+            Return String.Empty
+        End If
+
+        Dim installedPackagesPath As String = String.Empty
+
+        Try
+            For Each line As String In File.ReadAllLines(userCfgPath)
+                Dim trimmed = line.Trim()
+                If trimmed.StartsWith("InstalledPackagesPath", StringComparison.OrdinalIgnoreCase) Then
+                    Dim firstQuote = trimmed.IndexOf(""""c)
+                    Dim lastQuote = trimmed.LastIndexOf(""""c)
+                    If firstQuote >= 0 AndAlso lastQuote > firstQuote Then
+                        installedPackagesPath = trimmed.Substring(firstQuote + 1, lastQuote - firstQuote - 1)
+                    End If
+                    Exit For
+                End If
+            Next
+        Catch
+            Return String.Empty
+        End Try
+
+        If String.IsNullOrWhiteSpace(installedPackagesPath) Then
+            Return String.Empty
+        End If
+
+        Dim communityFolder = Path.Combine(installedPackagesPath, "Community")
+        Return communityFolder
+    End Function
 
     ''' <summary>
     ''' Toggles WSGListener.exe auto-start in HKCU\...\Run

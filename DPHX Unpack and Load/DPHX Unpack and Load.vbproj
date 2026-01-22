@@ -206,6 +206,7 @@
     <Compile Include="TaskVersionSelector.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WeatherCommunityPackageHelper.vb" />
     <Compile Include="TaskFileHelper.vb" />
     <Compile Include="UpcomingEventPrompt.Designer.vb">
       <DependentUpon>UpcomingEventPrompt.vb</DependentUpon>
