@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.20.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Using a dynamic Community Folder package</ReleaseTitle>
+      <ReleaseNotes>
+        The weather files are now unpacked to a Community Folder package instead of the custom weather presets folder
+        Weather presets are shown with their 0_ prefix to be easily identifiable in MSFS
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.20.1</ReleaseVersion>
       <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>
