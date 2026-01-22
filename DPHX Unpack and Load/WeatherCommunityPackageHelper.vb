@@ -29,7 +29,8 @@ Friend Module WeatherCommunityPackageHelper
 
     Friend Function EnsureWeatherCommunityPackage(simLabel As String,
                                                  communityFolder As String,
-                                                 owner As IWin32Window) As PackageEnsureResult
+                                                 owner As IWin32Window,
+                                                 Optional silentCreate As Boolean = False) As PackageEnsureResult
         If String.IsNullOrWhiteSpace(communityFolder) Then
             LogPackageEvent($"{simLabel}: Community folder not configured.")
             Return PackageEnsureResult.NotConfigured
@@ -46,6 +47,16 @@ Friend Module WeatherCommunityPackageHelper
         End If
 
         LogPackageEvent($"{simLabel}: Missing/incomplete package items: {String.Join(", ", missingItems)}")
+
+        If silentCreate Then
+            If NeedsCommunityFolderConfirmation(simLabel, communityFolder, owner) Then
+                Return PackageEnsureResult.NeedsFolderChange
+            End If
+            If CreateOrRepairPackage(simLabel, communityFolder) Then
+                Return PackageEnsureResult.Ready
+            End If
+            Return PackageEnsureResult.Failed
+        End If
 
         Dim messageBuilder As New StringBuilder()
         messageBuilder.AppendLine($"The required DPHX Community package (0_DPHX-Weather) for {simLabel} is missing or incomplete.")
@@ -289,6 +300,20 @@ Friend Module WeatherCommunityPackageHelper
     Private Sub LogPackageEvent(message As String, Optional severity As TraceEventType = TraceEventType.Information)
         My.Application.Log.WriteEntry(message, severity)
     End Sub
+
+    Friend Function ConfirmCommunityFolderSelection(simLabel As String,
+                                                    communityFolder As String,
+                                                    owner As IWin32Window) As Boolean
+        If String.IsNullOrWhiteSpace(communityFolder) Then
+            Return True
+        End If
+
+        If Not Directory.Exists(communityFolder) Then
+            Return False
+        End If
+
+        Return Not NeedsCommunityFolderConfirmation(simLabel, communityFolder, owner)
+    End Function
 
     Private Function NeedsCommunityFolderConfirmation(simLabel As String,
                                                       communityFolder As String,

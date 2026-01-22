@@ -786,9 +786,11 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
-    Private Function OpenSettingsWindow(Optional firstRun As Boolean = False) As DialogResult
+    Private Function OpenSettingsWindow(Optional firstRun As Boolean = False,
+                                        Optional skipCommunityPackagePrompt As Boolean = False) As DialogResult
         Dim formSettings As New Settings
         formSettings.IsFirstRun = firstRun
+        formSettings.SkipCommunityPackagePrompt = skipCommunityPackagePrompt
 
         Dim result As DialogResult = formSettings.ShowDialog(Me)
 
@@ -822,7 +824,7 @@ Public Class DPHXUnpackAndLoad
                 Case WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled
                     Return False
                 Case Else
-                    Dim settingsResult = OpenSettingsWindow()
+                    Dim settingsResult = OpenSettingsWindow(skipCommunityPackagePrompt:=ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.NeedsFolderChange)
                     If settingsResult = DialogResult.Abort OrElse settingsResult = DialogResult.Cancel Then
                         Return False
                     End If

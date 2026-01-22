@@ -15,6 +15,7 @@ Public Class Settings
 
     Public Shared SessionSettings As New AllSettings
     Public Property IsFirstRun As Boolean = False
+    Public Property SkipCommunityPackagePrompt As Boolean = False
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -274,14 +275,32 @@ Public Class Settings
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         Else
+            If chkMSFS2024.Checked Then
+                If Not WeatherCommunityPackageHelper.ConfirmCommunityFolderSelection("MSFS 2024", btnMSFS2024CommunityFolder.Text, Me) Then
+                    Return
+                End If
+            End If
+
+            If chkMSFS2020.Checked Then
+                If Not WeatherCommunityPackageHelper.ConfirmCommunityFolderSelection("MSFS 2020", btnMSFS2020CommunityFolder.Text, Me) Then
+                    Return
+                End If
+            End If
+
             Dim ensureResult As WeatherCommunityPackageHelper.PackageEnsureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready
 
             If chkMSFS2024.Checked Then
-                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024", btnMSFS2024CommunityFolder.Text, Me)
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024",
+                                                                                         btnMSFS2024CommunityFolder.Text,
+                                                                                         Me,
+                                                                                         SkipCommunityPackagePrompt)
             End If
 
             If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso chkMSFS2020.Checked Then
-                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020", btnMSFS2020CommunityFolder.Text, Me)
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020",
+                                                                                         btnMSFS2020CommunityFolder.Text,
+                                                                                         Me,
+                                                                                         SkipCommunityPackagePrompt)
             End If
 
             If ensureResult <> WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
