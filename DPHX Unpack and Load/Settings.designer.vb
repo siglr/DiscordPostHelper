@@ -33,9 +33,9 @@ Partial Class Settings
         Me.btnMSFS2020FlightPlanFilesFolder = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Button()
+        Me.btnMSFS2020CommunityFolder = New System.Windows.Forms.Button()
         Me.btnUnpackingFolder = New System.Windows.Forms.Button()
-        Me.btn2020WeatherPresetsFolderPaste = New System.Windows.Forms.Button()
+        Me.btn2020CommunityFolderPaste = New System.Windows.Forms.Button()
         Me.btnTempFolderPaste = New System.Windows.Forms.Button()
         Me.btnPackagesFolderPaste = New System.Windows.Forms.Button()
         Me.btnPackagesFolder = New System.Windows.Forms.Button()
@@ -53,8 +53,8 @@ Partial Class Settings
         Me.btnXCSoarMapsFolderClear = New System.Windows.Forms.Button()
         Me.btnNB21IGCFolderClear = New System.Windows.Forms.Button()
         Me.chkExclude2024WeatherFileFromCleanup = New System.Windows.Forms.CheckBox()
-        Me.btn2024WeatherPresetsFolderPaste = New System.Windows.Forms.Button()
-        Me.btnMSFS2024WeatherPresetsFolder = New System.Windows.Forms.Button()
+        Me.btn2024CommunityFolderPaste = New System.Windows.Forms.Button()
+        Me.btnMSFS2024CommunityFolder = New System.Windows.Forms.Button()
         Me.chkExclude2024FlightPlanFromCleanup = New System.Windows.Forms.CheckBox()
         Me.btn2024FlightPlansFolderPaste = New System.Windows.Forms.Button()
         Me.btnMSFS2024FlightPlanFilesFolder = New System.Windows.Forms.Button()
@@ -87,7 +87,7 @@ Partial Class Settings
         Me.chkEnableEFBFlightPlanCreation = New System.Windows.Forms.CheckBox()
         Me.btnNB21Install = New System.Windows.Forms.Button()
         Me.btnTrackerInstall = New System.Windows.Forms.Button()
-        Me.pnlMSFS2020WeatherPresetsFolder = New System.Windows.Forms.Panel()
+        Me.pnlMSFS2020CommunityFolder = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.pnlXCSoarTasksFolder = New System.Windows.Forms.Panel()
         Me.separator3 = New System.Windows.Forms.Panel()
@@ -106,7 +106,7 @@ Partial Class Settings
         Me.pnlNoticeAndButtons = New System.Windows.Forms.Panel()
         Me.separator9 = New System.Windows.Forms.Panel()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.pnlMSFS2024WeatherPresetsFolder = New System.Windows.Forms.Panel()
+        Me.pnlMSFS2024CommunityFolder = New System.Windows.Forms.Panel()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.pnlMSFS2024FlightPlanFilesFolder = New System.Windows.Forms.Panel()
         Me.separator2 = New System.Windows.Forms.Panel()
@@ -138,14 +138,14 @@ Partial Class Settings
         Me.Label21 = New System.Windows.Forms.Label()
         Me.okCancelPanel.SuspendLayout()
         Me.pnlMSFS2020FlightPlanFilesFolder.SuspendLayout()
-        Me.pnlMSFS2020WeatherPresetsFolder.SuspendLayout()
+        Me.pnlMSFS2020CommunityFolder.SuspendLayout()
         Me.pnlXCSoarTasksFolder.SuspendLayout()
         Me.pnlUnpackingFolder.SuspendLayout()
         Me.pnlPackagesFolder.SuspendLayout()
         Me.pnlAutoUnpack.SuspendLayout()
         Me.pnlXCSoarMapsFolder.SuspendLayout()
         Me.pnlNoticeAndButtons.SuspendLayout()
-        Me.pnlMSFS2024WeatherPresetsFolder.SuspendLayout()
+        Me.pnlMSFS2024CommunityFolder.SuspendLayout()
         Me.pnlMSFS2024FlightPlanFilesFolder.SuspendLayout()
         Me.pnlMSFSInstallations.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -270,21 +270,21 @@ Partial Class Settings
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "2020 Flight Plan Files:"
         '
-        'btnMSFS2020WeatherPresetsFolder
+        'btnMSFS2020CommunityFolder
         '
-        Me.btnMSFS2020WeatherPresetsFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btnMSFS2020CommunityFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnMSFS2020WeatherPresetsFolder.AutoEllipsis = True
-        Me.btnMSFS2020WeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnMSFS2020WeatherPresetsFolder.Location = New System.Drawing.Point(194, 4)
-        Me.btnMSFS2020WeatherPresetsFolder.Name = "btnMSFS2020WeatherPresetsFolder"
-        Me.btnMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
-        Me.btnMSFS2020WeatherPresetsFolder.TabIndex = 1
-        Me.btnMSFS2020WeatherPresetsFolder.Text = "Select the MSFS 2020 Community Folder"
-        Me.btnMSFS2020WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnMSFS2020WeatherPresetsFolder, "Select the MSFS 2020 Community Folder where the app will unpack weather presets.")
-        Me.btnMSFS2020WeatherPresetsFolder.UseVisualStyleBackColor = True
+        Me.btnMSFS2020CommunityFolder.AutoEllipsis = True
+        Me.btnMSFS2020CommunityFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnMSFS2020CommunityFolder.Location = New System.Drawing.Point(194, 4)
+        Me.btnMSFS2020CommunityFolder.Name = "btnMSFS2020CommunityFolder"
+        Me.btnMSFS2020CommunityFolder.Size = New System.Drawing.Size(470, 32)
+        Me.btnMSFS2020CommunityFolder.TabIndex = 1
+        Me.btnMSFS2020CommunityFolder.Text = "Select the MSFS 2020 Community Folder"
+        Me.btnMSFS2020CommunityFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnMSFS2020CommunityFolder, "Select the MSFS 2020 Community Folder where the app will unpack weather presets.")
+        Me.btnMSFS2020CommunityFolder.UseVisualStyleBackColor = True
         '
         'btnUnpackingFolder
         '
@@ -302,17 +302,17 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.btnUnpackingFolder, "Select the folder for the flight plan files (.pln)")
         Me.btnUnpackingFolder.UseVisualStyleBackColor = True
         '
-        'btn2020WeatherPresetsFolderPaste
+        'btn2020CommunityFolderPaste
         '
-        Me.btn2020WeatherPresetsFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btn2020CommunityFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn2020WeatherPresetsFolderPaste.Location = New System.Drawing.Point(691, 4)
-        Me.btn2020WeatherPresetsFolderPaste.Name = "btn2020WeatherPresetsFolderPaste"
-        Me.btn2020WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 33)
-        Me.btn2020WeatherPresetsFolderPaste.TabIndex = 3
-        Me.btn2020WeatherPresetsFolderPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btn2020WeatherPresetsFolderPaste, "Click this button to paste a folder from your clipboard")
-        Me.btn2020WeatherPresetsFolderPaste.UseVisualStyleBackColor = True
+        Me.btn2020CommunityFolderPaste.Location = New System.Drawing.Point(691, 4)
+        Me.btn2020CommunityFolderPaste.Name = "btn2020CommunityFolderPaste"
+        Me.btn2020CommunityFolderPaste.Size = New System.Drawing.Size(75, 33)
+        Me.btn2020CommunityFolderPaste.TabIndex = 3
+        Me.btn2020CommunityFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btn2020CommunityFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btn2020CommunityFolderPaste.UseVisualStyleBackColor = True
         '
         'btnTempFolderPaste
         '
@@ -529,33 +529,33 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.chkExclude2024WeatherFileFromCleanup, "Check this to exclude weather files from cleanup")
         Me.chkExclude2024WeatherFileFromCleanup.UseVisualStyleBackColor = True
         '
-        'btn2024WeatherPresetsFolderPaste
+        'btn2024CommunityFolderPaste
         '
-        Me.btn2024WeatherPresetsFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btn2024CommunityFolderPaste.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn2024WeatherPresetsFolderPaste.Location = New System.Drawing.Point(691, 4)
-        Me.btn2024WeatherPresetsFolderPaste.Name = "btn2024WeatherPresetsFolderPaste"
-        Me.btn2024WeatherPresetsFolderPaste.Size = New System.Drawing.Size(75, 33)
-        Me.btn2024WeatherPresetsFolderPaste.TabIndex = 3
-        Me.btn2024WeatherPresetsFolderPaste.Text = "Paste"
-        Me.ToolTip1.SetToolTip(Me.btn2024WeatherPresetsFolderPaste, "Click this button to paste a folder from your clipboard")
-        Me.btn2024WeatherPresetsFolderPaste.UseVisualStyleBackColor = True
+        Me.btn2024CommunityFolderPaste.Location = New System.Drawing.Point(691, 4)
+        Me.btn2024CommunityFolderPaste.Name = "btn2024CommunityFolderPaste"
+        Me.btn2024CommunityFolderPaste.Size = New System.Drawing.Size(75, 33)
+        Me.btn2024CommunityFolderPaste.TabIndex = 3
+        Me.btn2024CommunityFolderPaste.Text = "Paste"
+        Me.ToolTip1.SetToolTip(Me.btn2024CommunityFolderPaste, "Click this button to paste a folder from your clipboard")
+        Me.btn2024CommunityFolderPaste.UseVisualStyleBackColor = True
         '
-        'btnMSFS2024WeatherPresetsFolder
+        'btnMSFS2024CommunityFolder
         '
-        Me.btnMSFS2024WeatherPresetsFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btnMSFS2024CommunityFolder.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnMSFS2024WeatherPresetsFolder.AutoEllipsis = True
-        Me.btnMSFS2024WeatherPresetsFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnMSFS2024WeatherPresetsFolder.Location = New System.Drawing.Point(194, 4)
-        Me.btnMSFS2024WeatherPresetsFolder.Name = "btnMSFS2024WeatherPresetsFolder"
-        Me.btnMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
-        Me.btnMSFS2024WeatherPresetsFolder.TabIndex = 1
-        Me.btnMSFS2024WeatherPresetsFolder.Text = "Select the MSFS 2024 Community Folder"
-        Me.btnMSFS2024WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnMSFS2024WeatherPresetsFolder, "Select the MSFS 2024 Community Folder where the app will unpack weather presets.")
-        Me.btnMSFS2024WeatherPresetsFolder.UseVisualStyleBackColor = True
+        Me.btnMSFS2024CommunityFolder.AutoEllipsis = True
+        Me.btnMSFS2024CommunityFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnMSFS2024CommunityFolder.Location = New System.Drawing.Point(194, 4)
+        Me.btnMSFS2024CommunityFolder.Name = "btnMSFS2024CommunityFolder"
+        Me.btnMSFS2024CommunityFolder.Size = New System.Drawing.Size(470, 32)
+        Me.btnMSFS2024CommunityFolder.TabIndex = 1
+        Me.btnMSFS2024CommunityFolder.Text = "Select the MSFS 2024 Community Folder"
+        Me.btnMSFS2024CommunityFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ToolTip1.SetToolTip(Me.btnMSFS2024CommunityFolder, "Select the MSFS 2024 Community Folder where the app will unpack weather presets.")
+        Me.btnMSFS2024CommunityFolder.UseVisualStyleBackColor = True
         '
         'chkExclude2024FlightPlanFromCleanup
         '
@@ -933,19 +933,19 @@ Partial Class Settings
         Me.ToolTip1.SetToolTip(Me.btnTrackerInstall, "Click this button to install SSC-Tracker")
         Me.btnTrackerInstall.UseVisualStyleBackColor = True
         '
-        'pnlMSFS2020WeatherPresetsFolder
+        'pnlMSFS2020CommunityFolder
         '
-        Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
-        Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.btn2020WeatherPresetsFolderPaste)
-        Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.btnMSFS2020WeatherPresetsFolder)
-        Me.pnlMSFS2020WeatherPresetsFolder.Controls.Add(Me.Label2)
-        Me.pnlMSFS2020WeatherPresetsFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlMSFS2020WeatherPresetsFolder.Enabled = False
-        Me.pnlMSFS2020WeatherPresetsFolder.Location = New System.Drawing.Point(0, 85)
-        Me.pnlMSFS2020WeatherPresetsFolder.Name = "pnlMSFS2020WeatherPresetsFolder"
-        Me.pnlMSFS2020WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(769, 40)
-        Me.pnlMSFS2020WeatherPresetsFolder.TabIndex = 2
+        Me.pnlMSFS2020CommunityFolder.Controls.Add(Me.chkExclude2020WeatherFileFromCleanup)
+        Me.pnlMSFS2020CommunityFolder.Controls.Add(Me.btn2020CommunityFolderPaste)
+        Me.pnlMSFS2020CommunityFolder.Controls.Add(Me.btnMSFS2020CommunityFolder)
+        Me.pnlMSFS2020CommunityFolder.Controls.Add(Me.Label2)
+        Me.pnlMSFS2020CommunityFolder.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlMSFS2020CommunityFolder.Enabled = False
+        Me.pnlMSFS2020CommunityFolder.Location = New System.Drawing.Point(0, 85)
+        Me.pnlMSFS2020CommunityFolder.Name = "pnlMSFS2020CommunityFolder"
+        Me.pnlMSFS2020CommunityFolder.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlMSFS2020CommunityFolder.Size = New System.Drawing.Size(769, 40)
+        Me.pnlMSFS2020CommunityFolder.TabIndex = 2
         '
         'Label2
         '
@@ -1130,19 +1130,19 @@ Partial Class Settings
     "ion" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Right-Click to open the folder itself"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
         '
-        'pnlMSFS2024WeatherPresetsFolder
+        'pnlMSFS2024CommunityFolder
         '
-        Me.pnlMSFS2024WeatherPresetsFolder.Controls.Add(Me.chkExclude2024WeatherFileFromCleanup)
-        Me.pnlMSFS2024WeatherPresetsFolder.Controls.Add(Me.btn2024WeatherPresetsFolderPaste)
-        Me.pnlMSFS2024WeatherPresetsFolder.Controls.Add(Me.btnMSFS2024WeatherPresetsFolder)
-        Me.pnlMSFS2024WeatherPresetsFolder.Controls.Add(Me.Label11)
-        Me.pnlMSFS2024WeatherPresetsFolder.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlMSFS2024WeatherPresetsFolder.Enabled = False
-        Me.pnlMSFS2024WeatherPresetsFolder.Location = New System.Drawing.Point(0, 165)
-        Me.pnlMSFS2024WeatherPresetsFolder.Name = "pnlMSFS2024WeatherPresetsFolder"
-        Me.pnlMSFS2024WeatherPresetsFolder.Padding = New System.Windows.Forms.Padding(2)
-        Me.pnlMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(769, 40)
-        Me.pnlMSFS2024WeatherPresetsFolder.TabIndex = 4
+        Me.pnlMSFS2024CommunityFolder.Controls.Add(Me.chkExclude2024WeatherFileFromCleanup)
+        Me.pnlMSFS2024CommunityFolder.Controls.Add(Me.btn2024CommunityFolderPaste)
+        Me.pnlMSFS2024CommunityFolder.Controls.Add(Me.btnMSFS2024CommunityFolder)
+        Me.pnlMSFS2024CommunityFolder.Controls.Add(Me.Label11)
+        Me.pnlMSFS2024CommunityFolder.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlMSFS2024CommunityFolder.Enabled = False
+        Me.pnlMSFS2024CommunityFolder.Location = New System.Drawing.Point(0, 165)
+        Me.pnlMSFS2024CommunityFolder.Name = "pnlMSFS2024CommunityFolder"
+        Me.pnlMSFS2024CommunityFolder.Padding = New System.Windows.Forms.Padding(2)
+        Me.pnlMSFS2024CommunityFolder.Size = New System.Drawing.Size(769, 40)
+        Me.pnlMSFS2024CommunityFolder.TabIndex = 4
         '
         'Label11
         '
@@ -1481,9 +1481,9 @@ Partial Class Settings
         Me.Controls.Add(Me.pnlUnpackingFolder)
         Me.Controls.Add(Me.pnlXCSoarMapsFolder)
         Me.Controls.Add(Me.pnlXCSoarTasksFolder)
-        Me.Controls.Add(Me.pnlMSFS2024WeatherPresetsFolder)
+        Me.Controls.Add(Me.pnlMSFS2024CommunityFolder)
         Me.Controls.Add(Me.pnlMSFS2024FlightPlanFilesFolder)
-        Me.Controls.Add(Me.pnlMSFS2020WeatherPresetsFolder)
+        Me.Controls.Add(Me.pnlMSFS2020CommunityFolder)
         Me.Controls.Add(Me.pnlMSFS2020FlightPlanFilesFolder)
         Me.Controls.Add(Me.pnlMSFSInstallations)
         Me.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!)
@@ -1501,8 +1501,8 @@ Partial Class Settings
         Me.okCancelPanel.ResumeLayout(False)
         Me.pnlMSFS2020FlightPlanFilesFolder.ResumeLayout(False)
         Me.pnlMSFS2020FlightPlanFilesFolder.PerformLayout()
-        Me.pnlMSFS2020WeatherPresetsFolder.ResumeLayout(False)
-        Me.pnlMSFS2020WeatherPresetsFolder.PerformLayout()
+        Me.pnlMSFS2020CommunityFolder.ResumeLayout(False)
+        Me.pnlMSFS2020CommunityFolder.PerformLayout()
         Me.pnlXCSoarTasksFolder.ResumeLayout(False)
         Me.pnlXCSoarTasksFolder.PerformLayout()
         Me.pnlUnpackingFolder.ResumeLayout(False)
@@ -1515,8 +1515,8 @@ Partial Class Settings
         Me.pnlXCSoarMapsFolder.PerformLayout()
         Me.pnlNoticeAndButtons.ResumeLayout(False)
         Me.pnlNoticeAndButtons.PerformLayout()
-        Me.pnlMSFS2024WeatherPresetsFolder.ResumeLayout(False)
-        Me.pnlMSFS2024WeatherPresetsFolder.PerformLayout()
+        Me.pnlMSFS2024CommunityFolder.ResumeLayout(False)
+        Me.pnlMSFS2024CommunityFolder.PerformLayout()
         Me.pnlMSFS2024FlightPlanFilesFolder.ResumeLayout(False)
         Me.pnlMSFS2024FlightPlanFilesFolder.PerformLayout()
         Me.pnlMSFSInstallations.ResumeLayout(False)
@@ -1550,15 +1550,15 @@ Partial Class Settings
     Friend WithEvents btnMSFS2020FlightPlanFilesFolder As Button
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents Label1 As Label
-    Friend WithEvents pnlMSFS2020WeatherPresetsFolder As Panel
-    Friend WithEvents btnMSFS2020WeatherPresetsFolder As Button
+    Friend WithEvents pnlMSFS2020CommunityFolder As Panel
+    Friend WithEvents btnMSFS2020CommunityFolder As Button
     Friend WithEvents Label2 As Label
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents pnlUnpackingFolder As Panel
     Friend WithEvents btnUnpackingFolder As Button
     Friend WithEvents Label3 As Label
     Friend WithEvents btn2020FlightPlansFolderPaste As Button
-    Friend WithEvents btn2020WeatherPresetsFolderPaste As Button
+    Friend WithEvents btn2020CommunityFolderPaste As Button
     Friend WithEvents btnTempFolderPaste As Button
     Friend WithEvents pnlPackagesFolder As Panel
     Friend WithEvents btnPackagesFolderPaste As Button
@@ -1587,10 +1587,10 @@ Partial Class Settings
     Friend WithEvents btnXCSoarMapsFolderClear As Button
     Friend WithEvents pnlNoticeAndButtons As Panel
     Friend WithEvents Label7 As Label
-    Friend WithEvents pnlMSFS2024WeatherPresetsFolder As Panel
+    Friend WithEvents pnlMSFS2024CommunityFolder As Panel
     Friend WithEvents chkExclude2024WeatherFileFromCleanup As CheckBox
-    Friend WithEvents btn2024WeatherPresetsFolderPaste As Button
-    Friend WithEvents btnMSFS2024WeatherPresetsFolder As Button
+    Friend WithEvents btn2024CommunityFolderPaste As Button
+    Friend WithEvents btnMSFS2024CommunityFolder As Button
     Friend WithEvents Label11 As Label
     Friend WithEvents pnlMSFS2024FlightPlanFilesFolder As Panel
     Friend WithEvents chkExclude2024FlightPlanFromCleanup As CheckBox

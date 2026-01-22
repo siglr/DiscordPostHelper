@@ -59,16 +59,16 @@ Public Class Settings
             ToolTip1.SetToolTip(btnMSFS2020FlightPlanFilesFolder, SessionSettings.MSFS2020FlightPlansFolder)
         End If
         If Directory.Exists(SessionSettings.MSFS2020WeatherPresetsFolder) Then
-            btnMSFS2020WeatherPresetsFolder.Text = SessionSettings.MSFS2020WeatherPresetsFolder
-            ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, SessionSettings.MSFS2020WeatherPresetsFolder)
+            btnMSFS2020CommunityFolder.Text = SessionSettings.MSFS2020WeatherPresetsFolder
+            ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, SessionSettings.MSFS2020WeatherPresetsFolder)
         End If
         If Directory.Exists(SessionSettings.MSFS2024FlightPlansFolder) Then
             btnMSFS2024FlightPlanFilesFolder.Text = SessionSettings.MSFS2024FlightPlansFolder
             ToolTip1.SetToolTip(btnMSFS2024FlightPlanFilesFolder, SessionSettings.MSFS2024FlightPlansFolder)
         End If
         If Directory.Exists(SessionSettings.MSFS2024WeatherPresetsFolder) Then
-            btnMSFS2024WeatherPresetsFolder.Text = SessionSettings.MSFS2024WeatherPresetsFolder
-            ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, SessionSettings.MSFS2024WeatherPresetsFolder)
+            btnMSFS2024CommunityFolder.Text = SessionSettings.MSFS2024WeatherPresetsFolder
+            ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, SessionSettings.MSFS2024WeatherPresetsFolder)
         End If
         If Directory.Exists(SessionSettings.UnpackingFolder) Then
             btnUnpackingFolder.Text = SessionSettings.UnpackingFolder
@@ -188,7 +188,7 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2020 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2020WeatherPresetsFolder.Text) Then
+            If Not Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2020 Weather Presets")
             End If
@@ -199,7 +199,7 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2024 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2024WeatherPresetsFolder.Text) Then
+            If Not Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2024 Weather Presets")
             End If
@@ -274,9 +274,9 @@ Public Class Settings
             SessionSettings.MSFS2024Microsoft = opt2024Microsoft.Checked
             SessionSettings.MSFS2024Steam = opt2024Steam.Checked
             SessionSettings.MSFS2020FlightPlansFolder = btnMSFS2020FlightPlanFilesFolder.Text
-            SessionSettings.MSFS2020WeatherPresetsFolder = btnMSFS2020WeatherPresetsFolder.Text
+            SessionSettings.MSFS2020WeatherPresetsFolder = btnMSFS2020CommunityFolder.Text
             SessionSettings.MSFS2024FlightPlansFolder = btnMSFS2024FlightPlanFilesFolder.Text
-            SessionSettings.MSFS2024WeatherPresetsFolder = btnMSFS2024WeatherPresetsFolder.Text
+            SessionSettings.MSFS2024WeatherPresetsFolder = btnMSFS2024CommunityFolder.Text
             SessionSettings.XCSoarTasksFolder = btnXCSoarTasksFolder.Text
             SessionSettings.XCSoarMapsFolder = btnXCSoarMapsFolder.Text
             SessionSettings.UnpackingFolder = btnUnpackingFolder.Text
@@ -363,7 +363,7 @@ Public Class Settings
         End If
     End Sub
 
-    Private Sub btn2024FlightPlanFilesFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024FlightPlanFilesFolder.Click
+    Private Sub btnMSFS2024FlightPlanFilesFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024FlightPlanFilesFolder.Click
 
         FolderBrowserDialog1.Description = "Please Select a folder where To put flight plan files For MSFS 2024 (.pln) Then"
         FolderBrowserDialog1.ShowNewFolderButton = True
@@ -381,36 +381,36 @@ Public Class Settings
         End If
     End Sub
 
-    Private Sub btn2020WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2020WeatherPresetsFolder.Click
+    Private Sub btnMSFS2020CommunityFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2020CommunityFolder.Click
         FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2020 weather presets are located (.wpr)"
         FolderBrowserDialog1.ShowNewFolderButton = True
-        If Directory.Exists(btnMSFS2020WeatherPresetsFolder.Text) Then
-            FolderBrowserDialog1.SelectedPath = btnMSFS2020WeatherPresetsFolder.Text
+        If Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnMSFS2020CommunityFolder.Text
         Else
             FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         End If
 
         If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             ' User selected a folder and clicked OK
-            btnMSFS2020WeatherPresetsFolder.Text = FolderBrowserDialog1.SelectedPath
-            ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, FolderBrowserDialog1.SelectedPath)
+            btnMSFS2020CommunityFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
     End Sub
 
-    Private Sub btn2024WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024WeatherPresetsFolder.Click
+    Private Sub btn2024WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024CommunityFolder.Click
         FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2024 weather presets are located (.wpr)"
         FolderBrowserDialog1.ShowNewFolderButton = True
-        If Directory.Exists(btnMSFS2024WeatherPresetsFolder.Text) Then
-            FolderBrowserDialog1.SelectedPath = btnMSFS2024WeatherPresetsFolder.Text
+        If Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
+            FolderBrowserDialog1.SelectedPath = btnMSFS2024CommunityFolder.Text
         Else
             FolderBrowserDialog1.SelectedPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         End If
 
         If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             ' User selected a folder and clicked OK
-            btnMSFS2024WeatherPresetsFolder.Text = FolderBrowserDialog1.SelectedPath
-            ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, FolderBrowserDialog1.SelectedPath)
+            btnMSFS2024CommunityFolder.Text = FolderBrowserDialog1.SelectedPath
+            ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, FolderBrowserDialog1.SelectedPath)
         End If
 
     End Sub
@@ -596,12 +596,12 @@ Public Class Settings
         End If
     End Sub
 
-    Private Sub btn2020WeatherPresetsFolderPaste_Click(sender As Object, e As EventArgs) Handles btn2020WeatherPresetsFolderPaste.Click
+    Private Sub btn2020CommunityFolderPaste_Click(sender As Object, e As EventArgs) Handles btn2020CommunityFolderPaste.Click
         Dim folderPath As String = Clipboard.GetText()
         If Directory.Exists(folderPath) Then
             ' folderPath is a valid folder
-            btnMSFS2020WeatherPresetsFolder.Text = folderPath
-            ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, folderPath)
+            btnMSFS2020CommunityFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPath)
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
@@ -611,12 +611,12 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btn2024WeatherPresetsFolderPaste_Click(sender As Object, e As EventArgs) Handles btn2024WeatherPresetsFolderPaste.Click
+    Private Sub btn2024CommunityFolderPaste_Click(sender As Object, e As EventArgs) Handles btn2024CommunityFolderPaste.Click
         Dim folderPath As String = Clipboard.GetText()
         If Directory.Exists(folderPath) Then
             ' folderPath is a valid folder
-            btnMSFS2024WeatherPresetsFolder.Text = folderPath
-            ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, folderPath)
+            btnMSFS2024CommunityFolder.Text = folderPath
+            ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPath)
         Else
             ' folderPath is not a valid folder
             Using New Centered_MessageBox(Me)
@@ -703,7 +703,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020WeatherPresetsFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp, btnTrackerEXEFolder.MouseUp, btnMSFS2024WeatherPresetsFolder.MouseUp, btnMSFS2024FlightPlanFilesFolder.MouseUp
+    Private Sub btnPaths_MouseUp(sender As Object, e As MouseEventArgs) Handles btnMSFS2020FlightPlanFilesFolder.MouseUp, btnMSFS2020CommunityFolder.MouseUp, btnUnpackingFolder.MouseUp, btnPackagesFolder.MouseUp, btnXCSoarTasksFolder.MouseUp, btnXCSoarMapsFolder.MouseUp, btnNB21IGCFolder.MouseUp, btnNB21EXEFolder.MouseUp, btnTrackerEXEFolder.MouseUp, btnMSFS2024CommunityFolder.MouseUp, btnMSFS2024FlightPlanFilesFolder.MouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 RightClickOnPathButton(sender)
@@ -764,26 +764,26 @@ Public Class Settings
         If chkMSFS2020.Checked Then
             pnl2020Options.Enabled = True
             pnlMSFS2020FlightPlanFilesFolder.Enabled = True
-            pnlMSFS2020WeatherPresetsFolder.Enabled = True
+            pnlMSFS2020CommunityFolder.Enabled = True
         Else
             pnl2020Options.Enabled = False
             opt2020Microsoft.Checked = False
             opt2020Steam.Checked = False
             pnlMSFS2020FlightPlanFilesFolder.Enabled = False
-            pnlMSFS2020WeatherPresetsFolder.Enabled = False
+            pnlMSFS2020CommunityFolder.Enabled = False
         End If
 
         If chkMSFS2024.Checked Then
             pnl2024Options.Enabled = True
             pnlMSFS2024FlightPlanFilesFolder.Enabled = True
-            pnlMSFS2024WeatherPresetsFolder.Enabled = True
+            pnlMSFS2024CommunityFolder.Enabled = True
             chkEnableEFBFlightPlanCreation.Enabled = True
         Else
             pnl2024Options.Enabled = False
             opt2024Microsoft.Checked = False
             opt2024Steam.Checked = False
             pnlMSFS2024FlightPlanFilesFolder.Enabled = False
-            pnlMSFS2024WeatherPresetsFolder.Enabled = False
+            pnlMSFS2024CommunityFolder.Enabled = False
             chkEnableEFBFlightPlanCreation.Enabled = False
         End If
 
@@ -830,8 +830,8 @@ Public Class Settings
             'Weather presets folders
             folderPathToCheck = $"{basePath}\Weather\Presets"
             If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020WeatherPresetsFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, folderPathToCheck)
+                btnMSFS2020CommunityFolder.Text = folderPathToCheck
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
             End If
@@ -850,8 +850,8 @@ Public Class Settings
             'Weather presets folders
             folderPathToCheck = $"{basePath}\Weather\Presets"
             If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020WeatherPresetsFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020WeatherPresetsFolder, folderPathToCheck)
+                btnMSFS2020CommunityFolder.Text = folderPathToCheck
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) weather profiles folder.{Environment.NewLine}"
             End If
@@ -871,8 +871,8 @@ Public Class Settings
             'Weather presets folders
             folderPathToCheck = $"{basePath}\Weather\Presets"
             If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024WeatherPresetsFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, folderPathToCheck)
+                btnMSFS2024CommunityFolder.Text = folderPathToCheck
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
             End If
@@ -891,8 +891,8 @@ Public Class Settings
             'Weather presets folders
             folderPathToCheck = $"{basePath}\Weather\Presets"
             If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024WeatherPresetsFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024WeatherPresetsFolder, folderPathToCheck)
+                btnMSFS2024CommunityFolder.Text = folderPathToCheck
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) weather profiles folder.{Environment.NewLine}"
             End If
