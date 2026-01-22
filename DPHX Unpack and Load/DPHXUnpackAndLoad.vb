@@ -1002,7 +1002,7 @@ Public Class DPHXUnpackAndLoad
                 Dim sourceName = Path.GetFileName(weather2020)
                 Dim installedName = TaskFileHelper.GetInstalledWeatherPresetFilename(sourceName)
                 _filesToUnpack2020.Add("Weather File", installedName)
-                If File.Exists(Path.Combine(Settings.SessionSettings.MSFS2020WeatherPresetsFolder, installedName)) Then
+                If IsWeatherPresetDeployed(True, installedName) Then
                     _filesCurrentlyUnpacked2020.Add("Weather File", installedName)
                 End If
             End If
@@ -1023,7 +1023,7 @@ Public Class DPHXUnpackAndLoad
                 Dim sourceName = Path.GetFileName(weather2024)
                 Dim installedName = TaskFileHelper.GetInstalledWeatherPresetFilename(sourceName)
                 _filesToUnpack2024.Add("Weather File", installedName)
-                If File.Exists(Path.Combine(Settings.SessionSettings.MSFS2024WeatherPresetsFolder, installedName)) Then
+                If IsWeatherPresetDeployed(False, installedName) Then
                     _filesCurrentlyUnpacked2024.Add("Weather File", installedName)
                 End If
             End If
@@ -1294,10 +1294,7 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2020 = GetWeatherFilenameForSim(True)
             If Not String.IsNullOrWhiteSpace(weather2020) Then
-                _status.AppendStatusLine(CopyWeatherPresetFile(Path.GetFileName(weather2020),
-                     TempDPHXUnpackFolder,
-                     Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
-                     "Weather Preset for MSFS 2020"), True)
+                _status.AppendStatusLine(CopyWeatherPresetToPackage(Path.GetFileName(weather2020), True), True)
             Else
                 _status.AppendStatusLine("Weather Preset for MSFS 2020 skipped - no weather preset specified.", True)
             End If
@@ -1321,10 +1318,7 @@ Public Class DPHXUnpackAndLoad
             'Weather file
             Dim weather2024 = GetWeatherFilenameForSim(False)
             If Not String.IsNullOrWhiteSpace(weather2024) Then
-                _status.AppendStatusLine(CopyWeatherPresetFile(Path.GetFileName(weather2024),
-                     TempDPHXUnpackFolder,
-                     Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
-                     "Weather Preset for MSFS 2024"), True)
+                _status.AppendStatusLine(CopyWeatherPresetToPackage(Path.GetFileName(weather2024), False), True)
             Else
                 _status.AppendStatusLine("Weather Preset for MSFS 2024 skipped - no weather preset specified.", True)
             End If
@@ -1376,7 +1370,175 @@ Public Class DPHXUnpackAndLoad
     End Function
 
     Private Function DeleteFile(filename As String, sourcePath As String, msgToAsk As String, excludeFromCleanup As Boolean) As String
-        Return TaskFileHelper.DeleteTaskFile(filename, sourcePath, msgToAsk, excludeFromCleanup, warningMSFSRunningToolStrip.Visible)
+        Dim result = TaskFileHelper.DeleteTaskFile(filename, sourcePath, msgToAsk, excludeFromCleanup, warningMSFSRunningToolStrip.Visible)
+
+        Dim layoutMessage = SyncWeatherLayoutIfNeeded(sourcePath)
+        If Not String.IsNullOrWhiteSpace(layoutMessage) Then
+            result &= $"{Environment.NewLine}{layoutMessage}"
+        End If
+
+        Return result
+    End Function
+
+    Private Function CopyWeatherPresetToPackage(filename As String, isMsfs2020 As Boolean) As String
+        Dim simLabel = If(isMsfs2020, "MSFS 2020", "MSFS 2024")
+        Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
+
+        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, Me, True)
+        If ensureResult <> WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
+            Return BuildWeatherPackageFailureMessage(simLabel, ensureResult)
+        End If
+
+        Dim presetsDir = WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(isMsfs2020)
+        If String.IsNullOrWhiteSpace(presetsDir) OrElse Not Directory.Exists(presetsDir) Then
+            Return $"Weather Preset for {simLabel} skipped - the DPHX Community package WeatherPresets folder is missing."
+        End If
+
+        Dim copyResult = CopyWeatherPresetFile(filename,
+                                               TempDPHXUnpackFolder,
+                                               presetsDir,
+                                               $"Weather Preset for {simLabel}")
+
+        Dim installedName = TaskFileHelper.GetInstalledWeatherPresetFilename(filename)
+        Dim layoutMessage = UpsertWeatherLayoutEntry(isMsfs2020, installedName)
+        If Not String.IsNullOrWhiteSpace(layoutMessage) Then
+            copyResult &= $"{Environment.NewLine}{layoutMessage}"
+        End If
+
+        Return copyResult
+    End Function
+
+    Private Function BuildWeatherPackageFailureMessage(simLabel As String,
+                                                       ensureResult As WeatherCommunityPackageHelper.PackageEnsureResult) As String
+        Select Case ensureResult
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NotConfigured
+                Return $"Weather Preset for {simLabel} skipped - Community folder not configured."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NeedsFolderChange
+                Return $"Weather Preset for {simLabel} skipped - please update the Community folder in Settings."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled
+                Return $"Weather Preset for {simLabel} skipped - Community package setup cancelled."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Failed
+                Return $"Weather Preset for {simLabel} skipped - DPHX Community package missing or incomplete (open Settings to repair)."
+            Case Else
+                Return $"Weather Preset for {simLabel} skipped - DPHX Community package not ready."
+        End Select
+    End Function
+
+    Private Function IsWeatherPresetDeployed(isMsfs2020 As Boolean, installedName As String) As Boolean
+        If String.IsNullOrWhiteSpace(installedName) Then
+            Return False
+        End If
+
+        Dim presetsDir = WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(isMsfs2020)
+        If String.IsNullOrWhiteSpace(presetsDir) Then
+            Return False
+        End If
+
+        Dim filePath = Path.Combine(presetsDir, installedName)
+        Dim layoutPath = WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(isMsfs2020)
+        Dim thumbnailPath = WeatherCommunityPackageHelper.GetDphxWeatherThumbnailPath(isMsfs2020)
+        Dim relativePath = WeatherCommunityPackageHelper.BuildWeatherPresetLayoutPath(installedName)
+
+        If Not File.Exists(filePath) Then
+            Try
+                If File.Exists(layoutPath) Then
+                    Dim layout = WeatherCommunityPackageHelper.LoadLayout(layoutPath, thumbnailPath)
+                    If WeatherCommunityPackageHelper.RemoveLayoutEntry(layout, relativePath) Then
+                        WeatherCommunityPackageHelper.SaveLayout(layoutPath, layout)
+                    End If
+                End If
+            Catch
+            End Try
+
+            Return False
+        End If
+
+        Try
+            Dim layout = WeatherCommunityPackageHelper.LoadLayout(layoutPath, thumbnailPath)
+            Dim changed = WeatherCommunityPackageHelper.SyncLayoutWithDisk(layout, presetsDir)
+
+            If Not WeatherCommunityPackageHelper.LayoutHasEntry(layout, relativePath) Then
+                WeatherCommunityPackageHelper.UpsertLayoutEntryForFile(layout, relativePath, filePath)
+                changed = True
+            End If
+
+            If changed Then
+                WeatherCommunityPackageHelper.SaveLayout(layoutPath, layout)
+            End If
+        Catch
+        End Try
+
+        Return True
+    End Function
+
+    Private Function UpsertWeatherLayoutEntry(isMsfs2020 As Boolean, installedName As String) As String
+        Dim presetsDir = WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(isMsfs2020)
+        Dim layoutPath = WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(isMsfs2020)
+        Dim thumbnailPath = WeatherCommunityPackageHelper.GetDphxWeatherThumbnailPath(isMsfs2020)
+
+        If String.IsNullOrWhiteSpace(presetsDir) OrElse String.IsNullOrWhiteSpace(layoutPath) Then
+            Return String.Empty
+        End If
+
+        Try
+            Dim layout = WeatherCommunityPackageHelper.LoadLayout(layoutPath, thumbnailPath)
+            Dim changed = WeatherCommunityPackageHelper.SyncLayoutWithDisk(layout, presetsDir)
+
+            Dim relativePath = WeatherCommunityPackageHelper.BuildWeatherPresetLayoutPath(installedName)
+            Dim filePath = Path.Combine(presetsDir, installedName)
+            If File.Exists(filePath) Then
+                If WeatherCommunityPackageHelper.UpsertLayoutEntryForFile(layout, relativePath, filePath) Then
+                    changed = True
+                End If
+            End If
+
+            If changed Then
+                WeatherCommunityPackageHelper.SaveLayout(layoutPath, layout)
+            End If
+        Catch ex As Exception
+            Return $"layout.json update failed: {ex.Message}"
+        End Try
+
+        Return String.Empty
+    End Function
+
+    Private Function SyncWeatherLayoutIfNeeded(sourcePath As String) As String
+        If String.IsNullOrWhiteSpace(sourcePath) Then
+            Return String.Empty
+        End If
+
+        Dim normalizedSource = Path.GetFullPath(sourcePath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+        Dim presets2020 = WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True)
+        Dim presets2024 = WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False)
+
+        Dim isMsfs2020 = Not String.IsNullOrWhiteSpace(presets2020) AndAlso
+            String.Equals(normalizedSource,
+                          Path.GetFullPath(presets2020).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                          StringComparison.OrdinalIgnoreCase)
+
+        Dim isMsfs2024 = Not String.IsNullOrWhiteSpace(presets2024) AndAlso
+            String.Equals(normalizedSource,
+                          Path.GetFullPath(presets2024).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                          StringComparison.OrdinalIgnoreCase)
+
+        If Not isMsfs2020 AndAlso Not isMsfs2024 Then
+            Return String.Empty
+        End If
+
+        Dim layoutPath = WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(isMsfs2020)
+        Dim thumbnailPath = WeatherCommunityPackageHelper.GetDphxWeatherThumbnailPath(isMsfs2020)
+
+        Try
+            Dim layout = WeatherCommunityPackageHelper.LoadLayout(layoutPath, thumbnailPath)
+            Dim changed = WeatherCommunityPackageHelper.SyncLayoutWithDisk(layout, sourcePath)
+            If changed Then
+                WeatherCommunityPackageHelper.SaveLayout(layoutPath, layout)
+            End If
+        Catch ex As Exception
+            Return $"layout.json sync failed: {ex.Message}"
+        End Try
+
+        Return String.Empty
     End Function
 
     Private Sub CleanupFiles()
@@ -1420,7 +1582,7 @@ Public Class DPHXUnpackAndLoad
             Dim weather2020Source = Path.GetFileName(weather2020)
             Dim weather2020Installed = TaskFileHelper.GetInstalledWeatherPresetFilename(weather2020Source)
             addCand(weather2020Installed,
-                Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True),
                 $"Weather Preset for MSFS 2020 (source: {weather2020Source}, installed: {weather2020Installed})",
                 "WPR 2020",
                 Settings.SessionSettings.Exclude2020WeatherFileFromCleanup)
@@ -1452,7 +1614,7 @@ Public Class DPHXUnpackAndLoad
             Dim weather2024Source = Path.GetFileName(weather2024)
             Dim weather2024Installed = TaskFileHelper.GetInstalledWeatherPresetFilename(weather2024Source)
             addCand(weather2024Installed,
-                Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False),
                 $"Weather Preset for MSFS 2024 (source: {weather2024Source}, installed: {weather2024Installed})",
                 "WPR 2024",
                 Settings.SessionSettings.Exclude2024WeatherFileFromCleanup)
