@@ -22,9 +22,21 @@ Public Class CleaningTool
 
             Case tabWeather2020.Name
                 lblWeather2020FolderPath.Text = If(Settings.SessionSettings.Is2020Installed, WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True), "Not installed")
+                If Settings.SessionSettings.Is2020Installed Then
+                    tabWeather2020.Enabled = EnsureWeatherPackageReady(True)
+                    If Not tabWeather2020.Enabled Then
+                        lblWeather2020FolderPath.Text = "DPHX Community package missing - open Settings to repair"
+                    End If
+                End If
 
             Case tabWeather2024.Name
                 lblWeather2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False), "Not installed")
+                If Settings.SessionSettings.Is2024Installed Then
+                    tabWeather2024.Enabled = EnsureWeatherPackageReady(False)
+                    If Not tabWeather2024.Enabled Then
+                        lblWeather2024FolderPath.Text = "DPHX Community package missing - open Settings to repair"
+                    End If
+                End If
 
             Case tabPackages.Name
                 lblPackagesFolderPath.Text = Settings.SessionSettings.PackagesFolder
@@ -629,6 +641,36 @@ Public Class CleaningTool
     End Sub
 
 #End Region
+
+    Private Function EnsureWeatherPackageReady(isMsfs2020 As Boolean) As Boolean
+        Dim simLabel = If(isMsfs2020, "MSFS 2020", "MSFS 2024")
+        Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
+
+        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, Me)
+        If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
+            Return True
+        End If
+
+        Dim message As String
+        Select Case ensureResult
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NotConfigured
+                message = $"DPHX Community package not configured for {simLabel}. Please update the Community folder in Settings."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NeedsFolderChange
+                message = $"DPHX Community package requires a different folder for {simLabel}. Please update the Community folder in Settings."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled
+                message = $"DPHX Community package setup was cancelled for {simLabel}."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Failed
+                message = $"DPHX Community package is missing or incomplete for {simLabel}. Please open Settings to repair it."
+            Case Else
+                message = $"DPHX Community package is not ready for {simLabel}."
+        End Select
+
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(message, "DPHX Community Package", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Using
+
+        Return False
+    End Function
 
     Private Function GetWeatherLayoutPathForFolder(folderPath As String) As String
         If String.IsNullOrWhiteSpace(folderPath) Then
