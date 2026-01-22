@@ -5,6 +5,7 @@ Imports System.Reflection
 Imports System.Text
 Imports System.Windows.Forms
 Imports Newtonsoft.Json.Linq
+Imports SIGLR.SoaringTools.CommonLibrary
 
 Friend Module WeatherCommunityPackageHelper
 
