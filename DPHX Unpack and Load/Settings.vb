@@ -188,9 +188,12 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2020 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
+            If String.IsNullOrWhiteSpace(btnMSFS2020CommunityFolder.Text) Then
                 validSettings = False
-                sbMsg.AppendLine("Invalid folder path for 2020 Weather Presets")
+                sbMsg.AppendLine("Missing folder path for 2020 Community Folder")
+            ElseIf Not Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for 2020 Community Folder")
             End If
         End If
 
@@ -199,9 +202,12 @@ Public Class Settings
                 validSettings = False
                 sbMsg.AppendLine("Invalid folder path for 2024 Flight Plans")
             End If
-            If Not Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
+            If String.IsNullOrWhiteSpace(btnMSFS2024CommunityFolder.Text) Then
                 validSettings = False
-                sbMsg.AppendLine("Invalid folder path for 2024 Weather Presets")
+                sbMsg.AppendLine("Missing folder path for 2024 Community Folder")
+            ElseIf Not Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
+                validSettings = False
+                sbMsg.AppendLine("Invalid folder path for 2024 Community Folder")
             End If
         End If
 
@@ -268,6 +274,24 @@ Public Class Settings
                 MessageBox.Show(sbMsg.ToString, "Cannot save settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
         Else
+            Dim ensureResult As WeatherCommunityPackageHelper.PackageEnsureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready
+
+            If chkMSFS2024.Checked Then
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024", btnMSFS2024CommunityFolder.Text, Me)
+            End If
+
+            If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso chkMSFS2020.Checked Then
+                ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020", btnMSFS2020CommunityFolder.Text, Me)
+            End If
+
+            If ensureResult <> WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
+                If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled AndAlso IsFirstRun Then
+                    Me.DialogResult = DialogResult.Abort
+                    Me.Close()
+                End If
+                Return
+            End If
+
             'Save settings
             SessionSettings.MSFS2020Microsoft = opt2020Microsoft.Checked
             SessionSettings.MSFS2020Steam = opt2020Steam.Checked
@@ -382,7 +406,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnMSFS2020CommunityFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2020CommunityFolder.Click
-        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2020 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select the MSFS 2020 Community Folder"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2020CommunityFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2020CommunityFolder.Text
@@ -399,7 +423,7 @@ Public Class Settings
     End Sub
 
     Private Sub btn2024WeatherPresetsFolder_Click(sender As Object, e As EventArgs) Handles btnMSFS2024CommunityFolder.Click
-        FolderBrowserDialog1.Description = "Please Select a folder where MSFS 2024 weather presets are located (.wpr)"
+        FolderBrowserDialog1.Description = "Please Select the MSFS 2024 Community Folder"
         FolderBrowserDialog1.ShowNewFolderButton = True
         If Directory.Exists(btnMSFS2024CommunityFolder.Text) Then
             FolderBrowserDialog1.SelectedPath = btnMSFS2024CommunityFolder.Text
