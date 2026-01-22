@@ -15,7 +15,7 @@ try {
     }
 
     if ($discordId === null || $discordId === '') {
-        throw new Exception('Discord ID missing.');
+        throw new Exception('Discord ID missing!');
     }
 
     $pdo = new PDO("sqlite:$databasePath");
