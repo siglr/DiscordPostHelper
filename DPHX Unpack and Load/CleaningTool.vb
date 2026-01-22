@@ -646,7 +646,7 @@ Public Class CleaningTool
         Dim simLabel = If(isMsfs2020, "MSFS 2020", "MSFS 2024")
         Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
 
-        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, Me)
+        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, isMsfs2020, Me)
         If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
             Return True
         End If

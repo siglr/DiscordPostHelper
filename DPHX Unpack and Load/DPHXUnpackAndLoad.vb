@@ -838,12 +838,14 @@ Public Class DPHXUnpackAndLoad
         If Settings.SessionSettings.Is2024Installed Then
             result = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024",
                                                                                Settings.SessionSettings.MSFS2024WeatherPresetsFolder,
+                                                                               False,
                                                                                Me)
         End If
 
         If result = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso Settings.SessionSettings.Is2020Installed Then
             result = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020",
                                                                                Settings.SessionSettings.MSFS2020WeatherPresetsFolder,
+                                                                               True,
                                                                                Me)
         End If
 
@@ -1384,7 +1386,7 @@ Public Class DPHXUnpackAndLoad
         Dim simLabel = If(isMsfs2020, "MSFS 2020", "MSFS 2024")
         Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
 
-        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, Me, True)
+        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, isMsfs2020, Me, True)
         If ensureResult <> WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
             Return BuildWeatherPackageFailureMessage(simLabel, ensureResult)
         End If

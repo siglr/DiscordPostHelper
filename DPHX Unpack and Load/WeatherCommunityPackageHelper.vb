@@ -1,7 +1,6 @@
 Imports System.Diagnostics
 Imports System.IO
 Imports System.Linq
-Imports System.Reflection
 Imports System.Text
 Imports System.Windows.Forms
 Imports Newtonsoft.Json.Linq
@@ -22,10 +21,15 @@ Friend Module WeatherCommunityPackageHelper
     Private Const ContentInfoFolderName As String = "ContentInfo"
     Private Const ManifestFileName As String = "manifest.json"
     Private Const LayoutFileName As String = "layout.json"
-    Private Const ThumbnailSourceName As String = "DPHXWeatherPackThumbail.jpg"
+    Private Const ThumbnailSourceName As String = "Thumbnail.jpg"
     Private Const ThumbnailFileName As String = "Thumbnail.jpg"
-    Private Const MinimumGameVersion As String = "1.0.0"
-    Private Const MinimumCompatibilityVersion As String = "1.0.0"
+    Private Const ThumbnailLayoutSize As Long = 100045
+    Private Const ThumbnailLayoutDate As Long = 134104361600000000
+    Private Const PackageVersion As String = "2026.01.21"
+    Private Const MinimumGameVersionMsfs2024 As String = "1.5.27"
+    Private Const MinimumCompatibilityVersionMsfs2024 As String = "5.27.0.112"
+    Private Const MinimumGameVersionMsfs2020 As String = "1.37.18"
+    Private Const MinimumCompatibilityVersionMsfs2020 As String = "3.20.0.00"
 
     Friend Function GetDphxWeatherPackageRoot(isMsfs2020 As Boolean) As String
         Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
@@ -60,7 +64,7 @@ Friend Module WeatherCommunityPackageHelper
             Return String.Empty
         End If
 
-        Return Path.Combine(packageRoot, ContentInfoFolderName, ThumbnailFileName)
+        Return Path.Combine(packageRoot, ContentInfoFolderName, PackageFolderName, ThumbnailFileName)
     End Function
 
     Friend Function BuildWeatherPresetLayoutPath(fileName As String) As String
@@ -232,6 +236,7 @@ Friend Module WeatherCommunityPackageHelper
 
     Friend Function EnsureWeatherCommunityPackage(simLabel As String,
                                                  communityFolder As String,
+                                                 isMsfs2020 As Boolean,
                                                  owner As IWin32Window,
                                                  Optional silentCreate As Boolean = False) As PackageEnsureResult
         If String.IsNullOrWhiteSpace(communityFolder) Then
@@ -245,7 +250,7 @@ Friend Module WeatherCommunityPackageHelper
         End If
 
         Dim missingItems As List(Of String) = Nothing
-        If IsPackageComplete(communityFolder, missingItems) Then
+        If IsPackageComplete(communityFolder, isMsfs2020, missingItems) Then
             Return PackageEnsureResult.Ready
         End If
 
@@ -255,7 +260,7 @@ Friend Module WeatherCommunityPackageHelper
             If NeedsCommunityFolderConfirmation(simLabel, communityFolder, owner) Then
                 Return PackageEnsureResult.NeedsFolderChange
             End If
-            If CreateOrRepairPackage(simLabel, communityFolder) Then
+            If CreateOrRepairPackage(simLabel, communityFolder, isMsfs2020) Then
                 Return PackageEnsureResult.Ready
             End If
             Return PackageEnsureResult.Failed
@@ -288,7 +293,7 @@ Friend Module WeatherCommunityPackageHelper
                 If NeedsCommunityFolderConfirmation(simLabel, communityFolder, owner) Then
                     Return PackageEnsureResult.NeedsFolderChange
                 End If
-                If CreateOrRepairPackage(simLabel, communityFolder) Then
+                If CreateOrRepairPackage(simLabel, communityFolder, isMsfs2020) Then
                     Return PackageEnsureResult.Ready
                 End If
                 Return PackageEnsureResult.Failed
@@ -300,12 +305,13 @@ Friend Module WeatherCommunityPackageHelper
     End Function
 
     Private Function IsPackageComplete(communityFolder As String,
+                                       isMsfs2020 As Boolean,
                                        ByRef missingItems As List(Of String)) As Boolean
         Dim packageRoot = Path.Combine(communityFolder, PackageFolderName)
         Dim manifestPath = Path.Combine(packageRoot, ManifestFileName)
         Dim layoutPath = Path.Combine(packageRoot, LayoutFileName)
         Dim weatherPresetsPath = Path.Combine(packageRoot, WeatherPresetsFolderName)
-        Dim thumbnailPath = Path.Combine(packageRoot, ContentInfoFolderName, ThumbnailFileName)
+        Dim thumbnailPath = Path.Combine(packageRoot, ContentInfoFolderName, PackageFolderName, ThumbnailFileName)
 
         missingItems = New List(Of String)
 
@@ -315,26 +321,45 @@ Friend Module WeatherCommunityPackageHelper
         If Not Directory.Exists(weatherPresetsPath) Then
             missingItems.Add($"{PackageFolderName}\{WeatherPresetsFolderName}")
         End If
-        If Not File.Exists(manifestPath) OrElse Not IsValidJsonFile(manifestPath) Then
+        If Not File.Exists(manifestPath) Then
             missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
+        Else
+            Dim manifestToken As JToken = Nothing
+            Try
+                manifestToken = JToken.Parse(File.ReadAllText(manifestPath))
+            Catch
+                missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
+            End Try
+
+            Dim manifestObject = TryCast(manifestToken, JObject)
+            If manifestObject Is Nothing Then
+                missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
+            Else
+                Dim expectedManifest = BuildManifest(isMsfs2020)
+                If Not JToken.DeepEquals(manifestObject, expectedManifest) Then
+                    WriteJsonFile(manifestPath, expectedManifest)
+                    LogPackageEvent($"Manifest updated to expected content at {manifestPath}.")
+                End If
+            End If
         End If
         If Not File.Exists(layoutPath) OrElse Not IsValidLayoutFile(layoutPath, thumbnailPath) Then
             missingItems.Add($"{PackageFolderName}\{LayoutFileName}")
         End If
         If Not File.Exists(thumbnailPath) Then
-            missingItems.Add($"{PackageFolderName}\{ContentInfoFolderName}\{ThumbnailFileName}")
+            missingItems.Add($"{PackageFolderName}\{ContentInfoFolderName}\{PackageFolderName}\{ThumbnailFileName}")
         End If
 
         Return missingItems.Count = 0
     End Function
 
-    Private Function CreateOrRepairPackage(simLabel As String, communityFolder As String) As Boolean
+    Private Function CreateOrRepairPackage(simLabel As String, communityFolder As String, isMsfs2020 As Boolean) As Boolean
         Dim packageRoot = Path.Combine(communityFolder, PackageFolderName)
         Dim weatherPresetsPath = Path.Combine(packageRoot, WeatherPresetsFolderName)
         Dim contentInfoPath = Path.Combine(packageRoot, ContentInfoFolderName)
+        Dim contentInfoPackagePath = Path.Combine(contentInfoPath, PackageFolderName)
         Dim manifestPath = Path.Combine(packageRoot, ManifestFileName)
         Dim layoutPath = Path.Combine(packageRoot, LayoutFileName)
-        Dim thumbnailTarget = Path.Combine(contentInfoPath, ThumbnailFileName)
+        Dim thumbnailTarget = Path.Combine(contentInfoPackagePath, ThumbnailFileName)
 
         Try
             If Directory.Exists(packageRoot) Then
@@ -345,12 +370,13 @@ Friend Module WeatherCommunityPackageHelper
             Directory.CreateDirectory(packageRoot)
             Directory.CreateDirectory(weatherPresetsPath)
             Directory.CreateDirectory(contentInfoPath)
+            Directory.CreateDirectory(contentInfoPackagePath)
 
             If Not WriteThumbnail(thumbnailTarget) Then
                 Return False
             End If
 
-            Dim manifest = BuildManifest()
+            Dim manifest = BuildManifest(isMsfs2020)
             WriteJsonFile(manifestPath, manifest)
             LogPackageEvent($"{simLabel}: manifest.json generated at {manifestPath}")
 
@@ -385,18 +411,16 @@ Friend Module WeatherCommunityPackageHelper
         Return True
     End Function
 
-    Private Function BuildManifest() As JObject
-        Dim version = Assembly.GetExecutingAssembly().GetName().Version.ToString()
-
+    Private Function BuildManifest(isMsfs2020 As Boolean) As JObject
         Dim manifest = New JObject From {
             {"dependencies", New JArray()},
             {"content_type", "WEATHER"},
             {"title", "DPHX – Dynamic Weather Preset"},
             {"manufacturer", "WeSimGlide"},
             {"creator", "MajorDad"},
-            {"package_version", version},
-            {"minimum_game_version", MinimumGameVersion},
-            {"minimum_compatibility_version", MinimumCompatibilityVersion},
+            {"package_version", PackageVersion},
+            {"minimum_game_version", If(isMsfs2020, MinimumGameVersionMsfs2020, MinimumGameVersionMsfs2024)},
+            {"minimum_compatibility_version", If(isMsfs2020, MinimumCompatibilityVersionMsfs2020, MinimumCompatibilityVersionMsfs2024)},
             {"export_type", "Community"},
             {"builder", "Microsoft Flight Simulator 2024"},
             {"package_order_hint", "CUSTOM_SIMOBJECTS"}
@@ -410,9 +434,9 @@ Friend Module WeatherCommunityPackageHelper
         If File.Exists(thumbnailPath) Then
             Dim info As New FileInfo(thumbnailPath)
             contentItems.Add(New JObject From {
-                {"path", $"{ContentInfoFolderName}/{ThumbnailFileName}"},
-                {"size", info.Length},
-                {"date", DateTime.UtcNow.ToFileTimeUtc()}
+                {"path", $"{ContentInfoFolderName}/{PackageFolderName}/{ThumbnailFileName}"},
+                {"size", ThumbnailLayoutSize},
+                {"date", ThumbnailLayoutDate}
             })
         End If
 
@@ -452,9 +476,12 @@ Friend Module WeatherCommunityPackageHelper
 
             For Each entry As JObject In contentArray.OfType(Of JObject)()
                 Dim pathValue = entry.Value(Of String)("path")
-                If String.Equals(pathValue, $"{ContentInfoFolderName}/{ThumbnailFileName}", StringComparison.OrdinalIgnoreCase) Then
+                If String.Equals(pathValue, $"{ContentInfoFolderName}/{PackageFolderName}/{ThumbnailFileName}", StringComparison.OrdinalIgnoreCase) Then
                     Dim sizeValue = entry.Value(Of Long?)("size")
-                    If sizeValue.HasValue AndAlso sizeValue.Value = thumbnailSize Then
+                    Dim dateValue = entry.Value(Of Long?)("date")
+                    If sizeValue.HasValue AndAlso sizeValue.Value = ThumbnailLayoutSize AndAlso
+                        dateValue.HasValue AndAlso dateValue.Value = ThumbnailLayoutDate AndAlso
+                        thumbnailSize = ThumbnailLayoutSize Then
                         Return True
                     End If
                 End If
@@ -483,14 +510,13 @@ Friend Module WeatherCommunityPackageHelper
         Dim contentArray = EnsureContentArray(layout)
         Dim thumbnailEntry = contentArray.OfType(Of JObject)().
             FirstOrDefault(Function(obj) String.Equals(NormalizeLayoutPath(obj.Value(Of String)("path")),
-                                                       $"{ContentInfoFolderName}/{ThumbnailFileName}",
+                                                       $"{ContentInfoFolderName}/{PackageFolderName}/{ThumbnailFileName}",
                                                        StringComparison.OrdinalIgnoreCase))
         If thumbnailEntry Is Nothing Then
-            Dim info As New FileInfo(thumbnailPath)
             contentArray.Add(New JObject From {
-                {"path", $"{ContentInfoFolderName}/{ThumbnailFileName}"},
-                {"size", info.Length},
-                {"date", DateTime.UtcNow.ToFileTimeUtc()}
+                {"path", $"{ContentInfoFolderName}/{PackageFolderName}/{ThumbnailFileName}"},
+                {"size", ThumbnailLayoutSize},
+                {"date", ThumbnailLayoutDate}
             })
         End If
     End Sub

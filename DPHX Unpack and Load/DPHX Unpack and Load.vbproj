@@ -329,7 +329,7 @@
     <Content Include="DarkGreenDot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="DPHXWeatherPackThumbail.jpg">
+    <Content Include="Thumbnail.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

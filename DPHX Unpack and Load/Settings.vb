@@ -292,6 +292,7 @@ Public Class Settings
             If chkMSFS2024.Checked Then
                 ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2024",
                                                                                          btnMSFS2024CommunityFolder.Text,
+                                                                                         False,
                                                                                          Me,
                                                                                          SkipCommunityPackagePrompt)
             End If
@@ -299,6 +300,7 @@ Public Class Settings
             If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready AndAlso chkMSFS2020.Checked Then
                 ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage("MSFS 2020",
                                                                                          btnMSFS2020CommunityFolder.Text,
+                                                                                         True,
                                                                                          Me,
                                                                                          SkipCommunityPackagePrompt)
             End If
