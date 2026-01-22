@@ -27,6 +27,209 @@ Friend Module WeatherCommunityPackageHelper
     Private Const MinimumGameVersion As String = "1.0.0"
     Private Const MinimumCompatibilityVersion As String = "1.0.0"
 
+    Friend Function GetDphxWeatherPackageRoot(isMsfs2020 As Boolean) As String
+        Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
+        If String.IsNullOrWhiteSpace(communityFolder) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(communityFolder, PackageFolderName)
+    End Function
+
+    Friend Function GetDphxWeatherPresetsDir(isMsfs2020 As Boolean) As String
+        Dim packageRoot = GetDphxWeatherPackageRoot(isMsfs2020)
+        If String.IsNullOrWhiteSpace(packageRoot) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(packageRoot, WeatherPresetsFolderName)
+    End Function
+
+    Friend Function GetDphxWeatherLayoutPath(isMsfs2020 As Boolean) As String
+        Dim packageRoot = GetDphxWeatherPackageRoot(isMsfs2020)
+        If String.IsNullOrWhiteSpace(packageRoot) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(packageRoot, LayoutFileName)
+    End Function
+
+    Friend Function GetDphxWeatherThumbnailPath(isMsfs2020 As Boolean) As String
+        Dim packageRoot = GetDphxWeatherPackageRoot(isMsfs2020)
+        If String.IsNullOrWhiteSpace(packageRoot) Then
+            Return String.Empty
+        End If
+
+        Return Path.Combine(packageRoot, ContentInfoFolderName, ThumbnailFileName)
+    End Function
+
+    Friend Function BuildWeatherPresetLayoutPath(fileName As String) As String
+        If String.IsNullOrWhiteSpace(fileName) Then
+            Return String.Empty
+        End If
+
+        Return NormalizeLayoutPath($"{WeatherPresetsFolderName}/{fileName}")
+    End Function
+
+    Friend Function LoadLayout(layoutPath As String, Optional thumbnailPath As String = Nothing) As JObject
+        If Not String.IsNullOrWhiteSpace(layoutPath) AndAlso File.Exists(layoutPath) Then
+            Try
+                Dim content = File.ReadAllText(layoutPath)
+                Dim token = JToken.Parse(content)
+                Dim layout = TryCast(token, JObject)
+                If layout IsNot Nothing Then
+                    EnsureContentArray(layout)
+                    If Not String.IsNullOrWhiteSpace(thumbnailPath) Then
+                        EnsureThumbnailEntry(layout, thumbnailPath)
+                    End If
+                    Return layout
+                End If
+            Catch
+            End Try
+        End If
+
+        Dim emptyLayout As New JObject From {
+            {"content", New JArray()}
+        }
+
+        If Not String.IsNullOrWhiteSpace(thumbnailPath) Then
+            EnsureThumbnailEntry(emptyLayout, thumbnailPath)
+        End If
+
+        Return emptyLayout
+    End Function
+
+    Friend Sub SaveLayout(layoutPath As String, layout As JObject)
+        If String.IsNullOrWhiteSpace(layoutPath) OrElse layout Is Nothing Then
+            Exit Sub
+        End If
+
+        WriteJsonFile(layoutPath, layout)
+    End Sub
+
+    Friend Function LayoutHasEntry(layout As JObject, relativePath As String) As Boolean
+        If layout Is Nothing Then
+            Return False
+        End If
+
+        Dim normalized = NormalizeLayoutPath(relativePath)
+        If String.IsNullOrWhiteSpace(normalized) Then
+            Return False
+        End If
+
+        Dim contentArray = EnsureContentArray(layout)
+        For Each entry As JObject In contentArray.OfType(Of JObject)()
+            Dim pathValue = NormalizeLayoutPath(entry.Value(Of String)("path"))
+            If String.Equals(pathValue, normalized, StringComparison.OrdinalIgnoreCase) Then
+                Return True
+            End If
+        Next
+
+        Return False
+    End Function
+
+    Friend Function UpsertLayoutEntryForFile(layout As JObject, relativePath As String, fileFullPath As String) As Boolean
+        If layout Is Nothing OrElse String.IsNullOrWhiteSpace(relativePath) OrElse String.IsNullOrWhiteSpace(fileFullPath) Then
+            Return False
+        End If
+
+        Dim normalized = NormalizeLayoutPath(relativePath)
+        Dim contentArray = EnsureContentArray(layout)
+        Dim entry = contentArray.OfType(Of JObject)().
+            FirstOrDefault(Function(obj) String.Equals(NormalizeLayoutPath(obj.Value(Of String)("path")),
+                                                       normalized,
+                                                       StringComparison.OrdinalIgnoreCase))
+
+        Dim info As New FileInfo(fileFullPath)
+        Dim sizeValue As Long = If(info.Exists, info.Length, 0)
+        Dim dateValue As Long = DateTime.UtcNow.ToFileTimeUtc()
+
+        Dim updated As Boolean = False
+        If entry Is Nothing Then
+            contentArray.Add(New JObject From {
+                {"path", normalized},
+                {"size", sizeValue},
+                {"date", dateValue}
+            })
+            updated = True
+        Else
+            entry("size") = sizeValue
+            entry("date") = dateValue
+            updated = True
+        End If
+
+        Return updated
+    End Function
+
+    Friend Function RemoveLayoutEntry(layout As JObject, relativePath As String) As Boolean
+        If layout Is Nothing OrElse String.IsNullOrWhiteSpace(relativePath) Then
+            Return False
+        End If
+
+        Dim normalized = NormalizeLayoutPath(relativePath)
+        Dim contentArray = EnsureContentArray(layout)
+
+        For i As Integer = contentArray.Count - 1 To 0 Step -1
+            Dim entry = TryCast(contentArray(i), JObject)
+            If entry Is Nothing Then
+                Continue For
+            End If
+
+            Dim pathValue = NormalizeLayoutPath(entry.Value(Of String)("path"))
+            If String.Equals(pathValue, normalized, StringComparison.OrdinalIgnoreCase) Then
+                contentArray.RemoveAt(i)
+                Return True
+            End If
+        Next
+
+        Return False
+    End Function
+
+    Friend Function SyncLayoutWithDisk(layout As JObject, presetsDir As String, Optional addMissing As Boolean = True) As Boolean
+        If layout Is Nothing OrElse String.IsNullOrWhiteSpace(presetsDir) Then
+            Return False
+        End If
+
+        Dim contentArray = EnsureContentArray(layout)
+        Dim changed As Boolean = False
+
+        Dim expected As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+        If Directory.Exists(presetsDir) Then
+            For Each filePath As String In Directory.EnumerateFiles(presetsDir, "*.wpr")
+                Dim fileName = Path.GetFileName(filePath)
+                Dim relPath = BuildWeatherPresetLayoutPath(fileName)
+                If String.IsNullOrWhiteSpace(relPath) Then
+                    Continue For
+                End If
+
+                expected.Add(relPath)
+
+                If addMissing AndAlso Not LayoutHasEntry(layout, relPath) Then
+                    If UpsertLayoutEntryForFile(layout, relPath, filePath) Then
+                        changed = True
+                    End If
+                End If
+            Next
+        End If
+
+        For i As Integer = contentArray.Count - 1 To 0 Step -1
+            Dim entry = TryCast(contentArray(i), JObject)
+            If entry Is Nothing Then
+                Continue For
+            End If
+
+            Dim pathValue = NormalizeLayoutPath(entry.Value(Of String)("path"))
+            If pathValue.StartsWith($"{WeatherPresetsFolderName}/", StringComparison.OrdinalIgnoreCase) Then
+                If Not expected.Contains(pathValue) Then
+                    contentArray.RemoveAt(i)
+                    changed = True
+                End If
+            End If
+        Next
+
+        Return changed
+    End Function
+
     Friend Function EnsureWeatherCommunityPackage(simLabel As String,
                                                  communityFolder As String,
                                                  owner As IWin32Window,
@@ -261,6 +464,43 @@ Friend Module WeatherCommunityPackageHelper
         Catch
             Return False
         End Try
+    End Function
+
+    Private Function EnsureContentArray(layout As JObject) As JArray
+        Dim contentArray = TryCast(layout("content"), JArray)
+        If contentArray Is Nothing Then
+            contentArray = New JArray()
+            layout("content") = contentArray
+        End If
+        Return contentArray
+    End Function
+
+    Private Sub EnsureThumbnailEntry(layout As JObject, thumbnailPath As String)
+        If layout Is Nothing OrElse String.IsNullOrWhiteSpace(thumbnailPath) OrElse Not File.Exists(thumbnailPath) Then
+            Exit Sub
+        End If
+
+        Dim contentArray = EnsureContentArray(layout)
+        Dim thumbnailEntry = contentArray.OfType(Of JObject)().
+            FirstOrDefault(Function(obj) String.Equals(NormalizeLayoutPath(obj.Value(Of String)("path")),
+                                                       $"{ContentInfoFolderName}/{ThumbnailFileName}",
+                                                       StringComparison.OrdinalIgnoreCase))
+        If thumbnailEntry Is Nothing Then
+            Dim info As New FileInfo(thumbnailPath)
+            contentArray.Add(New JObject From {
+                {"path", $"{ContentInfoFolderName}/{ThumbnailFileName}"},
+                {"size", info.Length},
+                {"date", DateTime.UtcNow.ToFileTimeUtc()}
+            })
+        End If
+    End Sub
+
+    Private Function NormalizeLayoutPath(pathValue As String) As String
+        If String.IsNullOrWhiteSpace(pathValue) Then
+            Return String.Empty
+        End If
+
+        Return pathValue.Replace("\", "/")
     End Function
 
     Private Sub WriteJsonFile(targetPath As String, json As JObject)

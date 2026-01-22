@@ -21,10 +21,22 @@ Public Class CleaningTool
                 lblFlights2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, Settings.SessionSettings.MSFS2024FlightPlansFolder, "Not installed")
 
             Case tabWeather2020.Name
-                lblWeather2020FolderPath.Text = If(Settings.SessionSettings.Is2020Installed, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, "Not installed")
+                lblWeather2020FolderPath.Text = If(Settings.SessionSettings.Is2020Installed, WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True), "Not installed")
+                If Settings.SessionSettings.Is2020Installed Then
+                    tabWeather2020.Enabled = EnsureWeatherPackageReady(True)
+                    If Not tabWeather2020.Enabled Then
+                        lblWeather2020FolderPath.Text = "DPHX Community package missing - open Settings to repair"
+                    End If
+                End If
 
             Case tabWeather2024.Name
-                lblWeather2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, Settings.SessionSettings.MSFS2024WeatherPresetsFolder, "Not installed")
+                lblWeather2024FolderPath.Text = If(Settings.SessionSettings.Is2024Installed, WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False), "Not installed")
+                If Settings.SessionSettings.Is2024Installed Then
+                    tabWeather2024.Enabled = EnsureWeatherPackageReady(False)
+                    If Not tabWeather2024.Enabled Then
+                        lblWeather2024FolderPath.Text = "DPHX Community package missing - open Settings to repair"
+                    End If
+                End If
 
             Case tabPackages.Name
                 lblPackagesFolderPath.Text = Settings.SessionSettings.PackagesFolder
@@ -164,11 +176,11 @@ Public Class CleaningTool
             Case btnFlights2020Refresh.Name
                 TabSelected(tabFlights2020)
             Case btnWeather2020Refresh.Name
-                TabSelected(tabFlights2020)
+                TabSelected(tabWeather2020)
             Case btnFlights2024Refresh.Name
                 TabSelected(tabFlights2024)
             Case btnWeather2024Refresh.Name
-                TabSelected(tabFlights2024)
+                TabSelected(tabWeather2024)
             Case btnPackagesRefresh.Name
                 TabSelected(tabPackages)
             Case btnNB21LogsRefresh.Name
@@ -254,6 +266,8 @@ Public Class CleaningTool
     End Sub
 
     Private Sub DeleteSelectedFiles(theListBox As ListBox, folderPath As String)
+        Dim layoutPath As String = GetWeatherLayoutPathForFolder(folderPath)
+
         ' Step 2: Build a list of selected filenames
         Dim filesToDelete As New List(Of String)()
         For Each item As String In theListBox.SelectedItems
@@ -279,6 +293,10 @@ Public Class CleaningTool
                 End Using
             End Try
         Next
+
+        If Not String.IsNullOrWhiteSpace(layoutPath) Then
+            SyncWeatherLayoutWithDisk(folderPath, layoutPath)
+        End If
     End Sub
 
 
@@ -380,6 +398,7 @@ Public Class CleaningTool
         End Try
 
         Try
+            SyncWeatherLayoutWithDisk(folderPath, WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(True))
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
             lstWeather2020.Items.Clear()
 
@@ -408,6 +427,7 @@ Public Class CleaningTool
         End Try
 
         Try
+            SyncWeatherLayoutWithDisk(folderPath, WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(False))
             Dim wprFiles As String() = Directory.GetFiles(folderPath, "*.wpr")
             lstWeather2024.Items.Clear()
 
@@ -621,5 +641,100 @@ Public Class CleaningTool
     End Sub
 
 #End Region
+
+    Private Function EnsureWeatherPackageReady(isMsfs2020 As Boolean) As Boolean
+        Dim simLabel = If(isMsfs2020, "MSFS 2020", "MSFS 2024")
+        Dim communityFolder = If(isMsfs2020, Settings.SessionSettings.MSFS2020WeatherPresetsFolder, Settings.SessionSettings.MSFS2024WeatherPresetsFolder)
+
+        Dim ensureResult = WeatherCommunityPackageHelper.EnsureWeatherCommunityPackage(simLabel, communityFolder, Me)
+        If ensureResult = WeatherCommunityPackageHelper.PackageEnsureResult.Ready Then
+            Return True
+        End If
+
+        Dim message As String
+        Select Case ensureResult
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NotConfigured
+                message = $"DPHX Community package not configured for {simLabel}. Please update the Community folder in Settings."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.NeedsFolderChange
+                message = $"DPHX Community package requires a different folder for {simLabel}. Please update the Community folder in Settings."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Cancelled
+                message = $"DPHX Community package setup was cancelled for {simLabel}."
+            Case WeatherCommunityPackageHelper.PackageEnsureResult.Failed
+                message = $"DPHX Community package is missing or incomplete for {simLabel}. Please open Settings to repair it."
+            Case Else
+                message = $"DPHX Community package is not ready for {simLabel}."
+        End Select
+
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(message, "DPHX Community Package", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Using
+
+        Return False
+    End Function
+
+    Private Function GetWeatherLayoutPathForFolder(folderPath As String) As String
+        If String.IsNullOrWhiteSpace(folderPath) Then
+            Return String.Empty
+        End If
+
+        Dim normalized = NormalizeFolderPath(folderPath)
+        Dim presets2020 = NormalizeFolderPath(WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True))
+        Dim presets2024 = NormalizeFolderPath(WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False))
+
+        If Not String.IsNullOrWhiteSpace(presets2020) AndAlso String.Equals(normalized, presets2020, StringComparison.OrdinalIgnoreCase) Then
+            Return WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(True)
+        End If
+
+        If Not String.IsNullOrWhiteSpace(presets2024) AndAlso String.Equals(normalized, presets2024, StringComparison.OrdinalIgnoreCase) Then
+            Return WeatherCommunityPackageHelper.GetDphxWeatherLayoutPath(False)
+        End If
+
+        Return String.Empty
+    End Function
+
+    Private Sub SyncWeatherLayoutWithDisk(presetsDir As String, layoutPath As String)
+        If String.IsNullOrWhiteSpace(presetsDir) OrElse String.IsNullOrWhiteSpace(layoutPath) Then
+            Return
+        End If
+
+        Dim isMsfs2020 As Boolean
+        Dim presets2020 = NormalizeFolderPath(WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(True))
+        Dim presets2024 = NormalizeFolderPath(WeatherCommunityPackageHelper.GetDphxWeatherPresetsDir(False))
+        Dim normalized = NormalizeFolderPath(presetsDir)
+
+        If String.IsNullOrWhiteSpace(normalized) Then
+            Return
+        End If
+
+        If String.Equals(normalized, presets2020, StringComparison.OrdinalIgnoreCase) Then
+            isMsfs2020 = True
+        ElseIf String.Equals(normalized, presets2024, StringComparison.OrdinalIgnoreCase) Then
+            isMsfs2020 = False
+        Else
+            Return
+        End If
+
+        Dim thumbnailPath = WeatherCommunityPackageHelper.GetDphxWeatherThumbnailPath(isMsfs2020)
+
+        Try
+            Dim layout = WeatherCommunityPackageHelper.LoadLayout(layoutPath, thumbnailPath)
+            Dim changed = WeatherCommunityPackageHelper.SyncLayoutWithDisk(layout, presetsDir)
+            If changed Then
+                WeatherCommunityPackageHelper.SaveLayout(layoutPath, layout)
+            End If
+        Catch ex As Exception
+            Using New Centered_MessageBox()
+                MessageBox.Show($"Unable to sync layout.json with weather presets: {ex.Message}")
+            End Using
+        End Try
+    End Sub
+
+    Private Function NormalizeFolderPath(folderPath As String) As String
+        If String.IsNullOrWhiteSpace(folderPath) Then
+            Return String.Empty
+        End If
+
+        Return Path.GetFullPath(folderPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+    End Function
 
 End Class
