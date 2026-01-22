@@ -858,6 +858,7 @@ Public Class Settings
         Dim folderPathToCheck As String
         Dim basePath As String
         Dim errorMessages As String = String.Empty
+        Dim communityFolder As String = String.Empty
 
         If opt2020Microsoft.Checked Then
             'Base path
@@ -870,13 +871,13 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                                                            "Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2020CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
         End If
         If opt2020Steam.Checked Then
@@ -890,13 +891,12 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2020CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2020CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) Community folder.{Environment.NewLine}"
             End If
         End If
 
@@ -911,13 +911,13 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                                                            "Packages\Microsoft.Limitless_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2024CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
         End If
         If opt2024Steam.Checked Then
@@ -931,13 +931,12 @@ Public Class Settings
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) flight plans folder.{Environment.NewLine}"
             End If
-            'Weather presets folders
-            folderPathToCheck = $"{basePath}\Weather\Presets"
-            If Directory.Exists(folderPathToCheck) Then
-                btnMSFS2024CommunityFolder.Text = folderPathToCheck
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, folderPathToCheck)
+            communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
+            If Directory.Exists(communityFolder) Then
+                btnMSFS2024CommunityFolder.Text = communityFolder
+                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
             Else
-                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) weather profiles folder.{Environment.NewLine}"
+                errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) Community folder.{Environment.NewLine}"
             End If
         End If
 
@@ -948,6 +947,37 @@ Public Class Settings
         End If
 
     End Sub
+
+    Private Function ResolveCommunityFolderFromUserCfg(userCfgPath As String) As String
+        If String.IsNullOrWhiteSpace(userCfgPath) OrElse Not File.Exists(userCfgPath) Then
+            Return String.Empty
+        End If
+
+        Dim installedPackagesPath As String = String.Empty
+
+        Try
+            For Each line As String In File.ReadAllLines(userCfgPath)
+                Dim trimmed = line.Trim()
+                If trimmed.StartsWith("InstalledPackagesPath", StringComparison.OrdinalIgnoreCase) Then
+                    Dim firstQuote = trimmed.IndexOf(""""c)
+                    Dim lastQuote = trimmed.LastIndexOf(""""c)
+                    If firstQuote >= 0 AndAlso lastQuote > firstQuote Then
+                        installedPackagesPath = trimmed.Substring(firstQuote + 1, lastQuote - firstQuote - 1)
+                    End If
+                    Exit For
+                End If
+            Next
+        Catch
+            Return String.Empty
+        End Try
+
+        If String.IsNullOrWhiteSpace(installedPackagesPath) Then
+            Return String.Empty
+        End If
+
+        Dim communityFolder = Path.Combine(installedPackagesPath, "Community")
+        Return communityFolder
+    End Function
 
     ''' <summary>
     ''' Toggles WSGListener.exe auto-start in HKCU\...\Run
