@@ -874,8 +874,10 @@ Public Class Settings
             communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                                                             "Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
             If Directory.Exists(communityFolder) Then
-                btnMSFS2020CommunityFolder.Text = communityFolder
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
+                If ShouldOverrideDetectedCommunityFolder(btnMSFS2020CommunityFolder.Text) Then
+                    btnMSFS2020CommunityFolder.Text = communityFolder
+                    ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
+                End If
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
@@ -893,8 +895,10 @@ Public Class Settings
             End If
             communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
             If Directory.Exists(communityFolder) Then
-                btnMSFS2020CommunityFolder.Text = communityFolder
-                ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
+                If ShouldOverrideDetectedCommunityFolder(btnMSFS2020CommunityFolder.Text) Then
+                    btnMSFS2020CommunityFolder.Text = communityFolder
+                    ToolTip1.SetToolTip(btnMSFS2020CommunityFolder, communityFolder)
+                End If
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2020 (Steam) Community folder.{Environment.NewLine}"
             End If
@@ -914,8 +918,10 @@ Public Class Settings
             communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                                                             "Packages\Microsoft.Limitless_8wekyb3d8bbwe\LocalCache\UserCfg.opt"))
             If Directory.Exists(communityFolder) Then
-                btnMSFS2024CommunityFolder.Text = communityFolder
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
+                If ShouldOverrideDetectedCommunityFolder(btnMSFS2024CommunityFolder.Text) Then
+                    btnMSFS2024CommunityFolder.Text = communityFolder
+                    ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
+                End If
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Microsoft Store) Community folder.{Environment.NewLine}"
             End If
@@ -933,8 +939,10 @@ Public Class Settings
             End If
             communityFolder = ResolveCommunityFolderFromUserCfg(Path.Combine(basePath, "UserCfg.opt"))
             If Directory.Exists(communityFolder) Then
-                btnMSFS2024CommunityFolder.Text = communityFolder
-                ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
+                If ShouldOverrideDetectedCommunityFolder(btnMSFS2024CommunityFolder.Text) Then
+                    btnMSFS2024CommunityFolder.Text = communityFolder
+                    ToolTip1.SetToolTip(btnMSFS2024CommunityFolder, communityFolder)
+                End If
             Else
                 errorMessages = $"{errorMessages}Could not find MSFS 2024 (Steam) Community folder.{Environment.NewLine}"
             End If
@@ -977,6 +985,15 @@ Public Class Settings
 
         Dim communityFolder = Path.Combine(installedPackagesPath, "Community")
         Return communityFolder
+    End Function
+
+    Private Function ShouldOverrideDetectedCommunityFolder(existingPath As String) As Boolean
+        If String.IsNullOrWhiteSpace(existingPath) Then
+            Return True
+        End If
+
+        Dim trimmedPath = existingPath.Trim().TrimEnd("\"c, "/"c)
+        Return trimmedPath.EndsWith("\Weather\Presets", StringComparison.OrdinalIgnoreCase)
     End Function
 
     ''' <summary>
