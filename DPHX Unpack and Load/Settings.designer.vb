@@ -281,9 +281,9 @@ Partial Class Settings
         Me.btnMSFS2020WeatherPresetsFolder.Name = "btnMSFS2020WeatherPresetsFolder"
         Me.btnMSFS2020WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2020WeatherPresetsFolder.TabIndex = 1
-        Me.btnMSFS2020WeatherPresetsFolder.Text = "Select the MSFS 2020 folder containing weather presets (.wpr)"
+        Me.btnMSFS2020WeatherPresetsFolder.Text = "Select the MSFS 2020 Community Folder"
         Me.btnMSFS2020WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnMSFS2020WeatherPresetsFolder, "Select the MSFS 2020 folder containing weather presets (.wpr)")
+        Me.ToolTip1.SetToolTip(Me.btnMSFS2020WeatherPresetsFolder, "Select the MSFS 2020 Community Folder where the app will unpack weather presets.")
         Me.btnMSFS2020WeatherPresetsFolder.UseVisualStyleBackColor = True
         '
         'btnUnpackingFolder
@@ -552,9 +552,9 @@ Partial Class Settings
         Me.btnMSFS2024WeatherPresetsFolder.Name = "btnMSFS2024WeatherPresetsFolder"
         Me.btnMSFS2024WeatherPresetsFolder.Size = New System.Drawing.Size(470, 32)
         Me.btnMSFS2024WeatherPresetsFolder.TabIndex = 1
-        Me.btnMSFS2024WeatherPresetsFolder.Text = "Select the MSFS 2024 folder containing weather presets (.wpr)"
+        Me.btnMSFS2024WeatherPresetsFolder.Text = "Select the MSFS 2024 Community Folder"
         Me.btnMSFS2024WeatherPresetsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.btnMSFS2024WeatherPresetsFolder, "Select the MSFS 2024 folder containing weather presets (.wpr)")
+        Me.ToolTip1.SetToolTip(Me.btnMSFS2024WeatherPresetsFolder, "Select the MSFS 2024 Community Folder where the app will unpack weather presets.")
         Me.btnMSFS2024WeatherPresetsFolder.UseVisualStyleBackColor = True
         '
         'chkExclude2024FlightPlanFromCleanup
@@ -952,9 +952,9 @@ Partial Class Settings
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(5, 12)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(154, 20)
+        Me.Label2.Size = New System.Drawing.Size(171, 20)
         Me.Label2.TabIndex = 0
-        Me.Label2.Text = "2020 Weather Presets:"
+        Me.Label2.Text = "2020 Community Folder:"
         '
         'pnlXCSoarTasksFolder
         '
@@ -1149,9 +1149,9 @@ Partial Class Settings
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(5, 12)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(154, 20)
+        Me.Label11.Size = New System.Drawing.Size(171, 20)
         Me.Label11.TabIndex = 0
-        Me.Label11.Text = "2024 Weather Presets:"
+        Me.Label11.Text = "2024 Community Folder:"
         '
         'pnlMSFS2024FlightPlanFilesFolder
         '
