@@ -58,7 +58,7 @@ Friend Module WeatherCommunityPackageHelper
             messageBuilder.AppendLine($"- {item}")
         Next
         messageBuilder.AppendLine()
-        messageBuilder.AppendLine("Choose Yes to Create/Repair now, No to change folder, or Cancel to exit.")
+        messageBuilder.AppendLine("Choose Yes to Create/Repair now in the current folder, No to change folder, or Cancel to exit.")
 
         Dim response As DialogResult
         Using New Centered_MessageBox(owner)
@@ -71,6 +71,9 @@ Friend Module WeatherCommunityPackageHelper
 
         Select Case response
             Case DialogResult.Yes
+                If NeedsCommunityFolderConfirmation(simLabel, communityFolder, owner) Then
+                    Return PackageEnsureResult.NeedsFolderChange
+                End If
                 If CreateOrRepairPackage(simLabel, communityFolder) Then
                     Return PackageEnsureResult.Ready
                 End If
@@ -286,5 +289,33 @@ Friend Module WeatherCommunityPackageHelper
     Private Sub LogPackageEvent(message As String, Optional severity As TraceEventType = TraceEventType.Information)
         My.Application.Log.WriteEntry(message, severity)
     End Sub
+
+    Private Function NeedsCommunityFolderConfirmation(simLabel As String,
+                                                      communityFolder As String,
+                                                      owner As IWin32Window) As Boolean
+        Dim subfolders As String() = Array.Empty(Of String)()
+        Try
+            subfolders = Directory.GetDirectories(communityFolder)
+        Catch ex As Exception
+            LogPackageEvent($"{simLabel}: Unable to enumerate community folder subdirectories: {ex.Message}", TraceEventType.Warning)
+            Return False
+        End Try
+
+        If subfolders.Length > 0 Then
+            Return False
+        End If
+
+        Dim message = $"The selected Community folder has no subfolders, which is unusual and may indicate the wrong location.{Environment.NewLine}{Environment.NewLine}Are you sure you want to create the 0_DPHX-Weather package here?{Environment.NewLine}{Environment.NewLine}{communityFolder}"
+        Dim confirmation As DialogResult
+        Using New Centered_MessageBox(owner)
+            confirmation = MessageBox.Show(owner,
+                                           message,
+                                           "Confirm Community Folder",
+                                           MessageBoxButtons.YesNo,
+                                           MessageBoxIcon.Warning)
+        End Using
+
+        Return confirmation = DialogResult.No
+    End Function
 
 End Module
