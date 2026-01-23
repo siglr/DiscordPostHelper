@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.22.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.22.2</ReleaseVersion>
+      <ReleaseTitle>Hotfix for Community folder package definition</ReleaseTitle>
+      <ReleaseNotes>
+        The package definition file for the Community Folder package was not correctly defined, causing MSFS to not recognize it as a valid package
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.22.1</ReleaseVersion>
       <ReleaseTitle>Using a dynamic Community Folder package</ReleaseTitle>

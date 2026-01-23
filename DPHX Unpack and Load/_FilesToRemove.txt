@@ -12,3 +12,4 @@ TasksDatabase.db
 WebView2Loader.dll
 naudio.xml
 DPHX Unpack and Load.exe.manifest
+DPHXWeatherPackThumbnail.jpg
