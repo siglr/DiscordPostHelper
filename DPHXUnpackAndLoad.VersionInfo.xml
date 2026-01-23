@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.22.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.23.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.23.1</ReleaseVersion>
+      <ReleaseTitle>Second hotfix for layout.json update</ReleaseTitle>
+      <ReleaseNotes>
+        In some cases, the layout.json file was not correctly updated, leading to weather presets not being recognized in MSFS
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.22.2</ReleaseVersion>
       <ReleaseTitle>Hotfix for Community folder package definition</ReleaseTitle>
