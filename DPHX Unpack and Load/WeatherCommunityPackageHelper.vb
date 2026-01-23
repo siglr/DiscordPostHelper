@@ -536,7 +536,8 @@ Friend Module WeatherCommunityPackageHelper
 
     Private Sub WriteTextAtomically(targetPath As String, content As String)
         Dim tempPath = $"{targetPath}.tmp"
-        File.WriteAllText(tempPath, content, Encoding.UTF8)
+        Dim utf8WithoutBom As New UTF8Encoding(encoderShouldEmitUTF8Identifier:=False)
+        File.WriteAllText(tempPath, content, utf8WithoutBom)
         ReplaceFile(tempPath, targetPath)
     End Sub
 
