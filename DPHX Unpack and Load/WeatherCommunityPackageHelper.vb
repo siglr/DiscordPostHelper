@@ -555,11 +555,36 @@ Friend Module WeatherCommunityPackageHelper
     End Sub
 
     Private Sub ReplaceFile(tempPath As String, targetPath As String)
-        If File.Exists(targetPath) Then
-            File.Replace(tempPath, targetPath, Nothing)
-        Else
-            File.Move(tempPath, targetPath)
+        Const maxAttempts As Integer = 5
+        Const delayMs As Integer = 100
+
+        ' Make sure temp exists
+        If Not File.Exists(tempPath) Then
+            Throw New IOException("Temp file missing: " & tempPath)
         End If
+
+        For attempt = 1 To maxAttempts
+            Try
+                ' Remove read-only if needed
+                If File.Exists(targetPath) Then
+                    Try
+                        File.SetAttributes(targetPath, FileAttributes.Normal)
+                    Catch
+                    End Try
+
+                    File.Delete(targetPath)
+                End If
+
+                File.Move(tempPath, targetPath)
+                Return ' success
+            Catch ex As IOException
+                If attempt = maxAttempts Then Throw
+                Threading.Thread.Sleep(delayMs)
+            Catch ex As UnauthorizedAccessException
+                If attempt = maxAttempts Then Throw
+                Threading.Thread.Sleep(delayMs)
+            End Try
+        Next
     End Sub
 
     Private Sub ShowWriteFailureMessage(Optional details As String = Nothing)
