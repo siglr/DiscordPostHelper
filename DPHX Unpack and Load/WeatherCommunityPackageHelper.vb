@@ -325,8 +325,15 @@ Friend Module WeatherCommunityPackageHelper
             missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
         Else
             Dim manifestToken As JToken = Nothing
+            Dim hasUtf8Bom As Boolean = False
             Try
-                manifestToken = JToken.Parse(File.ReadAllText(manifestPath))
+                Dim manifestBytes = File.ReadAllBytes(manifestPath)
+                hasUtf8Bom = manifestBytes.Length >= 3 AndAlso
+                    manifestBytes(0) = &HEF AndAlso
+                    manifestBytes(1) = &HBB AndAlso
+                    manifestBytes(2) = &HBF
+                Dim manifestContent = Encoding.UTF8.GetString(manifestBytes)
+                manifestToken = JToken.Parse(manifestContent)
             Catch
                 missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
             End Try
@@ -336,7 +343,7 @@ Friend Module WeatherCommunityPackageHelper
                 missingItems.Add($"{PackageFolderName}\{ManifestFileName}")
             Else
                 Dim expectedManifest = BuildManifest(isMsfs2020)
-                If Not JToken.DeepEquals(manifestObject, expectedManifest) Then
+                If hasUtf8Bom OrElse Not JToken.DeepEquals(manifestObject, expectedManifest) Then
                     WriteJsonFile(manifestPath, expectedManifest)
                     LogPackageEvent($"Manifest updated to expected content at {manifestPath}.")
                 End If
