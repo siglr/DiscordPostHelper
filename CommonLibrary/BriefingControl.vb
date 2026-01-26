@@ -711,6 +711,8 @@ Public Class BriefingControl
     Private Sub AddCountryFlagPictures()
         Dim flagsDirectory As String = SupportingFeatures.ReadRegistryKey("CountryFlagsFolder", String.Empty)
 
+        ClearCountryFlagPictures()
+
         For Each countryName As String In _sessionData.Countries
             If countryName <> String.Empty AndAlso _SF.CountryFlagCodes.ContainsKey(countryName) Then
                 Dim countryCode As String = _SF.CountryFlagCodes(countryName).Item2
