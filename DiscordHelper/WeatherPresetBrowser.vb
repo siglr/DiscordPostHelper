@@ -131,7 +131,7 @@ Public Class WeatherPresetBrowser
         Else
             SSCPresetName = String.Empty
             PrimaryWPRFilename = lblWeatherPresetPrimaryFilename.Tag.ToString()
-            SecondaryWPRFilename = lblWeatherPresetSecondaryFilename.Tag.ToString()
+            SecondaryWPRFilename = If(lblWeatherPresetSecondaryFilename.Tag Is Nothing, String.Empty, lblWeatherPresetSecondaryFilename.Tag.ToString())
         End If
 
 
