@@ -180,25 +180,45 @@
     <english>[{0} - Task]({1})</english>
     <french>[{0} - Tâche]({1})</french>
   </entry>
-  <entry key="group.thread.file_dphx">
-    <english>**DPHX** : [{0}](&lt;{1}&gt;) - Start the **DPHX tool** first for maximum efficiency!</english>
-    <french>**DPHX** : [{0}](&lt;{1}&gt;) - Lancez d’abord l’outil **DPHX** pour une efficacité maximale!</french>
+  <entry key="group.thread.file_dphx1">
+    <english>## 📄 DPHX : [{0}](&lt;{1}&gt;)</english>
+    <french>## 📄 DPHX : [{0}](&lt;{1}&gt;)</french>
   </entry>
-  <entry key="group.thread.file_pln">
-    <english>**PLN** : [{0}](&lt;{1}&gt;) - Flight plan only, for manual interaction.</english>
-    <french>**PLN** : [{0}](&lt;{1}&gt;) - Plan de vol uniquement, pour une utilisation manuelle.</french>
+  <entry key="group.thread.file_dphx2">
+    <english>> Start the **DPHX tool** first for maximum efficiency!</english>
+    <french>> Lancez d’abord l’outil **DPHX** pour une efficacité maximale!</french>
   </entry>
-  <entry key="group.thread.file_wpr">
-    <english>**WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
-    <french>**WPR** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  <entry key="group.thread.file_pln1">
+    <english>## 📄 PLN : [{0}](&lt;{1}&gt;)</english>
+    <french>## 📄 PLN : [{0}](&lt;{1}&gt;)</french>
   </entry>
-  <entry key="group.thread.file_wpr_secondary">
-    <english>**Secondary WPR** : [{0}](&lt;{1}&gt;) - Weather preset only, for manual interaction.</english>
-    <french>**WPR Secondaire** : [{0}](&lt;{1}&gt;) - Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  <entry key="group.thread.file_pln2">
+    <english>> Flight plan only, for manual interaction.</english>
+    <french>> Plan de vol uniquement, pour une utilisation manuelle.</french>
   </entry>
-  <entry key="group.thread.file_zip">
-    <english>**ZIP** : [{0}](&lt;{1}&gt;) - Contains all the important files plus extras, for manual interaction.</english>
-    <french>**ZIP** : [{0}](&lt;{1}&gt;) - Contient tous les fichiers importants et des extras, pour une utilisation manuelle.</french>
+  <entry key="group.thread.file_wpr1">
+    <english>## 📄 WPR : [{0}](&lt;{1}&gt;)</english>
+    <french>## 📄 WPR : [{0}](&lt;{1}&gt;)</french>
+  </entry>
+  <entry key="group.thread.file_wpr2">
+    <english>> Weather preset only, for manual interaction.</english>
+    <french>> Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_wpr_secondary1">
+    <english>## 📄 Secondary WPR : [{0}](&lt;{1}&gt;)</english>
+    <french>## 📄 WPR Secondaire : [{0}](&lt;{1}&gt;)</french>
+  </entry>
+  <entry key="group.thread.file_wpr_secondary2">
+    <english>> Weather preset only, for manual interaction.</english>
+    <french>> Préconfiguration météo uniquement, pour une utilisation manuelle.</french>
+  </entry>
+  <entry key="group.thread.file_zip1">
+    <english>## 📄 ZIP : [{0}](&lt;{1}&gt;)</english>
+    <french>## 📄 ZIP : [{0}](&lt;{1}&gt;)</french>
+  </entry>
+  <entry key="group.thread.file_zip2">
+    <english>> Contains all the important files plus extras, for manual interaction.</english>
+    <french>> Contient tous les fichiers importants et des extras, pour une utilisation manuelle.</french>
   </entry>
   <entry key="group.thread.files_header">
     <english>## 📁 Files</english>
@@ -237,19 +257,23 @@
     <french>***-&gt; MODE TEST UNIQUEMENT - Les liens et l'image de couverture ne fonctionneront pas***</french>
   </entry>
   <entry key="group.thread.weather_note_different">
-    <english> 👉 *Note: weather preset name in MSFS is different than filename*</english>
-    <french> 👉 *Remarque : le nom de la configuration météo dans MSFS est différent du nom de fichier*</french>
+    <english>> 👉 *Note: weather preset name in MSFS is different than filename*</english>
+    <french>> 👉 *Remarque : le nom de la configuration météo dans MSFS est différent du nom de fichier*</french>
   </entry>
   <entry key="group.thread.weather_note_secondary_different">
-    <english> 👉 *Note: secondary weather preset name in MSFS is different than filename*</english>
-    <french> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est différent du nom de fichier*</french>
+    <english>> 👉 *Note: secondary weather preset name in MSFS is different than filename*</english>
+    <french>> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est différent du nom de fichier*</french>
   </entry>
   <entry key="group.thread.weather_note_exact">
-    <english> 👉 *Note: weather preset name in MSFS is: "{0}"*</english>
-    <french> 👉 *Remarque : le nom de la configuration météo dans MSFS est : "{0}"*</french>
+    <english>> 👉 *Note: weather preset name in MSFS is: "{0}"*</english>
+    <french>> 👉 *Remarque : le nom de la configuration météo dans MSFS est : "{0}"*</french>
   </entry>
   <entry key="group.thread.weather_note_secondary_exact">
-    <english> 👉 *Note: Secondary weather preset name in MSFS is: "{0}"*</english>
-    <french> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est : "{0}"*</french>
+    <english>> 👉 *Note: Secondary weather preset name in MSFS is: "{0}"*</english>
+    <french>> 👉 *Remarque : le nom de la configuration météo secondaire dans MSFS est : "{0}"*</french>
+  </entry>
+  <entry key="group.thread.task_details">
+    <english>## 🔍 Details</english>
+    <french>## 🔍 Détails</french>
   </entry>
 </localization>
