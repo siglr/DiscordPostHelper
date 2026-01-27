@@ -246,7 +246,7 @@ Public Class DPHXUnpackAndLoad
         If Not _abortingFirstRun AndAlso ShouldPromptRecentIgcUpload() Then
             Using New Centered_MessageBox(Me)
                 Dim result = MessageBox.Show("A recent IGC file was found that appears not uploaded to WeSimGlide.org yet." &
-                                             Environment.NewLine &
+                                             Environment.NewLine & Environment.NewLine &
                                              "Are you sure you want to exit?",
                                              "Recent IGC not uploaded",
                                              MessageBoxButtons.YesNo,
