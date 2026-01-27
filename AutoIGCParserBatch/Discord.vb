@@ -11,6 +11,7 @@ Public Class frmDiscord
     Private scrapingUp As Boolean = False
     Private forcedTaskConfirmed As Boolean = False
     Private browserRequestContext As RequestContext
+    Private browser As ChromiumWebBrowser
 
     Public Sub New()
         InitializeComponent()
@@ -27,17 +28,17 @@ Public Class frmDiscord
 
         Dim newBrowser = New ChromiumWebBrowser("https://discord.com/app", browserRequestContext) With {
             .ActivateBrowserOnCreation = False,
-            .Anchor = browser.Anchor,
-            .Location = browser.Location,
-            .Name = "browser",
-            .Size = browser.Size,
-            .TabIndex = browser.TabIndex
+            .Dock = DockStyle.Fill,
+            .Name = "browser"
         }
 
-        Controls.Remove(browser)
-        browser.Dispose()
+        If browser IsNot Nothing Then
+            browser.Dispose()
+        End If
+
+        pnlBrowserHost.Controls.Clear()
         browser = newBrowser
-        Controls.Add(browser)
+        pnlBrowserHost.Controls.Add(browser)
 
         Startup.LogCefDiagnostic($"RequestContext CachePath = {cachePath}")
         Startup.LogCefDiagnostic($"CookieDbExists = {File.Exists(Startup.CookieDbPath)}")

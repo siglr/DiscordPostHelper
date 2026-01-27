@@ -23,7 +23,7 @@ Partial Class frmDiscord
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         txtLog = New TextBox()
-        browser = New CefSharp.WinForms.ChromiumWebBrowser("https://discord.com/app")
+        pnlBrowserHost = New Panel()
         txtDiscordThreadURL = New TextBox()
         btnGo = New Button()
         btnStart = New Button()
@@ -45,14 +45,13 @@ Partial Class frmDiscord
         txtLog.Size = New Size(319, 1084)
         txtLog.TabIndex = 4
         ' 
-        ' browser
+        ' pnlBrowserHost
         ' 
-        browser.ActivateBrowserOnCreation = False
-        browser.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-        browser.Location = New Point(12, 43)
-        browser.Name = "browser"
-        browser.Size = New Size(1734, 1053)
-        browser.TabIndex = 3
+        pnlBrowserHost.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        pnlBrowserHost.Location = New Point(12, 43)
+        pnlBrowserHost.Name = "pnlBrowserHost"
+        pnlBrowserHost.Size = New Size(1734, 1053)
+        pnlBrowserHost.TabIndex = 3
         ' 
         ' txtDiscordThreadURL
         ' 
@@ -144,7 +143,7 @@ Partial Class frmDiscord
         Controls.Add(btnGo)
         Controls.Add(txtDiscordThreadURL)
         Controls.Add(txtLog)
-        Controls.Add(browser)
+        Controls.Add(pnlBrowserHost)
         Location = New Point(80, 0)
         Name = "frmDiscord"
         StartPosition = FormStartPosition.Manual
@@ -154,7 +153,7 @@ Partial Class frmDiscord
     End Sub
 
     Friend WithEvents txtLog As TextBox
-    Friend WithEvents browser As CefSharp.WinForms.ChromiumWebBrowser
+    Friend WithEvents pnlBrowserHost As Panel
     Friend WithEvents txtDiscordThreadURL As TextBox
     Friend WithEvents btnGo As Button
     Friend WithEvents btnStart As Button
