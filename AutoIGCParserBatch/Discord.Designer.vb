@@ -32,12 +32,13 @@ Partial Class frmDiscord
         lblProgress = New Label()
         txtForcedTask = New TextBox()
         chkManualStop = New CheckBox()
+        Label1 = New Label()
         SuspendLayout()
         ' 
         ' txtLog
         ' 
         txtLog.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Right
-        txtLog.Location = New Point(1752, 12)
+        txtLog.Location = New Point(1248, 12)
         txtLog.Multiline = True
         txtLog.Name = "txtLog"
         txtLog.ReadOnly = True
@@ -50,7 +51,7 @@ Partial Class frmDiscord
         pnlBrowserHost.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         pnlBrowserHost.Location = New Point(12, 43)
         pnlBrowserHost.Name = "pnlBrowserHost"
-        pnlBrowserHost.Size = New Size(1734, 1053)
+        pnlBrowserHost.Size = New Size(1230, 1053)
         pnlBrowserHost.TabIndex = 3
         ' 
         ' txtDiscordThreadURL
@@ -64,14 +65,14 @@ Partial Class frmDiscord
         ' 
         btnGo.Location = New Point(446, 10)
         btnGo.Name = "btnGo"
-        btnGo.Size = New Size(132, 26)
+        btnGo.Size = New Size(104, 26)
         btnGo.TabIndex = 1
         btnGo.Text = "Paste && Go"
         btnGo.UseVisualStyleBackColor = True
         ' 
         ' btnStart
         ' 
-        btnStart.Location = New Point(642, 10)
+        btnStart.Location = New Point(675, 10)
         btnStart.Name = "btnStart"
         btnStart.Size = New Size(86, 26)
         btnStart.TabIndex = 3
@@ -80,7 +81,7 @@ Partial Class frmDiscord
         ' 
         ' btnUpload
         ' 
-        btnUpload.Location = New Point(927, 11)
+        btnUpload.Location = New Point(1014, 11)
         btnUpload.Name = "btnUpload"
         btnUpload.Size = New Size(155, 26)
         btnUpload.TabIndex = 6
@@ -90,7 +91,7 @@ Partial Class frmDiscord
         ' btnStop
         ' 
         btnStop.Enabled = False
-        btnStop.Location = New Point(814, 10)
+        btnStop.Location = New Point(901, 10)
         btnStop.Name = "btnStop"
         btnStop.Size = New Size(107, 26)
         btnStop.TabIndex = 5
@@ -114,7 +115,7 @@ Partial Class frmDiscord
         ' 
         ' txtForcedTask
         ' 
-        txtForcedTask.Location = New Point(584, 11)
+        txtForcedTask.Location = New Point(617, 11)
         txtForcedTask.Name = "txtForcedTask"
         txtForcedTask.Size = New Size(52, 26)
         txtForcedTask.TabIndex = 2
@@ -122,18 +123,28 @@ Partial Class frmDiscord
         ' chkManualStop
         ' 
         chkManualStop.AutoSize = True
-        chkManualStop.Location = New Point(734, 13)
+        chkManualStop.Location = New Point(821, 13)
         chkManualStop.Name = "chkManualStop"
         chkManualStop.Size = New Size(74, 23)
         chkManualStop.TabIndex = 4
         chkManualStop.Text = "Manual"
         chkManualStop.UseVisualStyleBackColor = True
         ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Location = New Point(573, 15)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(42, 19)
+        Label1.TabIndex = 11
+        Label1.Text = "WSG:"
+        ' 
         ' frmDiscord
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(2083, 1108)
+        ClientSize = New Size(1579, 1108)
+        Controls.Add(Label1)
         Controls.Add(chkManualStop)
         Controls.Add(txtForcedTask)
         Controls.Add(lblProgress)
@@ -162,4 +173,5 @@ Partial Class frmDiscord
     Friend WithEvents lblProgress As Label
     Friend WithEvents txtForcedTask As TextBox
     Friend WithEvents chkManualStop As CheckBox
+    Friend WithEvents Label1 As Label
 End Class
