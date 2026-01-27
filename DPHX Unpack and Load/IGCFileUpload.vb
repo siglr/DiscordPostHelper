@@ -1000,7 +1000,7 @@ End Function
 
         Try
 
-            Dim form = New Dictionary(Of String, String) From {
+        Dim form = New Dictionary(Of String, String) From {
               {"igcTitle", igcDetails.TaskTitle},
               {"igcWaypoints", JsonConvert.SerializeObject(
                                    igcDetails.IGCWaypoints.Select(
