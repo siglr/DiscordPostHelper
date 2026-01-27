@@ -253,6 +253,7 @@ Public Class DPHXUnpackAndLoad
                                              MessageBoxIcon.Question)
                 If result = DialogResult.No Then
                     e.Cancel = True
+                    BeginInvoke(CType(Sub() toolStripWSGUploadIGC_Click(Me, EventArgs.Empty), MethodInvoker))
                     Return
                 End If
             End Using
