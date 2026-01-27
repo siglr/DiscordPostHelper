@@ -48,6 +48,7 @@ try {
 
     $igcLocalDate = $data['LocalDate'] ?? '';
     $igcLocalTime = $data['LocalTime'] ?? '';
+    $wsgUserId = isset($data['WSGUserID']) ? (int)$data['WSGUserID'] : 0;
 
     $foundTask = null;
     $matchedCandidates = [];
@@ -184,7 +185,7 @@ try {
     // 4) Return JSON
     if ($foundTask) {
         dbg("FOUND: EntrySeqID={$foundTask['EntrySeqID']} Title='{$foundTask['Title']}' SimDateTime='{$foundTask['SimDateTime']}'");
-        echo json_encode([
+        $response = [
             'status'     => 'found',
             'EntrySeqID' => $foundTask['EntrySeqID'],
             'Title' => $foundTask['Title'],
@@ -193,12 +194,22 @@ try {
             'LastUpdate' => $foundTask['LastUpdate'] ?? '',
             'WPRXML' => $foundTask['WPRXML'] ?? '',
             'WeatherPresetName' => extractWeatherPresetName($foundTask['WPRXML'] ?? '')
-        ]);
+        ];
+        if ($wsgUserId > 0) {
+            $latestByTask = fetchLatestIgcRecordTimes($pdo, $wsgUserId, [$foundTask['EntrySeqID']]);
+            $response['LastIgcRecordDateTimeUTC'] = $latestByTask[$foundTask['EntrySeqID']] ?? '';
+        }
+        echo json_encode($response);
     } elseif (!empty($matchedCandidates)) {
         dbg('MULTIPLE candidates remain, returning for user selection');
+        $latestByTask = [];
+        if ($wsgUserId > 0) {
+            $candidateIds = array_map(static fn($cand) => (int)$cand['EntrySeqID'], $matchedCandidates);
+            $latestByTask = fetchLatestIgcRecordTimes($pdo, $wsgUserId, $candidateIds);
+        }
         $candidateList = [];
         foreach ($matchedCandidates as $cand) {
-            $candidateList[] = [
+            $candidate = [
                 'EntrySeqID' => $cand['EntrySeqID'],
                 'Title' => $cand['Title'],
                 'PLNXML' => $cand['PLNXML'],
@@ -207,6 +218,11 @@ try {
                 'WPRXML' => $cand['WPRXML'] ?? '',
                 'WeatherPresetName' => extractWeatherPresetName($cand['WPRXML'] ?? '')
             ];
+            if ($wsgUserId > 0) {
+                $entrySeqId = (int)$cand['EntrySeqID'];
+                $candidate['LastIgcRecordDateTimeUTC'] = $latestByTask[$entrySeqId] ?? '';
+            }
+            $candidateList[] = $candidate;
         }
         echo json_encode([
             'status' => 'multiple',
@@ -363,6 +379,34 @@ function filterByLocalDateTime(array $candidates, string $igcDate, string $igcTi
     }
 
     return $filtered;
+}
+
+/**
+ * Fetch the latest IGC record datetime per task for a user.
+ */
+function fetchLatestIgcRecordTimes(PDO $pdo, int $wsgUserId, array $entrySeqIds): array {
+    if ($wsgUserId <= 0 || empty($entrySeqIds)) {
+        return [];
+    }
+
+    $placeholders = implode(',', array_fill(0, count($entrySeqIds), '?'));
+    $sql = "
+        SELECT EntrySeqID, MAX(IGCRecordDateTimeUTC) AS LastIgcRecordDateTimeUTC
+        FROM IGCRecords
+        WHERE WSGUserID = ?
+          AND EntrySeqID IN ($placeholders)
+        GROUP BY EntrySeqID
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array_merge([$wsgUserId], $entrySeqIds));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $latest = [];
+    foreach ($rows as $row) {
+        $latest[(int)$row['EntrySeqID']] = $row['LastIgcRecordDateTimeUTC'] ?? '';
+    }
+
+    return $latest;
 }
 
 /**

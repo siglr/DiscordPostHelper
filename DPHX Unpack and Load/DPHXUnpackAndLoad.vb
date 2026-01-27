@@ -243,6 +243,21 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub DPHXUnpackAndLoad_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If Not _abortingFirstRun AndAlso ShouldPromptRecentIgcUpload() Then
+            Using New Centered_MessageBox(Me)
+                Dim result = MessageBox.Show("A recent IGC file was found that appears not uploaded to WeSimGlide.org yet." &
+                                             Environment.NewLine &
+                                             "Are you sure you want to exit?",
+                                             "Recent IGC not uploaded",
+                                             MessageBoxButtons.YesNo,
+                                             MessageBoxIcon.Question)
+                If result = DialogResult.No Then
+                    e.Cancel = True
+                    Return
+                End If
+            End Using
+        End If
+
         _isClosing = True
 
         ' Block new commands from the listener
@@ -288,6 +303,205 @@ Public Class DPHXUnpackAndLoad
             Try : _status.Close() : Catch : End Try
         End If
     End Sub
+
+    Private Function ShouldPromptRecentIgcUpload() As Boolean
+        Try
+            Return Task.Run(Async Function() Await ShouldPromptRecentIgcUploadAsync()).GetAwaiter().GetResult()
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Async Function ShouldPromptRecentIgcUploadAsync() As Task(Of Boolean)
+        If Settings.SessionSettings.WSGUserID <= 0 Then
+            Return False
+        End If
+
+        Dim tracklogsPath As String = Settings.SessionSettings.NB21IGCFolder
+        If String.IsNullOrWhiteSpace(tracklogsPath) OrElse Not Directory.Exists(tracklogsPath) Then
+            Return False
+        End If
+
+        Dim recentThresholdUtc = DateTime.UtcNow.AddHours(-4)
+        Dim recentFiles = Directory.EnumerateFiles(tracklogsPath, "*.igc", SearchOption.TopDirectoryOnly) _
+            .Select(Function(path) New With {
+                .Path = path,
+                .CreatedUtc = File.GetCreationTimeUtc(path)
+            }) _
+            .Where(Function(item) item.CreatedUtc >= recentThresholdUtc) _
+            .OrderByDescending(Function(item) item.CreatedUtc) _
+            .ToList()
+
+        If recentFiles.Count = 0 Then
+            Return False
+        End If
+
+        For Each fileItem In recentFiles
+            Dim igcDetails = TryParseIgcFile(fileItem.Path)
+            If igcDetails Is Nothing Then
+                Continue For
+            End If
+
+            Dim matchResult = Await MatchIgcToTaskAsync(igcDetails, Settings.SessionSettings.WSGUserID)
+            If matchResult Is Nothing OrElse matchResult.EntrySeqIds.Count = 0 Then
+                Continue For
+            End If
+
+            If HasRecentIgcRecord(matchResult.LatestIgcRecordUtcByEntrySeq, recentThresholdUtc) Then
+                Continue For
+            End If
+
+            Return True
+        Next
+
+        Return False
+    End Function
+
+    Private Function HasRecentIgcRecord(latestByEntrySeq As Dictionary(Of Integer, DateTime), thresholdUtc As DateTime) As Boolean
+        If latestByEntrySeq Is Nothing Then
+            Return False
+        End If
+
+        For Each latestUtc In latestByEntrySeq.Values
+            If latestUtc >= thresholdUtc Then
+                Return True
+            End If
+        Next
+
+        Return False
+    End Function
+
+    Private Function TryParseIgcFile(igcPath As String) As IGCLookupDetails
+        Dim doc As JToken = IgcParser.ParseIgcFile(igcPath)
+        If doc Is Nothing Then
+            Return Nothing
+        End If
+
+        Dim root As JObject = CType(doc, JObject)
+        Dim nb21Version As String = root.Value(Of String)("NB21Version")
+        If String.IsNullOrWhiteSpace(nb21Version) Then
+            Return Nothing
+        End If
+
+        Dim details As New IGCLookupDetails With {
+            .IGCLocalFilePath = igcPath,
+            .TaskTitle = root.Value(Of String)("igcTitle"),
+            .Pilot = root.Value(Of String)("pilot"),
+            .GliderID = root.Value(Of String)("gliderID"),
+            .CompetitionID = root.Value(Of String)("competitionID"),
+            .CompetitionClass = root.Value(Of String)("competitionClass"),
+            .GliderType = root.Value(Of String)("gliderType"),
+            .NB21Version = nb21Version,
+            .Sim = root.Value(Of String)("Sim"),
+            .IGCRecordDateTimeUTC = root.Value(Of String)("IGCRecordDateTimeUTC"),
+            .IGCUploadDateTimeUTC = root.Value(Of String)("IGCUploadDateTimeUTC"),
+            .LocalDate = root.Value(Of String)("LocalDate"),
+            .LocalTime = root.Value(Of String)("LocalTime"),
+            .BeginTimeUTC = root.Value(Of String)("BeginTimeUTC")
+        }
+
+        details.IGCWaypoints = New List(Of IGCWaypoint)()
+        Dim wps = TryCast(root("igcWaypoints"), JArray)
+        If wps IsNot Nothing Then
+            For Each item As JObject In wps
+                Dim wp As New IGCWaypoint With {
+                    .Id = item("id")?.ToString(),
+                    .Coord = item("coord")?.ToString()
+                }
+                details.IGCWaypoints.Add(wp)
+            Next
+        End If
+
+        details.IsParsed = True
+        Return details
+    End Function
+
+    Private Async Function MatchIgcToTaskAsync(igcDetails As IGCLookupDetails, wsgUserId As Integer) As Task(Of IgcMatchResult)
+        Dim form = New Dictionary(Of String, String) From {
+            {"igcTitle", igcDetails.TaskTitle},
+            {"igcWaypoints", JsonConvert.SerializeObject(
+                igcDetails.IGCWaypoints.Select(
+                    Function(wp) New With {wp.Id, wp.Coord}
+                ).ToList()
+            )},
+            {"LocalDate", igcDetails.LocalDate},
+            {"LocalTime", igcDetails.LocalTime}
+        }
+
+        If wsgUserId > 0 Then
+            form.Add("WSGUserID", wsgUserId.ToString())
+        End If
+
+        Using client As New HttpClient()
+            client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
+            Dim resp = Await client.PostAsync("MatchIGCToTaskV2.php", New FormUrlEncodedContent(form))
+            If Not resp.IsSuccessStatusCode Then
+                Return Nothing
+            End If
+
+            Dim body = Await resp.Content.ReadAsStringAsync()
+            Dim j = JObject.Parse(body)
+            Dim status = j("status")?.ToString()
+
+            Dim result As New IgcMatchResult()
+
+            If status = "found" Then
+                Dim entrySeqId As Integer
+                Integer.TryParse(j("EntrySeqID")?.ToString(), entrySeqId)
+                If entrySeqId > 0 Then
+                    result.EntrySeqIds.Add(entrySeqId)
+                    Dim lastRecord = ParseIgcRecordDateTimeUtc(j("LastIgcRecordDateTimeUTC")?.ToString())
+                    If lastRecord.HasValue Then
+                        result.LatestIgcRecordUtcByEntrySeq(entrySeqId) = lastRecord.Value
+                    End If
+                End If
+            ElseIf status = "multiple" Then
+                Dim candidates = TryCast(j("candidates"), JArray)
+                If candidates IsNot Nothing Then
+                    For Each cand As JObject In candidates
+                        Dim entrySeqId As Integer
+                        Integer.TryParse(cand("EntrySeqID")?.ToString(), entrySeqId)
+                        If entrySeqId > 0 Then
+                            result.EntrySeqIds.Add(entrySeqId)
+                            Dim lastRecord = ParseIgcRecordDateTimeUtc(cand("LastIgcRecordDateTimeUTC")?.ToString())
+                            If lastRecord.HasValue Then
+                                result.LatestIgcRecordUtcByEntrySeq(entrySeqId) = lastRecord.Value
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+
+            Return result
+        End Using
+    End Function
+
+    Private Function ParseIgcRecordDateTimeUtc(value As String) As Nullable(Of DateTime)
+        If String.IsNullOrWhiteSpace(value) Then
+            Return Nothing
+        End If
+
+        Dim parsed As DateTime
+        If DateTime.TryParseExact(value,
+                                  "yyMMddHHmmss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                  parsed) Then
+            Return parsed
+        End If
+
+        Return Nothing
+    End Function
+
+    Private Class IgcMatchResult
+        Public ReadOnly Property EntrySeqIds As List(Of Integer)
+        Public ReadOnly Property LatestIgcRecordUtcByEntrySeq As Dictionary(Of Integer, DateTime)
+
+        Public Sub New()
+            EntrySeqIds = New List(Of Integer)()
+            LatestIgcRecordUtcByEntrySeq = New Dictionary(Of Integer, DateTime)()
+        End Sub
+    End Class
 
     Private Sub DPHXUnpackAndLoad_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         ' Release the named event

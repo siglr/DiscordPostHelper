@@ -1000,7 +1000,7 @@ End Function
 
         Try
 
-            Dim form = New Dictionary(Of String, String) From {
+        Dim form = New Dictionary(Of String, String) From {
               {"igcTitle", igcDetails.TaskTitle},
               {"igcWaypoints", JsonConvert.SerializeObject(
                                    igcDetails.IGCWaypoints.Select(
@@ -1010,6 +1010,9 @@ End Function
               {"LocalDate", igcDetails.LocalDate},
               {"LocalTime", igcDetails.LocalTime}
           }
+            If Settings.SessionSettings.WSGUserID > 0 Then
+                form.Add("WSGUserID", Settings.SessionSettings.WSGUserID.ToString())
+            End If
             Using client As New HttpClient()
                 client.BaseAddress = New Uri(SupportingFeatures.SIGLRDiscordPostHelperFolder)
                 Dim resp = Await client.PostAsync("MatchIGCToTaskV2.php",
