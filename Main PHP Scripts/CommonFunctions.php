@@ -35,6 +35,172 @@ function logMessage($message) {
     file_put_contents($logFile, "[$timestamp] $clientIp $message\n", FILE_APPEND);
 }
 
+function logDiscordSyncMessage($message) {
+    global $ENABLE_LOGGING;
+
+    if (!empty($ENABLE_LOGGING)) {
+        logMessage($message);
+    }
+}
+
+function refreshDiscordProfileIfStale($pdo, $wsgUserID) {
+    global $config;
+
+    $clientId = isset($config['discordClientId']) ? $config['discordClientId'] : '';
+    $clientSecret = isset($config['discordClientSecret']) ? $config['discordClientSecret'] : '';
+
+    if ($clientId === '' || $clientSecret === '') {
+        return null;
+    }
+
+    $tableCheckStmt = $pdo->prepare(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'UsersDiscordTokens'"
+    );
+    $tableCheckStmt->execute();
+    if (!$tableCheckStmt->fetch(PDO::FETCH_ASSOC)) {
+        return null;
+    }
+
+    $stmt = $pdo->prepare(
+        "SELECT ud.DiscordID,
+                t.AccessToken,
+                t.RefreshToken,
+                t.TokenExpiresUTC,
+                t.LastDiscordSyncUTC
+         FROM UsersDiscord ud
+         INNER JOIN UsersDiscordTokens t ON t.WSGUserID = ud.WSGUserID
+         WHERE ud.WSGUserID = ?
+         LIMIT 1"
+    );
+    $stmt->execute([$wsgUserID]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) {
+        return null;
+    }
+
+    $nowTimestamp = time();
+    if (!empty($row['LastDiscordSyncUTC'])) {
+        $lastSync = strtotime($row['LastDiscordSyncUTC'] . ' UTC');
+        if ($lastSync !== false && ($nowTimestamp - $lastSync) < 86400) {
+            return null;
+        }
+    }
+
+    $accessToken = $row['AccessToken'];
+    $refreshToken = $row['RefreshToken'];
+
+    if (!empty($row['TokenExpiresUTC'])) {
+        $tokenExpires = strtotime($row['TokenExpiresUTC'] . ' UTC');
+        if ($tokenExpires !== false && $tokenExpires <= $nowTimestamp) {
+            if (empty($refreshToken)) {
+                logDiscordSyncMessage("Discord token expired and no refresh token for WSGUserID: $wsgUserID");
+                return null;
+            }
+
+            $tokenUrl = 'https://discord.com/api/oauth2/token';
+            $data = [
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken
+            ];
+
+            $options = [
+                'http' => [
+                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method'  => 'POST',
+                    'content' => http_build_query($data)
+                ]
+            ];
+
+            $context = stream_context_create($options);
+            $result = file_get_contents($tokenUrl, false, $context);
+            if ($result === false) {
+                logDiscordSyncMessage("Failed to refresh Discord token for WSGUserID: $wsgUserID");
+                return null;
+            }
+
+            $tokenData = json_decode($result, true);
+            if (!isset($tokenData['access_token'])) {
+                logDiscordSyncMessage("Invalid refresh token response for WSGUserID: $wsgUserID");
+                return null;
+            }
+
+            $accessToken = $tokenData['access_token'];
+            if (!empty($tokenData['refresh_token'])) {
+                $refreshToken = $tokenData['refresh_token'];
+            }
+
+            $tokenExpiresUTC = null;
+            if (!empty($tokenData['expires_in'])) {
+                $tokenExpiresUTC = gmdate('Y-m-d H:i:s', $nowTimestamp + (int) $tokenData['expires_in']);
+            }
+
+            $updateTokenStmt = $pdo->prepare(
+                "UPDATE UsersDiscordTokens
+                 SET AccessToken = ?,
+                     RefreshToken = ?,
+                     TokenExpiresUTC = ?
+                 WHERE WSGUserID = ?"
+            );
+            $updateTokenStmt->execute([$accessToken, $refreshToken, $tokenExpiresUTC, $wsgUserID]);
+        }
+    }
+
+    $userUrl = 'https://discord.com/api/users/@me';
+    $options = [
+        'http' => [
+            'header' => "Authorization: Bearer $accessToken\r\n",
+            'method' => 'GET'
+        ]
+    ];
+
+    $context = stream_context_create($options);
+    $userResult = file_get_contents($userUrl, false, $context);
+    if ($userResult === false) {
+        logDiscordSyncMessage("Failed to fetch Discord user profile for WSGUserID: $wsgUserID");
+        return null;
+    }
+
+    $discordUser = json_decode($userResult, true);
+    if (!isset($discordUser['id'])) {
+        logDiscordSyncMessage("Invalid Discord user profile for WSGUserID: $wsgUserID");
+        return null;
+    }
+
+    $displayName = !empty($discordUser['global_name'])
+        ? $discordUser['global_name']
+        : $discordUser['username'];
+
+    $avatarURL = '';
+    if (!empty($discordUser['avatar'])) {
+        $avatarURL = "https://cdn.discordapp.com/avatars/" . $discordUser['id'] . "/" . $discordUser['avatar'] . ".png";
+    }
+
+    $nowUTC = gmdate('Y-m-d H:i:s');
+
+    $updateUserStmt = $pdo->prepare(
+        "UPDATE Users
+         SET WSGDisplayName = ?,
+             AvatarURL = ?
+         WHERE WSGUserID = ?"
+    );
+    $updateUserStmt->execute([$displayName, $avatarURL, $wsgUserID]);
+
+    $updateSyncStmt = $pdo->prepare(
+        "UPDATE UsersDiscordTokens
+         SET LastDiscordSyncUTC = ?
+         WHERE WSGUserID = ?"
+    );
+    $updateSyncStmt->execute([$nowUTC, $wsgUserID]);
+
+    return [
+        'displayName' => $displayName,
+        'avatar' => $avatarURL
+    ];
+}
+
 // Function to ensure datetime fields are properly formatted
 function formatDatetime($datetime) {
     $dt = new DateTime($datetime);
@@ -583,6 +749,464 @@ function getClientIP(): string
 
     // Default fallback
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+/**
+ * Builds a download requester signature to reduce duplicate counts.
+ *
+ * Uses IP, user-agent, and session cookie (if present) to better
+ * differentiate users behind CGNAT while keeping a stable fingerprint
+ * for the same browser session.
+ */
+function getDownloadRequesterSignature(): string
+{
+    $ipSource = getClientIP();
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $sessionName = session_name();
+    $sessionId = '';
+
+    if (!empty($sessionName) && isset($_COOKIE[$sessionName])) {
+        $sessionId = (string)$_COOKIE[$sessionName];
+    }
+
+    $signatureSource = $ipSource . '|' . $userAgent . '|' . $sessionId;
+    return 'sig:' . hash('sha256', $signatureSource);
+}
+
+/**
+ * Records a task download if this requester has not already downloaded today.
+ *
+ * Returns true if the download was counted, false if it was a duplicate.
+ */
+function recordUniqueTaskDownload(PDO $pdo, int $entrySeqID): bool
+{
+    try {
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+        $nowFormatted = $now->format('Y-m-d H:i:s');
+        $dateOnly = $now->format('Y-m-d');
+        $ipSource = getDownloadRequesterSignature();
+
+        $pdo->beginTransaction();
+
+        $checkQuery = "
+            SELECT 1
+              FROM TaskDownloads
+             WHERE IPSource   = :ipSource
+               AND Date       = :date
+               AND EntrySeqID = :entrySeqID
+             LIMIT 1
+        ";
+        $stmt = $pdo->prepare($checkQuery);
+        $stmt->execute([
+            ':ipSource' => $ipSource,
+            ':date' => $dateOnly,
+            ':entrySeqID' => $entrySeqID
+        ]);
+
+        if ($stmt->fetch()) {
+            $pdo->commit();
+            return false;
+        }
+
+        $insertQuery = "
+            INSERT INTO TaskDownloads (IPSource, Date, EntrySeqID)
+            VALUES (:ipSource, :date, :entrySeqID)
+        ";
+        $ins = $pdo->prepare($insertQuery);
+        $ins->execute([
+            ':ipSource' => $ipSource,
+            ':date' => $dateOnly,
+            ':entrySeqID' => $entrySeqID
+        ]);
+
+        $updateQuery = "
+            UPDATE Tasks
+               SET TotDownloads       = TotDownloads + 1,
+                   LastDownloadUpdate = :lastDownloadUpdate
+             WHERE EntrySeqID        = :id
+        ";
+        $update = $pdo->prepare($updateQuery);
+        $update->bindParam(':lastDownloadUpdate', $nowFormatted, PDO::PARAM_STR);
+        $update->bindParam(':id', $entrySeqID, PDO::PARAM_INT);
+        $update->execute();
+
+        $pdo->commit();
+        return true;
+    } catch (Exception $error) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $error;
+    }
+}
+
+function browserlessExtractTracklogsOnly(
+    string $igcUrl,
+    string $plnUrl,
+    string $flow = 'forced',
+    int $timeoutSeconds = 60
+): array {
+    global $blesstok;
+
+    $flow = strtolower(trim($flow));
+    if ($flow !== 'forced' && $flow !== 'normal') {
+        $flow = 'forced';
+    }
+
+    if (!isset($blesstok) || trim($blesstok) === '') {
+        return [
+            'ok' => false,
+            'http_code' => 0,
+            'plannerUrl' => '',
+            'data' => null,
+            'raw' => null,
+            'error' => 'Browserless token ($blesstok) is not configured in CommonFunctions.php',
+        ];
+    }
+
+    $igcUrl = trim($igcUrl);
+    $plnUrl = trim($plnUrl);
+
+    if ($igcUrl === '' || $plnUrl === '') {
+        return [
+            'ok' => false,
+            'http_code' => 0,
+            'plannerUrl' => '',
+            'data' => null,
+            'raw' => null,
+            'error' => 'Missing igcUrl or plnUrl',
+        ];
+    }
+
+    // Keep EXACT behavior of your working curl:
+    // - planner expects host/path (no https:// prefix)
+    // - do NOT urlencode the igc/pln values
+    $igcUrl = preg_replace('#^https?://#i', '', $igcUrl);
+    $plnUrl = preg_replace('#^https?://#i', '', $plnUrl);
+
+    // Build planner URL exactly like curl (spaces allowed)
+    $plannerUrl = 'https://xp-soaring.github.io/tasks/b21_task_planner/index.html'
+        . '?igc=' . $igcUrl
+        . '&pln=' . $plnUrl;
+
+    // Same endpoint/options as your curl (token + blockConsentModals=true)
+    $endpoint = 'https://production-sfo.browserless.io/chrome/bql?token='
+              . rawurlencode($blesstok)
+              . '&blockConsentModals=true';
+
+    // Build the BQL mutation (forced flow matches your working curl)
+    $query = <<<GQL
+mutation ExtractTracklogsOnly {
+  viewport(width: 1366, height: 768) {
+    width
+    height
+    time
+  }
+
+  goto(
+    url: "{$plannerUrl}",
+    waitUntil: networkIdle
+  ) {
+    status
+  }
+
+  waitTabReady: waitForSelector(selector: "#tab_tracklogs a", visible: true) {
+    time
+  }
+  clickTabTracklogs: click(selector: "#tab_tracklogs a", wait: true, visible: true) {
+    time
+  }
+
+  # Wait for at least one tracklog entry
+  waitTracklogRow: waitForSelector(
+    selector: "#tracklogs_table .tracklogs_entry_current .tracklogs_entry_info, #tracklogs_table .tracklogs_entry_info",
+    visible: true
+  ) {
+    time
+  }
+
+  # Click the first tracklog info cell
+  clickTracklogInfo: click(
+    selector: "#tracklogs_table .tracklogs_entry_current .tracklogs_entry_info, #tracklogs_table .tracklogs_entry_info",
+    wait: true,
+    visible: true
+  ) {
+    time
+  }
+
+GQL;
+
+    // Optional “normal” flow includes clicking “Load task”
+    if ($flow === 'normal') {
+        $query .= <<<GQL
+  # Wait for the Load Task button to show
+  waitLoadTaskButton: waitForSelector(selector: "#tracklog_info_load_task", visible: true) {
+    time
+  }
+  # Click the Load Task button
+  clickLoadTask: click(selector: "#tracklog_info_load_task", wait: true, visible: true) {
+    time
+  }
+
+  # Planner may switch tabs after loading; force Tracklogs tab back on.
+  waitTabTracklogsAfterLoad: waitForSelector(selector: "#tab_tracklogs a", visible: true) {
+    time
+  }
+  # Click the Tracklogs tab again
+  clickTabTracklogsAfterLoad: click(selector: "#tab_tracklogs a", wait: true, visible: true) {
+    time
+  }
+
+  # Wait for at least one tracklog entry
+  waitTracklogRowAfterLoad: waitForSelector(
+    selector: "#tracklogs_table .tracklogs_entry_current .tracklogs_entry_info, #tracklogs_table .tracklogs_entry_info",
+    visible: true
+  ) {
+    time
+  }
+
+  # Click the first tracklog info cell
+  clickTracklogInfoAfterLoad: click(
+    selector: "#tracklogs_table .tracklogs_entry_current .tracklogs_entry_info, #tracklogs_table .tracklogs_entry_info",
+    wait: true,
+    visible: true
+  ) {
+    time
+  }
+
+GQL;
+    }
+
+    $query .= <<<GQL
+  # Read the IGC line from the right-hand info panel
+  waitIgcInfo: waitForSelector(selector: "#tracklog_info_details .igc", visible: true) {
+    time
+  }
+  igcInfo: html(selector: "#tracklog_info_details .igc", visible: true) {
+    html
+  }
+
+  # Tracklogs table HTML
+  waitTracklogsTable: waitForSelector(selector: "#tracklogs_table", visible: true) {
+    time
+  }
+  tracklogsHTML: html(selector: "#tracklogs_table", visible: true) {
+    html
+  }
+
+  plannerVersion: html(selector: "#b21_task_planner_version", visible: true) {
+    html
+  }
+}
+GQL;
+
+    $payload = json_encode([
+        'query' => $query,
+        'variables' => (object)[],
+        'operationName' => 'ExtractTracklogsOnly'
+    ], JSON_UNESCAPED_SLASHES);
+
+    if ($payload === false) {
+        return [
+            'ok' => false,
+            'http_code' => 0,
+            'plannerUrl' => $plannerUrl,
+            'data' => null,
+            'raw' => null,
+            'error' => 'Failed to JSON-encode request payload: ' . json_last_error_msg(),
+        ];
+    }
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $endpoint,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => $payload,
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Expect:', // avoids 100-continue edge cases
+        ],
+        CURLOPT_TIMEOUT => $timeoutSeconds,
+        CURLOPT_CONNECTTIMEOUT => 20,
+    ]);
+
+    $respBody = curl_exec($ch);
+    $curlErrNo = curl_errno($ch);
+    $curlErr   = $curlErrNo ? curl_error($ch) : null;
+    $httpCode  = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($curlErrNo) {
+        return [
+            'ok' => false,
+            'http_code' => $httpCode,
+            'plannerUrl' => $plannerUrl,
+            'data' => null,
+            'raw' => null,
+            'error' => 'cURL error calling Browserless: ' . $curlErr,
+        ];
+    }
+
+    if ($respBody === false || $respBody === '') {
+        return [
+            'ok' => false,
+            'http_code' => $httpCode,
+            'plannerUrl' => $plannerUrl,
+            'data' => null,
+            'raw' => null,
+            'error' => 'Empty response from Browserless',
+        ];
+    }
+
+    $decoded = json_decode($respBody, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return [
+            'ok' => false,
+            'http_code' => ($httpCode ?: 0),
+            'plannerUrl' => $plannerUrl,
+            'data' => null,
+            'raw' => $respBody,
+            'error' => 'Browserless returned non-JSON response: ' . json_last_error_msg(),
+        ];
+    }
+
+    // Browserless can return HTTP 200 with GraphQL "errors"
+    $ok = ($httpCode >= 200 && $httpCode < 300) && !isset($decoded['errors']);
+
+    return [
+        'ok' => $ok,
+        'http_code' => ($httpCode ?: 200),
+        'plannerUrl' => $plannerUrl,
+        'data' => $decoded,
+        'raw' => null,
+        'error' => $ok ? null : (isset($decoded['errors']) ? 'Browserless GraphQL errors present.' : 'HTTP error from Browserless.'),
+    ];
+}
+
+function parseBrowserlessTracklogs(array $browserlessResult, ?string $igcKeyDir = null, bool $logEnabled = false): array
+{
+    if ($logEnabled && $igcKeyDir) {
+        file_put_contents(
+            $igcKeyDir . '/browserless_full_dump.json',
+            json_encode($browserlessResult, JSON_PRETTY_PRINT)
+        );
+    }
+
+    if (!isset($browserlessResult['data']['tracklogsHTML']['html'])) {
+        $browserlessResult['error'] = "Browserless response did not include tracklogs HTML.";
+        return $browserlessResult;
+    }
+
+    $htmlContent = $browserlessResult['data']['tracklogsHTML']['html'];
+    if (stripos(ltrim($htmlContent), '<tr') === 0) {
+        $htmlContent = '<table id="tracklogs_table">' . $htmlContent . '</table>';
+    }
+
+    $plannerVersion = '';
+    if (isset($browserlessResult['data']['plannerVersion']['html'])) {
+        $plannerVersion = trim($browserlessResult['data']['plannerVersion']['html']);
+    }
+
+    $igcValid = false;
+    if (isset($browserlessResult['data']['igcInfo']['html'])) {
+        $igcInfoHtml = $browserlessResult['data']['igcInfo']['html'];
+        $igcInfoText = trim(strip_tags($igcInfoHtml));
+        if (mb_strpos($igcInfoText, '🔒') !== false) {
+            $igcValid = true;
+        }
+    }
+
+    $htmlContent = '<?xml encoding="UTF-8">' . $htmlContent;
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    libxml_use_internal_errors(true);
+    $dom->loadHTML($htmlContent);
+    libxml_clear_errors();
+    $xpath = new DOMXPath($dom);
+
+    $targetRow = null;
+    $nodes = $xpath->query('//*[contains(@class,"tracklogs_entry_current")]');
+    if ($nodes->length > 0) {
+        $targetRow = $nodes->item(0);
+    } else {
+        $nodes = $xpath->query('//*[contains(@class,"tracklogs_entry")]');
+        if ($nodes->length > 0) {
+            $targetRow = $nodes->item(0);
+        }
+    }
+
+    if (!$targetRow) {
+        $browserlessResult['error'] = "No tracklogs entry node found in the HTML.";
+        return $browserlessResult;
+    }
+
+    $infoDiv = $xpath->query('.//*[contains(@class,"tracklogs_entry_info")]', $targetRow)->item(0);
+    if (!$infoDiv) {
+        $browserlessResult['error'] = "Information column not found in tracklogs entry.";
+        return $browserlessResult;
+    }
+
+    $nameDiv = $xpath->query('.//div[contains(@class,"tracklogs_entry_name")]', $infoDiv)->item(0);
+    $searchContext = $nameDiv ?: $infoDiv;
+
+    $resultDivCandidates = $xpath->query('.//div[contains(@class,"tracklogs_entry_finished")]', $searchContext);
+    if ($resultDivCandidates->length === 0) {
+        $browserlessResult['error'] = "Result element not found in tracklogs entry.";
+        return $browserlessResult;
+    }
+
+    $resultDiv = $resultDivCandidates->item(0);
+    $class     = $resultDiv->getAttribute('class');
+    $taskCompleted = (strpos($class, "tracklogs_entry_finished_ok") !== false);
+    $penalties     = (strpos($class, "penalties") !== false);
+
+    $span       = $xpath->query('.//span', $resultDiv)->item(0);
+    $resultText = $span ? trim($span->textContent) : '';
+
+    $duration = $distance = $speed = null;
+
+    if ($taskCompleted) {
+        $parts = preg_split('/\s+/', $resultText);
+        if (count($parts) >= 3 && strpos($parts[1], 'km') !== false) {
+            $duration = $parts[0];
+            $distance = sprintf('%.1f', floatval(str_replace('km', '', $parts[1])));
+            $speed    = sprintf('%.1f', floatval(str_replace('kph', '', $parts[2])));
+        } elseif (count($parts) >= 2) {
+            $duration = $parts[0];
+            $speed    = sprintf('%.1f', floatval(str_replace('kph', '', $parts[1])));
+        }
+    } else {
+        if ($resultText !== '') {
+            $distance = sprintf('%.1f', floatval(str_replace('km', '', $resultText)));
+        }
+    }
+
+    $parsedResults = [
+        "TaskCompleted" => $taskCompleted,
+        "Penalties"     => $penalties,
+        "Duration"      => $duration,
+        "Distance"      => $distance,
+        "Speed"         => $speed,
+        "IGCValid"      => $igcValid,
+        "TPVersion"     => $plannerVersion
+    ];
+
+    if ($igcKeyDir) {
+        $resultsFile = $igcKeyDir . '/results.json';
+        $jsonData    = json_encode($parsedResults, JSON_PRETTY_PRINT);
+        if ($jsonData === false) {
+            $browserlessResult['error'] = "Failed to encode parsed results as JSON: " . json_last_error_msg();
+            return $browserlessResult;
+        }
+        if (file_put_contents($resultsFile, $jsonData) === false) {
+            $browserlessResult['error'] = "Failed to write results file to $resultsFile";
+            return $browserlessResult;
+        }
+    }
+
+    $browserlessResult['parsedResults'] = $parsedResults;
+    return $browserlessResult;
 }
 
 ?>
