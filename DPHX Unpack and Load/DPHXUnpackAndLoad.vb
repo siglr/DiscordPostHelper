@@ -992,6 +992,18 @@ Public Class DPHXUnpackAndLoad
             Return
         End If
 
+        If info.EntrySeqID > 0 Then
+            Dim incrementUrl = SupportingFeatures.SIGLRDiscordPostHelperFolder() & "IncrementDownloadForTask.php?EntrySeqID=" & info.EntrySeqID.ToString()
+            Task.Run(Sub()
+                         Try
+                             Using client As New WebClient()
+                                 client.DownloadString(incrementUrl)
+                             End Using
+                         Catch
+                         End Try
+                     End Sub)
+        End If
+
         SupportingFeatures.BringWindowToFront(Me)
 
         LoadDPHXPackage(downloaded)
