@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.20.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Enhanced links visuals and efficiency plus fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Enhanced the link to the files for better visuals and clarity
+        Changed the download links of files to the new more efficient endpoint on the server
+        Fixed error (crash) when no secondary custom weather preset selected
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.20.1</ReleaseVersion>
       <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>

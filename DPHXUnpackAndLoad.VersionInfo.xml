@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.1.23.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.1.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Added an IGC upload reminder
+        Added Increment downloads for a task when joining through the "upcoming event" prompt
+        Updated countdown vocal cues
+        Fixed country flag icons being duplicated over and over when opening Settings
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.1.23.1</ReleaseVersion>
       <ReleaseTitle>Second hotfix for layout.json update</ReleaseTitle>
