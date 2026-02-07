@@ -20,6 +20,18 @@ Public Class ATCWaypoint
 
     Public ReadOnly Property WaypointName As String = String.Empty
 
+    Public ReadOnly Property PossibleInvalidRestriction As Boolean
+        Get
+            If _PossibleElevationUpdateReq OrElse _wpelevation = 0 Then
+                Return False
+            End If
+            If (_MaxAlt.HasValue AndAlso _MaxAlt < _wpelevation) OrElse (_MinAlt.HasValue AndAlso _MinAlt < _wpelevation) Then
+                Return True
+            End If
+            Return False
+        End Get
+    End Property
+
     Public ReadOnly Property ICAO As String = String.Empty
     Public ReadOnly Property Gate As String
         Get
