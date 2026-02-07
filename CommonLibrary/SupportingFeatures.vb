@@ -80,6 +80,34 @@ Public Class SupportingFeatures
 
     End Function
 
+    Public Shared Function GetTaskStartWaypoint(waypoints As IEnumerable(Of ATCWaypoint)) As ATCWaypoint
+        If waypoints Is Nothing Then
+            Return Nothing
+        End If
+
+        For Each waypoint As ATCWaypoint In waypoints
+            If waypoint.IsTaskStart Then
+                Return waypoint
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+    Public Shared Function GetTaskFinishWaypoint(waypoints As IEnumerable(Of ATCWaypoint)) As ATCWaypoint
+        If waypoints Is Nothing Then
+            Return Nothing
+        End If
+
+        For Each waypoint As ATCWaypoint In waypoints
+            If waypoint.IsTaskEnd Then
+                Return waypoint
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
     Public Shared Function TaskLibraryDiscordURL(Optional testMode As Boolean = False) As String
         If testMode Then
             Return $"https://discord.com/channels/{MSFSSoaringToolsDiscordID}/{MSFSSoaringToolsTestingID}"

@@ -2334,6 +2334,12 @@ Public Class Main
             SetLabelFormat(lblMap, LabelFormat.Regular)
         End If
 
+        Dim startWaypoint As ATCWaypoint = SupportingFeatures.GetTaskStartWaypoint(_SF.AllWaypoints)
+
+        If startWaypoint IsNot Nothing AndAlso Not startWaypoint.MaxAltFeet.HasValue Then
+            messageText.AppendLine("Possibly missing MAX altitude restriction on task start waypoint?")
+        End If
+
         If showMessageBox Then
             If cannotContinue Then
                 Using New Centered_MessageBox(Me)
