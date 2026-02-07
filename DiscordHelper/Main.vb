@@ -2337,7 +2337,7 @@ Public Class Main
         Dim startWaypoint As ATCWaypoint = SupportingFeatures.GetTaskStartWaypoint(_SF.AllWaypoints)
 
         If startWaypoint IsNot Nothing AndAlso Not startWaypoint.MaxAltFeet.HasValue Then
-            messageText.AppendLine("Possibly missing MAX altitude restriction on task start waypoint?")
+            messageText.AppendLine("Possibly missing MAX altitude restriction on Start waypoint?")
         End If
 
         If showMessageBox Then
