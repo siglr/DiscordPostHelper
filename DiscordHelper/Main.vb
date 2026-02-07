@@ -2709,6 +2709,10 @@ Public Class Main
         If hasBelowGroundRestriction Then
             warningMessages.Add("Altitude restriction below ground!")
         End If
+        Dim startWaypoint As ATCWaypoint = SupportingFeatures.GetTaskStartWaypoint(_SF.AllWaypoints)
+        If startWaypoint IsNot Nothing AndAlso Not startWaypoint.MaxAltFeet.HasValue Then
+            warningMessages.Add("No MAX on Start!")
+        End If
         lblElevationUpdateWarning.Visible = warningMessages.Count > 0
         If warningMessages.Count > 0 Then
             lblElevationUpdateWarning.Text = String.Join(" ", warningMessages)
