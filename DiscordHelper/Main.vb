@@ -2342,7 +2342,7 @@ Public Class Main
 
         For Each waypoint As ATCWaypoint In _SF.AllWaypoints
             If waypoint.PossibleInvalidRestriction Then
-                messageText.AppendLine("Waypoint altitude restriction is below ground (check waypoint elevations/restrictions).")
+                messageText.AppendLine("At least one waypoint's altitude restriction is below ground!")
                 Exit For
             End If
         Next
