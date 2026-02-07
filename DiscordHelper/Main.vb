@@ -2340,6 +2340,13 @@ Public Class Main
             messageText.AppendLine("Possibly missing MAX altitude restriction on Start waypoint?")
         End If
 
+        For Each waypoint As ATCWaypoint In _SF.AllWaypoints
+            If waypoint.PossibleInvalidRestriction Then
+                messageText.AppendLine("Waypoint altitude restriction is below ground (check waypoint elevations/restrictions).")
+                Exit For
+            End If
+        Next
+
         If showMessageBox Then
             If cannotContinue Then
                 Using New Centered_MessageBox(Me)
