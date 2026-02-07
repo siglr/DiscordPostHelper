@@ -445,6 +445,7 @@ Public Class Main
         _TaskEntrySeqID = 0
         _taskDiscordPostID = String.Empty
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
+        lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation update required!"
         lblDiscordTaskPostID.Text = "❌ Discord Post ID"
         lblWSGTaskEntrySeqID.Text = "❌ WeSimGlide.org ID: None"
         lblEventClubNotAuthorized.Visible = False
@@ -2340,13 +2341,6 @@ Public Class Main
             messageText.AppendLine("Possibly missing MAX altitude restriction on Start waypoint?")
         End If
 
-        For Each waypoint As ATCWaypoint In _SF.AllWaypoints
-            If waypoint.PossibleInvalidRestriction Then
-                messageText.AppendLine("At least one waypoint's altitude restriction is below ground!")
-                Exit For
-            End If
-        Next
-
         If showMessageBox Then
             If cannotContinue Then
                 Using New Centered_MessageBox(Me)
@@ -2651,6 +2645,7 @@ Public Class Main
 
         _PossibleElevationUpdateRequired = False
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
+        lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation update required!"
 
         filename = SupportingFeatures.SanitizeFilePath(filename)
 
@@ -2691,6 +2686,13 @@ Public Class Main
         End If
 
         txtAltRestrictions.Text = _SF.BuildAltitudeRestrictions(_XmlDocFlightPlan, _FlightTotalDistanceInKm, _TaskTotalDistanceInKm, _PossibleElevationUpdateRequired)
+        Dim hasBelowGroundRestriction As Boolean = False
+        For Each waypoint As ATCWaypoint In _SF.AllWaypoints
+            If waypoint.PossibleInvalidRestriction Then
+                hasBelowGroundRestriction = True
+                Exit For
+            End If
+        Next
 
         'Check if there is an AATMinDuration
         If _SF.AATMinDuration > TimeSpan.Zero Then
@@ -2701,7 +2703,17 @@ Public Class Main
             txtAATTask.Text = String.Empty
         End If
 
-        lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
+        Dim warningMessages As New List(Of String)
+        If _PossibleElevationUpdateRequired Then
+            warningMessages.Add("One or more waypoints have their elevation set to 1500' - Possible elevation update required!")
+        End If
+        If hasBelowGroundRestriction Then
+            warningMessages.Add("At least one waypoint's altitude restriction is below ground!")
+        End If
+        lblElevationUpdateWarning.Visible = warningMessages.Count > 0
+        If warningMessages.Count > 0 Then
+            lblElevationUpdateWarning.Text = String.Join(Environment.NewLine, warningMessages)
+        End If
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
 
         If _TaskTotalDistanceInKm = 0 Then
