@@ -25,6 +25,7 @@ Partial Class Main
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim BriefingRenderContext3 As SIGLR.SoaringTools.CommonLibrary.BriefingRenderContext = New SIGLR.SoaringTools.CommonLibrary.BriefingRenderContext()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.pnlScrollableSurface = New System.Windows.Forms.Panel()
         Me.mainTabControl = New System.Windows.Forms.TabControl()
@@ -1113,15 +1114,14 @@ Partial Class Main
         '
         'lblElevationUpdateWarning
         '
-        Me.lblElevationUpdateWarning.AutoSize = True
         Me.lblElevationUpdateWarning.Font = New System.Drawing.Font("Segoe UI Variable Display", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblElevationUpdateWarning.ForeColor = System.Drawing.Color.Red
-        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(69, 50)
+        Me.lblElevationUpdateWarning.Location = New System.Drawing.Point(19, 51)
         Me.lblElevationUpdateWarning.Name = "lblElevationUpdateWarning"
-        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(659, 21)
+        Me.lblElevationUpdateWarning.Size = New System.Drawing.Size(709, 23)
         Me.lblElevationUpdateWarning.TabIndex = 83
-        Me.lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation upda" &
-    "te required!"
+        Me.lblElevationUpdateWarning.Text = "Possible elevation update required! Altitude restriction below ground!"
+        Me.lblElevationUpdateWarning.TextAlign = System.Drawing.ContentAlignment.TopCenter
         Me.ToolTip1.SetToolTip(Me.lblElevationUpdateWarning, "Open the flight plan on the B21 Planner and make sure to update all elevations. O" &
         "therwise, you can dismiss this warning.")
         Me.lblElevationUpdateWarning.Visible = False
@@ -4350,6 +4350,10 @@ Partial Class Main
         Me.BriefingControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.BriefingControl1.MinimumSize = New System.Drawing.Size(700, 500)
         Me.BriefingControl1.Name = "BriefingControl1"
+        BriefingRenderContext3.HostMode = SIGLR.SoaringTools.CommonLibrary.BriefingHostMode.DesignerPreview
+        BriefingRenderContext3.InstalledSims = CType((SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags.MSFS2020 Or SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags.MSFS2024), SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags)
+        BriefingRenderContext3.PresetNameDisplayMode = SIGLR.SoaringTools.CommonLibrary.PresetNameDisplayMode.Friendly
+        Me.BriefingControl1.RenderContext = BriefingRenderContext3
         Me.BriefingControl1.Size = New System.Drawing.Size(1467, 860)
         Me.BriefingControl1.TabIndex = 0
         Me.BriefingControl1.Tag = "100"

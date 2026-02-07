@@ -445,7 +445,6 @@ Public Class Main
         _TaskEntrySeqID = 0
         _taskDiscordPostID = String.Empty
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
-        lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation update required!"
         lblDiscordTaskPostID.Text = "❌ Discord Post ID"
         lblWSGTaskEntrySeqID.Text = "❌ WeSimGlide.org ID: None"
         lblEventClubNotAuthorized.Visible = False
@@ -2645,7 +2644,7 @@ Public Class Main
 
         _PossibleElevationUpdateRequired = False
         lblElevationUpdateWarning.Visible = _PossibleElevationUpdateRequired
-        lblElevationUpdateWarning.Text = "One or more waypoints have their elevation set to 1500' - Possible elevation update required!"
+        lblElevationUpdateWarning.Text = String.Empty
 
         filename = SupportingFeatures.SanitizeFilePath(filename)
 
@@ -2705,14 +2704,14 @@ Public Class Main
 
         Dim warningMessages As New List(Of String)
         If _PossibleElevationUpdateRequired Then
-            warningMessages.Add("One or more waypoints have their elevation set to 1500' - Possible elevation update required!")
+            warningMessages.Add("Possible elevation update required!")
         End If
         If hasBelowGroundRestriction Then
-            warningMessages.Add("At least one waypoint's altitude restriction is below ground!")
+            warningMessages.Add("Altitude restriction below ground!")
         End If
         lblElevationUpdateWarning.Visible = warningMessages.Count > 0
         If warningMessages.Count > 0 Then
-            lblElevationUpdateWarning.Text = String.Join(Environment.NewLine, warningMessages)
+            lblElevationUpdateWarning.Text = String.Join(" ", warningMessages)
         End If
         txtDistanceTotal.Text = FormatNumber(_FlightTotalDistanceInKm, 0)
 
