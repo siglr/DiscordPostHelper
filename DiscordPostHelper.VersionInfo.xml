@@ -5,8 +5,8 @@
       <ReleaseVersion>26.2.11.1</ReleaseVersion>
       <ReleaseTitle>Altitude restrictions checks</ReleaseTitle>
       <ReleaseNotes>
-        Added a warning if no max alt restriction on Start waypoint
-        Added a warning when max or min restriction (of any waypoint) is below ground 
+        Added warning if no max alt restriction on Start waypoint
+        Added warning when max or min restriction (of any waypoint) is below ground 
       </ReleaseNotes>
     </Release>
     <Release>
