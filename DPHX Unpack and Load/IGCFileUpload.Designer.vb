@@ -100,6 +100,7 @@ Partial Class IGCFileUpload
         Me.convertToGpxMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.convertToKmlMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.convertToFltRecMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtReExtractPrompt = New System.Windows.Forms.TextBox()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -260,6 +261,7 @@ Partial Class IGCFileUpload
         '
         Me.pnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlResults.Controls.Add(Me.txtReExtractPrompt)
         Me.pnlResults.Controls.Add(Me.txtTaskLocalDateTime)
         Me.pnlResults.Controls.Add(Me.Label12)
         Me.pnlResults.Controls.Add(Me.btnUpload)
@@ -321,7 +323,7 @@ Partial Class IGCFileUpload
         Me.btnRecalculate.BackgroundImage = CType(resources.GetObject("btnRecalculate.BackgroundImage"), System.Drawing.Image)
         Me.btnRecalculate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnRecalculate.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.163636!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRecalculate.Location = New System.Drawing.Point(206, 0)
+        Me.btnRecalculate.Location = New System.Drawing.Point(207, 0)
         Me.btnRecalculate.Name = "btnRecalculate"
         Me.btnRecalculate.Size = New System.Drawing.Size(37, 37)
         Me.btnRecalculate.TabIndex = 1
@@ -611,7 +613,7 @@ Partial Class IGCFileUpload
         Me.tabIGCTabs.Location = New System.Drawing.Point(0, 0)
         Me.tabIGCTabs.Name = "tabIGCTabs"
         Me.tabIGCTabs.SelectedIndex = 0
-        Me.tabIGCTabs.Size = New System.Drawing.Size(717, 695)
+        Me.tabIGCTabs.Size = New System.Drawing.Size(716, 695)
         Me.tabIGCTabs.TabIndex = 2
         '
         'tabpgResults
@@ -622,7 +624,7 @@ Partial Class IGCFileUpload
         Me.tabpgResults.Location = New System.Drawing.Point(4, 29)
         Me.tabpgResults.Name = "tabpgResults"
         Me.tabpgResults.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgResults.Size = New System.Drawing.Size(709, 662)
+        Me.tabpgResults.Size = New System.Drawing.Size(708, 662)
         Me.tabpgResults.TabIndex = 0
         Me.tabpgResults.Text = "Results"
         Me.tabpgResults.UseVisualStyleBackColor = True
@@ -661,7 +663,7 @@ Partial Class IGCFileUpload
         Me.tabpgRatings.Location = New System.Drawing.Point(4, 22)
         Me.tabpgRatings.Name = "tabpgRatings"
         Me.tabpgRatings.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabpgRatings.Size = New System.Drawing.Size(709, 669)
+        Me.tabpgRatings.Size = New System.Drawing.Size(708, 669)
         Me.tabpgRatings.TabIndex = 1
         Me.tabpgRatings.Text = "Ratings & Comments"
         Me.tabpgRatings.UseVisualStyleBackColor = True
@@ -1000,6 +1002,21 @@ Partial Class IGCFileUpload
         Me.convertToFltRecMenuItem.Size = New System.Drawing.Size(240, 24)
         Me.convertToFltRecMenuItem.Text = "FltRec file"
         '
+        'txtReExtractPrompt
+        '
+        Me.txtReExtractPrompt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtReExtractPrompt.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtReExtractPrompt.Font = New System.Drawing.Font("Segoe UI Variable Display", 9.818182!, System.Drawing.FontStyle.Bold)
+        Me.txtReExtractPrompt.Location = New System.Drawing.Point(97, 6)
+        Me.txtReExtractPrompt.Name = "txtReExtractPrompt"
+        Me.txtReExtractPrompt.ReadOnly = True
+        Me.txtReExtractPrompt.Size = New System.Drawing.Size(110, 20)
+        Me.txtReExtractPrompt.TabIndex = 15
+        Me.txtReExtractPrompt.Text = "Re-extract? >>"
+        Me.txtReExtractPrompt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.ToolTip1.SetToolTip(Me.txtReExtractPrompt, "If you think the results are not right, click the re-extract button!")
+        Me.txtReExtractPrompt.Visible = False
+        '
         'IGCFileUpload
         '
         Me.AcceptButton = Me.btnClose
@@ -1113,4 +1130,5 @@ Partial Class IGCFileUpload
     Friend WithEvents convertToGpxMenuItem As ToolStripMenuItem
     Friend WithEvents convertToKmlMenuItem As ToolStripMenuItem
     Friend WithEvents convertToFltRecMenuItem As ToolStripMenuItem
+    Friend WithEvents txtReExtractPrompt As TextBox
 End Class
