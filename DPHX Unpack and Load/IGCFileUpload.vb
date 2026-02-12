@@ -23,6 +23,48 @@ Public Class IGCFileUpload
     Private igcDetails As IGCLookupDetails = Nothing
     Private taskCache As New Dictionary(Of String, IGCCacheTaskObject)
     Private _tabpgRatingsVisited As Boolean = False
+    Private ReadOnly _reExtractBlinkTimer As New Windows.Forms.Timer() With {.Interval = 500}
+    Private _reExtractBlinkOn As Boolean = False
+
+
+    Private Sub IGCFileUpload_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        AddHandler _reExtractBlinkTimer.Tick, AddressOf ReExtractBlinkTimer_Tick
+        StopReExtractPromptBlink()
+    End Sub
+
+    Private Sub IGCFileUpload_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        StopReExtractPromptBlink()
+        RemoveHandler _reExtractBlinkTimer.Tick, AddressOf ReExtractBlinkTimer_Tick
+    End Sub
+
+    Private Function ShouldPromptReExtract() As Boolean
+        If igcDetails Is Nothing OrElse igcDetails.Results Is Nothing Then Return False
+
+        Return (Not igcDetails.Results.IGCValid) OrElse (Not igcDetails.Results.TaskCompleted)
+    End Function
+
+    Private Sub ReExtractBlinkTimer_Tick(sender As Object, e As EventArgs)
+        _reExtractBlinkOn = Not _reExtractBlinkOn
+        txtReExtractPrompt.Visible = _reExtractBlinkOn
+    End Sub
+
+    Private Sub StopReExtractPromptBlink()
+        _reExtractBlinkTimer.Stop()
+        _reExtractBlinkOn = False
+        txtReExtractPrompt.Visible = False
+    End Sub
+
+    Private Sub UpdateReExtractPromptBlink()
+        If ShouldPromptReExtract() Then
+            If Not _reExtractBlinkTimer.Enabled Then
+                _reExtractBlinkOn = True
+                txtReExtractPrompt.Visible = True
+                _reExtractBlinkTimer.Start()
+            End If
+        Else
+            StopReExtractPromptBlink()
+        End If
+    End Sub
 
     Public Sub Display(parentForm As Form, pIGCFiles As List(Of String), pEntrySeqID As Integer)
 
@@ -106,6 +148,7 @@ Public Class IGCFileUpload
         txtWSGStatus.Text = String.Empty
         lblProcessing.Text = String.Empty
         pnlResults.Visible = False
+        StopReExtractPromptBlink()
         tabIGCTabs.SelectedTab = tabpgResults
         grpIGCUserComment.Enabled = False
         grpTaskUserData.Enabled = False
@@ -119,6 +162,7 @@ Public Class IGCFileUpload
             txtWSGStatus.Text = "No task found!"
             txtIGCEntrySeqID.Text = "Task not found"
             lblProcessing.Text = "No task found!"
+            UpdateReExtractPromptBlink()
             Return
         Else
             'Check if the task is the same as the current DPHX task
@@ -146,6 +190,7 @@ Public Class IGCFileUpload
             If igcDetails.AlreadyUploaded Then
                 txtWSGStatus.Text = "Already uploaded"
                 lblProcessing.Text = "Already uploaded"
+                UpdateReExtractPromptBlink()
                 Return
             Else
                 Dim userInfo As String = String.Empty
@@ -167,6 +212,7 @@ Public Class IGCFileUpload
         End If
         If igcDetails.Results Is Nothing Then
             'Still nothing - error processing?
+            UpdateReExtractPromptBlink()
         Else
             Await FillResultsPanel()
         End If
@@ -249,6 +295,8 @@ Public Class IGCFileUpload
 
         txtTime.Text = igcDetails.Results.Duration
 
+        UpdateReExtractPromptBlink()
+
     End Function
 
     Private Async Function ExtractionFromTaskPlanner() As Task
@@ -286,6 +334,7 @@ Public Class IGCFileUpload
             igcDetails.AlreadyUploaded = True
             igcDetails.Results = Nothing
             pnlResults.Visible = False
+            StopReExtractPromptBlink()
             tabIGCTabs.SelectedTab = tabpgResults
             grpIGCUserComment.Enabled = False
             grpTaskUserData.Enabled = False
@@ -868,6 +917,7 @@ End Function
         Try
             If lstbxIGCFiles.SelectedIndex >= 0 Then
                 lstbxIGCFiles.Enabled = False
+                StopReExtractPromptBlink()
                 Await ResetTaskPlanner()
                 Await ExtractionFromTaskPlanner()
                 Await FillResultsPanel()
