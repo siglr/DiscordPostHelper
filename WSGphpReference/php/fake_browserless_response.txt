@@ -1,0 +1,16 @@
+{
+  "data": {
+    "goto": {
+      "status": 200
+    },
+    "waitTracklogs": {
+      "time": 4
+    },
+    "tracklogsHTML": {
+      "html": "<table xmlns=\"http://www.w3.org/1999/xhtml\" id=\"tracklogs_table\"><tr class=\"tracklogs_entry_current\"><td class=\"tracklogs_entry_checkbox\"><input type=\"checkbox\" checked=\"checked\" /></td><td class=\"tracklogs_entry_info\" title=\"Click for task results.\"><div class=\"tracklogs_entry_name\">🔒ADCK - JS3-18<div class=\"tracklogs_entry_finished_ok penalties\"><span> 1:28:18  242.3kph</span></div></div><div class=\"tracklogs_entry_filename\">753_ADCK_JS3-18_250412180221.igc</div><div>Begins: 13 Apr 2025 18:03Z</div></td><td class=\"tracklogs_entry_colors_td\"><div class=\"tracklogs_entry_colors\"><div class=\"tracklogs_entry_color_top\" style=\"background-color: rgb(51, 51, 51);\"></div><div class=\"tracklogs_entry_color_middle\" style=\"background-color: rgb(51, 51, 51);\"></div><div class=\"tracklogs_entry_color_bottom\" style=\"background-color: rgb(51, 51, 51);\"></div></div></td></tr></table>"
+    },
+    "plannerVersion": {
+      "html": "v5.1.5"
+    }
+  }
+}
