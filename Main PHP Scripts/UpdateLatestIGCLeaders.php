@@ -24,6 +24,8 @@ try {
         IGCUploadDateTimeUTC >= datetime('now', '-7 days')
         AND Pilot IS NOT NULL
         AND TRIM(Pilot) <> ''
+        AND COALESCE(IsPrivate, 0) = 0
+        AND COALESCE(MarkedAsDesigner, 0) <> 1
       GROUP BY Pilot
       ORDER BY
         UploadCount DESC,
@@ -51,6 +53,8 @@ try {
             IGCUploadDateTimeUTC >= datetime('now', '-7 days')
             AND GliderType IS NOT NULL
             AND TRIM(GliderType) <> ''
+            AND COALESCE(IsPrivate, 0) = 0
+            AND COALESCE(MarkedAsDesigner, 0) <> 1
         GROUP BY GliderType
         ORDER BY FlightCount DESC, GliderType ASC
         LIMIT 5
@@ -75,6 +79,8 @@ try {
             IGCUploadDateTimeUTC >= datetime('now', '-7 days')
             AND Sim IS NOT NULL
             AND TRIM(Sim) <> ''
+            AND COALESCE(IsPrivate, 0) = 0
+            AND COALESCE(MarkedAsDesigner, 0) <> 1
         GROUP BY Sim
         ORDER BY VersionCount DESC, Version ASC
         LIMIT 5
