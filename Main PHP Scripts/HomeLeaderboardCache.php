@@ -114,7 +114,7 @@ if (!function_exists('formatClubEventDisplayName')) {
             return $full;
         }
 
-        return sprintf('%s – %s', $full, $short);
+        return sprintf('%s â€“ %s', $full, $short);
     }
 }
 
@@ -348,6 +348,8 @@ if (!function_exists('computeHomeLeaderboardFilters')) {
             LEFT JOIN Clubs c ON c.EventNewsID = ir.ClubEventNewsID
             WHERE ir.ClubEventNewsID IS NOT NULL
               AND ir.ClubEventNewsID != ''
+              AND COALESCE(ir.MarkedAsDesigner, 0) <> 1
+              AND COALESCE(ir.IsPrivate, 0) = 0
         SQL);
 
         $clubRows = $clubsStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -405,6 +407,8 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
         $conditions = [
             'ir.Speed IS NOT NULL',
             'ir.IGCUploadDateTimeUTC IS NOT NULL',
+            'COALESCE(ir.MarkedAsDesigner, 0) <> 1',
+            'COALESCE(ir.IsPrivate, 0) = 0',
         ];
 
         if ($simNormalized !== 'All') {
@@ -452,6 +456,8 @@ if (!function_exists('fetchHomeLeaderboardRows')) {
                 'tbp2.EntrySeqID = tbp.EntrySeqID',
                 'ir2.Speed IS NOT NULL',
                 'ir2.IGCUploadDateTimeUTC IS NOT NULL',
+                'COALESCE(ir2.MarkedAsDesigner, 0) <> 1',
+                'COALESCE(ir2.IsPrivate, 0) = 0',
             ];
 
             if ($simNormalized !== 'All') {

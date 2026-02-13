@@ -119,7 +119,9 @@ function isIgcRecordEligible(PDO $pdo, string $igcKey): bool
         FROM IGCRecords IGC
         JOIN Tasks T ON IGC.EntrySeqID = T.EntrySeqID
         WHERE IGC.IGCKey = :IGCKey
+          AND COALESCE(IGC.IsPrivate, 0) = 0
           AND IGC.IGCValid = 1
+          AND COALESCE(IGC.MarkedAsDesigner, 0) <> 1
           AND IGC.TaskCompleted = 1
           AND abs(strftime('%s', T.SimDateTime) - strftime(
                 '%s',
@@ -156,10 +158,12 @@ function findBestEligiblePerformance(
         JOIN Tasks T ON IGC.EntrySeqID = T.EntrySeqID
         WHERE IGC.EntrySeqID = :EntrySeqID
           AND IGC.Sim = :Sim
+          AND COALESCE(IGC.IsPrivate, 0) = 0
           AND ((IGC.CompetitionClass IS NULL AND :CompetitionClass IS NULL) OR IGC.CompetitionClass = :CompetitionClass)
           AND ((IGC.GliderType IS NULL AND :GliderType IS NULL) OR IGC.GliderType = :GliderType)
           AND IGC.TaskCompleted = 1
           AND IGC.IGCValid = 1
+          AND COALESCE(IGC.MarkedAsDesigner, 0) <> 1
           AND abs(strftime('%s', T.SimDateTime) - strftime(
                 '%s',
                 substr(T.SimDateTime, 1, 4) || '-' ||
@@ -301,6 +305,22 @@ try {
     $pdo = new PDO("sqlite:$databasePath");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    $isPrivate = 0;
+    if ($WSGUserID > 0) {
+        $privacyDefaultStmt = $pdo->prepare(
+            'SELECT COALESCE(IGCPrivateDefault, 0) AS IGCPrivateDefault
+             FROM Users
+             WHERE WSGUserID = :WSGUserID
+             LIMIT 1'
+        );
+        $privacyDefaultStmt->bindValue(':WSGUserID', $WSGUserID, PDO::PARAM_INT);
+        $privacyDefaultStmt->execute();
+        $privacyRow = $privacyDefaultStmt->fetch(PDO::FETCH_ASSOC);
+        if ($privacyRow) {
+            $isPrivate = (int) ($privacyRow['IGCPrivateDefault'] ?? 0) === 1 ? 1 : 0;
+        }
+    }
+
     // Duplicate check
     $dupQ = "SELECT 1 FROM IGCRecords WHERE IGCKey = :IGCKey";
     $stmt = $pdo->prepare($dupQ);
@@ -318,12 +338,12 @@ try {
         IGCKey, EntrySeqID, IGCRecordDateTimeUTC, IGCUploadDateTimeUTC,
         LocalTime, BeginTimeUTC, Pilot, GliderType, GliderID, CompetitionID,
         CompetitionClass, NB21Version, Sim, WSGUserID, TaskCompleted, Penalties,
-        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID
+        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID, IsPrivate
       ) VALUES (
         :IGCKey, :EntrySeqID, :IGCRecordDateTimeUTC, :IGCUploadDateTimeUTC,
         :LocalTime, :BeginTimeUTC, :Pilot, :GliderType, :GliderID, :CompetitionID,
         :CompetitionClass, :NB21Version, :Sim, :WSGUserID, :TaskCompleted, :Penalties,
-        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID
+        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID, :IsPrivate
       )
     ";
     $stmt = $pdo->prepare($insertQ);
@@ -351,7 +371,8 @@ try {
       ':TPVersion'            => $TPVersion,
       ':LocalDate'            => $LocalDate,
       ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null),
-      ':ClubEventNewsID'      => $matchedClubEventNewsID
+      ':ClubEventNewsID'      => $matchedClubEventNewsID,
+      ':IsPrivate'            => $isPrivate
     ]);
 
     // ─────────────────────────────────────────
