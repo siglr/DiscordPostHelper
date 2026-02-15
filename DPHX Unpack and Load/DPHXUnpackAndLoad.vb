@@ -592,6 +592,118 @@ Public Class DPHXUnpackAndLoad
 
     End Sub
 
+    Private Sub txtWSGEntrySeqIDToolStripMenuItem_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtWSGEntrySeqIDToolStripMenuItem.KeyPress
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+            e.Handled = True
+        End If
+    End Sub
+
+    Private Sub ByWSGTaskIDToolStripMenuItem_DropDownOpened(sender As Object, e As EventArgs) Handles ByWSGTaskIDToolStripMenuItem.DropDownOpened
+        FocusTaskIdInput()
+    End Sub
+
+    Private Sub FocusTaskIdInput(Optional reopenMenus As Boolean = False)
+        BeginInvoke(New MethodInvoker(Sub()
+                                          If reopenMenus Then
+                                              Try
+                                                  toolStripOpen.ShowDropDown()
+                                                  ByWSGTaskIDToolStripMenuItem.ShowDropDown()
+                                              Catch
+                                              End Try
+                                          End If
+
+                                          txtWSGEntrySeqIDToolStripMenuItem.Focus()
+                                          txtWSGEntrySeqIDToolStripMenuItem.SelectAll()
+                                      End Sub))
+    End Sub
+
+    Private Sub txtWSGEntrySeqIDToolStripMenuItem_KeyDown(sender As Object, e As KeyEventArgs) Handles txtWSGEntrySeqIDToolStripMenuItem.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            OpenTaskByEntrySeqID()
+        End If
+    End Sub
+
+    Private Sub OpenWSGTaskIDToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenWSGTaskIDToolStripMenuItem.Click
+        OpenTaskByEntrySeqID()
+    End Sub
+
+    Private Sub CloseTaskIdMenus()
+        Try
+            ByWSGTaskIDToolStripMenuItem.HideDropDown()
+            toolStripOpen.HideDropDown()
+        Catch
+        End Try
+    End Sub
+
+    Private Sub ShowTaskIdMessage(messageText As String)
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(Me,
+                            messageText,
+                            "Open by WSG Task ID",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information)
+        End Using
+
+        FocusTaskIdInput(True)
+    End Sub
+
+    Private Sub OpenTaskByEntrySeqID()
+        Dim entrySeqIdText = txtWSGEntrySeqIDToolStripMenuItem.Text.Trim()
+
+        If String.IsNullOrWhiteSpace(entrySeqIdText) Then
+            ShowTaskIdMessage("Please enter a valid WSG Task ID (EntrySeqID).")
+            Return
+        End If
+
+        Dim entrySeqId As Integer
+        If Not Integer.TryParse(entrySeqIdText, entrySeqId) OrElse entrySeqId <= 0 Then
+            ShowTaskIdMessage("Please enter numbers only for the WSG Task ID (EntrySeqID).")
+            Return
+        End If
+
+        Dim taskTitle As String = String.Empty
+        Dim taskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(entrySeqId.ToString(), taskTitle, True)
+
+        If String.IsNullOrWhiteSpace(taskID) Then
+            Dim unavailableTaskTitle As String = String.Empty
+            Dim unavailableTaskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(entrySeqId.ToString(), unavailableTaskTitle, False)
+
+            If String.IsNullOrWhiteSpace(unavailableTaskID) Then
+                ShowTaskIdMessage($"Task #{entrySeqId.ToString()} was not found.")
+            Else
+                ShowTaskIdMessage($"Task #{entrySeqId.ToString()} exists but is not available yet.")
+            End If
+            Return
+        End If
+
+        Dim downloaded = SupportingFeatures.DownloadTaskFile(taskID, taskTitle, Settings.SessionSettings.PackagesFolder)
+
+        If downloaded = String.Empty Then
+            FocusTaskIdInput(True)
+            Return
+        End If
+
+        Dim incrementUrl = SupportingFeatures.SIGLRDiscordPostHelperFolder() & "IncrementDownloadForTask.php?EntrySeqID=" & entrySeqId.ToString()
+        Task.Run(Sub()
+                     Try
+                         Using client As New WebClient()
+                             client.DownloadString(incrementUrl)
+                         End Using
+                     Catch
+                     End Try
+                 End Sub)
+
+        SupportingFeatures.BringWindowToFront(Me)
+        LoadDPHXPackage(downloaded)
+
+        If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
+            UnpackFiles()
+        End If
+
+        CloseTaskIdMenus()
+    End Sub
+
     Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles toolStripUnpack.Click
 
         UnpackFiles()
