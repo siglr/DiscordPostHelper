@@ -926,7 +926,7 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub ResetCurrentLoadedTaskState()
-        ctrlBriefing.FullReset()
+        ctrlBriefing.FullReset(True)
 
         _currentFile = String.Empty
         _allDPHData = Nothing
