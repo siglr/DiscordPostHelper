@@ -695,7 +695,7 @@ Public Class BriefingControl
     Public Sub AdjustRTBoxControls()
 
         'Check if we were on the Units tab - we may need to regenerate
-        If _onUnitsTab Then
+        If _onUnitsTab AndAlso _sessionData IsNot Nothing Then
             FullReset()
             BuildTaskData()
             BuildEventInfoTab()
