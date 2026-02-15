@@ -599,7 +599,19 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Sub ByWSGTaskIDToolStripMenuItem_DropDownOpened(sender As Object, e As EventArgs) Handles ByWSGTaskIDToolStripMenuItem.DropDownOpened
+        FocusTaskIdInput()
+    End Sub
+
+    Private Sub FocusTaskIdInput(Optional reopenMenus As Boolean = False)
         BeginInvoke(New MethodInvoker(Sub()
+                                          If reopenMenus Then
+                                              Try
+                                                  toolStripOpen.ShowDropDown()
+                                                  ByWSGTaskIDToolStripMenuItem.ShowDropDown()
+                                              Catch
+                                              End Try
+                                          End If
+
                                           txtWSGEntrySeqIDToolStripMenuItem.Focus()
                                           txtWSGEntrySeqIDToolStripMenuItem.SelectAll()
                                       End Sub))
@@ -633,7 +645,7 @@ Public Class DPHXUnpackAndLoad
                             MessageBoxIcon.Information)
         End Using
 
-        CloseTaskIdMenus()
+        FocusTaskIdInput(True)
     End Sub
 
     Private Sub OpenTaskByEntrySeqID()
@@ -668,7 +680,7 @@ Public Class DPHXUnpackAndLoad
         Dim downloaded = SupportingFeatures.DownloadTaskFile(taskID, taskTitle, Settings.SessionSettings.PackagesFolder)
 
         If downloaded = String.Empty Then
-            CloseTaskIdMenus()
+            FocusTaskIdInput(True)
             Return
         End If
 
