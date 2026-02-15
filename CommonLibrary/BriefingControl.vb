@@ -472,7 +472,7 @@ Public Class BriefingControl
 
     End Sub
 
-    Public Sub FullReset(Optional clearSessionData As Boolean = False)
+    Public Sub FullReset()
         txtBriefing.Clear()
         txtEventInfo.Clear()
         imageViewer.ClearImage()
@@ -522,6 +522,15 @@ Public Class BriefingControl
         pnlSetupWeather2020.Visible = False
 
         CountDownReset()
+        tabsBriefing.SelectedIndex = 0
+
+        GC.Collect()
+
+    End Sub
+
+    Public Sub FullCloseReset(Optional clearSessionData As Boolean = False)
+        FullReset()
+
         _weatherFile = String.Empty
         If clearSessionData Then
             _sessionData = Nothing
@@ -529,11 +538,6 @@ Public Class BriefingControl
         _XmlDocFlightPlan = Nothing
         _XmlDocWeatherPreset = Nothing
         _WeatherDetails = Nothing
-
-        tabsBriefing.SelectedIndex = 0
-
-        GC.Collect()
-
     End Sub
 
     Public Sub ChangeImage(imgFilename As String)
