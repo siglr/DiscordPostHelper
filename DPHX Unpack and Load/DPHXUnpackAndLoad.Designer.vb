@@ -26,11 +26,20 @@ Partial Class DPHXUnpackAndLoad
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DPHXUnpackAndLoad))
+        Dim BriefingRenderContext1 As SIGLR.SoaringTools.CommonLibrary.BriefingRenderContext = New SIGLR.SoaringTools.CommonLibrary.BriefingRenderContext()
         Me.pnlToolbar = New System.Windows.Forms.Panel()
         Me.ToolStrip1 = New SIGLR.SoaringTools.CommonLibrary.ToolStripExtensions.ToolStripExtended()
         Me.toolStripOpen = New System.Windows.Forms.ToolStripDropDownButton()
         Me.DPHXPackageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ManualModeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ByWSGTaskIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtWSGEntrySeqIDToolStripMenuItem = New System.Windows.Forms.ToolStripTextBox()
+        Me.OpenWSGTaskIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.CloseFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CloseAndDeleteFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripUnpack = New System.Windows.Forms.ToolStripButton()
         Me.toolStripCleanup = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -104,27 +113,77 @@ Partial Class DPHXUnpackAndLoad
         '
         'toolStripOpen
         '
-        Me.toolStripOpen.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DPHXPackageToolStripMenuItem, Me.ManualModeToolStripMenuItem})
+        Me.toolStripOpen.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DPHXPackageToolStripMenuItem, Me.ManualModeToolStripMenuItem, Me.ByWSGTaskIDToolStripMenuItem, Me.ToolStripSeparator4, Me.CloseFileToolStripMenuItem, Me.CloseAndDeleteFileToolStripMenuItem, Me.ToolStripSeparator6, Me.ExitToolStripMenuItem})
         Me.toolStripOpen.Image = CType(resources.GetObject("toolStripOpen.Image"), System.Drawing.Image)
         Me.toolStripOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.toolStripOpen.Name = "toolStripOpen"
-        Me.toolStripOpen.Size = New System.Drawing.Size(80, 25)
-        Me.toolStripOpen.Text = "&Open"
+        Me.toolStripOpen.Size = New System.Drawing.Size(66, 25)
+        Me.toolStripOpen.Text = "&File"
         Me.toolStripOpen.ToolTipText = "Click to select and load a DPHX pacage from your PC."
         '
         'DPHXPackageToolStripMenuItem
         '
         Me.DPHXPackageToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.DPHXPackageToolStripMenuItem.Name = "DPHXPackageToolStripMenuItem"
-        Me.DPHXPackageToolStripMenuItem.Size = New System.Drawing.Size(188, 26)
+        Me.DPHXPackageToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
+        Me.DPHXPackageToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
         Me.DPHXPackageToolStripMenuItem.Text = "DPHX Package"
         '
         'ManualModeToolStripMenuItem
         '
         Me.ManualModeToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.ManualModeToolStripMenuItem.Name = "ManualModeToolStripMenuItem"
-        Me.ManualModeToolStripMenuItem.Size = New System.Drawing.Size(188, 26)
+        Me.ManualModeToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
         Me.ManualModeToolStripMenuItem.Text = "Manual Mode"
+        '
+        'ByWSGTaskIDToolStripMenuItem
+        '
+        Me.ByWSGTaskIDToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.txtWSGEntrySeqIDToolStripMenuItem, Me.OpenWSGTaskIDToolStripMenuItem})
+        Me.ByWSGTaskIDToolStripMenuItem.Name = "ByWSGTaskIDToolStripMenuItem"
+        Me.ByWSGTaskIDToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
+        Me.ByWSGTaskIDToolStripMenuItem.Text = "By WSG Task ID"
+        '
+        'txtWSGEntrySeqIDToolStripMenuItem
+        '
+        Me.txtWSGEntrySeqIDToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.163636!)
+        Me.txtWSGEntrySeqIDToolStripMenuItem.MaxLength = 5
+        Me.txtWSGEntrySeqIDToolStripMenuItem.Name = "txtWSGEntrySeqIDToolStripMenuItem"
+        Me.txtWSGEntrySeqIDToolStripMenuItem.Size = New System.Drawing.Size(100, 26)
+        '
+        'OpenWSGTaskIDToolStripMenuItem
+        '
+        Me.OpenWSGTaskIDToolStripMenuItem.Name = "OpenWSGTaskIDToolStripMenuItem"
+        Me.OpenWSGTaskIDToolStripMenuItem.Size = New System.Drawing.Size(168, 26)
+        Me.OpenWSGTaskIDToolStripMenuItem.Text = "Open"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(268, 6)
+        '
+        'CloseFileToolStripMenuItem
+        '
+        Me.CloseFileToolStripMenuItem.Name = "CloseFileToolStripMenuItem"
+        Me.CloseFileToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
+        Me.CloseFileToolStripMenuItem.Text = "Close DPHX file"
+        '
+        'CloseAndDeleteFileToolStripMenuItem
+        '
+        Me.CloseAndDeleteFileToolStripMenuItem.Name = "CloseAndDeleteFileToolStripMenuItem"
+        Me.CloseAndDeleteFileToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
+        Me.CloseAndDeleteFileToolStripMenuItem.Text = "Close and delete DPHX file"
+        '
+        'ToolStripSeparator6
+        '
+        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(268, 6)
+        '
+        'ExitToolStripMenuItem
+        '
+        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        Me.ExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
+        Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'toolStripUnpack
         '
@@ -463,6 +522,10 @@ Partial Class DPHXUnpackAndLoad
         Me.ctrlBriefing.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ctrlBriefing.MinimumSize = New System.Drawing.Size(700, 500)
         Me.ctrlBriefing.Name = "ctrlBriefing"
+        BriefingRenderContext1.HostMode = SIGLR.SoaringTools.CommonLibrary.BriefingHostMode.DesignerPreview
+        BriefingRenderContext1.InstalledSims = CType((SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags.MSFS2020 Or SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags.MSFS2024), SIGLR.SoaringTools.CommonLibrary.InstalledSimFlags)
+        BriefingRenderContext1.PresetNameDisplayMode = SIGLR.SoaringTools.CommonLibrary.PresetNameDisplayMode.Friendly
+        Me.ctrlBriefing.RenderContext = BriefingRenderContext1
         Me.ctrlBriefing.Size = New System.Drawing.Size(1006, 597)
         Me.ctrlBriefing.TabIndex = 3
         '
@@ -543,4 +606,12 @@ Partial Class DPHXUnpackAndLoad
     Friend WithEvents DPHXPackageToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManualModeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents dragNdropToolStrip As ToolStripStatusLabel
+    Friend WithEvents ByWSGTaskIDToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents txtWSGEntrySeqIDToolStripMenuItem As ToolStripTextBox
+    Friend WithEvents OpenWSGTaskIDToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents CloseFileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CloseAndDeleteFileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
+    Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
 End Class
