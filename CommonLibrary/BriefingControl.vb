@@ -472,7 +472,7 @@ Public Class BriefingControl
 
     End Sub
 
-    Public Sub FullReset()
+    Public Sub FullReset(Optional clearSessionData As Boolean = False)
         txtBriefing.Clear()
         txtEventInfo.Clear()
         imageViewer.ClearImage()
@@ -523,7 +523,9 @@ Public Class BriefingControl
 
         CountDownReset()
         _weatherFile = String.Empty
-        _sessionData = Nothing
+        If clearSessionData Then
+            _sessionData = Nothing
+        End If
         _XmlDocFlightPlan = Nothing
         _XmlDocWeatherPreset = Nothing
         _WeatherDetails = Nothing
