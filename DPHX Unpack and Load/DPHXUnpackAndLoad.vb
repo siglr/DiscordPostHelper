@@ -598,6 +598,13 @@ Public Class DPHXUnpackAndLoad
         End If
     End Sub
 
+    Private Sub ByWSGTaskIDToolStripMenuItem_DropDownOpened(sender As Object, e As EventArgs) Handles ByWSGTaskIDToolStripMenuItem.DropDownOpened
+        BeginInvoke(New MethodInvoker(Sub()
+                                          txtWSGEntrySeqIDToolStripMenuItem.Focus()
+                                          txtWSGEntrySeqIDToolStripMenuItem.SelectAll()
+                                      End Sub))
+    End Sub
+
     Private Sub txtWSGEntrySeqIDToolStripMenuItem_KeyDown(sender As Object, e As KeyEventArgs) Handles txtWSGEntrySeqIDToolStripMenuItem.KeyDown
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
@@ -609,29 +616,37 @@ Public Class DPHXUnpackAndLoad
         OpenTaskByEntrySeqID()
     End Sub
 
+    Private Sub CloseTaskIdMenus()
+        Try
+            ByWSGTaskIDToolStripMenuItem.HideDropDown()
+            toolStripOpen.HideDropDown()
+        Catch
+        End Try
+    End Sub
+
+    Private Sub ShowTaskIdMessage(messageText As String)
+        Using New Centered_MessageBox(Me)
+            MessageBox.Show(Me,
+                            messageText,
+                            "Open by WSG Task ID",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information)
+        End Using
+
+        CloseTaskIdMenus()
+    End Sub
+
     Private Sub OpenTaskByEntrySeqID()
         Dim entrySeqIdText = txtWSGEntrySeqIDToolStripMenuItem.Text.Trim()
 
         If String.IsNullOrWhiteSpace(entrySeqIdText) Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me,
-                                "Please enter a valid WSG Task ID (EntrySeqID).",
-                                "Open by WSG Task ID",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-            End Using
+            ShowTaskIdMessage("Please enter a valid WSG Task ID (EntrySeqID).")
             Return
         End If
 
         Dim entrySeqId As Integer
         If Not Integer.TryParse(entrySeqIdText, entrySeqId) OrElse entrySeqId <= 0 Then
-            Using New Centered_MessageBox(Me)
-                MessageBox.Show(Me,
-                                "Please enter numbers only for the WSG Task ID (EntrySeqID).",
-                                "Open by WSG Task ID",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-            End Using
+            ShowTaskIdMessage("Please enter numbers only for the WSG Task ID (EntrySeqID).")
             Return
         End If
 
@@ -643,21 +658,9 @@ Public Class DPHXUnpackAndLoad
             Dim unavailableTaskID As String = SupportingFeatures.FetchTaskIDUsingEntrySeqID(entrySeqId.ToString(), unavailableTaskTitle, False)
 
             If String.IsNullOrWhiteSpace(unavailableTaskID) Then
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me,
-                                    "Task not found for the specified WSG Task ID (EntrySeqID).",
-                                    "Open by WSG Task ID",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information)
-                End Using
+                ShowTaskIdMessage($"Task #{entrySeqId.ToString()} was not found.")
             Else
-                Using New Centered_MessageBox(Me)
-                    MessageBox.Show(Me,
-                                    "This task exists but is not available yet.",
-                                    "Open by WSG Task ID",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information)
-                End Using
+                ShowTaskIdMessage($"Task #{entrySeqId.ToString()} exists but is not available yet.")
             End If
             Return
         End If
@@ -665,6 +668,7 @@ Public Class DPHXUnpackAndLoad
         Dim downloaded = SupportingFeatures.DownloadTaskFile(taskID, taskTitle, Settings.SessionSettings.PackagesFolder)
 
         If downloaded = String.Empty Then
+            CloseTaskIdMenus()
             Return
         End If
 
@@ -684,6 +688,8 @@ Public Class DPHXUnpackAndLoad
         If Settings.SessionSettings.AutoUnpack AndAlso _currentFile <> String.Empty AndAlso _lastLoadSuccess Then
             UnpackFiles()
         End If
+
+        CloseTaskIdMenus()
     End Sub
 
     Private Sub btnCopyFiles_Click(sender As Object, e As EventArgs) Handles toolStripUnpack.Click
