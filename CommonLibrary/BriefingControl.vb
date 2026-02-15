@@ -474,6 +474,7 @@ Public Class BriefingControl
 
     Public Sub FullReset()
         txtBriefing.Clear()
+        txtEventInfo.Clear()
         imageViewer.ClearImage()
         imagesTabViewerControl.ClearImage()
         txtFullDescription.Clear()
@@ -496,10 +497,38 @@ Public Class BriefingControl
 
         EventIsEnabled = False
         FullWeatherGraphPanel1.ResetGraph()
+        FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
         windLayersFlowLayoutPnl.Controls.Clear()
+
+        lblTaskTitle.Text = String.Empty
+        lblDeparture.Text = String.Empty
+        lblTaskName.Text = String.Empty
+        lblFlightPlanTitle.Text = String.Empty
+        lblSimLocalDateTime.Text = String.Empty
+        lblRecGliders.Text = String.Empty
+        lblBaroNote.Text = String.Empty
+        lblGroupEventTitle.Text = String.Empty
+        lblEventMSFSServer.Text = String.Empty
+        lblEventTrackerGroup.Text = String.Empty
+        lblWeatherProfile2024.Text = String.Empty
+        lblWeatherProfile2020.Text = String.Empty
+
+        pnlFlightPlanTitle.Visible = False
+        pnlSetupBaroWarning.Visible = False
+        pnlSetupEventTitle.Visible = False
+        pnlSetupServer.Visible = False
+        pnlSetupTrackerGroup.Visible = False
+        pnlSetupWeather2024.Visible = False
+        pnlSetupWeather2020.Visible = False
 
         CountDownReset()
         _weatherFile = String.Empty
+        _sessionData = Nothing
+        _XmlDocFlightPlan = Nothing
+        _XmlDocWeatherPreset = Nothing
+        _WeatherDetails = Nothing
+
+        tabsBriefing.SelectedIndex = 0
 
         GC.Collect()
 
@@ -679,7 +708,9 @@ Public Class BriefingControl
                 Case 5 'All Waypoints
                 Case 6 'Weather
                     FullWeatherGraphPanel1.Visible = chkShowGraph.Checked
-                    FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
+                    If _WeatherDetails IsNot Nothing AndAlso _sessionData IsNot Nothing Then
+                        FullWeatherGraphPanel1.SetWeatherInfo(_WeatherDetails, PrefUnits, SupportingFeatures.GetEnUSFormattedDate(_sessionData.SimLocalDateTime, _sessionData.SimLocalDateTime, _sessionData.IncludeYear))
+                    End If
                 Case 7 'Add-ons
                 Case 8 'Units
                     _onUnitsTab = True

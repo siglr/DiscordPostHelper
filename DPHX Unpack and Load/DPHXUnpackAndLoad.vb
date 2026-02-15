@@ -1424,6 +1424,15 @@ Public Class DPHXUnpackAndLoad
         toolStripCleanup.Enabled = False
         toolStripB21Planner.Enabled = False
         toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+        toolStripUnpack.ForeColor = DefaultForeColor
+
+        tool2020StatusOK.Visible = False
+        tool2020StatusWarning.Visible = False
+        tool2020StatusStop.Visible = False
+
+        tool2024StatusOK.Visible = False
+        tool2024StatusWarning.Visible = False
+        tool2024StatusStop.Visible = False
     End Sub
 
     Private Sub SetFilesToUnpack()
