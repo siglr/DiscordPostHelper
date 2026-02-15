@@ -121,6 +121,7 @@ Public Class DPHXUnpackAndLoad
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
         UpdateBriefingRenderContext()
         SetFormCaption(_currentFile)
+        UpdateFileMenuActions()
 
         Rescale()
 
@@ -628,6 +629,18 @@ Public Class DPHXUnpackAndLoad
         OpenTaskByEntrySeqID()
     End Sub
 
+    Private Sub CloseFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseFileToolStripMenuItem.Click
+        CloseCurrentFile(False)
+    End Sub
+
+    Private Sub CloseAndDeleteFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseAndDeleteFileToolStripMenuItem.Click
+        CloseCurrentFile(True)
+    End Sub
+
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Me.Close()
+    End Sub
+
     Private Sub CloseTaskIdMenus()
         Try
             ByWSGTaskIDToolStripMenuItem.HideDropDown()
@@ -844,6 +857,100 @@ Public Class DPHXUnpackAndLoad
         'Add version to form title
         Me.Text = $"DPHX Unpack and Load v{Me.GetType.Assembly.GetName.Version} - {filename}"
 
+    End Sub
+
+    Private Sub UpdateFileMenuActions()
+        Dim hasLoadedSource As Boolean = Not String.IsNullOrWhiteSpace(_currentFile)
+        Dim canDeleteCurrentDphx As Boolean = hasLoadedSource AndAlso
+            Path.GetExtension(_currentFile).Equals(".dphx", StringComparison.OrdinalIgnoreCase) AndAlso
+            File.Exists(_currentFile)
+
+        CloseFileToolStripMenuItem.Enabled = hasLoadedSource
+        CloseAndDeleteFileToolStripMenuItem.Enabled = canDeleteCurrentDphx
+    End Sub
+
+    Private Function ConfirmCloseWithoutCleanup() As Boolean
+        If Not toolStripCleanup.Enabled OrElse IsUnpackRed Then
+            Return True
+        End If
+
+        Using New Centered_MessageBox(Me)
+            Dim answer = MessageBox.Show(Me,
+                                         "Some task files appear to be unpacked already." & Environment.NewLine &
+                                         "Did you forget to cleanup before closing this DPHX file?" & Environment.NewLine & Environment.NewLine &
+                                         "Click Yes to close anyway, or No to cancel.",
+                                         "Close DPHX file",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question)
+            Return answer = DialogResult.Yes
+        End Using
+    End Function
+
+    Private Sub CloseCurrentFile(deleteSourceFile As Boolean)
+        If String.IsNullOrWhiteSpace(_currentFile) Then
+            Return
+        End If
+
+        If Not ConfirmCloseWithoutCleanup() Then
+            Return
+        End If
+
+        Dim fileToDelete As String = _currentFile
+        If deleteSourceFile Then
+            Try
+                If Path.GetExtension(fileToDelete).Equals(".dphx", StringComparison.OrdinalIgnoreCase) AndAlso File.Exists(fileToDelete) Then
+                    File.Delete(fileToDelete)
+                End If
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show(Me,
+                                    $"Unable to delete DPHX file '{fileToDelete}': {ex.Message}",
+                                    "Close and delete DPHX file",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning)
+                End Using
+            End Try
+        End If
+
+        TryCleanupTempUnpackFolder()
+        ResetCurrentLoadedTaskState()
+    End Sub
+
+    Private Sub TryCleanupTempUnpackFolder()
+        Dim tries As Integer = 0
+        Do While tries < 10 AndAlso Not SupportingFeatures.CleanupDPHXTempFolder(TempDPHXUnpackFolder, True)
+            tries += 1
+            Me.Refresh()
+            Application.DoEvents()
+        Loop
+    End Sub
+
+    Private Sub ResetCurrentLoadedTaskState()
+        ctrlBriefing.FullReset()
+
+        _currentFile = String.Empty
+        _allDPHData = Nothing
+        _taskDiscordPostID = String.Empty
+        _isManualMode = False
+        _lastLoadSuccess = False
+
+        txtPackageName.Text = String.Empty
+        packageNameToolStrip.Text = String.Empty
+        txtWSGEntrySeqIDToolStripMenuItem.Text = String.Empty
+
+        lbl2020AllFilesStatus.Text = String.Empty
+        lbl2024AllFilesStatus.Text = String.Empty
+
+        _filesToUnpack2020.Clear()
+        _filesCurrentlyUnpacked2020.Clear()
+        _filesToUnpack2024.Clear()
+        _filesCurrentlyUnpacked2024.Clear()
+
+        Settings.SessionSettings.LastDPHXOpened = String.Empty
+
+        DisableUnpackButton()
+        SetFormCaption(_currentFile)
+        UpdateFileMenuActions()
     End Sub
 
     Private Function CheckForNewVersion() As Boolean
@@ -1263,6 +1370,7 @@ Public Class DPHXUnpackAndLoad
 
         SetFormCaption(_currentFile)
         packageNameToolStrip.Text = _currentFile
+        UpdateFileMenuActions()
 
     End Sub
 
@@ -1316,6 +1424,15 @@ Public Class DPHXUnpackAndLoad
         toolStripCleanup.Enabled = False
         toolStripB21Planner.Enabled = False
         toolStripUnpack.Font = New Font(toolStripUnpack.Font, FontStyle.Regular)
+        toolStripUnpack.ForeColor = DefaultForeColor
+
+        tool2020StatusOK.Visible = False
+        tool2020StatusWarning.Visible = False
+        tool2020StatusStop.Visible = False
+
+        tool2024StatusOK.Visible = False
+        tool2024StatusWarning.Visible = False
+        tool2024StatusStop.Visible = False
     End Sub
 
     Private Sub SetFilesToUnpack()
@@ -2729,6 +2846,7 @@ Public Class DPHXUnpackAndLoad
             EnableUnpackButton()
             SetFormCaption(_currentFile)
             packageNameToolStrip.Text = _currentFile
+            UpdateFileMenuActions()
 
         Catch ex As Exception
             Using New Centered_MessageBox(Me)
