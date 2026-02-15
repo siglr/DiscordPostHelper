@@ -870,13 +870,14 @@ Public Class DPHXUnpackAndLoad
     End Sub
 
     Private Function ConfirmCloseWithoutCleanup() As Boolean
-        If Not toolStripCleanup.Enabled Then
+        If Not toolStripCleanup.Enabled OrElse IsUnpackRed Then
             Return True
         End If
 
         Using New Centered_MessageBox(Me)
             Dim answer = MessageBox.Show(Me,
-                                         "Cleanup is available for this task. Did you forget to cleanup before closing this DPHX file?" & Environment.NewLine & Environment.NewLine &
+                                         "Some task files appear to be unpacked already." & Environment.NewLine &
+                                         "Did you forget to cleanup before closing this DPHX file?" & Environment.NewLine & Environment.NewLine &
                                          "Click Yes to close anyway, or No to cancel.",
                                          "Close DPHX file",
                                          MessageBoxButtons.YesNo,
