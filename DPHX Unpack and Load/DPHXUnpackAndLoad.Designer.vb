@@ -134,7 +134,7 @@ Partial Class DPHXUnpackAndLoad
         Me.ManualModeToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.ManualModeToolStripMenuItem.Name = "ManualModeToolStripMenuItem"
         Me.ManualModeToolStripMenuItem.Size = New System.Drawing.Size(271, 26)
-        Me.ManualModeToolStripMenuItem.Text = "Manual Mode"
+        Me.ManualModeToolStripMenuItem.Text = "Manual Mode..."
         '
         'ByWSGTaskIDToolStripMenuItem
         '
