@@ -1,4 +1,20 @@
-﻿| Cols  | Len | Field                       | Source in code                                      |
+﻿As of 2026-02-17 - Important to read the I Record format first, as the B Record format is based on it.
+
+Exemple of I Record:
+I073638FXA3943AGL4447TAS4851NET5254ENL5555FLP5658WSP5961WDI6262GND6363GEA
+07: Number of extensions (here 7)
+36-38: Position for extension code FXA - fix accuracy (irrelevant)
+39-43: Position for extension code AGL - height above ground, meters
+44-47: Position for extension code TAS - true airspeed kph
+48-51: Position for extension code NET - netto lift/sink m/s x100 with lift = 9999 (99.99m/s) & sink = -999 (-9.99m/s)
+52-54: Position for extension code ENL - engine noise where 000 = engine off, 999 = engine on
+55-55: Position for extension code FLP - flap index 1..N
+56-58: Position for extension code WSP - wind speed 3-digits kph
+59-61: Position for extension code WDI - wind direction 3-digits degrees
+62-62: Position for extension code GND - on ground indicator 0 = not on ground, 1 = on ground
+63-63: Position for extension code GEA - gear down indicator 0 = up, 1 = down
+
+| Cols  | Len | Field                       | Source in code                                      |
 | ----- | --- | --------------------------- | --------------------------------------------------- |
 | 1     |   1 | Record type = `B`           | literal `"B"`                                       |
 | 2–7   |   6 | UTC time `HHMMSS`           | `s_to_hhmmss(realtime_s)`                           |
