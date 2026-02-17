@@ -1,0 +1,19 @@
+﻿| Cols  | Len | Field                       | Source in code                                      |
+| ----- | --- | --------------------------- | --------------------------------------------------- |
+| 1     |   1 | Record type = `B`           | literal `"B"`                                       |
+| 2–7   |   6 | UTC time `HHMMSS`           | `s_to_hhmmss(realtime_s)`                           |
+| 8–15  |   8 | Latitude `DDMMmmmN/S`       | `ConvertDecimalToDMS(lat, true)`                    |
+| 16–24 |   9 | Longitude `DDDMMmmmE/W`     | `ConvertDecimalToDMS(lon, false)`                   |
+| 25    |   1 | Fix validity = `A`          | literal `"A"`                                       |
+| 26–30 |   5 | Pressure altitude (m)       | `num1.ToString("00000")`                            |
+| 31–35 |   5 | GNSS altitude (m)           | `num1.ToString("00000")` again in this logger       |
+| 36–38 |   3 | `FXA` (fix accuracy)        | hardcoded `"007"`                                   |
+| 39–43 |   5 | `AGL` (alt above ground, m) | `num2.ToString("00000")`                            |
+| 44–47 |   4 | `TAS` (kph)                 | `num3.ToString("0000")`                             |
+| 48–51 |   4 | `NET` (m/s * 100, signed)   | `((int)Math.Round(100*num4)).ToString("0000;-000")` |
+| 52–54 |   3 | `ENL`                       | `"999"` if engine on else `"000"`                   |
+| 55    |   1 | `FLP`                       | flap position digit                                 |
+| 56–58 |   3 | `WSP` (wind speed kph)      | `num5.ToString("000")`                              |
+| 59–61 |   3 | `WDI` (wind direction deg)  | `num6.ToString("000")`                              |
+| 62    |   1 | `GND`                       | `"1"` on ground else `"0"`                          |
+| 63    |   1 | `GEA`                       | `"1"` gear down else `"0"`                          |

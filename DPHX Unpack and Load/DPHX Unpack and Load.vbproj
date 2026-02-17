@@ -329,6 +329,7 @@
     <Content Include="DarkGreenDot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="IGC B Record format.txt" />
     <Content Include="Thumbnail.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
