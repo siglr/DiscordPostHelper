@@ -1,0 +1,31 @@
+First C record: C031225000147140300000106Hatay Incirlik AAT 209-347
+-------------------------------------------------------------------
+C DDMMYY HHMMSS LCLHHMMSS FFFF NN TASK_NAME [TITLE_ARGS]
+C = record type
+DDMMYY = UTC date
+HHMMSS = UTC time
+LCLHHMMSS = simulator local time (fly_sim_local_time_str)
+FFFF = flight id, hardcoded to 0001
+NN = waypoint count, 2 digits
+TASK_NAME + optional title_args (variable-length tail)
+
+Subsequent C records (if any) are either turnpoints or start/finish lines
+-------------------------------------------------------------------------
+C3622333N03617917ELTDA;4;Hatay
+C3629817N03616858E*Start+1959|5000x5000;AAT01:15;
+C3721816N03638694EWP 1+5771x40000;AAT;
+C3746048N03555023EWP 2+2185x60000;AAT;
+C3700326N03526524E*Finish+226x4000
+C3659933N03525983ELTAG;Incirlik AB
+
+C DDMMmmmH DDDMMmmmH
+C lat_to_str lon_to_str
+
+First and last waypoints (without +) are departure and arrival points.
+Other waypoints name format:
+All before + is the name of the waypoint, which may contain spaces.
+After + : waypoint elevation in feet
+After x : diameter of the waypoint gate in meters
+After | : max altitude restriction in feet
+After / : min altitude restriction in feet
+Presence of AAT (like ;AAT;) indicates an AAT turnpoint
