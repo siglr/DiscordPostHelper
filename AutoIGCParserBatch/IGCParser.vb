@@ -171,6 +171,38 @@ Module IgcParser
         Return Nothing
     End Function
 
+    Private Function TryGetFirstNb21TimeAfterHfdte(lines As IEnumerable(Of String)) As TimeSpan?
+        Dim sawHfdte = False
+        Dim rx As New Regex("^LNB21\s+(\d{6}|\d{2}:\d{2}:\d{2})\b", RegexOptions.IgnoreCase)
+
+        For Each l In lines
+            If Not sawHfdte Then
+                If l.StartsWith("HFDTE") Then sawHfdte = True
+                Continue For
+            End If
+
+            Dim m = rx.Match(l)
+            If m.Success Then
+                Dim t = m.Groups(1).Value
+                Try
+                    If t.Contains(":"c) Then
+                        Dim p = t.Split(":"c)
+                        Return New TimeSpan(Integer.Parse(p(0)), Integer.Parse(p(1)), Integer.Parse(p(2)))
+                    Else
+                        Return New TimeSpan(Integer.Parse(t.Substring(0, 2)),
+                                            Integer.Parse(t.Substring(2, 2)),
+                                            Integer.Parse(t.Substring(4, 2)))
+                    End If
+                Catch
+                    ' ignore malformed NB21 time and keep scanning
+                End Try
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+
     Private Function TryGetHfdteDateUtc(lines As IEnumerable(Of String)) As DateTime?
         Dim h = lines.FirstOrDefault(Function(l) l.StartsWith("HFDTE"))
         If String.IsNullOrEmpty(h) OrElse h.Length < 11 Then Return Nothing
@@ -184,21 +216,47 @@ Module IgcParser
         End Try
     End Function
 
+    Private Function TryGetFirstBRecordTime(lines As IEnumerable(Of String)) As TimeSpan?
+        For Each l In lines
+            If l.StartsWith("B"c) AndAlso l.Length >= 7 Then
+                Try
+                    Return New TimeSpan(Integer.Parse(l.Substring(1, 2)),
+                                        Integer.Parse(l.Substring(3, 2)),
+                                        Integer.Parse(l.Substring(5, 2)))
+                Catch
+                    ' ignore malformed B record and keep scanning
+                End Try
+            End If
+        Next
+        Return Nothing
+    End Function
+
     Private Function ComputeRecordedUtcFromToff(lines As IEnumerable(Of String)) As DateTime?
-        Dim cUtc = TryGetFirstCRecordUtc(lines)          ' declaration instant (UTC)
-        Dim toff = TryGetNB21Time(lines, "TOFF")         ' takeoff TOD (UTC)
-        If cUtc.HasValue AndAlso toff.HasValue Then
-            ' Same-day candidate from C-record date
-            Dim candidate = cUtc.Value.Date.Add(toff.Value)
-            ' If TOFF time-of-day < C-record time-of-day, we rolled past midnight → add a day
-            If toff.Value < cUtc.Value.TimeOfDay Then candidate = candidate.AddDays(1)
-            Return DateTime.SpecifyKind(candidate, DateTimeKind.Utc)
+        Dim toff = TryGetNB21Time(lines, "TOFF") ' NB21 takeoff TOD comes from the LNB21 prefix time
+        Dim firstB = TryGetFirstBRecordTime(lines)
+        Dim hfdteDate = TryGetHfdteDateUtc(lines)
+
+        ' NB21 anchor rule: date comes from HFDTE, launch TOD comes from TOFF (or first B fallback).
+        ' C-record and local-time fields are not used here because they can be stale or simulator-local.
+        If hfdteDate.HasValue Then
+            Dim launchTod = If(toff, firstB)
+            If launchTod.HasValue Then
+                Dim candidate = hfdteDate.Value.Add(launchTod.Value)
+                Dim sessionStartTod = TryGetFirstNb21TimeAfterHfdte(lines)
+
+                ' If session starts before midnight and TOFF is just after midnight, roll to next UTC day.
+                If sessionStartTod.HasValue AndAlso launchTod.Value < sessionStartTod.Value Then
+                    candidate = candidate.AddDays(1)
+                End If
+
+                Return DateTime.SpecifyKind(candidate, DateTimeKind.Utc)
+            End If
         End If
 
-        ' Fallback: HFDTE date + TOFF (no C-record)
-        Dim hfdteDate = TryGetHfdteDateUtc(lines)
-        If hfdteDate.HasValue AndAlso toff.HasValue Then
-            Return DateTime.SpecifyKind(hfdteDate.Value.Add(toff.Value), DateTimeKind.Utc)
+        ' Keep non-HFDTE fallback behavior for older/non-NB21 files.
+        Dim cUtc = TryGetFirstCRecordUtc(lines)
+        If cUtc.HasValue AndAlso toff.HasValue Then
+            Return DateTime.SpecifyKind(cUtc.Value.Date.Add(toff.Value), DateTimeKind.Utc)
         End If
 
         Return Nothing
