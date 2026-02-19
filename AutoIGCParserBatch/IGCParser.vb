@@ -171,6 +171,38 @@ Module IgcParser
         Return Nothing
     End Function
 
+    Private Function TryGetFirstNb21TimeAfterHfdte(lines As IEnumerable(Of String)) As TimeSpan?
+        Dim sawHfdte = False
+        Dim rx As New Regex("^LNB21\s+(\d{6}|\d{2}:\d{2}:\d{2})\b", RegexOptions.IgnoreCase)
+
+        For Each l In lines
+            If Not sawHfdte Then
+                If l.StartsWith("HFDTE") Then sawHfdte = True
+                Continue For
+            End If
+
+            Dim m = rx.Match(l)
+            If m.Success Then
+                Dim t = m.Groups(1).Value
+                Try
+                    If t.Contains(":"c) Then
+                        Dim p = t.Split(":"c)
+                        Return New TimeSpan(Integer.Parse(p(0)), Integer.Parse(p(1)), Integer.Parse(p(2)))
+                    Else
+                        Return New TimeSpan(Integer.Parse(t.Substring(0, 2)),
+                                            Integer.Parse(t.Substring(2, 2)),
+                                            Integer.Parse(t.Substring(4, 2)))
+                    End If
+                Catch
+                    ' ignore malformed NB21 time and keep scanning
+                End Try
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+
     Private Function TryGetHfdteDateUtc(lines As IEnumerable(Of String)) As DateTime?
         Dim h = lines.FirstOrDefault(Function(l) l.StartsWith("HFDTE"))
         If String.IsNullOrEmpty(h) OrElse h.Length < 11 Then Return Nothing
@@ -204,46 +236,24 @@ Module IgcParser
         Dim firstB = TryGetFirstBRecordTime(lines)
         Dim hfdteDate = TryGetHfdteDateUtc(lines)
 
-        ' NB21 anchor rule: use HFDTE as the primary UTC date and TOFF (or first B) as the UTC TOD.
-        ' This intentionally ignores stale C-record dates/times, which may refer to task declaration day.
+        ' NB21 anchor rule: date comes from HFDTE, launch TOD comes from TOFF (or first B fallback).
+        ' C-record and local-time fields are not used here because they can be stale or simulator-local.
         If hfdteDate.HasValue Then
             Dim launchTod = If(toff, firstB)
             If launchTod.HasValue Then
-                Dim baseCandidate = hfdteDate.Value.Add(launchTod.Value)
+                Dim candidate = hfdteDate.Value.Add(launchTod.Value)
+                Dim sessionStartTod = TryGetFirstNb21TimeAfterHfdte(lines)
 
-                ' Midnight handling: evaluate HFDTE-1/HFDTE/HFDTE+1 and select the launch date that
-                ' best aligns with the first B-record TOD (smallest absolute delta to an adjacent B instant).
-                If firstB.HasValue Then
-                    Dim bestCandidate As DateTime = baseCandidate
-                    Dim bestDelta As Double = Double.MaxValue
-
-                    For Each dayOffset In New Integer() {0, -1, 1}
-                        Dim launchCandidate = hfdteDate.Value.AddDays(dayOffset).Add(launchTod.Value)
-                        Dim bSameDay = launchCandidate.Date.Add(firstB.Value)
-                        Dim delta = Math.Abs((bSameDay - launchCandidate).TotalSeconds)
-
-                        Dim bNextDay = bSameDay.AddDays(1)
-                        Dim deltaNext = Math.Abs((bNextDay - launchCandidate).TotalSeconds)
-                        If deltaNext < delta Then delta = deltaNext
-
-                        Dim bPrevDay = bSameDay.AddDays(-1)
-                        Dim deltaPrev = Math.Abs((bPrevDay - launchCandidate).TotalSeconds)
-                        If deltaPrev < delta Then delta = deltaPrev
-
-                        If delta < bestDelta Then
-                            bestDelta = delta
-                            bestCandidate = launchCandidate
-                        End If
-                    Next
-
-                    Return DateTime.SpecifyKind(bestCandidate, DateTimeKind.Utc)
+                ' If session starts before midnight and TOFF is just after midnight, roll to next UTC day.
+                If sessionStartTod.HasValue AndAlso launchTod.Value < sessionStartTod.Value Then
+                    candidate = candidate.AddDays(1)
                 End If
 
-                Return DateTime.SpecifyKind(baseCandidate, DateTimeKind.Utc)
+                Return DateTime.SpecifyKind(candidate, DateTimeKind.Utc)
             End If
         End If
 
-        ' Non-NB21 fallback chain: if HFDTE is unavailable, keep C-record date + TOFF behavior.
+        ' Keep non-HFDTE fallback behavior for older/non-NB21 files.
         Dim cUtc = TryGetFirstCRecordUtc(lines)
         If cUtc.HasValue AndAlso toff.HasValue Then
             Return DateTime.SpecifyKind(cUtc.Value.Date.Add(toff.Value), DateTimeKind.Utc)
