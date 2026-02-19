@@ -184,21 +184,69 @@ Module IgcParser
         End Try
     End Function
 
+    Private Function TryGetFirstBRecordTime(lines As IEnumerable(Of String)) As TimeSpan?
+        For Each l In lines
+            If l.StartsWith("B"c) AndAlso l.Length >= 7 Then
+                Try
+                    Return New TimeSpan(Integer.Parse(l.Substring(1, 2)),
+                                        Integer.Parse(l.Substring(3, 2)),
+                                        Integer.Parse(l.Substring(5, 2)))
+                Catch
+                    ' ignore malformed B record and keep scanning
+                End Try
+            End If
+        Next
+        Return Nothing
+    End Function
+
     Private Function ComputeRecordedUtcFromToff(lines As IEnumerable(Of String)) As DateTime?
-        Dim cUtc = TryGetFirstCRecordUtc(lines)          ' declaration instant (UTC)
-        Dim toff = TryGetNB21Time(lines, "TOFF")         ' takeoff TOD (UTC)
-        If cUtc.HasValue AndAlso toff.HasValue Then
-            ' Same-day candidate from C-record date
-            Dim candidate = cUtc.Value.Date.Add(toff.Value)
-            ' If TOFF time-of-day < C-record time-of-day, we rolled past midnight → add a day
-            If toff.Value < cUtc.Value.TimeOfDay Then candidate = candidate.AddDays(1)
-            Return DateTime.SpecifyKind(candidate, DateTimeKind.Utc)
+        Dim toff = TryGetNB21Time(lines, "TOFF") ' NB21 takeoff TOD comes from the LNB21 prefix time
+        Dim firstB = TryGetFirstBRecordTime(lines)
+        Dim hfdteDate = TryGetHfdteDateUtc(lines)
+
+        ' NB21 anchor rule: use HFDTE as the primary UTC date and TOFF (or first B) as the UTC TOD.
+        ' This intentionally ignores stale C-record dates/times, which may refer to task declaration day.
+        If hfdteDate.HasValue Then
+            Dim launchTod = If(toff, firstB)
+            If launchTod.HasValue Then
+                Dim baseCandidate = hfdteDate.Value.Add(launchTod.Value)
+
+                ' Midnight handling: evaluate HFDTE-1/HFDTE/HFDTE+1 and select the launch date that
+                ' best aligns with the first B-record TOD (smallest absolute delta to an adjacent B instant).
+                If firstB.HasValue Then
+                    Dim bestCandidate As DateTime = baseCandidate
+                    Dim bestDelta As Double = Double.MaxValue
+
+                    For Each dayOffset In New Integer() {0, -1, 1}
+                        Dim launchCandidate = hfdteDate.Value.AddDays(dayOffset).Add(launchTod.Value)
+                        Dim bSameDay = launchCandidate.Date.Add(firstB.Value)
+                        Dim delta = Math.Abs((bSameDay - launchCandidate).TotalSeconds)
+
+                        Dim bNextDay = bSameDay.AddDays(1)
+                        Dim deltaNext = Math.Abs((bNextDay - launchCandidate).TotalSeconds)
+                        If deltaNext < delta Then delta = deltaNext
+
+                        Dim bPrevDay = bSameDay.AddDays(-1)
+                        Dim deltaPrev = Math.Abs((bPrevDay - launchCandidate).TotalSeconds)
+                        If deltaPrev < delta Then delta = deltaPrev
+
+                        If delta < bestDelta Then
+                            bestDelta = delta
+                            bestCandidate = launchCandidate
+                        End If
+                    Next
+
+                    Return DateTime.SpecifyKind(bestCandidate, DateTimeKind.Utc)
+                End If
+
+                Return DateTime.SpecifyKind(baseCandidate, DateTimeKind.Utc)
+            End If
         End If
 
-        ' Fallback: HFDTE date + TOFF (no C-record)
-        Dim hfdteDate = TryGetHfdteDateUtc(lines)
-        If hfdteDate.HasValue AndAlso toff.HasValue Then
-            Return DateTime.SpecifyKind(hfdteDate.Value.Add(toff.Value), DateTimeKind.Utc)
+        ' Non-NB21 fallback chain: if HFDTE is unavailable, keep C-record date + TOFF behavior.
+        Dim cUtc = TryGetFirstCRecordUtc(lines)
+        If cUtc.HasValue AndAlso toff.HasValue Then
+            Return DateTime.SpecifyKind(cUtc.Value.Date.Add(toff.Value), DateTimeKind.Utc)
         End If
 
         Return Nothing
