@@ -6,50 +6,8 @@ Imports System.Text.RegularExpressions
 Module IgcParser
 
     Public Function FindGliderType(titleStr As String, competitionClass As String) As String
-        Dim lc = titleStr.ToLowerInvariant()
-        Dim rxOpts = RegexOptions.IgnoreCase Or RegexOptions.CultureInvariant
-
-        ' key + regex patterns (all lowercase), kept local to this function
-        Dim table = New(Key As String, Patterns As String())() {
-        ("AS33-18", {"as.33.*18", "as33.*18", "as-33.*18"}),
-        ("AS33-15", {"as.33.*15", "as33.*15", "as-33.*15"}),
-        ("AS33", {"^as33$", "^as-33"}),
-        ("ASW28", {"asw28", "asw-28"}),
-        ("JS3-18", {"js3-18", "js 3 18m"}),
-        ("JS3-15", {"js3-15", "js 3 15m"}),
-        ("LS4", {"ls4"}),
-        ("DG808S", {"dg808"}),
-        ("AS7", {"as7", "^k7$", " k7", "k7 ", "schleicherk7"}),
-        ("D2C", {"d2c", "discus"}),
-        ("Asobo_LS8-18", {"ls8", "mxs"}),
-        ("DGF", {"dgf", "dg1001"}),
-        ("T31", {"t31"}),
-        ("SZD30", {"szd30", "szd-30", "pirat", "yanosik"}),
-        ("S12G", {"stemme", "s12g"}),
-        ("ASK21", {"ask21", "ask-21", "k21"}),
-        ("TC Blanik L13", {"touchingcloud-blanik_16m", "touchingcloud.*blanik.*16", "touching cloud.*blanik.*16", "let l-13 blanik", "l-13 blanik", "blanik"}),
-        ("Taurus", {"taurus", "pipistrel"})
-    }
-
-        For Each entry In table
-            For Each pat In entry.Patterns
-                If Regex.IsMatch(lc, pat, rxOpts) Then
-                    Return entry.Key
-                End If
-            Next
-        Next
-
-        ' Fallback: disambiguate the GotFriends AS-33 ME by CompetitionClass
-        If lc = "gotfriends_schleicher_as_33_me" Then
-            Dim cc = If(competitionClass, String.Empty).ToLowerInvariant().Trim()
-            ' collapse whitespace so "18 m flapped" still matches
-            cc = Regex.Replace(cc, "\s+", "")
-            If cc.StartsWith("18m") Then Return "AS33-18"
-            If cc.StartsWith("15m") Then Return "AS33-15"
-        End If
-
-        Return "Unknown"
-
+        Dim _ = competitionClass ' kept for compatibility, currently unused by database-driven rules
+        Return GliderMatcher.MatchGliderKey(titleStr)
     End Function
 
     ' ————————————————————————————————

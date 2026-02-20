@@ -145,6 +145,7 @@ CommonLibrary
 * Document and expand the BriefingControl render context API (host mode, installed sims, preset name display) as new host integrations are added.
 * Document the club timing message fields (MeetMessage, NoSyncMessage, SyncMessage, LaunchMessage, StartMessage) in the RetrieveSoaringClubs API contract.
 * Document the optional MatchIGCToTaskV2 parameter `WSGUserID` and the response field `LastIgcRecordDateTimeUTC` for latest IGC creation timestamps.
+* Document the new `RetrieveGliderMatchRules` API endpoint contract (joined active `GliderMatchRules` + `Gliders`, ordered by `Priority` then `RuleID`) for client-side glider key matching consistency.
 
 ---
 

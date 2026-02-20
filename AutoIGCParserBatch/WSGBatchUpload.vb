@@ -87,7 +87,15 @@ Public Class WSGBatchUpload
         txtLog.AppendText($"Uploading: {Path.GetFileName(igcDetails.IGCLocalFilePath)}{Environment.NewLine}")
 
         ' 1) Parse everything out of the .igc
-        Dim doc As JToken = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        Dim doc As JToken = Nothing
+        Try
+            doc = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        Catch ex As Exception
+            txtLog.AppendText($"❌ Error parsing IGC file: {ex.Message}" & Environment.NewLine)
+            currentIdx += 1
+            ProcessNextFileAsync()
+            Return
+        End Try
         If doc Is Nothing Then
             txtLog.AppendText("❌ Error parsing IGC file." & Environment.NewLine)
             currentIdx += 1
