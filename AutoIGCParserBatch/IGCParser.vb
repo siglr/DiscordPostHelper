@@ -27,6 +27,7 @@ Module IgcParser
         ("SZD30", {"szd30", "szd-30", "pirat", "yanosik"}),
         ("S12G", {"stemme", "s12g"}),
         ("ASK21", {"ask21", "ask-21", "k21"}),
+        ("TC Blanik L13", {"touchingcloud-blanik_16m", "touchingcloud.*blanik.*16", "touching cloud.*blanik.*16", "let l-13 blanik", "l-13 blanik", "blanik"}),
         ("Taurus", {"taurus", "pipistrel"})
     }
 
