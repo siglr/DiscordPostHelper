@@ -5,8 +5,7 @@ Imports System.Text.RegularExpressions
 
 Module IgcParser
 
-    Public Function FindGliderType(titleStr As String, competitionClass As String) As String
-        Dim _ = competitionClass ' kept for compatibility, currently unused by database-driven rules
+    Public Function FindGliderType(titleStr As String) As String
         Return GliderMatcher.MatchGliderKey(titleStr)
     End Function
 
@@ -251,7 +250,7 @@ Module IgcParser
         Next
 
         ' normalize glider type
-        Dim norm = FindGliderType(gliderType, competitionClass)
+        Dim norm = FindGliderType(gliderType)
         If norm <> "" Then gliderType = norm
 
         ' 2) Try to read a real C-header + waypoints

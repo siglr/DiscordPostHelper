@@ -64,7 +64,31 @@ Public Module GliderMatcher
     End Function
 
     Private Function LoadRulesFromServer() As List(Of GliderRule)
-        Dim endpointUrl As String = $"https://siglr.com/DiscordPostHelper/{RulesEndpoint}"
+
+        Dim testServer As String = "https://siglr.com/DiscordPostHelperTest/"
+        Dim prodServer As String = "https://siglr.com/DiscordPostHelper/"
+
+        Dim baseUrl As String
+
+#If DEBUG Then
+        Dim result = MessageBox.Show(
+        "Use TEST server?" & Environment.NewLine & Environment.NewLine &
+        "Yes = Test" & Environment.NewLine &
+        "No = Production",
+        "Select Server",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Question)
+
+        If result = DialogResult.Yes Then
+            baseUrl = testServer
+        Else
+            baseUrl = prodServer
+        End If
+#Else
+    baseUrl = prodServer
+#End If
+
+        Dim endpointUrl As String = $"{baseUrl}{RulesEndpoint}"
 
         Using client As New HttpClient()
             Dim response = client.GetAsync(endpointUrl).GetAwaiter().GetResult()
