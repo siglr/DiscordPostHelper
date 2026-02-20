@@ -118,6 +118,8 @@ Public Class DPHXUnpackAndLoad
             Exit Sub
         End If
 
+        GliderMatcher.BaseUrlResolver = Function() SupportingFeatures.SIGLRDiscordPostHelperFolder()
+
         Dim firstRun As Boolean = Not Settings.SessionSettings.Load()
         UpdateBriefingRenderContext()
         SetFormCaption(_currentFile)

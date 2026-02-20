@@ -4,10 +4,21 @@ Imports Newtonsoft.Json.Linq
 
 Public Module GliderMatcher
 
+    Private Const DefaultBaseUrl As String = "https://siglr.com/DiscordPostHelper/"
     Private Const RulesEndpoint As String = "RetrieveGliderMatchRules.php"
     Private ReadOnly _syncRoot As New Object()
+    Private _baseUrlResolver As Func(Of String) = Function() DefaultBaseUrl
     Private _rulesLoaded As Boolean = False
     Private _rules As List(Of GliderRule)
+
+    Public Property BaseUrlResolver As Func(Of String)
+        Get
+            Return _baseUrlResolver
+        End Get
+        Set(value As Func(Of String))
+            _baseUrlResolver = If(value, Function() DefaultBaseUrl)
+        End Set
+    End Property
 
     Private Class GliderRule
         Public Property RuleID As Integer
@@ -64,29 +75,14 @@ Public Module GliderMatcher
     End Function
 
     Private Function LoadRulesFromServer() As List(Of GliderRule)
-
-        Dim testServer As String = "https://siglr.com/DiscordPostHelperTest/"
-        Dim prodServer As String = "https://siglr.com/DiscordPostHelper/"
-
-        Dim baseUrl As String
-
-#If DEBUG Then
-        Dim result = MessageBox.Show(
-        "Use TEST server?" & Environment.NewLine & Environment.NewLine &
-        "Yes = Test" & Environment.NewLine &
-        "No = Production",
-        "Select Server",
-        MessageBoxButtons.YesNo,
-        MessageBoxIcon.Question)
-
-        If result = DialogResult.Yes Then
-            baseUrl = testServer
-        Else
-            baseUrl = prodServer
+        Dim baseUrl As String = If(BaseUrlResolver?.Invoke(), String.Empty).Trim()
+        If String.IsNullOrWhiteSpace(baseUrl) Then
+            baseUrl = DefaultBaseUrl
         End If
-#Else
-    baseUrl = prodServer
-#End If
+
+        If Not baseUrl.EndsWith("/", StringComparison.Ordinal) Then
+            baseUrl &= "/"
+        End If
 
         Dim endpointUrl As String = $"{baseUrl}{RulesEndpoint}"
 
