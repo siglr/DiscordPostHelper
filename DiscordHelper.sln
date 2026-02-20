@@ -50,6 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main PHP Scripts", "Main PH
 		Main PHP Scripts\MatchIGCToTaskV2.php = Main PHP Scripts\MatchIGCToTaskV2.php
 		Main PHP Scripts\PostingTaskToTestChannel.php = Main PHP Scripts\PostingTaskToTestChannel.php
 		Main PHP Scripts\RetrieveNews.php = Main PHP Scripts\RetrieveNews.php
+		Main PHP Scripts\RetrieveGliderMatchRules.php = Main PHP Scripts\RetrieveGliderMatchRules.php
 		Main PHP Scripts\RetrieveSoaringClubs.php = Main PHP Scripts\RetrieveSoaringClubs.php
 		Main PHP Scripts\RetrieveSSCWeatherPresets.php = Main PHP Scripts\RetrieveSSCWeatherPresets.php
 		Main PHP Scripts\RetrieveUserRights.php = Main PHP Scripts\RetrieveUserRights.php

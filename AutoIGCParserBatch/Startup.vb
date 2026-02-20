@@ -65,6 +65,14 @@ Module Startup
 
         AddHandler Application.ApplicationExit, AddressOf OnApplicationExit
 
+        Try
+            GliderMatcher.EnsureRulesLoaded()
+            LogCefDiagnostic("Glider match rules loaded.")
+        Catch ex As Exception
+            MessageBox.Show($"Unable to load glider match rules: {ex.Message}", "Startup Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End Try
+
         Application.Run(New frmDiscord())
     End Sub
 

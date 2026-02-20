@@ -374,7 +374,12 @@ Public Class DPHXUnpackAndLoad
     End Function
 
     Private Function TryParseIgcFile(igcPath As String) As IGCLookupDetails
-        Dim doc As JToken = IgcParser.ParseIgcFile(igcPath)
+        Dim doc As JToken = Nothing
+        Try
+            doc = IgcParser.ParseIgcFile(igcPath)
+        Catch
+            Return Nothing
+        End Try
         If doc Is Nothing Then
             Return Nothing
         End If
@@ -2135,6 +2140,15 @@ Public Class DPHXUnpackAndLoad
 
         Dim listOfIGCFiles As List(Of String) = _SF.GetCorrespondingIGCFiles(Nothing, Settings.SessionSettings.NB21IGCFolder)
         If listOfIGCFiles.Count > 0 Then
+            Try
+                GliderMatcher.EnsureRulesLoaded()
+            Catch ex As Exception
+                Using New Centered_MessageBox(Me)
+                    MessageBox.Show($"Unable to load glider match rules: {ex.Message}", "IGC Upload Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Using
+                Exit Sub
+            End Try
+
             'Present the IGCUpload dialog with the list of IGC files
             Dim igcUploadDialog As New IGCFileUpload
             If _allDPHData IsNot Nothing Then

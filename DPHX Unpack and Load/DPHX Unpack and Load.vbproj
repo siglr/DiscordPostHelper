@@ -152,6 +152,9 @@
     <Compile Include="..\AutoIGCParserBatch\IGCParser.vb">
       <Link>IGCParser.vb</Link>
     </Compile>
+    <Compile Include="..\AutoIGCParserBatch\GliderMatcher.vb">
+      <Link>GliderMatcher.vb</Link>
+    </Compile>
     <Compile Include="..\AutoIGCParserBatch\UploadFileDialogHandler.vb">
       <Link>UploadFileDialogHandler.vb</Link>
     </Compile>

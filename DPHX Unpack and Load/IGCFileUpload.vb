@@ -367,7 +367,15 @@ Public Class IGCFileUpload
         Await ResetTaskPlanner()
 
         'Parse everything out of the .igc
-        Dim doc As JToken = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        Dim doc As JToken = Nothing
+        Try
+            doc = IgcParser.ParseIgcFile(igcDetails.IGCLocalFilePath)
+        Catch ex As Exception
+            Using New Centered_MessageBox(Me)
+                MessageBox.Show($"Error parsing IGC file: {ex.Message}", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Using
+            Return
+        End Try
         If doc Is Nothing Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Error parsing IGC file.", "Error processing IGC file", MessageBoxButtons.OK, MessageBoxIcon.Error)
