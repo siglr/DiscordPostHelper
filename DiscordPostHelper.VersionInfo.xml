@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.2.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.2.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.2.20.1</ReleaseVersion>
+      <ReleaseTitle>New Blanik glider in list</ReleaseTitle>
+      <ReleaseNotes>
+        Added new Blanik L-13 glider in dropdown list for recommended gliders
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.2.11.1</ReleaseVersion>
       <ReleaseTitle>Altitude restrictions checks</ReleaseTitle>

@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.2.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.2.20.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Fix for IGC Upload and new gliders</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed IGC launch date and time computation
+        Added Blanik L-13 in references for IGC results
+        Redefined gliders keys and easier to update
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.2.15.1</ReleaseVersion>
       <ReleaseTitle>New options in File menu</ReleaseTitle>
