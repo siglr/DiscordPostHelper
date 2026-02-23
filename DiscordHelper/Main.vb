@@ -6980,42 +6980,49 @@ Public Class Main
             promptForm.MaximizeBox = False
             promptForm.ShowInTaskbar = False
             promptForm.StartPosition = FormStartPosition.CenterParent
-            promptForm.Width = 720
-            promptForm.Height = 300
+            promptForm.Font = New Font("Segoe UI Variable Display", 9.818182!)
+            promptForm.Width = 760
+            promptForm.Height = 340
+
+            Dim bodyFont As New Font("Segoe UI Variable Display", 11.12727!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
             Dim lbl As New Label() With {
                 .AutoSize = False,
                 .Left = 12,
                 .Top = 12,
                 .Width = promptForm.ClientSize.Width - 24,
-                .Height = 56,
+                .Height = 72,
+                .Font = bodyFont,
                 .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}{FormatCandidateForDisplay(selectedParent)}"
             }
 
             Dim txtNote As New TextBox() With {
                 .Left = 12,
-                .Top = 76,
+                .Top = 90,
                 .Width = promptForm.ClientSize.Width - 24,
-                .Height = 120,
+                .Height = 150,
+                .Font = bodyFont,
                 .Multiline = True,
                 .ScrollBars = ScrollBars.Vertical
             }
 
             Dim btnOk As New Button() With {
                 .Text = "OK",
-                .Width = 90,
-                .Height = 30,
-                .Left = promptForm.ClientSize.Width - 196,
-                .Top = 210,
+                .Width = 110,
+                .Height = 34,
+                .Font = bodyFont,
+                .Left = promptForm.ClientSize.Width - 240,
+                .Top = 250,
                 .DialogResult = DialogResult.OK
             }
 
             Dim btnCancel As New Button() With {
                 .Text = "Cancel",
-                .Width = 90,
-                .Height = 30,
-                .Left = promptForm.ClientSize.Width - 100,
-                .Top = 210,
+                .Width = 110,
+                .Height = 34,
+                .Font = bodyFont,
+                .Left = promptForm.ClientSize.Width - 122,
+                .Top = 250,
                 .DialogResult = DialogResult.Cancel
             }
 
