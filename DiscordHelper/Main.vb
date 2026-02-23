@@ -90,6 +90,8 @@ Public Class Main
     Private _OriginalFlightPlanDepRwy As String = String.Empty
     Private _OriginalFlightPlanArrival As String = String.Empty
     Private _OriginalFlightPlanShortDesc As String = String.Empty
+    Private _pendingVersionParentEntrySeqID As Integer = 0
+    Private _pendingVersionLinkNote As String = String.Empty
 
 #End Region
 
@@ -6778,6 +6780,9 @@ Public Class Main
 
         Dim taskInfo As AllData = SetAndRetrieveSessionData()
 
+        _pendingVersionParentEntrySeqID = 0
+        _pendingVersionLinkNote = String.Empty
+
         ' Assume these values are computed or retrieved as part of the taskInfo
         Dim latitudeMin As Double
         Dim latitudeMax As Double
@@ -6787,9 +6792,12 @@ Public Class Main
 
         ' 1) Check for possible duplicates (title OR bbox)
         Dim candidates = FetchPossibleDuplicates(taskInfo.Title, latitudeMin, latitudeMax, longitudeMin, longitudeMax)
+        If candidates Is Nothing Then
+            candidates = New List(Of CandidateTask)
+        End If
 
         ' 1a) Hard-stop on exact title match (case-insensitive)
-        If candidates IsNot Nothing AndAlso candidates.Any(Function(c) String.Equals(c.Title, taskInfo.Title, StringComparison.OrdinalIgnoreCase)) Then
+        If candidates.Any(Function(c) String.Equals(c.Title, taskInfo.Title, StringComparison.OrdinalIgnoreCase)) Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show($"Task named ""{taskInfo.Title}"" already exists.{Environment.NewLine}Please change the title before publishing.",
                                 "Duplicate title", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -6798,8 +6806,6 @@ Public Class Main
         End If
 
         ' 1b) Soft-stop on identical waypoints (same geometry)
-        '     If any candidate has identical waypoints, warn and ask confirmation.
-        Dim identical As CandidateTask = Nothing
         Dim currentTaskCandidate As New CandidateTask With {
             .Title = taskInfo.Title,
             .PLNXML = _XmlDocFlightPlan.InnerXml,
@@ -6808,39 +6814,101 @@ Public Class Main
             }
         currentTaskCandidate.CompleteTaskData()
 
-        Dim epsilonMeters As Double = 100.0 ' matches your bbox epsilon of 0.001° (~100 m)
-        Dim diffSummary As String = Nothing
+        Dim epsilonMeters As Double = 100.0
+        Dim geometryMatches As New List(Of CandidateTask)
+        Dim diffSummaries As New Dictionary(Of Integer, String)
+
         For Each candidate As CandidateTask In candidates
             candidate.CompleteTaskData()
-
             Dim cmp = CompareTasksForDuplicate(currentTaskCandidate, candidate, epsilonMeters)
 
             If Not cmp.GeometryEqual Then
-                ' hard difference: skip this candidate
                 Continue For
             End If
 
             If cmp.ExactMatch Then
-                ' Same geometry + no soft diffs -> reject creation outright
                 Using New Centered_MessageBox(Me)
                     MessageBox.Show($"An identical task already exists:{Environment.NewLine}""{candidate.Title}"" ({candidate.EntrySeqID}){Environment.NewLine}Please update the existing task instead.",
                                     "Duplicate task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End Using
                 Return False
-            Else
-                ' Same geometry but with soft differences -> ask for confirmation (keep the first)
-                identical = candidate
-                diffSummary = String.Join(Environment.NewLine, cmp.Differences)
-                Exit For
             End If
+
+            geometryMatches.Add(candidate)
+            diffSummaries(candidate.EntrySeqID) = String.Join(Environment.NewLine, cmp.Differences)
         Next
 
-        If identical IsNot Nothing Then
-            Using New Centered_MessageBox(Me)
-                Dim ask = MessageBox.Show($"A task with the same waypoints already exists:{Environment.NewLine}• {identical.Title} ({identical.EntrySeqID}){Environment.NewLine}{Environment.NewLine}Differences detected:{Environment.NewLine}{diffSummary}{Environment.NewLine}{Environment.NewLine}Do you still want to publish?",
-                    "Possible duplicate (waypoints)", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                If ask = DialogResult.No Then Return False
-            End Using
+        If geometryMatches.Count > 0 Then
+            Dim proceedPublish As Boolean = True
+            If geometryMatches.Count = 1 Then
+                Dim parent As CandidateTask = geometryMatches(0)
+                Dim summary As String = String.Empty
+                If diffSummaries.ContainsKey(parent.EntrySeqID) Then
+                    summary = diffSummaries(parent.EntrySeqID)
+                End If
+
+                Using New Centered_MessageBox(Me)
+                    Dim ask = MessageBox.Show($"A task with the same waypoints already exists:{Environment.NewLine}• {FormatCandidateForDisplay(parent)}{Environment.NewLine}{Environment.NewLine}Differences detected:{Environment.NewLine}{summary}{Environment.NewLine}{Environment.NewLine}Do you still want to publish and link this new task version to the existing one?",
+                        "Possible duplicate (waypoints)", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    If ask = DialogResult.No Then
+                        proceedPublish = False
+                    End If
+                End Using
+
+                If Not proceedPublish Then
+                    Return False
+                End If
+
+                Dim note As String = PromptForVersionLinkNote(parent)
+                If String.IsNullOrEmpty(note) Then
+                    Return False
+                End If
+
+                _pendingVersionParentEntrySeqID = parent.EntrySeqID
+                _pendingVersionLinkNote = note
+            Else
+                Dim orderedCandidates = geometryMatches.OrderByDescending(Function(c) ParseCandidateLastUpdate(c.LastUpdate)).ToList()
+                Dim optionsBuilder As New StringBuilder()
+                optionsBuilder.AppendLine("Multiple similar tasks were found.")
+                optionsBuilder.AppendLine("Select the parent task by entering its EntrySeqID:")
+                optionsBuilder.AppendLine()
+                For Each candidate As CandidateTask In orderedCandidates
+                    optionsBuilder.AppendLine($"• {FormatCandidateForDisplay(candidate)}")
+                Next
+
+                Dim selectedParentId As Integer = 0
+                While selectedParentId = 0
+                    Dim selectedValue As String = Microsoft.VisualBasic.Interaction.InputBox(optionsBuilder.ToString(), "Select parent task", "")
+                    If String.IsNullOrWhiteSpace(selectedValue) Then
+                        Return False
+                    End If
+
+                    If Not Integer.TryParse(selectedValue.Trim(), selectedParentId) Then
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show("Please enter a valid numeric EntrySeqID.", "Invalid parent task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        End Using
+                        selectedParentId = 0
+                        Continue While
+                    End If
+
+                    Dim matchExists As Boolean = orderedCandidates.Any(Function(c) c.EntrySeqID = selectedParentId)
+                    If Not matchExists Then
+                        Using New Centered_MessageBox(Me)
+                            MessageBox.Show("The selected EntrySeqID is not in the candidate list.", "Invalid parent task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        End Using
+                        selectedParentId = 0
+                    End If
+                End While
+
+                Dim selectedParent As CandidateTask = orderedCandidates.First(Function(c) c.EntrySeqID = selectedParentId)
+                Dim note As String = PromptForVersionLinkNote(selectedParent)
+                If String.IsNullOrEmpty(note) Then
+                    Return False
+                End If
+
+                _pendingVersionParentEntrySeqID = selectedParent.EntrySeqID
+                _pendingVersionLinkNote = note
+            End If
         End If
 
         ' Update the taskData dictionary with minimal fields for creation
@@ -6868,9 +6936,7 @@ Public Class Main
 
         Dim result As Boolean = CallScriptToCreateWSGTaskPart1(taskData)
 
-        If result Then
-            'Nothing to do
-        Else
+        If Not result Then
             Using New Centered_MessageBox(Me)
                 MessageBox.Show("Failed to upload the task.", "Upload Result", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Using
@@ -6878,6 +6944,162 @@ Public Class Main
 
         Return result
 
+    End Function
+
+    Private Function PromptForVersionLinkNote(selectedParent As CandidateTask) As String
+        While True
+            Dim note As String = ShowVersionLinkNoteDialog(selectedParent)
+            If note Is Nothing Then
+                Return String.Empty
+            End If
+
+            note = note.Trim()
+            If note.Length = 0 Then
+                Using New Centered_MessageBox(Me)
+                    Dim retryResult = MessageBox.Show("A non-empty note is required to create the version link." & Environment.NewLine &
+                                                     "Click OK to enter a note, or Cancel to stop task publishing.",
+                                                     "Version link note required",
+                                                     MessageBoxButtons.OKCancel,
+                                                     MessageBoxIcon.Warning)
+                    If retryResult = DialogResult.Cancel Then
+                        Return String.Empty
+                    End If
+                End Using
+                Continue While
+            End If
+
+            Return note
+        End While
+    End Function
+
+    Private Function ShowVersionLinkNoteDialog(selectedParent As CandidateTask) As String
+        Using promptForm As New Form()
+            promptForm.Text = "Version link note"
+            promptForm.FormBorderStyle = FormBorderStyle.FixedDialog
+            promptForm.MinimizeBox = False
+            promptForm.MaximizeBox = False
+            promptForm.ShowInTaskbar = False
+            promptForm.StartPosition = FormStartPosition.CenterParent
+            promptForm.Font = New Font("Segoe UI Variable Display", 9.818182!)
+            promptForm.Width = 760
+            promptForm.Height = 390
+
+            Dim bodyFont As New Font("Segoe UI Variable Display", 11.12727!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+
+            Dim lbl As New Label() With {
+                .AutoSize = False,
+                .Left = 12,
+                .Top = 12,
+                .Width = promptForm.ClientSize.Width - 24,
+                .Height = 120,
+                .Font = bodyFont,
+                .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}" &
+                        $"Task: #{selectedParent.EntrySeqID} - {selectedParent.Title}{Environment.NewLine}" &
+                        $"Owner: {FormatCandidateOwnerForDisplay(selectedParent)}{Environment.NewLine}" &
+                        $"Updated: {FormatCandidateLastUpdateForDisplay(selectedParent)}"
+            }
+
+            Dim txtNote As New TextBox() With {
+                .Left = 12,
+                .Top = 138,
+                .Width = promptForm.ClientSize.Width - 24,
+                .Height = 180,
+                .Font = bodyFont,
+                .Multiline = True,
+                .ScrollBars = ScrollBars.Vertical
+            }
+
+            Dim btnOk As New Button() With {
+                .Text = "OK",
+                .Width = 110,
+                .Height = 34,
+                .Font = bodyFont,
+                .Left = promptForm.ClientSize.Width - 240,
+                .Top = 328,
+                .DialogResult = DialogResult.OK
+            }
+
+            Dim btnCancel As New Button() With {
+                .Text = "Cancel",
+                .Width = 110,
+                .Height = 34,
+                .Font = bodyFont,
+                .Left = promptForm.ClientSize.Width - 122,
+                .Top = 328,
+                .DialogResult = DialogResult.Cancel
+            }
+
+            promptForm.AcceptButton = btnOk
+            promptForm.CancelButton = btnCancel
+
+            promptForm.Controls.Add(lbl)
+            promptForm.Controls.Add(txtNote)
+            promptForm.Controls.Add(btnOk)
+            promptForm.Controls.Add(btnCancel)
+
+            If promptForm.ShowDialog(Me) = DialogResult.OK Then
+                Return txtNote.Text
+            End If
+        End Using
+
+        Return Nothing
+    End Function
+
+    Private Function FormatCandidateForDisplay(candidate As CandidateTask) As String
+        Dim owner As String = FormatCandidateOwnerForDisplay(candidate)
+        Dim updatedText As String = FormatCandidateLastUpdateForDisplay(candidate)
+
+        Return $"#{candidate.EntrySeqID} - {candidate.Title} | Owner: {owner} | Updated: {updatedText}"
+    End Function
+
+    Private Function FormatCandidateOwnerForDisplay(candidate As CandidateTask) As String
+        If String.IsNullOrWhiteSpace(candidate.OwnerName) Then
+            Return "N/A"
+        End If
+
+        Return candidate.OwnerName.Trim()
+    End Function
+
+    Private Function FormatCandidateLastUpdateForDisplay(candidate As CandidateTask) As String
+        If String.IsNullOrWhiteSpace(candidate.LastUpdate) Then
+            Return "N/A"
+        End If
+
+        Dim parsedUtc As DateTime
+        If DateTime.TryParseExact(candidate.LastUpdate.Trim(),
+                                  "yyyy-MM-dd HH:mm:ss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                  parsedUtc) Then
+            Return parsedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+        End If
+
+        If DateTime.TryParse(candidate.LastUpdate.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, parsedUtc) Then
+            Return parsedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+        End If
+
+        Return candidate.LastUpdate.Trim()
+    End Function
+
+    Private Function ParseCandidateLastUpdate(value As String) As DateTime
+        If String.IsNullOrWhiteSpace(value) Then
+            Return DateTime.MinValue
+        End If
+
+        Dim parsedUtc As DateTime
+        If DateTime.TryParseExact(value.Trim(),
+                                  "yyyy-MM-dd HH:mm:ss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                  parsedUtc) Then
+            Return parsedUtc.ToLocalTime()
+        End If
+
+        If DateTime.TryParse(value.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, parsedUtc) Then
+            Return parsedUtc.ToLocalTime()
+        End If
+
+        Return DateTime.MinValue
     End Function
 
     Private Function CompareTasksForDuplicate(currentTask As CandidateTask,
@@ -6975,7 +7197,12 @@ Public Class Main
         Using http As New Http.HttpClient()
             http.Timeout = TimeSpan.FromSeconds(15)
             Dim json = http.GetStringAsync(apiUrl).GetAwaiter().GetResult()
-            Return JsonConvert.DeserializeObject(Of List(Of CandidateTask))(json)
+            Dim duplicateCandidates = JsonConvert.DeserializeObject(Of List(Of CandidateTask))(json)
+            If duplicateCandidates Is Nothing Then
+                Return New List(Of CandidateTask)
+            End If
+
+            Return duplicateCandidates
         End Using
 
     End Function
@@ -7195,6 +7422,11 @@ Public Class Main
             {"Mode", modeRights}
         }
 
+        If (Not isUpdate) AndAlso _pendingVersionParentEntrySeqID > 0 Then
+            taskData("VersionParentEntrySeqID") = _pendingVersionParentEntrySeqID
+            taskData("VersionLinkNote") = _pendingVersionLinkNote
+        End If
+
         Dim filePath As String = taskInfo.DPHXPackageFilename
 
         'keep the TemporaryTaskID in case of an error
@@ -7207,14 +7439,24 @@ Public Class Main
 
         If Not _useTestMode Then
             Dim discordUpdateSuccess As Boolean = False
-            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(discordUpdateSuccess, taskData, filePath, taskInfo.CoverImageSelected)
+            Dim versionLinkError As String = String.Empty
+            Dim result As Boolean = CallScriptToCreateWSGTaskPart2(discordUpdateSuccess, versionLinkError, taskData, filePath, taskInfo.CoverImageSelected)
 
             If result Then
+                If versionLinkError.Length > 0 Then
+                    Using New Centered_MessageBox(Me)
+                        MessageBox.Show(Me, $"Task published successfully, but version link could not be created.{Environment.NewLine}{Environment.NewLine}{versionLinkError}{Environment.NewLine}{Environment.NewLine}The task remains published as a root version.", "Version link warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End Using
+                End If
+
                 'Check if Discord was also a success
                 If Not discordUpdateSuccess Then
                     'We want the user to possibly update his Discord message himself
                     ManualDiscordTaskPost()
                 End If
+
+                _pendingVersionParentEntrySeqID = 0
+                _pendingVersionLinkNote = String.Empty
             Else
                 'Put back the pending values
                 taskInfo.TaskStatus = SupportingFeatures.WSGTaskStatus.PendingCreation
@@ -7237,7 +7479,7 @@ Public Class Main
 
     End Function
 
-    Private Function CallScriptToCreateWSGTaskPart2(ByRef discordUpdateSuccess As Boolean, task As Dictionary(Of String, Object), dphxFilePath As String, Optional coverImagePath As String = "") As Boolean
+    Private Function CallScriptToCreateWSGTaskPart2(ByRef discordUpdateSuccess As Boolean, ByRef versionLinkError As String, task As Dictionary(Of String, Object), dphxFilePath As String, Optional coverImagePath As String = "") As Boolean
         If _useTestMode Then
             Throw New Exception("Test mode is active. WSG connection should not be possible!")
         End If
@@ -7320,6 +7562,12 @@ Public Class Main
                     If responseJson("discordError").ToString = String.Empty Then
                         discordUpdateSuccess = True
                     End If
+
+                    versionLinkError = String.Empty
+                    If responseJson("versionLinkError") IsNot Nothing Then
+                        versionLinkError = responseJson("versionLinkError").ToString().Trim()
+                    End If
+
                     Return responseJson("status").ToString() = "success"
                 End Using
             End Using
