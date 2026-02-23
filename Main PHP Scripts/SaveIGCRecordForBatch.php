@@ -333,17 +333,20 @@ try {
     // Detect matching club/event for this IGC
     $matchedClubEventNewsID = findMatchingClubEvent($pdo, $EntrySeqID, $IGCRecordDateTimeUTC);
 
+    // DPHX uploads include UsersTasks fields (UT_InfoFetched), while AutoIGCParserBatch uploads do not.
+    $igcSource = isset($_POST['UT_InfoFetched']) ? 'DPHX' : 'Batch';
+
     $insertQ = "
       INSERT INTO IGCRecords (
         IGCKey, EntrySeqID, IGCRecordDateTimeUTC, IGCUploadDateTimeUTC,
         LocalTime, BeginTimeUTC, Pilot, GliderType, GliderID, CompetitionID,
         CompetitionClass, NB21Version, Sim, WSGUserID, TaskCompleted, Penalties,
-        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID, IsPrivate
+        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID, IsPrivate, Source
       ) VALUES (
         :IGCKey, :EntrySeqID, :IGCRecordDateTimeUTC, :IGCUploadDateTimeUTC,
         :LocalTime, :BeginTimeUTC, :Pilot, :GliderType, :GliderID, :CompetitionID,
         :CompetitionClass, :NB21Version, :Sim, :WSGUserID, :TaskCompleted, :Penalties,
-        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID, :IsPrivate
+        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID, :IsPrivate, :Source
       )
     ";
     $stmt = $pdo->prepare($insertQ);
@@ -372,7 +375,8 @@ try {
       ':LocalDate'            => $LocalDate,
       ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null),
       ':ClubEventNewsID'      => $matchedClubEventNewsID,
-      ':IsPrivate'            => $isPrivate
+      ':IsPrivate'            => $isPrivate,
+      ':Source'               => $igcSource
     ]);
 
     // ─────────────────────────────────────────
