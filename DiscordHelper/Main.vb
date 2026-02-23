@@ -6868,25 +6868,18 @@ Public Class Main
                 _pendingVersionLinkNote = note
             Else
                 Dim orderedCandidates = geometryMatches.OrderByDescending(Function(c) ParseCandidateLastUpdate(c.LastUpdate)).ToList()
-                Dim skipVersionLink As Boolean = False
-                Dim selectedParent As CandidateTask = ShowParentTaskSelectionDialog(orderedCandidates, skipVersionLink)
-
-                If skipVersionLink Then
-                    _pendingVersionParentEntrySeqID = 0
-                    _pendingVersionLinkNote = String.Empty
-                Else
-                    If selectedParent Is Nothing Then
-                        Return False
-                    End If
-
-                    Dim note As String = PromptForVersionLinkNote(selectedParent)
-                    If String.IsNullOrEmpty(note) Then
-                        Return False
-                    End If
-
-                    _pendingVersionParentEntrySeqID = selectedParent.EntrySeqID
-                    _pendingVersionLinkNote = note
+                Dim selectedParent As CandidateTask = ShowParentTaskSelectionDialog(orderedCandidates)
+                If selectedParent Is Nothing Then
+                    Return False
                 End If
+
+                Dim note As String = PromptForVersionLinkNote(selectedParent)
+                If String.IsNullOrEmpty(note) Then
+                    Return False
+                End If
+
+                _pendingVersionParentEntrySeqID = selectedParent.EntrySeqID
+                _pendingVersionLinkNote = note
             End If
         End If
 
@@ -6925,9 +6918,7 @@ Public Class Main
 
     End Function
 
-    Private Function ShowParentTaskSelectionDialog(candidates As List(Of CandidateTask), ByRef skipVersionLink As Boolean) As CandidateTask
-        skipVersionLink = False
-
+    Private Function ShowParentTaskSelectionDialog(candidates As List(Of CandidateTask)) As CandidateTask
         If candidates Is Nothing OrElse candidates.Count = 0 Then
             Return Nothing
         End If
@@ -6960,9 +6951,7 @@ Public Class Main
                 .Dock = DockStyle.Top,
                 .Margin = New Padding(0, 0, 0, 12),
                 .Font = bodyFont,
-                .Text = "Multiple similar tasks were found. Select one parent task to link as the previous version." &
-                        Environment.NewLine &
-                        "If none should be linked, choose 'Publish without version link'."
+                .Text = "Multiple similar tasks were found. Select one parent task to link as the previous version."
             }
 
             Dim candidateList As New ListBox() With {
@@ -6986,15 +6975,6 @@ Public Class Main
                 .DialogResult = DialogResult.OK
             }
 
-            Dim btnNoLink As New Button() With {
-                .Text = "Publish without version link",
-                .AutoSize = True,
-                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                .Padding = New Padding(10, 4, 10, 4),
-                .Font = bodyFont,
-                .DialogResult = DialogResult.No
-            }
-
             Dim btnCancel As New Button() With {
                 .Text = "Cancel publish",
                 .AutoSize = True,
@@ -7013,7 +6993,6 @@ Public Class Main
                 .Margin = New Padding(0)
             }
             buttonFlow.Controls.Add(btnCancel)
-            buttonFlow.Controls.Add(btnNoLink)
             buttonFlow.Controls.Add(btnLink)
 
             promptForm.AcceptButton = btnLink
@@ -7039,11 +7018,6 @@ Public Class Main
                 End Sub
 
             Dim result = promptForm.ShowDialog(Me)
-            If result = DialogResult.No Then
-                skipVersionLink = True
-                Return Nothing
-            End If
-
             If result <> DialogResult.OK OrElse candidateList.SelectedIndex < 0 Then
                 Return Nothing
             End If
