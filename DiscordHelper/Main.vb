@@ -6868,13 +6868,9 @@ Public Class Main
                 _pendingVersionLinkNote = note
             Else
                 Dim orderedCandidates = geometryMatches.OrderByDescending(Function(c) ParseCandidateLastUpdate(c.LastUpdate)).ToList()
-                Dim selectedParent As CandidateTask = ShowParentTaskSelectionDialog(orderedCandidates)
+                Dim note As String = String.Empty
+                Dim selectedParent As CandidateTask = ShowParentTaskSelectionDialog(orderedCandidates, note)
                 If selectedParent Is Nothing Then
-                    Return False
-                End If
-
-                Dim note As String = PromptForVersionLinkNote(selectedParent)
-                If String.IsNullOrEmpty(note) Then
                     Return False
                 End If
 
@@ -6918,7 +6914,9 @@ Public Class Main
 
     End Function
 
-    Private Function ShowParentTaskSelectionDialog(candidates As List(Of CandidateTask)) As CandidateTask
+    Private Function ShowParentTaskSelectionDialog(candidates As List(Of CandidateTask), ByRef note As String) As CandidateTask
+        note = String.Empty
+
         If candidates Is Nothing OrElse candidates.Count = 0 Then
             Return Nothing
         End If
@@ -6944,6 +6942,8 @@ Public Class Main
             layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
             layout.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0!))
             layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
 
             Dim lbl As New Label() With {
                 .AutoSize = True,
@@ -6965,6 +6965,24 @@ Public Class Main
             For Each candidate As CandidateTask In candidates
                 candidateList.Items.Add(FormatCandidateForDisplay(candidate))
             Next
+
+            Dim lblNote As New Label() With {
+                .AutoSize = True,
+                .Dock = DockStyle.Top,
+                .Margin = New Padding(0, 0, 0, 8),
+                .Font = bodyFont,
+                .Text = "Version link note (required):"
+            }
+
+            Dim txtNote As New TextBox() With {
+                .Dock = DockStyle.Top,
+                .Margin = New Padding(0, 0, 0, 12),
+                .Height = 56,
+                .Font = bodyFont,
+                .Multiline = True,
+                .ScrollBars = ScrollBars.Vertical,
+                .AcceptsReturn = True
+            }
 
             Dim btnLink As New Button() With {
                 .Text = "Link selected",
@@ -7000,7 +7018,9 @@ Public Class Main
 
             layout.Controls.Add(lbl, 0, 0)
             layout.Controls.Add(candidateList, 0, 1)
-            layout.Controls.Add(buttonFlow, 0, 2)
+            layout.Controls.Add(lblNote, 0, 2)
+            layout.Controls.Add(txtNote, 0, 3)
+            layout.Controls.Add(buttonFlow, 0, 4)
             promptForm.Controls.Add(layout)
 
             AddHandler btnLink.Click,
@@ -7014,6 +7034,18 @@ Public Class Main
                                             MessageBoxIcon.Warning)
                         End Using
                         promptForm.DialogResult = DialogResult.None
+                        Exit Sub
+                    End If
+
+                    If String.IsNullOrWhiteSpace(txtNote.Text) Then
+                        Using New Centered_MessageBox(promptForm)
+                            MessageBox.Show(promptForm,
+                                            "Please enter a version link note before continuing.",
+                                            "Version link note required",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Warning)
+                        End Using
+                        promptForm.DialogResult = DialogResult.None
                     End If
                 End Sub
 
@@ -7022,6 +7054,7 @@ Public Class Main
                 Return Nothing
             End If
 
+            note = txtNote.Text.Trim()
             Return candidates(candidateList.SelectedIndex)
         End Using
     End Function
