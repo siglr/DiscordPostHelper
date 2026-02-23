@@ -6993,7 +6993,10 @@ Public Class Main
                 .Width = promptForm.ClientSize.Width - 24,
                 .Height = 72,
                 .Font = bodyFont,
-                .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}{FormatCandidateForDisplay(selectedParent)}"
+                .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}" &
+                        $"Task: #{selectedParent.EntrySeqID} - {selectedParent.Title}{Environment.NewLine}" &
+                        $"Owner: {FormatCandidateOwnerForDisplay(selectedParent)}{Environment.NewLine}" &
+                        $"Updated: {FormatCandidateLastUpdateForDisplay(selectedParent)}"
             }
 
             Dim txtNote As New TextBox() With {
@@ -7043,20 +7046,57 @@ Public Class Main
     End Function
 
     Private Function FormatCandidateForDisplay(candidate As CandidateTask) As String
-        Dim owner As String = If(String.IsNullOrWhiteSpace(candidate.OwnerName), "N/A", candidate.OwnerName.Trim())
-        Dim updatedText As String = If(String.IsNullOrWhiteSpace(candidate.LastUpdate), "N/A", candidate.LastUpdate.Trim())
-        Dim parsedDate As DateTime
-        If DateTime.TryParse(candidate.LastUpdate, parsedDate) Then
-            updatedText = parsedDate.ToString("yyyy-MM-dd HH:mm")
-        End If
+        Dim owner As String = FormatCandidateOwnerForDisplay(candidate)
+        Dim updatedText As String = FormatCandidateLastUpdateForDisplay(candidate)
 
         Return $"#{candidate.EntrySeqID} - {candidate.Title} | Owner: {owner} | Updated: {updatedText}"
     End Function
 
+    Private Function FormatCandidateOwnerForDisplay(candidate As CandidateTask) As String
+        If String.IsNullOrWhiteSpace(candidate.OwnerName) Then
+            Return "N/A"
+        End If
+
+        Return candidate.OwnerName.Trim()
+    End Function
+
+    Private Function FormatCandidateLastUpdateForDisplay(candidate As CandidateTask) As String
+        If String.IsNullOrWhiteSpace(candidate.LastUpdate) Then
+            Return "N/A"
+        End If
+
+        Dim parsedUtc As DateTime
+        If DateTime.TryParseExact(candidate.LastUpdate.Trim(),
+                                  "yyyy-MM-dd HH:mm:ss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                  parsedUtc) Then
+            Return parsedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+        End If
+
+        If DateTime.TryParse(candidate.LastUpdate.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, parsedUtc) Then
+            Return parsedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+        End If
+
+        Return candidate.LastUpdate.Trim()
+    End Function
+
     Private Function ParseCandidateLastUpdate(value As String) As DateTime
-        Dim parsed As DateTime
-        If DateTime.TryParse(value, parsed) Then
-            Return parsed
+        If String.IsNullOrWhiteSpace(value) Then
+            Return DateTime.MinValue
+        End If
+
+        Dim parsedUtc As DateTime
+        If DateTime.TryParseExact(value.Trim(),
+                                  "yyyy-MM-dd HH:mm:ss",
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal,
+                                  parsedUtc) Then
+            Return parsedUtc.ToLocalTime()
+        End If
+
+        If DateTime.TryParse(value.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, parsedUtc) Then
+            Return parsedUtc.ToLocalTime()
         End If
 
         Return DateTime.MinValue
