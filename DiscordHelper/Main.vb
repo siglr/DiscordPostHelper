@@ -6982,7 +6982,7 @@ Public Class Main
             promptForm.StartPosition = FormStartPosition.CenterParent
             promptForm.Font = New Font("Segoe UI Variable Display", 9.818182!)
             promptForm.Width = 760
-            promptForm.Height = 340
+            promptForm.Height = 390
 
             Dim bodyFont As New Font("Segoe UI Variable Display", 11.12727!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
@@ -6991,7 +6991,7 @@ Public Class Main
                 .Left = 12,
                 .Top = 12,
                 .Width = promptForm.ClientSize.Width - 24,
-                .Height = 72,
+                .Height = 120,
                 .Font = bodyFont,
                 .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}" &
                         $"Task: #{selectedParent.EntrySeqID} - {selectedParent.Title}{Environment.NewLine}" &
@@ -7001,9 +7001,9 @@ Public Class Main
 
             Dim txtNote As New TextBox() With {
                 .Left = 12,
-                .Top = 90,
+                .Top = 138,
                 .Width = promptForm.ClientSize.Width - 24,
-                .Height = 150,
+                .Height = 180,
                 .Font = bodyFont,
                 .Multiline = True,
                 .ScrollBars = ScrollBars.Vertical
@@ -7015,7 +7015,7 @@ Public Class Main
                 .Height = 34,
                 .Font = bodyFont,
                 .Left = promptForm.ClientSize.Width - 240,
-                .Top = 250,
+                .Top = 328,
                 .DialogResult = DialogResult.OK
             }
 
@@ -7025,7 +7025,7 @@ Public Class Main
                 .Height = 34,
                 .Font = bodyFont,
                 .Left = promptForm.ClientSize.Width - 122,
-                .Top = 250,
+                .Top = 328,
                 .DialogResult = DialogResult.Cancel
             }
 
