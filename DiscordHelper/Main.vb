@@ -6860,7 +6860,7 @@ Public Class Main
                 End If
 
                 Dim note As String = PromptForVersionLinkNote(parent)
-                If note = String.Empty Then
+                If String.IsNullOrEmpty(note) Then
                     Return False
                 End If
 
@@ -6902,7 +6902,7 @@ Public Class Main
 
                 Dim selectedParent As CandidateTask = orderedCandidates.First(Function(c) c.EntrySeqID = selectedParentId)
                 Dim note As String = PromptForVersionLinkNote(selectedParent)
-                If note = String.Empty Then
+                If String.IsNullOrEmpty(note) Then
                     Return False
                 End If
 
@@ -6948,7 +6948,7 @@ Public Class Main
 
     Private Function PromptForVersionLinkNote(selectedParent As CandidateTask) As String
         While True
-            Dim note As String = Microsoft.VisualBasic.Interaction.InputBox($"Provide a note explaining why this task links to:{Environment.NewLine}{FormatCandidateForDisplay(selectedParent)}", "Version link note", "")
+            Dim note As String = ShowVersionLinkNoteDialog(selectedParent)
             If note Is Nothing Then
                 Return String.Empty
             End If
@@ -6956,7 +6956,14 @@ Public Class Main
             note = note.Trim()
             If note.Length = 0 Then
                 Using New Centered_MessageBox(Me)
-                    MessageBox.Show("A non-empty note is required to create the version link.", "Version link note required", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Dim retryResult = MessageBox.Show("A non-empty note is required to create the version link." & Environment.NewLine &
+                                                     "Click OK to enter a note, or Cancel to stop task publishing.",
+                                                     "Version link note required",
+                                                     MessageBoxButtons.OKCancel,
+                                                     MessageBoxIcon.Warning)
+                    If retryResult = DialogResult.Cancel Then
+                        Return String.Empty
+                    End If
                 End Using
                 Continue While
             End If
@@ -6965,9 +6972,72 @@ Public Class Main
         End While
     End Function
 
+    Private Function ShowVersionLinkNoteDialog(selectedParent As CandidateTask) As String
+        Using promptForm As New Form()
+            promptForm.Text = "Version link note"
+            promptForm.FormBorderStyle = FormBorderStyle.FixedDialog
+            promptForm.MinimizeBox = False
+            promptForm.MaximizeBox = False
+            promptForm.ShowInTaskbar = False
+            promptForm.StartPosition = FormStartPosition.CenterParent
+            promptForm.Width = 720
+            promptForm.Height = 300
+
+            Dim lbl As New Label() With {
+                .AutoSize = False,
+                .Left = 12,
+                .Top = 12,
+                .Width = promptForm.ClientSize.Width - 24,
+                .Height = 56,
+                .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}{FormatCandidateForDisplay(selectedParent)}"
+            }
+
+            Dim txtNote As New TextBox() With {
+                .Left = 12,
+                .Top = 76,
+                .Width = promptForm.ClientSize.Width - 24,
+                .Height = 120,
+                .Multiline = True,
+                .ScrollBars = ScrollBars.Vertical
+            }
+
+            Dim btnOk As New Button() With {
+                .Text = "OK",
+                .Width = 90,
+                .Height = 30,
+                .Left = promptForm.ClientSize.Width - 196,
+                .Top = 210,
+                .DialogResult = DialogResult.OK
+            }
+
+            Dim btnCancel As New Button() With {
+                .Text = "Cancel",
+                .Width = 90,
+                .Height = 30,
+                .Left = promptForm.ClientSize.Width - 100,
+                .Top = 210,
+                .DialogResult = DialogResult.Cancel
+            }
+
+            promptForm.AcceptButton = btnOk
+            promptForm.CancelButton = btnCancel
+
+            promptForm.Controls.Add(lbl)
+            promptForm.Controls.Add(txtNote)
+            promptForm.Controls.Add(btnOk)
+            promptForm.Controls.Add(btnCancel)
+
+            If promptForm.ShowDialog(Me) = DialogResult.OK Then
+                Return txtNote.Text
+            End If
+        End Using
+
+        Return Nothing
+    End Function
+
     Private Function FormatCandidateForDisplay(candidate As CandidateTask) As String
-        Dim owner As String = If(String.IsNullOrWhiteSpace(candidate.OwnerName), "Unknown owner", candidate.OwnerName.Trim())
-        Dim updatedText As String = candidate.LastUpdate
+        Dim owner As String = If(String.IsNullOrWhiteSpace(candidate.OwnerName), "N/A", candidate.OwnerName.Trim())
+        Dim updatedText As String = If(String.IsNullOrWhiteSpace(candidate.LastUpdate), "N/A", candidate.LastUpdate.Trim())
         Dim parsedDate As DateTime
         If DateTime.TryParse(candidate.LastUpdate, parsedDate) Then
             updatedText = parsedDate.ToString("yyyy-MM-dd HH:mm")
