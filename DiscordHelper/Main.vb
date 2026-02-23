@@ -6981,17 +6981,26 @@ Public Class Main
             promptForm.ShowInTaskbar = False
             promptForm.StartPosition = FormStartPosition.CenterParent
             promptForm.Font = New Font("Segoe UI Variable Display", 9.818182!)
-            promptForm.Width = 760
-            promptForm.Height = 390
+            promptForm.ClientSize = New Size(760, 260)
 
             Dim bodyFont As New Font("Segoe UI Variable Display", 11.12727!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
-            Dim lbl As New Label() With {
+            Dim layout As New TableLayoutPanel() With {
+                .Dock = DockStyle.Fill,
+                .ColumnCount = 1,
+                .Padding = New Padding(12),
                 .AutoSize = False,
-                .Left = 12,
-                .Top = 12,
-                .Width = promptForm.ClientSize.Width - 24,
-                .Height = 120,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink
+            }
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+
+            Dim lbl As New Label() With {
+                .AutoSize = True,
+                .MaximumSize = New Size(promptForm.ClientSize.Width - 48, 0),
+                .Dock = DockStyle.Top,
+                .Margin = New Padding(0, 0, 0, 12),
                 .Font = bodyFont,
                 .Text = $"Provide a note explaining why this task links to:{Environment.NewLine}" &
                         $"Task: #{selectedParent.EntrySeqID} - {selectedParent.Title}{Environment.NewLine}" &
@@ -7000,13 +7009,14 @@ Public Class Main
             }
 
             Dim txtNote As New TextBox() With {
-                .Left = 12,
-                .Top = 138,
-                .Width = promptForm.ClientSize.Width - 24,
-                .Height = 180,
+                .Dock = DockStyle.Top,
+                .Margin = New Padding(0, 0, 0, 12),
+                .Width = promptForm.ClientSize.Width - 48,
+                .Height = 56,
                 .Font = bodyFont,
                 .Multiline = True,
-                .ScrollBars = ScrollBars.Vertical
+                .ScrollBars = ScrollBars.Vertical,
+                .AcceptsReturn = True
             }
 
             Dim btnOk As New Button() With {
@@ -7014,8 +7024,6 @@ Public Class Main
                 .Width = 110,
                 .Height = 34,
                 .Font = bodyFont,
-                .Left = promptForm.ClientSize.Width - 240,
-                .Top = 328,
                 .DialogResult = DialogResult.OK
             }
 
@@ -7024,18 +7032,28 @@ Public Class Main
                 .Width = 110,
                 .Height = 34,
                 .Font = bodyFont,
-                .Left = promptForm.ClientSize.Width - 122,
-                .Top = 328,
                 .DialogResult = DialogResult.Cancel
             }
+
+            Dim buttonFlow As New FlowLayoutPanel() With {
+                .Dock = DockStyle.Fill,
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .FlowDirection = FlowDirection.RightToLeft,
+                .WrapContents = False,
+                .Margin = New Padding(0)
+            }
+            buttonFlow.Controls.Add(btnCancel)
+            buttonFlow.Controls.Add(btnOk)
 
             promptForm.AcceptButton = btnOk
             promptForm.CancelButton = btnCancel
 
-            promptForm.Controls.Add(lbl)
-            promptForm.Controls.Add(txtNote)
-            promptForm.Controls.Add(btnOk)
-            promptForm.Controls.Add(btnCancel)
+            layout.Controls.Add(lbl, 0, 0)
+            layout.Controls.Add(txtNote, 0, 1)
+            layout.Controls.Add(buttonFlow, 0, 2)
+
+            promptForm.Controls.Add(layout)
 
             If promptForm.ShowDialog(Me) = DialogResult.OK Then
                 Return txtNote.Text
