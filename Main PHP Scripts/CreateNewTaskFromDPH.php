@@ -1,6 +1,70 @@
 <?php
 require __DIR__ . '/CommonFunctions.php';
 
+
+function initializeTaskVersionLinksTable(PDO $pdo): void
+{
+    $pdo->exec('CREATE TABLE IF NOT EXISTS TaskVersionLinks (
+        ChildEntrySeqID INTEGER PRIMARY KEY,
+        ParentEntrySeqID INTEGER NOT NULL,
+        LinkNote TEXT,
+        UpdatedUTC TEXT NOT NULL DEFAULT (datetime(\'now\')),
+        CHECK (ChildEntrySeqID != ParentEntrySeqID),
+        FOREIGN KEY (ChildEntrySeqID) REFERENCES Tasks(EntrySeqID) ON DELETE CASCADE,
+        FOREIGN KEY (ParentEntrySeqID) REFERENCES Tasks(EntrySeqID) ON DELETE CASCADE
+    )');
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_taskversionlinks_parent ON TaskVersionLinks(ParentEntrySeqID)');
+}
+
+function taskExistsByEntrySeqId(PDO $pdo, int $entrySeqID): bool
+{
+    $stmt = $pdo->prepare('SELECT 1 FROM Tasks WHERE EntrySeqID = :id LIMIT 1');
+    $stmt->execute([':id' => $entrySeqID]);
+    return (bool) $stmt->fetchColumn();
+}
+
+function ensureNoVersionCycle(PDO $pdo, int $childEntrySeqID, int $parentEntrySeqID): void
+{
+    $ancestor = $parentEntrySeqID;
+    $stmt = $pdo->prepare('SELECT ParentEntrySeqID FROM TaskVersionLinks WHERE ChildEntrySeqID = :id LIMIT 1');
+    $safe = 0;
+    while ($ancestor > 0 && $safe < 1000) {
+        if ($ancestor === $childEntrySeqID) {
+            throw new Exception('Cycle detected.');
+        }
+        $stmt->execute([':id' => $ancestor]);
+        $parent = $stmt->fetchColumn();
+        $ancestor = $parent ? (int) $parent : 0;
+        $safe++;
+    }
+}
+
+function upsertTaskVersionParent(PDO $pdo, int $childEntrySeqID, int $parentEntrySeqID, string $note): void
+{
+    if ($parentEntrySeqID <= 0 || $childEntrySeqID <= 0 || $parentEntrySeqID === $childEntrySeqID) {
+        throw new Exception('Invalid parent task.');
+    }
+    if (trim($note) === '') {
+        throw new Exception('Version link note is required.');
+    }
+
+    if (!taskExistsByEntrySeqId($pdo, $parentEntrySeqID)) {
+        throw new Exception('Parent task not found.');
+    }
+
+    ensureNoVersionCycle($pdo, $childEntrySeqID, $parentEntrySeqID);
+
+    $up = $pdo->prepare('UPDATE TaskVersionLinks
+        SET ParentEntrySeqID = :parent, LinkNote = :note, UpdatedUTC = datetime(\'now\')
+        WHERE ChildEntrySeqID = :child');
+    $up->execute([':child' => $childEntrySeqID, ':parent' => $parentEntrySeqID, ':note' => $note]);
+    if ($up->rowCount() === 0) {
+        $ins = $pdo->prepare('INSERT INTO TaskVersionLinks (ChildEntrySeqID, ParentEntrySeqID, LinkNote, UpdatedUTC)
+            VALUES (:child, :parent, :note, datetime(\'now\'))');
+        $ins->execute([':child' => $childEntrySeqID, ':parent' => $parentEntrySeqID, ':note' => $note]);
+    }
+}
+
 try {
     logMessage("--- Script running CreateNewTaskFromDPH ---");
 
@@ -143,6 +207,10 @@ try {
         else {
             logMessage("Updating task...");
         }
+
+        $versionParentEntrySeqID = isset($taskData['VersionParentEntrySeqID']) ? (int) $taskData['VersionParentEntrySeqID'] : 0;
+        $versionLinkNote = isset($taskData['VersionLinkNote']) ? trim((string) $taskData['VersionLinkNote']) : '';
+        $versionLinkError = '';
 
         // Validate that required files are present
         if (!isset($_FILES['file']) || !isset($_FILES['image'])) {
@@ -454,6 +522,18 @@ try {
             ':Availability' => $taskData['Availability']
         ]);
 
+
+        if ($versionParentEntrySeqID > 0) {
+            try {
+                initializeTaskVersionLinksTable($pdo);
+                upsertTaskVersionParent($pdo, (int) $taskData['EntrySeqID'], $versionParentEntrySeqID, $versionLinkNote);
+                logMessage('Task version link set: child #' . (int)$taskData['EntrySeqID'] . ' -> parent #' . $versionParentEntrySeqID);
+            } catch (Throwable $versionLinkException) {
+                $versionLinkError = $versionLinkException->getMessage();
+                logMessage('Unable to set task version link for child #' . (int)$taskData['EntrySeqID'] . ': ' . $versionLinkError);
+            }
+        }
+
         // Call createOrUpdateTaskNewsEntry if Status = 99
         if ($taskData['Status'] === 99) {
             // Add TaskID to $taskData and set it to RealTaskID
@@ -466,7 +546,9 @@ try {
         $output = [
             'status'           => 'success',
             'message'          => 'Task updated successfully.',
-            'discordError'     => isset($discordError) ? $discordError : ''
+            'discordError'     => isset($discordError) ? $discordError : '',
+            'versionLinkError' => $versionLinkError,
+            'versionLinkApplied' => ($versionParentEntrySeqID > 0 && $versionLinkError === '')
         ];
         echo json_encode($output);
         logMessage("Task update successfully completed for TaskID: " . $taskData['RealTaskID']);

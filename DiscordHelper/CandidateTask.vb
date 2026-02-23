@@ -5,6 +5,8 @@ Public Class CandidateTask
     Public Property EntrySeqID As Integer
     Public Property TaskID As String
     Public Property Title As String
+    Public Property LastUpdate As String
+    Public Property OwnerName As String
     Public Property PLNXML As String
     Public Property WPRXML As String
     Public Property SimDateTime As Date?
