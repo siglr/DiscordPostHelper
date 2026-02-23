@@ -6868,46 +6868,25 @@ Public Class Main
                 _pendingVersionLinkNote = note
             Else
                 Dim orderedCandidates = geometryMatches.OrderByDescending(Function(c) ParseCandidateLastUpdate(c.LastUpdate)).ToList()
-                Dim optionsBuilder As New StringBuilder()
-                optionsBuilder.AppendLine("Multiple similar tasks were found.")
-                optionsBuilder.AppendLine("Select the parent task by entering its EntrySeqID:")
-                optionsBuilder.AppendLine()
-                For Each candidate As CandidateTask In orderedCandidates
-                    optionsBuilder.AppendLine($"• {FormatCandidateForDisplay(candidate)}")
-                Next
+                Dim skipVersionLink As Boolean = False
+                Dim selectedParent As CandidateTask = ShowParentTaskSelectionDialog(orderedCandidates, skipVersionLink)
 
-                Dim selectedParentId As Integer = 0
-                While selectedParentId = 0
-                    Dim selectedValue As String = Microsoft.VisualBasic.Interaction.InputBox(optionsBuilder.ToString(), "Select parent task", "")
-                    If String.IsNullOrWhiteSpace(selectedValue) Then
+                If skipVersionLink Then
+                    _pendingVersionParentEntrySeqID = 0
+                    _pendingVersionLinkNote = String.Empty
+                Else
+                    If selectedParent Is Nothing Then
                         Return False
                     End If
 
-                    If Not Integer.TryParse(selectedValue.Trim(), selectedParentId) Then
-                        Using New Centered_MessageBox(Me)
-                            MessageBox.Show("Please enter a valid numeric EntrySeqID.", "Invalid parent task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        End Using
-                        selectedParentId = 0
-                        Continue While
+                    Dim note As String = PromptForVersionLinkNote(selectedParent)
+                    If String.IsNullOrEmpty(note) Then
+                        Return False
                     End If
 
-                    Dim matchExists As Boolean = orderedCandidates.Any(Function(c) c.EntrySeqID = selectedParentId)
-                    If Not matchExists Then
-                        Using New Centered_MessageBox(Me)
-                            MessageBox.Show("The selected EntrySeqID is not in the candidate list.", "Invalid parent task", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        End Using
-                        selectedParentId = 0
-                    End If
-                End While
-
-                Dim selectedParent As CandidateTask = orderedCandidates.First(Function(c) c.EntrySeqID = selectedParentId)
-                Dim note As String = PromptForVersionLinkNote(selectedParent)
-                If String.IsNullOrEmpty(note) Then
-                    Return False
+                    _pendingVersionParentEntrySeqID = selectedParent.EntrySeqID
+                    _pendingVersionLinkNote = note
                 End If
-
-                _pendingVersionParentEntrySeqID = selectedParent.EntrySeqID
-                _pendingVersionLinkNote = note
             End If
         End If
 
@@ -6944,6 +6923,133 @@ Public Class Main
 
         Return result
 
+    End Function
+
+    Private Function ShowParentTaskSelectionDialog(candidates As List(Of CandidateTask), ByRef skipVersionLink As Boolean) As CandidateTask
+        skipVersionLink = False
+
+        If candidates Is Nothing OrElse candidates.Count = 0 Then
+            Return Nothing
+        End If
+
+        Using promptForm As New Form()
+            promptForm.Text = "Select parent task"
+            promptForm.FormBorderStyle = FormBorderStyle.FixedDialog
+            promptForm.MinimizeBox = False
+            promptForm.MaximizeBox = False
+            promptForm.ShowInTaskbar = False
+            promptForm.StartPosition = FormStartPosition.CenterParent
+            promptForm.Font = New Font("Segoe UI Variable Display", 9.818182!)
+            promptForm.ClientSize = New Size(860, 420)
+
+            Dim bodyFont As New Font("Segoe UI Variable Display", 11.12727!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+
+            Dim layout As New TableLayoutPanel() With {
+                .Dock = DockStyle.Fill,
+                .ColumnCount = 1,
+                .Padding = New Padding(12),
+                .AutoSize = False
+            }
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layout.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0!))
+            layout.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+
+            Dim lbl As New Label() With {
+                .AutoSize = True,
+                .MaximumSize = New Size(promptForm.ClientSize.Width - 48, 0),
+                .Dock = DockStyle.Top,
+                .Margin = New Padding(0, 0, 0, 12),
+                .Font = bodyFont,
+                .Text = "Multiple similar tasks were found. Select one parent task to link as the previous version." &
+                        Environment.NewLine &
+                        "If none should be linked, choose 'Publish without version link'."
+            }
+
+            Dim candidateList As New ListBox() With {
+                .Dock = DockStyle.Fill,
+                .Margin = New Padding(0, 0, 0, 12),
+                .Font = bodyFont,
+                .SelectionMode = SelectionMode.One,
+                .HorizontalScrollbar = True
+            }
+
+            For Each candidate As CandidateTask In candidates
+                candidateList.Items.Add(FormatCandidateForDisplay(candidate))
+            Next
+
+            Dim btnLink As New Button() With {
+                .Text = "Link selected",
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .Padding = New Padding(10, 4, 10, 4),
+                .Font = bodyFont,
+                .DialogResult = DialogResult.OK
+            }
+
+            Dim btnNoLink As New Button() With {
+                .Text = "Publish without version link",
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .Padding = New Padding(10, 4, 10, 4),
+                .Font = bodyFont,
+                .DialogResult = DialogResult.No
+            }
+
+            Dim btnCancel As New Button() With {
+                .Text = "Cancel publish",
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .Padding = New Padding(10, 4, 10, 4),
+                .Font = bodyFont,
+                .DialogResult = DialogResult.Cancel
+            }
+
+            Dim buttonFlow As New FlowLayoutPanel() With {
+                .Dock = DockStyle.Fill,
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .FlowDirection = FlowDirection.RightToLeft,
+                .WrapContents = False,
+                .Margin = New Padding(0)
+            }
+            buttonFlow.Controls.Add(btnCancel)
+            buttonFlow.Controls.Add(btnNoLink)
+            buttonFlow.Controls.Add(btnLink)
+
+            promptForm.AcceptButton = btnLink
+            promptForm.CancelButton = btnCancel
+
+            layout.Controls.Add(lbl, 0, 0)
+            layout.Controls.Add(candidateList, 0, 1)
+            layout.Controls.Add(buttonFlow, 0, 2)
+            promptForm.Controls.Add(layout)
+
+            AddHandler btnLink.Click,
+                Sub(sender As Object, e As EventArgs)
+                    If candidateList.SelectedIndex < 0 Then
+                        Using New Centered_MessageBox(promptForm)
+                            MessageBox.Show(promptForm,
+                                            "Please select a parent task before continuing.",
+                                            "Parent task required",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Warning)
+                        End Using
+                        promptForm.DialogResult = DialogResult.None
+                    End If
+                End Sub
+
+            Dim result = promptForm.ShowDialog(Me)
+            If result = DialogResult.No Then
+                skipVersionLink = True
+                Return Nothing
+            End If
+
+            If result <> DialogResult.OK OrElse candidateList.SelectedIndex < 0 Then
+                Return Nothing
+            End If
+
+            Return candidates(candidateList.SelectedIndex)
+        End Using
     End Function
 
     Private Function PromptForVersionLinkNote(selectedParent As CandidateTask) As String
