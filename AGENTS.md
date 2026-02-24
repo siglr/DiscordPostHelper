@@ -147,6 +147,7 @@ CommonLibrary
 * Document the optional MatchIGCToTaskV2 parameter `WSGUserID` and the response field `LastIgcRecordDateTimeUTC` for latest IGC creation timestamps.
 * Document the new `RetrieveGliderMatchRules` API endpoint contract (joined active `GliderMatchRules` + `Gliders`, ordered by `Priority` then `RuleID`) for client-side glider key matching consistency.
 * Document the optional `CreateNewTaskFromDPH` publish-time version-linking fields (`VersionParentEntrySeqID`, `VersionLinkNote`) and response fields (`versionLinkApplied`, `versionLinkError`) for backward-compatible task version linking on final publish.
+* Document the `CreateNewTaskFromDPH` server-side credits-to-designer linkage behavior that populates `Tasks.DesignerWSGUserID` from the credits Discord handle matched against `Users.DesignerName` (prefix before `#`).
 
 ---
 

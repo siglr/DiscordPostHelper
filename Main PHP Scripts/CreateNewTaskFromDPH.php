@@ -65,6 +65,52 @@ function upsertTaskVersionParent(PDO $pdo, int $childEntrySeqID, int $parentEntr
     }
 }
 
+function extractDesignerHandleFromCredits(string $credits): string
+{
+    $credits = trim($credits);
+    if ($credits === '') {
+        return '';
+    }
+
+    if (!preg_match('/All credits to @([A-Za-z0-9._]+)\b/i', $credits, $matches)) {
+        return '';
+    }
+
+    return strtolower(trim($matches[1]));
+}
+
+function resolveDesignerWSGUserID(PDO $pdo, string $credits): ?int
+{
+    $designerHandle = extractDesignerHandleFromCredits($credits);
+    if ($designerHandle === '') {
+        return null;
+    }
+
+    $stmt = $pdo->prepare(
+        "SELECT WSGUserID
+         FROM Users
+         WHERE lower(trim(substr(DesignerName, 1,
+             CASE
+                 WHEN instr(DesignerName, '#') > 0 THEN instr(DesignerName, '#') - 1
+                 ELSE length(DesignerName)
+             END
+         ))) = :DesignerHandle
+         ORDER BY WSGUserID ASC"
+    );
+    $stmt->execute([':DesignerHandle' => $designerHandle]);
+    $matchingUsers = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (count($matchingUsers) === 1) {
+        return (int) $matchingUsers[0];
+    }
+
+    if (count($matchingUsers) > 1) {
+        logMessage('Ambiguous designer match for credits handle @' . $designerHandle . '.');
+    }
+
+    return null;
+}
+
 try {
     logMessage("--- Script running CreateNewTaskFromDPH ---");
 
@@ -297,6 +343,7 @@ try {
         // Prepare WPR secondary fields (backward compatibility for older DPH app)
         $wprSecondaryFilename = array_key_exists('WPRSecondaryFilename', $taskData) ? $taskData['WPRSecondaryFilename'] : null;
         $wprSecondaryName = array_key_exists('WPRSecondaryName', $taskData) ? $taskData['WPRSecondaryName'] : null;
+        $designerWSGUserID = resolveDesignerWSGUserID($pdo, isset($taskData['Credits']) ? (string) $taskData['Credits'] : '');
 
         // Update the database with full task details
         $stmt = $pdo->prepare("
@@ -332,6 +379,7 @@ try {
                 LongDescription = :LongDescription, 
                 WeatherSummary = :WeatherSummary, 
                 Credits = :Credits, 
+                DesignerWSGUserID = :DesignerWSGUserID,
                 Countries = :Countries,
                 RecommendedAddOns = :RecommendedAddOns,
                 RecommendedAddOnsList = :RecommendedAddOnsList, 
@@ -492,6 +540,7 @@ try {
             ':LongDescription' => $taskData['LongDescription'],
             ':WeatherSummary' => $taskData['WeatherSummary'],
             ':Credits' => $taskData['Credits'],
+            ':DesignerWSGUserID' => $designerWSGUserID,
             ':Countries' => $taskData['Countries'],
             ':RecommendedAddOns' => $taskData['RecommendedAddOns'],
             ':RecommendedAddOnsList' => $recommendedAddOnsList,
