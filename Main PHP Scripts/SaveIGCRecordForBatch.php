@@ -225,6 +225,30 @@ function findBestEligiblePerformance(
     return $bestRow;
 }
 
+function resolveMarkedAsDesigner(PDO $pdo, int $entrySeqId, int $wsgUserId): int
+{
+    if ($wsgUserId <= 0) {
+        return 0;
+    }
+
+    $taskStmt = $pdo->prepare(
+        'SELECT DesignerWSGUserID
+         FROM Tasks
+         WHERE EntrySeqID = :EntrySeqID
+         LIMIT 1'
+    );
+    $taskStmt->bindValue(':EntrySeqID', $entrySeqId, PDO::PARAM_INT);
+    $taskStmt->execute();
+    $taskRow = $taskStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$taskRow || !isset($taskRow['DesignerWSGUserID'])) {
+        return 0;
+    }
+
+    $designerUserId = (int) $taskRow['DesignerWSGUserID'];
+    return ($designerUserId > 0 && $designerUserId === $wsgUserId) ? 1 : 0;
+}
+
 // ─────────────────────────────────────────────
 // Main
 // ─────────────────────────────────────────────
@@ -333,6 +357,12 @@ try {
     // Detect matching club/event for this IGC
     $matchedClubEventNewsID = findMatchingClubEvent($pdo, $EntrySeqID, $IGCRecordDateTimeUTC);
 
+    // Mark this IGC as designer when uploader user matches task designer.
+    $markedAsDesigner = resolveMarkedAsDesigner($pdo, $EntrySeqID, $WSGUserID);
+    if ($loggingEnabled && function_exists('logMessage')) {
+        logMessage("IGC designer check: EntrySeqID={$EntrySeqID}, WSGUserID={$WSGUserID}, MarkedAsDesigner={$markedAsDesigner}");
+    }
+
     // DPHX uploads include UsersTasks fields (UT_InfoFetched), while AutoIGCParserBatch uploads do not.
     $igcSource = isset($_POST['UT_InfoFetched']) ? 'DPHX' : 'Batch';
 
@@ -341,12 +371,12 @@ try {
         IGCKey, EntrySeqID, IGCRecordDateTimeUTC, IGCUploadDateTimeUTC,
         LocalTime, BeginTimeUTC, Pilot, GliderType, GliderID, CompetitionID,
         CompetitionClass, NB21Version, Sim, WSGUserID, TaskCompleted, Penalties,
-        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID, IsPrivate, Source
+        Duration, Distance, Speed, IGCValid, TPVersion, LocalDate, Comment, ClubEventNewsID, IsPrivate, Source, MarkedAsDesigner
       ) VALUES (
         :IGCKey, :EntrySeqID, :IGCRecordDateTimeUTC, :IGCUploadDateTimeUTC,
         :LocalTime, :BeginTimeUTC, :Pilot, :GliderType, :GliderID, :CompetitionID,
         :CompetitionClass, :NB21Version, :Sim, :WSGUserID, :TaskCompleted, :Penalties,
-        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID, :IsPrivate, :Source
+        :Duration, :Distance, :Speed, :IGCValid, :TPVersion, :LocalDate, :Comment, :ClubEventNewsID, :IsPrivate, :Source, :MarkedAsDesigner
       )
     ";
     $stmt = $pdo->prepare($insertQ);
@@ -376,7 +406,8 @@ try {
       ':Comment'              => ($IGCUserComment !== '' ? $IGCUserComment : null),
       ':ClubEventNewsID'      => $matchedClubEventNewsID,
       ':IsPrivate'            => $isPrivate,
-      ':Source'               => $igcSource
+      ':Source'               => $igcSource,
+      ':MarkedAsDesigner'     => $markedAsDesigner
     ]);
 
     // ─────────────────────────────────────────
