@@ -25,6 +25,15 @@ function bindNullableString($stmt, string $parameter, $value): void
     }
 }
 
+function normalizeCompetitionClass(string $gliderType, string $competitionClass): string
+{
+    if (strcasecmp(trim($gliderType), 'ASK21-F7') === 0 && strcasecmp(trim($competitionClass), '17m flapped') === 0) {
+        return '17m no flaps';
+    }
+
+    return $competitionClass;
+}
+
 function normalizeUtcDateTime(string $value): ?string
 {
     $value = trim($value);
@@ -285,7 +294,7 @@ try {
     $GliderType           = trim($_POST['GliderType']);
     $GliderID             = trim($_POST['GliderID']);
     $CompetitionID        = trim($_POST['CompetitionID']);
-    $CompetitionClass     = trim($_POST['CompetitionClass']);
+    $CompetitionClass     = normalizeCompetitionClass($GliderType, trim($_POST['CompetitionClass']));
     $NB21Version          = trim($_POST['NB21Version']);
     $Sim                  = trim($_POST['Sim']);
 
