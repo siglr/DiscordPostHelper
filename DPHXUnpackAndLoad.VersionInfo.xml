@@ -1,0 +1,760 @@
+﻿<VersionInfo>
+  <CurrentLatestVersion>26.3.2.1</CurrentLatestVersion>
+  <Releases>
+    <Release>
+      <ReleaseVersion>26.3.2.1</ReleaseVersion>
+      <ReleaseTitle>Fix for new tracker version</ReleaseTitle>
+      <ReleaseNotes>
+        Switched the launch order between tracker and logger
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Fix for IGC Upload and new gliders</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed IGC launch date and time computation
+        Added Blanik L-13 in references for IGC results
+        Redefined gliders keys and easier to update
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.2.15.1</ReleaseVersion>
+      <ReleaseTitle>New options in File menu</ReleaseTitle>
+      <ReleaseNotes>
+        When a "fail" flag is detected on IGC, show message about possible re-analysis
+        Added menu to open a WSG task directly by its ID
+        Added two close menu options to close the active DPHX file
+        Added Exit menu option to quit the tool
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Added an IGC upload reminder
+        Added Increment downloads for a task when joining through the "upcoming event" prompt
+        Updated countdown vocal cues
+        Fixed country flag icons being duplicated over and over when opening Settings
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.23.1</ReleaseVersion>
+      <ReleaseTitle>Second hotfix for layout.json update</ReleaseTitle>
+      <ReleaseNotes>
+        In some cases, the layout.json file was not correctly updated, leading to weather presets not being recognized in MSFS
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.22.2</ReleaseVersion>
+      <ReleaseTitle>Hotfix for Community folder package definition</ReleaseTitle>
+      <ReleaseNotes>
+        The package definition file for the Community Folder package was not correctly defined, causing MSFS to not recognize it as a valid package
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Using a dynamic Community Folder package</ReleaseTitle>
+      <ReleaseNotes>
+        The weather files are now unpacked to a Community Folder package instead of the custom weather presets folder
+        Weather presets are shown with their 0_ prefix to be easily identifiable in MSFS
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.20.1</ReleaseVersion>
+      <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>
+      <ReleaseNotes>
+        Removed Whitelist folder feature in favor of SSC Presets selection and download
+        Added support for dual weather presets
+        Added support for SSC Weather Presets and auto download
+        Added renaming of weather presets so they are easily identifiable in MSFS
+        Changed the event timing messages to be aligned with WSG and Discord and customized per club
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.14.1</ReleaseVersion>
+      <ReleaseTitle>Fix IGC conversion error (decimal symbol)</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the conversion error occuring on IGC upload for users with a decimal symbol different than dot.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.12.11.2</ReleaseVersion>
+      <ReleaseTitle>Fix IGC results extraction</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed results extraction following changes on the task planner side
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.12.11.1</ReleaseVersion>
+      <ReleaseTitle>Better IGC to task matching</ReleaseTitle>
+      <ReleaseNotes>
+        Reinforced the IGC to task matching process to account for task versioning
+        Removed extra columns from the Waypoints tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.27.1</ReleaseVersion>
+      <ReleaseTitle>Export IGC to several formats</ReleaseTitle>
+      <ReleaseNotes>
+        Added IGC to GPX, KML and .fltRec file conversion
+        Prevented invalid avatar download resulting in error and crash in IGC upload
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.21.2</ReleaseVersion>
+      <ReleaseTitle>Strengthened integration with Tracker</ReleaseTitle>
+      <ReleaseNotes>
+        Added a verification of what's been loaded on the Tracker and loop a few times if required
+        Fixed the tracker info showing when it should not on the briefing's Setup tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.20.1</ReleaseVersion>
+      <ReleaseTitle>Full Drag and Drop and Manual Loading Mode</ReleaseTitle>
+      <ReleaseNotes>
+        Individual and manual file loading fall back mode
+        Support dragging files directly on the main form
+        Support dragging PLN and WPR links from Discord
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.16.1</ReleaseVersion>
+      <ReleaseTitle>Install all tools from DPHX Settings</ReleaseTitle>
+      <ReleaseNotes>
+        Automated the download and installation of the logger and tracker
+        At startup, now retrieving the upcoming events and asking to join
+        Delayed WSG opening (if enabled) when asking to join upcoming event or already executing download from WSG
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.10.1</ReleaseVersion>
+      <ReleaseTitle>Easier first-time setup</ReleaseTitle>
+      <ReleaseNotes>
+        Improved first-time experience by creating default folders and providing a batch file to run the first time
+        Added a "Copy file" button to the IGC screen to facilitate pasting on Discord when needed
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.3.2</ReleaseVersion>
+      <ReleaseTitle>Transition to 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Moved all code to 64 bits to allow future enhancements
+        Changed the order of unpack operations to (possibly) avoid overwritten files
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.10.15.1</ReleaseVersion>
+      <ReleaseTitle>IGC upload enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a reminder to fill out ratings/comments when posting an IGC file
+        Replaced the recorded datetime of an IGC file with the takeoff time for a better and more reliable time.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.10.6.1</ReleaseVersion>
+      <ReleaseTitle>Whitelist enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Made sure to always copy from whitelist when different and also bypass any read-only flag and put it back
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.24.1</ReleaseVersion>
+      <ReleaseTitle>Small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Sorted the list of IGC files from the most recent on top to the oldest at the bottom
+        Fixed warning for weather file even if they are the same
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.16.1</ReleaseVersion>
+      <ReleaseTitle>Whitelist folder</ReleaseTitle>
+      <ReleaseNotes>
+        Improved file comparison to avoid unnecessary overwrites
+        Added a "whitelist" folder of files to never overwrite or delete (like weather presets)
+        Included the SSC weather presets in the whitelist by default
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.5.1</ReleaseVersion>
+      <ReleaseTitle>Comments and ratings on IGC upload</ReleaseTitle>
+      <ReleaseNotes>
+        Added comments and task ratings on IGC upload screen
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.3.1</ReleaseVersion>
+      <ReleaseTitle>Hotfix for new task planner version</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the IGC Upload to work with the newest task planner version
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.2.1</ReleaseVersion>
+      <ReleaseTitle>File for EFB and cleanup enhancement</ReleaseTitle>
+      <ReleaseNotes>
+        Added option to create EFB compatible (simplified) PLN file to load in MSFS 2024
+        Added dialog box to select/confirm cleanup choices
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.8.26.3</ReleaseVersion>
+      <ReleaseTitle>Hotfix #2 for DPHX not opening from WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the DPHX file not opening when main tool is not running
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.8.26.2</ReleaseVersion>
+      <ReleaseTitle>Hotfix for small issues in the last version</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the penalties icon when no visible penalties detected
+        Moved buttons on the IGC Upload screen to match a normal upload workflow
+        Solving the auto-update problem
+        Added check if listener is running after launch of DPHX - if not, ask user to run it manually for Smart Screen
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.8.24.1</ReleaseVersion>
+      <ReleaseTitle>Major redesign of the tool</ReleaseTitle>
+      <ReleaseNotes>
+        Made the tool lighter and more integrated directly with WeSimGlide.org
+        New scaling and resizing behavior
+        New section with most important setup information at a glance
+        IGC file upload to WeSimGlide.org
+        Added listener tool always running in background
+        Lots of other small fixes and improvements
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.5.22.1</ReleaseVersion>
+      <ReleaseTitle>Better weather file compatibility</ReleaseTitle>
+      <ReleaseNotes>
+        Auto fix the weather file at load for better compatibility with MSFS 2020 and 2024
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.3.3.1</ReleaseVersion>
+      <ReleaseTitle>Sync with the DPH tool and small bug fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Updated default tasks database with latest tasks.
+        Fixed TaskLibrary not fetching updated tasks in some context.
+        Adjusted handling of the task's post ID on Discord.
+        Fixes here and there.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.17.1</ReleaseVersion>
+      <ReleaseTitle>Sync with the DPH tool and small bug fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a bug with an invalid task ID being retrieved.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.11.1</ReleaseVersion>
+      <ReleaseTitle>Sync with the DPH tool for delayed availability feature</ReleaseTitle>
+      <ReleaseNotes>
+        Nothing special but supporting delayed availability messages.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.7.1</ReleaseVersion>
+      <ReleaseTitle>Quick fix for nasty bug</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a bug occuring with a rogue invalid task entry.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.3.3</ReleaseVersion>
+      <ReleaseTitle>Fixed Cleanup Tool with MSFS 2024</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the file cleanup tool which didn't work with MSFS 2024 folders.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.18.1</ReleaseVersion>
+      <ReleaseTitle>Tracker integration</ReleaseTitle>
+      <ReleaseNotes>
+        Added support to start and set SSC-Tracker directly from the tool.
+        Improved unpacking log messages.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.11.1</ReleaseVersion>
+      <ReleaseTitle>More WeSimGlide.org integration</ReleaseTitle>
+      <ReleaseNotes>
+        Added a local web server to the tool to be able to receive a command from WeSimGlide.org to download a DPHX file.
+        Fixed some display problem for the news bar to the right.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.4.2</ReleaseVersion>
+      <ReleaseTitle>Auto start and feed NB21 Logger with PLN file</ReleaseTitle>
+      <ReleaseNotes>
+        Added settings for the NB21 auto start and PLN feed.
+        Added code to start and feed NB21 with the PLN file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.12.18.1</ReleaseVersion>
+      <ReleaseTitle>Full support for both MSFS 2020 and 2024 on the same installation</ReleaseTitle>
+      <ReleaseNotes>
+        Added MSFS folder detection based on 2020, 2024, Steam or Microsoft Store version.
+        Added folders selection to unpack to both 2020 and 2024.
+        Adjusted File Browser (cleaner) to support 2024.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.12.14.1</ReleaseVersion>
+      <ReleaseTitle>Just a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Prevented multiple group event prompt occuring one over the other.
+        Attempt to fix an error of a news entry not being in the dictionary.
+        Added a check in the settings for Packages and Unpack folders not to be the same.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.10.27.2</ReleaseVersion>
+      <ReleaseTitle>Removed extra spaces in briefing</ReleaseTitle>
+      <ReleaseNotes>
+        Removed extra blank spaces from the event's briefing text.
+        Fixed a few typos.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.10.10.1</ReleaseVersion>
+      <ReleaseTitle>Detect group event starting soon</ReleaseTitle>
+      <ReleaseNotes>
+        When inside 2 hours of a group event, check task availability and ask to download and open DPHX file.
+        Added contextual menu to task and event news panels to either go to the task library, download, open and unpack the task for that event, and go to the event's URL.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.22.1</ReleaseVersion>
+      <ReleaseTitle>Support new AAT minimum time</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for new AAT minimum time specs in the PLN file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.9.1</ReleaseVersion>
+      <ReleaseTitle>Repost info and several improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added last update date and explanation in the task browser.
+        Added repost information when available.
+        Added link to the event title when available.
+        Fixed the ($*$) symbol with a line feed in the news panel.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.3.1</ReleaseVersion>
+      <ReleaseTitle>World Map view of the tasks library</ReleaseTitle>
+      <ReleaseNotes>
+        Added integration with WeSimGlide.org and world map view of all tasks in the library.
+        Added a button to copy the link to the selected task on WeSimGlide.org.
+        Added support for double-clicking on "Flown" or "ToFly" on the grid to mark the task as flown or as to fly.
+        Fixed a few minor bugs.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.6.11.1</ReleaseVersion>
+      <ReleaseTitle>Better formatting of text and news tab</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for most of the Discord markdown formatting in the rich text controls on all the briefing tabs and library browser.
+        Improved: Display the yellow tab on the news panel only when new or updated news are available - not for removal.
+        Improved: Reviewed the news format a bit, event date is now clearer vs published date.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.6.4.1</ReleaseVersion>
+      <ReleaseTitle>Tasks - Your ratings (local only)</ReleaseTitle>
+      <ReleaseNotes>
+        Added number of tasks shown in the grid (after filtering).
+        Added a "Your data" section for each task, to rate, tag and comment a task.
+        Fixed the retrieval of news happening too frequently when MSFS not running.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.6.3.4</ReleaseVersion>
+      <ReleaseTitle>Task Library Browser - day 1 fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed: do not open the task library when clicking on a event news for which the task has not been added yet.
+        Fixed: zoom level bug when out of range (first opening after update).
+        Modified Updater to skip database file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.6.3.2</ReleaseVersion>
+      <ReleaseTitle>Task Library Browser</ReleaseTitle>
+      <ReleaseNotes>
+        Added Task Library Browser screen.
+        Added News panel on the main screen.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.4.15.2</ReleaseVersion>
+      <ReleaseTitle>Small fix</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a possible disappearance of the main window when closed while minimized.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.3.3.3</ReleaseVersion>
+      <ReleaseTitle>New cleaner tool</ReleaseTitle>
+      <ReleaseNotes>
+        Added cleaner tool screen to browse the various files by category and be able to delete them.
+        Added possibility to clear out optional setting.
+        Fixed possible error when a path in the settings does not exist anymore.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.2.12.1</ReleaseVersion>
+      <ReleaseTitle>Support for AAT</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for displaying AAT waypoints.
+        Added event title and description on the Event Info tab if different than the task.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Improved weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's look, while providing more information visually.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.1.8.1</ReleaseVersion>
+      <ReleaseTitle>Unicode symbols fix and better weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's labeling to allow for both units to be displayed together.
+        Fixed a problem with special unicode characters not displaying correctly on some Windows configuration.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.29.1</ReleaseVersion>
+      <ReleaseTitle>Weather details improvement</ReleaseTitle>
+      <ReleaseNotes>
+        Added lightning indicator to the weather details on the briefing tab as 0 to 100%.
+        Added snow cover to the weather details on the briefing tab.
+        Fixed error on weather graph when wind or cloud altitude exactly at 60k feet.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.21.1</ReleaseVersion>
+      <ReleaseTitle>Support for IGC files</ReleaseTitle>
+      <ReleaseNotes>
+        New NB21 Logger folder in Settings.
+        Launching the B21 Online Task Planner now also loads any IGC files for the currently opened flight plan.
+        A few fixes for the Settings form.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.12.1</ReleaseVersion>
+      <ReleaseTitle>Small bug fixes</ReleaseTitle>
+      <ReleaseNotes>
+        A few small bug (annoyances) fixes
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.6.2</ReleaseVersion>
+      <ReleaseTitle>Fixed difficulty ratings</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the "Experimented" difficulty rating to "Experienced" like in the DPH tool.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.11.14.1</ReleaseVersion>
+      <ReleaseTitle>Staying in sync with DPH Tool</ReleaseTitle>
+      <ReleaseNotes>
+        Just some adjustments to stay in sync with the changes in the DPH Tool.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.11.5.1</ReleaseVersion>
+      <ReleaseTitle>Gradient legends on graphical display</ReleaseTitle>
+      <ReleaseNotes>
+        Added gradient legend for both wind and cloud graphical display.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.30.2</ReleaseVersion>
+      <ReleaseTitle>Graphical Weather View</ReleaseTitle>
+      <ReleaseNotes>
+        Added graphical display option for wind and cloud layers on the Weather tab under Briefing.
+        Fixed Briefing Units not being saved.
+        Several smaller bug fixes.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.27.1</ReleaseVersion>
+      <ReleaseTitle>Fix to toolbar and new file status icons</ReleaseTitle>
+      <ReleaseNotes>
+        Added status icons to indicate files status.
+        Fixed the toolbar buttons not working when window is not the active one.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.24.4</ReleaseVersion>
+      <ReleaseTitle>New toolbar, new links, new settings!</ReleaseTitle>
+      <ReleaseNotes>
+        Added .XCM file type (XCSoar maps) and treatment.
+        Moved DPHX buttons to toolbar, added similar buttons for Discord and Task Library, removed non essential fields to make more room.
+        Added settings to exclude each file type from cleanup to keep the file at its location.
+        Added more details on which files are missing and which ones are unpacked correctly.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.21.2</ReleaseVersion>
+      <ReleaseTitle>Dynamic soaring and much more...</ReleaseTitle>
+      <ReleaseNotes>
+        Added Dynamic as soaring type.
+        Moving towards a new Soaring Task Browser app, made several changes to accommodate that in relation to proper identification of a task.
+        Several small bug fixes along the way.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.17.3</ReleaseVersion>
+      <ReleaseTitle>Bring me button fix and Invite links</ReleaseTitle>
+      <ReleaseNotes>
+        Disabled the "Bring me..." button when no file is currently loaded
+        Added Invite link/button to Discord server.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.5.2</ReleaseVersion>
+      <ReleaseTitle>Remove the watch symbol and sync with DPH tool</ReleaseTitle>
+      <ReleaseNotes>
+        Removed the invalid watch symbol from the empty Main Task Info in the Briefing control.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.3.1</ReleaseVersion>
+      <ReleaseTitle>Gate Diameter or Radius</ReleaseTitle>
+      <ReleaseNotes>
+        Added a new option to display gate sizes as Diameter or Radius.
+        Fixed the caption and status bar not displaying the current filename.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.29.1</ReleaseVersion>
+      <ReleaseTitle>Smarter and smarter</ReleaseTitle>
+      <ReleaseNotes>
+        Remember the last loaded DPHX file between sessions.
+        Added the ability to detect if all the files are already in their destinations to highlight or not "Unpack" and display a status message.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.27.1</ReleaseVersion>
+      <ReleaseTitle>Small release to stay in-sync with DPH Tool</ReleaseTitle>
+      <ReleaseNotes>
+        When clicking the button to open the task's thread, try to open on Discord app directly then fall back to browser if it didn't work.
+        Fixed duration text when no min or max specified or only one of them or both are the same.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.19.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Opening B21 Task Planner now passes both the PLN and WPR files if they're both present.
+        Added button to bring you in the right Discord thread to post a task result, screenshot, track file, etc.
+        When barometric pressure is not standard, added a warning symbol to remind people to press "B" or manually adjust it in their glider.
+        Added more support for Discord's markdown codes and improved the briefing's text content.
+        Removed the “No Gust” info when no gust is present.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.28.1</ReleaseVersion>
+      <ReleaseTitle>Cleanup, resync, rename club</ReleaseTitle>
+      <ReleaseNotes>
+        Renamed club "GG-💎" to "💎 Tuesday" and added "💎 Sunday" (both EDT and EST).
+        Clean up of the clubs and resync all libraries.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.21.1</ReleaseVersion>
+      <ReleaseTitle>Test audio button and added main area/POI</ReleaseTitle>
+      <ReleaseNotes>
+        Added "Test" button to test output volume of audio cues.
+        Added the main area / POI to the task description on the briefing.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.17.3</ReleaseVersion>
+      <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds audio cues for all countdowns on the briefing's event tab, allowing to hear the countdowns without having to look at the tool's window.
+        It is also possible to adjust the output volume of these audio cues.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.15.1</ReleaseVersion>
+      <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds the MSFS local times in relation to the event times (sync, launch, start) to the briefing's event info.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.29.1</ReleaseVersion>
+      <ReleaseTitle>Change to the auto-update process</ReleaseTitle>
+      <ReleaseNotes>
+        The auto-update program is now a Windows form with better formatting.
+        Also, the updater now displays all release notes between user's version and newest version available.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.6.2</ReleaseVersion>
+      <ReleaseTitle>Version info files now on GitHub</ReleaseTitle>
+      <ReleaseNotes>
+        The location of XML files containing version information has been changed to be directly on GitHub, improving the release pipeline and workflow.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.6.1</ReleaseVersion>
+      <ReleaseTitle>Fixed error when impossible to check for latest version</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug for some people that cannot reach the server to check for latest version.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.4.2</ReleaseVersion>
+      <ReleaseTitle>Fixed briefing altitudes (wrong units)</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug on the briefing tab that was displaying altitudes with the wrong units
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.26.1</ReleaseVersion>
+      <ReleaseTitle>Short description and small fixes</ReleaseTitle>
+      <ReleaseNotes>
+        This release includes:
+        - Added short description to briefing, between task title and credits
+        - Fixed wrong ICAO codes in the waypoints grid on the briefing page and support more than two ICAO in the waypoints
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.24.1</ReleaseVersion>
+      <ReleaseTitle>More briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release includes:
+        - New Weather tab on briefing to display wind and cloud layers in grid formats like waypoints
+        - Allow only one instance of the program to run at a time
+        - Fixed event info and add-ons info not reloading properly in the briefing when going in and out of the Units tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.22.1</ReleaseVersion>
+      <ReleaseTitle>Briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release mostly features improvements to the briefing tab.
+        - Added mouse drag support on map and other images
+        - Added country flag support in the briefing viewer
+        - Added button to open the B21 Online Task Planer with the current flight plan
+        - Added global exception handling (in case of crashes)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.19.1</ReleaseVersion>
+      <ReleaseTitle>Preferred units to display most data</ReleaseTitle>
+      <ReleaseNotes>
+        Most important feature added with this release is the support for preferred display units on the Briefing page.
+        But this release also includes:
+        - Inclusion of meters per second for wind speeds
+        - Downgrade of the .Net requirements to 4.8 which should make the tool run on more Windows versions
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.18.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for bug on extra files introduced by previous version</ReleaseTitle>
+      <ReleaseNotes>
+        This is a quick fix for a bug related to the storage of extra files.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.17.1</ReleaseVersion>
+      <ReleaseTitle>New Add-ons tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release focuses on the addition of the Add-ons tab to list recommendeded add-ons. Double-click the URL to open it.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.16.1</ReleaseVersion>
+      <ReleaseTitle>Fix Flight Plan folder not working in Settings</ReleaseTitle>
+      <ReleaseNotes>
+        When trying to set the flight plan folder in Settings, it would change the default DPHX Packages instead.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.11.1</ReleaseVersion>
+      <ReleaseTitle>New compass roses for each wind layer</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is the addition of graphical compass roses with wind indication for each layer.
+        It also contains a fix to properly clear up the images being used by the tool when reloading a file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.8.1</ReleaseVersion>
+      <ReleaseTitle>Adjustments related to the event now being optional</ReleaseTitle>
+      <ReleaseNotes>
+        This release contains no visible changes or fixes, but small adjustments were needed due to the event now being optional in the DPH file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.4.1</ReleaseVersion>
+      <ReleaseTitle>Revamped Briefing Event Info with Countdowns</ReleaseTitle>
+      <ReleaseNotes>
+        The Event Info section of the Briefing tab now contains several countdown fields to the various event timings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Event Information now displayed</ReleaseTitle>
+      <ReleaseNotes>
+        The Event Info tab now displays event information
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.1.2</ReleaseVersion>
+      <ReleaseTitle>Bunch of fixes related to regional number formats</ReleaseTitle>
+      <ReleaseNotes>
+        This release focuses only on problems that were related to different number formatting based on regional settings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.1.1</ReleaseVersion>
+      <ReleaseTitle>Check minimum requirement and new waypoint columns</ReleaseTitle>
+      <ReleaseNotes>
+        Check minimum .NET Framework requirement during startup
+        Add several new waypoint distances columns with drop down list (briefing tab, waypoints)
+        Add possiblity to show/hide the latitude and longitude columns (briefing tab, waypoints)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Lots of new stuff and bux fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added XCSoar .tsk files support
+        Added task credits under the task title
+        Added support for displaying other images included in package
+        Added support for right-click on paths in the settings page to open up the actual folder in Windows Explorer
+        Added cleanup of temporary folder at start and close
+        Fix for files not loading from the right folder
+        Lots of bug fixes around loading different dphx packages in the same session
+        Fix conversions to integer or not doing proper round up/down
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.27.2</ReleaseVersion>
+      <ReleaseTitle>Testing the auto-update</ReleaseTitle>
+      <ReleaseNotes>
+        This release is only to test the auto-update feature.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.27.1</ReleaseVersion>
+      <ReleaseTitle>First BETA Release</ReleaseTitle>
+      <ReleaseNotes>
+        Open BETA Release.
+        Contains minimum features for real testing purposes.
+      </ReleaseNotes>
+    </Release>
+  </Releases>
+</VersionInfo>

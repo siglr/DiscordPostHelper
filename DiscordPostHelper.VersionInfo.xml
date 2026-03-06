@@ -1,0 +1,1070 @@
+﻿<VersionInfo>
+  <CurrentLatestVersion>26.3.2.1</CurrentLatestVersion>
+  <Releases>
+    <Release>
+      <ReleaseVersion>26.3.2.1</ReleaseVersion>
+      <ReleaseTitle>Link versions on duplicate detection</ReleaseTitle>
+      <ReleaseNotes>
+        When a similar task is detected, will now ask to link with new one
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.2.20.1</ReleaseVersion>
+      <ReleaseTitle>New Blanik glider in list</ReleaseTitle>
+      <ReleaseNotes>
+        Added new Blanik L-13 glider in dropdown list for recommended gliders
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.2.11.1</ReleaseVersion>
+      <ReleaseTitle>Altitude restrictions checks</ReleaseTitle>
+      <ReleaseNotes>
+        Added warning if no max alt restriction on Start waypoint
+        Added warning when max or min restriction (of any waypoint) is below ground 
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Enhanced links visuals and efficiency plus fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Enhanced the link to the files for better visuals and clarity
+        Changed the download links of files to the new more efficient endpoint on the server
+        Fixed error (crash) when no secondary custom weather preset selected
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>26.1.20.1</ReleaseVersion>
+      <ReleaseTitle>SSC Presets and Custom Event Messages</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for dual weather presets
+        Added support for SSC Weather Presets and auto download
+        Added support for custom event messages per club
+        Added support for drag and drop of Discord file links and images
+        Updated extra files limit to 10 excluding map and cover image
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.12.11.1</ReleaseVersion>
+      <ReleaseTitle>Better task duplicate detection and handling</ReleaseTitle>
+      <ReleaseNotes>
+        Added sim local date/time as possible change for new task version
+        Added trimming file names for blank spaces that were causing havoc
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.21.2</ReleaseVersion>
+      <ReleaseTitle>Staying in sync with DPHX tool</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the tracker info showing when it should not on the briefing's Setup tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.20.1</ReleaseVersion>
+      <ReleaseTitle>Very small update</ReleaseTitle>
+      <ReleaseNotes>
+        Moved "Discard" button on the toolbar to be closer to "Save" when visible
+        "This is a refly" only considered when "Delayed Availability" is checked
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.10.1</ReleaseVersion>
+      <ReleaseTitle>Small but significant new stuff</ReleaseTitle>
+      <ReleaseNotes>
+        Enabled task deletion rights
+        Prevented tasks from being published when the weather file is missing
+        Added the possibility to get the group event posts in French (limited, will not translate user provided text)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.11.3.2</ReleaseVersion>
+      <ReleaseTitle>Transition to 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Moved all code to 64 bits to allow future enhancements
+        For SSC posts, changed the IGC upload message
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.10.28.1</ReleaseVersion>
+      <ReleaseTitle>Fix for very specific situation (old Discord version)</ReleaseTitle>
+      <ReleaseNotes>
+        Added discordapp.com to possible links
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.10.15.1</ReleaseVersion>
+      <ReleaseTitle>Fixed Test posting</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the Test Mode postings
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.10.6.1</ReleaseVersion>
+      <ReleaseTitle>Message added while uploading to WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Added message displaying that it is pushing the task to WSG
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.24.1</ReleaseVersion>
+      <ReleaseTitle>Another set of small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Removed the UTC/ZULU checkbox on the event tab
+        Put up a warning when a leaderboard exists for a task before updating it
+        Added a "clone" feature
+        Fixed: the DPHX file was not updated on WSG when posting only the event
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.16.1</ReleaseVersion>
+      <ReleaseTitle>Several small enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Made UTC checkbox readonly when selecting a club on the event tab
+        Protected WSG published tasks when using Test Mode
+        Attempt to fix the WSG emoji not showing in some situations on other Discords
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.9.12.1</ReleaseVersion>
+      <ReleaseTitle>Events History</ReleaseTitle>
+      <ReleaseNotes>
+        Added possibility to create past events (only to create an entry in the new TaskEvents table)
+        Added listbox to display events featuring the current task
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.8.27.1</ReleaseVersion>
+      <ReleaseTitle>Country and duplicate task detection</ReleaseTitle>
+      <ReleaseNotes>
+        Replaced the automatic country detection by a button to click
+        Added checks to detect if a very similar task already exists on WSG
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.8.24.1</ReleaseVersion>
+      <ReleaseTitle>Small fixes and keeping sync with new DPHX</ReleaseTitle>
+      <ReleaseNotes>
+        Added validation of altitudes inside a WPR file to fix invalid entries
+        Adjusted the Event Logistics post to replace the "when it is ... in your own local time" with a more simple "adjust if you join early/late"
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.5.22.1</ReleaseVersion>
+      <ReleaseTitle>Better weather file compatibility</ReleaseTitle>
+      <ReleaseNotes>
+        Auto fix the weather file at load for better compatibility with MSFS 2020 and 2024
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Better soaring club management</ReleaseTitle>
+      <ReleaseNotes>
+        Retrieve each "For beginners" guide through the WSG server
+        Added the UKVGA guide for beginners
+        Verify if a user has the right to create a group event for a specific club
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.4.24.1</ReleaseVersion>
+      <ReleaseTitle>Split Sync Title into two</ReleaseTitle>
+      <ReleaseNotes>
+        Split the "Sync Title" function into two buttons, one for the PLN, one for the WPR.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.4.2.1</ReleaseVersion>
+      <ReleaseTitle>Small improvements and fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Provide event and task links for both WSG and Discord.
+        Add a version to the URL for the cover image to clear cache when modified.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.3.12.1</ReleaseVersion>
+      <ReleaseTitle>Altitude Restrictions are back in group posting options</ReleaseTitle>
+      <ReleaseNotes>
+        Added altitude restrictions back to group posting options.
+        Added weather summary to task full details.
+        Rearranged posting workflow a bit to encapsulate logistics on its own.
+        Adjusted wizard and group posting layout.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.3.7.1</ReleaseVersion>
+      <ReleaseTitle>Small update for various fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Prevented use of Azure APIs if in test mode.
+        Changed the text of unavailable links yet again.
+        The "Set" button on Discord Post ID should not be enabled if you are not a publisher or in the shared publishers (if you can't update the task, you can't update the task's Discord ID).
+        Changed the delete task button to be only available if user has rights AND is task owner or shared publisher, AND ask 2 confirmations for safety.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.3.3.1</ReleaseVersion>
+      <ReleaseTitle>Automatic posting to Discord Flights channel</ReleaseTitle>
+      <ReleaseNotes>
+        Transferred the Discord task posting from the app to WSG (on task creation or update).
+        Transferred the posting to wsg-announcements from the app to WSG (on event creation, update or delete).
+        When provided, added cover image (max 1920x1080) when publishing task.
+        Renamed the repost checkbox and made the group event URL read-only (use paste button if needed).
+        Made sure to hide filenames in Discord post when using delayed availability.
+        Added the map image back to the posting popup.
+        Fixed the title of the form that waits for the URL from Discord.
+        Fixed the options Reminder checkbox not saving its state on closing the app.
+        Layout adjustments, wizard adjustments, small fixes here and there too.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.22.1</ReleaseVersion>
+      <ReleaseTitle>Previous and Next week selection</ReleaseTitle>
+      <ReleaseNotes>
+        Added "next" and "previous" week buttons for meet/brief. date selection.
+        Fixed a silly error with summer time.
+        Fixed: club preset not being set during file loading.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Auto summer time detection</ReleaseTitle>
+      <ReleaseNotes>
+        Soaring clubs now have a default time zone and based on the date, the correct time (and day) is selected in consideration with summer time too.
+        Moved XML files to the server to make updating easier.
+        New ability to set default shared designers per soaring club.
+        Fixed the open from WSG popup window sizing problem.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.17.1</ReleaseVersion>
+      <ReleaseTitle>Small update with a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added wait cursors and fixed a bug with an invalid task ID being retrieved.
+        Fixed some posting options not being available for the event when not being the publisher.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.15.1</ReleaseVersion>
+      <ReleaseTitle>Open from WSG and remembering location</ReleaseTitle>
+      <ReleaseNotes>
+        Added a way to open the task by downloading it directly from WSG by specifying the task ID.
+        The app now saves and reuses the last folder used when loading or saving a file.
+        Fixed a bug with an invalid date/time format being passed to the server when creating the event news.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.11.1</ReleaseVersion>
+      <ReleaseTitle>New Delayed Availability feature!</ReleaseTitle>
+      <ReleaseNotes>
+        Added a feature to make the files and details available only at a date and time specified by the task designer.
+        Fix - added a check to prevent both a temporary Discord ID and the real Discord ID to exist at the same time.
+        Revisited layout of Copy/Paste messages to more clearly identify WHAT and where we are posting.
+        Added an option to be reminded about post options before starting a workflow.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.3.1</ReleaseVersion>
+      <ReleaseTitle>Important fix post previous release</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed detection of Discord channel when in test mode.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.2.2.1</ReleaseVersion>
+      <ReleaseTitle>New testing mode!</ReleaseTitle>
+      <ReleaseNotes>
+        Added a testing mode where new users and publishers can test their Discord posts without messing with official channels and WeSimGlide.org.
+        Added a few clarifications on the WSG and Discord tab.
+        Fixed combined group event and task workflow.
+        A few other fixes here and there.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.28.4</ReleaseVersion>
+      <ReleaseTitle>Small fix post previous release</ReleaseTitle>
+      <ReleaseNotes>
+        Disabled the whole WSG-Discord tab when user is unidentified.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.28.1</ReleaseVersion>
+      <ReleaseTitle>Biggest release since first launch!</ReleaseTitle>
+      <ReleaseNotes>
+        Major shift to make WeSimGlide.org the primary source of data.
+        Completely redesigned task and group event posts format on Discord.
+        Redesigned WSG-Discord tab layout.
+        New publisher and sharing management.
+        New "Take me there" button when posting to navigate quickly to the correct Discord channel.
+        Less steps in the posting workflows.
+        Known clubs can now "force enable" the event time checkboxes.
+        Lots of fixes here and there.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.15.1</ReleaseVersion>
+      <ReleaseTitle>More group event stuff sent to WeSimGlide.org</ReleaseTitle>
+      <ReleaseNotes>
+        Included all group event details when publishing the event news.
+        A few small fixes here and there.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.11.1</ReleaseVersion>
+      <ReleaseTitle>More stuff sent to WeSimGlide.org</ReleaseTitle>
+      <ReleaseNotes>
+        Included recommended add-ons when publishing to WeSimGlide.org.
+        Added extra files list when publishing to WeSimGlide.org to offer these files as download.
+        Fixed the "Publish News" code to only include the "TasksBrowser" role when the actual task has been published.
+        A few small fixes here and there.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>25.1.4.2</ReleaseVersion>
+      <ReleaseTitle>Small fixes for visibility</ReleaseTitle>
+      <ReleaseNotes>
+        Added check to restore visibility when app has been closed while minimized or on some other screen.
+        Renamed the Discord tab and adjusted tab size.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.12.14.1</ReleaseVersion>
+      <ReleaseTitle>Just a few fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check to validate the URL when adding or editing an add-on.
+        Renamed the "Task Browser" section on the Discord tab to "WeSimGlide.org".
+        Switched to Azure Maps service for country retrieval.
+        Updated countries and how to get them correctly using ISO3166 Alpha-3 codes.
+        Fixed several typos.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.10.27.2</ReleaseVersion>
+      <ReleaseTitle>More emojies on Discord posts</ReleaseTitle>
+      <ReleaseNotes>
+        Added usage of new club emojies when posting to Discord.
+        Removed extra blank spaces from the event's briefing text.
+        Fixed a bug where the full workflow for task and event button is available when there is no group event.
+        Fixed a few typos.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.10.10.1</ReleaseVersion>
+      <ReleaseTitle>WSG Integration and more!</ReleaseTitle>
+      <ReleaseNotes>
+        Once a task is posted to WSG, prepare the new WeSimGlide.org section with task URL to be added to the task's thread.
+        Once event news is pushed to WSG, prepare the post content to be published on the wsg-announcements channel.
+        Added a list to the "Credits" field for shortcuts to known task designers.
+        Added new gliders and adjusted some time info for SSC events.
+        Added SSC-Tracker group name to the group event to get it published to WSG.
+        Added default SSC-Tracker group name in the KnownSoaringClubs XML file and auto fill the field at club selection.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.22.1</ReleaseVersion>
+      <ReleaseTitle>Support new AAT specs in PLN</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for new AAT minimum time specs in the PLN file.
+        Fixed the weather chart's bottom part information (temperature and barometric pressure) creation.
+        Added sending the weather chart when publishing to WeSimGlide.org.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.9.1</ReleaseVersion>
+      <ReleaseTitle>Task original source and some small improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a field to provide URL and date of original task source.
+        Added “update” explanation when updating task online.
+        Added asking user if they want to reset first when loading a different file plan.
+        Fixed the Ctrl-Backspace behavior and also better trimming of text and combobox fields.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.7.3.1</ReleaseVersion>
+      <ReleaseTitle>Small fix and sync with WeSimGlide.org</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed countries with a comma in the name. Caused troubles with the task browser.
+        Staying in sync with DPHX and the new WeSimGlide.org feature.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.6.11.1</ReleaseVersion>
+      <ReleaseTitle>Publishing to the task browser</ReleaseTitle>
+      <ReleaseNotes>
+        Added features for publishing the DPHX file and task to the online server for the task browser.
+        Added support for most of the Discord markdown formatting in the rich text controls on the briefing tab.
+        Fix: Made sure to trim all text fields - many blank spaces detected in the database.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.5.7.3</ReleaseVersion>
+      <ReleaseTitle>Support for Discord 64 bits</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for interaction with Discord 64 bits.
+        Implemented the Ctrl-Backspace feature on all text fields (text fields only and Ctrl-Z doesn't work with it).
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Group Event posts format revisited</ReleaseTitle>
+      <ReleaseNotes>
+        Updated the group event post format and order to align with most popular format.
+        Added a feature to save and recall a task description template.
+        Added a feature to save and recall a group event description template.
+        Removed duplication of information
+        Added actual flight plan filename, weather filename and profile name to the files legend post
+        Fixed the logic between With and Without Legend.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.4.15.2</ReleaseVersion>
+      <ReleaseTitle>Redesigned Discord posting workflow</ReleaseTitle>
+      <ReleaseNotes>
+        Redesign of the Discord tab for better workflow, more options and enforcing the posting to Task Library first.
+        Unlinked task short description from event description.
+        Added AUSGLIDE summer time known soaring club config.
+        Added BST (British Summer Time) to the UKVGA group event entries.
+        Fixed the header type for the task thread anchor.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.2.24.1</ReleaseVersion>
+      <ReleaseTitle>Various small fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added an indicator for AAT waypoint on the Discord post for All Waypoints.
+        Adjusted the text for the group event link to include the club name and event title.
+        Added the possibility of including only the DPHX file when posting the event details.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.2.12.1</ReleaseVersion>
+      <ReleaseTitle>Support for AAT and custom clubs</ReleaseTitle>
+      <ReleaseNotes>
+        Read AAT information from waypoints in flight plan.
+        Added more predefined options in the recommended gliders.
+        Assigned UKVGA club back on to West Europe server.
+        Added "CUSTOM" soaring club to allow customized event club name.
+        Updated the way the club name is built for Discord and DPHX format.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.1.22.1</ReleaseVersion>
+      <ReleaseTitle>Improved weather chart</ReleaseTitle>
+      <ReleaseNotes>
+        Improved the weather chart's look, while providing more information visually.
+        Added "Sync" button to harmonize flight plan title, filename, weather profile and filename with the task title.
+        Added retrieval of the link to the first post in the task's thread to use when redirecting people to the task.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>24.1.8.1</ReleaseVersion>
+      <ReleaseTitle>Brand new Discord posting workflow</ReleaseTitle>
+      <ReleaseNotes>
+        Further improved workflow of posting task to reduce number of clicks, include weather graph and automatically add group event when already available.
+        Removed the "Weather Summary" only checkbox.
+        Fixed the wizard guide showing under the right pane on the Flight Plan tab since the addition of the splitter.
+        Fixed the cloud layers altitude indication on the Discord post, which were reversed (feet - meters).
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.29.1</ReleaseVersion>
+      <ReleaseTitle>Weather details improvement</ReleaseTitle>
+      <ReleaseNotes>
+        Added lightning indicator to the weather details on the Discord post as 0 to 100%.
+        Fixed error on weather graph when wind or cloud altitude exactly at 60k feet.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.21.1</ReleaseVersion>
+      <ReleaseTitle>Optimization for B21 Online Task Planner</ReleaseTitle>
+      <ReleaseNotes>
+        Improvement in the way the B21 Online Task Planner is launched.
+        Staying in sync with the DPHX Unpack and Load tool (Briefing Tab).
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.12.1</ReleaseVersion>
+      <ReleaseTitle>Scaling and resizing</ReleaseTitle>
+      <ReleaseNotes>
+        Fix rendering size with 125% scale on 1080 resolution.
+        Added splitter on the Flight Plan tab for easy resizing of left and right parts.
+        Reordered the timestamps menu items from the longest to the shortest format.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.12.6.2</ReleaseVersion>
+      <ReleaseTitle>Several unrelated fixes and updates</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check for waypoints with elevation 1500’ and raise a warning about possible need to update elevations.
+        Added contextual menus to date/time labels so you can copy the UNIX timestamp format to the clipboard.
+        Removed option to post group event to hub. Hub doesn't post events anymore, only uses links to original events.
+        Fixed the voice channel not displaying correctly under the Discord Event section (to select Voice Channel).
+        Fixed the meet time results not displaying correctly under the Discord Event section (to specify local start date and time).
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.11.14.1</ReleaseVersion>
+      <ReleaseTitle>Group Flight Events Hub</ReleaseTitle>
+      <ReleaseNotes>
+        Changes in this version are mostly all related to the new Group Flight Events Hub.
+        Added button to post group event to the Hub, with link to original club post.
+        Added distinction between CET and CEDT times for SSC events.
+        Added button to publish only DPHX file and link to task post.
+        Replace the current voice channel text by a full link to the Discord voice channel.
+        Fixed a bug when creating the event post where it gets stuck waiting for a link copied from Discord.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.11.5.1</ReleaseVersion>
+      <ReleaseTitle>Gradient legends on graphical display</ReleaseTitle>
+      <ReleaseNotes>
+        Added gradient legend for both wind and cloud graphical display.
+        Fixed Briefing panel not resizing properly horizontally.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.30.2</ReleaseVersion>
+      <ReleaseTitle>Graphical Weather View</ReleaseTitle>
+      <ReleaseNotes>
+        Added graphical display option for wind and cloud layers on the Weather tab under Briefing.
+        Added UKVGA events in the KnownSoaringClubs file (Tuesday and Thursday).
+        Fixed Briefing Units not being saved.
+        Several smaller bug fixes.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.27.1</ReleaseVersion>
+      <ReleaseTitle>Fix to toolbar and new badge</ReleaseTitle>
+      <ReleaseNotes>
+        Added the Cloud Surfer badge to the list of SSC badges.
+        Fixed the toolbar buttons not working when window is not the active one.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.24.5</ReleaseVersion>
+      <ReleaseTitle>New toolbar, new links, new group event posts, and more.</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed XCSoar "trk" by "tsk" and added file info for .xcm files too.
+        Fixed label "XCSoar Track" to "XCSoar Task".
+        Replaced the link to download the DPHX tool from GitHub to FlightSim.to.
+        Changed workflow and content of group flight event posts to allow for "teaser" like and delayed completion for remaining task details, aka "SSC" style.
+        Centered all message boxes and moved main buttons to a toolbar.
+        Added new "I need support!" toolbar items with links to Discord.
+        Added two more toolbar actions: Discard changes and go to Task Library.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.21.2</ReleaseVersion>
+      <ReleaseTitle>Dynamic soaring and much more...</ReleaseTitle>
+      <ReleaseNotes>
+        Added Dynamic as soaring type.
+        Moving towards a new Soaring Task Browser app, made several changes to accommodate that in relation to proper identification of a task.
+        Several small bug fixes along the way.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.17.5</ReleaseVersion>
+      <ReleaseTitle>Repost info and Invite links</ReleaseTitle>
+      <ReleaseNotes>
+        Added "Repost" checkbox and date on the Discord tab when posting an preexisting task.
+        Added invite link to include in group event post.
+        Adjusted all soaring club infos and added SSC Wednesday.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.9.1</ReleaseVersion>
+      <ReleaseTitle>Various improvements in several areas</ReleaseTitle>
+      <ReleaseNotes>
+        Changed links to use markdown, so links will be clearer to read and more precise.
+        When clicking Reset All, take the user back to the Flight Plan tab.
+        Do not post the cover image twice (don’t include within the files).
+        Made the vertical size of long description and the file drop zone auto-adjust to available space.
+        Fixed and improved auto-expert workflow.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.5.2</ReleaseVersion>
+      <ReleaseTitle>Auto-paste, Cover image and more</ReleaseTitle>
+      <ReleaseNotes>
+        Added an optional cover image as the first post in the thread.
+        Added posting of group event thread and logistics with link to task's thread.
+        Added Expert-mode to the posting of group events.
+        Added auto-paste to automatically select Discord (true Windows app only, no browser) and paste the content of the clipboard, then continue. Makes the workflow even faster with less clicks and keyboard keys.
+        Revisited map selection, added cover image selection, added lock preventing auto-selection of map and cover images.
+        Improved the country emojies and codes to work everywhere.
+        Improved workflow of auto-continue (expert mode) and auto-paste.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.10.3.1</ReleaseVersion>
+      <ReleaseTitle>Sanity check before posting</ReleaseTitle>
+      <ReleaseNotes>
+        Added sanity check validations and labels highlighting for required / missing information.
+        Removed flight plan file from the task's main post as it is too technical.
+        Added a new option to display gate sizes as Diameter or Radius (Briefing).
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.29.1</ReleaseVersion>
+      <ReleaseTitle>A few more little goodies</ReleaseTitle>
+      <ReleaseNotes>
+        Added a "Wave" option in the lift types (good idea from @FF403).
+        Added option to suppress warning sign and set the extra text when non-standard barometric pressure.
+        Added support for double-click on Credits and BaroPressureExtraInfo when empty, to reset to default values.
+        Fixed a bug where a departure position in the flight plan could be empty.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.27.1</ReleaseVersion>
+      <ReleaseTitle>Major release with several new features and improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added a check and message if the task distance is 0 to fix a bug where a flight plan can miss the asterix (*) to identify start and finish, but have waypoints called START and FINISH instead which are being recognized.
+        Fixed the task thread field not reseting itself.
+        Fixed the task description not displayed when copying to clipboard.
+        Fixed duration text when no min or max specified or only one of them or both are the same.
+        Support CTRL-S to save and if the task title has not changed, then auto-save without the dialog box.
+        Added a "Paste" button to insert username in credits field so it's easier to do a copy/paste.
+        Reviewed the full decoding of waypoint ID to prevent some very specific bugs.
+        Auto paste URL from task and task thread when clipboard content is valid after returning from posting on Discord.
+        Added the expert mode to auto-click on the next step when posting on Discord: way faster!
+        Both "Expert mode" and "Merge remaining posts" are now saved between sessions.
+        Added file drop zone area to drop all kind of files (DPH, DPHX, PLN, WPR, others).
+        When adding other files, auto-select the first image containing "Map" or if none, select the first image.
+        Renamed difficulty rating "Experimented" to "Experienced" and made sure to select the rating based on the number and not the full text.
+        Fixed a rare error with some waypoint's badly formatted negative elevation.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.9.19.1</ReleaseVersion>
+      <ReleaseTitle>Several unrelated but relatively substantial improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Opening B21 Task Planner now passes both the PLN and WPR files if they're both present.
+        Added new field to store subthread URL for the task. Used on the briefing and DPHX Unpack and Load tool to bring the user to the right place to post results, screenshots, etc.
+        When barometric pressure is not standard, added a warning symbol to remind people to press "B" or manually adjust it in their glider.
+        Adjusted workflow to create the task thread and get the link before posting the files.
+        Removed the “No Gust” info when no gust is present.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.28.1</ReleaseVersion>
+      <ReleaseTitle>Cleanup, resync, rename club</ReleaseTitle>
+      <ReleaseNotes>
+        Renamed club "GG-💎" to "💎 Tuesday" and added "💎 Sunday" (both EDT and EST).
+        Clean up of the clubs and resync all libraries.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.21.1</ReleaseVersion>
+      <ReleaseTitle>Task main post improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Changed the main task Discord post format to use more emojis and make it easier to read.
+        Modified "Soaring Tuesday Club" name to "Soaring Diamonds Club".
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.17.3</ReleaseVersion>
+      <ReleaseTitle>Audio Cues for countdowns on briefing's event tab</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds audio cues for all countdowns on the briefing's event tab, allowing to hear the countdowns without having to look at the tool's window.
+        It also contains a fix for a small formatting bug for the event post on Discord.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.15.1</ReleaseVersion>
+      <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds the MSFS local times in relation to the event times (sync, launch, start) in the event post and the briefing's event info.
+        It also contains a fix for conversion of waypoint elevation for some regional settings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.8.15.1</ReleaseVersion>
+      <ReleaseTitle>MSFS Local times in relation to event times</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds the MSFS local times in relation to the event times (sync, launch, start) in the event post and the briefing's event info.
+        It also contains a fix for conversion of waypoint elevation for some regional settings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.29.1</ReleaseVersion>
+      <ReleaseTitle>Change to the auto-update process</ReleaseTitle>
+      <ReleaseNotes>
+        The auto-update program is now a Windows form with better formatting.
+        Also, the updater now displays all release notes between user's version and newest version available.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.27.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for Event Topic copy to clipboard</ReleaseTitle>
+      <ReleaseNotes>
+        This update only fixes a bug where the Event Topic would not copy to clipboard in a specific situation.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.23.2</ReleaseVersion>
+      <ReleaseTitle>Quick fix for new bug</ReleaseTitle>
+      <ReleaseNotes>
+        The last version 23.6.23.1 introduced a bug where not all post content was included in the clipboard. This release fixes that bug.
+        Truly sorry about that!
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.23.1</ReleaseVersion>
+      <ReleaseTitle>Link to Beginner's Guide to Group Soaring Flights</ReleaseTitle>
+      <ReleaseNotes>
+        This version adds an option to include a predefined or custom link to some existing guide for beginners that want to learn how to join the group soaring events.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.19.1</ReleaseVersion>
+      <ReleaseTitle>Small required fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Prevent posting files without the session being saved.
+        Fixed recommended add-ons sometimes not reseting when loading a different file.
+        Fixed possible errors when clicking post buttons with empty information.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.13.2</ReleaseVersion>
+      <ReleaseTitle>Share a group event for a task</ReleaseTitle>
+      <ReleaseNotes>
+        When creating a group event, it's nice to share it directly in the task's thread, so now you can.
+        This release also adds a new club and fixes one or two small details.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.6.2</ReleaseVersion>
+      <ReleaseTitle>Version info files now on GitHub</ReleaseTitle>
+      <ReleaseNotes>
+        The location of XML files containing version information has been changed to be directly on GitHub, improving the release pipeline and workflow.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.6.2</ReleaseVersion>
+      <ReleaseTitle>Fixed error when impossible to check for latest version</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug for some people that cannot reach the server to check for latest version.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.5.1</ReleaseVersion>
+      <ReleaseTitle>Fixed loading shared DPHX</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug when loading a shared or downloaded DPHX file
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.4.2</ReleaseVersion>
+      <ReleaseTitle>Fixed briefing altitudes (wrong units)</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug on the briefing tab that was displaying altitudes with the wrong units
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.6.04.1</ReleaseVersion>
+      <ReleaseTitle>Fixed a bug when saving a file for the first time</ReleaseTitle>
+      <ReleaseNotes>
+        This releases fixes a bug that prevented saving a new file.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.30.1</ReleaseVersion>
+      <ReleaseTitle>Save process revisited and more</ReleaseTitle>
+      <ReleaseNotes>
+        This release changes how saving a session works:
+        - It now detects when changes are pending (Save button turns red)
+        - It now reopens the last file (if there's one) between runs
+        - It now always saves a DPHX package
+
+        But this release also contains other changes:
+        - Other improvements to wizard guide (it now asks where you want to go between sections)
+        - Fix the Country area where buttons are not enabled at the right time (move up, down, remove)
+        - Save window location and size after each use
+        - Small fixes here and there
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.26.1</ReleaseVersion>
+      <ReleaseTitle>Discord Markdown to enhance all posts</ReleaseTitle>
+      <ReleaseNotes>
+        This release mostly focuses on the addition of Discord Markdown to enhance all posts in Discord
+        - Improvements and fixes to the wizard guide to include the briefing tab
+        - Added airports ICAO to list of waypoints in the Discord post (useful when more than departure and arrival airports in the flight plan)
+        - Added short description to briefing, between task title and credits
+        - Fixed wrong ICAO codes in the waypoints grid on the briefing page and support more than two ICAO in the waypoints
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.24.1</ReleaseVersion>
+      <ReleaseTitle>Discord emojies and more briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release includes:
+        - Discord emojies to section titles in the posts content
+        - New Weather tab on briefing to display wind and cloud layers in grid formats like waypoints
+        - Fixed guide tooltip not closing when hitting F1 on the new Discord tab
+        - Fixed event info and add-ons info not reloading properly in the briefing when going in and out of the Units tab
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.24.1</ReleaseVersion>
+      <ReleaseTitle>Briefing improvements</ReleaseTitle>
+      <ReleaseNotes>
+        This release mostly features improvements to the briefing tab.
+        - Added mouse drag support on map and other images
+        - Added country flag support in the briefing viewer
+        - Added global exception handling (in case of crashes)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.19.1</ReleaseVersion>
+      <ReleaseTitle>Preferred units on Briefing page</ReleaseTitle>
+      <ReleaseNotes>
+        Most important feature added with this release is the support for preferred display units on the Briefing page.
+        But this release also includes:
+        - Inclusion of meters per second for wind speeds
+        - Downgrade of the .Net requirements to 4.8 which should make the tool run on more Windows versions
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.18.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for bug on extra files introduced by previous version</ReleaseTitle>
+      <ReleaseNotes>
+        This is a quick fix for a bug related to the storage of extra files.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.17.1</ReleaseVersion>
+      <ReleaseTitle>Major redesign of the window AND new features</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is a big revamping of the interface, to try and make the user experience easier and also accomodate new fields.
+        - Removed the “resulting text” fields on the right to make room for other input fields and possibly make the form fit on smaller screens.
+        - Whole new section for the recommended add-ons (with links) for the task, no need to put that in the description anymore.
+        - Added a section to include the DPHX package with the files to promote sharing it.
+        - Changed the order of the posts so that files come first in the thread.
+        - Adjusted the wizard (guide) for the major redesign of the form and the new features.
+        - New Add-Ons tab within the briefing to list recommendeded add-ons. Double-click the URL to open it.
+        - Several other small fixes and adjustments were also made along the way
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.11.1</ReleaseVersion>
+      <ReleaseTitle>New compass roses for each wind layer</ReleaseTitle>
+      <ReleaseNotes>
+        The main feature of this release is the addition of graphical compass roses with wind indication for each layer on the briefing's map tab.
+        It also contains a fix to properly handle images when switching back and forth from the briefing tab.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.8.1</ReleaseVersion>
+      <ReleaseTitle>Event is not always enabled and included now</ReleaseTitle>
+      <ReleaseNotes>
+        Since not all tasks are events, a checkbox has been added to specifically include an event into the DPH file.
+        Also, clicking the "Thermal" checkbox now also activates the "Sync Fly" option on the event tab.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.4.1</ReleaseVersion>
+      <ReleaseTitle>Revamped Briefing Event Info with Countdowns</ReleaseTitle>
+      <ReleaseNotes>
+        The Event Info section of the Briefing tab now contains several countdown fields to the various event timings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.2.1</ReleaseVersion>
+      <ReleaseTitle>Support resizing and scrollbars</ReleaseTitle>
+      <ReleaseNotes>
+        The window can now be resized and scrollbars are available when screen space is limited.
+        The Briefing tab now displays event information (Event Info tab)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.1.2</ReleaseVersion>
+      <ReleaseTitle>Bunch of fixes related to regional number formats</ReleaseTitle>
+      <ReleaseNotes>
+        This release focuses only on problems that were related to different number formatting based on regional settings.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.5.1.1</ReleaseVersion>
+      <ReleaseTitle>Preventing crashes and new waypoint columns</ReleaseTitle>
+      <ReleaseNotes>
+        Try to prevent some crashes with the retrieval of countries from geolocation using waypoints coordinates.
+        Check minimum .NET Framework requirement during startup
+        Add several new waypoint distances columns with drop down list (briefing tab, waypoints)
+        Add possiblity to show/hide the latitude and longitude columns (briefing tab, waypoints)
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Revamping of Briefing tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release merges with the DPHX Unpack and Load tool and replaces the old Briefing tab with the same one built for that tool.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.24.2</ReleaseVersion>
+      <ReleaseTitle>Small fix following previous update</ReleaseTitle>
+      <ReleaseNotes>
+        See previous release for more information.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.24.1</ReleaseVersion>
+      <ReleaseTitle>Known Clubs now in XML file</ReleaseTitle>
+      <ReleaseNotes>
+        Known Clubs informations are now stored in an external XML file.
+
+        Reverted Daylight Saving Time code to Zulu only, with warning visible when DST applies for the selected event date.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.18.1</ReleaseVersion>
+      <ReleaseTitle>Multiple country flags and autoload countries</ReleaseTitle>
+      <ReleaseNotes>
+        The tool now supports adding multiple country flags to be added to the task and event titles.
+
+        The countries are now also automatically added based on the flight plan's waypoints.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.17.1</ReleaseVersion>
+      <ReleaseTitle>Country Flags and known clubs name change</ReleaseTitle>
+      <ReleaseNotes>
+        New field to specify Country flag to use in the task's title
+
+        Several known clubs have changed their names, this update implements the new names.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.16.1</ReleaseVersion>
+      <ReleaseTitle>Bug fix for cloud layer altitude</ReleaseTitle>
+      <ReleaseNotes>
+        The cloud layer altitude was reversed between meters and feet.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.2.2</ReleaseVersion>
+      <ReleaseTitle>Briefing tab improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Minor improvements to the briefing tab to remove waypoints from the description and make sure formatting (bold and italic) are properly applied.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.4.2.1</ReleaseVersion>
+      <ReleaseTitle>Fix for SSC channel name and remove gust warning</ReleaseTitle>
+      <ReleaseNotes>
+        Minor update to update the name of the voice channel for SSC Saturday's group flight and also remove the wind gusts warning as it appears to be resolved in SU12.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.20.4</ReleaseVersion>
+      <ReleaseTitle>Auto-Update bug fix</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed bug where Updater did not actually extract the files.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.20.2</ReleaseVersion>
+      <ReleaseTitle>Auto-Update implementation</ReleaseTitle>
+      <ReleaseNotes>
+        Starting with this release, an auto-update feature has been implemented and the app will automatically check for a new release when you start it.
+
+        If it finds one, it will show you a popup window with the release's details and the release history too. You then have the choice to update or not, but if you do, everything will happen automatically.
+
+        Manual update will still be possible by downloading the latest release and replacing the files yourself.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.20.1</ReleaseVersion>
+      <ReleaseTitle>Yet another fix for daylight saving time calculation</ReleaseTitle>
+      <ReleaseNotes>
+        Very minor update that should fix the daylight saving date and time calculation for good.
+
+        Let me know if you think there is still a problem with that.
+
+        To update: simply overwrite your current files with the one in this release.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.13.1</ReleaseVersion>
+      <ReleaseTitle>DPHX Package creation and load back</ReleaseTitle>
+      <ReleaseNotes>
+        In this new version, the "Create package" button becomes "Share package" and instead of only copying files to a folder for you to manually zip, it will now put all the required files into a .dphx file, save it and place it on your clipboard. You can then paste the file anywhere (email, Discord, other chat platforms, etc.) to share with someone else.
+
+        Of course, anyone with the tool can then also load back the .dphx file (when you click load, you can select both .dph and .dphx files) and automatically extract all the same files including the .dph file and load everything easily.
+
+        The tool also supports direct opening by double-clicking on a dphx file once you associate the file extension with the tool's main executable.
+
+        To update, simply overwrite your existing files with the ones in this release.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.12.1</ReleaseVersion>
+      <ReleaseTitle>Fix for Daylight Saving rules to calculate UTC and local times</ReleaseTitle>
+      <ReleaseNotes>
+        After going into DST here in East America, I've discovered a bug with the UTC and Local date/time conversions. This release should address this problem.
+
+        Simply overwrite your existing files with the one in this release.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.10.1</ReleaseVersion>
+      <ReleaseTitle>Small release</ReleaseTitle>
+      <ReleaseNotes>
+        In this release:
+        - The airfield database is no longer used as we always take the airfield names from the flight plan file
+        - The waypoint coordinates for xbox no longer contain a comma, but just a space
+        - Fixed a possible bug where the default clubs were not loaded
+        You can delete the csv file of the airfield database that was included in previous versions. Simply overwrite the other files.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.3.6.1</ReleaseVersion>
+      <ReleaseTitle>Rename, split, add waypoint coordinates</ReleaseTitle>
+      <ReleaseNotes>
+        For this release, you should delete any previous files you had and replace them by the ones in this release.
+        - The main executable was renamed to DiscordPostHelper.exe
+        - The code not directly related to UI has been moved into a CommonLibrary.dll
+
+        New features:
+        - The extra files section now do not accept potentially harmful file extensions
+        - There is a new checkbox to add all waypoint coordinates into the description to help Xbox users
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.26.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.26.1 - New Briefing Tab</ReleaseTitle>
+      <ReleaseNotes>
+        This release adds a new "Briefing" tab, where will you find all relevant information to give during the briefing time.
+
+        The tab is itself divided into two sub-tabs, the "Basic Info" and the "Flight and Map" where you get to select an image from the extra files, that represents the flight map. You can then zoom and scroll the image according to the briefing needs.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.24.2</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.24.2 Unix timestamps fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Bug fix in this release:
+        - During refactoring, an error was introduced with the syntax of the Unix timestamps, it is now fixed
+
+        Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.22.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.22.1 Load parameter file</ReleaseTitle>
+      <ReleaseNotes>
+        New features in this release:
+        - You can now set Windows to auto-launch the tool when double-clicking a .dph file, it will be automatically opened
+        - The current session file is added to the window title for convenience
+
+        Simply download the ZIP file from the asset, unzip in a new folder anywhere or over your previous version and launch the executable.
+
+        To set Windows to automatically open the app when double-clicking on a .dph file, you will need to right-click a .dph file and select "Open with..." or double-click the .dph file, and then browse and select the executable file and set to "Always".
+      </ReleaseNotes>
+    </Release>
+    <Release>
+      <ReleaseVersion>23.2.20.1</ReleaseVersion>
+      <ReleaseTitle>Version 23.2.20.1 Code refactoring and cleanup</ReleaseTitle>
+      <ReleaseNotes>
+        Several fixes or improvements along the way, including performance wise.
+      </ReleaseNotes>
+    </Release>
+  </Releases>
+</VersionInfo>
