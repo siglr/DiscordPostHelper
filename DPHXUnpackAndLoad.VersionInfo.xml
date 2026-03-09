@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.3.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.3.9.5</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.3.9.5</ReleaseVersion>
+      <ReleaseTitle>Updated and Enhanced Country Handling</ReleaseTitle>
+      <ReleaseNotes>
+        Improved and updated the country handling in tasks
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.3.2.1</ReleaseVersion>
       <ReleaseTitle>Fix for new tracker version</ReleaseTitle>

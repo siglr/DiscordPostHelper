@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.3.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.3.9.5</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.3.9.5</ReleaseVersion>
+      <ReleaseTitle>Updated and Enhanced Country List and Handling</ReleaseTitle>
+      <ReleaseNotes>
+        Improved and updated the country list and handling in tasks
+        Added automatic sanitation of waypoints and filenames for diacritic letters
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.3.2.1</ReleaseVersion>
       <ReleaseTitle>Link versions on duplicate detection</ReleaseTitle>
