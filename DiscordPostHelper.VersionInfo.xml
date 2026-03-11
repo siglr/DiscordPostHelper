@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.3.9.5</CurrentLatestVersion>
+  <CurrentLatestVersion>26.3.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.3.11.1</ReleaseVersion>
+      <ReleaseTitle>Small fix and sync with DPHX and WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the title not being updated on WSG
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.3.9.5</ReleaseVersion>
       <ReleaseTitle>Updated and Enhanced Country List and Handling</ReleaseTitle>
