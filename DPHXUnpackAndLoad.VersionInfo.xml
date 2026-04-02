@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.3.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.2.1</ReleaseVersion>
+      <ReleaseTitle>More IGC Upload Enhancements</ReleaseTitle>
+      <ReleaseNotes>
+        Faster and less error prone IGC results extraction process
+        Detailed task results from IGC
+        Results are always shown, task review is always available
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.3.11.1</ReleaseVersion>
       <ReleaseTitle>IGC Upload Enhancements</ReleaseTitle>
