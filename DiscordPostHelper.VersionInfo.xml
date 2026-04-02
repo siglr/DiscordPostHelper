@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.3.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.2.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.2.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for distance calculations</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed the frequent distance calculation difference between DPH and B21 Task Planner
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.3.11.1</ReleaseVersion>
       <ReleaseTitle>Small fix and sync with DPHX and WSG</ReleaseTitle>
