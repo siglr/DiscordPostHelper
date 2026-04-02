@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.2.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.2.2</ReleaseVersion>
+      <ReleaseTitle>Fix for date-time mismatch error</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a reported date-time mismatch error
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.2.1</ReleaseVersion>
       <ReleaseTitle>More IGC Upload Enhancements</ReleaseTitle>
