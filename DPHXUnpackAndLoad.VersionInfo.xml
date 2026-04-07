@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.2.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.7.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.7.1</ReleaseVersion>
+      <ReleaseTitle>More stats from IGC result</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed error when double-clicking a DPHX to open it when the app is already running
+        Added other stats to the IGC results
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.2.2</ReleaseVersion>
       <ReleaseTitle>Fix for date-time mismatch error</ReleaseTitle>
