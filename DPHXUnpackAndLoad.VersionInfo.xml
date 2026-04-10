@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.7.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.10.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.10.1</ReleaseVersion>
+      <ReleaseTitle>Live Weather Packages Support</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for live weather DPHX files
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.7.1</ReleaseVersion>
       <ReleaseTitle>More stats from IGC result</ReleaseTitle>

@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.2.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.10.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.10.1</ReleaseVersion>
+      <ReleaseTitle>Staying in sync with DPHX tool and WSG</ReleaseTitle>
+      <ReleaseNotes>
+        Prevent DPH from loading live weather packages (not supported)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.2.1</ReleaseVersion>
       <ReleaseTitle>Small fix for distance calculations</ReleaseTitle>
