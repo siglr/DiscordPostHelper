@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.14.1</ReleaseVersion>
+      <ReleaseTitle>Better Live Weather IGC Support and New Stats</ReleaseTitle>
+      <ReleaseNotes>
+        New IGC stats added or updated (average AGL and MSL, best RoC, best single climb)
+        Fixed uploading IGC for live-weather task
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.10.1</ReleaseVersion>
       <ReleaseTitle>Live Weather Packages Support</ReleaseTitle>
