@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.22.1</ReleaseVersion>
+      <ReleaseTitle>Migrated all IGC analysis to server</ReleaseTitle>
+      <ReleaseNotes>
+        IGC analysis now happens on the server side, for up to date engine without needed updates on the client side
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.14.1</ReleaseVersion>
       <ReleaseTitle>Better Live Weather IGC Support and New Stats</ReleaseTitle>
