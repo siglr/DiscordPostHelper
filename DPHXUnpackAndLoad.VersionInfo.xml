@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.4.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.4.28.1</ReleaseVersion>
+      <ReleaseTitle>Optimizing AAT and VNE penalties</ReleaseTitle>
+      <ReleaseNotes>
+        Display penalty adjusted IGC duration result instead of original duration. Will now be in sync with the speed result
+        Keep AAT penalties as "soft" penalties, in sync with WSG
+        Made sure to properly store raw original results instead of adjusted
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.22.1</ReleaseVersion>
       <ReleaseTitle>Migrated all IGC analysis to server</ReleaseTitle>
