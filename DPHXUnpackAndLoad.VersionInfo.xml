@@ -1,6 +1,16 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.5.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.5.11.1</ReleaseVersion>
+      <ReleaseTitle>VNE Penalty Model system and some fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Simplified loading of the task planner in the IGC upload "Task View" tab
+        Possible fix for a WSGListener launch error related to HTTP protocol
+        Added VNE Penalty Model display during setup
+        Adjusted IGC results to display the VNE Penalty model used (should depend on flown in event or not)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.28.1</ReleaseVersion>
       <ReleaseTitle>Optimizing AAT and VNE penalties</ReleaseTitle>

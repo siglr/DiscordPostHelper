@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.4.10.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.5.11.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.5.11.1</ReleaseVersion>
+      <ReleaseTitle>VNE Penalty Model System</ReleaseTitle>
+      <ReleaseNotes>
+        Added options to select VNE Penalty Model for the task and for the event
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.4.10.1</ReleaseVersion>
       <ReleaseTitle>Staying in sync with DPHX tool and WSG</ReleaseTitle>
