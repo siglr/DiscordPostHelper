@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.5.11.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.5.25.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.5.25.1</ReleaseVersion>
+      <ReleaseTitle>Support for SSC Weather Presets versions</ReleaseTitle>
+      <ReleaseNotes>
+        Added versions for the SSC weather preset selection
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.5.11.2</ReleaseVersion>
       <ReleaseTitle>VNE Penalty Model System - Take 2</ReleaseTitle>

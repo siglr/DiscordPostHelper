@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.5.11.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.5.25.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.5.25.1</ReleaseVersion>
+      <ReleaseTitle>SSC Presets versions and EFB App support</ReleaseTitle>
+      <ReleaseNotes>
+        In manual mode, added versions for SSC weather preset selection
+        Fixed manual fallback window resizing problem
+        Added button to install the WSG EFB app directly from the Settings
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.5.11.1</ReleaseVersion>
       <ReleaseTitle>VNE Penalty Model system and some fixes</ReleaseTitle>
