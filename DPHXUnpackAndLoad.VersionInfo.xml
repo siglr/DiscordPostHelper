@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.5.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.3.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.6.3.3</ReleaseVersion>
+      <ReleaseTitle>Community Packages Management</ReleaseTitle>
+      <ReleaseNotes>
+        Added the new Community Packages management screen to allow download of gliders, mods, liveries and other community packages, directly from DPHX
+        Fixed some scaling issue
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.5.28.1</ReleaseVersion>
       <ReleaseTitle>More integrations with the WSG EFB Companion app</ReleaseTitle>
