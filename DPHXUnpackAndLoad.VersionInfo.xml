@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.6.3.3</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.6.8.1</ReleaseVersion>
+      <ReleaseTitle>Symlinks Support for Community Folder</ReleaseTitle>
+      <ReleaseNotes>
+        Support for symlinks (symbolic links used by add-ons management tools like MSFS Addons Linker) to read and update community folder packages
+        Improvements on the Community Folder packages management
+        Small fixes
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.6.3.3</ReleaseVersion>
       <ReleaseTitle>Community Packages Management</ReleaseTitle>
