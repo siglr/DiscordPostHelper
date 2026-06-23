@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.6.22.7</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.23.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.6.23.1</ReleaseVersion>
+      <ReleaseTitle>Drag and Drop Zone</ReleaseTitle>
+      <ReleaseNotes>
+        Added new drag and drop zone feature
+        When manually loading a PLN file, read the departure airfield and runway directly
+        Fixed small regression: bring back the ability to drag and drop links directly from Discord (for PLN and WPR)
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.6.22.7</ReleaseVersion>
       <ReleaseTitle>WSG Client Initial Release</ReleaseTitle>
