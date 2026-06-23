@@ -1,6 +1,15 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.6.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.22.7</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.6.22.7</ReleaseVersion>
+      <ReleaseTitle>Last update - Replaced by WSG Client</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed possible wrong duration displayed in IGC results
+        Fixed possible IGC duplicate submission (very rare cases)
+        This is the last update of this tool, it has been replaced by the WSG Client desktop app which is now the official tool to manage your WeSimGlide.org experience
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.6.8.1</ReleaseVersion>
       <ReleaseTitle>Symlinks Support for Community Folder</ReleaseTitle>

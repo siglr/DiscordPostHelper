@@ -1,13 +1,11 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.6.12.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.22.7</CurrentLatestVersion>
   <Releases>
     <Release>
-      <ReleaseVersion>26.6.12.1</ReleaseVersion>
-      <ReleaseTitle>WeSimGlide Client updater release</ReleaseTitle>
+      <ReleaseVersion>26.6.22.7</ReleaseVersion>
+      <ReleaseTitle>WSG Client Initial Release</ReleaseTitle>
       <ReleaseNotes>
-        Added the first updater-backed WSG Client release metadata.
-        Uses GitHub release tags in the WSGC.version format and packages named WSG.Client.version.zip.
-        Keeps the WSG Client update flow aligned with the DPH and DPHX release metadata pattern.
+        This is the initial release of the WSG Client desktop app.
       </ReleaseNotes>
     </Release>
   </Releases>
