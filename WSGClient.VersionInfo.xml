@@ -1,6 +1,16 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.6.23.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.6.29.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.6.29.2</ReleaseVersion>
+      <ReleaseTitle>Add ons installation improvements and other fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Full support for custom destination folder per new add-on to install
+        Even better support for packages installed using junctions / links (addons linker)
+        Fixed map image scaling issue
+        Tentative fix for some of the modal popup scaling issue
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.6.23.1</ReleaseVersion>
       <ReleaseTitle>Drag and Drop Zone</ReleaseTitle>
