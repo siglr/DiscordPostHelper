@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.6.29.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.7.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.7.2</ReleaseVersion>
+      <ReleaseTitle>Improved installation and setup wizard</ReleaseTitle>
+      <ReleaseNotes>
+        Added club image to the Event Setup banner
+        Improved the "Run WSG Client First Time" batch file to possibly remove the continuous SmartScreen prompt
+        Setup Wizard step for DPHX migration hidden when not possible
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.6.29.2</ReleaseVersion>
       <ReleaseTitle>Add ons installation improvements and other fixes</ReleaseTitle>
