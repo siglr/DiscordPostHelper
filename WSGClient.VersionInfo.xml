@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.7.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.8.1</ReleaseVersion>
+      <ReleaseTitle>Small fix for setup wizard</ReleaseTitle>
+      <ReleaseNotes>
+        Setup Wizard step for DPHX migration hidden when not possible - take 2
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.7.2</ReleaseVersion>
       <ReleaseTitle>Improved installation and setup wizard</ReleaseTitle>
