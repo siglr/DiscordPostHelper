@@ -1,6 +1,19 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.12.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.12.3</ReleaseVersion>
+      <ReleaseTitle>Light theme and several performance and IGC Upload improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Dark/Light theme support
+        Hide both the NB21 Logger and SSC Tracker windows and "integrate" their running status inside a new tab (special access only until proven ok)
+        Freeze all refresh on UI when minimized or hidden
+        Improved WSG login information retrieval and validation
+        Add an IGC file icon on the IGC Upload screen that would support file drag and drop to Discord or elsewhere for the selected IGC file
+        Improve IGC Upload screen
+        Fix performance problem in relation to number of IGC files
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.8.1</ReleaseVersion>
       <ReleaseTitle>Small fix for setup wizard</ReleaseTitle>
