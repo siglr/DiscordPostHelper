@@ -1,6 +1,21 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.12.3</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.14.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.14.1</ReleaseVersion>
+      <ReleaseTitle>Lots of improvements in several areas</ReleaseTitle>
+      <ReleaseNotes>
+        Added a "Retry" button on the integrated tracker to resolve possible connectivity issue
+        Now syncing with the units stored in the WSG database under the user's profile
+        Added support for new ground speed unit (knots) and distance (nautical miles)
+        Adjustments to the experimental feature to automatically show the IGC files on the IGC Upload tab when a new one gets created
+        Fixed live-weather event IGC upload not being matched to its associated event
+        Better cleanup of everything that gets created by unpacking
+        Added the track's tracklog folder to the Files and Cleanup section
+        Improved the recent IGC not uploaded detection when exiting the app
+        More performance improvements on IGC Upload by caching data on disk
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.12.3</ReleaseVersion>
       <ReleaseTitle>Light theme and several performance and IGC Upload improvements</ReleaseTitle>
