@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.14.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.15.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.15.1</ReleaseVersion>
+      <ReleaseTitle>Experimental features bug fixing</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed a bug where a cached IGC result was not showing the Upload button without clicking "Recheck"
+        Live Tracking support (share my position - experimental)
+        Fixed a bug with one of the experimental feature
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.14.1</ReleaseVersion>
       <ReleaseTitle>Lots of improvements in several areas</ReleaseTitle>
