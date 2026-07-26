@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.15.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.26.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.26.1</ReleaseVersion>
+      <ReleaseTitle>Support for new SSC Tracker architecture</ReleaseTitle>
+      <ReleaseNotes>
+        Support for latest SSC Tracker version's architecture
+        Few bugs fixed
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.15.1</ReleaseVersion>
       <ReleaseTitle>Experimental features bug fixing</ReleaseTitle>

@@ -1,6 +1,14 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.5.31.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.26.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.26.1</ReleaseVersion>
+      <ReleaseTitle>Mostly maintenance, keeping things up to date</ReleaseTitle>
+      <ReleaseNotes>
+        Updated the posts to show WSG Client instead of DPHX tool
+        Set the event expiration date time to +4 hours instead of +3
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.5.31.1</ReleaseVersion>
       <ReleaseTitle>Save default VNE penaly model for new task</ReleaseTitle>
