@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.7.31.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.7.31.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.7.31.2</ReleaseVersion>
+      <ReleaseTitle>Fix to properly detect payware package version</ReleaseTitle>
+      <ReleaseNotes>
+        Bug fix: properly detect installed version of payware gliders
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.31.1</ReleaseVersion>
       <ReleaseTitle>Support for WSG EFB app's new audio notifications</ReleaseTitle>
