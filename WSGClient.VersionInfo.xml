@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.8.19.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.1.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.1.1</ReleaseVersion>
+      <ReleaseTitle>Auto-close tools and more fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Added options to auto-close NB21 Logger and SSC-Tracker when closing WSG Client
+        Handled CefSharp startup initialization failures
+        Fixed a potential bug where repairing/updating add-ons would fail depending on folder locations
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.8.19.1</ReleaseVersion>
       <ReleaseTitle>Several small but significant fixes</ReleaseTitle>
