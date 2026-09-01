@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.7.26.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.1.4</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.1.4</ReleaseVersion>
+      <ReleaseTitle>Support for WSG Task Builder</ReleaseTitle>
+      <ReleaseNotes>
+        Added support for the new WSG Task Builder app to create and edit tasks directly on WeSimGlide.org
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.7.26.1</ReleaseVersion>
       <ReleaseTitle>Mostly maintenance, keeping things up to date</ReleaseTitle>
