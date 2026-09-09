@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.9.3</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.9.4</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.9.4</ReleaseVersion>
+      <ReleaseTitle>Hotfix #3 for previous version - Sorry</ReleaseTitle>
+      <ReleaseNotes>
+        Making sure the task is properly loaded in the tracker
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.9.3</ReleaseVersion>
       <ReleaseTitle>Hotfix #2 for previous version</ReleaseTitle>
