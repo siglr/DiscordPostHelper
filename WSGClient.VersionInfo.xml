@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.1.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.9.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.9.1</ReleaseVersion>
+      <ReleaseTitle>Fix for tracker compatibility and WSG Task Builder</ReleaseTitle>
+      <ReleaseNotes>
+        Always send a group to the tracker to make sure the task is loaded
+        After uploading an IGC, the Leaderboard button takes you to WSG's map with your IGC checked and selected to display on map
+        Switch most B21 Task Planner links to WSG Task Builder
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.1.1</ReleaseVersion>
       <ReleaseTitle>Auto-close tools and more fixes</ReleaseTitle>
