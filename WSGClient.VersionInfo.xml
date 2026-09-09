@@ -2,6 +2,13 @@
   <CurrentLatestVersion>26.9.9.1</CurrentLatestVersion>
   <Releases>
     <Release>
+      <ReleaseVersion>26.9.9.2</ReleaseVersion>
+      <ReleaseTitle>Hotfix for previous version</ReleaseTitle>
+      <ReleaseNotes>
+        Always send a group to the tracker to make sure the task is loaded - take 2
+      </ReleaseNotes>
+    </Release>
+    <Release>
       <ReleaseVersion>26.9.9.1</ReleaseVersion>
       <ReleaseTitle>Fix for tracker compatibility and WSG Task Builder</ReleaseTitle>
       <ReleaseNotes>
