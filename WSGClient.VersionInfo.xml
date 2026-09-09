@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.9.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.9.3</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.9.3</ReleaseVersion>
+      <ReleaseTitle>Hotfix #2 for previous version</ReleaseTitle>
+      <ReleaseNotes>
+        Always send a group to the tracker to make sure the task is loaded - take 3
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.9.2</ReleaseVersion>
       <ReleaseTitle>Hotfix for previous version</ReleaseTitle>
