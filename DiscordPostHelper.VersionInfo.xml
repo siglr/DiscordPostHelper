@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.9.4.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.9.4</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.9.4</ReleaseVersion>
+      <ReleaseTitle>More support for WSG Task Builder - Events</ReleaseTitle>
+      <ReleaseNotes>
+        More changes towards WSG Task Builder integration and replacement
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.4.1</ReleaseVersion>
       <ReleaseTitle>More support for WSG Task Builder</ReleaseTitle>
