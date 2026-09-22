@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.9.4</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.22.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.22.1</ReleaseVersion>
+      <ReleaseTitle>Possible fix for IGC upload error</ReleaseTitle>
+      <ReleaseNotes>
+        Trying to fix the IGC upload error that some users are experiencing when uploading an IGC file to WSG
+        Task Builder preparation work
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.9.4</ReleaseVersion>
       <ReleaseTitle>Hotfix #3 for previous version - Sorry</ReleaseTitle>
