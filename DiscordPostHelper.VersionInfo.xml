@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.9.20.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.23.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.23.2</ReleaseVersion>
+      <ReleaseTitle>Fix following hosting provider change</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed errors when posting to the server
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.20.2</ReleaseVersion>
       <ReleaseTitle>Fix for MSFS local date and time</ReleaseTitle>
