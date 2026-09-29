@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.22.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.9.28.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.9.28.1</ReleaseVersion>
+      <ReleaseTitle>WSG Task Builder publishing</ReleaseTitle>
+      <ReleaseNotes>
+        More support for WSG Task Builder publishing features
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.22.1</ReleaseVersion>
       <ReleaseTitle>Possible fix for IGC upload error</ReleaseTitle>
