@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.9.28.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.1.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.1.1</ReleaseVersion>
+      <ReleaseTitle>Support DPHX from Task Builder</ReleaseTitle>
+      <ReleaseNotes>
+        Added support to receive DPHX directly from WSG Task Builder
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.9.28.1</ReleaseVersion>
       <ReleaseTitle>WSG Task Builder publishing</ReleaseTitle>
