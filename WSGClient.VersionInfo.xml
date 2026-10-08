@@ -1,6 +1,14 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.1.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.8.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.8.1</ReleaseVersion>
+      <ReleaseTitle>Full cleanup and closed challenge uploads</ReleaseTitle>
+      <ReleaseNotes>
+        Added 'Full cleanup and exit' with configurable options
+        Added a clear message for closed challenge uploads, with local opening/closing times
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.1.1</ReleaseVersion>
       <ReleaseTitle>Support DPHX from Task Builder</ReleaseTitle>
