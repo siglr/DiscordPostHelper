@@ -1,6 +1,22 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.8.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.23.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.23.1</ReleaseVersion>
+      <ReleaseTitle>Automatic MSFS 2024 setup, bundled EFB and IGC improvements</ReleaseTitle>
+      <ReleaseNotes>
+        Added an optional setting to skip the not-uploaded IGC check when closing WSG Client
+        Improved local duplicate and partial IGC recording handling
+        Automatic MSFS 2024 airfield, runway and active Event multiplayer setup, inspired by icebird4all's ICE tool
+        Restore the selected aircraft, variant and livery after task setup
+        Bundled matching WSG EFB app with automatic install/update for configured MSFS 2024 when MSFS is closed, including existing linked installations
+        Improved EFB task weather selection and verification, with reapplication when spawning on the runway
+        Improved cockpit result audio for weather and date/time
+        Reliable task changes in an already-open SSC-Tracker through automatic restart
+        Improved task setup progress window layout, positioning and focus behavior
+        Fixed batch weather XML handling and weather unit compatibility
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.8.1</ReleaseVersion>
       <ReleaseTitle>Full cleanup and closed challenge uploads</ReleaseTitle>
