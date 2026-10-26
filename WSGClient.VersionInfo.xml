@@ -1,6 +1,17 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.23.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.25.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.25.1</ReleaseVersion>
+      <ReleaseTitle>Improved MSFS task setup and EFB readiness</ReleaseTitle>
+      <ReleaseNotes>
+        Improved preservation of the selected aircraft, variant and livery during MSFS task setup
+        Added automatic opening of WSG Companion in the MSFS EFB after task setup
+        Added optional automatic minimization after successful MSFS task setup (off by default)
+        Task setup now continues where possible after recoverable errors and reports detailed issues at the end
+        Updated bundled WSG Companion to 0.14.33, with improved weather/date-time handoff and World Map-only task loading
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.23.1</ReleaseVersion>
       <ReleaseTitle>Automatic MSFS 2024 setup, bundled EFB and IGC improvements</ReleaseTitle>
