@@ -1,6 +1,18 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.26.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.27.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.27.1</ReleaseVersion>
+      <ReleaseTitle>Improved EFB installation and MSFS task setup</ReleaseTitle>
+      <ReleaseNotes>
+        EFB Companion support for unpublished local tasks and live-weather tasks.
+        MSFS setup startup countdown, Cancel button and shorter operation timeouts.
+        Fixed runway selection for L-R-C designators.
+        Fixed double-click task-loading loops and added restart protection.
+        Correct Tracker group handling for overlapping events.
+        Automatic cleanup of obsolete MSFS task setup files.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.26.1</ReleaseVersion>
       <ReleaseTitle>Improved EFB installation and MSFS task setup</ReleaseTitle>
