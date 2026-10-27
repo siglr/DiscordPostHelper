@@ -1,6 +1,13 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.27.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.10.27.2</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.10.27.2</ReleaseVersion>
+      <ReleaseTitle>DPHX compatibility fix for EFB task loading</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed EFB task loading for legacy DPHX packages
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.27.1</ReleaseVersion>
       <ReleaseTitle>Improved EFB installation and MSFS task setup</ReleaseTitle>
