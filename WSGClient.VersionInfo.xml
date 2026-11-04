@@ -1,6 +1,16 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.10.27.2</CurrentLatestVersion>
+  <CurrentLatestVersion>26.11.4.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.11.4.1</ReleaseVersion>
+      <ReleaseTitle>Easier MSFS task setup cancellation and clearer progress</ReleaseTitle>
+      <ReleaseNotes>
+        Cancel pending MSFS task setup directly from the Setup tab, including while MSFS is closed or waiting for World Map.
+        Keep WSG Client responsive while cancellation is recorded and improve handling when setup completes at the same time.
+        Improve task setup progress readability at different display scales, larger fonts and compact work areas, while keeping Cancel and Close accessible.
+        Clarify the initial 30-minute readiness allowance, active setup limits and separate in-sim verification steps.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.27.2</ReleaseVersion>
       <ReleaseTitle>DPHX compatibility fix for EFB task loading</ReleaseTitle>
