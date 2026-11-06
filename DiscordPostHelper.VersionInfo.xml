@@ -1,6 +1,13 @@
 ﻿<VersionInfo>
-  <CurrentLatestVersion>26.10.2.5</CurrentLatestVersion>
+  <CurrentLatestVersion>26.11.6.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.11.6.1</ReleaseVersion>
+      <ReleaseTitle>Event date and time fix</ReleaseTitle>
+      <ReleaseNotes>
+        Fixed event date/time selection and local display.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.10.2.5</ReleaseVersion>
       <ReleaseTitle>Refly event updates and task preservation</ReleaseTitle>
