@@ -1,6 +1,15 @@
 <VersionInfo>
-  <CurrentLatestVersion>26.11.4.1</CurrentLatestVersion>
+  <CurrentLatestVersion>26.11.16.1</CurrentLatestVersion>
   <Releases>
+    <Release>
+      <ReleaseVersion>26.11.16.1</ReleaseVersion>
+      <ReleaseTitle>Manual Mode date time picker and setup fixes</ReleaseTitle>
+      <ReleaseNotes>
+        Improved error handling when configured tool paths are missing.
+        Fixed aircraft and livery restoration during task setup after MSFS first starts.
+        Added a local date time picker in Manual Mode, with 15-minute time choices and a default rounded up from the current local time.
+      </ReleaseNotes>
+    </Release>
     <Release>
       <ReleaseVersion>26.11.4.1</ReleaseVersion>
       <ReleaseTitle>Easier MSFS task setup cancellation and clearer progress</ReleaseTitle>
